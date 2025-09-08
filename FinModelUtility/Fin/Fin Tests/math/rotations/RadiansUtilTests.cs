@@ -9,12 +9,12 @@ public class RadiansUtilTests {
   private const float PI = MathF.PI;
 
   [Test]
-  [TestCase(0, 0, ExpectedResult = 0)]
-  [TestCase(PI, PI, ExpectedResult = 0)]
-  [TestCase(2 * PI, 0, ExpectedResult = 0)]
-  [TestCase(-2 * PI, 0, ExpectedResult = 0)]
-  [TestCase(4 * PI, 0, ExpectedResult = 0)]
-  [TestCase(PI, -PI, ExpectedResult = 0)]
+  [TestCase(0, 0, ExpectedResult = 0f)]
+  [TestCase(PI, PI, ExpectedResult = 0f)]
+  [TestCase(2 * PI, 0, ExpectedResult = 0f)]
+  [TestCase(-2 * PI, 0, ExpectedResult = 0f)]
+  [TestCase(4 * PI, 0, ExpectedResult = 0f)]
+  [TestCase(PI, -PI, ExpectedResult = 0f)]
   // Clockwise (positive)
   [TestCase(-PI / 4, PI / 4, ExpectedResult = PI / 2)]
   [TestCase(PI / 4, PI * 3 / 4, ExpectedResult = PI / 2)]
