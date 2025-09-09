@@ -130,15 +130,6 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
     var fromZ
         = GetFromValueOrDefault_(zInterpolationType, fromZFrame, defaultZ);
 
-    // In case all from frames are the current frame, just return the current
-    // value.
-    if (fromXFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE) &&
-        fromYFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE) &&
-        fromZFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE)) {
-      value = this.ConvertRadiansToQuaternionImpl(fromX, fromY, fromZ);
-      return true;
-    }
-
     if (GetFromAndToFrameIndex_(fromsAndTos,
                                 areAxesStatic,
                                 out var fromFrame,
@@ -148,6 +139,9 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
       }
 
       var frameDelta = (frame - fromFrame) / (toFrame - fromFrame);
+      if (frameDelta.IsRoughly(0, FROM_FRAME_TOLERANCE)) {
+        frameDelta = 0;
+      }
 
       var q1 = this.ConvertRadiansToQuaternionImpl(fromX, fromY, fromZ);
 
