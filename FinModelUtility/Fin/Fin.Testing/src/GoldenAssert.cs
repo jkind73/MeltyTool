@@ -1,10 +1,13 @@
-﻿using System.Reflection;
+﻿using System.IO.Hashing;
+using System.Reflection;
 
 using CommunityToolkit.HighPerformance;
 
 using fin.image;
 using fin.io;
 using fin.util.asserts;
+using fin.util.hex;
+using fin.util.streams;
 using fin.util.strings;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -139,8 +142,14 @@ public static class GoldenAssert {
       rhsStream.Read(rhsSpan);
 
       if (lhsLong != rhsLong) {
+        lhsStream.Position = 0;
+        var lhsChecksum = Crc32.HashToUInt32(lhsStream.ReadAllBytes());
+
+        rhsStream.Position = 0;
+        var rhsChecksum = Crc32.HashToUInt32(rhsStream.ReadAllBytes());
+
         Asserts.Fail(
-            $"Files with name \"{lhs.Name}\" are different around byte #: {i * bytesToRead}");
+            $"Files with name \"{lhs.Name}\" are different around byte #: {i * bytesToRead}.\nCrc32 was 0x{lhsChecksum.ToHex()}, now is 0x{rhsChecksum.ToHex()}");
       }
     }
   }

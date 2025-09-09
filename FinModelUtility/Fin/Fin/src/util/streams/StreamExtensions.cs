@@ -25,4 +25,10 @@ public static class StreamExtensions {
       srcOffset += (uint) currentLength;
     }
   }
+
+  public static byte[] ReadAllBytes(this Stream stream) {
+    var bytes = new byte[stream.Length];
+    stream.ReadExactly(bytes);
+    return bytes;
+  }
 }
