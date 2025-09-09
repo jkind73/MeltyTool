@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Numerics;
 
-using fin.math.floats;
 using fin.util.asserts;
 
 using NUnit.Framework;
 
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+
 
 namespace fin.math.rotations;
 
@@ -26,12 +26,40 @@ public class QuaternionUtilTests {
                             float expectedQW) {
     var tolerance = .0000001f;
 
-    var actualQuaternion = QuaternionUtil.CreateZyxRadians(xRadians, yRadians, zRadians);
+    var actualQuaternion =
+        QuaternionUtil.CreateZyxRadians(xRadians, yRadians, zRadians);
 
     Assert.AreEqual(expectedQX, actualQuaternion.X, tolerance);
     Assert.AreEqual(expectedQY, actualQuaternion.Y, tolerance);
     Assert.AreEqual(expectedQZ, actualQuaternion.Z, tolerance);
     Assert.AreEqual(expectedQW, actualQuaternion.W, tolerance);
+  }
+
+  [Test]
+  [TestCase(0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1)]
+  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257f, .36515f, .54772f, .7303f)]
+  public void TestConsistentSlerp(float fromQx,
+                                  float fromQy,
+                                  float fromQz,
+                                  float fromQw,
+                                  float toQx,
+                                  float toQy,
+                                  float toQz,
+                                  float toQw,
+                                  float expectedQx,
+                                  float expectedQy,
+                                  float expectedQz,
+                                  float expectedQw) {
+    var tolerance = .0000001f;
+
+    var actualQuaternion =
+        new Quaternion(fromQx, fromQy, fromQz, fromQw)
+            .ConsistentSlerp(new Quaternion(toQx, toQy, toQz, toQw), 0);
+
+    Assert.AreEqual(expectedQx, actualQuaternion.X, tolerance);
+    Assert.AreEqual(expectedQy, actualQuaternion.Y, tolerance);
+    Assert.AreEqual(expectedQz, actualQuaternion.Z, tolerance);
+    Assert.AreEqual(expectedQw, actualQuaternion.W, tolerance);
   }
 
   [Test]
