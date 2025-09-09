@@ -133,15 +133,13 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
     if (GetFromAndToFrameIndex_(fromsAndTos,
                                 areAxesStatic,
                                 out var fromFrame,
-                                out var toFrame)) {
+                                out var toFrame) &&
+        frame.IsRoughly(fromFrame, FROM_FRAME_TOLERANCE)) {
       if (toFrame < fromFrame) {
         toFrame += sharedConfig.AnimationLength;
       }
 
       var frameDelta = (frame - fromFrame) / (toFrame - fromFrame);
-      if (frameDelta.IsRoughly(0, FROM_FRAME_TOLERANCE)) {
-        frameDelta = 0;
-      }
 
       var q1 = this.ConvertRadiansToQuaternionImpl(fromX, fromY, fromZ);
 
