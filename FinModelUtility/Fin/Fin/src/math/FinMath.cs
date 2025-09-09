@@ -61,6 +61,10 @@ public static class FinMath {
     return min + ((value - min) % (max - min));
   }
 
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static float RoundToNearest(this float value, float target)
+    => MathF.Round(value / target) * target;
+
   public static int Base10DigitCount(this int value)
     => (int) Math.Max(1, 1 + Math.Log10(value));
 

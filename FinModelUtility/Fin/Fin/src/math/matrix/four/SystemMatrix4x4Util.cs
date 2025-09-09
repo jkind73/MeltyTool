@@ -35,7 +35,7 @@ public static class SystemMatrix4x4Util {
     var hash = new FluentHash();
     fixed (float* ptr = &mat.M11) {
       for (var i = 0; i < 4 * 4; ++i) {
-        var value = MathF.Round(ptr[i] / error) * error;
+        var value = ptr[i].RoundToNearest(error);
         hash = hash.With(value.GetHashCode());
       }
     }

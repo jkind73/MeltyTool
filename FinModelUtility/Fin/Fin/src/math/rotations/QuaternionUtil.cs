@@ -9,6 +9,8 @@ using Quaternion = System.Numerics.Quaternion;
 namespace fin.math.rotations;
 
 public static class QuaternionUtil {
+  public const float QUATERNION_TOLERANCE = .00001f;
+
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion Create(IRotation rotation)
     => CreateZyxRadians(rotation.XRadians,
@@ -37,11 +39,13 @@ public static class QuaternionUtil {
     var cy = FinTrig.Cos(zRadians * 0.5f);
     var sy = FinTrig.Sin(zRadians * 0.5f);
 
+    // Have to round off quaternion values to avoid issues where less
+    // significant bits are slightly off and break tests.
     return new Quaternion(
-        sr * cp * cy - cr * sp * sy,
-        cr * sp * cy + sr * cp * sy,
-        cr * cp * sy - sr * sp * cy,
-        cr * cp * cy + sr * sp * sy);
+        (sr * cp * cy - cr * sp * sy).RoundToNearest(QUATERNION_TOLERANCE),
+        (cr * sp * cy + sr * cp * sy).RoundToNearest(QUATERNION_TOLERANCE),
+        (cr * cp * sy - sr * sp * cy).RoundToNearest(QUATERNION_TOLERANCE),
+        (cr * cp * cy + sr * sp * sy).RoundToNearest(QUATERNION_TOLERANCE));
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -41,8 +41,6 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes
     => this.axes_;
 
-  private const float FROM_FRAME_TOLERANCE = .000001f;
-
   public bool TryGetAtFrame(float frame, out Quaternion value) {
     if (sharedConfig.Looping) {
       frame = frame.ModRange(0, sharedConfig.AnimationLength);
@@ -133,8 +131,7 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
     if (GetFromAndToFrameIndex_(fromsAndTos,
                                 areAxesStatic,
                                 out var fromFrame,
-                                out var toFrame) &&
-        frame.IsRoughly(fromFrame, FROM_FRAME_TOLERANCE)) {
+                                out var toFrame)) {
       if (toFrame < fromFrame) {
         toFrame += sharedConfig.AnimationLength;
       }
