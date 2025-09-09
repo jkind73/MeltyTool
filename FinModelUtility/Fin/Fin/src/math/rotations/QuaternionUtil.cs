@@ -80,7 +80,7 @@ public static class QuaternionUtil {
     return angles;
   }
 
-  public const float QUATERNION_TOLERANCE = .00001f;
+  public const float QUATERNION_TOLERANCE = .0001f;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion RoundOff(in this Quaternion quaternion)
@@ -103,5 +103,5 @@ public static class QuaternionUtil {
       in this Quaternion from,
       in Quaternion to,
       float fraction)
-    => Quaternion.Normalize(Quaternion.Slerp(from, to, fraction)).RoundOff();
+    => Quaternion.Normalize(Quaternion.Slerp(from, to, fraction).RoundOff());
 }

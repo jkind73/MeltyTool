@@ -37,7 +37,7 @@ public class QuaternionUtilTests {
 
   [Test]
   [TestCase(0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1)]
-  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257f, .36515f, .54772f, .7303f)]
+  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257418f, .36514837f, .5477225f, .73029673f)]
   public void TestConsistentSlerp(float fromQx,
                                   float fromQy,
                                   float fromQz,
@@ -54,7 +54,7 @@ public class QuaternionUtilTests {
 
     var actualQuaternion =
         new Quaternion(fromQx, fromQy, fromQz, fromQw)
-            .ConsistentSlerp(new Quaternion(toQx, toQy, toQz, toQw), 0);
+            .ConsistentSlerp(new Quaternion(toQx, toQy, toQz, toQw), 0.00001f);
 
     Assert.AreEqual(expectedQx, actualQuaternion.X, tolerance);
     Assert.AreEqual(expectedQy, actualQuaternion.Y, tolerance);
