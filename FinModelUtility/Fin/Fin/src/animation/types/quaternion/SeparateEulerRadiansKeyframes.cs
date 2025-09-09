@@ -41,7 +41,7 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes
     => this.axes_;
 
-  private const float FROM_FRAME_TOLERANCE = .00001f;
+  private const float FROM_FRAME_TOLERANCE = .000001f;
 
   public bool TryGetAtFrame(float frame, out Quaternion value) {
     if (sharedConfig.Looping) {
