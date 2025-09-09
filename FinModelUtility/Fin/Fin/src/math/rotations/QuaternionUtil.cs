@@ -9,8 +9,6 @@ using Quaternion = System.Numerics.Quaternion;
 namespace fin.math.rotations;
 
 public static class QuaternionUtil {
-  public const float QUATERNION_TOLERANCE = .00001f;
-
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion Create(IRotation rotation)
     => CreateZyxRadians(rotation.XRadians,
@@ -41,11 +39,10 @@ public static class QuaternionUtil {
 
     // Have to round off quaternion values to avoid issues where less
     // significant bits are slightly off and break tests.
-    return new Quaternion(
-        (sr * cp * cy - cr * sp * sy).RoundToNearest(QUATERNION_TOLERANCE),
-        (cr * sp * cy + sr * cp * sy).RoundToNearest(QUATERNION_TOLERANCE),
-        (cr * cp * sy - sr * sp * cy).RoundToNearest(QUATERNION_TOLERANCE),
-        (cr * cp * cy + sr * sp * sy).RoundToNearest(QUATERNION_TOLERANCE));
+    return new Quaternion(sr * cp * cy - cr * sp * sy,
+                          cr * sp * cy + sr * cp * sy,
+                          cr * cp * sy - sr * sp * cy,
+                          cr * cp * cy + sr * sp * sy);
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -81,5 +78,24 @@ public static class QuaternionUtil {
     angles.Z = FinTrig.Atan2(siny_cosp, cosy_cosp);
 
     return angles;
+  }
+
+  public const float QUATERNION_TOLERANCE = .00001f;
+
+  /// <summary>
+  ///   Stupid method that's necessary because of Quaternion.Slerp() gives
+  ///   ever so slightly different results on different machines. This makes
+  ///   testing files a fucking nightmare, because you can't just compare all
+  ///   bytes anymore. 
+  /// </summary>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion RoundOff(in this Quaternion quaternion) {
+    // Have to round off quaternion values to avoid issues where less
+    // significant bits are slightly off and break tests.
+    return new Quaternion(
+        quaternion.X.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.Y.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.Z.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.W.RoundToNearest(QUATERNION_TOLERANCE));
   }
 }

@@ -14,9 +14,9 @@ public class QuaternionUtilTests {
   [Test]
   [TestCase(0, 0, 0, 0, 0, 0, 1)]
   [TestCase(2 * MathF.PI, 2 * MathF.PI, 2 * MathF.PI, 0, 0, 0, -1)]
-  [TestCase(1, 2, 3, -.71829f, .31061998f, .44443998f, .43594998f)]
-  [TestCase(2, 3, 4, -.51484f, -.17016f, .38404998f, .74733f)]
-  [TestCase(-1.6628352f, 0.42798066f, -0.3666214f, -0.68385f, 0.27231f, 0.03425f, 0.67603f)]
+  [TestCase(1, 2, 3, -.71828705f, .31062245f, .44443506f, .43595284f)]
+  [TestCase(2, 3, 4, -.5148352f, -.17015748f, .38405117f, .7473258f)]
+  [TestCase(-1.6628352f, 0.42798066f, -0.3666214f, -0.6838529f, 0.27231407f, 0.034253977f, 0.67603034f)]
   public void TestCreateZyx(float xRadians,
                             float yRadians,
                             float zRadians,

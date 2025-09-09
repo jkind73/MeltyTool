@@ -151,7 +151,7 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
       }
 
       var interp = Quaternion.Slerp(q1, q2, frameDelta);
-      value = Quaternion.Normalize(interp);
+      value = Quaternion.Normalize(interp.RoundOff());
 
       return true;
     }
