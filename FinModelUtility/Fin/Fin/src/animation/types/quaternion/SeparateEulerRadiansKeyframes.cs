@@ -41,6 +41,8 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes
     => this.axes_;
 
+  private const float FROM_FRAME_TOLERANCE = .00001f;
+
   public bool TryGetAtFrame(float frame, out Quaternion value) {
     if (sharedConfig.Looping) {
       frame = frame.ModRange(0, sharedConfig.AnimationLength);
@@ -128,6 +130,15 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
     var fromZ
         = GetFromValueOrDefault_(zInterpolationType, fromZFrame, defaultZ);
 
+    // In case all from frames are the current frame, just return the current
+    // value.
+    if (fromXFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE) &&
+        fromYFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE) &&
+        fromZFrame.Frame.IsRoughly(frame, FROM_FRAME_TOLERANCE)) {
+      value = this.ConvertRadiansToQuaternionImpl(fromX, fromY, fromZ);
+      return true;
+    }
+
     if (GetFromAndToFrameIndex_(fromsAndTos,
                                 areAxesStatic,
                                 out var fromFrame,
@@ -152,6 +163,7 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
 
       var interp = Quaternion.Slerp(q1, q2, frameDelta);
       value = Quaternion.Normalize(interp);
+
       return true;
     }
 

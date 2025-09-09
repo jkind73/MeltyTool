@@ -8,7 +8,11 @@ public static class FloatsExtensions {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool IsRoughly(this float a, float b)
-    => MathF.Abs(a - b) < ROUGHLY_EQUAL_ERROR;
+    => a.IsRoughly(b, ROUGHLY_EQUAL_ERROR);
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static bool IsRoughly(this float a, float b, float tolerance)
+    => MathF.Abs(a - b) < tolerance;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool IsRoughly0(this float a) => a.IsRoughly(0);
