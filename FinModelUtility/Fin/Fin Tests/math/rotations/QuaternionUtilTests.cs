@@ -14,8 +14,9 @@ public class QuaternionUtilTests {
   [Test]
   [TestCase(0, 0, 0, 0, 0, 0, 1)]
   [TestCase(2 * MathF.PI, 2 * MathF.PI, 2 * MathF.PI, 0, 0, 0, -1)]
-  [TestCase(1, 2, 3, -.7182f, .3106f, .4444f, .4359f)]
-  [TestCase(2, 3, 4, -.5148f, -.1701f, .3840f, .7473f)]
+  [TestCase(1, 2, 3, -.71828705f, .31062245f, .44443506f, .43595284f)]
+  [TestCase(2, 3, 4, -.5148352f, -.17015748f, .38405117f, .7473258f)]
+  [TestCase(-1.6628352f, 0.42798066f, -0.3666214f, -0.6838529f, 0.27231407f, 0.034253977f, 0.67603034f)]
   public void TestCreateZyx(float xRadians,
                             float yRadians,
                             float zRadians,
@@ -23,14 +24,14 @@ public class QuaternionUtilTests {
                             float expectedQY,
                             float expectedQZ,
                             float expectedQW) {
+    var tolerance = .0000001f;
+
     var actualQuaternion = QuaternionUtil.CreateZyxRadians(xRadians, yRadians, zRadians);
 
-    if (!actualQuaternion.X.IsRoughly(expectedQX) ||
-        !actualQuaternion.Y.IsRoughly(expectedQY) ||
-        !actualQuaternion.Z.IsRoughly(expectedQZ) ||
-        !actualQuaternion.W.IsRoughly(expectedQW)) {
-      Assert.Fail($"Expected {actualQuaternion} to equal {new Quaternion(expectedQX, expectedQY, expectedQZ, expectedQW)}");
-    }
+    Assert.AreEqual(expectedQX, actualQuaternion.X, tolerance);
+    Assert.AreEqual(expectedQY, actualQuaternion.Y, tolerance);
+    Assert.AreEqual(expectedQZ, actualQuaternion.Z, tolerance);
+    Assert.AreEqual(expectedQW, actualQuaternion.W, tolerance);
   }
 
   [Test]
