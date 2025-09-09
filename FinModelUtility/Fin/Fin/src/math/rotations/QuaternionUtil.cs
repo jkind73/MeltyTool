@@ -82,6 +82,16 @@ public static class QuaternionUtil {
 
   public const float QUATERNION_TOLERANCE = .00001f;
 
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion RoundOff(in this Quaternion quaternion)
+      // Have to round off quaternion values to avoid issues where less
+      // significant bits are slightly off and break tests.
+    => new(
+        quaternion.X.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.Y.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.Z.RoundToNearest(QUATERNION_TOLERANCE),
+        quaternion.W.RoundToNearest(QUATERNION_TOLERANCE));
+
   /// <summary>
   ///   Stupid method that's necessary because of Quaternion.Slerp() gives
   ///   ever so slightly different results on different machines. This makes
@@ -89,13 +99,9 @@ public static class QuaternionUtil {
   ///   bytes anymore. 
   /// </summary>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Quaternion RoundOff(in this Quaternion quaternion) {
-    // Have to round off quaternion values to avoid issues where less
-    // significant bits are slightly off and break tests.
-    return new Quaternion(
-        quaternion.X.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.Y.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.Z.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.W.RoundToNearest(QUATERNION_TOLERANCE));
-  }
+  public static Quaternion ConsistentSlerp(
+      in this Quaternion from,
+      in Quaternion to,
+      float fraction)
+    => Quaternion.Normalize(Quaternion.Slerp(from, to, fraction)).RoundOff();
 }
