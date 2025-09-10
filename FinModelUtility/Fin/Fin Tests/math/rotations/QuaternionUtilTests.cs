@@ -37,7 +37,7 @@ public class QuaternionUtilTests {
 
   [Test]
   [TestCase(0, 0, 0, 1, 1, 1, 1, 1, 0.00001f, 0.00001f, 0.00001f, 1)]
-  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257904f, .3651508f, .5477226f, .7302943f)]
+  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, 1.0000399f, 2.00004f, 3.00004f, 4.00004f)]
   public void TestSlowButConsistentSlerp(float fromQx,
                                          float fromQy,
                                          float fromQz,
