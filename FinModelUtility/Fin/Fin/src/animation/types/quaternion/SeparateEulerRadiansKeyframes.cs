@@ -150,7 +150,7 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
         q2 = -q2;
       }
 
-      value = q1.ConsistentSlerp(q2, frameDelta);
+      value = Quaternion.Normalize(QuaternionUtil.Slerp(q1, q2, frameDelta));
 
       return true;
     }

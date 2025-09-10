@@ -36,25 +36,27 @@ public class QuaternionUtilTests {
   }
 
   [Test]
-  [TestCase(0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1)]
-  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257418f, .36514837f, .5477225f, .73029673f)]
-  public void TestConsistentSlerp(float fromQx,
-                                  float fromQy,
-                                  float fromQz,
-                                  float fromQw,
-                                  float toQx,
-                                  float toQy,
-                                  float toQz,
-                                  float toQw,
-                                  float expectedQx,
-                                  float expectedQy,
-                                  float expectedQz,
-                                  float expectedQw) {
+  [TestCase(0, 0, 0, 1, 1, 1, 1, 1, 0.00001f, 0.00001f, 0.00001f, 1)]
+  [TestCase(1, 2, 3, 4, 5, 6, 7, 8, .18257904f, .3651508f, .5477226f, .7302943f)]
+  public void TestSlowButConsistentSlerp(float fromQx,
+                                         float fromQy,
+                                         float fromQz,
+                                         float fromQw,
+                                         float toQx,
+                                         float toQy,
+                                         float toQz,
+                                         float toQw,
+                                         float expectedQx,
+                                         float expectedQy,
+                                         float expectedQz,
+                                         float expectedQw) {
     var tolerance = .0000001f;
 
     var actualQuaternion =
-        new Quaternion(fromQx, fromQy, fromQz, fromQw)
-            .ConsistentSlerp(new Quaternion(toQx, toQy, toQz, toQw), 0.00001f);
+        QuaternionUtil.SlowButConsistentSlerp(
+            new Quaternion(fromQx, fromQy, fromQz, fromQw),
+            new Quaternion(toQx, toQy, toQz, toQw),
+            0.00001f);
 
     Assert.AreEqual(expectedQx, actualQuaternion.X, tolerance);
     Assert.AreEqual(expectedQy, actualQuaternion.Y, tolerance);

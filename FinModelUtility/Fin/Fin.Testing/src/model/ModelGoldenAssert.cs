@@ -1,6 +1,7 @@
 ﻿using fin.model.io.exporters;
 using fin.model.io.exporters.assimp.indirect;
 using fin.io;
+using fin.math.rotations;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.processing;
@@ -16,6 +17,7 @@ public static class ModelGoldenAssert {
       Func<IFileHierarchyDirectory, TModelBundle>
           gatherModelBundleFromInputDirectory)
       where TModelBundle : IModelFileBundle {
+    QuaternionUtil.UseSlowButConsistentSlerp();
     GoldenAssert.AssertGoldenFiles(
         goldenSubdir,
         (inputDirectory, targetDirectory) => {

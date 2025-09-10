@@ -80,28 +80,63 @@ public static class QuaternionUtil {
     return angles;
   }
 
-  public const float QUATERNION_TOLERANCE = .0001f;
+  /// <summary>
+  ///   Stupid logic that's necessary because Quaternion.Slerp() gives ever so
+  ///   slightly different results on different machines. This makes file
+  ///   assertions a fucking nightmare, because you can't just compare all
+  ///   bytes anymore--a single bit will be off and fail the test.
+  ///
+  ///   So in testing, we need to switch to a slower, manual version.
+  /// </summary>
+  public static SlerpHandler Slerp { get; private set; } = Quaternion.Slerp;
 
-  [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Quaternion RoundOff(in this Quaternion quaternion)
-      // Have to round off quaternion values to avoid issues where less
-      // significant bits are slightly off and break tests.
-    => new(
-        quaternion.X.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.Y.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.Z.RoundToNearest(QUATERNION_TOLERANCE),
-        quaternion.W.RoundToNearest(QUATERNION_TOLERANCE));
+  public delegate Quaternion SlerpHandler(Quaternion from,
+                                          Quaternion to,
+                                          float fraction);
 
   /// <summary>
-  ///   Stupid method that's necessary because of Quaternion.Slerp() gives
-  ///   ever so slightly different results on different machines. This makes
-  ///   testing files a fucking nightmare, because you can't just compare all
-  ///   bytes anymore. 
+  ///   Permanently switches over to using a slower, more consistent version of
+  ///   Quaternion.Slerp that gives identical results across machines.
+  ///
+  ///   Should only be used in tests.
+  /// </summary>
+  public static void UseSlowButConsistentSlerp()
+    => Slerp = SlowButConsistentSlerp;
+
+  /// <summary>
+  ///   Shamelessly stolen from:
+  ///   https://github.com/sungiant/abacus/blob/21c620dd287aafd79aa8935a18d92df5f0b28816/source/abacus/src/main/Abacus.Single.cs#L157
   /// </summary>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static Quaternion ConsistentSlerp(
-      in this Quaternion from,
-      in Quaternion to,
-      float fraction)
-    => Quaternion.Normalize(Quaternion.Slerp(from, to, fraction).RoundOff());
+  public static Quaternion SlowButConsistentSlerp(
+      Quaternion from,
+      Quaternion to,
+      float fraction) {
+    Quaternion slerped;
+    var remaining = 1 - fraction;
+    var angle = Quaternion.Dot(from, to);
+    if (angle < 0) {
+      from = -from;
+      angle = -angle;
+    }
+
+    var theta = MathF.Acos(angle);
+    var f = remaining;
+    var a = fraction;
+    if (theta > 0.000001f) {
+      var x = MathF.Sin(remaining * theta);
+      var y = MathF.Sin(fraction * theta);
+      var z = MathF.Sin(theta);
+      f = x / z;
+      a = y / z;
+    }
+
+    slerped = new Quaternion(
+        (f * from.X) + (a * to.X),
+        (f * from.Y) + (a * to.Y),
+        (f * from.Z) + (a * to.Z),
+        (f * from.W) + (a * to.W));
+
+    return slerped;
+  }
 }
