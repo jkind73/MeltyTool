@@ -94,8 +94,7 @@ public static class GoldenAssert {
     var rhsFiles = rhs.GetExistingFiles()
                       .ToDictionary(file => file.Name.ToString());
 
-    Assert.IsTrue(lhsFiles.Keys.ToHashSet()
-                          .SetEquals(rhsFiles.Keys.ToHashSet()));
+    CollectionAssert.AreEquivalent(lhsFiles.Keys, rhsFiles.Keys);
 
     foreach (var (name, lhsFile) in lhsFiles) {
       var rhsFile = rhsFiles[name];
