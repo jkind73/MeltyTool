@@ -79,7 +79,7 @@ public class GltfAnimationBuilder {
             foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              translationTangentKeyframes[frame / fps] = (value * modelScale, tangentIn, tangentOut);
+              translationTangentKeyframes[frame / fps] = (tangentIn, value * modelScale, tangentOut);
             }
 
             gltfAnimation.CreateTranslationChannel(node, translationTangentKeyframes);
@@ -111,7 +111,7 @@ public class GltfAnimationBuilder {
             foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              rotationTangentKeyframes[frame / fps] = (value, tangentIn, tangentOut);
+              rotationTangentKeyframes[frame / fps] = (tangentIn, value, tangentOut);
             }
 
             gltfAnimation.CreateRotationChannel(node, rotationTangentKeyframes);
@@ -143,7 +143,7 @@ public class GltfAnimationBuilder {
             foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              scaleTangentKeyframes[frame / fps] = (value, tangentIn, tangentOut);
+              scaleTangentKeyframes[frame / fps] = (tangentIn, value, tangentOut);
             }
 
             gltfAnimation.CreateScaleChannel(node, scaleTangentKeyframes);
