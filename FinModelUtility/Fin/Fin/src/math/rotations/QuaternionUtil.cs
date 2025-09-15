@@ -2,7 +2,6 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-using fin.math.floats;
 using fin.model;
 
 using Quaternion = System.Numerics.Quaternion;
@@ -121,17 +120,14 @@ public static class QuaternionUtil {
       angle = -angle;
     }
 
-    var theta = MathF.Acos(angle);
-    var f0 = remaining;
-    var a0 = fraction;
-
-    var f = f0;
-    var a = a0;
+    var theta = FinTrig.Acos(angle);
+    var f = remaining;
+    var a = fraction;
 
     if (theta > 0.000001f) {
-      var x = MathF.Sin(remaining * theta);
-      var y = MathF.Sin(fraction * theta);
-      var z = MathF.Sin(theta);
+      var x = FinTrig.Sin(remaining * theta);
+      var y = FinTrig.Sin(fraction * theta);
+      var z = FinTrig.Sin(theta);
       f = x / z;
       a = y / z;
     }
@@ -141,14 +137,6 @@ public static class QuaternionUtil {
         (f * from.Y) + (a * to.Y),
         (f * from.Z) + (a * to.Z),
         (f * from.W) + (a * to.W));
-    
-    // TODO: Delete this
-    if (slerped.X.IsRoughly(0.3578491f) &&
-        slerped.Y.IsRoughly(0.1380615f) &&
-        slerped.Z.IsRoughly(0.5010681f) &&
-        slerped.W.IsRoughly(-0.7756957f)) {
-      ;
-    }
 
     return slerped;
   }

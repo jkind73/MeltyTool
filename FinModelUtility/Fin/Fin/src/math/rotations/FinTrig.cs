@@ -7,26 +7,25 @@ public static class FinTrig {
   public const float DEG_2_RAD = MathF.PI / 180;
   public const float RAD_2_DEG = 1 / DEG_2_RAD;
 
+  // - At this point, native C# approach is faster than FastMath.
+  // - Math version is used instead of MathF because there are bit-level
+  //   differences in MathF across machines that cause flakiness when comparing
+  //   model files byte-by-byte. This was a fucking bitch to solve.
 
-  // At this point, native C# approach is faster than FastMath.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static float Cos(float radians) => MathF.Cos(radians);
+  public static float Cos(float radians) => (float) Math.Cos(radians);
 
-  // At this point, native C# approach is faster than FastMath.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static float Sin(float radians) => MathF.Sin(radians);
+  public static float Sin(float radians) => (float) Math.Sin(radians);
 
-  // At this point, native C# approach is faster than FastMath.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static float Acos(float value) => MathF.Acos(value);
+  public static float Acos(float value) => (float) Math.Acos(value);
 
-  // At this point, native C# approach is faster than FastMath.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static float Asin(float value) => MathF.Asin(value);
+  public static float Asin(float value) => (float) Math.Asin(value);
 
-  // At this point, native C# approach is faster than FastMath.
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static float Atan2(float y, float x) => MathF.Atan2(y, x);
+  public static float Atan2(float y, float x) => (float) Math.Atan2(y, x);
 
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
