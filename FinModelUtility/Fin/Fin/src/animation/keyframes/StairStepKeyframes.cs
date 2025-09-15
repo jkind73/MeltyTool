@@ -19,6 +19,7 @@ public class StairStepKeyframes<T>(
       = new(individualConfig?.InitialCapacity ?? 0);
 
   public ISharedInterpolationConfig SharedConfig => sharedConfig;
+
   public IndividualInterpolationConfig<T> IndividualConfig
     => individualConfig ?? IndividualInterpolationConfig<T>.DEFAULT;
 
@@ -65,5 +66,14 @@ public class StairStepKeyframes<T>(
         dst[f--] = keyframe.ValueOut;
       }
     }
+  }
+
+  // TODO: Implement this
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, T value)> keyframes,
+      out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes) {
+    keyframes = default;
+    tangentKeyframes = null;
+    return false;
   }
 }

@@ -30,4 +30,9 @@ public class CombinedVector3Keyframes<TKeyframe>(
     => this.impl_.TryGetAtFrame(frame, out value);
 
   public void GetAllFrames(Span<Vector3> dst) => this.impl_.GetAllFrames(dst);
+
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, Vector3 value)> keyframes,
+      out IReadOnlyList<(Vector3 tangentIn, Vector3 tangentOut)>? tangentKeyframes)
+    => this.impl_.TryGetSimpleKeyframes(out keyframes, out tangentKeyframes);
 }

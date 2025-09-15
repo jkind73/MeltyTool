@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using fin.animation.keyframes;
 
@@ -12,8 +13,15 @@ public interface IInterpolatable<T> {
   [Const]
   bool TryGetAtFrame(float frame, out T value);
 
+  // Returns the value at each frame in the animation.
   [Const]
   void GetAllFrames(Span<T> dst);
+
+  // Returns just the keyframes of the animation.
+  [Const]
+  bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, T value)> keyframes,
+      out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes);
 }
 
 public interface IKeyframeInterpolator<in TKeyframe, out T>

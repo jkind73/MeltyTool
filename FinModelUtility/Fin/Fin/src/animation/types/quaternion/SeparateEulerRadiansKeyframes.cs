@@ -273,4 +273,13 @@ public class SeparateEulerRadiansKeyframes<TKeyframe>(
       dst[i] = rotation;
     }
   }
+
+  // TODO: Implement this
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, Quaternion value)> keyframes,
+      out IReadOnlyList<(Quaternion tangentIn, Quaternion tangentOut)>? tangentKeyframes) {
+    keyframes = default;
+    tangentKeyframes = null;
+    return false;
+  }
 }

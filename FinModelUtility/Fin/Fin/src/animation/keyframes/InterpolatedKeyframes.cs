@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 using fin.animation.interpolation;
@@ -119,5 +121,21 @@ public class InterpolatedKeyframes<TKeyframe, T>(
       dst[normalizedFrame]
           = interpolator.Interpolate(from, to, normalizedFrame, sharedConfig);
     }
+  }
+
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, T value)> keyframes,
+      out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes) {
+    // TODO: Implement this
+    if (this.impl_ is List<KeyframeWithTangents<T>>) {
+      keyframes = default;
+      tangentKeyframes = default;
+      return false;
+    }
+
+    tangentKeyframes = null;
+    keyframes = this.impl_.Select(k => (k.Frame, k.ValueOut)).ToArray();
+
+    return true;
   }
 }

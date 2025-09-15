@@ -30,4 +30,9 @@ public class CombinedQuaternionKeyframes<TKeyframe>(
     => this.impl_.TryGetAtFrame(frame, out value);
 
   public void GetAllFrames(Span<Quaternion> dst) => this.impl_.GetAllFrames(dst);
+
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, Quaternion value)> keyframes,
+      out IReadOnlyList<(Quaternion tangentIn, Quaternion tangentOut)>? tangentKeyframes)
+    => this.impl_.TryGetSimpleKeyframes(out keyframes, out tangentKeyframes);
 }

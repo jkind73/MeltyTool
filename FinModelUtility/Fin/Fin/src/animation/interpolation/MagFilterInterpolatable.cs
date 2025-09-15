@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 using fin.math.floats;
 using fin.math.interpolation;
@@ -50,4 +52,9 @@ public class MagFilterInterpolatable<T>(IInterpolator<T> interpolator)
   }
 
   public void GetAllFrames(Span<T> dst) => this.Impl.GetAllFrames(dst);
+
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, T value)> keyframes,
+      out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes)
+    => this.Impl.TryGetSimpleKeyframes(out keyframes, out tangentKeyframes);
 }

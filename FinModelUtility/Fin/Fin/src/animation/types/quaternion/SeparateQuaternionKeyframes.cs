@@ -89,4 +89,13 @@ public class SeparateQuaternionKeyframes<TKeyframe>(
       dst[i] = new Quaternion(x[i], y[i], z[i], w[i]);
     }
   }
+
+  // TODO: Implement this
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, Quaternion value)> keyframes,
+      out IReadOnlyList<(Quaternion tangentIn, Quaternion tangentOut)>? tangentKeyframes) {
+    keyframes = default;
+    tangentKeyframes = null;
+    return false;
+  }
 }

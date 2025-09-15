@@ -61,4 +61,13 @@ public class SeparateVector2Keyframes<TKeyframe>(
       dst[i] = new Vector2(x[i], y[i]);
     }
   }
+
+  // TODO: Implement this
+  public bool TryGetSimpleKeyframes(
+      out IReadOnlyList<(float frame, Vector2 value)> keyframes,
+      out IReadOnlyList<(Vector2 tangentIn, Vector2 tangentOut)>? tangentKeyframes) {
+    keyframes = default;
+    tangentKeyframes = null;
+    return false;
+  }
 }
