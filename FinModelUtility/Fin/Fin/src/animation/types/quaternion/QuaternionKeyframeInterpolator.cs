@@ -2,6 +2,8 @@
 
 using fin.animation.interpolation;
 using fin.animation.keyframes;
+using fin.math.rotations;
+
 
 namespace fin.animation.types.quaternion;
 
@@ -33,6 +35,6 @@ public class QuaternionKeyframeInterpolator<TKeyframe>
       q2 = -q2;
     }
 
-    return Quaternion.Slerp(q1, q2, t);
+    return QuaternionUtil.Slerp(q1, q2, t);
   }
 }
