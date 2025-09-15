@@ -45,8 +45,14 @@ public class GltfAnimationBuilder {
 
     // Writes translation/rotation/scale for each joint.
     var translationKeyframes = new Dictionary<float, Vector3>();
+    var translationTangentKeyframes
+        = new Dictionary<float, (Vector3, Vector3, Vector3)>();
     var rotationKeyframes = new Dictionary<float, Quaternion>();
+    var rotationTangentKeyframes
+        = new Dictionary<float, (Quaternion, Quaternion, Quaternion)>();
     var scaleKeyframes = new Dictionary<float, Vector3>();
+    var scaleTangentKeyframes
+        = new Dictionary<float, (Vector3, Vector3, Vector3)>();
 
     Span<Vector3> translationsOrScales
         = stackalloc Vector3[animation.FrameCount];
@@ -57,43 +63,100 @@ public class GltfAnimationBuilder {
         continue;
       }
 
-      // TODO: How to get keyframes for sparse tracks?
-
       var translationDefined = boneTracks.Translations?.HasAnyData ?? false;
       if (translationDefined) {
         translationKeyframes.Clear();
-        boneTracks.Translations.GetAllFrames(translationsOrScales);
-        for (var i = 0; i < translationsOrScales.Length; ++i) {
-          var time = i / fps;
-          translationKeyframes[time] = translationsOrScales[i] * modelScale;
-        }
+        translationTangentKeyframes.Clear();
+        if (boneTracks.Translations.TryGetSimpleKeyframes(
+                out var keyframes,
+                out var tangentKeyframes)) {
+          if (tangentKeyframes == null) {
+            foreach (var (frame, value) in keyframes) {
+              translationKeyframes[frame / fps] = value * modelScale;
+            }
+            gltfAnimation.CreateTranslationChannel(node, translationKeyframes);
+          } else {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+              var (frame, value) = frameAndValue;
+              var (tangentIn, tangentOut) = tangents;
+              translationTangentKeyframes[frame / fps] = (value * modelScale, tangentIn, tangentOut);
+            }
 
-        gltfAnimation.CreateTranslationChannel(node, translationKeyframes);
+            gltfAnimation.CreateTranslationChannel(node, translationTangentKeyframes);
+          }
+        } else {
+          boneTracks.Translations.GetAllFrames(translationsOrScales);
+          for (var i = 0; i < translationsOrScales.Length; ++i) {
+            var time = i / fps;
+            translationKeyframes[time] = translationsOrScales[i] * modelScale;
+          }
+
+          gltfAnimation.CreateTranslationChannel(node, translationKeyframes);
+        }
       }
 
       var rotationDefined = boneTracks.Rotations?.HasAnyData ?? false;
       if (rotationDefined) {
         rotationKeyframes.Clear();
-        boneTracks.Rotations.GetAllFrames(rotations);
-        for (var i = 0; i < animation.FrameCount; ++i) {
-          var time = i / fps;
-          rotationKeyframes[time] = rotations[i];
+        rotationTangentKeyframes.Clear();
+        if (boneTracks.Rotations.TryGetSimpleKeyframes(
+                out var keyframes,
+                out var tangentKeyframes)) {
+          if (tangentKeyframes == null) {
+            foreach (var (frame, value) in keyframes) {
+              rotationKeyframes[frame / fps] = value;
+            }
+            gltfAnimation.CreateRotationChannel(node, rotationKeyframes);
+          } else {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+              var (frame, value) = frameAndValue;
+              var (tangentIn, tangentOut) = tangents;
+              rotationTangentKeyframes[frame / fps] = (value, tangentIn, tangentOut);
+            }
+
+            gltfAnimation.CreateRotationChannel(node, rotationTangentKeyframes);
+          }
+        } else {
+          boneTracks.Rotations.GetAllFrames(rotations);
+          for (var i = 0; i < rotations.Length; ++i) {
+            var time = i / fps;
+            rotationKeyframes[time] = rotations[i];
+          }
+
+          gltfAnimation.CreateRotationChannel(node, rotationKeyframes);
         }
-
-        gltfAnimation.CreateRotationChannel(node, rotationKeyframes);
       }
-
 
       var scaleDefined = boneTracks.Scales?.HasAnyData ?? false;
       if (scaleDefined) {
         scaleKeyframes.Clear();
-        boneTracks.Scales.GetAllFrames(translationsOrScales);
-        for (var i = 0; i < translationsOrScales.Length; ++i) {
-          var time = i / fps;
-          scaleKeyframes[time] = translationsOrScales[i];
-        }
+        scaleTangentKeyframes.Clear();
+        if (boneTracks.Scales.TryGetSimpleKeyframes(
+                out var keyframes,
+                out var tangentKeyframes)) {
+          if (tangentKeyframes == null) {
+            foreach (var (frame, value) in keyframes) {
+              scaleKeyframes[frame / fps] = value;
+            }
+            gltfAnimation.CreateScaleChannel(node, scaleKeyframes);
+          } else {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+              var (frame, value) = frameAndValue;
+              var (tangentIn, tangentOut) = tangents;
+              scaleTangentKeyframes[frame / fps] = (value, tangentIn, tangentOut);
+            }
 
-        gltfAnimation.CreateScaleChannel(node, scaleKeyframes);
+            gltfAnimation.CreateScaleChannel(node, scaleTangentKeyframes);
+          }
+        } else {
+          boneTracks.Scales.GetAllFrames(translationsOrScales);
+          for (var i = 0; i < translationsOrScales.Length; ++i) {
+            var time = i / fps;
+            scaleKeyframes[time] = translationsOrScales[i];
+          }
+
+          gltfAnimation.CreateScaleChannel(node, scaleKeyframes);
+        }
       }
     }
   }
