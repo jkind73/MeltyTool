@@ -3,7 +3,6 @@ using System.Numerics;
 
 using Avalonia.Controls;
 
-using fin.io;
 using fin.io.web;
 using fin.scene;
 using fin.scene.instance;
@@ -19,7 +18,6 @@ using MarioArtistTool.scenery;
 using marioartisttool.services;
 using marioartisttool.util;
 
-using schema.binary;
 
 namespace marioartisttool.Views;
 
