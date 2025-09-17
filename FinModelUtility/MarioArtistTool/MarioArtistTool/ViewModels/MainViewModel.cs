@@ -1,12 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Models.TreeDataGrid;
+using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 
@@ -32,6 +35,7 @@ using Brush = Avalonia.Media.Brush;
 using Color = Avalonia.Media.Color;
 using Image = Avalonia.Controls.Image;
 
+
 namespace marioartisttool.ViewModels;
 
 public class MainViewModelForDesigner : MainViewModel {
@@ -39,14 +43,14 @@ public class MainViewModelForDesigner : MainViewModel {
     var rootSubdirs = new LinkedList<MfsTreeDirectory>();
     var root
         = new MfsTreeDirectory(null,
-                               new MfsDirectory { Name = "/" },
+                               new MfsDirectory {Name = "/"},
                                rootSubdirs,
                                []);
 
     var subdir1Files = new LinkedList<MfsTreeFile>();
     var subdir1
         = new MfsTreeDirectory(root,
-                               new MfsDirectory { Name = "subdir1" },
+                               new MfsDirectory {Name = "subdir1"},
                                [],
                                subdir1Files);
     rootSubdirs.AddLast(subdir1);
@@ -54,7 +58,7 @@ public class MainViewModelForDesigner : MainViewModel {
     var subdir2Files = new LinkedList<MfsTreeFile>();
     var subdir2
         = new MfsTreeDirectory(root,
-                               new MfsDirectory { Name = "subdir2" },
+                               new MfsDirectory {Name = "subdir2"},
                                [],
                                subdir2Files);
     rootSubdirs.AddLast(subdir2);
@@ -102,6 +106,7 @@ public class MainViewModel : ViewModelBase {
                             };
 
                             BucketBitmapObservableManager? bbom = null;
+                            Grid? bucketPanel = null;
                             if (x is MfsTreeFile mfsTreeFile) {
                               using var br
                                   = mfsTreeFile.OpenReadAsBinary(
@@ -129,7 +134,7 @@ public class MainViewModel : ViewModelBase {
                               bucket.Bind(Image.SourceProperty, bucketImage);
 
                               if (d.Children.Any()) {
-                                var bucketPanel = new Grid {
+                                bucketPanel = new Grid {
                                     Width = 32,
                                     Height = 32
                                 };
@@ -245,12 +250,24 @@ public class MainViewModel : ViewModelBase {
                                           fileCursorObservable);
                             } else {
                               if (bbom != null) {
-                                border.PointerEntered += 
+                                border.PointerEntered +=
                                     (_, _) => bbom.IsMouseOver = true;
-                                border.PointerExited += 
+                                border.PointerExited +=
                                     (_, _) => bbom.IsMouseOver = false;
 
+                                border.DoubleTapped += (_, _) => {
+                                  var expanderCell =
+                                      border.GetParentExpanderCell();
+                                  expanderCell.IsExpanded =
+                                      !expanderCell.IsExpanded;
+                                };
 
+                                bucketPanel.Tapped += (_, _) => {
+                                  var expanderCell =
+                                      border.GetParentExpanderCell();
+                                  expanderCell.IsExpanded =
+                                      !expanderCell.IsExpanded;
+                                };
                               }
                             }
 
@@ -283,4 +300,19 @@ public class MainViewModel : ViewModelBase {
                                              int scale = 1)
     => new(AssetLoaderUtil.LoadBitmap($"cursors/{cursorImageName}", scale),
            new PixelPoint(pixelPoint.X * scale, pixelPoint.Y * scale));
+}
+
+public static class AvaloniaExtensions {
+  public static TreeDataGridExpanderCell GetParentExpanderCell(
+      this Control element) {
+    ILogical? current = element;
+    while (current != null) {
+      if (current is TreeDataGridExpanderCell expanderCell) {
+        return expanderCell;
+      }
+      current = current.GetLogicalParent();
+    }
+
+    throw new Exception();
+  }
 }
