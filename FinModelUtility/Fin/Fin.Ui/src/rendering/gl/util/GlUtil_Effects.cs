@@ -2,6 +2,8 @@
 
 using fin.model;
 
+using OpenTK.Graphics.OpenGL;
+
 namespace fin.ui.rendering.gl;
 
 public static partial class GlUtil {
@@ -23,5 +25,21 @@ public static partial class GlUtil {
     SetBlendColor(Color.White);
     ResetBlending();
     ResetDepth();
+  }
+
+  public static void RenderAsShadow(
+      Action render,
+      float opacity = .6f) {
+    SetBlendColor(Color.FromArgb((byte) (255 * opacity), 0, 0, 0));
+    SetBlending(BlendEquation.ADD,
+                BlendFactor.CONST_ALPHA,
+                BlendFactor.ONE_MINUS_CONST_ALPHA);
+    DisableChangingBlending = true;
+
+    render();
+
+    DisableChangingBlending = false;
+    SetBlendColor(Color.White);
+    ResetBlending();
   }
 }

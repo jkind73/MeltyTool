@@ -71,6 +71,11 @@ public partial class MainView : UserControl {
             var characterObj = area.AddObject();
             characterObj.AddSceneModel(model);
 
+            var shadowObj = area.AddObject();
+            shadowObj.SetPosition(100, 0, -300);
+            shadowObj.SetScale(1, 1, 0f);
+            shadowObj.AddComponent(new ShadowRenderer(model));
+
             var lightingObj = area.AddObject();
             scene.CreateDefaultLighting(lightingObj);
           } catch (Exception e) {
