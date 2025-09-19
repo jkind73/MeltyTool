@@ -255,19 +255,21 @@ public class MainViewModel : ViewModelBase {
                                 border.PointerExited +=
                                     (_, _) => bbom.IsMouseOver = false;
 
-                                border.DoubleTapped += (_, _) => {
-                                  var expanderCell =
-                                      border.GetParentExpanderCell();
-                                  expanderCell.IsExpanded =
-                                      !expanderCell.IsExpanded;
-                                };
+                                if (bucketPanel != null) {
+                                  border.DoubleTapped += (_, _) => {
+                                    var expanderCell =
+                                        border.GetParentExpanderCell();
+                                    expanderCell.IsExpanded =
+                                        !expanderCell.IsExpanded;
+                                  };
 
-                                bucketPanel.Tapped += (_, _) => {
-                                  var expanderCell =
-                                      border.GetParentExpanderCell();
-                                  expanderCell.IsExpanded =
-                                      !expanderCell.IsExpanded;
-                                };
+                                  bucketPanel.Tapped += (_, _) => {
+                                    var expanderCell =
+                                        border.GetParentExpanderCell();
+                                    expanderCell.IsExpanded =
+                                        !expanderCell.IsExpanded;
+                                  };
+                                }
                               }
                             }
 
