@@ -48,8 +48,17 @@
               </VisualBrush.Visual>
             </VisualBrush>
           </Border.Background>
-				</Border>
+        </Border>
 
+        <Image Source="/Assets/file_select/gradient_dark.png"
+               Stretch="Fill"
+               BlendMode="Multiply"
+               Opacity=".5" />
+
+        <Image Source="/Assets/file_select/gradient_light.png"
+               Stretch="Fill"
+               BlendMode="ColorDodge"
+               Opacity=".9" />
       </Grid>
 
       <Border Padding="4">
