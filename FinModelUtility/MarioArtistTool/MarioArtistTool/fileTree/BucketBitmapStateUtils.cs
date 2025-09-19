@@ -16,6 +16,14 @@ public enum BucketBitmapState {
   WAVE_2_OUT,
   WAVE_1_OUT,
   WAVING,
+  OPEN_1,
+  OPEN_2,
+  OPEN_3,
+  OPEN_4,
+  OPEN_5,
+  OPEN_6,
+  OPEN_7,
+  OPEN,
 }
 
 public static class BucketBitmapStateExtensions {
@@ -29,6 +37,16 @@ public static class BucketBitmapStateExtensions {
                 or BucketBitmapState.WAVE_2_OUT
                 or BucketBitmapState.WAVE_1_OUT
                 or BucketBitmapState.WAVING;
+
+  public static bool IsOpen(this BucketBitmapState state)
+    => state is BucketBitmapState.OPEN_1
+                or BucketBitmapState.OPEN_2
+                or BucketBitmapState.OPEN_3
+                or BucketBitmapState.OPEN_4
+                or BucketBitmapState.OPEN_5
+                or BucketBitmapState.OPEN_6
+                or BucketBitmapState.OPEN_7
+                or BucketBitmapState.OPEN;
 }
 
 public static class BucketBitmapStateUtils {
@@ -54,6 +72,31 @@ public static class BucketBitmapStateUtils {
       return false;
     }
 
+    // Opening
+    if (to == BucketBitmapState.OPEN) {
+      to = BucketBitmapState.OPEN_7;
+    }
+
+    if (from.IsOpen() && to.IsOpen()) {
+      next = from + Math.Sign(to - from);
+      return true;
+    }
+
+    if (from.IsOpen()) {
+      if (from == BucketBitmapState.OPEN_1) {
+        next = BucketBitmapState.IDLE;
+      } else {
+        next = from - 1;
+      }
+
+      return true;
+    }
+
+    if (from == BucketBitmapState.IDLE && to.IsOpen()) {
+      next = BucketBitmapState.OPEN_1;
+      return true;
+    }
+
     // Continuously waving
     if (from.IsWaving() && to.IsWaving()) {
       if (from == BucketBitmapState.WAVE_1_OUT) {
@@ -77,14 +120,8 @@ public static class BucketBitmapStateUtils {
       return true;
     }
 
-    if (to.IsWaving()) {
-      if (from is BucketBitmapState.IDLE) {
-        next = BucketBitmapState.WAVE_1_IN;
-      } else {
-        // TODO: Handle returning back to idle
-        next = from + 1;
-      }
-
+    if (from == BucketBitmapState.IDLE && to.IsWaving()) {
+      next = BucketBitmapState.WAVE_1_IN;
       return true;
     }
 

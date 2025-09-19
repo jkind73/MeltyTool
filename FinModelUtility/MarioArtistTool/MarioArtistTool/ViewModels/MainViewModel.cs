@@ -259,14 +259,14 @@ public class MainViewModel : ViewModelBase {
                                   border.DoubleTapped += (_, _) => {
                                     var expanderCell =
                                         border.GetParentExpanderCell();
-                                    expanderCell.IsExpanded =
+                                    bbom.IsOpen = expanderCell.IsExpanded =
                                         !expanderCell.IsExpanded;
                                   };
 
                                   bucketPanel.Tapped += (_, _) => {
                                     var expanderCell =
                                         border.GetParentExpanderCell();
-                                    expanderCell.IsExpanded =
+                                    bbom.IsOpen = expanderCell.IsExpanded =
                                         !expanderCell.IsExpanded;
                                   };
                                 }

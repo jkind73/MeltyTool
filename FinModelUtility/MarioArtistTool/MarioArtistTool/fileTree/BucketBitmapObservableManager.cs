@@ -24,6 +24,27 @@ public class BucketBitmapObservableManager {
   private static readonly Bitmap WAVE_4_IMAGE_
       = AssetLoaderUtil.LoadBitmap("bucket/wave_4.png");
 
+  private static readonly Bitmap OPEN_1_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_1.png");
+
+  private static readonly Bitmap OPEN_2_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_2.png");
+
+  private static readonly Bitmap OPEN_3_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_3.png");
+
+  private static readonly Bitmap OPEN_4_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_4.png");
+
+  private static readonly Bitmap OPEN_5_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_5.png");
+
+  private static readonly Bitmap OPEN_6_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_6.png");
+
+  private static readonly Bitmap OPEN_7_IMAGE_
+      = AssetLoaderUtil.LoadBitmap("bucket/open_7.png");
+
   private static readonly Bitmap HAT_IMAGE_
       = AssetLoaderUtil.LoadBitmap("bucket/hat.png");
 
@@ -66,17 +87,19 @@ public class BucketBitmapObservableManager {
 
     BucketBitmapState to = BucketBitmapState.IDLE;
 
-    if (this.IsOpen) { }
-
     if (this.IsMouseOver) {
       to = BucketBitmapState.WAVING;
     }
 
+    if (this.IsOpen) {
+      to = BucketBitmapState.OPEN;
+    }
+
     Task.Run(async () => {
       await foreach (var next in BucketBitmapStateUtils.GetPath(
-                   from,
-                   to,
-                   newCancellationTokenSource.Token)) {
+                         from,
+                         to,
+                         newCancellationTokenSource.Token)) {
         this.CurrentState = next;
         var nextBucketImage = next switch {
             BucketBitmapState.IDLE => IDLE_IMAGE_,
@@ -88,9 +111,19 @@ public class BucketBitmapObservableManager {
                 => WAVE_3_IMAGE_,
             BucketBitmapState.WAVE_4_IN or BucketBitmapState.WAVE_4_OUT
                 => WAVE_4_IMAGE_,
+            BucketBitmapState.OPEN_1 => OPEN_1_IMAGE_,
+            BucketBitmapState.OPEN_2 => OPEN_2_IMAGE_,
+            BucketBitmapState.OPEN_3 => OPEN_3_IMAGE_,
+            BucketBitmapState.OPEN_4 => OPEN_4_IMAGE_,
+            BucketBitmapState.OPEN_5 => OPEN_5_IMAGE_,
+            BucketBitmapState.OPEN_6 => OPEN_6_IMAGE_,
+            BucketBitmapState.OPEN_7 => OPEN_7_IMAGE_,
         };
 
         this.BucketImage.OnNext(nextBucketImage);
+
+        var hasHat = !next.IsOpen();
+        this.HatImage.OnNext(hasHat ? HAT_IMAGE_ : null);
       }
     });
   }
