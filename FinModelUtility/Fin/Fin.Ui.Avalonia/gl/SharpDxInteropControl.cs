@@ -36,6 +36,9 @@ public abstract class SharpDxInteropControl : Control {
   private bool updateQueued_;
   private bool initialized_;
 
+  private uint textureId_;
+  private int fboId_;
+
   public event Action? OnInit;
 
   protected abstract void InitGl();
@@ -110,6 +113,9 @@ public abstract class SharpDxInteropControl : Control {
     this.InitGl();
     this.OnInit?.Invoke();
 
+    this.textureId_ = (uint) GL.GenTexture();
+    this.fboId_ = GL.GenFramebuffer();
+    
     this.QueueNextFrame_();
   }
 
@@ -218,12 +224,10 @@ public abstract class SharpDxInteropControl : Control {
         throw new Exception("DXOpenDeviceNV failed");
       }
 
-      GL.GenTextures(1, out uint glName);
-
       var hCfb = Wgl.DXRegisterObjectNV(
           hDevice,
           image.Texture.NativePointer, // wrong?
-          glName,
+          this.textureId_,
           (int) TextureTarget2d.Texture2D,
           WGL_NV_DX_interop.AccessReadWrite
       );
@@ -237,12 +241,11 @@ public abstract class SharpDxInteropControl : Control {
         throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
       }
 
-      var framebufferName = GL.GenFramebuffer();
-      GL.BindFramebuffer(FramebufferTarget.Framebuffer, framebufferName);
+      GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
       GL.FramebufferTexture(
           FramebufferTarget.Framebuffer,
           FramebufferAttachment.ColorAttachment0,
-          glName,
+          this.textureId_,
           0
       );
       GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
