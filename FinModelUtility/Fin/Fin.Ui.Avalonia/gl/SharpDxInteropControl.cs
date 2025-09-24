@@ -263,9 +263,6 @@ public abstract class SharpDxInteropControl : Control {
 
       Wgl.DXUnregisterObjectNV(hDevice, hCfb);
       Wgl.DXCloseDeviceNV(hDevice);
-
-      this.openTkWindow_.Context.MakeNoneCurrent();
-      this.context_!.Flush();
     }
   }
 
