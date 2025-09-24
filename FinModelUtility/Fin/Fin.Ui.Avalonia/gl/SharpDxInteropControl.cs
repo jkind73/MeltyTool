@@ -92,6 +92,21 @@ public abstract class SharpDxInteropControl : Control {
     GL.LoadBindings(bindingsContext);
     
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
+
+    IntPtr hDc = wglGetCurrentDC();
+    if (hDc == IntPtr.Zero)
+      throw new InvalidOperationException(
+          "No current hDC. Make sure OpenGL context is current."
+      );
+    string[] extensions = Wgl
+                          .Arb.GetExtensionsString(hDc)
+                          .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+    bool hasInterop = extensions.Contains("WGL_NV_DX_interop");
+    if (!hasInterop)
+      throw new PlatformNotSupportedException(
+          "NV_DX_interop not available on this device."
+      );
+
     this.InitGl();
     this.OnInit?.Invoke();
 
@@ -198,22 +213,7 @@ public abstract class SharpDxInteropControl : Control {
 
       GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
-      IntPtr hDc = wglGetCurrentDC();
-      if (hDc == IntPtr.Zero)
-        throw new InvalidOperationException(
-            "No current hDC. Make sure OpenGL context is current."
-        );
-      string[] extensions = Wgl
-                            .Arb.GetExtensionsString(hDc)
-                            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
-      bool hasInterop = extensions.Contains("WGL_NV_DX_interop");
-      if (!hasInterop)
-        throw new PlatformNotSupportedException(
-            "NV_DX_interop not available on this device."
-        );
-
       var hDevice = Wgl.DXOpenDeviceNV(this.device_.NativePointer);
-
       if (hDevice == IntPtr.Zero) {
         throw new Exception("DXOpenDeviceNV failed");
       }
