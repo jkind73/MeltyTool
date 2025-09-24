@@ -11,6 +11,8 @@ using Avalonia.Platform;
 using Avalonia.Rendering;
 using Avalonia.Rendering.Composition;
 
+using fin.ui.rendering.gl;
+
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
@@ -20,7 +22,6 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
-using SharpDX.Mathematics.Interop;
 
 namespace fin.ui.avalonia.gl;
 
@@ -28,18 +29,23 @@ namespace fin.ui.avalonia.gl;
 ///   Shamelessly stolen from:
 ///   https://github.com/Dragorn421/DragoStuff/blob/aa1ac3434f2701739570adf77377c29e1e3171c1/SharpDXInteropControl.cs
 /// </summary>
-public class SharpDxInteropControl : Control {
+public abstract class SharpDxInteropControl : Control {
   private CompositionSurfaceVisual? visual_;
   private Compositor? compositor_;
   private string info_ = string.Empty;
   private bool updateQueued_;
   private bool initialized_;
 
+  public event Action? OnInit;
+
+  protected abstract void InitGl();
+  protected abstract void RenderGl();
+  protected abstract void TeardownGl();
+
   protected CompositionDrawingSurface? Surface { get; private set; }
 
   public SharpDxInteropControl() {
     this.SizeChanged += (sender, e) => {
-      Console.WriteLine("SizeChanged");
       this.QueueNextFrame_();
     };
   }
@@ -78,9 +84,17 @@ public class SharpDxInteropControl : Control {
           false, "Compositor doesn't support interop for the current backend");
     else
       (res, info) = this.InitializeGraphicsResources(this.Surface, interop);
-    Console.WriteLine(info);
     this.info_ = info;
     this.initialized_ = res;
+    
+    var bindingsContext = new GLFWBindingsContext();
+    Wgl.LoadBindings(bindingsContext);
+    GL.LoadBindings(bindingsContext);
+    
+    GlUtil.SwitchContext(this.openTkWindow_!.Context);
+    this.InitGl();
+    this.OnInit?.Invoke();
+
     this.QueueNextFrame_();
   }
 
@@ -100,6 +114,8 @@ public class SharpDxInteropControl : Control {
     this.visual_!.Size = new(this.Bounds.Width, this.Bounds.Height);
     var size = PixelSize.FromSize(this.Bounds.Size, root.RenderScaling);
     this.RenderFrame(size);
+
+    this.QueueNextFrame_();
   }
 
   private Device? device_;
@@ -154,8 +170,6 @@ public class SharpDxInteropControl : Control {
   }
 
   protected void FreeGraphicsResources() {
-    Console.WriteLine("FreeGraphicsResources");
-
     if (this.swapchain_ is not null) {
       this.swapchain_.DisposeAsync().GetAwaiter().GetResult();
       this.swapchain_ = null;
@@ -181,35 +195,22 @@ public class SharpDxInteropControl : Control {
 
     using (this.swapchain_!.BeginDraw(pixelSize, out var image)) {
       this.device_!.ImmediateContext.OutputMerger.SetTargets(image.RenderTargetView);
-      var context = this.device_.ImmediateContext;
 
-      // Clear views
-      context.ClearRenderTargetView(image.RenderTargetView,
-                                    new RawColor4(1, 0, 0, 1));
-
-      this.openTkWindow_!.Context.MakeCurrent();
-
-      GL.DebugMessageCallback(this.MyGlDebugMessageCallback_, IntPtr.Zero);
-
-      Wgl.LoadBindings(new GLFWBindingsContext());
+      GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
       IntPtr hDc = wglGetCurrentDC();
       if (hDc == IntPtr.Zero)
         throw new InvalidOperationException(
             "No current hDC. Make sure OpenGL context is current."
         );
-      Console.WriteLine(Wgl.Arb.GetExtensionsString(hDc));
       string[] extensions = Wgl
                             .Arb.GetExtensionsString(hDc)
                             .Split(' ', StringSplitOptions.RemoveEmptyEntries);
       bool hasInterop = extensions.Contains("WGL_NV_DX_interop");
-      Console.WriteLine($"NV_DX_interop supported? {hasInterop}");
       if (!hasInterop)
         throw new PlatformNotSupportedException(
             "NV_DX_interop not available on this device."
         );
-
-      Console.WriteLine("DXOpenDeviceNV");
 
       var hDevice = Wgl.DXOpenDeviceNV(this.device_.NativePointer);
 
@@ -250,9 +251,7 @@ public class SharpDxInteropControl : Control {
         throw new Exception($"incomplete framebuffer: {fbStatus}");
       }
 
-      GL.Viewport(0, 0, 100, 100); // TODO
-      GL.ClearColor(0, 1, 0, 1);
-      GL.Clear(ClearBufferMask.ColorBufferBit);
+      this.RenderGl();
 
       var unlockResult = Wgl.DXUnlockObjectsNV(hDevice, 1, [hCfb]);
       if (!unlockResult) {
@@ -260,11 +259,9 @@ public class SharpDxInteropControl : Control {
       }
 
       Wgl.DXUnregisterObjectNV(hDevice, hCfb);
-
       Wgl.DXCloseDeviceNV(hDevice);
 
       this.openTkWindow_.Context.MakeNoneCurrent();
-
       this.context_!.Flush();
     }
   }
@@ -272,21 +269,7 @@ public class SharpDxInteropControl : Control {
   [DllImport("Kernel32.dll")]
   public static extern int GetLastError();
 
-  private void MyGlDebugMessageCallback_(
-      DebugSource source,
-      DebugType type,
-      int id,
-      DebugSeverity severity,
-      int length,
-      IntPtr messagePtr,
-      IntPtr userParam
-  ) {
-    string message = Marshal.PtrToStringAnsi(messagePtr, length);
-    Console.WriteLine($"{source} {type} {id} {severity} {message}");
-  }
-
   private void Resize_(PixelSize size) {
-    Console.WriteLine($"Resize {size.Width}x{size.Height}");
     if (this.device_ is null)
       return;
 
