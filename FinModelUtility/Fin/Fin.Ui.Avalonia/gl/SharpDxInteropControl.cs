@@ -37,6 +37,7 @@ public abstract class SharpDxInteropControl : Control {
   private bool initialized_;
 
   private IntPtr hDevice_;
+  private nint[] hCfbs_ = new nint[1];
   private uint textureId_;
   private int fboId_;
 
@@ -121,6 +122,9 @@ public abstract class SharpDxInteropControl : Control {
 
     this.textureId_ = (uint) GL.GenTexture();
     this.fboId_ = GL.GenFramebuffer();
+
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
     
     this.QueueNextFrame_();
   }
@@ -239,7 +243,9 @@ public abstract class SharpDxInteropControl : Control {
         throw new Exception("DXRegisterObjectNV failed");
       }
 
-      var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, [hCfb]);
+      this.hCfbs_[0] = hCfb;
+
+      var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, this.hCfbs_);
       if (!lockResult) {
         throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
       }
@@ -251,7 +257,7 @@ public abstract class SharpDxInteropControl : Control {
           this.textureId_,
           0
       );
-      GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+
       var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
       if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
         throw new Exception($"incomplete framebuffer: {fbStatus}");
@@ -259,7 +265,7 @@ public abstract class SharpDxInteropControl : Control {
 
       this.RenderGl();
 
-      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, [hCfb]);
+      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
       if (!unlockResult) {
         throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
       }
