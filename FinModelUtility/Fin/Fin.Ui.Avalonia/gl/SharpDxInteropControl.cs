@@ -36,6 +36,7 @@ public abstract class SharpDxInteropControl : Control {
   private bool updateQueued_;
   private bool initialized_;
 
+  private IntPtr hDevice_;
   private uint textureId_;
   private int fboId_;
 
@@ -112,6 +113,11 @@ public abstract class SharpDxInteropControl : Control {
 
     this.InitGl();
     this.OnInit?.Invoke();
+
+    this.hDevice_ = Wgl.DXOpenDeviceNV(this.device_.NativePointer);
+    if (this.hDevice_ == IntPtr.Zero) {
+      throw new Exception("DXOpenDeviceNV failed");
+    }
 
     this.textureId_ = (uint) GL.GenTexture();
     this.fboId_ = GL.GenFramebuffer();
@@ -196,6 +202,8 @@ public abstract class SharpDxInteropControl : Control {
       this.swapchain_ = null;
     }
 
+    Wgl.DXCloseDeviceNV(this.hDevice_);
+
     Utilities.Dispose(ref this.context_);
     Utilities.Dispose(ref this.device_);
 
@@ -219,13 +227,8 @@ public abstract class SharpDxInteropControl : Control {
 
       GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
-      var hDevice = Wgl.DXOpenDeviceNV(this.device_.NativePointer);
-      if (hDevice == IntPtr.Zero) {
-        throw new Exception("DXOpenDeviceNV failed");
-      }
-
       var hCfb = Wgl.DXRegisterObjectNV(
-          hDevice,
+          this.hDevice_,
           image.Texture.NativePointer, // wrong?
           this.textureId_,
           (int) TextureTarget2d.Texture2D,
@@ -236,7 +239,7 @@ public abstract class SharpDxInteropControl : Control {
         throw new Exception("DXRegisterObjectNV failed");
       }
 
-      var lockResult = Wgl.DXLockObjectsNV(hDevice, 1, [hCfb]);
+      var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, [hCfb]);
       if (!lockResult) {
         throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
       }
@@ -256,13 +259,12 @@ public abstract class SharpDxInteropControl : Control {
 
       this.RenderGl();
 
-      var unlockResult = Wgl.DXUnlockObjectsNV(hDevice, 1, [hCfb]);
+      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, [hCfb]);
       if (!unlockResult) {
         throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
       }
 
-      Wgl.DXUnregisterObjectNV(hDevice, hCfb);
-      Wgl.DXCloseDeviceNV(hDevice);
+      Wgl.DXUnregisterObjectNV(this.hDevice_, hCfb);
     }
   }
 
