@@ -5,7 +5,7 @@ using fin.data.dictionaries;
 
 using schema.binary;
 using schema.binary.attributes;
-using schema.readOnly;
+using readOnly;
 
 namespace fin.io;
 

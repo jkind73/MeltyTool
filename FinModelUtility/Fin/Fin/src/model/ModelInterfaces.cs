@@ -1,6 +1,6 @@
 ﻿using fin.importers;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

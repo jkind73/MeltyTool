@@ -12,7 +12,7 @@ using fin.language.equations.fixedFunction;
 using fin.shaders.glsl;
 using fin.image.util;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

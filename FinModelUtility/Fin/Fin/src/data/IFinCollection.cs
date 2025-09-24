@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.data;
 

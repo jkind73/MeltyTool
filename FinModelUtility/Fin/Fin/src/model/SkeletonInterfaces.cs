@@ -4,7 +4,7 @@ using System.Numerics;
 using fin.data.indexable;
 using fin.math.transform;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

@@ -3,7 +3,7 @@ using fin.data.indexable;
 using fin.picross.moves;
 using fin.util.asserts;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.picross.solver;
 

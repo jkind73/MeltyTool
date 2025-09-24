@@ -8,7 +8,7 @@ using fin.math;
 using fin.model;
 using fin.model.util;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.scene;
 

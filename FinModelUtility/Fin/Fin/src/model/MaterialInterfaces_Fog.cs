@@ -1,6 +1,6 @@
 ﻿using fin.color;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-using schema.readOnly;
+using readOnly;
 
 using SixLabors.ImageSharp.PixelFormats;
 

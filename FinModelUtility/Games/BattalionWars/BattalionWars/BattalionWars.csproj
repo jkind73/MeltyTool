@@ -12,9 +12,4 @@
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Gx\Gx\Gx.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="schema" Version="0.6.13" />
-  </ItemGroup>
-
 </Project>

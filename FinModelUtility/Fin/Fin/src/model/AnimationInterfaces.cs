@@ -7,7 +7,7 @@ using fin.animation.types.quaternion;
 using fin.animation.types.vector3;
 using fin.data.indexable;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

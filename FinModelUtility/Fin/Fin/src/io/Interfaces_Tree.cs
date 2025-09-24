@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using fin.util.types;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.io;
 // TODO: Come up with a better name for these "tree" interfaces?

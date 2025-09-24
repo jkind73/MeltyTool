@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.io;
 

@@ -5,7 +5,7 @@ using fin.color;
 using fin.data.indexable;
 using fin.math.xyz;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

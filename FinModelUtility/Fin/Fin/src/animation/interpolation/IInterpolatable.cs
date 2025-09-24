@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using fin.animation.keyframes;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.animation.interpolation;
 

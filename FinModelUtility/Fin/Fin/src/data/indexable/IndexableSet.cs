@@ -4,7 +4,7 @@ using System.Linq;
 
 using fin.data.sets;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.data.indexable;
 

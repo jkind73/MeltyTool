@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using fin.util.asserts;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.data.dictionaries;
 

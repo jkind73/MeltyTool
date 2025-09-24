@@ -9,7 +9,7 @@ using fin.io.bundles;
 using fin.model;
 using fin.util.types;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.scene;
 

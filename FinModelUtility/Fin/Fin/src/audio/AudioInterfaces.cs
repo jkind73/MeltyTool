@@ -7,7 +7,7 @@ using fin.importers;
 using fin.io;
 using fin.io.bundles;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.audio;
 // Playback types

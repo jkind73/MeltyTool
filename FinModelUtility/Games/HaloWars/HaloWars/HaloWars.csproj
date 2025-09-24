@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="schema" Version="0.6.13" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
     <ProjectReference Include="..\..\..\Libraries\Granny3d\Granny3d.csproj" />
     <ProjectReference Include="..\KSoft\KSoft.Phoenix\KSoft.Phoenix.csproj" />

@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="schema" Version="0.6.13" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\Fin\Fin.Picross\Fin.Picross.csproj" />
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
   </ItemGroup>

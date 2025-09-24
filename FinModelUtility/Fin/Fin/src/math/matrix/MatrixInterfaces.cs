@@ -1,6 +1,6 @@
 ﻿using System;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.math.matrix;
 // The type parameters on these matrices are kind of janky, but they allow us

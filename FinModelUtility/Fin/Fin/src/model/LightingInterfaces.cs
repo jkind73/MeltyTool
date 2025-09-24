@@ -4,7 +4,7 @@ using System.Numerics;
 using fin.color;
 using fin.math.xyz;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

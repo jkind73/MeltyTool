@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.math.transform;
 

@@ -2,7 +2,7 @@
 
 using fin.math.xy;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

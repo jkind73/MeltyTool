@@ -1,6 +1,6 @@
 ﻿using fin.data;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.picross;
 

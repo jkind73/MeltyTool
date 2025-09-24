@@ -6,7 +6,7 @@ using fin.data.indexable;
 using fin.data.sets;
 using fin.math.matrix.four;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.model;
 

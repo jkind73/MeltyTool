@@ -3,7 +3,7 @@
 using fin.math.matrix.four;
 using fin.math.rotations;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.math.transform;
 

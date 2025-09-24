@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.data.dictionaries;
 

@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 using fin.util.asserts;
 
-using schema.readOnly;
+using readOnly;
 
 namespace fin.data;
 
