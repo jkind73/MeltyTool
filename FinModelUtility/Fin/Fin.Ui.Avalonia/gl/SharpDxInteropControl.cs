@@ -1,7 +1,6 @@
 ﻿// Copied and adapted from https://github.com/AvaloniaUI/Avalonia/blob/release/11.3.0/samples/GpuInterop
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -15,7 +14,6 @@ using Avalonia.Rendering.Composition;
 
 using fin.ui.rendering.gl;
 
-using OpenTK.Graphics.OpenGL;
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
 using OpenTK.Windowing.Desktop;
@@ -24,6 +22,21 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+
+using DrawBufferMode = OpenTK.Graphics.OpenGL.DrawBufferMode;
+using FramebufferAttachment = OpenTK.Graphics.OpenGL.FramebufferAttachment;
+using FramebufferErrorCode = OpenTK.Graphics.OpenGL.FramebufferErrorCode;
+using FramebufferTarget = OpenTK.Graphics.OpenGL.FramebufferTarget;
+using GL = OpenTK.Graphics.OpenGL.GL;
+using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
+using PixelInternalFormat = OpenTK.Graphics.OpenGL.PixelInternalFormat;
+using PixelType = OpenTK.Graphics.OpenGL.PixelType;
+using TextureMagFilter = OpenTK.Graphics.OpenGL.TextureMagFilter;
+using TextureMinFilter = OpenTK.Graphics.OpenGL.TextureMinFilter;
+using TextureParameterName = OpenTK.Graphics.OpenGL.TextureParameterName;
+using TextureTarget = OpenTK.Graphics.OpenGL.TextureTarget;
+using TextureTarget2d = OpenTK.Graphics.OpenGL.TextureTarget2d;
+using TextureWrapMode = OpenTK.Graphics.OpenGL.TextureWrapMode;
 
 namespace fin.ui.avalonia.gl;
 
@@ -40,8 +53,10 @@ public class SharpDxInteropControl : Control {
 
   private IntPtr hDevice_;
   private nint[] hCfbs_ = new nint[1];
-  private uint textureId_;
+  
   private int fboId_;
+  private uint colorTextureId_;
+  private uint depthTextureId_;
 
   public event Action? OnInit;
 
@@ -149,8 +164,9 @@ public class SharpDxInteropControl : Control {
       throw new Exception("DXOpenDeviceNV failed");
     }
 
-    this.textureId_ = (uint) GL.GenTexture();
     this.fboId_ = GL.GenFramebuffer();
+    this.colorTextureId_ = (uint) GL.GenTexture();
+    this.depthTextureId_ = (uint) GL.GenTexture();
 
     this.QueueNextFrame_();
   }
@@ -240,6 +256,11 @@ public class SharpDxInteropControl : Control {
     this.openTkWindow_?.Dispose();
     this.openTkWindow_ = null;
 
+    // TODO: Free these on destroy
+    this.fboId_ = GL.GenFramebuffer();
+    this.colorTextureId_ = (uint) GL.GenTexture();
+    this.depthTextureId_ = (uint) GL.GenTexture();
+
     this.teardownGl_();
   }
 
@@ -300,7 +321,7 @@ public class SharpDxInteropControl : Control {
     var hCfb = Wgl.DXRegisterObjectNV(
         this.hDevice_,
         this.currentImage_.Texture.NativePointer, // wrong?
-        this.textureId_,
+        this.colorTextureId_,
         (int) TextureTarget2d.Texture2D,
         WGL_NV_DX_interop.AccessReadWrite
     );
@@ -316,14 +337,47 @@ public class SharpDxInteropControl : Control {
       throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
     }
 
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
+    GL.TexImage2D(TextureTarget.Texture2D,
+                  0,
+                  PixelInternalFormat.DepthComponent32f,
+                  size.Width,
+                  size.Height,
+                  0,
+                  PixelFormat.DepthComponent,
+                  PixelType.UnsignedInt,
+                  IntPtr.Zero);
+    // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureMinFilter,
+                    (int) TextureMinFilter.Linear);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureMagFilter,
+                    (int) TextureMagFilter.Linear);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureWrapS,
+                    (int) TextureWrapMode.ClampToBorder);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureWrapT,
+                    (int) TextureWrapMode.ClampToBorder);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GL.FramebufferTexture(
+    GL.FramebufferTexture2D(
         FramebufferTarget.Framebuffer,
         FramebufferAttachment.ColorAttachment0,
-        this.textureId_,
+        TextureTarget.Texture2D,
+        this.colorTextureId_,
         0
     );
+    GL.FramebufferTexture2D(
+        FramebufferTarget.Framebuffer,
+        FramebufferAttachment.DepthAttachment,
+        TextureTarget.Texture2D,
+        this.depthTextureId_,
+        0);
     GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+    GlUtil.AssertNoErrorsWhenDebugging();
 
     var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
     if (fbStatus != FramebufferErrorCode.FramebufferComplete) {

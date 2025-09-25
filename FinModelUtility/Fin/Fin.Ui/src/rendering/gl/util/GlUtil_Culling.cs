@@ -28,9 +28,9 @@ public static partial class GlUtil {
       } else {
         GL.Enable(EnableCap.CullFace);
         GL.CullFace(cullingMode switch {
-            CullingMode.SHOW_FRONT_ONLY => CullFaceMode.Back,
-            CullingMode.SHOW_BACK_ONLY  => CullFaceMode.Front,
-            CullingMode.SHOW_NEITHER    => CullFaceMode.FrontAndBack,
+            CullingMode.SHOW_FRONT_ONLY => TriangleFace.Back,
+            CullingMode.SHOW_BACK_ONLY  => TriangleFace.Front,
+            CullingMode.SHOW_NEITHER    => TriangleFace.FrontAndBack,
             _ => throw new ArgumentOutOfRangeException(
                 nameof(cullingMode), cullingMode, null)
         });

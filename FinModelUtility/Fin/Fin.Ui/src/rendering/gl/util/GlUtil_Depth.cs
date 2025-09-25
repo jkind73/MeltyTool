@@ -36,8 +36,8 @@ public static partial class GlUtil {
 
     if (depthMode.CheckFlag(DepthMode.READ) &&
         depthCompareType != DepthCompareType.Always) {
-      GL.DepthFunc(ConvertFinDepthCompareTypeToGl_(depthCompareType));
       GL.Enable(EnableCap.DepthTest);
+      GL.DepthFunc(ConvertFinDepthCompareTypeToGl_(depthCompareType));
     } else {
       GL.Disable(EnableCap.DepthTest);
     }
