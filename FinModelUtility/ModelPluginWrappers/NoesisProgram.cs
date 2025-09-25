@@ -122,7 +122,7 @@ namespace ModelPluginWrappers {
     }
 
     public static INoeBitStream NoeBitStream(byte[]? data = null) {
-      return new NoeBitStreamReader(data);
+      return new NoeBitStreamReader(data ?? []);
     }
 
     public static void Main() {
