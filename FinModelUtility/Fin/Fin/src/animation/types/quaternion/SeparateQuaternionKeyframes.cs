@@ -19,7 +19,7 @@ public sealed class SeparateQuaternionKeyframes<TKeyframe>(
   public SeparateQuaternionKeyframes(
       ISharedInterpolationConfig sharedConfig,
       IKeyframeInterpolator<TKeyframe, float> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = default)
+      IndividualInterpolationConfig<float> individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,
@@ -94,7 +94,7 @@ public sealed class SeparateQuaternionKeyframes<TKeyframe>(
   public bool TryGetSimpleKeyframes(
       out IReadOnlyList<(float frame, Quaternion value)> keyframes,
       out IReadOnlyList<(Quaternion tangentIn, Quaternion tangentOut)>? tangentKeyframes) {
-    keyframes = default;
+    keyframes = null;
     tangentKeyframes = null;
     return false;
   }

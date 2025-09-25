@@ -41,8 +41,8 @@ public static class KeyframesUtil {
     // Short-circuits early if there are no frames.
     if (impl.Count == 0) {
       keyframe = default;
-      keyframeIndex = default;
-      normalizedFrame = default;
+      keyframeIndex = 0;
+      normalizedFrame = 0;
       return false;
     }
 
@@ -71,8 +71,8 @@ public static class KeyframesUtil {
         // If not looping, short-circuits early.
         if (!looping) {
           keyframe = default;
-          keyframeIndex = default;
-          normalizedFrame = default;
+          keyframeIndex = 0;
+          normalizedFrame = 0;
           return false;
         }
 

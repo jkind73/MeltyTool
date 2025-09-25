@@ -13,7 +13,7 @@ public class ThreeDsFileHierarchyExtractor {
                                    out IFileHierarchy fileHierarchy,
                                    IArchiveExtractor.ArchiveFileProcessor? archiveFileNameProcessor = null) {
     if (!TryToFindRom_(gameName, out var romFile)) {
-      fileHierarchy = default;
+      fileHierarchy = null;
       return false;
     }
 

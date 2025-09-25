@@ -14,7 +14,7 @@ public static class ListDictionaryExtensions {
       return true;
     }
 
-    list = default;
+    list = null;
     return false;
   }
 
@@ -27,7 +27,7 @@ public static class ListDictionaryExtensions {
       return true;
     }
 
-    list = default;
+    list = null;
     return false;
   }
 

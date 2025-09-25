@@ -31,7 +31,7 @@ public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
   public SeparateEulerRadiansKeyframes(
       ISharedInterpolationConfig sharedConfig,
       IRadiansKeyframeInterpolator<TKeyframe> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = default)
+      IndividualInterpolationConfig<float> individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,
@@ -193,8 +193,8 @@ public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
       }
     }
 
-    fromFrameIndex = default;
-    toFrameIndex = default;
+    fromFrameIndex = 0;
+    toFrameIndex = 0;
     return false;
   }
 
@@ -278,7 +278,7 @@ public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
   public bool TryGetSimpleKeyframes(
       out IReadOnlyList<(float frame, Quaternion value)> keyframes,
       out IReadOnlyList<(Quaternion tangentIn, Quaternion tangentOut)>? tangentKeyframes) {
-    keyframes = default;
+    keyframes = null;
     tangentKeyframes = null;
     return false;
   }

@@ -60,11 +60,11 @@ public partial class VrmlParser {
   }
 
   private static TimeSensorNode ReadTimeSensorNode_(ITextReader tr) {
-    float cycleInterval = default;
+    float cycleInterval = 0;
     bool enabled = true;
     bool loop = false;
-    float startTime = default;
-    float stopTime = default;
+    float startTime = 0;
+    float stopTime = 0;
 
     ReadFields_(
         tr,

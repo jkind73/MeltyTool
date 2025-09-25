@@ -17,7 +17,7 @@ public class SeparateVector2Keyframes<TKeyframe>(
   public SeparateVector2Keyframes(
       ISharedInterpolationConfig sharedConfig,
       IKeyframeInterpolator<TKeyframe, float> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = default)
+      IndividualInterpolationConfig<float> individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,
@@ -66,7 +66,7 @@ public class SeparateVector2Keyframes<TKeyframe>(
   public bool TryGetSimpleKeyframes(
       out IReadOnlyList<(float frame, Vector2 value)> keyframes,
       out IReadOnlyList<(Vector2 tangentIn, Vector2 tangentOut)>? tangentKeyframes) {
-    keyframes = default;
+    keyframes = null;
     tangentKeyframes = null;
     return false;
   }

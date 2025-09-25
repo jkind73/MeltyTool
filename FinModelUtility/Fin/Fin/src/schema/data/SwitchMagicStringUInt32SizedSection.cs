@@ -24,7 +24,7 @@ public partial class SwitchMagicStringUInt32SizedSection<T>(
   private readonly Func<string, T> createTypeHandler_ = createTypeHandler;
 
   private readonly PassThruStringMagicUInt32SizedSection<T> impl_ =
-      new(default, default!);
+      new(null, default!);
 
   [Skip]
   public int TweakReadSize {

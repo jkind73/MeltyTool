@@ -59,16 +59,16 @@ public static class TmemExtensions {
                              imageSegmentedAddress);
     tmem.GsDpSetTile(colorFormat,
                      bitsPerTexel,
-                     default,
+                     0,
                      tileDescriptorIndex,
                      TileDescriptorIndex.TX_LOADTILE,
-                     default,
+                     0,
                      wrapModeS,
-                     default,
-                     default,
+                     0,
+                     0,
                      wrapModeT,
-                     default,
-                     default);
+                     0,
+                     0);
     if (uls == 0 && ult == 0) {
       tmem.GsDpLoadBlock(0,
                          0,
@@ -86,16 +86,16 @@ public static class TmemExtensions {
 
     tmem.GsDpSetTile(colorFormat,
                      bitsPerTexel,
-                     default,
+                     0,
                      tileDescriptorIndex,
                      (TileDescriptorIndex) tileDescriptorIndex,
-                     default,
+                     0,
                      wrapModeS,
-                     default,
-                     default,
+                     0,
+                     0,
                      wrapModeT,
-                     default,
-                     default);
+                     0,
+                     0);
     tmem.GsDpSetTileSize(uls,
                          ult,
                          (TileDescriptorIndex) tileDescriptorIndex,

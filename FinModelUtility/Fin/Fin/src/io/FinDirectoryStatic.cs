@@ -100,7 +100,7 @@ public static class FinDirectoryStatic {
       return true;
     }
 
-    file = default;
+    file = null;
     return false;
   }
 

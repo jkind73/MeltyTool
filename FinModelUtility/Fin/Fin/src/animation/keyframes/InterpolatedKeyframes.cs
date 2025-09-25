@@ -127,8 +127,8 @@ public class InterpolatedKeyframes<TKeyframe, T>(
       out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes) {
     // TODO: Implement this
     if (this.impl_ is List<KeyframeWithTangents<T>>) {
-      keyframes = default;
-      tangentKeyframes = default;
+      keyframes = null;
+      tangentKeyframes = null;
       return false;
     }
 

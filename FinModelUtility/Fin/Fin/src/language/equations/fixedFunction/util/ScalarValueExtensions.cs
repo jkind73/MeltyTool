@@ -44,7 +44,7 @@ public static class ScalarValueExtensions {
       return true;
     }
 
-    constantValue = default;
+    constantValue = 0;
     return false;
   }
 }

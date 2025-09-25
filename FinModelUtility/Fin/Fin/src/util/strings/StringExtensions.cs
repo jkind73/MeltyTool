@@ -25,7 +25,7 @@ public static class StringExtensions {
       return true;
     }
 
-    trimmed = default;
+    trimmed = null;
     return false;
   }
 
@@ -43,7 +43,7 @@ public static class StringExtensions {
       return true;
     }
 
-    trimmed = default;
+    trimmed = null;
     return false;
   }
 

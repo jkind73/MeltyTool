@@ -29,8 +29,8 @@ public partial class MainView : UserControl {
       LoadingStatusService.IsLoading = true;
 
       var scene = new SceneImpl {
-          FileBundle = default,
-          Files = default
+          FileBundle = null,
+          Files = null
       };
 
       var area = scene.AddArea();

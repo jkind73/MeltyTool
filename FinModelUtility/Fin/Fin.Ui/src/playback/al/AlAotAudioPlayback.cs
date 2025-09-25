@@ -21,7 +21,7 @@ public partial class AlAudioManager {
       this.alBufferId_ = (int) newBuffer;
 
       ALFormat bufferFormat = default;
-      short[] shortBufferData = default!;
+      short[] shortBufferData = null!;
       switch (source.AudioChannelsType) {
         case AudioChannelsType.MONO: {
           bufferFormat = ALFormat.Mono16;

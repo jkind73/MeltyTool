@@ -57,7 +57,7 @@ public static class InterpolationUtil {
       return true;
     }
 
-    fromCoefficient = toCoefficient = oneCoefficient = default;
+    fromCoefficient = toCoefficient = oneCoefficient = 0;
     return false;
   }
 }

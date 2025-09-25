@@ -72,7 +72,7 @@ public sealed class StairStepKeyframes<T>(
   public bool TryGetSimpleKeyframes(
       out IReadOnlyList<(float frame, T value)> keyframes,
       out IReadOnlyList<(T tangentIn, T tangentOut)>? tangentKeyframes) {
-    keyframes = default;
+    keyframes = null;
     tangentKeyframes = null;
     return false;
   }

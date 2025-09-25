@@ -111,7 +111,7 @@ public static class TextureTransformBaking {
                           .Distinct()
                           .SingleOrDefault();
     if (singleTextureTransform == null) {
-      textureTransform = default;
+      textureTransform = null;
       return false;
     }
 

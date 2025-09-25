@@ -132,7 +132,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     public IReadOnlyTreeDirectory AssertGetParent()
       => Asserts.True(this.TryGetParent(out var parent))
           ? parent
-          : default!;
+          : null!;
 
     public bool TryGetParent(out IReadOnlyTreeDirectory parent)
       => this.Instance.TryGetParent(out parent);
@@ -310,7 +310,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
         var parentDirPath
             = localPath[..(lastSubdirRange.Start.Value - 1)];
         if (!this.TryToGetExistingSubdirImpl_(parentDirPath, out parentDir)) {
-          outFile = default;
+          outFile = null;
           return false;
         }
 
@@ -326,7 +326,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
         }
       }
 
-      outFile = default;
+      outFile = null;
       return false;
     }
 
@@ -376,7 +376,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
         }
 
         if (!foundMatch) {
-          outDirectory = default;
+          outDirectory = null;
           return false;
         }
       }
@@ -389,7 +389,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
         string pathWithoutExtension,
         out IFileHierarchyFile outFile,
         params string[] fileTypes) {
-      outFile = default;
+      outFile = null;
       var subdirs = pathWithoutExtension.Split('/', '\\');
 
       IFileHierarchyDirectory parentDir;

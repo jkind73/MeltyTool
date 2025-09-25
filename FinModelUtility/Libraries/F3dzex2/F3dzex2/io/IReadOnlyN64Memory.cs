@@ -96,7 +96,7 @@ public class N64Memory(
             segmentedAddress,
             out var offset,
             out var validSegments)) {
-      possibilities = default;
+      possibilities = null;
       return false;
     }
 
@@ -190,7 +190,7 @@ public class N64Memory(
     var offsetInSegment = offset;
 
     if (!this.segments_.TryGetList(segmentIndex, out var segments)) {
-      validSegments = default;
+      validSegments = null;
       return false;
     }
 

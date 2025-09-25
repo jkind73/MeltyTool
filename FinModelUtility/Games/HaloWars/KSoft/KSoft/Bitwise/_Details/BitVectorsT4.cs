@@ -394,7 +394,7 @@ namespace KSoft.Collections
 			{
 				this.mVector = vector;
 				this.mBitIndex = TypeExtensions.kNone;
-				this.mCurrent = default(bool);
+				this.mCurrent = false;
 			}
 
 			public bool Current { get {
@@ -445,7 +445,7 @@ namespace KSoft.Collections
 				this.mStartBitIndex = startBitIndex-1;
 				this.mVector = vector;
 				this.mBitIndex = TypeExtensions.kNone;
-				this.mCurrent = default(int);
+				this.mCurrent = 0;
 			}
 
 			public int Current { get {
@@ -1074,7 +1074,7 @@ namespace KSoft.Collections
 			{
 				this.mVector = vector;
 				this.mBitIndex = TypeExtensions.kNone;
-				this.mCurrent = default(bool);
+				this.mCurrent = false;
 			}
 
 			public bool Current { get {
@@ -1125,7 +1125,7 @@ namespace KSoft.Collections
 				this.mStartBitIndex = startBitIndex-1;
 				this.mVector = vector;
 				this.mBitIndex = TypeExtensions.kNone;
-				this.mCurrent = default(int);
+				this.mCurrent = 0;
 			}
 
 			public int Current { get {

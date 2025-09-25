@@ -60,7 +60,7 @@ public static partial class FileHierarchy {
       public IReadOnlyTreeDirectory AssertGetParent()
         => Asserts.True(this.TryGetParent(out var parent))
             ? parent
-            : default!;
+            : null!;
 
       public bool TryGetParent(out IReadOnlyTreeDirectory parent)
         => this.Instance.TryGetParent(out parent);
@@ -240,7 +240,7 @@ public static partial class FileHierarchy {
           var parentDirPath
               = localPath[..(lastSubdirRange.Start.Value - 1)];
           if (!this.TryToGetExistingSubdirImpl_(parentDirPath, out parentDir)) {
-            outFile = default;
+            outFile = null;
             return false;
           }
 
@@ -256,7 +256,7 @@ public static partial class FileHierarchy {
           }
         }
 
-        outFile = default;
+        outFile = null;
         return false;
       }
 
@@ -306,7 +306,7 @@ public static partial class FileHierarchy {
           }
 
           if (!foundMatch) {
-            outDirectory = default;
+            outDirectory = null;
             return false;
           }
         }

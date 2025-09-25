@@ -19,7 +19,7 @@ public class SeparateVector3Keyframes<TKeyframe>(
   public SeparateVector3Keyframes(
       ISharedInterpolationConfig sharedConfig,
       IKeyframeInterpolator<TKeyframe, float> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = default)
+      IndividualInterpolationConfig<float> individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,
@@ -88,7 +88,7 @@ public class SeparateVector3Keyframes<TKeyframe>(
     var zAxis = this.Axes[2];
 
     if (!xAxis.HasAnyData || !yAxis.HasAnyData || !zAxis.HasAnyData) {
-      keyframes = default;
+      keyframes = null;
       tangentKeyframes = null;
       return false;
     }
@@ -98,7 +98,7 @@ public class SeparateVector3Keyframes<TKeyframe>(
     var zDefinitions = zAxis.Definitions;
     if (xDefinitions.Count != yDefinitions.Count ||
         xDefinitions.Count != zDefinitions.Count) {
-      keyframes = default;
+      keyframes = null;
       tangentKeyframes = null;
       return false;
     }
@@ -107,7 +107,7 @@ public class SeparateVector3Keyframes<TKeyframe>(
     for (var i = 0; i < length; ++i) {
       if (!xDefinitions[i].Frame.IsRoughly(yDefinitions[i].Frame) ||
           !xDefinitions[i].Frame.IsRoughly(zDefinitions[i].Frame)) {
-        keyframes = default;
+        keyframes = null;
         tangentKeyframes = null;
         return false;
       }

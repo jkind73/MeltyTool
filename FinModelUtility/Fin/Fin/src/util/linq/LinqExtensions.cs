@@ -58,7 +58,7 @@ public static class LinqExtensions {
       return true;
     }
 
-    values = default;
+    values = null;
     return false;
   }
 

@@ -11,7 +11,7 @@ public static class SpanDecompressorExtensions {
   public static bool TryToDecompress(this ISpanDecompressor decompressor,
                                      ReadOnlySpan<byte> src,
                                      out byte[] dst) {
-    dst = default;
+    dst = null;
     if (!decompressor.TryToGetLength(src, out var length)) {
       return false;
     }

@@ -30,7 +30,7 @@ public class Lz77Decompressor : BBinaryReaderToArrayDecompressor {
     }
     br.PopEndianness();
 
-    data = default;
+    data = null;
     return false;
   }
 

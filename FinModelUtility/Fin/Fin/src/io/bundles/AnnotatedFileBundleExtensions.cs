@@ -10,7 +10,7 @@ public static class AnnotatedFileBundleExtensions {
       return true;
     }
 
-    outFile = default;
+    outFile = null;
     return false;
   }
 }

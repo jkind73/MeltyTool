@@ -60,7 +60,7 @@ public readonly struct FinDirectory(string fullName) : ISystemDirectory {
       return true;
     }
 
-    parent = default;
+    parent = null;
     return false;
   }
 
@@ -118,7 +118,7 @@ public readonly struct FinDirectory(string fullName) : ISystemDirectory {
   public bool TryToGetExistingSubdir(
       ReadOnlySpan<char> path,
       out IReadOnlySystemDirectory outDirectory) {
-    outDirectory = default;
+    outDirectory = null;
     return this.TryToGetExistingSubdir(
         path,
         out Unsafe.As<IReadOnlySystemDirectory, ISystemDirectory>(
@@ -175,7 +175,7 @@ public readonly struct FinDirectory(string fullName) : ISystemDirectory {
       return true;
     }
 
-    outFile = default;
+    outFile = null;
     return false;
   }
 
@@ -189,7 +189,7 @@ public readonly struct FinDirectory(string fullName) : ISystemDirectory {
       }
     }
 
-    outFile = default;
+    outFile = null;
     return false;
   }
 

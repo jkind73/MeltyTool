@@ -10,7 +10,7 @@ namespace fin.animation.types.quaternion;
 public sealed class CombinedQuaternionKeyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, Quaternion> interpolator,
-    IndividualInterpolationConfig<Quaternion> individualConfig = default)
+    IndividualInterpolationConfig<Quaternion> individualConfig = null)
     : ICombinedQuaternionKeyframes<TKeyframe>
     where TKeyframe : IKeyframe<Quaternion> {
   private readonly InterpolatedKeyframes<TKeyframe, Quaternion> impl_

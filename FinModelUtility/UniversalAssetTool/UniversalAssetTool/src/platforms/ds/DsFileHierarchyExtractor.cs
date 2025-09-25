@@ -15,7 +15,7 @@ internal class DsFileHierarchyExtractor {
       string gameName,
       out IFileHierarchy fileHierarchy) {
     if (!this.TryToFindRom_(gameName, out var romFile)) {
-      fileHierarchy = default;
+      fileHierarchy = null;
       return false;
     }
 

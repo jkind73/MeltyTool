@@ -184,7 +184,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( char );
+				var value = '\0';
 				this.ReadCursor( ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -198,7 +198,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( bool );
+				var value = false;
 				this.ReadCursor( ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -212,7 +212,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( float );
+				var value = 0.0f;
 				this.ReadCursor( ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -226,7 +226,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( double );
+				var value = 0.0d;
 				this.ReadCursor( ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -297,7 +297,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( uint );
+				var value = 0U;
 				this.ReadCursor( ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -311,7 +311,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( int );
+				var value = 0;
 				this.ReadCursor( ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -325,7 +325,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( ulong );
+				var value = 0UL;
 				this.ReadCursor( ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -339,7 +339,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( long );
+				var value = 0L;
 				this.ReadCursor( ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -582,7 +582,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( char );
+				var value = '\0';
 				this.ReadElement(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -598,7 +598,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( bool );
+				var value = false;
 				this.ReadElement(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -614,7 +614,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( float );
+				var value = 0.0f;
 				this.ReadElement(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -630,7 +630,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( double );
+				var value = 0.0d;
 				this.ReadElement(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -711,7 +711,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( uint );
+				var value = 0U;
 				this.ReadElement(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -727,7 +727,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( int );
+				var value = 0;
 				this.ReadElement(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -743,7 +743,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( ulong );
+				var value = 0UL;
 				this.ReadElement(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -759,7 +759,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( long );
+				var value = 0L;
 				this.ReadElement(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -1080,7 +1080,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( char );
+				var value = '\0';
 				executed = this.ReadElementOpt(name, ref value );
 				if (executed)
 				{
@@ -1103,7 +1103,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( bool );
+				var value = false;
 				executed = this.ReadElementOpt(name, ref value );
 				if (executed)
 				{
@@ -1126,7 +1126,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( float );
+				var value = 0.0f;
 				executed = this.ReadElementOpt(name, ref value );
 				if (executed)
 				{
@@ -1149,7 +1149,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( double );
+				var value = 0.0d;
 				executed = this.ReadElementOpt(name, ref value );
 				if (executed)
 				{
@@ -1265,7 +1265,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( uint );
+				var value = 0U;
 				executed = this.ReadElementOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -1288,7 +1288,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( int );
+				var value = 0;
 				executed = this.ReadElementOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -1311,7 +1311,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( ulong );
+				var value = 0UL;
 				executed = this.ReadElementOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -1334,7 +1334,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( long );
+				var value = 0L;
 				executed = this.ReadElementOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -1589,7 +1589,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( char );
+				var value = '\0';
 				this.ReadAttribute(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -1605,7 +1605,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( bool );
+				var value = false;
 				this.ReadAttribute(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -1621,7 +1621,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( float );
+				var value = 0.0f;
 				this.ReadAttribute(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -1637,7 +1637,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( double );
+				var value = 0.0d;
 				this.ReadAttribute(name, ref value );
 				{
 					property.SetValue(theObj, value, null);
@@ -1718,7 +1718,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( uint );
+				var value = 0U;
 				this.ReadAttribute(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -1734,7 +1734,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( int );
+				var value = 0;
 				this.ReadAttribute(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -1750,7 +1750,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( ulong );
+				var value = 0UL;
 				this.ReadAttribute(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -1766,7 +1766,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( long );
+				var value = 0L;
 				this.ReadAttribute(name, ref value , numBase);
 				{
 					property.SetValue(theObj, value, null);
@@ -2087,7 +2087,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( char );
+				var value = '\0';
 				executed = this.ReadAttributeOpt(name, ref value );
 				if (executed)
 				{
@@ -2110,7 +2110,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( bool );
+				var value = false;
 				executed = this.ReadAttributeOpt(name, ref value );
 				if (executed)
 				{
@@ -2133,7 +2133,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( float );
+				var value = 0.0f;
 				executed = this.ReadAttributeOpt(name, ref value );
 				if (executed)
 				{
@@ -2156,7 +2156,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( double );
+				var value = 0.0d;
 				executed = this.ReadAttributeOpt(name, ref value );
 				if (executed)
 				{
@@ -2272,7 +2272,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( uint );
+				var value = 0U;
 				executed = this.ReadAttributeOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -2295,7 +2295,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( int );
+				var value = 0;
 				executed = this.ReadAttributeOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -2318,7 +2318,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( ulong );
+				var value = 0UL;
 				executed = this.ReadAttributeOpt(name, ref value , numBase);
 				if (executed)
 				{
@@ -2341,7 +2341,7 @@ namespace KSoft.IO
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
 			{
-				var value = default( long );
+				var value = 0L;
 				executed = this.ReadAttributeOpt(name, ref value , numBase);
 				if (executed)
 				{

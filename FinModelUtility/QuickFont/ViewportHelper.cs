@@ -31,7 +31,7 @@ namespace QuickFont
       ViewportHelper._currentViewport = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
     }
 
-    public static void InvalidateViewport() => ViewportHelper._currentViewport = new Viewport?();
+    public static void InvalidateViewport() => ViewportHelper._currentViewport = null;
 
     public static bool IsOrthographicProjection(ref Matrix4 mat)
     {

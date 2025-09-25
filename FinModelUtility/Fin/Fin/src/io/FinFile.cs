@@ -62,7 +62,7 @@ public readonly struct FinFile(string fullName) : ISystemFile {
       return true;
     }
 
-    parent = default;
+    parent = null;
     return false;
   }
 

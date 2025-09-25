@@ -114,7 +114,7 @@ public class KeyframeDefinitionsTests {
     impl.SetKeyframe(2, "second");
     impl.SetKeyframe(4, "third");
 
-    AssertKeyframe_(new KeyframeDefinition<string>(0, default),
+    AssertKeyframe_(new KeyframeDefinition<string>(0, null),
                     impl.GetKeyframeAtFrame(-1));
     AssertKeyframe_(new KeyframeDefinition<string>(0, "first"),
                     impl.GetKeyframeAtFrame(0));
@@ -138,7 +138,7 @@ public class KeyframeDefinitionsTests {
     impl.SetKeyframe(2, "second");
     impl.SetKeyframe(0, "first");
 
-    AssertKeyframe_(new KeyframeDefinition<string>(0, default),
+    AssertKeyframe_(new KeyframeDefinition<string>(0, null),
                     impl.GetKeyframeAtFrame(-1));
     AssertKeyframe_(new KeyframeDefinition<string>(0, "first"),
                     impl.GetKeyframeAtFrame(0));
@@ -162,7 +162,7 @@ public class KeyframeDefinitionsTests {
     impl.SetKeyframe(0, "first");
     impl.SetKeyframe(2, "second");
 
-    AssertKeyframe_(new KeyframeDefinition<string>(0, default),
+    AssertKeyframe_(new KeyframeDefinition<string>(0, null),
                     impl.GetKeyframeAtFrame(-1));
     AssertKeyframe_(new KeyframeDefinition<string>(0, "first"),
                     impl.GetKeyframeAtFrame(0));

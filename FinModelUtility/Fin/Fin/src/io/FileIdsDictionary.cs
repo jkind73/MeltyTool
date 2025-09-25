@@ -49,7 +49,7 @@ public partial class FileIdsDictionary : IFileIdsDictionary {
       return true;
     }
 
-    files = default!;
+    files = null!;
     return false;
   }
 

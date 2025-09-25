@@ -55,7 +55,7 @@ public partial class VrmlParser {
     float minFront = 1;
     float maxBack = 10;
     float maxFront = 10;
-    AudioClipNode source = default;
+    AudioClipNode source = null;
 
     ReadFields_(
         tr,

@@ -99,7 +99,7 @@ public class ColorFixedFunctionOps<TIdentifier>(
       return true;
     }
 
-    scalarValue = default;
+    scalarValue = null;
     return false;
   }
 

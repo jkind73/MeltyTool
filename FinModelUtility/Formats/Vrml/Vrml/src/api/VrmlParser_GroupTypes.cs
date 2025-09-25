@@ -14,9 +14,9 @@ public partial class VrmlParser {
       ITextReader tr,
       IDictionary<string, INode> definitions) {
     IReadOnlyList<INode> children = [];
-    string description = default;
-    IReadOnlyList<string> parameter = default;
-    string url = default;
+    string description = null;
+    IReadOnlyList<string> parameter = null;
+    string url = null;
 
     ReadFields_(
         tr,

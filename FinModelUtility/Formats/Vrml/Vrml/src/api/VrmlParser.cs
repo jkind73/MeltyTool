@@ -163,7 +163,7 @@ public partial class VrmlParser {
         }
       }
 
-      node = default;
+      node = null;
       return true;
     }
 
@@ -213,8 +213,8 @@ public partial class VrmlParser {
   private static AppearanceNode ReadAppearanceNode_(
       ITextReader tr,
       IDictionary<string, INode> definitions) {
-    IMaterialNode material = default;
-    IImageTextureNode texture = default;
+    IMaterialNode material = null;
+    IImageTextureNode texture = null;
     ITextureTransformNode? textureTransform = null;
 
     ReadFields_(
@@ -268,7 +268,7 @@ public partial class VrmlParser {
   }
 
   private static IColorNode ReadColorNode_(ITextReader tr) {
-    IReadOnlyList<Vector3> color = default;
+    IReadOnlyList<Vector3> color = null;
     ReadFields_(
         tr,
         fieldName => {
@@ -284,7 +284,7 @@ public partial class VrmlParser {
   }
 
   private static ICoordinateNode ReadCoordinateNode_(ITextReader tr) {
-    IReadOnlyList<Vector3> point = default;
+    IReadOnlyList<Vector3> point = null;
     ReadFields_(
         tr,
         fieldName => {
@@ -344,7 +344,7 @@ public partial class VrmlParser {
 
   private static IImageTextureNode ReadImageTextureNode_(
       ITextReader tr) {
-    string url = default;
+    string url = null;
     ReadFields_(
         tr,
         fieldName => {
@@ -382,7 +382,7 @@ public partial class VrmlParser {
       ITextReader tr,
       IDictionary<string, INode> definitions) {
     Vector3? center = null;
-    IReadOnlyList<IImageTextureNode> frames = default;
+    IReadOnlyList<IImageTextureNode> frames = null;
     bool? pinned = null;
     Quaternion? rotation = null;
     Vector3? scale = null;
@@ -514,7 +514,7 @@ public partial class VrmlParser {
 
   private static ITextureCoordinateNode ReadTextureCoordinateNode_(
       ITextReader tr) {
-    IReadOnlyList<Vector2> point = default;
+    IReadOnlyList<Vector2> point = null;
     ReadFields_(
         tr,
         fieldName => {

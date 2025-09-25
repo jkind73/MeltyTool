@@ -745,7 +745,7 @@ namespace KSoft.IO
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
 				{
-					var value = default(char);
+					var value = '\0';
 					this.ReadCursor(ref value);
 
 					coll.Add(value);
@@ -770,7 +770,7 @@ namespace KSoft.IO
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
 				{
-					var value = default(bool);
+					var value = false;
 					this.ReadCursor(ref value);
 
 					coll.Add(value);
@@ -795,7 +795,7 @@ namespace KSoft.IO
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
 				{
-					var value = default(float);
+					var value = 0.0f;
 					this.ReadCursor(ref value);
 
 					coll.Add(value);
@@ -820,7 +820,7 @@ namespace KSoft.IO
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
 				{
-					var value = default(double);
+					var value = 0.0d;
 					this.ReadCursor(ref value);
 
 					coll.Add(value);

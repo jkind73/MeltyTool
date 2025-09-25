@@ -54,8 +54,8 @@ public partial class VrmlParser {
     IColorNode? color = null;
     bool? colorPerVertex = null;
     bool? convex = null;
-    ICoordinateNode coord = default;
-    IReadOnlyList<int> coordIndex = default;
+    ICoordinateNode coord = null;
+    IReadOnlyList<int> coordIndex = null;
     ITextureCoordinateNode? texCoord = null;
     IReadOnlyList<int>? texCoordIndex = null;
 
@@ -108,7 +108,7 @@ public partial class VrmlParser {
   }
 
   private static SphereNode ReadSphereNode_(ITextReader tr) {
-    float radius = default;
+    float radius = 0;
 
     ReadFields_(
         tr,
@@ -129,7 +129,7 @@ public partial class VrmlParser {
       ITextReader tr,
       IDictionary<string, INode> definitions) {
     IReadOnlyList<string> @string = null!;
-    IEnumerable<float> length = default;
+    IEnumerable<float> length = null;
     FontStyleNode fontStyle = new FontStyleNode();
 
     ReadFields_(
