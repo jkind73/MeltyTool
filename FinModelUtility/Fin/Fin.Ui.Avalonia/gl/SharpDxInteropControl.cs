@@ -43,6 +43,9 @@ public abstract class SharpDxInteropControl : Control {
 
   public event Action? OnInit;
 
+  private IDisposable currentImageDisposable_;
+  private D3D11SwapchainImage currentImage_;
+
   protected abstract void InitGl();
   protected abstract void RenderGl();
   protected abstract void TeardownGl();
@@ -50,9 +53,7 @@ public abstract class SharpDxInteropControl : Control {
   protected CompositionDrawingSurface? Surface { get; private set; }
 
   public SharpDxInteropControl() {
-    this.SizeChanged += (sender, e) => {
-      this.QueueNextFrame_();
-    };
+    this.SizeChanged += (sender, e) => { this.QueueNextFrame_(); };
   }
 
   protected override void OnAttachedToVisualTree(
@@ -91,11 +92,11 @@ public abstract class SharpDxInteropControl : Control {
       (res, info) = this.InitializeGraphicsResources(this.Surface, interop);
     this.info_ = info;
     this.initialized_ = res;
-    
+
     var bindingsContext = new GLFWBindingsContext();
     Wgl.LoadBindings(bindingsContext);
     GL.LoadBindings(bindingsContext);
-    
+
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
     IntPtr hDc = wglGetCurrentDC();
@@ -123,9 +124,6 @@ public abstract class SharpDxInteropControl : Control {
     this.textureId_ = (uint) GL.GenTexture();
     this.fboId_ = GL.GenFramebuffer();
 
-    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
-    
     this.QueueNextFrame_();
   }
 
@@ -226,52 +224,16 @@ public abstract class SharpDxInteropControl : Control {
       this.Resize_(pixelSize);
     }
 
-    using (this.swapchain_!.BeginDraw(pixelSize, out var image)) {
-      this.device_!.ImmediateContext.OutputMerger.SetTargets(image.RenderTargetView);
+    this.currentImage_.BeginDraw();
+    this.device_!.ImmediateContext.OutputMerger.SetTargets(
+        this.currentImage_.RenderTargetView);
 
-      GlUtil.SwitchContext(this.openTkWindow_!.Context);
+    GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
-      var hCfb = Wgl.DXRegisterObjectNV(
-          this.hDevice_,
-          image.Texture.NativePointer, // wrong?
-          this.textureId_,
-          (int) TextureTarget2d.Texture2D,
-          WGL_NV_DX_interop.AccessReadWrite
-      );
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    this.RenderGl();
 
-      if (hCfb == IntPtr.Zero) {
-        throw new Exception("DXRegisterObjectNV failed");
-      }
-
-      this.hCfbs_[0] = hCfb;
-
-      var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, this.hCfbs_);
-      if (!lockResult) {
-        throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
-      }
-
-      GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-      GL.FramebufferTexture(
-          FramebufferTarget.Framebuffer,
-          FramebufferAttachment.ColorAttachment0,
-          this.textureId_,
-          0
-      );
-
-      var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-      if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
-        throw new Exception($"incomplete framebuffer: {fbStatus}");
-      }
-
-      this.RenderGl();
-
-      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
-      if (!unlockResult) {
-        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
-      }
-
-      Wgl.DXUnregisterObjectNV(this.hDevice_, hCfb);
-    }
+    this.currentImage_.Present();
   }
 
   [DllImport("Kernel32.dll")]
@@ -289,8 +251,52 @@ public abstract class SharpDxInteropControl : Control {
         size.Height);
 
     this.openTkWindow_!.ClientSize = (size.Width, size.Height);
-    this.openTkWindow_.Context.MakeCurrent();
+    GlUtil.SwitchContext(this.openTkWindow_.Context);
     GL.Viewport(0, 0, size.Width, size.Height);
-    this.openTkWindow_.Context.MakeNoneCurrent();
+
+    this.currentImageDisposable_?.Dispose();
+    if (this.hCfbs_[0] != 0) {
+      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+      if (!unlockResult) {
+        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
+      }
+      Wgl.DXUnregisterObjectNV(this.hDevice_, this.hCfbs_[0]);
+    }
+
+    this.currentImageDisposable_
+        = this.swapchain_!.BeginDraw(size, out this.currentImage_);
+
+    var hCfb = Wgl.DXRegisterObjectNV(
+        this.hDevice_,
+        this.currentImage_.Texture.NativePointer, // wrong?
+        this.textureId_,
+        (int) TextureTarget2d.Texture2D,
+        WGL_NV_DX_interop.AccessReadWrite
+    );
+
+    if (hCfb == IntPtr.Zero) {
+      throw new Exception("DXRegisterObjectNV failed");
+    }
+
+    this.hCfbs_[0] = hCfb;
+
+    var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+    if (!lockResult) {
+      throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
+    }
+
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GL.FramebufferTexture(
+        FramebufferTarget.Framebuffer,
+        FramebufferAttachment.ColorAttachment0,
+        this.textureId_,
+        0
+    );
+    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
+
+    var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+    if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
+      throw new Exception($"incomplete framebuffer: {fbStatus}");
+    }
   }
 }

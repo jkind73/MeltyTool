@@ -82,7 +82,6 @@ class D3d11Swapchain {
     var img = this.CleanupAndFindNextImage_(size) ??
               new(this.device_, size, this.Interop, this.Target);
 
-    img.BeginDraw();
     this.pendingImages_.Remove(img);
     var rv = new AnonymousDisposable(() => {
       img.Present();
