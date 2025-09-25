@@ -95,24 +95,24 @@ public class ScalarConstant(float value) : BScalarValue, IScalarConstant {
   public override string ToString() => $"{this.Value}";
 
 
-  public override bool Equals(object? other) {
-    if (ReferenceEquals(this, other)) {
+  public override bool Equals(object? obj) {
+    if (ReferenceEquals(this, obj)) {
       return true;
     }
 
-    if (other is IScalarConstant otherScalar) {
+    if (obj is IScalarConstant otherScalar) {
       return FixedFunctionUtils.CompareScalarConstants(
           this.Value,
           otherScalar.Value);
     }
 
-    if (other is IColorConstant otherColor) {
+    if (obj is IColorConstant otherColor) {
       return FixedFunctionUtils.CompareScalarConstants(
           this.Value,
           otherColor.IntensityValue);
     }
 
-    if (other is ColorWrapper {
+    if (obj is ColorWrapper {
             Intensity: IScalarConstant colorWrapperIntensity
         }) {
       return FixedFunctionUtils.CompareScalarConstants(

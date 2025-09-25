@@ -43,7 +43,7 @@ public interface IPicrossBoardState : IReadOnlyGrid<IReadOnlyPicrossCellState> {
 
 public class PicrossBoardState : IPicrossBoardState {
   private readonly IPicrossDefinition definition_;
-  private readonly IReadOnlyList<IPicrossCellState> cellStates_;
+  private readonly IPicrossCellState[] cellStates_;
 
   private readonly IReadOnlyIndexableDictionary<IPicrossClue, IPicrossClueState>
       clueStateByClue_;

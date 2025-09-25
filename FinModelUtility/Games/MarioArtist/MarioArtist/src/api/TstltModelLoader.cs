@@ -96,9 +96,9 @@ public partial class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
   public const bool INCLUDE_FACE = true;
 
   public IModel Import(TstltModelFileBundle fileBundle)
-    => this.Import(fileBundle, out _);
+    => Import(fileBundle, out _);
 
-  public IModel Import(TstltModelFileBundle fileBundle, out Gender gender) {
+  public static IModel Import(TstltModelFileBundle fileBundle, out Gender gender) {
     using var br = fileBundle.MainFile.OpenReadAsBinary(Endianness.BigEndian);
 
     var n64Hardware = new N64Hardware<N64Memory>();

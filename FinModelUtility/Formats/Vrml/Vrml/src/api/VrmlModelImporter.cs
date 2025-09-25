@@ -45,10 +45,10 @@ public class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
     using var wrlFileStream = wrlFile.OpenRead();
     var (vrmlScene, definitions) = VrmlParser.Parse(wrlFileStream);
     var fileSet = fileBundle.WrlFile.AsFileSet();
-    return this.Import(vrmlScene, definitions, fileBundle, fileSet);
+    return Import(vrmlScene, definitions, fileBundle, fileSet);
   }
 
-  public IModel Import(IGroupNode vrmlScene,
+  public static IModel Import(IGroupNode vrmlScene,
                        IReadOnlyDictionary<string, INode> definitions,
                        IVrmlFileBundle fileBundle,
                        HashSet<IReadOnlyGenericFile> fileSet) {

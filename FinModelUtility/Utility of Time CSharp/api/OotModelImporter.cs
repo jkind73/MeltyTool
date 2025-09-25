@@ -191,7 +191,7 @@ namespace UoT.api {
                   ConvertRadiansToQuaternionOot_;
 
               for (var a = 0; a < 3; ++a) {
-                this.AddOotAnimationTrackToFin_(
+                AddOotAnimationTrackToFin_(
                     ootAnimation.GetTrack(i * 3 + a),
                     a,
                     rotations);
@@ -204,7 +204,7 @@ namespace UoT.api {
       return finModel;
     }
 
-    private void AddOotAnimationTrackToFin_(
+    private static void AddOotAnimationTrackToFin_(
         IAnimationTrack ootAnimationTrack,
         int axis,
         ISeparateEulerRadiansKeyframes<Keyframe<float>> rotations) {
