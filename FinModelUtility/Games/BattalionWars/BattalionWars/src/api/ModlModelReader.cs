@@ -119,7 +119,7 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
       var levelDir = modlFile.AssertGetParent();
       var baseLevelDir = levelDir.AssertGetParent();
       var textureDictionary = new LazyCaseInvariantStringDictionary<Task<ITexture>>(
-          async textureNameWithoutExtension => {
+          textureNameWithoutExtension => {
             var textureName = $"{textureNameWithoutExtension}.texr";
             IReadOnlyTreeFile? textureFile;
             if (!levelDir.TryToGetExistingFile(
