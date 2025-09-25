@@ -6,5 +6,5 @@ namespace fin.picross;
 
 [GenerateReadOnly]
 public partial interface IPicrossDefinition : IGrid<bool> {
-  string Name { get; set; }
+  new string Name { get; set; }
 }

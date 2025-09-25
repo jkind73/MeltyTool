@@ -77,7 +77,7 @@ public sealed class KeyframeDefinitionsWithBinarySearch<T>(int initialCapacity =
                              out _,
                              out var keyframe,
                              out _);
-    if (keyframe != null && keyframe.Frame == frame) {
+    if (keyframe.Frame == frame) {
       return keyframe;
     }
 

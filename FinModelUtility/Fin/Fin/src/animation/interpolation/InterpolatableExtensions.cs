@@ -14,13 +14,13 @@ public static class InterpolatableExtensions {
   public static bool TryGetAtFrameOrDefault<T>(
       this IInterpolatable<T> impl,
       float frame,
-      IndividualInterpolationConfig<T> individualConfig,
+      IndividualInterpolationConfig<T>? individualConfig,
       out T value) {
     if (impl.TryGetAtFrame(frame, out value)) {
       return true;
     }
 
-    if (individualConfig.DefaultValue?.Try(out value) ?? false) {
+    if (individualConfig?.DefaultValue?.Try(out value) ?? false) {
       return true;
     }
 

@@ -21,10 +21,10 @@ public enum PicrossCompletionState {
 
 [GenerateReadOnly]
 public partial interface IPicrossCellState {
-  PicrossCellStatus Status { get; set; }
-  PicrossCellMoveSource MoveSource { get; set; }
-  IPicrossClue? ColumnClue { get; set; }
-  IPicrossClue? RowClue { get; set; }
+  new PicrossCellStatus Status { get; set; }
+  new PicrossCellMoveSource MoveSource { get; set; }
+  new IPicrossClue? ColumnClue { get; set; }
+  new IPicrossClue? RowClue { get; set; }
 }
 
 public class PicrossCellState : IPicrossCellState {

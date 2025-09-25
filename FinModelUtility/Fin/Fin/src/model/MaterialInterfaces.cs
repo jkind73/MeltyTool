@@ -155,7 +155,7 @@ public partial interface IShaderMaterial : IMaterial {
   new string VertexShader { get; set; }
   new string FragmentShader { get; set; }
 
-  IReadOnlyDictionary<string, IReadOnlyTexture> TextureByUniform { get; }
+  new IReadOnlyDictionary<string, IReadOnlyTexture> TextureByUniform { get; }
   void AddTexture(string uniformName, IReadOnlyTexture texture);
 }
 
@@ -509,7 +509,7 @@ public partial interface ITextureTransform {
   ITextureTransform SetRotationRadians3d(in Vector3 xyz);
 
   [Const]
-  Matrix4x4 AsMatrix();
+  new Matrix4x4 AsMatrix();
 }
 
 public interface IScrollingTexture : ITexture {

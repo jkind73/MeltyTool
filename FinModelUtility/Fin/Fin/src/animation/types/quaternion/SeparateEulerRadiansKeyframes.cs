@@ -16,9 +16,9 @@ namespace fin.animation.types.quaternion;
 public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IRadiansKeyframeInterpolator<TKeyframe> interpolator,
-    IndividualInterpolationConfig<float> individualConfigX,
-    IndividualInterpolationConfig<float> individualConfigY,
-    IndividualInterpolationConfig<float> individualConfigZ)
+    IndividualInterpolationConfig<float>? individualConfigX,
+    IndividualInterpolationConfig<float>? individualConfigY,
+    IndividualInterpolationConfig<float>? individualConfigZ)
     : ISeparateEulerRadiansKeyframes<TKeyframe>
     where TKeyframe : IKeyframe<float> {
   private readonly IReadOnlyList<InterpolatedKeyframes<TKeyframe, float>> axes_

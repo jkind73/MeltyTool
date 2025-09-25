@@ -30,35 +30,35 @@ public partial interface IFinMatrix<[KeepMutableType] TMutable, TReadOnly, TImpl
   TMutable InvertInPlace();
 
   [Const]
-  TMutable Clone();
+  new TMutable Clone();
 
   [Const]
-  TMutable CloneAndAdd(TReadOnly other);
+  new TMutable CloneAndAdd(TReadOnly other);
   [Const]
-  void AddIntoBuffer(TReadOnly other, TMutable buffer);
+  new void AddIntoBuffer(TReadOnly other, TMutable buffer);
 
   [Const]
-  TMutable CloneAndMultiply(TReadOnly other);
+  new TMutable CloneAndMultiply(TReadOnly other);
   [Const]
-  void MultiplyIntoBuffer(TReadOnly other, TMutable buffer);
+  new void MultiplyIntoBuffer(TReadOnly other, TMutable buffer);
 
   [Const]
-  TMutable CloneAndAdd(in TImpl other);
+  new TMutable CloneAndAdd(in TImpl other);
   [Const]
-  void AddIntoBuffer(in TImpl other, TMutable buffer);
+  new void AddIntoBuffer(in TImpl other, TMutable buffer);
 
   [Const]
-  TMutable CloneAndMultiply(in TImpl other);
+  new TMutable CloneAndMultiply(in TImpl other);
   [Const]
-  void MultiplyIntoBuffer(in TImpl other, TMutable buffer);
+  new void MultiplyIntoBuffer(in TImpl other, TMutable buffer);
 
   [Const]
-  TMutable CloneAndMultiply(float other);
+  new TMutable CloneAndMultiply(float other);
   [Const]
-  void MultiplyIntoBuffer(float other, TMutable buffer);
+  new void MultiplyIntoBuffer(float other, TMutable buffer);
 
   [Const]
-  TMutable CloneAndInvert();
+  new TMutable CloneAndInvert();
   [Const]
-  void InvertIntoBuffer(TMutable buffer);
+  new void InvertIntoBuffer(TMutable buffer);
 }

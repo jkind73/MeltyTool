@@ -19,7 +19,7 @@ using uni.ui.winforms.common.fileTreeView;
 namespace uni.ui.avalonia.toolbars;
 
 public class TopMenuModelForDesigner : TopMenuModel {
-  public IFileTreeParentNode? SelectedDirectory => null;
+  public new IFileTreeParentNode? SelectedDirectory => null;
 }
 
 public class TopMenuModel : ViewModelBase {

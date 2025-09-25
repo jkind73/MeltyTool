@@ -11,9 +11,9 @@ namespace fin.animation.types.vector3;
 public class SeparateVector3Keyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, float> interpolator,
-    IndividualInterpolationConfig<float> individualConfigX,
-    IndividualInterpolationConfig<float> individualConfigY,
-    IndividualInterpolationConfig<float> individualConfigZ)
+    IndividualInterpolationConfig<float>? individualConfigX,
+    IndividualInterpolationConfig<float>? individualConfigY,
+    IndividualInterpolationConfig<float>? individualConfigZ)
     : ISeparateVector3Keyframes<TKeyframe>
     where TKeyframe : IKeyframe<float> {
   public SeparateVector3Keyframes(

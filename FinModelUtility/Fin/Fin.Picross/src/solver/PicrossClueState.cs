@@ -4,10 +4,10 @@ namespace fin.picross.solver;
 
 [GenerateReadOnly]
 public partial interface IPicrossClueState {
-  IPicrossClue Clue { get; }
-  byte Length { get; }
-  bool Solved => this.StartIndex != null;
-  int? StartIndex { get; set; }
+  new IPicrossClue Clue { get; }
+  new byte Length { get; }
+  new bool Solved => this.StartIndex != null;
+  new int? StartIndex { get; set; }
 }
 
 public record PicrossClueState(IPicrossClue Clue) : IPicrossClueState {

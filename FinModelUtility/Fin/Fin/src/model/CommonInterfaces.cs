@@ -4,5 +4,5 @@ namespace fin.model;
 
 [GenerateReadOnly]
 public partial interface INamed {
-  string Name { get; set; }
+  new string? Name { get; set; }
 }

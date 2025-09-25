@@ -29,11 +29,11 @@ public partial class ContrastableIconButton : UserControl {
   }
 
 
-  public static readonly StyledProperty<bool> IsEnabledProperty =
+  public static new readonly StyledProperty<bool> IsEnabledProperty =
       AvaloniaProperty.Register<ContrastableIconButton, bool>(
           nameof(IsEnabled), true);
 
-  public bool IsEnabled {
+  public new bool IsEnabled {
     get => this.GetValue(IsEnabledProperty);
     set => this.SetValue(IsEnabledProperty, value);
   }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace fin.data.dictionaries;
 
 public class SimpleDictionary<TKey, TValue>(IDictionary<TKey, TValue> impl)
-    : IFinDictionary<TKey, TValue> {
+    : IFinDictionary<TKey, TValue> where TKey : notnull {
   public SimpleDictionary() :
       this(new ConcurrentDictionary<TKey, TValue>()) { }
 

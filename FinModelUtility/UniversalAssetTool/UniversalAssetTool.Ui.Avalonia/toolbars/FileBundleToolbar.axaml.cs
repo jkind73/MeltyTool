@@ -7,7 +7,7 @@ using ReactiveUI;
 namespace uni.ui.avalonia.toolbars;
 
 public class FileBundleToolbarModelForDesigner : FileBundleToolbarModel {
-  public string FileName => "//foo/bar.mod";
+  public new string FileName => "//foo/bar.mod";
 }
 
 public class FileBundleToolbarModel : ViewModelBase {

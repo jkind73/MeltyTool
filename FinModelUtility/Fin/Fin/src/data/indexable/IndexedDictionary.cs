@@ -16,7 +16,7 @@ public partial interface IIndexedDictionary<TValue>
   void Clear();
   new TValue this[int index] { get; set; }
 
-  IEnumerable<TValue> Values { get; }
+  new IEnumerable<TValue> Values { get; }
 }
 
 public static class IndexedDictionaryExtensions {

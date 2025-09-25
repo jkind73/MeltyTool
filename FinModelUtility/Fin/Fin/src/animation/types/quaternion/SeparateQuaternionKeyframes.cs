@@ -10,10 +10,10 @@ namespace fin.animation.types.quaternion;
 public sealed class SeparateQuaternionKeyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, float> interpolator,
-    IndividualInterpolationConfig<float> individualConfigX,
-    IndividualInterpolationConfig<float> individualConfigY,
-    IndividualInterpolationConfig<float> individualConfigZ,
-    IndividualInterpolationConfig<float> individualConfigW)
+    IndividualInterpolationConfig<float>? individualConfigX,
+    IndividualInterpolationConfig<float>? individualConfigY,
+    IndividualInterpolationConfig<float>? individualConfigZ,
+    IndividualInterpolationConfig<float>? individualConfigW)
     : ISeparateQuaternionKeyframes<TKeyframe>
     where TKeyframe : IKeyframe<float> {
   public SeparateQuaternionKeyframes(

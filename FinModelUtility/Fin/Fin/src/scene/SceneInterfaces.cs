@@ -81,7 +81,7 @@ public partial interface ISceneObject {
   new IReadOnlyList<ISceneModel> Models { get; }
   ISceneModel AddSceneModel(IReadOnlyModel model);
 
-  IReadOnlyList<ISceneNodeComponent> Components { get; }
+  new IReadOnlyList<ISceneNodeComponent> Components { get; }
   ISceneObject AddComponent(ISceneNodeComponent component);
 }
 

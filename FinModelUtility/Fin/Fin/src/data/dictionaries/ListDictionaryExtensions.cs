@@ -27,7 +27,7 @@ public static class ListDictionaryExtensions {
       return true;
     }
 
-    list = null;
+    list = null!;
     return false;
   }
 

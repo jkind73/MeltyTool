@@ -8,7 +8,7 @@ using ReactiveUI;
 namespace uni.ui.avalonia.toolbars;
 
 public class TopToolbarModelForDesigner : TopToolbarModel {
-  public IFileBundle? FileBundle => null;
+  public new IFileBundle? FileBundle => null;
 }
 
 public class TopToolbarModel : ViewModelBase {

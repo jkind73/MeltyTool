@@ -50,7 +50,7 @@ public partial interface IModelAnimation : IAnimation {
 
   IBoneTracks GetOrCreateBoneTracks(IReadOnlyBone bone);
 
-  bool HasAnyMeshTracks { get; }
+  new bool HasAnyMeshTracks { get; }
   new IReadOnlyIndexableDictionary<IReadOnlyMesh, IMeshTracks> MeshTracks {
     get;
   }
