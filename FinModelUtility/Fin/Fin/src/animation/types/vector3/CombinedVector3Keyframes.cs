@@ -18,7 +18,7 @@ public sealed class CombinedVector3Keyframes<TKeyframe>(
 
   public ISharedInterpolationConfig SharedConfig => sharedConfig;
 
-  public IndividualInterpolationConfig<Vector3> IndividualConfig
+  public IndividualInterpolationConfig<Vector3>? IndividualConfig
     => individualConfig;
 
   public IReadOnlyList<TKeyframe> Definitions => this.impl_.Definitions;

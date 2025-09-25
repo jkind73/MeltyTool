@@ -10,8 +10,8 @@ namespace fin.animation.types.vector2;
 public sealed class SeparateVector2Keyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, float> interpolator,
-    IndividualInterpolationConfig<float> individualConfigX,
-    IndividualInterpolationConfig<float> individualConfigY)
+    IndividualInterpolationConfig<float>? individualConfigX,
+    IndividualInterpolationConfig<float>? individualConfigY)
     : ISeparateVector2Keyframes<TKeyframe>
     where TKeyframe : IKeyframe<float> {
   public SeparateVector2Keyframes(

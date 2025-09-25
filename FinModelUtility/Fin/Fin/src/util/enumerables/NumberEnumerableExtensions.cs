@@ -19,10 +19,10 @@ public static class NumberEnumerableExtensions {
       this IEnumerable<TNumber> enumerable,
       TNumber? defaultValue = default)
       where TNumber : INumber<TNumber> {
-    var max = defaultValue;
+    var max = defaultValue ?? TNumber.Zero;
     foreach (var value in enumerable) {
       max = TNumber.Max(max, value);
     }
-    return max;
+    return max!;
   }
 }
