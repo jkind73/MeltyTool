@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace ttyd.schema.model.blocks;
 
 [BinarySchema]
-public partial class VertexDataTuple : IBinaryConvertible {
+public sealed partial class VertexDataTuple : IBinaryConvertible {
   public int BaseIndex { get; set; }
   public int CoordCount { get; set; }
 }
@@ -24,7 +24,7 @@ public enum CullMode : int {
 }
 
 [BinarySchema]
-public partial class SceneGraphObject : IBinaryDeserializable {
+public sealed partial class SceneGraphObject : IBinaryDeserializable {
   [StringLengthSource(64)]
   public string Name { get; set; }
 

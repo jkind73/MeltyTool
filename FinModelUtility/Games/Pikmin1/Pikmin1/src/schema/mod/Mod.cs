@@ -13,14 +13,14 @@ using schema.binary;
 namespace pikmin1.schema.mod;
 
 [BinarySchema]
-public partial class DateTime : IBinaryConvertible {
+public sealed partial class DateTime : IBinaryConvertible {
   public ushort year { get; set; } = 2021;
   public byte month { get; set; } = 9;
   public byte day { get; set; } = 18;
 }
 
 [BinarySchema]
-public partial class ModHeader : IBinaryConvertible {
+public sealed partial class ModHeader : IBinaryConvertible {
   public readonly DateTime dateTime = new();
 
   public uint flags { get; set; }

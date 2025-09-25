@@ -2,7 +2,7 @@
 
 namespace mdl.schema {
   [BinarySchema]
-  public partial class DrawElement : IBinaryConvertible {
+  public sealed partial class DrawElement : IBinaryConvertible {
     public ushort MaterialIndex { get; set; }
     public ushort ShapeIndex { get; set; }
   }

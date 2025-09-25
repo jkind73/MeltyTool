@@ -13,7 +13,7 @@ namespace fin.schema;
 
 internal partial class SizedSectionTests {
   [BinarySchema]
-  public partial class A : IBinaryConvertible {
+  public sealed partial class A : IBinaryConvertible {
     public byte Field1 { get; set; }
     public byte Field2 { get; set; }
     public byte Field3 { get; set; }
@@ -36,7 +36,7 @@ internal partial class SizedSectionTests {
 
 
   [BinarySchema]
-  public partial class TweakedASection : IBinaryConvertible {
+  public sealed partial class TweakedASection : IBinaryConvertible {
     public AutoUInt32SizedSection<A> Section { get; } = new() {
         TweakReadSize = -4,
     };

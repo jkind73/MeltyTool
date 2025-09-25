@@ -38,7 +38,7 @@ public interface IEnvironmentSettings : IZsiSection {
 }
 
 [BinarySchema]
-public partial class EnvironmentSettingsOot3d
+public sealed partial class EnvironmentSettingsOot3d
     : IEnvironmentSettings, IBinaryConvertible {
   public float DrawDistance { get; set; }
   public float FogEnd { get; set; }
@@ -69,7 +69,7 @@ public partial class EnvironmentSettingsOot3d
 }
 
 [BinarySchema]
-public partial class EnvironmentSettingsMm3d
+public sealed partial class EnvironmentSettingsMm3d
     : IEnvironmentSettings, IBinaryConvertible {
   public Rgb24 ActorAmbientColor { get; set; }
   public Rgb24 SceneAmbientColor { get; set; }

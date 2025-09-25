@@ -19,7 +19,7 @@ public enum AOBJ_Flags : uint {
 ///   https://github.com/Ploaj/HSDLib/blob/b7554d5c753cca2d50090cdd7366afe64dd8f175/HSDRaw/Common/Animation/HSD_AOBJ.cs#L18
 /// </summary>
 [BinarySchema]
-public partial class AObj : IBinaryDeserializable {
+public sealed partial class AObj : IBinaryDeserializable {
   public AOBJ_Flags Flags { get; set; }
   public float EndFrame { get; set; }
   public uint FObjOffset { get; set; }

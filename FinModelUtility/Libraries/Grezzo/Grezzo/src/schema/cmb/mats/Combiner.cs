@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
-public partial class Combiner : IBinaryConvertible {
+public sealed partial class Combiner : IBinaryConvertible {
   public TexCombineMode combinerModeColor;
   public TexCombineMode combinerModeAlpha;
   public TexCombineScale scaleColor;

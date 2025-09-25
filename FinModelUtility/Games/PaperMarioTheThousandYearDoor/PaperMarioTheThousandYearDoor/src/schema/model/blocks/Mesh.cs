@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace ttyd.schema.model.blocks;
 
 [BinarySchema]
-public partial class Mesh : IBinaryDeserializable {
+public sealed partial class Mesh : IBinaryDeserializable {
   [SequenceLengthSource(4)]
   public int[] Unks1 { get; set; }
 

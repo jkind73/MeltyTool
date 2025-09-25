@@ -10,7 +10,7 @@ public enum ModCullMode : byte {
 
 namespace pikmin1.schema.mod {
   [BinarySchema]
-  public partial class DisplayList : IBinaryConvertible {
+  public sealed partial class DisplayList : IBinaryConvertible {
     [SequenceLengthSource(3)]
     public byte[] Flags { get; set; }
 
@@ -25,7 +25,7 @@ namespace pikmin1.schema.mod {
   }
 
   [BinarySchema]
-  public partial class MeshPacket : IBinaryConvertible {
+  public sealed partial class MeshPacket : IBinaryConvertible {
     [SequenceLengthSource(SchemaIntegerType.UINT32)]
     public short[] indices;
 
@@ -34,7 +34,7 @@ namespace pikmin1.schema.mod {
   }
 
   [BinarySchema]
-  public partial class Mesh : IBinaryConvertible {
+  public sealed partial class Mesh : IBinaryConvertible {
     public uint boneIndex = 0;
     public uint vtxDescriptor = 0;
 

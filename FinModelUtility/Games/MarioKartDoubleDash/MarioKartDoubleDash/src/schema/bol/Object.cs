@@ -8,7 +8,7 @@ using schema.binary.attributes;
 namespace mkdd.schema.bol;
 
 [BinarySchema]
-public partial class Object : IBinaryDeserializable {
+public sealed partial class Object : IBinaryDeserializable {
   public Vector3 Position { get; set; }
   public Vector3 Scale { get; set; }
   public Vector3i Rotation { get; } = new();

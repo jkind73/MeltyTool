@@ -27,7 +27,7 @@ namespace pikmin1.schema.mod;
 ////////////////////////////////////////////////////////////////////
 
 [BinarySchema]
-public partial class KeyInfoU8 : IBinaryConvertible {
+public sealed partial class KeyInfoU8 : IBinaryConvertible {
   public byte Frame = 0;
 
   [Unknown]
@@ -44,7 +44,7 @@ public partial class KeyInfoU8 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class KeyInfoF32 : IBinaryConvertible {
+public sealed partial class KeyInfoF32 : IBinaryConvertible {
   [Unknown]
   public float Value = 0;
 
@@ -59,7 +59,7 @@ public partial class KeyInfoF32 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class KeyInfoS10 : IBinaryConvertible {
+public sealed partial class KeyInfoS10 : IBinaryConvertible {
   public short Frame = 0;
 
   public readonly short padding = 0; // TODO: Is this right?
@@ -72,7 +72,7 @@ public partial class KeyInfoS10 : IBinaryConvertible {
 };
 
 [BinarySchema]
-public partial class ColorAnimationInfo : IBinaryConvertible {
+public sealed partial class ColorAnimationInfo : IBinaryConvertible {
   [Unknown]
   public int Index = 0;
 
@@ -82,7 +82,7 @@ public partial class ColorAnimationInfo : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class AlphaAnimationInfo : IBinaryConvertible {
+public sealed partial class AlphaAnimationInfo : IBinaryConvertible {
   [Unknown]
   public int Index = 0;
 
@@ -90,7 +90,7 @@ public partial class AlphaAnimationInfo : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class PolygonColorInfo
+public sealed partial class PolygonColorInfo
     : IBinaryConvertible, IEquatable<PolygonColorInfo> {
   public Rgba32 DiffuseColour { get; set; }
 
@@ -148,7 +148,7 @@ public partial class PolygonColorInfo
 }
 
 [BinarySchema]
-public partial record LightingInfo : IBinaryConvertible {
+public sealed partial record LightingInfo : IBinaryConvertible {
   public uint lightingInfoFlags;
 
   [Skip]
@@ -201,7 +201,7 @@ public enum PeInfoFlags : int {
 }
 
 [BinarySchema]
-public partial record PeInfo : IBinaryConvertible {
+public sealed partial record PeInfo : IBinaryConvertible {
   public PeInfoFlags Flags = 0;
 
   public int AlphaCompareFunctionBits { get; set; }
@@ -259,7 +259,7 @@ public partial record PeInfo : IBinaryConvertible {
 };
 
 [BinarySchema]
-public partial class TextureAnimationData : IBinaryConvertible {
+public sealed partial class TextureAnimationData : IBinaryConvertible {
   public int Frame = 0;
   public KeyInfoF32 X { get; } = new();
   public KeyInfoF32 Y { get; } = new();
@@ -267,7 +267,7 @@ public partial class TextureAnimationData : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TextureData
+public sealed partial class TextureData
     : IBinaryConvertible, IEquatable<TextureData> {
   public int TexAttrIndex = 0;
 
@@ -423,7 +423,7 @@ public record Material : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TextureInfo : IBinaryConvertible, IEquatable<TextureInfo> {
+public sealed partial class TextureInfo : IBinaryConvertible, IEquatable<TextureInfo> {
   [Unknown]
   public int unknown1 = 0;
 
@@ -477,7 +477,7 @@ public partial class TextureInfo : IBinaryConvertible, IEquatable<TextureInfo> {
 }
 
 [BinarySchema]
-public partial record TexGenData : IBinaryConvertible {
+public sealed partial record TexGenData : IBinaryConvertible {
   public GxTexCoord TexCoordId = 0;
   public GxTexGenType TexGenType = 0;
   public GxTexGenSrc TexGenSrc { get; set; }
@@ -486,7 +486,7 @@ public partial record TexGenData : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TEVInfo : IBinaryConvertible {
+public sealed partial class TEVInfo : IBinaryConvertible {
   [SequenceLengthSource(3)]
   public TEVColReg[] ColorRegisters { get; set; }
 
@@ -498,7 +498,7 @@ public partial class TEVInfo : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TEVColReg : IBinaryConvertible {
+public sealed partial class TEVColReg : IBinaryConvertible {
   [Unknown]
   public readonly RgbaS10 Color = new();
 
@@ -520,7 +520,7 @@ public partial class TEVColReg : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TCR_Unk1 : IBinaryConvertible {
+public sealed partial class TCR_Unk1 : IBinaryConvertible {
   [Unknown]
   public int unknown1 = 0;
 
@@ -541,7 +541,7 @@ public partial class TCR_Unk1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TCR_Unk2 : IBinaryConvertible {
+public sealed partial class TCR_Unk2 : IBinaryConvertible {
   [Unknown]
   public int unknown1 = 0;
 
@@ -550,7 +550,7 @@ public partial class TCR_Unk2 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TEVStage : IBinaryConvertible {
+public sealed partial class TEVStage : IBinaryConvertible {
   [Unknown]
   public byte Unknown = 0;
 
@@ -569,7 +569,7 @@ public partial class TEVStage : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class ColorCombiner : IBinaryConvertible {
+public sealed partial class ColorCombiner : IBinaryConvertible {
   public GxCc colorA = 0;
   public GxCc colorB = 0;
   public GxCc colorC = 0;
@@ -595,7 +595,7 @@ public partial class ColorCombiner : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class AlphaCombiner : IBinaryConvertible {
+public sealed partial class AlphaCombiner : IBinaryConvertible {
   public GxCa alphaA = 0;
   public GxCa alphaB = 0;
   public GxCa alphaC = 0;

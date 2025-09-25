@@ -108,7 +108,7 @@ public sealed class QpBinArchiveExtractor {
 }
 
 [BinarySchema]
-public partial class QpBinArchiveHeader : IBinaryDeserializable {
+public sealed partial class QpBinArchiveHeader : IBinaryDeserializable {
   private readonly uint magic_ = 0x55aa382d;
 
   public uint FileStringTableOffset { get; set; }
@@ -124,7 +124,7 @@ public interface IFileStringTableEntry {
 }
 
 [BinarySchema]
-public partial class FileStringTableDirectory
+public sealed partial class FileStringTableDirectory
     : IFileStringTableEntry, IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.UINT24)]
   public uint NameOffset { get; set; }
@@ -134,7 +134,7 @@ public partial class FileStringTableDirectory
 }
 
 [BinarySchema]
-public partial class FileStringTableFile
+public sealed partial class FileStringTableFile
     : IFileStringTableEntry, IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.UINT24)]
   public uint NameOffset { get; set; }

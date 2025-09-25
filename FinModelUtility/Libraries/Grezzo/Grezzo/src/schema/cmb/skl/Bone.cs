@@ -9,7 +9,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.skl;
 
 [BinarySchema]
-public partial class Bone : IBinaryConvertible {
+public sealed partial class Bone : IBinaryConvertible {
   // Because only 12 bits are used, 4095 is the max bone count. (In
   // versions > OoT3D anyway)
   private ushort flags;

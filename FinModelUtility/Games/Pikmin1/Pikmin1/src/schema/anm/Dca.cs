@@ -3,7 +3,7 @@ using schema.binary.attributes;
 
 namespace pikmin1.schema.anm {
   [BinarySchema]
-  public partial class Dca : IDcx {
+  public sealed partial class Dca : IDcx {
     [WSizeOfMemberInBytes(nameof(AnimationData))]
     private uint animationLength_;
 
@@ -17,7 +17,7 @@ namespace pikmin1.schema.anm {
 
 
   [BinarySchema]
-  public partial class DcaAnimationData : IDcxAnimationData {
+  public sealed partial class DcaAnimationData : IDcxAnimationData {
     [WLengthOfSequence(nameof(JointDataList))]
     public uint jointCount_ { get; private set; }
     public uint FrameCount { get; set; }
@@ -42,7 +42,7 @@ namespace pikmin1.schema.anm {
   }
 
   [BinarySchema]
-  public partial class DcaJointData : IDcxJointData {
+  public sealed partial class DcaJointData : IDcxJointData {
     public int JointIndex { get; set; }
     public int ParentIndex { get; set; }
 
@@ -52,7 +52,7 @@ namespace pikmin1.schema.anm {
   }
 
   [BinarySchema]
-  public partial class DcaAxes : IDcxAxes {
+  public sealed partial class DcaAxes : IDcxAxes {
     public IDcxAxis[] Axes { get; } = [
         new DcaAxis(),
         new DcaAxis(),
@@ -61,7 +61,7 @@ namespace pikmin1.schema.anm {
   }
 
   [BinarySchema]
-  public partial class DcaAxis : IDcxAxis {
+  public sealed partial class DcaAxis : IDcxAxis {
     public int FrameCount { get; set; }
     public int FrameOffset { get; set; }
   }

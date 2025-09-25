@@ -6,7 +6,7 @@ using sonicadventure.util;
 namespace sonicadventure.schema.animation;
 
 [BinarySchema]
-public partial class Animation(uint keyedPointer, uint key)
+public sealed partial class Animation(uint keyedPointer, uint key)
     : IKeyedInstance<Animation> {
   public static Animation New(uint keyedPointer, uint key)
     => new(keyedPointer, key);
@@ -25,7 +25,7 @@ public partial class Animation(uint keyedPointer, uint key)
 }
 
 [BinarySchema]
-public partial class AnimationData(uint keyedPointer, uint key)
+public sealed partial class AnimationData(uint keyedPointer, uint key)
     : IKeyedInstance<AnimationData> {
   public static AnimationData New(uint keyedPointer, uint key)
     => new(keyedPointer, key);

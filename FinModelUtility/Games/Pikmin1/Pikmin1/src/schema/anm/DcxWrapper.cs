@@ -10,7 +10,7 @@ namespace pikmin1.schema.anm {
   }
 
   [BinarySchema]
-  public partial class DcxWrapper : IBinaryConvertible {
+  public sealed partial class DcxWrapper : IBinaryConvertible {
     public AnimationFormat AnimationFormat { get; set; }
 
     [Skip]

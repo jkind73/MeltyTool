@@ -8,7 +8,7 @@ namespace sysdolphin.schema.melee;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Melee/Pl/SBM_PlayerModelLookupTables.cs#L66
 /// </summary>
 [BinarySchema]
-public partial class MeleeLookupEntry : IBinaryDeserializable {
+public sealed partial class MeleeLookupEntry : IBinaryDeserializable {
   public uint Count { get; private set; }
   public uint ByteEntriesOffset { get; set; }
 

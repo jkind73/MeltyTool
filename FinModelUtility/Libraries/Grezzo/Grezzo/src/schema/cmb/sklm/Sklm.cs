@@ -3,7 +3,7 @@
 namespace grezzo.schema.cmb.sklm;
 
 [BinarySchema]
-public partial class Sklm : IBinaryConvertible {
+public sealed partial class Sklm : IBinaryConvertible {
   public uint mshOffset;
   public uint shpOffset;
 

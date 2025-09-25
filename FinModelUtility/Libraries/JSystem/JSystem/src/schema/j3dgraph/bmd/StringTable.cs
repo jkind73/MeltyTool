@@ -11,7 +11,7 @@ using schema.binary.attributes;
 namespace jsystem.schema.j3dgraph.bmd;
 
 [BinarySchema]
-public partial class StringTable : IBinaryConvertible {
+public sealed partial class StringTable : IBinaryConvertible {
   [WLengthOfSequence(nameof(EntriesAndStrings))]
   private ushort entryCount_;
 
@@ -30,7 +30,7 @@ public partial class StringTable : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class StringTableEntry : IBinaryConvertible {
+public sealed partial class StringTableEntry : IBinaryConvertible {
   [Unknown]
   public ushort unknown;
 
@@ -38,7 +38,7 @@ public partial class StringTableEntry : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class StringTableString : IBinaryConvertible {
+public sealed partial class StringTableString : IBinaryConvertible {
   [NullTerminatedString]
   public string String { get; set; }
 }

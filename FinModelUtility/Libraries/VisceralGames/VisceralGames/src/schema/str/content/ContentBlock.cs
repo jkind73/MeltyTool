@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace visceral.schema.str.content;
 
 [BinarySchema]
-public partial class ContentBlock : IBlock {
+public sealed partial class ContentBlock : IBlock {
   public SwitchMagicWrapper<ContentType, IContent> Impl { get; }
     = new(br => (ContentType) br.ReadUInt32(),
           (bw, magic) => bw.WriteUInt32((uint) magic),

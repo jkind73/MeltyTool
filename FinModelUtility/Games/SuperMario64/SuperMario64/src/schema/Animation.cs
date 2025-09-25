@@ -15,7 +15,7 @@ public enum AnimationFlags : short {
 }
 
 [BinarySchema]
-public partial class Animation : IBinaryConvertible {
+public sealed partial class Animation : IBinaryConvertible {
   public AnimationFlags Flags { get; set; }
   public short YTransDivisor { get; set; }
   public short StartFrame { get; set; }

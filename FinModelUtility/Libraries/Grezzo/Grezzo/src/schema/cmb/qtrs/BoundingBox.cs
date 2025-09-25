@@ -7,7 +7,7 @@ using schema.binary;
 namespace grezzo.schema.cmb.qtrs;
 
 [BinarySchema]
-public partial class BoundingBox : IBinaryConvertible {
+public sealed partial class BoundingBox : IBinaryConvertible {
   // M-1 checked all files, and Min/Max are the only values to ever change
   [Unknown]
   public uint unk0 { get; private set; }

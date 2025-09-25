@@ -8,7 +8,7 @@ using schema.binary;
 namespace fin.schema.color;
 
 [BinarySchema]
-public partial class RgbaS10 : IBinaryConvertible {
+public sealed partial class RgbaS10 : IBinaryConvertible {
   private short r_;
   private short g_;
   private short b_;

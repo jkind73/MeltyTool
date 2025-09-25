@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace sm64ds.schema.bmd;
 
 [BinarySchema]
-public partial class DisplayList : IBinaryConvertible {
+public sealed partial class DisplayList : IBinaryConvertible {
   [Unknown]
   public uint Unknown { get; set; }
 
@@ -17,7 +17,7 @@ public partial class DisplayList : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class DisplayListData : IBinaryConvertible {
+public sealed partial class DisplayListData : IBinaryConvertible {
   public uint TransformCount { get; set; }
   public uint TransformsOffset { get; set; }
 

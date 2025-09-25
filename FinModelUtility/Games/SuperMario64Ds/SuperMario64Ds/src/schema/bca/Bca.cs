@@ -9,7 +9,7 @@ namespace sm64ds.schema.bca;
 ///   https://github.com/Arisotura/SM64DSe/blob/master/SM64DSFormats/BCA.cs
 /// </summary>
 [BinarySchema]
-public partial class Bca : IBinaryDeserializable {
+public sealed partial class Bca : IBinaryDeserializable {
   public ushort NumBones { get; set; }
   public ushort NumFrames { get; set; }
 

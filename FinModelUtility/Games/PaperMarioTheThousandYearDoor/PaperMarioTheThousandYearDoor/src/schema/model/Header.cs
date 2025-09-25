@@ -8,7 +8,7 @@ using ttyd.schema.model.blocks;
 namespace ttyd.schema.model;
 
 [BinarySchema]
-public partial class Header : IBinaryDeserializable {
+public sealed partial class Header : IBinaryDeserializable {
   public uint AnimationOffset { get; set; }
 
   [StringLengthSource(64)]

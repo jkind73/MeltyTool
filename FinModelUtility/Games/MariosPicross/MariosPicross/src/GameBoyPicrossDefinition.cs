@@ -14,7 +14,7 @@ namespace MariosPicross;
 ///   https://github.com/sopoforic/cgrr-mariospicross/blob/master/mariospicross.py
 /// </summary>
 [BinarySchema]
-public partial class GameBoyPicrossDefinition 
+public sealed partial class GameBoyPicrossDefinition 
     : IPicrossDefinition, IBinaryConvertible {
   [Skip]
   public string Name { get; set; }

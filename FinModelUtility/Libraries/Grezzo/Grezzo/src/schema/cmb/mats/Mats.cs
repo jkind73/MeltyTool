@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
-public partial class Mats : IBinaryConvertible {
+public sealed partial class Mats : IBinaryConvertible {
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
   public Material[] Materials { get; set; }
 

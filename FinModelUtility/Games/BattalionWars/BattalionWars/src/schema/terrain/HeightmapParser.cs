@@ -161,7 +161,7 @@ public partial class HeightmapParser : IBwHeightmap {
   }
 
   [BinarySchema]
-  public partial class SchemaTile : IBinaryConvertible {
+  public sealed partial class SchemaTile : IBinaryConvertible {
     public ushort[] Heights { get; } = new ushort[16];
     public Rgba32[] LightColors { get; } = new Rgba32[16];
     public TileUvs[] SurfaceTextureUvsFromFirstRow { get; } = new TileUvs[4];

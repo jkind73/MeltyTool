@@ -17,7 +17,7 @@ public enum PIXEL_PROCESS_ENABLE : byte {
 }
 
 [BinarySchema]
-public partial class PeDesc : IBinaryDeserializable {
+public sealed partial class PeDesc : IBinaryDeserializable {
   public PIXEL_PROCESS_ENABLE Flags { get; set; }
 
   [NumberFormat(SchemaNumberType.UN8)]

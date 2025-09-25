@@ -34,7 +34,7 @@ public partial class Bca : IBcx {
   public IAnx1 Anx1 => this.ANF1;
 
   [BinarySchema]
-  public partial class BcaHeader : IBinaryConvertible {
+  public sealed partial class BcaHeader : IBinaryConvertible {
     private readonly string magic_ = "J3D1bca1";
 
     [WSizeOfStreamInBytes]
@@ -140,13 +140,13 @@ public partial class Bca : IBcx {
       }
 
       [BinarySchema]
-      public partial class AnimComponent : IBinaryConvertible {
+      public sealed partial class AnimComponent : IBinaryConvertible {
         public AnimIndex S { get; } = new();
         public AnimIndex R { get; } = new();
         public AnimIndex T { get; } = new();
 
         [BinarySchema]
-        public partial class AnimIndex : IBinaryConvertible {
+        public sealed partial class AnimIndex : IBinaryConvertible {
           public ushort Count;
           public ushort Index;
         }

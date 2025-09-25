@@ -12,7 +12,7 @@ namespace fin.schema.data;
 ///   parent data.
 /// </summary>
 [BinarySchema]
-public partial class SwitchMagicStringUInt32SizedSection<T>(
+public sealed partial class SwitchMagicStringUInt32SizedSection<T>(
     int magicLength,
     Func<string, T> createTypeHandler)
     : IMagicSection<T>

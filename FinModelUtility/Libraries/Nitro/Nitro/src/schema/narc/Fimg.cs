@@ -10,13 +10,13 @@ namespace nitro.schema.narc;
 ///   https://github.com/nickworonekin/narchive/blob/master/src/Narchive/Formats/NarcArchive.cs
 /// </summary>
 [BinarySchema]
-public partial class Fimg : IBinaryConvertible {
+public sealed partial class Fimg : IBinaryConvertible {
   public AutoStringMagicUInt32SizedSection<FimgData> Data { get; }
     = new("FIMG");
 }
 
 [BinarySchema]
-public partial class FimgData : IBinaryConvertible {
+public sealed partial class FimgData : IBinaryConvertible {
   [RPositionRelativeToStream]
   public long Offset { get; private set; }
 }

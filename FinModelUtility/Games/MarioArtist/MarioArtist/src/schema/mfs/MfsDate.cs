@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace marioartist.schema.mfs;
 
 [BinarySchema]
-public partial class MfsDate : IBinaryDeserializable {
+public sealed partial class MfsDate : IBinaryDeserializable {
   private uint data_;
 
   [Skip]

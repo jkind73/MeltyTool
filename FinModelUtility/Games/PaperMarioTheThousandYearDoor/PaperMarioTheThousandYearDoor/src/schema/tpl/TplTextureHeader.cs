@@ -3,7 +3,7 @@
 namespace ttyd.schema.tpl;
 
 [BinarySchema]
-public partial class TplTextureHeader : IBinaryDeserializable {
+public sealed partial class TplTextureHeader : IBinaryDeserializable {
   public ushort Height { get; set; }
   public ushort Width { get; set; }
 

@@ -57,7 +57,7 @@ public enum JObjFlags : uint {
 ///   Joint object.
 /// </summary>
 [BinarySchema]
-public partial class JObj : IDatTreeNode<JObj>, IBinaryDeserializable {
+public sealed partial class JObj : IDatTreeNode<JObj>, IBinaryDeserializable {
   public uint StringOffset { get; set; }
   public JObjFlags Flags { get; set; }
   public uint FirstChildBoneOffset { get; set; }

@@ -75,7 +75,7 @@ public static class Chunk {
 }
 
 [BinarySchema]
-public partial class ChunkData : IBinaryConvertible {
+public sealed partial class ChunkData : IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.UINT32)]
   public ChunkId Id { get; private set; }
 

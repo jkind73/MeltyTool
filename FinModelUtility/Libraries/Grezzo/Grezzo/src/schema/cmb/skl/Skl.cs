@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.skl;
 
 [BinarySchema]
-public partial class Skl : IBinaryConvertible {
+public sealed partial class Skl : IBinaryConvertible {
   private uint boneCount_;
 
   // M-1: Only value found is "2", possibly "IsTranslateAnimationEnabled"

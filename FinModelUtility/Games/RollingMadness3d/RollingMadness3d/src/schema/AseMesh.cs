@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace rollingMadness.schema;
 
 [BinarySchema]
-public partial class AseMesh : IBinaryConvertible {
+public sealed partial class AseMesh : IBinaryConvertible {
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
   public AseString[] ImageNames { get; set; }
 
@@ -28,7 +28,7 @@ public partial class AseMesh : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class AseString : IBinaryConvertible {
+public sealed partial class AseString : IBinaryConvertible {
   public string Value { get; set; }
 
   public void Read(IBinaryReader br) {
@@ -56,13 +56,13 @@ public partial class AseString : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Vertex : IBinaryConvertible {
+public sealed partial class Vertex : IBinaryConvertible {
   public Vector3 Position { get; set; }
   public Vector3 Normal { get; set; }
 }
 
 [BinarySchema]
-public partial class UvData : IBinaryConvertible {
+public sealed partial class UvData : IBinaryConvertible {
   public Vector2 Uv { get; set; }
   public float Unk0 { get; set; }
   public float Unk1 { get; set; }
@@ -70,7 +70,7 @@ public partial class UvData : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Triangle : IBinaryConvertible {
+public sealed partial class Triangle : IBinaryConvertible {
   public uint Vertex1 { get; set; }
   public uint Vertex2 { get; set; }
   public uint Vertex3 { get; set; }

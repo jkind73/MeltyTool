@@ -20,7 +20,7 @@ namespace UoT.model {
   }
 
   [BinarySchema]
-  public partial class NonLinkLimb : ILimb2 {
+  public sealed partial class NonLinkLimb : ILimb2 {
     public short X { get; set; }
     public short Y { get; set; }
     public short Z { get; set; }
@@ -32,7 +32,7 @@ namespace UoT.model {
   }
 
   [BinarySchema]
-  public partial class LinkLimb : ILimb2 {
+  public sealed partial class LinkLimb : ILimb2 {
     public short X { get; set; }
     public short Y { get; set; }
     public short Z { get; set; }

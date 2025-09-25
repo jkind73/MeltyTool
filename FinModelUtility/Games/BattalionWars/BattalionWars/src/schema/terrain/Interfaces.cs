@@ -10,7 +10,7 @@ namespace modl.schema.terrain;
 public record BwSection(string Name, int Size, long Offset);
 
 [BinarySchema]
-public partial class BwHeightmapMaterial : IBinaryConvertible {
+public sealed partial class BwHeightmapMaterial : IBinaryConvertible {
   [StringLengthSource(16)]
   public string Texture1 { get; private set; }
 

@@ -27,7 +27,7 @@ public sealed class BwArchive : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class Sond : IBinaryConvertible {
+public sealed partial class Sond : IBinaryConvertible {
   private readonly string magic_ = "DNOS"; // SOND backwards
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]

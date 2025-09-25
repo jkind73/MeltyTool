@@ -44,7 +44,7 @@ public enum PObjFlags : ushort {
 /// </summary>
 public partial class PObj : IDatLinkedListNode<PObj>, IBinaryDeserializable {
   [BinarySchema]
-  public partial class PObjHeader : IBinaryDeserializable {
+  public sealed partial class PObjHeader : IBinaryDeserializable {
     public uint StringOffset { get; set; }
     public uint NextPObjOffset { get; set; }
     public uint VertexDescriptorListOffset { get; set; }

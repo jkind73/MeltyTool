@@ -13,7 +13,7 @@ public enum Inf1EntryType : ushort {
 }
 
 [BinarySchema]
-public partial class Inf1Entry : IBinaryConvertible {
+public sealed partial class Inf1Entry : IBinaryConvertible {
   public Inf1EntryType Type { get; set; }
   public ushort Index { get; set; }
 

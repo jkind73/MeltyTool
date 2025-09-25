@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace fin.schema.data;
 
 [BinarySchema]
-public partial class AutoMagicUInt32SizedSection<TMagic, TData>
+public sealed partial class AutoMagicUInt32SizedSection<TMagic, TData>
     : IMagicSection<TMagic, TData>
     where TMagic : notnull
     where TData : IBinaryConvertible {

@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace sm64.schema {
   [Endianness(SchemaConstants.SM64_ENDIANNESS)]
   [BinarySchema]
-  public partial class PresetMacroEntry : IBinaryConvertible {
+  public sealed partial class PresetMacroEntry : IBinaryConvertible {
     [Skip]
     public ushort PresetId { get; set; }
 

@@ -7,7 +7,7 @@ namespace sysdolphin.schema.melee;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Melee/Pl/SBM_FighterBoneIDs.cs
 /// </summary>
 [BinarySchema]
-public partial class MeleeFighterBoneIds : IBinaryDeserializable {
+public sealed partial class MeleeFighterBoneIds : IBinaryDeserializable {
   public int HeadBone { get; set; }
   public int RightArm { get; set; }
   public int LeftLeg { get; set; }

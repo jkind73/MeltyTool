@@ -10,7 +10,7 @@ namespace fin.schema.data;
 ///   parent data.
 /// </summary>
 [BinarySchema]
-public partial class AutoUInt32SizedSection<T> : ISizedSection<T>
+public sealed partial class AutoUInt32SizedSection<T> : ISizedSection<T>
     where T : IBinaryConvertible, new() {
   private readonly PassThruUInt32SizedSection<T> impl_ = new(new T());
 

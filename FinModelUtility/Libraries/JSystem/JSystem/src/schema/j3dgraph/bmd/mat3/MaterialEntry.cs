@@ -16,7 +16,7 @@ public enum RenderOrder : byte {
 ///   https://github.com/LordNed/WindEditor/wiki/BMD-and-BDL-Model-Format#material-entry
 /// </summary>
 [BinarySchema]
-public partial class MaterialEntry : IBinaryConvertible {
+public sealed partial class MaterialEntry : IBinaryConvertible {
   public RenderOrder RenderOrder { get; set; }
   public byte CullModeIndex { get; set; }
   public byte ColorChannelControlsCountIndex { get; set; }

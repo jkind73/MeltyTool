@@ -12,7 +12,7 @@ public enum MaterialFlags : uint;
 ///   https://info.sonicretro.org/SCHG:Sonic_Adventure/Model_Format
 /// </summary>
 [BinarySchema]
-public partial class Material : IBinaryConvertible {
+public sealed partial class Material : IBinaryConvertible {
   public Argb32 DiffuseColor { get; set; }
   public Argb32 SpecularColor { get; set; }
   public float Exponent { get; set; }

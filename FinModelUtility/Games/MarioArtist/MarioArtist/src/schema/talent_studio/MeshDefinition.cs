@@ -4,7 +4,7 @@
 namespace marioartist.schema.talent_studio;
 
 [BinarySchema]
-public partial class MeshDefinition : IBinaryDeserializable {
+public sealed partial class MeshDefinition : IBinaryDeserializable {
   public uint[] MeshSegmentedAddresses { get; } = new uint[4];
   public byte[] Unk0 { get; } = new byte[4];
 

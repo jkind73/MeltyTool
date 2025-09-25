@@ -9,7 +9,7 @@ public enum AstAudioFormat : ushort {
 }
 
 [BinarySchema]
-public partial class StrmHeader : IBinaryConvertible {
+public sealed partial class StrmHeader : IBinaryConvertible {
   private readonly string magic_ = "STRM";
 
   public uint MaybeSizeOfBlockSection { get; private set; }

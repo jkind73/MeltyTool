@@ -10,7 +10,7 @@ namespace sm64ds.schema.bmd;
 ///   https://kuribo64.net/get.php?id=KBNyhM0kmNiuUBb3
 /// </summary>
 [BinarySchema]
-public partial class Palette : IBinaryConvertible {
+public sealed partial class Palette : IBinaryConvertible {
   private uint nameOffset_;
 
   [NullTerminatedString]

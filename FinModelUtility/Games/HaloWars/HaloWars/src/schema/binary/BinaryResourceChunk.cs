@@ -32,7 +32,7 @@ public enum BinaryResourceChunkType : ulong {
 }
 
 [BinarySchema]
-public partial class BinaryResourceChunk : IBinaryDeserializable {
+public sealed partial class BinaryResourceChunk : IBinaryDeserializable {
   public BinaryResourceChunkType Type { get; set; }
   public uint Offset { get; set; }
   public uint Size { get; set;}

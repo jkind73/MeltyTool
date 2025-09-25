@@ -11,12 +11,12 @@ using schema.binary.attributes;
 namespace pikmin1.schema.mod.collision;
 
 [BinarySchema]
-public partial class BaseRoomInfo : IBinaryConvertible {
+public sealed partial class BaseRoomInfo : IBinaryConvertible {
   public uint index = 0;
 }
 
 [BinarySchema]
-public partial class BaseCollTriInfo : IBinaryConvertible {
+public sealed partial class BaseCollTriInfo : IBinaryConvertible {
   public uint mapCode = 0;
   public readonly Vector3i indice = new();
 
@@ -36,7 +36,7 @@ public partial class BaseCollTriInfo : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CollTriInfo : IBinaryConvertible {
+public sealed partial class CollTriInfo : IBinaryConvertible {
   [WLengthOfSequence(nameof(collinfo))]
   private uint colInfoCount_;
 
@@ -56,7 +56,7 @@ public partial class CollTriInfo : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CollGroup : IBinaryConvertible {
+public sealed partial class CollGroup : IBinaryConvertible {
   [Unknown]
   [WLengthOfSequence(nameof(unknown1))]
   private ushort NumUnknown1 { get; set; }
@@ -75,7 +75,7 @@ public partial class CollGroup : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CollGrid : IBinaryConvertible {
+public sealed partial class CollGrid : IBinaryConvertible {
   [AlignStart(0x20)]
   public Vector3 boundsMin { get; set; }
 

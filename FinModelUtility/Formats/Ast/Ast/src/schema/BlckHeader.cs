@@ -5,7 +5,7 @@ using schema.binary;
 namespace ast.schema;
 
 [BinarySchema]
-public partial class BlckHeader : IBinaryConvertible {
+public sealed partial class BlckHeader : IBinaryConvertible {
   private readonly string magic_ = "BLCK";
 
   public uint BlockSizeInBytes { get; private set; }

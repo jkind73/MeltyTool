@@ -23,7 +23,7 @@ public partial class Bigh : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class BighEntryInfo : IBinaryDeserializable {
+public sealed partial class BighEntryInfo : IBinaryDeserializable {
   public uint Offset { get; set; }
   public uint Size { get; set; }
   public uint NameHash { get; set; }

@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace gm.schema.vb;
 
 [BinarySchema]
-public partial class Vb : IBinaryConvertible {
+public sealed partial class Vb : IBinaryConvertible {
   [RSequenceUntilEndOfStream]
   public VbVertex[] Vertices { get; set; }
 }

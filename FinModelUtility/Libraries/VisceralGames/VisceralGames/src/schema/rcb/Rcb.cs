@@ -79,7 +79,7 @@ public partial class Rcb : IBinaryDeserializable {
   }
 
   [BinarySchema]
-  public partial class Bone : IBinaryConvertible {
+  public sealed partial class Bone : IBinaryConvertible {
     public Matrix4x4 Matrix { get; set; }
   }
 }

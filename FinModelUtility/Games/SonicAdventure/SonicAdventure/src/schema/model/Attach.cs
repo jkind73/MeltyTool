@@ -12,7 +12,7 @@ namespace sonicadventure.schema.model;
 ///   https://info.sonicretro.org/SCHG:Sonic_Adventure/Model_Format
 /// </summary>
 [BinarySchema]
-public partial class Attach(uint keyedPointer, uint key)
+public sealed partial class Attach(uint keyedPointer, uint key)
     : IKeyedInstance<Attach> {
   public static Attach New(uint keyedPointer, uint key)
     => new(keyedPointer, key);

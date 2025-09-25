@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.luts;
 
 [BinarySchema]
-public partial class LutSet : IBinaryConvertible {
+public sealed partial class LutSet : IBinaryConvertible {
   public ushort BitFlags; //Not sure
 
   [WLengthOfSequence(nameof(Keyframes))]

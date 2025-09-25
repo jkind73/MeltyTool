@@ -8,7 +8,7 @@ namespace ttyd.schema.model.blocks;
 ///   https://github.com/PistonMiner/ttyd-tools/blob/master/ttyd-tools/docs/MarioSt_AnimGroupBase.bt#L395
 /// </summary>
 [BinarySchema]
-public partial class Animation : IBinaryConvertible {
+public sealed partial class Animation : IBinaryConvertible {
   [StringLengthSource(16)]
   public string Name { get; set; }
 

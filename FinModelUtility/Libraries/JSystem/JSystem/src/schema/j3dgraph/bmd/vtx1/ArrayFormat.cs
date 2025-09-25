@@ -9,7 +9,7 @@ using schema.binary;
 namespace jsystem.schema.j3dgraph.bmd.vtx1;
 
 [BinarySchema]
-public partial class ArrayFormat : IBinaryConvertible {
+public sealed partial class ArrayFormat : IBinaryConvertible {
   public GxVertexAttribute ArrayType;
   public GxComponentCountType ComponentCountType { get; set; }
   public GxComponentType DataType;

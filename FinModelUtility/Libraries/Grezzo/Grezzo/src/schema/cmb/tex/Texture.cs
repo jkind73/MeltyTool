@@ -9,7 +9,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.tex;
 
 [BinarySchema]
-public partial class Texture : IBinaryConvertible {
+public sealed partial class Texture : IBinaryConvertible {
   public uint dataLength { get; private set; }
   public ushort mimapCount { get; private set; }
 

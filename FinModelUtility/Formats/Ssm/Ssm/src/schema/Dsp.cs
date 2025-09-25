@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace ssm.schema;
 
 [BinarySchema]
-public partial class Dsp : IBinaryDeserializable, IChildOf<Ssm> {
+public sealed partial class Dsp : IBinaryDeserializable, IChildOf<Ssm> {
   public Ssm Parent { get; set; }
 
   public uint ChannelCount { get; set; }

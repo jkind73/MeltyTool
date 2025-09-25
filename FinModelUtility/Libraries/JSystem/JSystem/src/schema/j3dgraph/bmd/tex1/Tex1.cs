@@ -19,7 +19,7 @@ public partial class Tex1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Tex1Data : IBinaryConvertible {
+public sealed partial class Tex1Data : IBinaryConvertible {
   [WLengthOfSequence(nameof(TextureHeaders))]
   private ushort textureCount_;
 

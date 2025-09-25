@@ -21,7 +21,7 @@ public enum PolyType {
 ///   https://info.sonicretro.org/SCHG:Sonic_Adventure/Model_Format
 /// </summary>
 [BinarySchema]
-public partial class Mesh(uint keyedPointer, uint key) : IKeyedInstance<Mesh> {
+public sealed partial class Mesh(uint keyedPointer, uint key) : IKeyedInstance<Mesh> {
   public static Mesh New(uint keyedPointer, uint key) => new(keyedPointer, key);
 
   public ushort PolyTypeAndMaterialId { get; set; }

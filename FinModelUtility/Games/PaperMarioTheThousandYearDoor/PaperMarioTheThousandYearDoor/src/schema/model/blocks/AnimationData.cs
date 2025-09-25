@@ -73,7 +73,7 @@ public partial class AnimationData : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class
+public sealed partial class
     AnimationModelFileAnimationBaseInfo : IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.UINT32)]
   public bool Loop { get; set; }
@@ -83,7 +83,7 @@ public partial class
 }
 
 [BinarySchema]
-public partial class AnimationModelFileAnimationKeyframe
+public sealed partial class AnimationModelFileAnimationKeyframe
     : IBinaryConvertible {
   public float Time { get; set; }
 
@@ -104,7 +104,7 @@ public partial class AnimationModelFileAnimationKeyframe
 }
 
 [BinarySchema]
-public partial class AnimationModelFileAnimationVectorDelta
+public sealed partial class AnimationModelFileAnimationVectorDelta
     : IBinaryConvertible {
   public byte IndexDelta { get; set; }
 
@@ -113,7 +113,7 @@ public partial class AnimationModelFileAnimationVectorDelta
 }
 
 [BinarySchema]
-public partial class
+public sealed partial class
     AnimationModelFileAnimationTextureCoordinateTransformDelta
     : IBinaryConvertible {
   public byte IndexDelta { get; set; }
@@ -124,7 +124,7 @@ public partial class
 }
 
 [BinarySchema]
-public partial class AnimationModelFileAnimationVisibilityGroupStatus
+public sealed partial class AnimationModelFileAnimationVisibilityGroupStatus
     : IBinaryConvertible {
   public byte VisibilityGroupId { get; set; }
   public sbyte Visible { get; set; }
@@ -132,7 +132,7 @@ public partial class AnimationModelFileAnimationVisibilityGroupStatus
 
 
 [BinarySchema]
-public partial class GroupTransformDelta
+public sealed partial class GroupTransformDelta
     : IBinaryConvertible {
   public byte IndexDelta { get; set; }
   public sbyte ValueDelta { get; set; }

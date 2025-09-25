@@ -28,7 +28,7 @@ using schema.binary.attributes;
 namespace visceral.schema.str.content;
 
 [BinarySchema]
-public partial class FileInfo : IContent {
+public sealed partial class FileInfo : IContent {
   public FileBuild Build { get; set; }
   public ushort Alignment { get; set; }
   public ushort Flags { get; set; }

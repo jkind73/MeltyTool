@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace jsystem.schema.j3dgraph.bmd.mat3;
 
 [BinarySchema]
-public partial class TevStageProps : ITevStageProps, IBinaryConvertible {
+public sealed partial class TevStageProps : ITevStageProps, IBinaryConvertible {
   private readonly byte padding0_ = byte.MaxValue;
 
   public GxCc color_a { get; set; }

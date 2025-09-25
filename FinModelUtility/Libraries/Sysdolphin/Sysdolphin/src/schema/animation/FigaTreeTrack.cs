@@ -8,7 +8,7 @@ namespace sysdolphin.schema.animation;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Common/Animation/HSD_Track.cs
 /// </summary>
 [BinarySchema]
-public partial class FigaTreeTrack : IDatKeyframes, IBinaryDeserializable {
+public sealed partial class FigaTreeTrack : IDatKeyframes, IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.UINT16)]
   public uint DataLength { get; set; }
 

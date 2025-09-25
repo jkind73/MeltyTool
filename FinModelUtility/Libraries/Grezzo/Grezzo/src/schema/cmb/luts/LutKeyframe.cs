@@ -3,7 +3,7 @@
 namespace grezzo.schema.cmb.luts;
 
 [BinarySchema]
-public partial class LutKeyframe : IBinaryConvertible {
+public sealed partial class LutKeyframe : IBinaryConvertible {
   public float InSlope;
   public float OutSlope;
   public int Frame;

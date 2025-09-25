@@ -10,7 +10,7 @@ namespace fin.schema.data;
 ///   parent data.
 /// </summary>
 [BinarySchema]
-public partial class AutoStringMagicJankSizedSection<T>(string magic)
+public sealed partial class AutoStringMagicJankSizedSection<T>(string magic)
     : IMagicSection<T>
     where T : IBinaryConvertible, new() {
   private readonly PassThruStringMagicJankSizedSection<T> impl_ = new(magic, new T());

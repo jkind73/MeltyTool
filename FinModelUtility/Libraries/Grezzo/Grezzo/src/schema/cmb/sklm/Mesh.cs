@@ -8,7 +8,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.sklm;
 
 [BinarySchema]
-public partial class Mesh : IBinaryConvertible {
+public sealed partial class Mesh : IBinaryConvertible {
   public ushort shapeIndex;
   public byte materialIndex;
   public byte id;

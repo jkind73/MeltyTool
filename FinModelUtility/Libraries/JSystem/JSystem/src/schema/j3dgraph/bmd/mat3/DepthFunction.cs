@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace jsystem.schema.j3dgraph.bmd.mat3;
 
 [BinarySchema]
-public partial class DepthFunction : IDepthFunction, IBinaryConvertible {
+public sealed partial class DepthFunction : IDepthFunction, IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool Enable { get; set; }
 

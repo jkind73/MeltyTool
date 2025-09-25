@@ -32,7 +32,7 @@ namespace visceral.schema.str;
 
 [Endianness(Endianness.LittleEndian)]
 [BinarySchema]
-public partial class StreamSetFile : IBinaryConvertible {
+public sealed partial class StreamSetFile : IBinaryConvertible {
   private readonly BlockType magic_ = BlockType.Options;
   private readonly uint size_ = 12;
 
@@ -58,7 +58,7 @@ public partial class StreamSetFile : IBinaryConvertible {
   public List<BlockWrapper> Contents { get; } = [];
 
   [BinarySchema]
-  public partial class BlockWrapper : IBinaryConvertible {
+  public sealed partial class BlockWrapper : IBinaryConvertible {
     public SwitchMagicUInt32SizedSection<BlockType, IBlock> Impl { get; }
       = new(new BlockConfig()) { TweakReadSize = -8 };
 

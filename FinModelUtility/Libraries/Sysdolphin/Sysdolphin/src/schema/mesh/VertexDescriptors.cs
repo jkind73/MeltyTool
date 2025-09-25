@@ -8,7 +8,7 @@ using schema.binary;
 namespace sysdolphin.schema.mesh;
 
 [BinarySchema]
-public partial class VertexDescriptors
+public sealed partial class VertexDescriptors
     : IVertexDescriptor, IBinaryConvertible {
   private readonly Dictionary<GxVertexAttribute, VertexDescriptor> map_ = new();
 

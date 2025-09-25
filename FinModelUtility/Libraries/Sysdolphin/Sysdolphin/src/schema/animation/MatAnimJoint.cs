@@ -8,7 +8,7 @@ namespace sysdolphin.schema.animation;
 ///   https://github.com/Ploaj/HSDLib/blob/b7554d5c753cca2d50090cdd7366afe64dd8f175/HSDRaw/Common/Animation/HSD_MatAnim.cs#L3
 /// </summary>
 [BinarySchema]
-public partial class MatAnimJoint : IDatTreeNode<MatAnimJoint>,
+public sealed partial class MatAnimJoint : IDatTreeNode<MatAnimJoint>,
                                     IBinaryDeserializable {
   public uint FirstChildOffset { get; set; }
   public uint NextSiblingOffset { get; set; }

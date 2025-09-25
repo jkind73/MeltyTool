@@ -35,7 +35,7 @@ public enum RObjLimitType : byte {
 ///   https://github.com/Ploaj/HSDLib/blob/1a03d63a35376adc79a0a7495a389ea1a9dc4226/HSDRaw/Common/HSD_ROBJ.cs#L34
 /// </summary>
 [BinarySchema]
-public partial class RObj : IDatLinkedListNode<RObj>, IBinaryDeserializable {
+public sealed partial class RObj : IDatLinkedListNode<RObj>, IBinaryDeserializable {
   public uint NextRObjOffset { get; set; }
   public int Flags { get; set; }
   public int ReferenceOffset { get; set; }

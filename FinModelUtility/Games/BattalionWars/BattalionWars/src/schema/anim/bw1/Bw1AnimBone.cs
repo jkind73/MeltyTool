@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace modl.schema.anim.bw1;
 
 [BinarySchema]
-public partial class Bw1AnimBone : IBwAnimBone, IBinaryConvertible {
+public sealed partial class Bw1AnimBone : IBwAnimBone, IBinaryConvertible {
   public string GetIdentifier() => Bw1Node.GetIdentifier(this.WeirdId);
 
   [StringLengthSource(16)] public string Name { get; set; }

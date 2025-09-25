@@ -22,7 +22,7 @@ public partial class Evp1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Evp1Data : IBinaryConvertible {
+public sealed partial class Evp1Data : IBinaryConvertible {
   [WLengthOfSequence(nameof(envelopeSizes_))]
   private ushort envelopeCount_;
   private readonly ushort padding_ = ushort.MaxValue;

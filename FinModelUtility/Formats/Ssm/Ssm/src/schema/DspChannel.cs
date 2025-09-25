@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace ssm.schema;
 
 [BinarySchema]
-public partial class DspChannel : IBinaryDeserializable, IChildOf<Dsp> {
+public sealed partial class DspChannel : IBinaryDeserializable, IChildOf<Dsp> {
   public Dsp Parent { get; set; }
 
   public ushort LoopFlag { get; set; }

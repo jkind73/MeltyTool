@@ -10,7 +10,7 @@ using schema.binary;
 namespace jsystem.schema.j3dgraph.bmd.mat3;
 
 [BinarySchema]
-public partial class TextureMatrixInfo
+public sealed partial class TextureMatrixInfo
     : ITextureMatrixInfo,
       IBinaryConvertible {
   public GxTexGenType TexGenType { get; set; }

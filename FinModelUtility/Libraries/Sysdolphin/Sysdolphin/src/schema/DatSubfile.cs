@@ -236,7 +236,7 @@ public sealed class DatSubfile : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class FileHeader : IBinaryConvertible {
+public sealed partial class FileHeader : IBinaryConvertible {
   public uint FileSize { get; set; }
   public uint DataBlockSize { get; set; }
 
@@ -272,7 +272,7 @@ public partial class FileHeader : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class RootNodeData : IBinaryConvertible {
+public sealed partial class RootNodeData : IBinaryConvertible {
   public uint DataOffset { get; set; }
   public uint StringOffset { get; set; }
 }

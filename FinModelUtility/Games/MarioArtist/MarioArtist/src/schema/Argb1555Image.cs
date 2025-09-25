@@ -11,7 +11,7 @@ public interface IMarioArtistImage : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class Argb1555Image(int width, int height) : IMarioArtistImage {
+public sealed partial class Argb1555Image(int width, int height) : IMarioArtistImage {
   public byte[] Data { get; } = new byte[2 * width * height];
 
   public IImage ToImage()

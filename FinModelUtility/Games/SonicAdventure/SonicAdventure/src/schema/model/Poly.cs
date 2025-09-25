@@ -6,19 +6,19 @@ namespace sonicadventure.schema.model;
 public interface IPoly : IBinaryConvertible;
 
 [BinarySchema]
-public partial class TrianglesPoly : IPoly {
+public sealed partial class TrianglesPoly : IPoly {
   [SequenceLengthSource(3)]
   public ushort[] VertexIndices { get; private set; }
 }
 
 [BinarySchema]
-public partial class QuadsPoly : IPoly {
+public sealed partial class QuadsPoly : IPoly {
   [SequenceLengthSource(4)]
   public ushort[] VertexIndices { get; private set; }
 }
 
 [BinarySchema]
-public partial class TriangleStripPoly : IPoly {
+public sealed partial class TriangleStripPoly : IPoly {
   [WLengthOfSequence(nameof(VertexIndices))]
   public byte NumStrips { get; set; }
 

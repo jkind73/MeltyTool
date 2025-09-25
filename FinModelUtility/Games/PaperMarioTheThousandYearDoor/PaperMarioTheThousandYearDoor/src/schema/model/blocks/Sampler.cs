@@ -11,7 +11,7 @@ public enum WrapFlags : int {
 }
 
 [BinarySchema]
-public partial record Sampler : IBinaryDeserializable {
+public sealed partial record Sampler : IBinaryDeserializable {
   public int TextureIndex { get; set; }
   public WrapFlags WrapFlags { get; set; }
 }

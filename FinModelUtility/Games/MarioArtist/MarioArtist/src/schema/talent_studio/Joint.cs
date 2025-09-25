@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace marioartist.schema.talent_studio;
 
 [BinarySchema]
-public partial class Joint : IBinaryDeserializable {
+public sealed partial class Joint : IBinaryDeserializable {
   public ushort unk0;
   public ushort unk1;
 

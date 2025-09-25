@@ -11,7 +11,7 @@ namespace sm64ds.schema.bmd;
 ///   https://kuribo64.net/get.php?id=KBNyhM0kmNiuUBb3
 /// </summary>
 [BinarySchema]
-public partial class Material : IBinaryConvertible {
+public sealed partial class Material : IBinaryConvertible {
   private uint nameOffset_;
 
   [NullTerminatedString]

@@ -10,7 +10,7 @@ namespace sm64ds.schema.bmd;
 ///   https://kuribo64.net/get.php?id=KBNyhM0kmNiuUBb3
 /// </summary>
 [BinarySchema]
-public partial class Bone : IBinaryConvertible {
+public sealed partial class Bone : IBinaryConvertible {
   public uint Id { get; set; }
 
   private uint nameOffset_;

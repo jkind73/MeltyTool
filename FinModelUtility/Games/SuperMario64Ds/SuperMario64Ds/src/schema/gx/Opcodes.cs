@@ -14,7 +14,7 @@ public interface IOpcode : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class NoopOpcode : IOpcode {
+public sealed partial class NoopOpcode : IOpcode {
   [Skip]
   public OpcodeType Type => OpcodeType.NOOP;
 }
@@ -195,7 +195,7 @@ public sealed class Vertex0x28Opcode : IOpcode {
 }
 
 [BinarySchema]
-public partial class BeginVertexListOpcode : IOpcode {
+public sealed partial class BeginVertexListOpcode : IOpcode {
   [Skip]
   public OpcodeType Type => OpcodeType.BEGIN_VERTEX_LIST;
 
@@ -206,7 +206,7 @@ public partial class BeginVertexListOpcode : IOpcode {
 }
 
 [BinarySchema]
-public partial class EndVertexListOpcode : IOpcode {
+public sealed partial class EndVertexListOpcode : IOpcode {
   [Skip]
   public OpcodeType Type => OpcodeType.END_VERTEX_LIST;
 }

@@ -6,13 +6,13 @@ using schema.binary;
 namespace marioartist.schema.talent_studio;
 
 [BinarySchema]
-public partial class ChosenColor : IBinaryDeserializable {
+public sealed partial class ChosenColor : IBinaryDeserializable {
   public uint Index { get; set; }
   public Rgba32 Color { get; set; }
 }
 
 [BinarySchema]
-public partial class ChosenPart0 : IBinaryDeserializable {
+public sealed partial class ChosenPart0 : IBinaryDeserializable {
   public uint Id { get; set; }
   public uint Unk0 { get; set; }
 

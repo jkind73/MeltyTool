@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace uni.platforms.threeDs.tools.cia;
 
 [BinarySchema]
-public partial class Cia : IBinaryDeserializable {
+public sealed partial class Cia : IBinaryDeserializable {
   private const int SECTION_ALIGNMENT = 64;
 
   public CiaHeader Header { get; } = new();

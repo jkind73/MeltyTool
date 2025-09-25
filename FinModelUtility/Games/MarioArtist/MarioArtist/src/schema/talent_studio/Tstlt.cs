@@ -20,7 +20,7 @@ public enum Gender : ushort {
 }
 
 [BinarySchema]
-public partial class Header : IBinaryDeserializable {
+public sealed partial class Header : IBinaryDeserializable {
   public uint Checksum { get; set; }
   public uint Unk0 { get; set; }
   [NullTerminatedString]
@@ -39,7 +39,7 @@ public partial class Header : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class AnotherHeader : IBinaryDeserializable {
+public sealed partial class AnotherHeader : IBinaryDeserializable {
   public uint unkCount0;
   public uint unkCount1;
   public uint unk2;

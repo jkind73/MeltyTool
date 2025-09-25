@@ -74,7 +74,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoBranchAndStoreCommand
+  public sealed partial class GeoBranchAndStoreCommand
       : IGeoCommandWithBranch, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.BRANCH_AND_STORE;
 
@@ -91,7 +91,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoTerminateCommand
+  public sealed partial class GeoTerminateCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.TERMINATE;
 
@@ -100,7 +100,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoBranchCommand
+  public sealed partial class GeoBranchCommand
       : IGeoCommandWithBranch, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.BRANCH;
 
@@ -116,7 +116,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoReturnFromBranchCommand
+  public sealed partial class GeoReturnFromBranchCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.RETURN_FROM_BRANCH;
 
@@ -125,7 +125,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoOpenNodeCommand : IGeoCommand, IBinaryDeserializable {
+  public sealed partial class GeoOpenNodeCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.OPEN_NODE;
 
     [IntegerFormat(SchemaIntegerType.UINT24)]
@@ -133,7 +133,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class
+  public sealed partial class
       GeoCloseNodeCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.CLOSE_NODE;
 
@@ -142,7 +142,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoViewportCommand : IGeoCommand, IBinaryDeserializable {
+  public sealed partial class GeoViewportCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.VIEWPORT;
     private readonly byte padding_ = 0;
 
@@ -154,7 +154,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoOrthoMatrixCommand
+  public sealed partial class GeoOrthoMatrixCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.ORTHO_MATRIX;
     private readonly byte padding_ = 0;
@@ -163,7 +163,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoCameraFrustumCommand
+  public sealed partial class GeoCameraFrustumCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.CAMERA_FRUSTUM;
 
@@ -179,7 +179,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoStartLayoutCommand
+  public sealed partial class GeoStartLayoutCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.START_LAYOUT;
 
@@ -188,7 +188,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoToggleDepthBufferCommand
+  public sealed partial class GeoToggleDepthBufferCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.TOGGLE_DEPTH_BUFFER;
 
@@ -200,7 +200,7 @@ namespace sm64.scripts {
 
 
   [BinarySchema]
-  public partial class GeoSetRenderRangeCommand
+  public sealed partial class GeoSetRenderRangeCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.SET_RENDER_RANGE;
 
@@ -212,7 +212,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoSwitchCommand : IGeoCommand, IBinaryDeserializable {
+  public sealed partial class GeoSwitchCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.SWITCH;
     private readonly byte padding_ = 0;
 
@@ -222,7 +222,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoCameraLookAtCommand
+  public sealed partial class GeoCameraLookAtCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.CAMERA_LOOK_AT;
     private readonly byte padding_ = 0;
@@ -259,7 +259,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoTranslationCommand
+  public sealed partial class GeoTranslationCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.TRANSLATE;
 
@@ -283,7 +283,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoRotationCommand
+  public sealed partial class GeoRotationCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.ROTATE;
 
@@ -307,7 +307,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoAnimatedPartCommand
+  public sealed partial class GeoAnimatedPartCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.ANIMATED_PART;
 
@@ -319,7 +319,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoBillboardCommand
+  public sealed partial class GeoBillboardCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.BILLBOARD;
 
@@ -343,7 +343,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoDisplayListCommand
+  public sealed partial class GeoDisplayListCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.DISPLAY_LIST;
     public GeoDrawingLayer DrawingLayer { get; set; }
@@ -353,7 +353,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoShadowCommand : IGeoCommand, IBinaryDeserializable {
+  public sealed partial class GeoShadowCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.SHADOW;
     private readonly byte padding_ = 0;
 
@@ -363,7 +363,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class
+  public sealed partial class
       GeoObjectListCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.OBJECT_LIST;
 
@@ -372,7 +372,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoDisplayListFromAsm
+  public sealed partial class GeoDisplayListFromAsm
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.DISPLAY_LIST_FROM_ASM;
 
@@ -383,7 +383,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class
+  public sealed partial class
       GeoBackgroundCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.BACKGROUND;
 
@@ -395,7 +395,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoNoopCommand : IGeoCommand, IBinaryDeserializable {
+  public sealed partial class GeoNoopCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id { get; set; }
 
     [IntegerFormat(SchemaIntegerType.UINT24)]
@@ -405,7 +405,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class
+  public sealed partial class
       GeoHeldObjectCommand : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.HELD_OBJECT;
 
@@ -418,7 +418,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoScaleCommand
+  public sealed partial class GeoScaleCommand
       : IGeoCommandWithDisplayList, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.SCALE;
 
@@ -444,7 +444,7 @@ namespace sm64.scripts {
   }
 
   [BinarySchema]
-  public partial class GeoCullingRadiusCommand
+  public sealed partial class GeoCullingRadiusCommand
       : IGeoCommand, IBinaryDeserializable {
     public GeoCommandId Id => GeoCommandId.CULLING_RADIUS;
 

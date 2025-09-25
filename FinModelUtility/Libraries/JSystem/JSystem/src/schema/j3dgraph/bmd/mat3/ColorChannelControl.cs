@@ -22,7 +22,7 @@ namespace jsystem.schema.j3dgraph.bmd.mat3;
 ///   </seealso>
 /// </summary>
 [BinarySchema]
-public partial class ColorChannelControl : IColorChannelControl,
+public sealed partial class ColorChannelControl : IColorChannelControl,
                                            IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool LightingEnabled { get; set; }

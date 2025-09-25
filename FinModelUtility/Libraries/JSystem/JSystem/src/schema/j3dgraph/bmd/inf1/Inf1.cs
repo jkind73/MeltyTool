@@ -19,7 +19,7 @@ public partial class Inf1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Inf1Data : IBinaryConvertible {
+public sealed partial class Inf1Data : IBinaryConvertible {
   public ushort ScalingRule;
   private readonly ushort padding_ = ushort.MaxValue;
 

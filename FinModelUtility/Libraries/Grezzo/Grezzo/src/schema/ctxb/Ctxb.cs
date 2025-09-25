@@ -15,7 +15,7 @@ public partial class Ctxb : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CtxbHeader : IChildOf<Ctxb>, IBinaryConvertible {
+public sealed partial class CtxbHeader : IChildOf<Ctxb>, IBinaryConvertible {
   public Ctxb Parent { get; set; }
 
   private readonly string magic_ = "ctxb";
@@ -34,7 +34,7 @@ public partial class CtxbHeader : IChildOf<Ctxb>, IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CtxbTexChunk : IBinaryConvertible {
+public sealed partial class CtxbTexChunk : IBinaryConvertible {
   private readonly string magic_ = "tex" + AsciiUtil.GetChar(0x20);
   private readonly int chunkSize_ = 0x30;
 
@@ -44,7 +44,7 @@ public partial class CtxbTexChunk : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class CtxbTexEntry : IBinaryConvertible {
+public sealed partial class CtxbTexEntry : IBinaryConvertible {
   [WLengthOfSequence(nameof(Data))]
   private uint dataLength_;
   public ushort mimapCount { get; private set; }

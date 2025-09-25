@@ -8,7 +8,7 @@ namespace marioartist.schema.mfs;
 ///   https://github.com/LuigiBlood/mfs_manager/blob/master/mfs_library/MFS/MFSDef.cs#L107
 /// </summary>
 [BinarySchema]
-public partial class MfsFile : IBinaryDeserializable, IMfsEntry {
+public sealed partial class MfsFile : IBinaryDeserializable, IMfsEntry {
   public MfsEntryFlags Flags { get; set; }
   public ushort ParentDirectoryIndex { get; set; }
 

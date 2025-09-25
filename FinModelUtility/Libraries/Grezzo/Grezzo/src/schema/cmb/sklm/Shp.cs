@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.sklm;
 
 [BinarySchema]
-public partial class Shp : IBinaryConvertible {
+public sealed partial class Shp : IBinaryConvertible {
   private readonly string magic_ = "shp" + AsciiUtil.GetChar(0x20);
 
   public uint chunkSize;

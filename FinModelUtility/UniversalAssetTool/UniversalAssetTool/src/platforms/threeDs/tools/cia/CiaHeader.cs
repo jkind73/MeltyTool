@@ -8,7 +8,7 @@ public enum CiaFormatVersion : ushort {
 }
 
 [BinarySchema]
-public partial class CiaHeader : IBinaryConvertible {
+public sealed partial class CiaHeader : IBinaryConvertible {
   public uint HeaderSize { get; set; }
   private readonly ushort padding_ = 0;
   public CiaFormatVersion FormatVersion { get; set; }

@@ -3,6 +3,6 @@
 namespace visceral.schema.dat;
 
 [BinarySchema]
-public partial class Dat : IBinaryConvertible {
+public sealed partial class Dat : IBinaryConvertible {
   private readonly string magic_ = "BIGH";
 }

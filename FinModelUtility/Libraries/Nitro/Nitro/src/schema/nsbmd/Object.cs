@@ -19,7 +19,7 @@ namespace nitro.schema.nsbmd {
   ///   https://github.com/scurest/apicula/blob/07c4d8facdcb015d118bf26a29d37c8b41021bfd/src/nitro/model.rs#L329
   /// </summary>
   [BinarySchema]
-  public partial class Object : IBinaryDeserializable {
+  public sealed partial class Object : IBinaryDeserializable {
     public ObjectFlags Flags { get; set; }
 
     [NumberFormat(SchemaNumberType.UN16)]

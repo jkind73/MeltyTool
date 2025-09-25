@@ -8,7 +8,7 @@ namespace sysdolphin.schema.animation;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Common/Animation/HSD_AnimJoint.cs#L4
 /// </summary>
 [BinarySchema]
-public partial class AnimJoint
+public sealed partial class AnimJoint
     : IDatTreeNode<AnimJoint>,
       IBinaryDeserializable {
   public uint FirstChildOffset { get; set; }

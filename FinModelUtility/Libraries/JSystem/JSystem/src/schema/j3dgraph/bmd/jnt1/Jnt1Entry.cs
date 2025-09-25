@@ -34,7 +34,7 @@ public enum JointType : ushort {
 }
 
 [BinarySchema]
-public partial class Jnt1Entry : IBinaryConvertible {
+public sealed partial class Jnt1Entry : IBinaryConvertible {
   public JointType JointType { get; set; }
 
   [IntegerFormat(SchemaIntegerType.BYTE)]

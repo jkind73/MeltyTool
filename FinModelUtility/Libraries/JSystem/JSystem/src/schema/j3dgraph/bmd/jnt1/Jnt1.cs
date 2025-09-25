@@ -18,7 +18,7 @@ public partial class Jnt1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Jnt1Data : IBinaryConvertible {
+public sealed partial class Jnt1Data : IBinaryConvertible {
   [WLengthOfSequence(nameof(Joints))]
   [WLengthOfSequence(nameof(RemapTable))]
   private ushort jointCount_;

@@ -9,7 +9,7 @@ namespace grezzo.schema.cmb.luts;
 ///   "LUT" stands for "lookup table". (But where is this actually used...?)
 /// </summary>
 [BinarySchema]
-public partial class Luts : IBinaryConvertible {
+public sealed partial class Luts : IBinaryConvertible {
   [WLengthOfSequence(nameof(Offset))]
   [WLengthOfSequence(nameof(luts))]
   private uint lutSetCount_;

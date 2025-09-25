@@ -12,7 +12,7 @@ namespace jsystem.schema.j3dgraph.btk;
 /// </summary>
 [Endianness(Endianness.BigEndian)]
 [BinarySchema]
-public partial class Btk : IBinaryConvertible {
+public sealed partial class Btk : IBinaryConvertible {
   private readonly string magic1_ = "J3D1btk1";
 
   [WSizeOfStreamInBytes]
@@ -30,6 +30,6 @@ public partial class Btk : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Ttk1 : IBinaryConvertible {
+public sealed partial class Ttk1 : IBinaryConvertible {
   private readonly string magic_ = "TTK1";
 }

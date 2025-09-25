@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
-public partial class Sampler : IBinaryConvertible {
+public sealed partial class Sampler : IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool isAbs { get; private set; }
   public sbyte index { get; private set; }

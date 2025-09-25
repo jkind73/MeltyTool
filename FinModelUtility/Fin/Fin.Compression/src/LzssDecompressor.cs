@@ -61,7 +61,7 @@ public sealed class LzssDecompressor {
 }
 
 [BinarySchema]
-public partial class LzssHeader : IBinaryConvertible {
+public sealed partial class LzssHeader : IBinaryConvertible {
   private readonly string magic_ = "LzS" + AsciiUtil.GetChar(0x1);
 
   [Unknown]

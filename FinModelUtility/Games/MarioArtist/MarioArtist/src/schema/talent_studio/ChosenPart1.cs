@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace marioartist.schema.talent_studio;
 
 [BinarySchema]
-public partial class ChosenPart1 : IBinaryDeserializable {
+public sealed partial class ChosenPart1 : IBinaryDeserializable {
   public uint MeshSetId { get; set; }
   public uint MaybeFileIndex { get; set; }
   public uint ChosenModelIndex { get; set; }

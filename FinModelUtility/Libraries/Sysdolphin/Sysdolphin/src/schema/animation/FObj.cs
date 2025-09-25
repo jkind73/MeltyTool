@@ -41,7 +41,7 @@ public enum GxInterpolationType {
 ///   https://github.com/Ploaj/HSDLib/blob/b7554d5c753cca2d50090cdd7366afe64dd8f175/HSDRaw/Common/Animation/HSD_FOBJ.cs#L65
 /// </summary>
 [BinarySchema]
-public partial class FObj : IDatLinkedListNode<FObj>,
+public sealed partial class FObj : IDatLinkedListNode<FObj>,
                             IDatKeyframes,
                             IBinaryDeserializable {
   public uint NextSiblingOffset { get; set; }

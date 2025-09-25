@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace fin.schema.data;
 
 [BinarySchema]
-public partial class PassThruStringMagicJankSizedSection<T>(
+public sealed partial class PassThruStringMagicJankSizedSection<T>(
     string magic,
     T data) : IMagicSection<T>
     where T : IBinaryConvertible {

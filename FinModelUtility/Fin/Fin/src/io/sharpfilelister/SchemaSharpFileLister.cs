@@ -13,7 +13,7 @@ using static fin.io.sharpfilelister.Interop;
 namespace fin.io.sharpDirLister;
 
 [BinarySchema]
-public partial class SchemaDirectoryInformation : IBinaryConvertible {
+public sealed partial class SchemaDirectoryInformation : IBinaryConvertible {
   [StringLengthSource(SchemaIntegerType.INT16)]
   public string Name { get; set; }
 
@@ -25,7 +25,7 @@ public partial class SchemaDirectoryInformation : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Uint16SizedString : IBinaryConvertible {
+public sealed partial class Uint16SizedString : IBinaryConvertible {
   [StringLengthSource(SchemaIntegerType.UINT16)]
   public string Name { get; set; }
 }

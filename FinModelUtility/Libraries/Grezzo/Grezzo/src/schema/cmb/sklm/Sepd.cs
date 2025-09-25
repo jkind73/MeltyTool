@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.sklm;
 
 [BinarySchema]
-public partial class Sepd : IBinaryConvertible {
+public sealed partial class Sepd : IBinaryConvertible {
   private readonly string magic_ = "sepd";
 
   public uint chunkSize;

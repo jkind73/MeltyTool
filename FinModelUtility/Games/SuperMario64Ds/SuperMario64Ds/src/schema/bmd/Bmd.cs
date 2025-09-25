@@ -8,7 +8,7 @@ namespace sm64ds.schema.bmd;
 ///   https://kuribo64.net/get.php?id=KBNyhM0kmNiuUBb3
 /// </summary>
 [BinarySchema]
-public partial class Bmd : IBinaryConvertible {
+public sealed partial class Bmd : IBinaryConvertible {
   public int ScaleFactor { get; set; }
 
   public uint BoneCount { get; set; }

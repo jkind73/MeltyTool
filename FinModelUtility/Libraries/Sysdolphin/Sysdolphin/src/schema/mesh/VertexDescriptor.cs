@@ -7,7 +7,7 @@ using schema.binary.attributes;
 namespace sysdolphin.schema.mesh;
 
 [BinarySchema]
-public partial class VertexDescriptor : IBinaryConvertible {
+public sealed partial class VertexDescriptor : IBinaryConvertible {
   public GxVertexAttribute Attribute { get; set; }
 
   [IntegerFormat(SchemaIntegerType.UINT32)]

@@ -13,7 +13,7 @@ using schema.binary.attributes;
 namespace pikmin1.schema.mod;
 
 [BinarySchema]
-public partial class Texture : IBinaryConvertible {
+public sealed partial class Texture : IBinaryConvertible {
   public enum TextureFormat : uint {
     RGB565 = 0,
     CMPR = 1,
@@ -74,7 +74,7 @@ public partial class Texture : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class TextureAttributes : IBinaryConvertible {
+public sealed partial class TextureAttributes : IBinaryConvertible {
   public ushort TextureImageIndex { get; set; }
   private readonly ushort padding_ = 0;
 

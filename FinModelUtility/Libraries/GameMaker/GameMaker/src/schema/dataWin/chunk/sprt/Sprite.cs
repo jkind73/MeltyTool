@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace gm.schema.dataWin.chunk.sprt;
 
 [BinarySchema]
-public partial class Sprite : IBinaryDeserializable {
+public sealed partial class Sprite : IBinaryDeserializable {
   private uint nameOffset_;
 
   [NullTerminatedString]
@@ -42,7 +42,7 @@ public partial class Sprite : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public partial class Frame : IBinaryDeserializable {
+public sealed partial class Frame : IBinaryDeserializable {
   public ushort X { get; set; }
   public ushort Y { get; set; }
   public ushort Width { get; set; }

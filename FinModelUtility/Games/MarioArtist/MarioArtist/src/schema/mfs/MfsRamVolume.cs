@@ -15,7 +15,7 @@ public enum VolumeFlags : byte {
 ///   https://github.com/LuigiBlood/mfs_manager/blob/master/mfs_library/MFS/MFSDef.cs#L10
 /// </summary>
 [BinarySchema]
-public partial class MfsRamVolume : IBinaryDeserializable {
+public sealed partial class MfsRamVolume : IBinaryDeserializable {
   public uint Unk0 { get; set; }
   public uint Unk1 { get; set; }
   public uint Unk2 { get; set; }

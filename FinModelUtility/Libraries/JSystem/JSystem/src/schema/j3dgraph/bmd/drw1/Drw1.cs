@@ -18,7 +18,7 @@ public partial class Drw1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public partial class Drw1Data : IBinaryConvertible {
+public sealed partial class Drw1Data : IBinaryConvertible {
   [WLengthOfSequence(nameof(IsWeighted))]
   [WLengthOfSequence(nameof(Data))]
   private ushort count_;

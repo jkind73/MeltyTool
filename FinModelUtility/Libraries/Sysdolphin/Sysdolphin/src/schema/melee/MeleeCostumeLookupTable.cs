@@ -8,7 +8,7 @@ namespace sysdolphin.schema.melee;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Melee/Pl/SBM_PlayerModelLookupTables.cs#L28
 /// </summary>
 [BinarySchema]
-public partial class MeleeCostumeLookupTable : IBinaryDeserializable {
+public sealed partial class MeleeCostumeLookupTable : IBinaryDeserializable {
   public uint HighPolyOffset { get; set; }
   public uint LowPolyOffset { get; set; }
 

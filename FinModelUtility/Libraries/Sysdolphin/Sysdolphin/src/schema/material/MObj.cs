@@ -43,7 +43,7 @@ public enum RenderMode : int {
 ///   https://github.com/jam1garner/Smash-Forge/blob/c0075bca364366bbea2d3803f5aeae45a4168640/Smash%20Forge/Filetypes/Melee/DAT.cs#L1256
 /// </summary>
 [BinarySchema]
-public partial class MObj : IBinaryDeserializable {
+public sealed partial class MObj : IBinaryDeserializable {
   public uint StringOffset { get; set; }
   public RenderMode RenderMode { get; set; }
   public uint FirstTObjOffset { get; set; }

@@ -9,7 +9,7 @@ namespace sm64ds.schema.bca;
 ///   https://github.com/Arisotura/SM64DSe/blob/master/SM64DSFormats/BCA.cs
 /// </summary>
 [BinarySchema]
-public partial class BoneAnimationData : IBinaryDeserializable, IChildOf<Bca> {
+public sealed partial class BoneAnimationData : IBinaryDeserializable, IChildOf<Bca> {
   public Bca Parent { get; set; }
 
   public AnimationDescriptor ScaleX { get; } = new();

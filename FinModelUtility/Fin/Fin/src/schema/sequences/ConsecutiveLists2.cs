@@ -11,7 +11,7 @@ using schema.util.sequences;
 namespace fin.schema.sequences;
 
 [BinarySchema]
-public partial class ConsecutiveLists2<T1, T2>
+public sealed partial class ConsecutiveLists2<T1, T2>
     : ISequence<ConsecutiveLists2<T1, T2>, (T1 First, T2 Second)>
     where T1 : IBinaryConvertible, new()
     where T2 : IBinaryConvertible, new() {

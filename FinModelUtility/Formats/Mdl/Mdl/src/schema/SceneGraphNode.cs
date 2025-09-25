@@ -2,7 +2,7 @@
 
 namespace mdl.schema {
   [BinarySchema]
-  public partial class SceneGraphNode : IBinaryConvertible {
+  public sealed partial class SceneGraphNode : IBinaryConvertible {
     public ushort InverseMatrixIndex { get; set; }
     public ushort ChildIndexShift { get; set; }
     public ushort SiblingIndexShift { get; set; }

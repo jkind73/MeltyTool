@@ -32,7 +32,7 @@ public sealed class NsbmdModelImporter : IModelImporter<NsbmdModelFileBundle> {
 }
 
 [BinarySchema]
-public partial class Nsbmd : IBinaryDeserializable {
+public sealed partial class Nsbmd : IBinaryDeserializable {
   public uint SectionSize { get; set; }
   public uint RenderCommandsOffset { get; set; }
   public uint MaterialsOffset { get; set; }

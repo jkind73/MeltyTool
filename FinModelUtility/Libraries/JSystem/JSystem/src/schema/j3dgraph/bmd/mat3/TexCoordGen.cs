@@ -8,7 +8,7 @@ using schema.binary;
 namespace jsystem.schema.j3dgraph.bmd.mat3;
 
 [BinarySchema]
-public partial class TexCoordGen : ITexCoordGen, IBinaryConvertible {
+public sealed partial class TexCoordGen : ITexCoordGen, IBinaryConvertible {
   public GxTexGenType TexGenType { get; set; }
   public GxTexGenSrc TexGenSrc { get; set; }
   public GxTexMatrix TexMatrix { get; set; }

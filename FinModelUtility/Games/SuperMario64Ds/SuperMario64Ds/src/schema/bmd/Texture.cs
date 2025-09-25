@@ -20,7 +20,7 @@ public enum TextureType {
 ///   https://kuribo64.net/get.php?id=KBNyhM0kmNiuUBb3
 /// </summary>
 [BinarySchema]
-public partial class Texture : IBinaryConvertible {
+public sealed partial class Texture : IBinaryConvertible {
   private uint nameOffset_;
 
   [NullTerminatedString]

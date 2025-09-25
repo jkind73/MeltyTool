@@ -9,7 +9,7 @@ namespace sm64ds.schema.bca;
 ///   https://github.com/Arisotura/SM64DSe/blob/master/SM64DSFormats/BCA.cs
 /// </summary>
 [BinarySchema]
-public partial class AnimationDescriptor : IBinaryDeserializable {
+public sealed partial class AnimationDescriptor : IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool InterpolateOddFrames { get; set; }
 

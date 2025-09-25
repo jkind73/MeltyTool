@@ -6,7 +6,7 @@ using sysdolphin.schema.animation;
 namespace sysdolphin.schema.melee;
 
 [BinarySchema]
-public partial class GrMapGObj : IBinaryDeserializable {
+public sealed partial class GrMapGObj : IBinaryDeserializable {
   public uint RootJObjOffset { get; set; }
   public uint JointAnimationsOffset { get; set; }
   public uint MaterialAnimationsOffset { get; set; }

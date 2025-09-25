@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace sysdolphin.schema.melee;
 
 [BinarySchema]
-public partial class GrMapHead : IDatNode, IBinaryDeserializable {
+public sealed partial class GrMapHead : IDatNode, IBinaryDeserializable {
   public uint GeneralPointsOffset { get; set; }
   public uint GeneralPointsCount { get; set; }
 

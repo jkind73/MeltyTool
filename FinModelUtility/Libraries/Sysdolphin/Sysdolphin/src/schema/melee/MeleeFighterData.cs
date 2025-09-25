@@ -8,7 +8,7 @@ namespace sysdolphin.schema.melee;
 ///   https://github.com/Ploaj/HSDLib/blob/master/HSDRaw/Melee/Pl/SBM_FighterData.cs
 /// </summary>
 [BinarySchema]
-public partial class MeleeFighterData : IDatNode, IBinaryDeserializable {
+public sealed partial class MeleeFighterData : IDatNode, IBinaryDeserializable {
   public uint Attributes { get; set; }
   public uint Attributes2 { get; set; }
   public uint ModelLookupTablesOffset { get; set; }

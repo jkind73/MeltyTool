@@ -8,7 +8,7 @@ namespace gm.schema.dataWin;
 ///   https://github.com/puggsoy/GMS-Explorer/blob/master/GMS%20Explorer/Chunks/GEN8.cs#L10
 /// </summary>
 [BinarySchema]
-public partial class Gen8 : IBinaryConvertible {
+public sealed partial class Gen8 : IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool Debug { get; set; }
 

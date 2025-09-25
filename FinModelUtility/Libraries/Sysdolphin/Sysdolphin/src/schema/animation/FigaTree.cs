@@ -8,7 +8,7 @@ namespace sysdolphin.schema.animation;
 ///   https://github.com/Ploaj/HSDLib/blob/93a906444f34951c6eed4d8c6172bba43d4ada98/HSDRaw/Common/Animation/HSD_FigaTree.cs#L14
 /// </summary>
 [BinarySchema]
-public partial class FigaTree : IDatNode, IBinaryDeserializable {
+public sealed partial class FigaTree : IDatNode, IBinaryDeserializable {
   public int Type { get; set; }
   public int Unknown1 { get; set; }
   public float FrameCount { get; set; }

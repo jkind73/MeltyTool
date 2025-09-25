@@ -10,7 +10,7 @@ namespace sysdolphin.schema;
 ///   Data object.
 /// </summary>
 [BinarySchema]
-public partial class DObj : IDatLinkedListNode<DObj>, IBinaryDeserializable {
+public sealed partial class DObj : IDatLinkedListNode<DObj>, IBinaryDeserializable {
   public uint StringOffset { get; set; }
   public uint NextDObjOffset { get; set; }
   public uint MObjOffset { get; set; }

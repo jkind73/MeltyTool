@@ -3,4 +3,4 @@
 namespace ttyd.schema.tpl;
 
 [BinarySchema]
-public partial class TplTexturePalette : IBinaryDeserializable;
+public sealed partial class TplTexturePalette : IBinaryDeserializable;

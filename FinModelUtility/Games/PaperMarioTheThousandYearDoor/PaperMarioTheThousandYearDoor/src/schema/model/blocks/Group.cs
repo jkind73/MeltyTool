@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace ttyd.schema.model.blocks;
 
 [BinarySchema]
-public partial class Group : IBinaryDeserializable {
+public sealed partial class Group : IBinaryDeserializable {
   [StringLengthSource(64)]
   public string Name { get; set; }
 
