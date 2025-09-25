@@ -19,7 +19,7 @@ public sealed class SeparateQuaternionKeyframes<TKeyframe>(
   public SeparateQuaternionKeyframes(
       ISharedInterpolationConfig sharedConfig,
       IKeyframeInterpolator<TKeyframe, float> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = null)
+      IndividualInterpolationConfig<float>? individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,

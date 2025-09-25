@@ -19,7 +19,7 @@ public class SeparateVector3Keyframes<TKeyframe>(
   public SeparateVector3Keyframes(
       ISharedInterpolationConfig sharedConfig,
       IKeyframeInterpolator<TKeyframe, float> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = null)
+      IndividualInterpolationConfig<float>? individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,

@@ -10,7 +10,7 @@ namespace fin.animation.types.vector2;
 public class CombinedVector2Keyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, Vector2> interpolator,
-    IndividualInterpolationConfig<Vector2> individualConfig = null)
+    IndividualInterpolationConfig<Vector2>? individualConfig = null)
     : ICombinedVector2Keyframes<TKeyframe>
     where TKeyframe : IKeyframe<Vector2> {
   private readonly InterpolatedKeyframes<TKeyframe, Vector2> impl_

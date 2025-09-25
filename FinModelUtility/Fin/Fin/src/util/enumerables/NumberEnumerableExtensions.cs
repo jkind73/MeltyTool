@@ -11,13 +11,13 @@ public static class NumberEnumerableExtensions {
   public static TNumber MaxOrDefault<T, TNumber>(
       this IEnumerable<T> enumerable, 
       Func<T, TNumber> selector,
-      TNumber defaultValue = default)
+      TNumber? defaultValue = default)
       where TNumber : INumber<TNumber>
     => enumerable.Select(selector).MaxOrDefault(defaultValue);
 
   public static TNumber MaxOrDefault<TNumber>(
       this IEnumerable<TNumber> enumerable,
-      TNumber defaultValue = default)
+      TNumber? defaultValue = default)
       where TNumber : INumber<TNumber> {
     var max = defaultValue;
     foreach (var value in enumerable) {

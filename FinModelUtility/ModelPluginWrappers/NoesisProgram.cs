@@ -121,7 +121,7 @@ namespace ModelPluginWrappers {
       NOEKF_SCALE_SCALAR_1,
     }
 
-    public static INoeBitStream NoeBitStream(byte[] data = null) {
+    public static INoeBitStream NoeBitStream(byte[]? data = null) {
       return new NoeBitStreamReader(data);
     }
 

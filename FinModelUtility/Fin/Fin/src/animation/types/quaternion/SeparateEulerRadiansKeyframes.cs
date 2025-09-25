@@ -31,7 +31,7 @@ public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
   public SeparateEulerRadiansKeyframes(
       ISharedInterpolationConfig sharedConfig,
       IRadiansKeyframeInterpolator<TKeyframe> interpolator,
-      IndividualInterpolationConfig<float> individualConfig = null)
+      IndividualInterpolationConfig<float>? individualConfig = null)
       : this(sharedConfig,
              interpolator,
              individualConfig,
