@@ -46,6 +46,8 @@ public sealed class GlTexture : IGlTexture {
   private GlTexture(IReadOnlyTexture texture) {
     this.texture_ = texture;
 
+    GlUtil.AssertNoErrorsWhenDebugging();
+
     GL.GenTextures(1, out int id);
     this.Id = id;
 
@@ -129,6 +131,8 @@ public sealed class GlTexture : IGlTexture {
                       TextureParameterName.TextureMaxLod,
                       texture.MaxLod);
     }
+
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   private static readonly MemoryPool<byte> pool_ = MemoryPool<byte>.Shared;
@@ -235,6 +239,8 @@ public sealed class GlTexture : IGlTexture {
       int imageHeight,
       PixelFormat pixelFormat,
       byte* scan0) {
+    GlUtil.AssertNoErrorsWhenDebugging();
+
     // This is required to fix a rare issue with alignment:
     // https://stackoverflow.com/questions/52460143/texture-not-showing-correctly
     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
@@ -247,6 +253,8 @@ public sealed class GlTexture : IGlTexture {
                   pixelFormat,
                   PixelType.UnsignedByte,
                   (IntPtr) scan0);
+
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   ~GlTexture() => this.ReleaseUnmanagedResources_();

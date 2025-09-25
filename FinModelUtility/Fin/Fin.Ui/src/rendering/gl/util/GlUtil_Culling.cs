@@ -22,6 +22,7 @@ public static partial class GlUtil {
 
       currentState_.CurrentCullingMode = cullingMode;
 
+      AssertNoErrorsWhenDebugging();
       if (cullingMode == CullingMode.SHOW_BOTH) {
         GL.Disable(EnableCap.CullFace);
       } else {
@@ -34,6 +35,7 @@ public static partial class GlUtil {
                 nameof(cullingMode), cullingMode, null)
         });
       }
+      AssertNoErrorsWhenDebugging();
 
       return true;
     }

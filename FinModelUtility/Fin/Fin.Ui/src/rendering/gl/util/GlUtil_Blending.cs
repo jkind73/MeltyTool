@@ -35,8 +35,10 @@ public static partial class GlUtil {
       return;
     }
 
+    AssertNoErrorsWhenDebugging();
     currentState_.BlendColor = color;
     GL.BlendColor(color);
+    AssertNoErrorsWhenDebugging();
   }
 
   public static Color GetBlendColor() => currentState_.BlendColor;
@@ -84,6 +86,7 @@ public static partial class GlUtil {
     var isColorNone = colorBlendEquation is FinBlendEquation.NONE;
     var isAlphaNone = alphaBlendEquation is FinBlendEquation.NONE;
 
+    AssertNoErrorsWhenDebugging();
     if (isColorNone && isAlphaNone) {
       GL.Disable(EnableCap.Blend);
       GL.BlendEquation(GlBlendEquation.FuncAdd);
@@ -122,6 +125,7 @@ public static partial class GlUtil {
     if (logicOp != FinLogicOp.UNDEFINED) {
       GL.Enable(EnableCap.ColorLogicOp);
     }
+    AssertNoErrorsWhenDebugging();
 
     return true;
   }
