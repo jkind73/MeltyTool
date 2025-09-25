@@ -15,7 +15,7 @@ using TextureMinFilter = OpenTK.Graphics.ES30.TextureMinFilter;
 
 namespace fin.ui.rendering.gl.texture;
 
-public class GlTexture : IGlTexture {
+public sealed class GlTexture : IGlTexture {
   private static readonly Dictionary<IReadOnlyTexture, GlTexture> cache_
       = new();
 

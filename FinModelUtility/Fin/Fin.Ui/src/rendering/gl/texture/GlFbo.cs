@@ -10,7 +10,7 @@ using TextureMinFilter = OpenTK.Graphics.ES30.TextureMinFilter;
 
 namespace fin.ui.rendering.gl.texture;
 
-public class GlFbo : IFinDisposable {
+public sealed class GlFbo : IFinDisposable {
   private int fboId_;
   private int colorTextureId_;
   private int depthTextureId_;

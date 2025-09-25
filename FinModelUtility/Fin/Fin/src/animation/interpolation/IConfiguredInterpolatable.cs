@@ -23,7 +23,7 @@ public interface ISharedInterpolationConfig {
   bool DisableNearestRotationFix { get; set; }
 }
 
-public class SharedInterpolationConfig : ISharedInterpolationConfig {
+public sealed class SharedInterpolationConfig : ISharedInterpolationConfig {
   public int AnimationLength { get; set; }
   public bool Looping { get; set; }
   public bool DisableNearestRotationFix { get; set; }
@@ -34,7 +34,7 @@ public interface IIndividualInterpolationConfig {
   int InitialCapacity { get; }
 }
 
-public class IndividualInterpolationConfig<T>()
+public sealed class IndividualInterpolationConfig<T>()
     : IIndividualInterpolationConfig {
   public static IndividualInterpolationConfig<T> DEFAULT { get; } = new();
 

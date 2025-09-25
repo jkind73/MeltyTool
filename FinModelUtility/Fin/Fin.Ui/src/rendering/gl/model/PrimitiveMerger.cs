@@ -14,7 +14,7 @@ public readonly struct MergedPrimitive {
   }
 }
 
-public class PrimitiveMerger {
+public sealed class PrimitiveMerger {
   public bool TryToMergePrimitives(
       IList<IReadOnlyPrimitive> primitives,
       out MergedPrimitive mergedPrimitive) {

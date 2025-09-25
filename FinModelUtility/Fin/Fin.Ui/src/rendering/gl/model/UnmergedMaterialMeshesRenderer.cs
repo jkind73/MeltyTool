@@ -6,7 +6,7 @@ using fin.ui.rendering.gl.material;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
-  private class UnmergedMaterialMeshesRenderer(
+  private sealed class UnmergedMaterialMeshesRenderer(
       IReadOnlyModel model,
       IReadOnlyTextureTransformManager? textureTransformManager = null,
       bool dynamic = false)

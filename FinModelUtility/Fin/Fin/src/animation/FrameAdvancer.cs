@@ -5,7 +5,7 @@ using fin.util.time;
 
 namespace fin.animation;
 
-public class FrameAdvancer : IAnimationPlaybackManager {
+public sealed class FrameAdvancer : IAnimationPlaybackManager {
   private readonly IStopwatch impl_ = new FrameStopwatch();
 
   public double SpeedMultiplier { get; set; } = 1;

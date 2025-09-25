@@ -11,7 +11,7 @@ namespace fin.animation.keyframes;
 public partial interface IStairStepKeyframes<T>
     : IKeyframes<Keyframe<T>>, IConfiguredInterpolatable<T>;
 
-public class StairStepKeyframes<T>(
+public sealed class StairStepKeyframes<T>(
     ISharedInterpolationConfig sharedConfig,
     IndividualInterpolationConfig<T>? individualConfig = null)
     : IStairStepKeyframes<T> {

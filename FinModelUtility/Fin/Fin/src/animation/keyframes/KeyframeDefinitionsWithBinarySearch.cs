@@ -9,7 +9,7 @@ using fin.util.enumerables;
 
 namespace fin.animation.keyframes;
 
-public class KeyframeDefinitionsWithBinarySearch<T>(int initialCapacity = 0)
+public sealed class KeyframeDefinitionsWithBinarySearch<T>(int initialCapacity = 0)
     : IKeyframeDefinitions<T> {
   private List<KeyframeDefinition<T>> impl_ = new(initialCapacity);
 

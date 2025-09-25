@@ -10,7 +10,7 @@ using fin.shaders.glsl;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
-  private class MergedMaterialMeshRenderer(
+  private sealed class MergedMaterialMeshRenderer(
       IReadOnlyModel model,
       IReadOnlyMesh mesh,
       IModelRequirements modelRequirements,

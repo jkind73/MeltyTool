@@ -14,7 +14,7 @@ namespace fin.ui.rendering.gl.model;
 ///
 ///   NOTE: This will only be valid in the GL context this was first rendered in!
 /// </summary>
-public partial class ModelRenderer
+public sealed partial class ModelRenderer
     : IDynamicModelRenderer {
   private readonly IReadOnlyList<IReadOnlyBone> bonesUsedByVertices_;
 

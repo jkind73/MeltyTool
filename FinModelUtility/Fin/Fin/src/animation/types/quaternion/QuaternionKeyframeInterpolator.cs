@@ -7,7 +7,7 @@ using fin.math.rotations;
 
 namespace fin.animation.types.quaternion;
 
-public class QuaternionKeyframeInterpolator
+public sealed class QuaternionKeyframeInterpolator
     : QuaternionKeyframeInterpolator<Keyframe<Quaternion>> {
   public static QuaternionKeyframeInterpolator Instance { get; } = new();
   private QuaternionKeyframeInterpolator() { }

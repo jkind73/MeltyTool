@@ -13,7 +13,7 @@ using fin.util.optional;
 namespace fin.animation.types.quaternion;
 
 // TODO: Add support for tangents in quaternions
-public class SeparateEulerRadiansKeyframes<TKeyframe>(
+public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IRadiansKeyframeInterpolator<TKeyframe> interpolator,
     IndividualInterpolationConfig<float> individualConfigX,

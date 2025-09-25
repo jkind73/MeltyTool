@@ -7,7 +7,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.quaternion;
 
-public class SeparateQuaternionKeyframes<TKeyframe>(
+public sealed class SeparateQuaternionKeyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, float> interpolator,
     IndividualInterpolationConfig<float> individualConfigX,

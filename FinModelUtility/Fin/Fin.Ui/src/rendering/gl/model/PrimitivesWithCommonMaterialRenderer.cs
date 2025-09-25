@@ -6,7 +6,7 @@ using fin.ui.rendering.gl.material;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
-  private class PrimitivesWithCommonMaterialRenderer : IDisposable {
+  private sealed class PrimitivesWithCommonMaterialRenderer : IDisposable {
     private readonly IGlBufferRenderer bufferRenderer_;
     private bool isSelected_;
 

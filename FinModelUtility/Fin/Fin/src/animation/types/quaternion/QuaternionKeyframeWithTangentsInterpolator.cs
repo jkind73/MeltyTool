@@ -5,7 +5,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.quaternion;
 
-public class QuaternionKeyframeWithTangentsInterpolator
+public sealed class QuaternionKeyframeWithTangentsInterpolator
     : QuaternionKeyframeInterpolator<Keyframe<Quaternion>> {
   public static QuaternionKeyframeWithTangentsInterpolator Instance { get; }
     = new();
