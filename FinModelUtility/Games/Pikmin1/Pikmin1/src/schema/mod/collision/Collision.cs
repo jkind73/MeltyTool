@@ -67,11 +67,11 @@ public partial class CollGroup : IBinaryConvertible {
 
   [Unknown]
   [RSequenceLengthSource(nameof(NumUnknown2))]
-  public uint[] unknown2 = Array.Empty<uint>();
+  public uint[] unknown2 = [];
 
   [Unknown]
   [RSequenceLengthSource(nameof(NumUnknown1))]
-  public byte[] unknown1 = Array.Empty<byte>();
+  public byte[] unknown1 = [];
 }
 
 [BinarySchema]

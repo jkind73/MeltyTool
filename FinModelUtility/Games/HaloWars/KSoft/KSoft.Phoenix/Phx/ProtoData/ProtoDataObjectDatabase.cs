@@ -23,9 +23,9 @@ namespace KSoft.Phoenix.Phx
 		public IProtoDataObjectDatabaseProvider Provider { get; private set; }
 		public Type ObjectKindEnum { get; private set; }
 		public List<object> ObjectKinds { get; private set; }
-			= new List<object>();
+			= [];
 		public List<int> ObjectKindIds { get; private set; }
-			= new List<int>();
+			= [];
 
 		public ProtoDataObjectDatabase(IProtoDataObjectDatabaseProvider provider, Type objectKindEnum)
 		{

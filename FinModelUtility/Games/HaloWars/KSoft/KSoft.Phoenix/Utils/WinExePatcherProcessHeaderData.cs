@@ -15,14 +15,14 @@ namespace KSoft.Phoenix.zPatching
 
 		public string SourceExeFileName;
 		public byte[] SourceExeBytes;
-		public List<int> PatternFileOffsets = new List<int>();
+		public List<int> PatternFileOffsets = [];
 
 		public int ModJmpFileOffset;
 		public int ModJmpVa;
 
 		public WinExePatcherProcessHeaderData()
 		{
-			this.BytePattern = new short[] {
+			this.BytePattern = [
 				/*
 					call    sub
 					nop
@@ -34,12 +34,12 @@ namespace KSoft.Phoenix.zPatching
 				0x90,
 				/*0x8B*/-1, 0xFB,
 				0x41, 0x3B, 0x5E, 0x20,
-				0x0F, 0x83,   -1, 0x00, 0x00, 0x00,
+				0x0F, 0x83,   -1, 0x00, 0x00, 0x00
 
 				// alignment asm bytes, can't rely on these :(
 				//0x66, 0x66,
 				//0x0F, 0x1F, 0x84, 0x00, 0x00, 0x00, 0x00, 0x00,
-			};
+			];
 			this.BytePatternNextJmpOffset = this.BytePattern.Length - sizeof(uint);
 			this.BytePatternModJmpOffset = this.BytePattern.Length - sizeof(uint) - sizeof(ushort);
 		}

@@ -248,7 +248,7 @@ namespace KSoft.Phoenix.Phx
 			textData.HasDisplayName2ID = true;
 			textData.HasRolloverTextID = true;
 
-			this.ObjectIDs = new List<BProtoObjectID>();
+			this.ObjectIDs = [];
 		}
 
 		#region ITagElementStreamable Members

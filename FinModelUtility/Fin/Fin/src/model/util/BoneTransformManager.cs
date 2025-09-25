@@ -161,7 +161,7 @@ public class BoneTransformManager : IBoneTransformManager {
   }
 
   private readonly List<(IReadOnlyBone, FinMatrix4x4, IReadOnlyFinMatrix4x4)>
-      boneList_ = new();
+      boneList_ = [];
 
   public void CalculateMatrices(
       IReadOnlyBone rootBone,

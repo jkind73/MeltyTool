@@ -10,7 +10,7 @@ namespace fin.model.util;
 
 public class RenderPriorityOrderedSet<T> : IEnumerable<T> {
   // TODO: Optimize this somehow?
-  private readonly OrderedHashSet<T> elements_ = new();
+  private readonly OrderedHashSet<T> elements_ = [];
 
   private readonly AggregatedDictionary<T, uint> inversePriorityByElement_
       = new(Math.Min, new NullFriendlyDictionary<T, uint>());

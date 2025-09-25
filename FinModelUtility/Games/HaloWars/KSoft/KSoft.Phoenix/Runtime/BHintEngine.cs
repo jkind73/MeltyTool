@@ -76,7 +76,7 @@ namespace KSoft.Phoenix.Runtime
 		public uint PreconditionTime;
 		public byte State;
 		public int GamesReinforced, TimesReinforced, HintDisplayedCount;
-		public List<CondensedListItem16<BParameterPage>> Pages = new List<CondensedListItem16<BParameterPage>>();
+		public List<CondensedListItem16<BParameterPage>> Pages = [];
 		public int TimesReinforcedThisGame;
 		public bool EventReady, Active, Permission;
 		public float InitialWaitTimeRemaining, TerminalWaitTimeRemaining;
@@ -120,7 +120,8 @@ namespace KSoft.Phoenix.Runtime
 			DoneIndex=int.MaxValue,
 		};
 
-		public List<CondensedListItem32<BConcept>> Concepts { get; private set; } = new List<CondensedListItem32<BConcept>>();
+		public List<CondensedListItem32<BConcept>> Concepts { get; private set; } =
+			[];
 		public float TimeSinceLastHint;
 		public bool HintMessageOn;
 		public int[] AllowedConcepts;

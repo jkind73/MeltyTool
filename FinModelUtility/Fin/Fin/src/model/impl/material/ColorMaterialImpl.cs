@@ -16,7 +16,6 @@ public partial class ModelImpl<TVertex> {
   private class ColorMaterialImpl(Color color) : BMaterialImpl, IColorMaterial {
     public Color Color { get; set; } = color;
 
-    public override IEnumerable<ITexture> Textures
-      => Enumerable.Empty<ITexture>();
+    public override IEnumerable<ITexture> Textures => [];
   }
 }

@@ -14,6 +14,6 @@ public partial class ModelImpl<TVertex> {
 
   private class HiddenMaterialImpl : BMaterialImpl, IHiddenMaterial {
     public override IEnumerable<ITexture> Textures { get; } =
-      Array.Empty<ITexture>();
+      [];
   }
 }

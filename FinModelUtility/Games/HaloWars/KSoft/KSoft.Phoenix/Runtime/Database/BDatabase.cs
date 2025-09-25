@@ -5,16 +5,16 @@ namespace KSoft.Phoenix.Runtime
 	sealed partial class BDatabase
 		: IO.IEndianStreamSerializable
 	{
-		public List<string> Civs = new List<string>(); // max=0x64
-		public List<string> Leaders = new List<string>(); // max=0x12C
-		public List<string> Abilities = new List<string>(); // max=0x3E8
-		public List<string> ProtoVisuals = new List<string>(); // max=0x2710
-		public List<string> Models = new List<string>(); // max=0x2710
-		public List<string> Animations = new List<string>(); // max=0x2710
-		public List<string> TerrainEffects = new List<string>(); // max=0x1F4
-		public List<string> ProtoImpactEffects = new List<string>(); // max=0x1F4
-		public List<string> LightEffects = new List<string>(); // max=0x3E8
-		public List<string> ParticleGateways = new List<string>(); // max=0x3E8
+		public List<string> Civs = []; // max=0x64
+		public List<string> Leaders = []; // max=0x12C
+		public List<string> Abilities = []; // max=0x3E8
+		public List<string> ProtoVisuals = []; // max=0x2710
+		public List<string> Models = []; // max=0x2710
+		public List<string> Animations = []; // max=0x2710
+		public List<string> TerrainEffects = []; // max=0x1F4
+		public List<string> ProtoImpactEffects = []; // max=0x1F4
+		public List<string> LightEffects = []; // max=0x3E8
+		public List<string> ParticleGateways = []; // max=0x3E8
 		public List<GenericProtoObjectEntry> GenericProtoObjects { get; private set; } // max=0x4E20
 		public List<ProtoSquadEntry> ProtoSquads { get; private set; } // max=0x4E20
 		public List<string> ProtoTechs { get; private set; } // max=0x2710
@@ -37,34 +37,34 @@ namespace KSoft.Phoenix.Runtime
 
 		public BDatabase()
 		{
-			this.Civs = new List<string>();
-			this.Leaders = new List<string>();
-			this.Abilities = new List<string>();
-			this.ProtoVisuals = new List<string>();
-			this.Models = new List<string>();
-			this.Animations = new List<string>();
-			this.TerrainEffects = new List<string>();
-			this.ProtoImpactEffects = new List<string>();
-			this.LightEffects = new List<string>();
-			this.ParticleGateways = new List<string>();
-			this.GenericProtoObjects = new List<GenericProtoObjectEntry>();
-			this.ProtoSquads = new List<ProtoSquadEntry>();
-			this.ProtoTechs = new List<string>();
-			this.ProtoPowers = new List<string>();
-			this.ProtoObjects = new List<string>();
-			this.Resources = new List<string>();
-			this.Rates = new List<string>();
-			this.Populations = new List<string>();
-			this.WeaponTypes = new List<string>();
-			this.DamageTypes = new List<string>();
-			this.Templates = new List<TemplateEntry>();
-			this.AnimTypes = new List<string>();
-			this.EffectTypes = new List<string>();
-			this.Actions = new List<string>();
-			this.Tactics = new List<CondensedListItem16<Tactic>>();
-			this.Shapes = new List<CondensedListItemValue32<DataTagValue>>();
-			this.PhysicsInfo = new List<CondensedListItemValue32<DataTagValue>>();
-			this.ProtoIcons = new List<ProtoIcon>();
+			this.Civs = [];
+			this.Leaders = [];
+			this.Abilities = [];
+			this.ProtoVisuals = [];
+			this.Models = [];
+			this.Animations = [];
+			this.TerrainEffects = [];
+			this.ProtoImpactEffects = [];
+			this.LightEffects = [];
+			this.ParticleGateways = [];
+			this.GenericProtoObjects = [];
+			this.ProtoSquads = [];
+			this.ProtoTechs = [];
+			this.ProtoPowers = [];
+			this.ProtoObjects = [];
+			this.Resources = [];
+			this.Rates = [];
+			this.Populations = [];
+			this.WeaponTypes = [];
+			this.DamageTypes = [];
+			this.Templates = [];
+			this.AnimTypes = [];
+			this.EffectTypes = [];
+			this.Actions = [];
+			this.Tactics = [];
+			this.Shapes = [];
+			this.PhysicsInfo = [];
+			this.ProtoIcons = [];
 		}
 
 		#region IEndianStreamSerializable Members

@@ -15,7 +15,7 @@ public partial class ModelRenderer {
 
     private IGlBufferManager? bufferManager_;
     private IDynamicGlBufferManager? dynamicBufferManager_;
-    private IReadOnlyMesh selectedMesh_;
+    private IReadOnlyMesh? selectedMesh_;
 
     private MergedMaterialMeshRenderer[] materialMeshRenderers_ = [];
 

@@ -22,7 +22,7 @@ public partial class ModelRenderer {
       }
 
       this.materialMeshRenderers_
-          = new List<PrimitivesWithCommonMaterialRenderer>();
+          = [];
 
       var primitiveMerger = new PrimitiveMerger();
       Action<IReadOnlyMaterial?, IEnumerable<IReadOnlyPrimitive>>

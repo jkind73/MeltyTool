@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Runtime
 		};
 
 		public BBombExplodeInfo[] BombExplodeInfos;
-		public List<BEntityID> NudgedUnits = new List<BEntityID>();
+		public List<BEntityID> NudgedUnits = [];
 		public BVector StartLocation, StartDirection, RightVector;
 		public sbyte State;
 		public bool GotStartLocation, GotStartDirection;

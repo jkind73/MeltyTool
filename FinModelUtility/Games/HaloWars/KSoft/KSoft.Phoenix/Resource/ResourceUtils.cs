@@ -30,7 +30,7 @@ namespace KSoft.Phoenix.Resource
 		#endregion
 
 		#region Xml extensions
-		static readonly HashSet<string> kXmlBasedFilesExtensions = new HashSet<string>() {
+		static readonly HashSet<string> kXmlBasedFilesExtensions = [
 			".xml",
 
 			".vis",
@@ -49,8 +49,8 @@ namespace KSoft.Phoenix.Resource
 
 			".blueprint",
 			".physics",
-			".shp",
-		};
+			".shp"
+		];
 
 		public static bool IsXmlBasedFile(string filename)
 		{
@@ -86,10 +86,10 @@ namespace KSoft.Phoenix.Resource
 		#endregion
 
 		#region IsDataBasedFile
-		static readonly HashSet<string> kDataBasedFileExtensions = new HashSet<string>() {
+		static readonly HashSet<string> kDataBasedFileExtensions = [
 			".cfg",
-			".txt",
-		};
+			".txt"
+		];
 
 		public static bool IsDataBasedFile(string filename)
 		{

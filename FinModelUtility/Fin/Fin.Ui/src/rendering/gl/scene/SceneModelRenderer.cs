@@ -15,11 +15,11 @@ public class SceneModelRenderer : IRenderable, IDisposable {
   private readonly ISceneModelInstance sceneModel_;
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
-  private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = new();
+  private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
   private bool isBoneSelected_;
 
   private readonly List<(IReadOnlyBone, SceneModelRenderer[])>
-      children_ = new();
+      children_ = [];
 
   public SceneModelRenderer(ISceneModelInstance sceneModel,
                             IReadOnlyLighting? lighting) {

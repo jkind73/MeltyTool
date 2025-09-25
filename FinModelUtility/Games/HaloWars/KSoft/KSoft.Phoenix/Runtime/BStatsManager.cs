@@ -162,7 +162,7 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public const int kStatType = 1;
 
-		public List<BStatTotalKeyValuePair> Totals { get; private set; } = new List<BStatTotalKeyValuePair>();
+		public List<BStatTotalKeyValuePair> Totals { get; private set; } = [];
 		public BStatTotal Total = new BStatTotal();
 		public BStatCombat Combat_;
 
@@ -290,8 +290,9 @@ namespace KSoft.Phoenix.Runtime
 		: IO.IEndianStreamSerializable
 	{
 		public BStatsRecorder[] Recorders;
-		public List<BStatPowerKeyValuePair> Powers { get; private set; } = new List<BStatPowerKeyValuePair>();
-		public List<BStatAbilityKeyValuePair> Abilities { get; private set; } = new List<BStatAbilityKeyValuePair>();
+		public List<BStatPowerKeyValuePair> Powers { get; private set; } = [];
+		public List<BStatAbilityKeyValuePair> Abilities { get; private set; } =
+			[];
 
 		public BCost[] TotalResources, MaxResources, 
 			GatheredResources, TributedResources;

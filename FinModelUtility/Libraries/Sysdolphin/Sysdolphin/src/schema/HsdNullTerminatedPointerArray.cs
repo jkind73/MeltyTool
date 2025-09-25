@@ -4,7 +4,7 @@ namespace sysdolphin.schema;
 
 public class HsdNullTerminatedPointerArray<T> : IBinaryDeserializable
     where T : IBinaryDeserializable, new() {
-  private readonly List<T> values_ = new();
+  private readonly List<T> values_ = [];
 
   public IReadOnlyList<T> Values => this.values_;
 

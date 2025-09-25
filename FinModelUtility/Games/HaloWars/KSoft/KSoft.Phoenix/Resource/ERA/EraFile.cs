@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.Resource
 		public string FileName { get; set; }
 
 		private EraFileHeader mHeader = new EraFileHeader();
-		private List<EraFileEntryChunk> mFiles = new List<EraFileEntryChunk>();
+		private List<EraFileEntryChunk> mFiles = [];
 		private Dictionary<string, string> mLocalFiles = new Dictionary<string, string>();
 		private Dictionary<string, EraFileEntryChunk> mFileNameToChunk = new Dictionary<string, EraFileEntryChunk>();
 
@@ -566,7 +566,7 @@ namespace KSoft.Phoenix.Resource
 		private void CreatePathForUnpacking(string full_path)
 		{
 			if (this.mDirsThatExistForUnpacking == null)
-				this.mDirsThatExistForUnpacking = new HashSet<string>();
+				this.mDirsThatExistForUnpacking = [];
 
 			string folder = Path.GetDirectoryName(full_path);
 			// don't bother checking the file system if we've already encountered this folder

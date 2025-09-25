@@ -12,15 +12,15 @@ namespace QuickFont
 {
   public static class ViewportHelper
   {
-    private static Viewport? _currentViewport;
+    private static Viewport? currentViewport_;
 
     public static Viewport? CurrentViewport
     {
       get
       {
-        if (!ViewportHelper._currentViewport.HasValue)
+        if (!ViewportHelper.currentViewport_.HasValue)
           ViewportHelper.UpdateCurrentViewport();
-        return ViewportHelper._currentViewport;
+        return ViewportHelper.currentViewport_;
       }
     }
 
@@ -28,10 +28,10 @@ namespace QuickFont
     {
       int[] data = new int[4];
       GL.GetInteger(GetPName.Viewport, data);
-      ViewportHelper._currentViewport = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
+      ViewportHelper.currentViewport_ = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
     }
 
-    public static void InvalidateViewport() => ViewportHelper._currentViewport = null;
+    public static void InvalidateViewport() => ViewportHelper.currentViewport_ = null;
 
     public static bool IsOrthographicProjection(ref Matrix4 mat)
     {

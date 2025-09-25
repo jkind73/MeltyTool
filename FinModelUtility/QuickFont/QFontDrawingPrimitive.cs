@@ -742,7 +742,7 @@ label_10:
       maxSize.Width = QFontDrawingPrimitive.TransformWidthToViewport(maxSize.Width, options);
       TextNodeList textNodeList1 = new TextNodeList(text);
       textNodeList1.MeasureNodes(font.FontData, options);
-      List<TextNode> textNodeList2 = new List<TextNode>();
+      List<TextNode> textNodeList2 = [];
       foreach (TextNode textNode in textNodeList1)
       {
         if ((!options.WordWrap || (double) textNode.Length >= (double) maxSize.Width) && textNode.Type == TextNodeType.Word)

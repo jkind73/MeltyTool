@@ -79,7 +79,7 @@ namespace KSoft.Phoenix.Resource.PKG
 			;
 
 		public List<CaPackageEntry> FileEntries { get; private set; }
-			= new List<CaPackageEntry>();
+			= [];
 
 		public long Alignment = kDefaultAlignment;
 

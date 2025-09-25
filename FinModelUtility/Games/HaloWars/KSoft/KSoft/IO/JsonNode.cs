@@ -11,7 +11,7 @@ namespace KSoft.IO
 	static class JsonNodeGlobals
 	{
 		[ThreadStatic]
-		public static List<string> gErrorsOutputList = new List<string>();
+		public static List<string> gErrorsOutputList = [];
 	};
 
 	[SuppressMessage("Microsoft.Design", "CA1815")]
@@ -56,7 +56,7 @@ namespace KSoft.IO
 
 		public IEnumerable<KeyValuePair<string, object>> RawData { get {
 			if (this.IsNull)
-				return Enumerable.Empty<KeyValuePair<string, object>>();
+				return [];
 
 			var enumerable = (IEnumerable<KeyValuePair<string, object>>) this.mData;
 			return new EnumeratorWrapper<KeyValuePair<string, object>>(enumerable);
@@ -246,7 +246,7 @@ namespace KSoft.IO
 				return false;
 
 			if (!(values is List<string> list))
-				list = new List<string>(values);
+				list = [..values];
 
 			MiniJSON.Json.SetValue(this.mData, valueName, list);
 			return true;

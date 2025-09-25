@@ -33,7 +33,7 @@ namespace KSoft.Wwise.FilePackage
 		internal Dictionary<uint, SoundBank.AkSoundBankHierarchyObjectBase> mIdToObject =
 			new Dictionary<uint, SoundBank.AkSoundBankHierarchyObjectBase>();
 
-		internal HashSet<uint> mDupObjects = new HashSet<uint>();
+		internal HashSet<uint> mDupObjects = [];
 
 		internal Dictionary<uint, SoundBank.MediaReference> mUntouched =
 			new Dictionary<uint, SoundBank.MediaReference>();

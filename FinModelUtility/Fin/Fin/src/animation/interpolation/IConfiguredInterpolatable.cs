@@ -39,11 +39,11 @@ public sealed class IndividualInterpolationConfig<T>()
   public static IndividualInterpolationConfig<T> DEFAULT { get; } = new();
 
   public int? AnimationLength { get; init; }
-  public int InitialCapacity { get; init; } = 0;
-  public IOptional<T>? DefaultValue { get; init; } = null;
+  public int InitialCapacity { get; init; }
+  public IOptional<T>? DefaultValue { get; init; }
 }
 
 public interface IConfiguredInterpolatable<T> : IInterpolatable<T> {
   ISharedInterpolationConfig SharedConfig { get; }
-  IndividualInterpolationConfig<T> IndividualConfig { get; }
+  IndividualInterpolationConfig<T>? IndividualConfig { get; }
 }

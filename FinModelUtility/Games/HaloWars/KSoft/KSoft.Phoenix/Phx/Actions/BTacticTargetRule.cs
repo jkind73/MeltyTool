@@ -45,10 +45,10 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 
 		[Meta.BDamageTypeReference]
-		public List<BDamageTypeID> DamageTypes { get; private set; } = new List<BDamageTypeID>();
+		public List<BDamageTypeID> DamageTypes { get; private set; } = [];
 
 		[Meta.UnitReference]
-		public List<BProtoUnitID> TargetTypes { get; private set; } = new List<BProtoUnitID>();
+		public List<BProtoUnitID> TargetTypes { get; private set; } = [];
 
 		#region ActionID
 		int mActionID = TypeExtensions.kNone;

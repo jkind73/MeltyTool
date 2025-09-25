@@ -248,10 +248,10 @@ namespace KSoft.Phoenix.Phx
 			this.Flags = new Collections.BBitSet(kFlagsParams);
 			this.Flags2 = new Collections.BBitSet(kFlags2Params);
 
-			this.IconLocations = new List<int>();
-			this.TechPrereqs = new List<int>();
+			this.IconLocations = [];
+			this.TechPrereqs = [];
 
-			this.ChildObjectIDs = new List<int>();
+			this.ChildObjectIDs = [];
 			this.LevelData = new Collections.BListExplicitIndex<BProtoPowerDataLevel>(BProtoPowerDataLevel.kBListExplicitIndexParams);
 		}
 

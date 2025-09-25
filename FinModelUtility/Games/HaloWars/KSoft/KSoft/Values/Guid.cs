@@ -104,7 +104,8 @@ namespace KSoft.Values
 				GetData3 = Reflection.Util.GenerateMemberGetter			<Guid, short>	(kData3Name);
 				SetData3 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, short>	(kData3Name);
 
-				string[] kData4Names = { "_d", "_e", "_f", "_g", "_h", "_i", "_j", "_k", };
+				string[] kData4Names = ["_d", "_e", "_f", "_g", "_h", "_i", "_j", "_k"
+				];
 				GetData4 = new Func<Guid, byte>[kData4Names.Length];
 				SetData4 = new Reflection.Util.ValueTypeMemberSetterDelegate<Guid, byte>[kData4Names.Length];
 

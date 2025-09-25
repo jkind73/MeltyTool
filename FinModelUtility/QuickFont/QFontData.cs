@@ -35,7 +35,7 @@ namespace QuickFont
 
     public List<string> Serialize()
     {
-      List<string> stringList1 = new List<string>();
+      List<string> stringList1 = [];
       List<string> stringList2 = stringList1;
       int num = this.Pages.Length;
       string str1 = num.ToString() ?? "";
@@ -76,7 +76,7 @@ namespace QuickFont
     public void Deserialize(List<string> input, out int pageCount, out char[] charSet)
     {
       this.CharSetMapping = new Dictionary<char, QFontGlyph>();
-      List<char> charList = new List<char>();
+      List<char> charList = [];
       try
       {
         pageCount = int.Parse(input[0]);

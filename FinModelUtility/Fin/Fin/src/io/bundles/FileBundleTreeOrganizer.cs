@@ -38,7 +38,7 @@ public class FileBundleTreeOrganizer : IFileBundleOrganizer {
 }
 
 public class FileBundleListOrganizer : IFileBundleOrganizer {
-  public List<IAnnotatedFileBundle> List { get; } = new();
+  public List<IAnnotatedFileBundle> List { get; } = [];
 
   public void Add(IAnnotatedFileBundle annotatedFileBundle)
     => this.List.Add(annotatedFileBundle);

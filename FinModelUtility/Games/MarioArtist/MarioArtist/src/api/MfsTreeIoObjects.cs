@@ -159,7 +159,7 @@ public class MfsTreeDirectory(
           return true;
         }
 
-        outFile = null;
+        outFile = null!;
         return false;
       }
 
@@ -169,7 +169,7 @@ public class MfsTreeDirectory(
       }
     }
 
-    outFile = null;
+    outFile = null!;
     return false;
   }
 

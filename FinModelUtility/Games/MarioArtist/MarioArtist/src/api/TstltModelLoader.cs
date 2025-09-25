@@ -259,7 +259,7 @@ public partial class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         parentChildren = jointsByParent[parentJoint];
       } else {
         parentChildren = jointsByParent[parentJoint] =
-            new List<(Joint joint, int index)>();
+            [];
       }
 
       parentChildren.Add((joint, i));
@@ -806,7 +806,7 @@ public partial class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                               }
                             })
                             .WhereNonnull()
-                            .Select(t => t.Value)
+                            .Select(t => t!.Value)
                             .ToArray();
 
     if (!displayListTuples.Any()) {

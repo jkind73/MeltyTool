@@ -41,7 +41,7 @@ public partial class TextureSelectorBox : UserControl {
                  .OrderBy(texture => texture.Name)
                  .ToList();
         if (this.textures_ == null) {
-          this.textures_ = Array.Empty<IReadOnlyTexture>();
+          this.textures_ = [];
         }
 
         foreach (var texture in this.textures_) {

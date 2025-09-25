@@ -82,7 +82,7 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BListArray<		BHardpoint> Hardpoints { get; private set; }
 			= new Collections.BListArray<	BHardpoint>();
 		public List<string> SingleBoneIKs { get; private set; }
-			= new List<string>();
+			= [];
 		public Collections.BListArray<		BGroundIKNode> GroundIKs { get; private set; }
 			= new Collections.BListArray<	BGroundIKNode>();
 		public Collections.BListArray<		BSweetSpotIKNode> SweetSpotIKs { get; private set; }
@@ -437,7 +437,7 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 		[Meta.BProtoObjectReference]
 		public List<	BProtoObjectID> CostEscalationObjects { get; private set; }
-			 = new List<BProtoObjectID>();
+			 = [];
 		public Collections.BListArray<		BProtoObjectCaptureCost> CaptureCosts { get; private set; }
 			= new Collections.BListArray<	BProtoObjectCaptureCost>();
 		#region Bounty
@@ -637,7 +637,7 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 		[Meta.TriggerScriptReference]
 		public List<string> AbilityTriggerScripts { get; private set; }
-			= new List<string>();
+			= [];
 		public Collections.BListExplicitIndex<		BProtoObjectVeterancy> Veterancy { get; private set; }
 			= new Collections.BListExplicitIndex<	BProtoObjectVeterancy>(BProtoObjectVeterancy.kBListExplicitIndexParams);
 		public Collections.BTypeValuesSingle AddResource { get; private set; }
@@ -1001,7 +1001,7 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 		[Meta.ObjectTypeReference]
 		public List<	BProtoObjectID> Contains { get; private set; }
-			= new List<	BProtoObjectID>();
+			= [];
 		#region GarrisonSquadMode
 		BSquadMode mGarrisonSquadMode = BSquadMode.Invalid;
 		public BSquadMode GarrisonSquadMode

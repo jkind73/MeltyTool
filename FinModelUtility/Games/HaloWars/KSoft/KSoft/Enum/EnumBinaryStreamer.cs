@@ -40,7 +40,7 @@ namespace KSoft.IO
 		{
 			var methods = kBinaryWriterType.GetMethods();
 			// Avoid having to allocate a new array every iteration
-			Type[] types = new Type[] { null };
+			Type[] types = [null];
 			foreach (Type t in EnumUtils.kSupportedTypes)
 			{
 				types[0] = t;

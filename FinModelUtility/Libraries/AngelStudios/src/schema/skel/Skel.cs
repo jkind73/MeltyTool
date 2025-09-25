@@ -17,7 +17,7 @@ public class SkelBone(BoneCounter boneCounter) : ITextDeserializable {
   public int Id { get; set; }
   public string Name { get; set; }
   public Vector3 Offset { get; set; }
-  public LinkedList<SkelBone> Children { get; } = new();
+  public LinkedList<SkelBone> Children { get; } = [];
 
   public void Read(ITextReader tr) {
     {

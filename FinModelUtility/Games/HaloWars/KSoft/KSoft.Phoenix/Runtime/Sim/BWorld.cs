@@ -94,9 +94,9 @@ namespace KSoft.Phoenix.Runtime
 		BExplorationGroupTimerEntry[] ActiveExplorationGroups;
 		public BPlayer[] Players;
 		PlayerColorCategory[,] PlayerColorCategories = new PlayerColorCategory[cMaxPlayerColorCategories, cMaximumSupportedPlayers];
-		List<CondensedListItem16<BSimOrder>> SimOrders = new List<CondensedListItem16<BSimOrder>>();
-		List<CondensedListItem16<BUnitOpp>> UnitOpps = new List<CondensedListItem16<BUnitOpp>>();
-		List<CondensedListItem16<BPathMoveData>> PathMoveData = new List<CondensedListItem16<BPathMoveData>>();
+		List<CondensedListItem16<BSimOrder>> SimOrders = [];
+		List<CondensedListItem16<BUnitOpp>> UnitOpps = [];
+		List<CondensedListItem16<BPathMoveData>> PathMoveData = [];
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)

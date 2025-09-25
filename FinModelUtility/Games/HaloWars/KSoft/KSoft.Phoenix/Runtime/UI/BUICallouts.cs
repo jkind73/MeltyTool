@@ -52,7 +52,7 @@ namespace KSoft.Phoenix.Runtime
 			IndexSize=sizeof(short),
 		};
 
-		public List<CondensedListItem16<BUICallout>> Callouts = new List<CondensedListItem16<BUICallout>>();
+		public List<CondensedListItem16<BUICallout>> Callouts = [];
 		public int[] CalloutWidgets = new int[cNumCallouts];
 		public int NextCalloutID;
 		public bool PanelVisible, CalloutsVisible;

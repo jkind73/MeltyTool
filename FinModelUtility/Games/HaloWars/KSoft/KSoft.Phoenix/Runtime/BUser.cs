@@ -86,7 +86,7 @@ namespace KSoft.Phoenix.Runtime
 		public BVector LastCameraLoc, LastCameraHoverPoint;
 		public bool HaveHoverPoint, HoverPointOverTerrain;
 		public HUDItemEnabledStates HUDItemEnabled = new HUDItemEnabledStates();
-		public List<BObjectiveArrow> ObjectiveArrows = new List<BObjectiveArrow>();
+		public List<BObjectiveArrow> ObjectiveArrows = [];
 
 		#region IEndianStreamSerializable Members
 		void SerializeUserMode16(IO.EndianStream s)

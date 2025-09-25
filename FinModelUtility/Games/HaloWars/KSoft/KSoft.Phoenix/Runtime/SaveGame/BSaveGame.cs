@@ -26,8 +26,8 @@ namespace KSoft.Phoenix.Runtime
 		int SaveFileType;
 		public BDatabase Database { get; private set; } = new BDatabase();
 
-		public List<BSavePlayer> Players { get; private set; } = new List<BSavePlayer>();
-		public List<BSaveTeam> Teams { get; private set; } = new List<BSaveTeam>();
+		public List<BSavePlayer> Players { get; private set; } = [];
+		public List<BSaveTeam> Teams { get; private set; } = [];
 		public BSaveUser UserSave { get; private set; } = new BSaveUser();
 
 		public BWorld World { get; private set; } = new BWorld();

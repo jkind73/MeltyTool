@@ -122,7 +122,7 @@ namespace QuickFont.Configuration
           }
         }
       }
-      HashSet<char> source = new HashSet<char>();
+      HashSet<char> source = [];
       foreach (char ch in str)
         source.Add(ch);
       return new string(source.ToArray<char>());

@@ -23,7 +23,7 @@ namespace uni.ui.avalonia.resources.texture {
       : TexturesPanelViewModel {
     public EmptyTexturesPanelViewModelForDesigner() {
       this.ModelAndTextures = (ModelDesignerUtil.CreateStubModel(),
-                               Array.Empty<IReadOnlyTexture>());
+                               []);
     }
   }
 

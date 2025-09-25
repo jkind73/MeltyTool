@@ -15,7 +15,7 @@ namespace KSoft.ObjectModel
 
 		public PropertyChangedEventArgsCollection()
 		{
-			this.mEventArgs = new List<System.ComponentModel.PropertyChangedEventArgs>();
+			this.mEventArgs = [];
 		}
 		PropertyChangedEventArgsCollection(IEnumerable<System.ComponentModel.PropertyChangedEventArgs> eventArgs)
 		{

@@ -8,7 +8,7 @@ public class TtydGroupTransformKeyframes(
     int animationLength) {
   private readonly
       List<(float keyframe, IReadOnlyList<GroupTransformDelta> deltas)>
-      keyframeTimesAndDeltas_ = new();
+      keyframeTimesAndDeltas_ = [];
 
   public void AddDeltasForKeyframe(
       float keyframe,

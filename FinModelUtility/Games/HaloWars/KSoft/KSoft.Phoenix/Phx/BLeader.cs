@@ -323,7 +323,7 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 
 		[Meta.BProtoPowerReference]
-		public List<BProtoPowerID> SupportPowerIDs { get; private set; } = new List<BProtoSquadID>();
+		public List<BProtoPowerID> SupportPowerIDs { get; private set; } = [];
 
 		public bool IsEmpty { get { return this.SupportPowerIDs.Count == 0; } }
 

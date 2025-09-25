@@ -79,7 +79,7 @@ namespace KSoft.Wwise.FilePackage
 			{
 				this.mSoundBanks = new SoundBank.AkSoundBank[this.mSoundBanksTable.Count];
 				this.mIdToName = new Dictionary<uint, string>(this.mSoundBanks.Length);
-				this.mIdToNameDups = new List<KeyValuePair<uint, string>>();
+				this.mIdToNameDups = [];
 				for (int x = 0; x < this.mSoundBanksTable.Count; x++)
 				{
 					var entry = this.mSoundBanksTable[x];

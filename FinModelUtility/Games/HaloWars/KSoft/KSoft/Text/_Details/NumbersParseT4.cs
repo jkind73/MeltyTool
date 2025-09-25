@@ -727,7 +727,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<byte?> EmptyResult => Array.Empty<byte?>();
+			protected override IEnumerable<byte?> EmptyResult => [];
 
 			protected byte? ProcessItem(int start, int length)
 			{
@@ -808,7 +808,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<sbyte?> EmptyResult => Array.Empty<sbyte?>();
+			protected override IEnumerable<sbyte?> EmptyResult => [];
 
 			protected sbyte? ProcessItem(int start, int length)
 			{
@@ -889,7 +889,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<ushort?> EmptyResult => Array.Empty<ushort?>();
+			protected override IEnumerable<ushort?> EmptyResult => [];
 
 			protected ushort? ProcessItem(int start, int length)
 			{
@@ -970,7 +970,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<short?> EmptyResult => Array.Empty<short?>();
+			protected override IEnumerable<short?> EmptyResult => [];
 
 			protected short? ProcessItem(int start, int length)
 			{
@@ -1051,7 +1051,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<uint?> EmptyResult => Array.Empty<uint?>();
+			protected override IEnumerable<uint?> EmptyResult => [];
 
 			protected uint? ProcessItem(int start, int length)
 			{
@@ -1132,7 +1132,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<int?> EmptyResult => Array.Empty<int?>();
+			protected override IEnumerable<int?> EmptyResult => [];
 
 			protected int? ProcessItem(int start, int length)
 			{
@@ -1213,7 +1213,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<ulong?> EmptyResult => Array.Empty<ulong?>();
+			protected override IEnumerable<ulong?> EmptyResult => [];
 
 			protected ulong? ProcessItem(int start, int length)
 			{
@@ -1294,7 +1294,7 @@ namespace KSoft
 			{
 			}
 
-			protected override IEnumerable<long?> EmptyResult => Array.Empty<long?>();
+			protected override IEnumerable<long?> EmptyResult => [];
 
 			protected long? ProcessItem(int start, int length)
 			{

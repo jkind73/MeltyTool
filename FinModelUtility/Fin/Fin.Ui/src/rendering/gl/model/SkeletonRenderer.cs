@@ -90,7 +90,7 @@ public class SkeletonRenderer
     }
   }
 
-  private readonly IndexableSet<IReadOnlyBone> selectedChildren_ = new();
+  private readonly IndexableSet<IReadOnlyBone> selectedChildren_ = [];
   private readonly IReadOnlyBoneTransformManager boneTransformManager_;
 
   private readonly IReadOnlyIndexableDictionary<IReadOnlyBone, Vector3>

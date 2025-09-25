@@ -73,7 +73,7 @@ namespace KSoft.Phoenix.Phx
 
 		#region StringTable stuff
 		public LocStringTable EnglishStringTable { get; private set; }
-			= new LocStringTable();
+			= [];
 
 		/// <summary>Maps a ID to a bit representing if any data references it somewhere. Only updated on data load</summary>
 		public Collections.BitSet ReferencedStringIds { get; private set; }

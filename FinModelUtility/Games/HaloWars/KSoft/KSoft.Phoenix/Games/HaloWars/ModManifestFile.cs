@@ -58,7 +58,7 @@ namespace KSoft.Phoenix.HaloWars
 		}
 
 		public ObservableCollection<ModManifestDirectory> Directories { get; private set; }
-			= new ObservableCollection<ModManifestDirectory>();
+			= [];
 
 		public void ReadFromFile()
 		{

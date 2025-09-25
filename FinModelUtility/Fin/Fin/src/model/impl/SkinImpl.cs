@@ -16,7 +16,7 @@ public partial class ModelImpl<TVertex> {
     private readonly Func<int, Vector3, TVertex> vertexCreator_;
     private readonly List<IVertex> vertices_;
     private readonly List<TVertex> typedVertices_;
-    private readonly List<IMesh> meshes_ = new();
+    private readonly List<IMesh> meshes_ = [];
 
     private readonly FinSortedSet<IReadOnlyBone> bonesUsedByVertices_
         = new((lhs, rhs) => lhs.Index.CompareTo(rhs.Index));

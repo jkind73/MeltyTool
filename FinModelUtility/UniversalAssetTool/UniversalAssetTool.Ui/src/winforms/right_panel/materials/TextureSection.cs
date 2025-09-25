@@ -20,6 +20,6 @@ public partial class TextureSection : UserControl {
         ((value is IReadOnlyFixedFunctionMaterial fixedFunctionMaterial)
             ? fixedFunctionMaterial.TextureSources.Nonnull()
             : value?.Textures)?.ToArray() ??
-        Array.Empty<IReadOnlyTexture>();
+        [];
   }
 }

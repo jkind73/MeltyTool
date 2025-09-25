@@ -8,7 +8,7 @@ public class DelayedSplitPercentageProgress(int capacity = 0)
     : IPercentageProgress {
   private bool isComplete_;
   private readonly List<PercentageProgress> progresses_ = new(capacity);
-  private readonly List<bool> eachIsComplete_ = new();
+  private readonly List<bool> eachIsComplete_ = [];
 
   public PercentageProgress this[int index] => this.progresses_[index];
 

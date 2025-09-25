@@ -7,7 +7,7 @@ namespace fin.model.impl;
 
 public partial class ModelImpl<TVertex> {
   private partial class AnimationManagerImpl {
-    private readonly List<IMorphTarget> morphTargets_ = new();
+    private readonly List<IMorphTarget> morphTargets_ = [];
 
     public IReadOnlyList<IMorphTarget> MorphTargets => this.morphTargets_;
 

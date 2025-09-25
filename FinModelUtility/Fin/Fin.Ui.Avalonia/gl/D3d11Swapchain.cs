@@ -20,7 +20,7 @@ namespace fin.ui.avalonia.gl;
 class D3d11Swapchain {
   protected ICompositionGpuInterop Interop { get; }
   protected CompositionDrawingSurface Target { get; }
-  private readonly List<D3D11SwapchainImage> pendingImages_ = new();
+  private readonly List<D3D11SwapchainImage> pendingImages_ = [];
   private readonly D3DDevice device_;
 
   public D3d11Swapchain(

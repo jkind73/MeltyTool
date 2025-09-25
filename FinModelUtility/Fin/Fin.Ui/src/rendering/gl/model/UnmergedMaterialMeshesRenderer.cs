@@ -15,7 +15,7 @@ public partial class ModelRenderer {
     private IDynamicGlBufferManager? dynamicBufferManager_;
 
     private readonly List<(IReadOnlyMesh, UnmergedMaterialMeshRenderer)>
-        meshRenderers_ = new();
+        meshRenderers_ = [];
 
     // Generates buffer manager and model within the current GL context.
     public void GenerateModelIfNull() {
@@ -60,7 +60,7 @@ public partial class ModelRenderer {
       this.bufferManager_?.Dispose();
     }
 
-    public IReadOnlyModel Model { get; } = model;
+    public IReadOnlyModel Model => model;
 
     public IReadOnlySet<IReadOnlyMesh>? HiddenMeshes { get; set; }
 

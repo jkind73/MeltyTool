@@ -25,7 +25,7 @@ namespace KSoft.Collections
 		void InitializeUndefined()
 		{
 			if (this.mUndefined == null)
-				this.mUndefined = new ObservableCollection<string>();
+				this.mUndefined = [];
 		}
 
 		public void Clear()

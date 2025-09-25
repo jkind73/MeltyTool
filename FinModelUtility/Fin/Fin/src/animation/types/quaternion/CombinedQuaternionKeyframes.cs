@@ -18,7 +18,7 @@ public sealed class CombinedQuaternionKeyframes<TKeyframe>(
 
   public ISharedInterpolationConfig SharedConfig => sharedConfig;
 
-  public IndividualInterpolationConfig<Quaternion> IndividualConfig
+  public IndividualInterpolationConfig<Quaternion>? IndividualConfig
     => individualConfig;
 
   public IReadOnlyList<TKeyframe> Definitions => this.impl_.Definitions;

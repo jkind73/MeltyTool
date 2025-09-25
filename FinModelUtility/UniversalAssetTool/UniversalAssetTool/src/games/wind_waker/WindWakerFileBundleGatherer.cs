@@ -170,7 +170,7 @@ public class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
         return bckFiles;
       }
 
-      return Array.Empty<IFileHierarchyFile>();
+      return [];
     }
   }
 

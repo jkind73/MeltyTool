@@ -17,7 +17,7 @@ namespace KSoft.Debug
 			Contract.Requires(debugTraceClass != null);
 
 			if (sources == null)
-				sources = new List<TraceSource>();
+				sources = [];
 
 			var properties = debugTraceClass.GetProperties(BindingFlags.GetProperty | BindingFlags.Static | BindingFlags.Public);
 
@@ -40,7 +40,7 @@ namespace KSoft.Debug
 			Contract.Requires(debugTraceClasses != null);
 
 			if (sources == null)
-				sources = new List<TraceSource>();
+				sources = [];
 
 			foreach (var debugTraceClass in debugTraceClasses)
 			{

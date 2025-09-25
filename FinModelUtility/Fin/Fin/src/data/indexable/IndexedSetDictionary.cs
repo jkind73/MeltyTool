@@ -12,7 +12,7 @@ public class IndexedSetDictionary<TValue>
 
   public ISet<TValue> GetOrCreateSet(int index) {
     if (!this.impl_.TryGetValue(index, out var set)) {
-      this.impl_[index] = set = new HashSet<TValue>();
+      this.impl_[index] = set = [];
     }
 
     return set;

@@ -58,7 +58,7 @@ public class InterpolatedKeyframes<TKeyframe, T>(
           return true;
         }
 
-        value = default;
+        value = default!;
         return false;
     }
   }

@@ -279,7 +279,7 @@ namespace KSoft.Memory.Strings
 		public static StringStorage UnicodeStringBigEndian { get { return kStringUnicodeBE; } }
 		#endregion
 
-		internal static readonly StringStorage[] kStorageTypesList = new StringStorage[] {
+		internal static readonly StringStorage[] kStorageTypesList = [
 			// Ascii
 			kCStringAscii,
 			/* Clr */ new StringStorage(StringStorageWidthType.Ascii, StringStorageLengthPrefix.Int7),
@@ -298,7 +298,7 @@ namespace KSoft.Memory.Strings
 			// Unicode-BE
 			kCStringUnicodeBE,
 			/* Clr */ new StringStorage(StringStorageWidthType.Unicode, StringStorageLengthPrefix.Int7, Shell.EndianFormat.Big),
-			kStringUnicodeBE,
-		};
+			kStringUnicodeBE
+		];
 	};
 }

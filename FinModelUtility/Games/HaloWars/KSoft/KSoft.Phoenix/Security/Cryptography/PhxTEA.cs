@@ -5,16 +5,16 @@
 		#region Keys
 		const int kKeySize = 3;
 
-		public static readonly ulong[] kKeyEra = new ulong[kKeySize] {
+		public static readonly ulong[] kKeyEra = [
 			0xBC3EB6B4D0471DDB,
 			0x8299E6431912BE73,
-			0x4601515D43D26DF5,
-		};
-		public static readonly ulong[] kKeyGameFile = new ulong[kKeySize] {
+			0x4601515D43D26DF5
+		];
+		public static readonly ulong[] kKeyGameFile = [
 			0x194F8D77DF360283,
 			0x1385AC1E2122F575,
-			0xA7392D249DC2C737,
-		};
+			0xA7392D249DC2C737
+		];
 
 		ulong[] mKey;
 
@@ -23,7 +23,7 @@
 			if (userKey == 0)
 				this.mKey = key;
 			else
-				this.mKey = new ulong[kKeySize] { key[0], key[1], userKey };
+				this.mKey = [key[0], key[1], userKey];
 		}
 		#endregion
 

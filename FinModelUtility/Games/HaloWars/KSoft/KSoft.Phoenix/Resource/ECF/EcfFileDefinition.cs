@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Resource.ECF
 		public uint ChunkExtraDataSize { get; private set; }
 
 		public List<EcfFileChunkDefinition> Chunks { get; private set; }
-			= new List<EcfFileChunkDefinition>();
+			= [];
 
 		#region ITagElementStringNameStreamable
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

@@ -42,7 +42,7 @@ namespace QuickFont
       int num = 5 + (int) (0.1 * (double) font.Size);
       Bitmap bitmap = new Bitmap(512, 512, PixelFormat.Format24bppRgb);
       Graphics graph = Graphics.FromImage((Image) bitmap);
-      List<SizeF> glyphSizes = new List<SizeF>();
+      List<SizeF> glyphSizes = [];
       foreach (char ch in this._charSet)
       {
         SizeF sizeF = font.MeasureString(ch.ToString() ?? "", graph);
@@ -317,7 +317,7 @@ label_28:
       out QFontGlyph[] destGlyphs,
       int destMargin)
     {
-      List<QBitmap> bitmapSheetsAndRepack = new List<QBitmap>();
+      List<QBitmap> bitmapSheetsAndRepack = [];
       destGlyphs = new QFontGlyph[sourceGlyphs.Length];
       QBitmap qbitmap = (QBitmap) null;
       int val2 = 0;
@@ -417,10 +417,10 @@ label_28:
         qfontGlyph.YOffset -= num;
       Size optimalPageSize = Builder.GetOptimalPageSize(initialBitmap.Width * this._config.SuperSampleLevels, initialBitmap.Height * this._config.SuperSampleLevels, this._config.PageMaxTextureSize);
       QFontGlyph[] destGlyphs;
-      List<QBitmap> bitmapSheetsAndRepack = Builder.GenerateBitmapSheetsAndRepack(glyphs, new BitmapData[1]
-      {
-        bitmapData
-      }, optimalPageSize.Width, optimalPageSize.Height, out destGlyphs, destMargin);
+      List<QBitmap> bitmapSheetsAndRepack = Builder.GenerateBitmapSheetsAndRepack(glyphs,
+      [
+          bitmapData
+      ], optimalPageSize.Width, optimalPageSize.Height, out destGlyphs, destMargin);
       initialBitmap.UnlockBits(bitmapData);
       initialBitmap.Dispose();
       if (this._config.SuperSampleLevels != 1)
@@ -428,7 +428,7 @@ label_28:
         Builder.ScaleSheetsAndGlyphs(bitmapSheetsAndRepack, destGlyphs, 1f / (float) this._config.SuperSampleLevels);
         Builder.RetargetAllGlyphs(bitmapSheetsAndRepack, destGlyphs, this._config.KerningConfig.AlphaEmptyPixelTolerance);
       }
-      List<TexturePage> texturePageList = new List<TexturePage>();
+      List<TexturePage> texturePageList = [];
       foreach (QBitmap qbitmap in bitmapSheetsAndRepack)
         texturePageList.Add(new TexturePage(qbitmap.BitmapData));
       QFontData qfontData = new QFontData()
@@ -481,7 +481,7 @@ label_28:
       char[] charSet,
       byte alphaTolerance)
     {
-      List<BitmapData> bitmapDataList = new List<BitmapData>();
+      List<BitmapData> bitmapDataList = [];
       foreach (QBitmap sourceFontSheet in sourceFontSheets)
         bitmapDataList.Add(sourceFontSheet.BitmapData);
       QFontGlyph[] destGlyphs;
@@ -497,7 +497,7 @@ label_28:
           qbitmap.ExpandAlpha(shadowConfig.BlurRadius, shadowConfig.BlurPasses);
       }
       Builder.RetargetAllGlyphs(bitmapSheetsAndRepack, destGlyphs, alphaTolerance);
-      List<TexturePage> texturePageList = new List<TexturePage>();
+      List<TexturePage> texturePageList = [];
       foreach (QBitmap qbitmap in bitmapSheetsAndRepack)
         texturePageList.Add(new TexturePage(qbitmap.BitmapData));
       QFontData fontData = new QFontData()
@@ -566,7 +566,7 @@ label_28:
       float downSampleFactor,
       QFontConfiguration loaderConfig)
     {
-      List<string> input = new List<string>();
+      List<string> input = [];
       StreamReader streamReader = new StreamReader(filePath);
       string str1;
       while ((str1 = streamReader.ReadLine()) != null)
@@ -577,7 +577,7 @@ label_28:
       char[] charSet;
       qfontData.Deserialize(input, out pageCount, out charSet);
       string str2 = filePath.Replace(".qfont", "").Replace(" ", "");
-      List<QBitmap> qbitmapList = new List<QBitmap>();
+      List<QBitmap> qbitmapList = [];
       if (pageCount == 1)
       {
         qbitmapList.Add(new QBitmap(str2 + ".png"));
@@ -639,7 +639,7 @@ label_28:
         if (chArray2 != null)
           throw new Exception("Failed to load font from file. Glyphs '" + chArray2[0].ToString() + "' and '" + chArray2[1].ToString() + "' were overlapping. This occurred only after resizing your texture font, implying that there is a bug in QFont. ");
       }
-      List<QFontGlyph> qfontGlyphList = new List<QFontGlyph>();
+      List<QFontGlyph> qfontGlyphList = [];
       foreach (char key in charSet)
         qfontGlyphList.Add(qfontData.CharSetMapping[key]);
       if (loaderConfig.ShadowConfig != null)
@@ -660,11 +660,10 @@ label_28:
         for (int index2 = index1 + 1; index2 < array.Length; ++index2)
         {
           if (charSet[array[index1]].Page == charSet[array[index2]].Page && Builder.RectangleIntersect(charSet[array[index1]].Rect, charSet[array[index2]].Rect))
-            return new char[2]
-            {
-              array[index1],
+            return [
+                array[index1],
               array[index2]
-            };
+            ];
         }
       }
       return (char[]) null;

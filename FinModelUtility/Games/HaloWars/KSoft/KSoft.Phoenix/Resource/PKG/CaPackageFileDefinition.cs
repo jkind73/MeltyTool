@@ -14,7 +14,7 @@ namespace KSoft.Phoenix.Resource.PKG
 		public long Alignment;
 
 		public List<string> FileNames { get; private set; }
-			= new List<string>();
+			= [];
 
 		#region ITagElementStringNameStreamable
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

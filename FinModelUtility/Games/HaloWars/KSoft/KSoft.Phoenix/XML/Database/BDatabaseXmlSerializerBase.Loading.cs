@@ -161,8 +161,8 @@ namespace KSoft.Phoenix.XML
 
 				this.Tasks = null;
 				this.TaskExceptions = null;
-				this.Tasks = new List<Task<bool>>();
-				this.TaskExceptions = new List<Exception>();
+				this.Tasks = [];
+				this.TaskExceptions = [];
 			}
 
 			public bool UpdateResultWithTaskResults(ref bool r)

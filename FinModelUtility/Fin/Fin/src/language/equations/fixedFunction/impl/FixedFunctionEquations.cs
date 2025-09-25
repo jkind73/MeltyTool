@@ -7,8 +7,8 @@ namespace fin.language.equations.fixedFunction;
 
 public partial class FixedFunctionEquations<TIdentifier>
     : IFixedFunctionEquations<TIdentifier> where TIdentifier : notnull {
-  private readonly HashSet<IValue> valueDependencies_ = new();
-  private readonly HashSet<TIdentifier> identifierDependencies_ = new();
+  private readonly HashSet<IValue> valueDependencies_ = [];
+  private readonly HashSet<TIdentifier> identifierDependencies_ = [];
 
   public IColorOps ColorOps { get; }
   public IScalarOps ScalarOps { get; }

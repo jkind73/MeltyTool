@@ -32,7 +32,7 @@ namespace QuickFont
     public QFontDrawing(bool useDefaultBlendFunction = true, QFontSharedState state = null)
     {
       this._useDefaultBlendFunction = useDefaultBlendFunction;
-      this._glFontDrawingPrimitives = new List<QFontDrawingPrimitive>();
+      this._glFontDrawingPrimitives = [];
       this.InitialiseState(state);
     }
 
@@ -69,12 +69,11 @@ namespace QuickFont
       int shader2 = GL.CreateShader(ShaderType.FragmentShader);
       if (shader1 == -1 || shader2 == -1)
         throw new Exception(string.Format("Error creating shader name for {0}", shader1 == -1 ? (shader2 == -1 ? (object) "vert and frag shaders" : (object) "vert shader") : (object) "frag shader"));
-      string[] strArray = new string[3]
-      {
-        "#version 130\n\n",
+      string[] strArray = [
+          "#version 130\n\n",
         "#version 140\n\n",
         "#version 150\n\n"
-      };
+      ];
       int params1 = 0;
       int params2 = 0;
       foreach (string str in strArray)

@@ -21,7 +21,7 @@ public class NarcArchiveDirectoryEntry : NarcArchiveEntry {
   /// Gets the entries in the directory.
   /// </summary>
   public List<NarcArchiveEntry> Entries { get; set; }
-    = new List<NarcArchiveEntry>();
+    = [];
 
   /// <summary>
   /// Gets or sets the offset of the directory name in the name entry table.

@@ -69,7 +69,7 @@ public static class LinqExtensions {
       return true;
     } catch { }
 
-    first = default;
+    first = default!;
     return false;
   }
 
@@ -112,7 +112,7 @@ public static class LinqExtensions {
       single = enumerable.Single();
       return true;
     } catch {
-      single = default;
+      single = default!;
       return false;
     }
   }

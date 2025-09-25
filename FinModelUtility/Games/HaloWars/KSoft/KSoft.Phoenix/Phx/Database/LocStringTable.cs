@@ -87,8 +87,9 @@ namespace KSoft.Phoenix.Phx
 			first_child.Depth = this.Depth + 1;
 			first_child.StartIndex = this.StartIndex;
 
-			this.SubRanges = new List<LocStringTableIndexRange>();
-			this.SubRanges.Add(first_child);
+			this.SubRanges = [
+				first_child
+			];
 
 			return first_child;
 		}
@@ -195,7 +196,7 @@ namespace KSoft.Phoenix.Phx
 
 		bool mDoNotUpdateUsedIndices;
 		public Collections.BitSet UsedIndices { get; private set; }
-			= new Collections.BitSet();
+			= [];
 
 		public LocStringTable()
 		{

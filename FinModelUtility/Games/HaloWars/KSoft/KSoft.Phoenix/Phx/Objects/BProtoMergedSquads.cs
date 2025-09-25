@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Phx
 		}
 
 		[Meta.BProtoSquadReference]
-		public List<BProtoSquadID> BaseSquadIDs { get; private set; } = new List<BProtoSquadID>();
+		public List<BProtoSquadID> BaseSquadIDs { get; private set; } = [];
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

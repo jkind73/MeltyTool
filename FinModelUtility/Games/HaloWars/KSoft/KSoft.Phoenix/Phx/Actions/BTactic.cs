@@ -12,8 +12,10 @@ namespace KSoft.Phoenix.Phx
 	#endregion
 
 	public Collections.BListArray<BTacticTargetRule> TargetRules { get; private set; } = new Collections.BListArray<BTacticTargetRule>();
-		public List<BProtoActionID> PersistentActions { get; private set; } = new List<BProtoActionID>();
-		public List<BProtoActionID> PersistentSquadActions { get; private set; } = new List<BProtoActionID>();
+		public List<BProtoActionID> PersistentActions { get; private set; } =
+			[];
+		public List<BProtoActionID> PersistentSquadActions { get; private set; } =
+			[];
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

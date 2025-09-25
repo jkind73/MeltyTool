@@ -37,7 +37,7 @@ namespace KSoft.IO
 		static void InitializeWriteMethods()
 		{
 			// Avoid having to allocate a new array every iteration
-			Type[] types = new Type[] { null, null };
+			Type[] types = [null, null];
 			types[1] = typeof(int); // bitCount
 			foreach (Type t in EnumUtils.kSupportedTypes)
 			{
@@ -54,7 +54,7 @@ namespace KSoft.IO
 			var Bits_type = typeof(Bits);
 
 			// Avoid having to allocate a new array every iteration
-			Type[] types = new Type[] { null, null };
+			Type[] types = [null, null];
 			types[1] = typeof(int); // startBitIndex
 			foreach (Type t in EnumUtils.kSupportedTypes)
 			{

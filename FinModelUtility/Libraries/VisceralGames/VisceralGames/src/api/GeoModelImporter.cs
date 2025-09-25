@@ -154,7 +154,7 @@ public class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
   private void AddRcbFileToModel_(IModel finModel,
                                   Rcb rcb,
                                   out IBone[] finBones) {
-    finBones = Array.Empty<IBone>();
+    finBones = [];
 
     foreach (var rcbSkeleton in rcb.Skeletons) {
       finBones = new IBone[rcbSkeleton.Bones.Count];

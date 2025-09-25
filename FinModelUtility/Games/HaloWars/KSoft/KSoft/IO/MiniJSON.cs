@@ -389,7 +389,7 @@ namespace MiniJSON {
 
                             // KM00 start
                             if (array == null)
-                            array = new List<object>();
+                            array = [];
                         // KM00 end
 
 
@@ -400,7 +400,7 @@ namespace MiniJSON {
 
                 // KM00 start
                 if (array == null)
-                    array = new List<object>();
+                    array = [];
                 // KM00 end
 
                 return array;

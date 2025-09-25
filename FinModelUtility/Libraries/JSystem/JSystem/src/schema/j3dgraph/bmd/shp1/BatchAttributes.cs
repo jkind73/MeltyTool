@@ -11,7 +11,7 @@ namespace jsystem.schema.j3dgraph.bmd.shp1;
 
 public class BatchAttributes : IVertexDescriptor, IBinaryDeserializable {
   private readonly LinkedList<(GxVertexAttribute, GxAttributeType?, GxColorComponentType?)> impl_
-      = new();
+      = [];
 
   public uint Value { get; set; }
 

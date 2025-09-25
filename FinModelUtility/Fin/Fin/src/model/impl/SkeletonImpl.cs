@@ -12,7 +12,7 @@ public partial class ModelImpl<TVertex> {
   public ISkeleton Skeleton { get; } = new SkeletonImpl();
 
   private class SkeletonImpl : ISkeleton {
-    public readonly List<IBone> bones = new();
+    public readonly List<IBone> bones = [];
 
     public IBone Root { get; }
     public IReadOnlyList<IBone> Bones => this.bones;

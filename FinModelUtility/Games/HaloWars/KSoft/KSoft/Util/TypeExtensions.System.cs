@@ -790,7 +790,7 @@ namespace KSoft
 		[DebuggerStepThrough]
 		public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T> seq)
 		{
-			return seq ?? Enumerable.Empty<T>();
+			return seq ?? [];
 		}
 
 		/// <summary>Query if 'seq' contains duplicate values</summary>

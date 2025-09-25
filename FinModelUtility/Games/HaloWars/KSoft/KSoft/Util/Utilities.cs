@@ -45,7 +45,7 @@ namespace KSoft
 		#region static EmptyArray
 		/// <summary>A global zero-length array of objects. Should only be used as input for functions that don't use 'params'</summary>
 		[SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-		public static object[] EmptyArray { get => Array.Empty<object>(); }
+		public static object[] EmptyArray { get => []; }
 		#endregion
 
 		#region static GetNullException function ptr

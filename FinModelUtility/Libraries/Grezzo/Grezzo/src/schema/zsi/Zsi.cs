@@ -46,9 +46,9 @@ public class Zsi : IBinaryDeserializable {
         }
       }
 
-      this.MeshHeaders = new List<MeshHeader>();
-      this.EnvironmentSettings = new List<IEnvironmentSettings>();
-      this.RoomFileNames = new List<string>();
+      this.MeshHeaders = [];
+      this.EnvironmentSettings = [];
+      this.RoomFileNames = [];
       foreach (var (cmdType, cmd0, cmd1) in commands) {
         switch (cmdType) {
           case ZsiSectionType.MESH_HEADER: {

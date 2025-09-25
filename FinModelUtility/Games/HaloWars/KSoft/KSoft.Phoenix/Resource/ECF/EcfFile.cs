@@ -17,7 +17,7 @@ namespace KSoft.Phoenix.Resource.ECF
 		, IEnumerable<EcfChunk>
 	{
 		internal EcfHeader mHeader = new EcfHeader();
-		protected List<EcfChunk> mChunks = new List<EcfChunk>();
+		protected List<EcfChunk> mChunks = [];
 
 		public int ChunksCount { get { return this.mChunks.Count; } }
 

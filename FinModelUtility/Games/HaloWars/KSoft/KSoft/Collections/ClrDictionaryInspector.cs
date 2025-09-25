@@ -149,7 +149,7 @@ namespace KSoft.Collections
 		public IReadOnlyList<int> Buckets { get {
 			var buckets = kGetDicBuckets(this.mDic);
 
-			return buckets ?? Array.Empty<int>();
+			return buckets ?? [];
 		} }
 		public IReadOnlyList<DicEntry> Entries { get {
 			if (this.mEntries == null)

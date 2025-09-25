@@ -24,20 +24,20 @@ namespace KSoft.Reflection
 		#region Underlying Type support utils
 		/// <summary>TypeCodes for supported underlying types</summary>
 		/// <remarks>Even indices represent signed types, odd are unsigned</remarks>
-		public static readonly TypeCode[] kSupportedTypeCodes = {
+		public static readonly TypeCode[] kSupportedTypeCodes = [
 			TypeCode.SByte,	TypeCode.Byte,
 			TypeCode.Int16,	TypeCode.UInt16,
 			TypeCode.Int32, TypeCode.UInt32,
-			TypeCode.Int64, TypeCode.UInt64,
-		};
+			TypeCode.Int64, TypeCode.UInt64
+		];
 		/// <summary>Types for supported underlying types</summary>
 		/// <remarks>Even indices represent signed types, odd are unsigned</remarks>
-		public static readonly Type[] kSupportedTypes = {
+		public static readonly Type[] kSupportedTypes = [
 			typeof(SByte), typeof(Byte),
 			typeof(Int16), typeof(UInt16),
 			typeof(Int32), typeof(UInt32),
-			typeof(Int64), typeof(UInt64),
-		};
+			typeof(Int64), typeof(UInt64)
+		];
 
 		/// <summary>Is the TypeCode a supported underlying type?</summary>
 		/// <param name="c"></param>
