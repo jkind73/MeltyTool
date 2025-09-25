@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Layout;
 using Avalonia.Rendering;
+using Avalonia.Threading;
 
 namespace fin.ui.avalonia.gl;
 
@@ -11,14 +12,21 @@ public abstract class BGlPanel : Panel, ICustomHitTest {
   public event Action? OnInit;
 
   protected BGlPanel() {
-    var child = new OpenTkControl(
-        () => {
-          this.InitGl();
-          this.OnInit?.Invoke();
-        },
-        this.RenderGl,
-        this.TeardownGl);
-    this.VisualChildren.Add(child);
+    Dispatcher.UIThread.InvokeAsync(async () => {
+      var initGl = () => {
+        this.InitGl();
+        this.OnInit?.Invoke();
+      };
+      var renderGl = this.RenderGl;
+      var teardownGl = this.TeardownGl;
+
+      if (await SharpDxInteropControl.TryToAddTo(this, initGl, renderGl, teardownGl)) {
+        return;
+      }
+
+      this.Children.Add(new OpenTkControl(initGl, renderGl, teardownGl));
+    });
+
   }
 
   protected abstract void InitGl();

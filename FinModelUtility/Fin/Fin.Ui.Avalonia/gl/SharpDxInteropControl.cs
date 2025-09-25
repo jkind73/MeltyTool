@@ -1,8 +1,10 @@
 ﻿// Copied and adapted from https://github.com/AvaloniaUI/Avalonia/blob/release/11.3.0/samples/GpuInterop
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -29,7 +31,7 @@ namespace fin.ui.avalonia.gl;
 ///   Shamelessly stolen from:
 ///   https://github.com/Dragorn421/DragoStuff/blob/aa1ac3434f2701739570adf77377c29e1e3171c1/SharpDXInteropControl.cs
 /// </summary>
-public abstract class SharpDxInteropControl : Control {
+public class SharpDxInteropControl : Control {
   private CompositionSurfaceVisual? visual_;
   private Compositor? compositor_;
   private string info_ = string.Empty;
@@ -46,20 +48,46 @@ public abstract class SharpDxInteropControl : Control {
   private IDisposable currentImageDisposable_;
   private D3D11SwapchainImage currentImage_;
 
-  protected abstract void InitGl();
-  protected abstract void RenderGl();
-  protected abstract void TeardownGl();
+  private Action initGl_;
+  private Action renderGl_;
+  private Action teardownGl_;
 
   protected CompositionDrawingSurface? Surface { get; private set; }
 
-  public SharpDxInteropControl() {
+  public static async Task<bool> TryToAddTo(
+      Panel parent,
+      Action initGl,
+      Action renderGl,
+      Action teardownGl) {
+    var control = new SharpDxInteropControl(initGl, renderGl, teardownGl);
+
+    bool success = false;
+    try {
+      parent.Children.Add(control);
+      success = control.initialized_;
+    } catch { }
+
+    if (!success) {
+      parent.Children.Remove(control);
+      return false;
+    }
+
+    return true;
+  }
+
+  public SharpDxInteropControl(Action initGl,
+                               Action renderGl,
+                               Action teardownGl) {
+    this.initGl_ = initGl;
+    this.renderGl_ = renderGl;
+    this.teardownGl_ = teardownGl;
     this.SizeChanged += (sender, e) => { this.QueueNextFrame_(); };
   }
 
   protected override void OnAttachedToVisualTree(
       VisualTreeAttachmentEventArgs e) {
     base.OnAttachedToVisualTree(e);
-    this.Initialize_();
+    this.Initialize_().Wait();
   }
 
   protected override void OnDetachedFromLogicalTree(
@@ -73,7 +101,7 @@ public abstract class SharpDxInteropControl : Control {
     base.OnDetachedFromLogicalTree(e);
   }
 
-  private async void Initialize_() {
+  private async Task Initialize_() {
     var selfVisual = ElementComposition.GetElementVisual(this)!;
     this.compositor_ = selfVisual.Compositor;
 
@@ -113,7 +141,7 @@ public abstract class SharpDxInteropControl : Control {
           "NV_DX_interop not available on this device."
       );
 
-    this.InitGl();
+    this.initGl_();
     this.OnInit?.Invoke();
 
     this.hDevice_ = Wgl.DXOpenDeviceNV(this.device_.NativePointer);
@@ -211,6 +239,8 @@ public abstract class SharpDxInteropControl : Control {
 
     this.openTkWindow_?.Dispose();
     this.openTkWindow_ = null;
+
+    this.teardownGl_();
   }
 
   [DllImport("opengl32.dll")]
@@ -231,7 +261,7 @@ public abstract class SharpDxInteropControl : Control {
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    this.RenderGl();
+    this.renderGl_();
 
     this.currentImage_.Present();
   }
@@ -260,6 +290,7 @@ public abstract class SharpDxInteropControl : Control {
       if (!unlockResult) {
         throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
       }
+
       Wgl.DXUnregisterObjectNV(this.hDevice_, this.hCfbs_[0]);
     }
 

@@ -102,8 +102,6 @@ public partial class MainView : UserControl {
       LoadingStatusService.IsLoading = false;
     };
 
-    this.ViewerGlPanel.OnInit += () => MfsFileSystemService.SelectFile(null);
-
     var camera = this.ViewerGlPanel.Camera;
     camera.Position = new Vector3(0, -1.35f, .3f);
     camera.PitchDegrees = 0;
