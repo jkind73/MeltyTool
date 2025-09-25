@@ -164,6 +164,8 @@ public sealed class GlTexture : IGlTexture {
                             fastLock.byteScan0);
         break;
       }
+      // TODO: Luminance/LuminanceAlpha is not supported in OpenGL ES. Implement support for R/RG instead
+      /*
       case La16Image la16Image: {
         using var fastLock = la16Image.UnsafeLock();
         PassBytesIntoImage_(level,
@@ -193,7 +195,7 @@ public sealed class GlTexture : IGlTexture {
                             PixelFormat.LuminanceAlpha,
                             fastLock.byteScan0);
         break;
-      }
+      }*/
       default: {
         using var rentedBytes = pool_.Rent(4 * imageWidth * imageHeight);
         image.Access(getHandler => {
