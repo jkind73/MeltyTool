@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace fin.util.enumerables;
 
-public class EnumeratorExtensionsTests {
+public sealed class EnumeratorExtensionsTests {
   [Test]
   public void TestTryMoveNextEmpty() {
     var emptyEnumerator = Enumerable.Empty<int>().ToEnumerator();

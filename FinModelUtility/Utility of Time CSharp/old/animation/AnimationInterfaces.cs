@@ -19,13 +19,13 @@ namespace UoT {
     IList<ushort> Frames { get; }
   }
 
-  public class Vec3s {
+  public sealed class Vec3s {
     public short X { get; set; }
     public short Y { get; set; }
     public short Z { get; set; }
   }
 
-  public class FacialState(EyeState eyeState, MouthState mouthState) {
+  public sealed class FacialState(EyeState eyeState, MouthState mouthState) {
     public static FacialState DEFAULT = new FacialState(default, default);
 
     public EyeState EyeState { get; } = eyeState;

@@ -40,7 +40,7 @@ public static class IndexableDictionaryExtensions {
   }
 }
 
-public class IndexableDictionary<TIndexable, TValue>(int capacity)
+public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
     : IIndexableDictionary<TIndexable, TValue>
     where TIndexable : IIndexable {
   private readonly List<(bool hasValue, TValue value)> impl_ = new(capacity);

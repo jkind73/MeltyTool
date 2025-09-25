@@ -15,13 +15,13 @@ using uni.ui.avalonia.resources.model.skeleton;
 using uni.ui.avalonia.resources.texture;
 
 namespace uni.ui.avalonia.resources.model {
-  public class ModelPanelViewModelForDesigner : ModelPanelViewModel {
+  public sealed class ModelPanelViewModelForDesigner : ModelPanelViewModel {
     public ModelPanelViewModelForDesigner() {
       this.Model = ModelDesignerUtil.CreateStubModel();
     }
   }
 
-  public class ModelPanelViewModel : ViewModelBase {
+  public class ModelPanelViewModel : BViewModel {
     public IReadOnlyModel Model {
       get;
       set {

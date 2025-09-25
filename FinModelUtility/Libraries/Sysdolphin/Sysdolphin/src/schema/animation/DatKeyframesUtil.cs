@@ -2,7 +2,7 @@
 
 namespace sysdolphin.schema.animation;
 
-public class DatKeyframe {
+public sealed class DatKeyframe {
   public int Frame { get; init; }
   public float IncomingValue { get; set; }
   public float OutgoingValue { get; set; }

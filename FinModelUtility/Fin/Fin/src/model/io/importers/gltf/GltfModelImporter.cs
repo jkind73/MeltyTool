@@ -28,7 +28,7 @@ public record GltfModelFileBundle(IReadOnlyTreeFile GltfFile)
   public IReadOnlyTreeFile MainFile => this.GltfFile;
 }
 
-public class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
+public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
   public IModel Import(GltfModelFileBundle modelFileBundle) {
     var gltfFile = modelFileBundle.GltfFile;
 

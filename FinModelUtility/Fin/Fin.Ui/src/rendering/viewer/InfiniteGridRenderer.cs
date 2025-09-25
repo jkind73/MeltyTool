@@ -14,7 +14,7 @@ namespace fin.ui.rendering.viewer;
 ///    - https://godotshaders.com/shader/infinite-ground-grid/
 ///    - https://madebyevan.com/shaders/grid/
 /// </summary>
-public class InfiniteGridRenderer : IRenderable {
+public sealed class InfiniteGridRenderer : IRenderable {
   private IModelRenderer? impl_;
 
   private IShaderUniform<float> nearPlaneUniform_;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.stacks;
 
-public class FinStack<T> : IFinStack<T> {
+public sealed class FinStack<T> : IFinStack<T> {
   private readonly Stack<T> impl_;
 
   public FinStack() {

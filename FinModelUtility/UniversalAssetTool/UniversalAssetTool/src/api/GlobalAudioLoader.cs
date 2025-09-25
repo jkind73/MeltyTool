@@ -12,7 +12,7 @@ using ssm.api;
 
 namespace uni.api;
 
-public class GlobalAudioReader : IAudioImporter<IAudioFileBundle> {
+public sealed class GlobalAudioReader : IAudioImporter<IAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       IAudioFileBundle audioFileBundle)

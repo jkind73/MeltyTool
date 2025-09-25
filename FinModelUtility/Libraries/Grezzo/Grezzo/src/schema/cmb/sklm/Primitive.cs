@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace grezzo.schema.cmb.sklm;
 
-public class Primitive : IBinaryConvertible {
+public sealed class Primitive : IBinaryConvertible {
   public uint chunkSize;
   public bool isVisible;
   public PrimitiveMode primitiveMode;

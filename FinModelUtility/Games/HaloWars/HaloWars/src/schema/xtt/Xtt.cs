@@ -7,7 +7,7 @@ using schema.binary;
 
 namespace hw.schema.xtt;
 
-public class Xtt : IBinaryDeserializable {
+public sealed class Xtt : IBinaryDeserializable {
   public IImage AlbedoTexture { get; private set; }
 
   public void Read(IBinaryReader br) {

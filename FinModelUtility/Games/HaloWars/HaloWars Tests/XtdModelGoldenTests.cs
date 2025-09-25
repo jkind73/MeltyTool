@@ -7,7 +7,7 @@ using fin.testing.model;
 using hw.api;
 
 namespace hw {
-  public class XtdModelGoldenTests
+  public sealed class XtdModelGoldenTests
       : BModelGoldenTests<XtdModelFileBundle, XtdModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]

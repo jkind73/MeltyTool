@@ -15,7 +15,7 @@ using schema.binary;
 
 namespace f3dzex2.displaylist.opcodes.f3dzex2;
 
-public class F3dzex2OpcodeParser : IOpcodeParser {
+public sealed class F3dzex2OpcodeParser : IOpcodeParser {
   public IOpcodeCommand Parse(IReadOnlyN64Memory n64Memory,
                               IDisplayListReader dlr,
                               SchemaBinaryReader br) {

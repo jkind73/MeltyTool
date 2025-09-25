@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fin.data.sets;
 
-public class CastSet<TIn, TOut>(IFinSet<TIn> impl) : IFinSet<TOut>
+public sealed class CastSet<TIn, TOut>(IFinSet<TIn> impl) : IFinSet<TOut>
     where TIn : TOut {
   public CastSet(ISet<TIn> impl) : this(new FinSet<TIn>(impl)) { }
   public CastSet() : this(new FinSet<TIn>()) { }

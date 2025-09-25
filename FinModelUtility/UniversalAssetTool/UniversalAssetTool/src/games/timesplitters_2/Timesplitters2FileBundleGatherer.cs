@@ -5,7 +5,7 @@ using fin.util.progress;
 
 namespace uni.games.timesplitters_2;
 
-public class Timesplitters2FileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class Timesplitters2FileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "timesplitters_2";
 
   protected override void GatherFileBundlesFromHierarchy(

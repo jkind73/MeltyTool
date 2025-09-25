@@ -10,7 +10,7 @@ namespace fin.data.lazy;
 ///   Dictionary implementation that lazily populates its entries when
 ///   accessed.
 /// </summary>
-public class LazyDictionary<TKey, TValue>
+public sealed class LazyDictionary<TKey, TValue>
     : ILazyDictionary<TKey, TValue> {
   private readonly IFinDictionary<TKey, TValue> impl_;
   private readonly Func<TKey, TValue> handler_;

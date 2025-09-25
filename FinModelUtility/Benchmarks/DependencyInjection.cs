@@ -3,7 +3,7 @@
 using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class DependencyInjection {
+  public sealed class DependencyInjection {
     private const int n = 100000;
     private const float value = 1;
 
@@ -32,7 +32,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaMethodWrapper : IMethod {
+    public sealed class ViaMethodWrapper : IMethod {
       public double Run(double d) => Math.Acos(d);
     }
 
@@ -47,7 +47,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaInlineWrapper : IMethod {
+    public sealed class ViaInlineWrapper : IMethod {
       [MethodImpl(MethodImplOptions.AggressiveInlining)]
       public double Run(double d) => Math.Acos(d);
     }
@@ -62,7 +62,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaOptimizedInlineWrapper : IMethod {
+    public sealed class ViaOptimizedInlineWrapper : IMethod {
       [MethodImpl(MethodImplOptions.AggressiveInlining |
                   MethodImplOptions.AggressiveOptimization)]
       public double Run(double d) => Math.Acos(d);
@@ -80,7 +80,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaMethodGroup(Func<double, double> methodGroup) {
+    public sealed class ViaMethodGroup(Func<double, double> methodGroup) {
       public Func<double, double> methodGroup = methodGroup;
     }
 
@@ -95,7 +95,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaLambda(Func<double, double> lambda) {
+    public sealed class ViaLambda(Func<double, double> lambda) {
       public Func<double, double> lambda = lambda;
     }
 
@@ -110,7 +110,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaInterfaceImpl(IMethod impl) : IMethod {
+    public sealed class ViaInterfaceImpl(IMethod impl) : IMethod {
       [MethodImpl(MethodImplOptions.AggressiveInlining)]
       public double Run(double x)  => impl.Run(x);
     }
@@ -125,7 +125,7 @@ namespace benchmarks {
       }
     }
 
-    public class ViaGenericImpl<TMethod>(TMethod impl)
+    public sealed class ViaGenericImpl<TMethod>(TMethod impl)
         where TMethod : IMethod {
       private readonly TMethod impl_ = impl;
 

@@ -8,7 +8,7 @@ using SledgeSolid = Sledge.Formats.Map.Objects.Solid;
 
 namespace Celeste64.map;
 
-public class Map {
+public sealed class Map {
   public IReadOnlyList<SledgeEntity> Entities { get; }
   public IReadOnlyList<SledgeSolid> Solids { get; }
 

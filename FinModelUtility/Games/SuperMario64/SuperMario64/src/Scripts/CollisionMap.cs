@@ -5,7 +5,7 @@ using fin.math;
 using OpenTK.Graphics.ES30;
 
 namespace sm64.Scripts {
-  public class CollisionTriangleList {
+  public sealed class CollisionTriangleList {
     public int id = 0;
     public List<uint> indicesList;
     public uint[] indices;
@@ -31,7 +31,7 @@ namespace sm64.Scripts {
     }
   }
 
-  public class CollisionMap {
+  public sealed class CollisionMap {
     private int vbo;
 
     private List<Vector3> vertices = [];

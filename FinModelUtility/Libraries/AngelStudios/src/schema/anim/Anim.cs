@@ -9,7 +9,7 @@ namespace xmod.schema.anim;
 ///   Shamelessly stolen from:
 ///   https://github.com/Dummiesman/AngelStudiosBlenderAddon/blob/cac6dbc59cbc0bae7afd99f49043538548d94396/io_scene_angelstudios/import_anim.py
 /// </summary>
-public class Anim : IBinaryDeserializable {
+public sealed class Anim : IBinaryDeserializable {
   public int FrameCount { get; set; }
 
   public IReadOnlyList<Vector3> RootPositions { get; set; }

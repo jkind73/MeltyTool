@@ -12,7 +12,7 @@ using fin.util.linq;
 
 namespace fin.ui.rendering.viewer;
 
-public class SkyboxRenderer : IRenderable {
+public sealed class SkyboxRenderer : IRenderable {
   private IModelRenderer? impl_;
 
   private IShaderUniform<float> nearPlaneUniform_;

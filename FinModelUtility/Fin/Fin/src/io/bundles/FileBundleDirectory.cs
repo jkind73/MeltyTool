@@ -17,7 +17,7 @@ public interface IFileBundleDirectory {
   void CleanUp();
 }
 
-public class FileBundleDirectory : IFileBundleDirectory {
+public sealed class FileBundleDirectory : IFileBundleDirectory {
   private readonly List<IFileBundleDirectory> subdirs_ = [];
   private readonly List<IAnnotatedFileBundle> fileBundles_ = [];
 

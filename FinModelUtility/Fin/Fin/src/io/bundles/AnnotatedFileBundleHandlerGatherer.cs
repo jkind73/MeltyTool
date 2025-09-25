@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace fin.io.bundles;
 
-public class AnnotatedFileBundleHandlerGatherer(
+public sealed class AnnotatedFileBundleHandlerGatherer(
     Action<IFileBundleOrganizer, IMutablePercentageProgress> impl)
     : IAnnotatedFileBundleGatherer {
   public void GatherFileBundles(
@@ -15,7 +15,7 @@ public class AnnotatedFileBundleHandlerGatherer(
   }
 }
 
-public class AnnotatedFileBundleHandlerGathererWithoutProgress(
+public sealed class AnnotatedFileBundleHandlerGathererWithoutProgress(
     Action<IFileBundleOrganizer> impl)
     : IAnnotatedFileBundleGatherer {
   public void GatherFileBundles(
@@ -26,7 +26,7 @@ public class AnnotatedFileBundleHandlerGathererWithoutProgress(
   }
 }
 
-public class AnnotatedFileBundleHandlerGathererWithInput<T>(
+public sealed class AnnotatedFileBundleHandlerGathererWithInput<T>(
     Action<IFileBundleOrganizer, IMutablePercentageProgress, T> impl,
     T input)
     : IAnnotatedFileBundleGatherer {
@@ -38,7 +38,7 @@ public class AnnotatedFileBundleHandlerGathererWithInput<T>(
   }
 }
 
-public class AnnotatedFileBundleHandlerGathererWithoutProgressWithInput<T>(
+public sealed class AnnotatedFileBundleHandlerGathererWithoutProgressWithInput<T>(
     Action<IFileBundleOrganizer, T> impl,
     T input)
     : IAnnotatedFileBundleGatherer {

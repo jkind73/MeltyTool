@@ -2,7 +2,7 @@
 
 namespace modl.level;
 
-public class Level {
+public sealed class Level {
   private readonly SubTypeDictionary<string, BLevelObject?> objectById_
       = new();
 

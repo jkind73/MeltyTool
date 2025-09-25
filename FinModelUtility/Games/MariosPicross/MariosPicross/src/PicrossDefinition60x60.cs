@@ -3,7 +3,7 @@ using fin.util.asserts;
 
 namespace MariosPicross;
 
-public class PicrossDefinition60X60 : IPicrossDefinition {
+public sealed class PicrossDefinition60X60 : IPicrossDefinition {
   private readonly IPicrossDefinition[] picrossDefinitions_;
 
   public PicrossDefinition60X60(

@@ -9,7 +9,7 @@ public enum PolygonType {
   QUAD_STRIP,
 }
 
-public class OpcodeReader {
+public sealed class OpcodeReader {
   public static IOpcode[] ReadOpcodes(IBinaryReader br) {
     var opcodes = new LinkedList<IOpcode>();
 

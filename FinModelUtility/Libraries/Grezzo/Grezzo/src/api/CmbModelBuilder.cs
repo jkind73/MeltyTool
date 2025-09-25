@@ -32,7 +32,7 @@ using Version = grezzo.schema.cmb.Version;
 
 namespace grezzo.api;
 
-public class CmbModelBuilder {
+public sealed class CmbModelBuilder {
   public IModel BuildModel(
       IFileBundle fileBundle,
       Cmb cmb,

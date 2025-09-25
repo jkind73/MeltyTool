@@ -11,7 +11,7 @@ using uni.util.io;
 
 namespace uni.games.ocarina_of_time_3d;
 
-public class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
+public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
   // TODO: Add support for Link
   // TODO: Add support for faceb
   // TODO: Add support for cmab

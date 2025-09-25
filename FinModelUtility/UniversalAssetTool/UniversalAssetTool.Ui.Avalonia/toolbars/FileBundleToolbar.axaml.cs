@@ -6,11 +6,11 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.toolbars;
 
-public class FileBundleToolbarModelForDesigner : FileBundleToolbarModel {
+public sealed class FileBundleToolbarModelForDesigner : FileBundleToolbarModel {
   public new string FileName => "//foo/bar.mod";
 }
 
-public class FileBundleToolbarModel : ViewModelBase {
+public class FileBundleToolbarModel : BViewModel {
   public string? FileName {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);

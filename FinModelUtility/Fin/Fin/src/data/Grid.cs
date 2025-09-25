@@ -15,7 +15,7 @@ public partial interface IGrid<T> {
   new T this[int x, int y] { get; set; }
 }
 
-public class Grid<T> : IGrid<T> {
+public sealed class Grid<T> : IGrid<T> {
   private IList<T> impl_;
 
   public Grid(int width, int height, T defaultValue = default!) {

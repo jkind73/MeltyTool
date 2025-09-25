@@ -83,7 +83,7 @@ public partial class ChunkData : IBinaryConvertible {
   public byte[] Data { get; private set; }
 }
 
-public class ModSectionData : IBinaryConvertible {
+public sealed class ModSectionData : IBinaryConvertible {
   public List<ChunkData> Chunks { get; } = [];
   public List<byte> EofBytes { get; } = [];
 

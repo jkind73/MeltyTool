@@ -16,7 +16,7 @@ public partial interface ISubTypeDictionary<TKey, TValue>
   void Set<TValueSub>(TKey key, TValueSub value) where TValueSub : TValue;
 }
 
-public class SubTypeDictionary<TKey, TValueBase>(
+public sealed class SubTypeDictionary<TKey, TValueBase>(
     IFinDictionary<TKey, TValueBase> impl)
     : ISubTypeDictionary<TKey, TValueBase> {
   public SubTypeDictionary() : this(

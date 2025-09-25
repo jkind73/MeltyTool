@@ -13,7 +13,7 @@ using schema.binary;
 
 namespace grezzo.api;
 
-public class ZsiSceneImporter : ISceneImporter<ZsiSceneFileBundle> {
+public sealed class ZsiSceneImporter : ISceneImporter<ZsiSceneFileBundle> {
   private readonly CmbModelBuilder cmbModelBuilder_ = new();
 
   public IScene Import(ZsiSceneFileBundle sceneFileBundle) {

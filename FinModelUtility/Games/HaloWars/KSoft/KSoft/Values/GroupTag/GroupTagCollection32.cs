@@ -126,7 +126,7 @@ namespace KSoft.Values
 	/// collection lookup
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-	public class GroupTagContainer32Attribute : GroupTagContainerAttribute
+	public sealed class GroupTagContainer32Attribute : GroupTagContainerAttribute
 	{
 		/// <summary>Initialize the attribute with a type containing a <see cref="GroupTag32Collection"/></summary>
 		/// <param name="container">A type which contains static <see cref="GroupTag32Collection"/> properties</param>

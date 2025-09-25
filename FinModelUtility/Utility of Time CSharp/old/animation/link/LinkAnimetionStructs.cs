@@ -6,7 +6,7 @@ namespace UoT {
   // Based on the structs at:
   // https://wiki.cloudmodding.com/oot/Animation_Format#C_code
 
-  public class LinkAnimetion(
+  public sealed class LinkAnimetion(
       ushort frameCount,
       IList<LinkAnimetionTrack> tracks,
       IList<Vec3s> positions,
@@ -23,7 +23,7 @@ namespace UoT {
     public FacialState GetFacialState(int i) => facialStates![i];
   }
 
-  public class LinkAnimetionTrack(int type, IList<ushort> frames)
+  public sealed class LinkAnimetionTrack(int type, IList<ushort> frames)
       : IAnimationTrack {
     public int Type { get; } = type; // 0 = constant, 1 = keyframe
     public IList<ushort> Frames { get; } = frames;

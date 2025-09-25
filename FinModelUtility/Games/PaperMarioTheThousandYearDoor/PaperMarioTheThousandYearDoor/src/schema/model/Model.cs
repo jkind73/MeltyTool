@@ -8,7 +8,7 @@ using ttyd.schema.model.blocks;
 
 namespace ttyd.schema.model;
 
-public class Model : IBinaryDeserializable {
+public sealed class Model : IBinaryDeserializable {
   public Header Header { get; } = new();
 
   public Group[] Groups { get; private set; }

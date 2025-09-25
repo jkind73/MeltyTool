@@ -12,7 +12,7 @@ using vrml.schema;
 
 namespace vrml.api;
 
-public class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
+public sealed class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
   public IScene Import(VrmlSceneFileBundle fileBundle) {
     var wrlFile = fileBundle.WrlFile.Impl;
     using var wrlFileStream = wrlFile.OpenRead();
@@ -79,8 +79,7 @@ public class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
       }
     }
 
-    obj.AddSceneModel(
-        new VrmlModelImporter().Import(vrmlScene, definitions, fileBundle, fileSet));
+    obj.AddSceneModel(VrmlModelImporter.Import(vrmlScene, definitions, fileBundle, fileSet));
 
     return finScene;
   }

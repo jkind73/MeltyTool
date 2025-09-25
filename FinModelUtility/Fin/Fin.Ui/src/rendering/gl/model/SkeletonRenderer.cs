@@ -24,7 +24,7 @@ public interface ISkeletonRenderer : IRenderable {
 /// <summary>
 ///   A renderer for a Fin model's skeleton.
 /// </summary>
-public class SkeletonRenderer
+public sealed class SkeletonRenderer
     : ISkeletonRenderer {
   private static readonly IModelRenderer BONE_RENDERER_;
 

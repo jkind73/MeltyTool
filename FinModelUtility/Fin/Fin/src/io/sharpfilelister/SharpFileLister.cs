@@ -8,13 +8,13 @@ using static fin.io.sharpfilelister.Interop;
 
 namespace fin.io.sharpDirLister;
 
-public class DirectoryInformation {
+public sealed class DirectoryInformation {
   public string AbsoluteSubdirPath { get; set; }
   public LinkedList<string> AbsoluteFilePaths { get; } = [];
   public LinkedList<DirectoryInformation> Subdirs { get; } = [];
 }
 
-public class SharpFileLister {
+public sealed class SharpFileLister {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
   //Code based heavily on https://stackoverflow.com/q/47471744

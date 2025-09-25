@@ -30,7 +30,7 @@ public enum ModFlags {
   UseNBT = 0x01
 }
 
-public class Mod : IBinaryConvertible {
+public sealed class Mod : IBinaryConvertible {
   public readonly ModHeader header = new();
   public readonly List<Vector3> vertices = [];
   public readonly List<Vector3> vnormals = [];

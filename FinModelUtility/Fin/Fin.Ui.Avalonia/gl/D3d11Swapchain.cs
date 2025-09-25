@@ -93,7 +93,7 @@ class D3d11Swapchain {
   }
 }
 
-public class D3D11SwapchainImage {
+public sealed class D3D11SwapchainImage {
   public PixelSize Size { get; }
   private readonly ICompositionGpuInterop interop_;
   private readonly CompositionDrawingSurface target_;

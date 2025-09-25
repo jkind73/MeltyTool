@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.animal_crossing_wild_world;
 
-public class AnimalCrossingWildWorldFileBundleGatherer
+public sealed class AnimalCrossingWildWorldFileBundleGatherer
     : BDsFileBundleGatherer {
   public override string Name => "animal_crossing_wild_world";
 

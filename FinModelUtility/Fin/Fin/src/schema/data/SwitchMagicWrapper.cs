@@ -11,7 +11,7 @@ namespace fin.schema.data;
 ///   be adequate for most cases, except when the data class needs to access
 ///   parent data.
 /// </summary>
-public class SwitchMagicWrapper<TMagic, TData>(
+public sealed class SwitchMagicWrapper<TMagic, TData>(
     Func<IBinaryReader, TMagic> readMagicHandler,
     Action<IBinaryWriter, TMagic> writeMagicHandler,
     Func<TMagic, TData> createTypeHandler)

@@ -9,7 +9,7 @@ using System.Drawing;
 #nullable disable
 namespace QuickFont
 {
-  public class ProcessedText
+  public sealed class ProcessedText
   {
     internal TextNodeList TextNodeList;
     internal SizeF MaxSize;

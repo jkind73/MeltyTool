@@ -2,7 +2,7 @@
 
 namespace f3dzex2.image;
 
-public class BitsPerTexelExtensionsTests {
+public sealed class BitsPerTexelExtensionsTests {
   [Test]
   [TestCase(BitsPerTexel._4BPT, (uint) 2, ExpectedResult = (uint) 1)]
   [TestCase(BitsPerTexel._8BPT, (uint) 1, ExpectedResult = (uint) 1)]

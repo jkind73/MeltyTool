@@ -24,7 +24,7 @@ namespace KSoft.Text
 	/// given to Encode.</p>
 	/// </remarks>
 	// Based on the answers from http://codereview.stackexchange.com/questions/14084/base-36-encoding-of-a-byte-array/
-	public class RadixEncoding
+	public sealed class RadixEncoding
 	{
 		readonly string kDigits;
 		readonly double kBitsPerDigit;

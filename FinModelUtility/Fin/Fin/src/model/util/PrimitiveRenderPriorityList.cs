@@ -13,7 +13,7 @@ using PrimitiveBundle
     TransparencyType
     transparencyType);
 
-public class PrimitiveRenderPriorityList
+public sealed class PrimitiveRenderPriorityList
     : IEnumerable<(IReadOnlyMesh, IReadOnlyPrimitive)> {
   private readonly BinarySortedList<PrimitiveBundle> elements_
       = new(new RenderPriorityComparer());

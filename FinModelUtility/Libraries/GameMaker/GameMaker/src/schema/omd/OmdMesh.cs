@@ -5,7 +5,7 @@ using schema.text.reader;
 
 namespace gm.schema.omd;
 
-public class OmdMesh : ITextDeserializable {
+public sealed class OmdMesh : ITextDeserializable {
   public string Name { get; private set; }
   public int MaterialIndex { get; private set; }
   public D3d D3d { get; private set; }

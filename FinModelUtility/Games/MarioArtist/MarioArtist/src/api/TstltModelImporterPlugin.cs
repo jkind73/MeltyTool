@@ -4,7 +4,7 @@ using fin.model.io;
 
 namespace marioartist.api;
 
-public class TstltModelImporterPlugin : IModelImporterPlugin {
+public sealed class TstltModelImporterPlugin : IModelImporterPlugin {
   public string DisplayName => "Tstlt";
 
   public string Description => "Mario Artist: Talent Studio model format.";

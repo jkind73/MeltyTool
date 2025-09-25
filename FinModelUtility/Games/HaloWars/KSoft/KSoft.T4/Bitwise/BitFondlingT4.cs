@@ -82,7 +82,7 @@ namespace KSoft.T4.Bitwise
 			protected string BuildWordMaskForIntegerLsb(int wordSize) { return this.BuildWordMaskForInteger(wordSize, lhs:false); }
 		};
 
-		public class BitReverseCodeGenerator
+		public sealed class BitReverseCodeGenerator
 			: BitFondleCodeGenerator
 		{
 			public BitReverseCodeGenerator(TextTemplating.TextTransformation ttFile, NumberCodeDefinition def)
@@ -258,7 +258,7 @@ namespace KSoft.T4.Bitwise
 		// UInt32 - ~65
 		// UInt64 - ~86
 		// #TODO: the generated code for 16-bit isn't working right...who's fault is this?
-		public class FastBitCountCodeGenerator
+		public sealed class FastBitCountCodeGenerator
 			: BitCountCodeGenerator
 		{
 			public FastBitCountCodeGenerator(TextTemplating.TextTransformation ttFile, NumberCodeDefinition def)

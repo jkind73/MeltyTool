@@ -2,7 +2,7 @@
 
 namespace uni.platforms.threeDs.tools.gar.schema;
 
-public class Gar5Subfile : IGarSubfile {
+public sealed class Gar5Subfile : IGarSubfile {
   public string FileName { get; }
   public string? FullPath { get; }
 

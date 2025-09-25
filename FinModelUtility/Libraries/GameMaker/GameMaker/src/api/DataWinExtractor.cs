@@ -7,7 +7,7 @@ using gm.schema.dataWin;
 
 namespace gm.api;
 
-public class DataWinExtractor {
+public sealed class DataWinExtractor {
   public void Extract(IReadOnlyGenericFile srcFile,
                       ISystemDirectory dstDirectory) {
     if (!dstDirectory.IsEmpty) {

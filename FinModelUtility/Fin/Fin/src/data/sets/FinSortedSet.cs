@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace fin.data.sets;
 
-public class FinSortedSet<T>(Comparer<T> comparer) : IFinSet<T> {
+public sealed class FinSortedSet<T>(Comparer<T> comparer) : IFinSet<T> {
   private readonly SortedSet<T> impl_ = new(comparer);
 
   public FinSortedSet() : this(Comparer<T>.Default) { }

@@ -6,7 +6,7 @@ using uni.ui.winforms;
 
 namespace uni.ui;
 
-public class Program {
+public sealed class Program {
   [STAThread]
   public static void Main(string[] args) {
     Cli.Run(args,

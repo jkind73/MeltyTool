@@ -5,7 +5,7 @@ using fin.util.time;
 
 namespace fin.audio.stubbed;
 
-public class StubbedPlaybackState(int frequency, int? sampleCount = null) {
+public sealed class StubbedPlaybackState(int frequency, int? sampleCount = null) {
   private readonly FrameStopwatch stopwatch_ = new();
   private PlaybackState state_;
 

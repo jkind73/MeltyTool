@@ -4,7 +4,7 @@ using fin.util.enumerables;
 
 namespace sysdolphin.api;
 
-public class MeleeModelFileBundle : IModelFileBundle {
+public sealed class MeleeModelFileBundle : IModelFileBundle {
   public IReadOnlyTreeFile MainFile => this.PrimaryDatFile;
   public required IReadOnlyTreeFile PrimaryDatFile { get; init; }
   public IReadOnlyTreeFile? AnimationDatFile { get; init; }

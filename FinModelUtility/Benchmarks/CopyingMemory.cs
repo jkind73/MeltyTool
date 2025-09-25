@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class CopyingMemory {
+  public sealed class CopyingMemory {
     private readonly int n_ = 100000;
     
     private const int SIZE = 12;

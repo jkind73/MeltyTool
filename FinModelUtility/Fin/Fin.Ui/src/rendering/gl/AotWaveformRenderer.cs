@@ -9,7 +9,7 @@ using OpenTK.Graphics.ES30;
 
 namespace fin.ui.rendering.gl;
 
-public class AotWaveformRenderer : IRenderable {
+public sealed class AotWaveformRenderer : IRenderable {
   private IReadOnlyList<NormalTangentMultiColorMultiUvVertexImpl> vertices_;
   private IDynamicModelRenderer renderer_;
 

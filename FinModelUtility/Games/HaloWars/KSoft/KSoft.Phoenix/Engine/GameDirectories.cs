@@ -18,7 +18,7 @@ namespace KSoft.Phoenix.Engine
 		kNumberOf
 	};
 
-	public class GameDirectories
+	public sealed class GameDirectories
 	{
 		#region Art
 		const string kArtPath = @"art\";

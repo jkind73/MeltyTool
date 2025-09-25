@@ -12,7 +12,7 @@ namespace visceral.api;
 ///   Shamelessly stolen from:
 ///   https://github.com/gibbed/Gibbed.Visceral/blob/master/projects/Gibbed.Visceral.Setup/Project.cs#L85
 /// </summary>
-public class BighExtractor {
+public sealed class BighExtractor {
   private readonly ILogger logger_ = Logging.Create<BighExtractor>();
 
   public void Extract(IReadOnlyGenericFile bighFile,

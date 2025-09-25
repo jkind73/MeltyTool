@@ -16,7 +16,7 @@ public interface IN64Hardware<TMemory> : IN64Hardware
 }
 
 
-public class N64Hardware<TMemory> : IN64Hardware<TMemory>
+public sealed class N64Hardware<TMemory> : IN64Hardware<TMemory>
     where TMemory : IN64Memory {
   IN64Memory IN64Hardware.Memory => this.Memory;
   public TMemory Memory { get; set; }

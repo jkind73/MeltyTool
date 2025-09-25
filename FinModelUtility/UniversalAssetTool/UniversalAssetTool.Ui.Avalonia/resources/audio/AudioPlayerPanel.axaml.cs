@@ -28,8 +28,8 @@ public interface IAudioPlayerPanelViewModel {
   IAotAudioPlayback<short>? ActivePlayback { get; }
 }
 
-public class AudioPlayerPanelViewModelForDesigner
-    : ViewModelBase, IAudioPlayerPanelViewModel {
+public sealed class AudioPlayerPanelViewModelForDesigner
+    : BViewModel, IAudioPlayerPanelViewModel {
   public AudioPlayerPanelViewModelForDesigner() {
     var bundle = new OggAudioFileBundle(new FinFile("//fake/file.ogg"));
     this.AudioFileBundles = [bundle];
@@ -45,8 +45,8 @@ public class AudioPlayerPanelViewModelForDesigner
   public IAotAudioPlayback<short>? ActivePlayback => null;
 }
 
-public class AudioPlayerPanelViewModel
-    : ViewModelBase, IAudioPlayerPanelViewModel {
+public sealed class AudioPlayerPanelViewModel
+    : BViewModel, IAudioPlayerPanelViewModel {
   private readonly IAudioManager<short> audioManager_ =
       AlAudioManager.TryToCreateOrStub();
   private readonly IAudioPlayer<short> audioPlayer_;

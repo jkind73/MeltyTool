@@ -69,7 +69,7 @@ namespace KSoft.Phoenix.XML
 		}
 		#endregion
 
-		public class StreamTriggerScriptContext
+		public sealed class StreamTriggerScriptContext
 		{
 			public Engine.XmlFileInfo FileInfo { get; set; }
 

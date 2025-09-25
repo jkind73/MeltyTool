@@ -2,7 +2,7 @@
 
 Based on RFC 2060.
 
-Public class:           IMAP4
+public sealed class:           IMAP4
 Public variable:        Debug
 Public functions:       Internaldate2tuple
                         Int2AP

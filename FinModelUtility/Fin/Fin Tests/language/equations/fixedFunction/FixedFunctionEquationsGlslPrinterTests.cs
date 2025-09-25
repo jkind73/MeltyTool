@@ -1,6 +1,6 @@
 ﻿namespace fin.language.equations.fixedFunction; 
 /*
-public class FixedFunctionEquationsGlslPrinterTest {
+public sealed class FixedFunctionEquationsGlslPrinterTest {
   [Test]
   public void TestScalarColor() {
     var equations = new FixedFunctionEquations<FixedFunctionSource>();

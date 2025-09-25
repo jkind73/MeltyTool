@@ -1,5 +1,5 @@
 ﻿namespace fin.config;
 
-public class GameConfig {
+public sealed class GameConfig {
   public float Scale { get; set; } = 1;
 }

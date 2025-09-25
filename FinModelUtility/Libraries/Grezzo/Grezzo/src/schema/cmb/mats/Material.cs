@@ -7,7 +7,7 @@ using schema.binary;
 
 namespace grezzo.schema.cmb.mats;
 
-public class Material : IBinaryConvertible {
+public sealed class Material : IBinaryConvertible {
   public bool isFragmentLightingEnabled;
   public bool isVertexLightingEnabled;
   public bool IsFogEnabled { get; set; }

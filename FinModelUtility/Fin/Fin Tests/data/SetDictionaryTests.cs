@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data;
 
-public class SetDictionaryTests {
+public sealed class SetDictionaryTests {
   [Test]
   public void TestAdd() {
     var impl = new SetDictionary<string, string>();

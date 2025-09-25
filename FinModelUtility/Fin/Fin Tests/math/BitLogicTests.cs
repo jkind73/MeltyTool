@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math;
 
-public class BitLogicTests {
+public sealed class BitLogicTests {
   [Test]
   public void ExtractFromRight() {
     Assert.AreEqual((uint) 0b1111,

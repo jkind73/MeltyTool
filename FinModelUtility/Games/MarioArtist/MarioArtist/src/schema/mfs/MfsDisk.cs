@@ -12,7 +12,7 @@ public enum MfsDiskError {
   NOT_MFS,
 }
 
-public class MfsDisk : IBinaryDeserializable {
+public sealed class MfsDisk : IBinaryDeserializable {
   public LeoDisk Disk { get; private set; }
   public MfsDiskError Error { get; private set; }
   public MfsRamVolume? Volume { get; private set; }

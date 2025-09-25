@@ -16,7 +16,7 @@ using IGltfMeshBuilder
 
 namespace fin.model.io.exporters.gltf;
 
-public class GltfSkinBuilder {
+public sealed class GltfSkinBuilder {
   public bool UvIndices { get; set; }
 
   public IList<(Mesh gltfMesh, bool hasJoints)> AddSkin(

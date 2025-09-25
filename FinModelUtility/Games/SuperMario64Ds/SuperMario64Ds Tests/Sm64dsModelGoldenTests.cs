@@ -8,7 +8,7 @@ using sm64ds.api;
 
 namespace sm64ds;
 
-public class Sm64dsModelGoldenTests
+public sealed class Sm64dsModelGoldenTests
     : BModelGoldenTests<Sm64dsModelFileBundle, Sm64dsModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

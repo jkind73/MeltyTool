@@ -62,7 +62,7 @@ namespace KSoft.Phoenix.Resource.PKG
 		}
 	};
 
-	public class CaPackageFile
+	public sealed class CaPackageFile
 		: IO.IEndianStreamSerializable
 	{
 		public const string kFileExtension = ".pkg";

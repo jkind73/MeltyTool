@@ -11,7 +11,7 @@ using fin.ui.rendering.gl.model;
 
 namespace fin.ui.rendering.gl.scene;
 
-public class SceneModelRenderer : IRenderable, IDisposable {
+public sealed class SceneModelRenderer : IRenderable, IDisposable {
   private readonly ISceneModelInstance sceneModel_;
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;

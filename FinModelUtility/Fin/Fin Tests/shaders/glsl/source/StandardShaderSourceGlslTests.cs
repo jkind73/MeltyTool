@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.shaders.glsl.source;
 
-public class StandardShaderSourceGlslTests {
+public sealed class StandardShaderSourceGlslTests {
   [Test]
   public void TestWithoutNothing()
     => AssertGlsl_(

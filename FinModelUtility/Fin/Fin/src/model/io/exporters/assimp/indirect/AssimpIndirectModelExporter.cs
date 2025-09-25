@@ -19,7 +19,7 @@ using SharpGLTF.Validation;
 
 namespace fin.model.io.exporters.assimp.indirect;
 
-public class AssimpIndirectModelExporter : IModelExporter {
+public sealed class AssimpIndirectModelExporter : IModelExporter {
   // You can bet your ass I'm gonna prefix everything with ass.
 
   public bool LowLevel { get; set; }

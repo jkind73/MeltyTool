@@ -14,7 +14,7 @@ public interface IGroupTransformBakedFrames {
                             Span<float> buffer);
 }
 
-public class TtydGroupTransformBakedFrames(
+public sealed class TtydGroupTransformBakedFrames(
     int transformCount,
     float[] bakedTransformFrames)
     : IGroupTransformBakedFrames {

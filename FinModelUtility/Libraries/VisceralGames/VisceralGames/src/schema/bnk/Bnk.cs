@@ -2,7 +2,7 @@
 
 namespace visceral.schema.bnk;
 
-public class Bnk : IBinaryDeserializable {
+public sealed class Bnk : IBinaryDeserializable {
   public void Read(IBinaryReader br) {
       br.Position = 0x24;
 

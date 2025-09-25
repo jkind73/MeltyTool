@@ -13,7 +13,7 @@ public record BankAudioFileBundle(IReadOnlyTreeFile BankFile)
   public IReadOnlyTreeFile? MainFile => this.BankFile;
 }
 
-public class BankAudioImporter : IAudioImporter<BankAudioFileBundle> {
+public sealed class BankAudioImporter : IAudioImporter<BankAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       BankAudioFileBundle audioFileBundle) {

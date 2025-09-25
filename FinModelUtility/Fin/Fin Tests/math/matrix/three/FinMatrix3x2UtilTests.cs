@@ -8,7 +8,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.matrix.three;
 
-public class FinMatrix3x2UtilTests {
+public sealed class FinMatrix3x2UtilTests {
   [Test]
   public void TestTranslation() {
     var expectedTranslation = new Vector2(2, 3);

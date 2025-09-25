@@ -4,7 +4,7 @@
 ///   Shamelessly stolen from:
 ///   https://github.com/nickworonekin/narchive/blob/master/src/Narchive/Formats/NarcArchiveFileEntry.cs
 /// </summary>
-public class NarcArchiveFileEntry : NarcArchiveEntry {
+public sealed class NarcArchiveFileEntry : NarcArchiveEntry {
   /// <summary>
   /// Gets the relative path of the entry.
   /// </summary>

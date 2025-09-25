@@ -8,7 +8,7 @@ namespace uni.platforms.gcn.tools {
   /// <summary>
   ///   Shamelessly stolen from https://github.com/Cuyler36/RELDumper
   /// </summary>
-  public class RelDump {
+  public sealed class RelDump {
     private const int REL_HEADER_SIZE = 0xA0;
     private const int DOL_HEADER_SIZE = -0xC0;
     private int currentHeaderSize_;

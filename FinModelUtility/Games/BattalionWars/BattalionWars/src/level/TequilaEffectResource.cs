@@ -3,7 +3,7 @@ using modl.xml.level;
 
 namespace modl.level;
 
-public class TequilaEffectResource : BLevelObject {
+public sealed class TequilaEffectResource : BLevelObject {
   public string Name { get; set; }
 
   protected override void Populate(

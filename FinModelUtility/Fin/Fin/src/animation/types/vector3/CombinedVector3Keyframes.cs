@@ -7,7 +7,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.vector3;
 
-public class CombinedVector3Keyframes<TKeyframe>(
+public sealed class CombinedVector3Keyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, Vector3> interpolator,
     IndividualInterpolationConfig<Vector3>? individualConfig = null)

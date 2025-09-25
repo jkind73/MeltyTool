@@ -8,7 +8,7 @@ using fin.data.sets;
 
 namespace fin.model.util;
 
-public class RenderPriorityOrderedSet<T> : IEnumerable<T> {
+public sealed class RenderPriorityOrderedSet<T> : IEnumerable<T> {
   // TODO: Optimize this somehow?
   private readonly OrderedHashSet<T> elements_ = [];
 

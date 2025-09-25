@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.stacks;
 
-public class FinStackTests {
+public sealed class FinStackTests {
   [Test]
   public void TestInitWithSingle() {
     var stack = new FinStack<string>("foo");

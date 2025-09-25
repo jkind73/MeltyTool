@@ -8,7 +8,7 @@ using schema.binary;
 
 namespace modl.schema.modl.bw1;
 
-public class Bw1Modl : IModl, IBinaryDeserializable {
+public sealed class Bw1Modl : IModl, IBinaryDeserializable {
   public List<IBwNode> Nodes { get; } = [];
   public ListDictionary<ushort, ushort> CnctParentToChildren { get; } = new();
 

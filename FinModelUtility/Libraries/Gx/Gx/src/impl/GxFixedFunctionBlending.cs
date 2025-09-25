@@ -2,7 +2,7 @@
 
 namespace gx;
 
-public class GxFixedFunctionBlending {
+public sealed class GxFixedFunctionBlending {
   public void ApplyBlending(IFixedFunctionMaterial material,
                             GxBlendMode blendMode,
                             GxBlendFactor srcFactor,

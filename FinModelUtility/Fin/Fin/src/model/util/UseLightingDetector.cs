@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace fin.model.util;
 
-public class UseLightingDetector {
+public sealed class UseLightingDetector {
   public bool ShouldUseLightingFor(IReadOnlyModel model) {
     foreach (var vertex in model.Skin.Vertices) {
       if (vertex is IReadOnlyNormalVertex { LocalNormal: { } }) {

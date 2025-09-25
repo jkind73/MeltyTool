@@ -2,7 +2,7 @@
 
 namespace fin.util.progress;
 
-public class CounterPercentageProgress(int total) : IPercentageProgress {
+public sealed class CounterPercentageProgress(int total) : IPercentageProgress {
   private bool isComplete_;
 
   private int current_;

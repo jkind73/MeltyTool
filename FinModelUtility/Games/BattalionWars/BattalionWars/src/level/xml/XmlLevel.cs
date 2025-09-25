@@ -1,6 +1,6 @@
 ﻿namespace modl.xml.level;
 
-public class XmlLevel {
+public sealed class XmlLevel {
   public IList<XmlLevelObject> Instances { get; init; }
     = new List<XmlLevelObject>();
 }

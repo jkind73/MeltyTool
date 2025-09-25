@@ -9,7 +9,7 @@ using static fin.io.sharpfilelister.Interop2;
 
 namespace fin.io.sharpDirLister;
 
-public class SchemaSharpDirectorySizeMeasurer {
+public sealed class SchemaSharpDirectorySizeMeasurer {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
   private const int PATH_SPAN_LENGTH = 260;

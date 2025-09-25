@@ -4,7 +4,7 @@ using uni.platforms.wii.tools;
 
 namespace uni.platforms.wii;
 
-public class WiiFileHierarchyExtractor {
+public sealed class WiiFileHierarchyExtractor {
   private readonly Wit wit_ = new();
 
   public IFileHierarchy ExtractFromRom(ISystemFile romFile) {

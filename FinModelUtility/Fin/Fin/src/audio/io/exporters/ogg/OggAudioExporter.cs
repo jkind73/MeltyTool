@@ -16,7 +16,7 @@ namespace fin.audio.io.exporters.ogg;
 ///   Based on example at:
 ///   https://github.com/SteveLillis/.NET-Ogg-Vorbis-Encoder/blob/master/OggVorbisEncoder.Example/Encoder.cs
 /// </summary>
-public class OggAudioExporter : IAudioExporter {
+public sealed class OggAudioExporter : IAudioExporter {
   private const int WRITE_BUFFER_SIZE = 512;
 
   public void ExportAudio(IAudioBuffer<short> audioBuffer,

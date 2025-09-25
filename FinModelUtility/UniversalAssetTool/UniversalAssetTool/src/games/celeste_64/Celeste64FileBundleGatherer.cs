@@ -9,7 +9,7 @@ using fmod.api;
 
 namespace uni.games.celeste_64;
 
-public class Celeste64FileBundleGatherer : BPrereqsFileBundleGatherer {
+public sealed class Celeste64FileBundleGatherer : BPrereqsFileBundleGatherer {
   public override string Name => "celeste_64";
 
   protected override void GatherFileBundlesFromHierarchy(

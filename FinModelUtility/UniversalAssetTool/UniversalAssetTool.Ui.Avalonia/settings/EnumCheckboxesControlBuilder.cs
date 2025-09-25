@@ -7,7 +7,7 @@ using ConfigFactory.Generics;
 
 namespace uni.ui.avalonia.settings;
 
-public class EnumCheckboxesControlBuilder
+public sealed class EnumCheckboxesControlBuilder
     : ControlBuilder<EnumCheckboxesControlBuilder> {
   public override object? Build(IConfigModule context,
                                 PropertyInfo propertyInfo) {

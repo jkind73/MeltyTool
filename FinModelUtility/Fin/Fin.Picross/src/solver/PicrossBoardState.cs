@@ -27,7 +27,7 @@ public partial interface IPicrossCellState {
   new IPicrossClue? RowClue { get; set; }
 }
 
-public class PicrossCellState : IPicrossCellState {
+public sealed class PicrossCellState : IPicrossCellState {
   public PicrossCellStatus Status { get; set; }
   public PicrossCellMoveSource MoveSource { get; set; }
   public IPicrossClue? ColumnClue { get; set; }
@@ -41,7 +41,7 @@ public interface IPicrossBoardState : IReadOnlyGrid<IReadOnlyPicrossCellState> {
   PicrossCompletionState GetCompletionState();
 }
 
-public class PicrossBoardState : IPicrossBoardState {
+public sealed class PicrossBoardState : IPicrossBoardState {
   private readonly IPicrossDefinition definition_;
   private readonly IPicrossCellState[] cellStates_;
 

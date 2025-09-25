@@ -28,7 +28,7 @@ using schema.binary;
 
 namespace HaloWarsTools;
 
-public class HWUgxResource : HWBinaryResource {
+public sealed class HWUgxResource : HWBinaryResource {
   public ModelImpl Mesh { get; private set; }
   private bool FlipFaces_ { get; set; }
 

@@ -5,7 +5,7 @@ using fin.util.progress;
 using visceral.api;
 
 namespace uni.games.dead_space_1 {
-  public class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
+  public sealed class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
     public override string Name => "dead_space_1";
     public override string SteamName => "Dead Space";
     public override string EpicName => "Dead Space";

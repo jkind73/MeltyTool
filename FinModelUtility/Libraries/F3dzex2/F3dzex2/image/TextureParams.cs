@@ -7,7 +7,7 @@ using fin.util.hash;
 
 namespace f3dzex2.image;
 
-public class TextureParams : IEquatable<TextureParams> {
+public sealed class TextureParams : IEquatable<TextureParams> {
   public ImageParams ImageParams { get; private set; } = new();
 
   public int Index { get; set; }

@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.lazy;
 
-public class LazyArrayTests {
+public sealed class LazyArrayTests {
   [Test]
   public void TestWithKeyAndValueHandler() {
     var invokeCount = 0;

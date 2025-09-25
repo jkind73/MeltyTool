@@ -10,12 +10,12 @@ using ssm.schema;
 
 namespace ssm.api;
 
-public class SsmAudioFileBundle : IAudioFileBundle {
+public sealed class SsmAudioFileBundle : IAudioFileBundle {
   public IReadOnlyTreeFile MainFile => this.SsmFile;
   public required IReadOnlyTreeFile SsmFile { get; init; }
 }
 
-public class SsmAudioImporter : IAudioImporter<SsmAudioFileBundle> {
+public sealed class SsmAudioImporter : IAudioImporter<SsmAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       SsmAudioFileBundle audioFileBundle) {

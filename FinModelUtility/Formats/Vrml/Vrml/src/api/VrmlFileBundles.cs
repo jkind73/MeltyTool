@@ -11,12 +11,12 @@ public interface IVrmlFileBundle : IFileBundle {
   IReadOnlyTreeFile IFileBundle.MainFile => this.WrlFile;
 }
 
-public class VrmlModelFileBundle : IVrmlFileBundle, IModelFileBundle {
+public sealed class VrmlModelFileBundle : IVrmlFileBundle, IModelFileBundle {
   public string? GameName { get; }
   public required IFileHierarchyFile WrlFile { get; init; }
 }
 
-public class VrmlSceneFileBundle : IVrmlFileBundle, ISceneFileBundle {
+public sealed class VrmlSceneFileBundle : IVrmlFileBundle, ISceneFileBundle {
   public string? GameName { get; }
   public required IFileHierarchyFile WrlFile { get; init; }
 }

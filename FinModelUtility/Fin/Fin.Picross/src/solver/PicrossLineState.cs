@@ -8,7 +8,7 @@ public interface IPicrossLineState {
   bool IsSolved { get; }
 }
 
-public class PicrossLineState : IPicrossLineState {
+public sealed class PicrossLineState : IPicrossLineState {
   public required bool IsColumn { get; init; }
 
   public required IReadOnlyList<IReadOnlyPicrossCellState> CellStates {

@@ -2,7 +2,7 @@
 
 namespace modl.schema.anim.bw2;
 
-public class Bw2AnimBone : IBwAnimBone, IBinaryDeserializable {
+public sealed class Bw2AnimBone : IBwAnimBone, IBinaryDeserializable {
   public string GetIdentifier() => this.Name;
 
   public string Name { get; set; }

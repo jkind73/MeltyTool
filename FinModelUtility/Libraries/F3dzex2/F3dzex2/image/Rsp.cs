@@ -36,7 +36,7 @@ public interface IRsp {
   }
 }
 
-public class Rsp : IRsp {
+public sealed class Rsp : IRsp {
   private float texScaleXFloat_ = 1;
   private float texScaleYFloat_ = 1;
   private ushort texScaleXShort_ = 0xFFFF;

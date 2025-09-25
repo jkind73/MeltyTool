@@ -15,7 +15,7 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.animation;
 
-public class FloatInterpolatableGraphViewModelForDesigner
+public sealed class FloatInterpolatableGraphViewModelForDesigner
     : FloatInterpolatableGraphViewModel {
   public FloatInterpolatableGraphViewModelForDesigner() {
     var sharedConfig = new SharedInterpolationConfig {
@@ -36,7 +36,7 @@ public class FloatInterpolatableGraphViewModelForDesigner
   }
 }
 
-public class FloatInterpolatableGraphViewModel : ViewModelBase {
+public class FloatInterpolatableGraphViewModel : BViewModel {
   public IConfiguredInterpolatable<float> Keyframes {
     get;
     set {

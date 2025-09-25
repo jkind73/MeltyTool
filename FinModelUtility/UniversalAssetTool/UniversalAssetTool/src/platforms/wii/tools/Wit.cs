@@ -7,7 +7,7 @@ using uni.games;
 
 namespace uni.platforms.wii.tools;
 
-public class Wit {
+public sealed class Wit {
   public bool Run(ISystemFile romFile, out IFileHierarchy hierarchy) {
     Asserts.Equal(
         ".iso",

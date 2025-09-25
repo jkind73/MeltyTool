@@ -17,7 +17,7 @@ using GltfPrimitiveType = SharpGLTF.Schema2.PrimitiveType;
 
 namespace fin.model.io.exporters.gltf.lowlevel;
 
-public class LowLevelGltfMeshBuilder {
+public sealed class LowLevelGltfMeshBuilder {
   public bool UvIndices { get; set; }
 
   public IList<Mesh> BuildAndBindMesh(

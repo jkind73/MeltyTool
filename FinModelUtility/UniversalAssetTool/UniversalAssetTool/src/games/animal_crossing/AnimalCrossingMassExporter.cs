@@ -4,7 +4,7 @@ using uni.platforms.gcn;
 
 namespace uni.games.animal_crossing;
 
-public class AnimalCrossingMassExporter : IMassExporter {
+public sealed class AnimalCrossingMassExporter : IMassExporter {
   public void ExportAll() {
     if (!new GcnFileHierarchyExtractor().TryToExtractFromGame(
             "animal_crossing",

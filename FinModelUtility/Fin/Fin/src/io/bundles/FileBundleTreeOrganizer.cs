@@ -8,7 +8,7 @@ public interface IFileBundleOrganizer {
   void Add(IAnnotatedFileBundle annotatedFileBundle);
 }
 
-public class FileBundleTreeOrganizer : IFileBundleOrganizer {
+public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
   private readonly FileBundleDirectory root_ = new("(root)");
 
   private readonly
@@ -37,7 +37,7 @@ public class FileBundleTreeOrganizer : IFileBundleOrganizer {
   }
 }
 
-public class FileBundleListOrganizer : IFileBundleOrganizer {
+public sealed class FileBundleListOrganizer : IFileBundleOrganizer {
   public List<IAnnotatedFileBundle> List { get; } = [];
 
   public void Add(IAnnotatedFileBundle annotatedFileBundle)

@@ -4,7 +4,7 @@ using fin.color;
 
 namespace fin.language.equations.fixedFunction;
 
-public class FixedFunctionRegisters : IFixedFunctionRegisters {
+public sealed class FixedFunctionRegisters : IFixedFunctionRegisters {
   private readonly Dictionary<string, IColorRegister> colorRegistersMap_ =
       new();
 

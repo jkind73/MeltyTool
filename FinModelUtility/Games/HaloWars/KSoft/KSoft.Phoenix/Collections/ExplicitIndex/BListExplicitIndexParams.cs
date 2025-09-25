@@ -3,8 +3,7 @@ using System.Collections.Generic;
 
 namespace KSoft.Collections
 {
-	public class BListExplicitIndexParams<T>
-		: BListParams
+	public class BListExplicitIndexParams<T> : BListParams
 	{
 		public IComparer<T> kComparer = Comparer<T>.Default;
 

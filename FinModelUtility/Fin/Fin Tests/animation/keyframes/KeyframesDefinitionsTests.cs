@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.animation.keyframes;
 
-public class KeyframeDefinitionsTests {
+public sealed class KeyframeDefinitionsTests {
   [Test]
   public void TestAddToEnd() {
     var impl = new KeyframeDefinitions<string>();

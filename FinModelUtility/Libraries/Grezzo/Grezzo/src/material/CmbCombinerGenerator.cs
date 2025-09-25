@@ -18,7 +18,7 @@ namespace grezzo.material;
 /// <summary>
 ///   Shamelessly stolen from https://github.com/naclomi/noclip.website/blob/8b0de601d6d8f596683f0bdee61a9681a42512f9/src/oot3d/render.ts
 /// </summary>
-public class CmbCombinerGenerator {
+public sealed class CmbCombinerGenerator {
   private readonly mats_Material cmbMaterial_;
   private readonly IFixedFunctionEquations<FixedFunctionSource> equations_;
   private readonly IFixedFunctionRegisters registers_;

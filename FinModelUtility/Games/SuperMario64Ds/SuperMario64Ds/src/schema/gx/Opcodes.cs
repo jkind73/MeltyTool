@@ -19,7 +19,7 @@ public partial class NoopOpcode : IOpcode {
   public OpcodeType Type => OpcodeType.NOOP;
 }
 
-public class UnhandledOpcode(OpcodeType type) : IOpcode {
+public sealed class UnhandledOpcode(OpcodeType type) : IOpcode {
   public OpcodeType Type => type;
 
   public void Read(IBinaryReader br) {
@@ -27,7 +27,7 @@ public class UnhandledOpcode(OpcodeType type) : IOpcode {
   }
 }
 
-public class MatrixRestoreOpcode : IOpcode {
+public sealed class MatrixRestoreOpcode : IOpcode {
   public OpcodeType Type => OpcodeType.MATRIX_RESTORE;
   public byte TransformId { get; set; }
 
@@ -36,7 +36,7 @@ public class MatrixRestoreOpcode : IOpcode {
   }
 }
 
-public class ColorOpcode : IOpcode {
+public sealed class ColorOpcode : IOpcode {
   public OpcodeType Type => OpcodeType.COLOR;
 
   public Vector3 Color { get; set; }
@@ -50,7 +50,7 @@ public class ColorOpcode : IOpcode {
   }
 }
 
-public class NormalOpcode : IOpcode {
+public sealed class NormalOpcode : IOpcode {
   public OpcodeType Type => OpcodeType.NORMAL;
   public Vector3 Normal { get; set; }
 
@@ -63,7 +63,7 @@ public class NormalOpcode : IOpcode {
   }
 }
 
-public class TexCoordOpcode : IOpcode {
+public sealed class TexCoordOpcode : IOpcode {
   public OpcodeType Type => OpcodeType.TEXCOORD;
   public Vector2 TexCoord { get; set; }
 
@@ -81,7 +81,7 @@ public interface IVertexOpcode : IOpcode {
   float? Z { get; set; }
 }
 
-public class Vertex0x23Opcode : IVertexOpcode {
+public sealed class Vertex0x23Opcode : IVertexOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x23;
 
   public float? X { get; set; }
@@ -102,7 +102,7 @@ public class Vertex0x23Opcode : IVertexOpcode {
   }
 }
 
-public class Vertex0x24Opcode : IVertexOpcode {
+public sealed class Vertex0x24Opcode : IVertexOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x24;
   public Vector3 Position { get; set; }
 
@@ -123,7 +123,7 @@ public class Vertex0x24Opcode : IVertexOpcode {
   }
 }
 
-public class Vertex0x25Opcode : IVertexOpcode {
+public sealed class Vertex0x25Opcode : IVertexOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x25;
 
   public float? X { get; set; }
@@ -141,7 +141,7 @@ public class Vertex0x25Opcode : IVertexOpcode {
   }
 }
 
-public class Vertex0x26Opcode : IVertexOpcode {
+public sealed class Vertex0x26Opcode : IVertexOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x26;
 
   public float? X { get; set; }
@@ -159,7 +159,7 @@ public class Vertex0x26Opcode : IVertexOpcode {
   }
 }
 
-public class Vertex0x27Opcode : IVertexOpcode {
+public sealed class Vertex0x27Opcode : IVertexOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x27;
   public Vector3 Position { get; set; }
 
@@ -178,7 +178,7 @@ public class Vertex0x27Opcode : IVertexOpcode {
   }
 }
 
-public class Vertex0x28Opcode : IOpcode {
+public sealed class Vertex0x28Opcode : IOpcode {
   public OpcodeType Type => OpcodeType.VERTEX_0x28;
 
   public Vector3 DeltaPosition { get; set; }

@@ -6,7 +6,7 @@ using ssm.api;
 
 namespace uni.games.custom_robo;
 
-public class CustomRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class CustomRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "custom_robo";
 
   protected override void GatherFileBundlesFromHierarchy(

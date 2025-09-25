@@ -7,7 +7,7 @@ using fin.math.rotations;
 
 namespace fin.animation.types.radians;
 
-public class RadiansKeyframeInterpolator
+public sealed class RadiansKeyframeInterpolator
     : RadiansKeyframeInterpolator<Keyframe<float>> {
   public static RadiansKeyframeInterpolator Instance { get; } = new();
   private RadiansKeyframeInterpolator() { }

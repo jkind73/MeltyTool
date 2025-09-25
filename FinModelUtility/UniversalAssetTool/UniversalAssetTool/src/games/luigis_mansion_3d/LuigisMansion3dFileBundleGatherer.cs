@@ -10,7 +10,7 @@ using fin.util.progress;
 
 namespace uni.games.luigis_mansion_3d;
 
-public class LuigisMansion3dFileBundleGatherer
+public sealed class LuigisMansion3dFileBundleGatherer
     : B3dsFileBundleGatherer {
   private readonly IModelSeparator separator_ =
       new ModelSeparator(directory => directory.LocalPath)

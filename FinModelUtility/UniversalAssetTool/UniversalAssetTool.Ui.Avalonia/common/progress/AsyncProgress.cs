@@ -8,8 +8,8 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.common.progress;
 
-public class AsyncProgress
-    : ViewModelBase, IMutableIndeterminateProgressValue<object> {
+public sealed class AsyncProgress
+    : BViewModel, IMutableIndeterminateProgressValue<object> {
   private bool isComplete_;
   private object? value_;
 

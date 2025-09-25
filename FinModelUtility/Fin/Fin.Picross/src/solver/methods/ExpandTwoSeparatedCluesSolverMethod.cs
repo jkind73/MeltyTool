@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods;
 
-public class ExpandTwoSeparatedCluesSolverMethod : IPicrossSolverMethod {
+public sealed class ExpandTwoSeparatedCluesSolverMethod : IPicrossSolverMethod {
   public IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState) {

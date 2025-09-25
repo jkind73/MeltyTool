@@ -3,7 +3,7 @@ using fin.model.io;
 
 namespace nitro.api;
 
-public class NsbmdModelFileBundle : IModelFileBundle {
+public sealed class NsbmdModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile NsbmdFile { get; init; }
 
   public required string? GameName { get; init; }

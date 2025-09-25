@@ -11,7 +11,7 @@ using SharpGLTF.Geometry.VertexTypes;
 
 namespace fin.model.io.exporters.gltf;
 
-public class GltfVertexBuilder {
+public sealed class GltfVertexBuilder {
   public bool UvIndices { get; set; }
 
   private static readonly (int, float)[] defaultSkinning_ = [(0, 1)];

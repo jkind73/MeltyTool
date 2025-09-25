@@ -13,7 +13,7 @@ using uni.util.io;
 
 namespace uni.games.super_mario_64_ds;
 
-public class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
+public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
   private readonly IModelSeparator modelSeparator_
       = new ModelSeparator(directory => directory.Name)
         .Register(

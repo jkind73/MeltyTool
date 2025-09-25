@@ -3,7 +3,7 @@ using schema.text.reader;
 
 namespace gm.schema.d3d;
 
-public class D3d : ITextDeserializable {
+public sealed class D3d : ITextDeserializable {
   public D3dCommand[] Commands { get; private set; }
 
   public void Read(ITextReader tr) {

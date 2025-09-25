@@ -4,7 +4,7 @@ using fin.shaders.glsl.source;
 
 namespace fin.ui.rendering.gl.material;
 
-public class GlNullMaterialShader(
+public sealed class GlNullMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements)
     : BGlMaterialShader<IReadOnlyMaterial?>(model,

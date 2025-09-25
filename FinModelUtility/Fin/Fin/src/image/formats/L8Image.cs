@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.formats;
 
-public class L8Image : BImage<L8> {
+public sealed class L8Image : BImage<L8> {
   public L8Image(PixelFormat format, int width, int height) : this(
       format,
       new Image<L8>(FinImage.ImageSharpConfig, width, height)) { }

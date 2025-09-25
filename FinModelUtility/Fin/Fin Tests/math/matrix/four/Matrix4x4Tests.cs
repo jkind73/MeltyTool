@@ -9,7 +9,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.matrix.four;
 
-public class Matrix4x4Tests {
+public sealed class Matrix4x4Tests {
   [Test]
   public void TestFloatArrayConstructor() {
     var values = new float[FinMatrix4x4.CELL_COUNT];

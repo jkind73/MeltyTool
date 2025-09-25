@@ -6,7 +6,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class Material : ITextDeserializable {
+public sealed class Material : ITextDeserializable {
   public string Name { get; set; }
 
   public Vector3 AmbientColor { get; set; }

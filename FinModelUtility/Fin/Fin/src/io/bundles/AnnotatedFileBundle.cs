@@ -49,7 +49,7 @@ public static class AnnotatedFileBundle {
     => new AnnotatedFileBundle<TFileBundle>(fileBundle, file);
 }
 
-public class AnnotatedFileBundle<TFileBundle>(
+public sealed class AnnotatedFileBundle<TFileBundle>(
     TFileBundle fileBundle,
     IFileHierarchyFile file)
     : IAnnotatedFileBundle<TFileBundle>

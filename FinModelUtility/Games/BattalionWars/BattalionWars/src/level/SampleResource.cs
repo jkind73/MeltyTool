@@ -1,5 +1,5 @@
 ﻿namespace modl.level;
 
-public class SampleResource : BLevelObject {
+public sealed class SampleResource : BLevelObject {
   public string Name { get; set; }
 }

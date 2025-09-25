@@ -2,7 +2,7 @@
 
 namespace fin.ui.rendering.gl.ubo;
 
-public class GlUbo : IDisposable {
+public sealed class GlUbo : IDisposable {
   private readonly int bindingIndex_;
   private readonly int id_;
   private readonly byte[] buffer_;

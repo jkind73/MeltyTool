@@ -18,7 +18,7 @@ using Matrix4x4 = System.Numerics.Matrix4x4;
 
 namespace visceral.api;
 
-public class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
+public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
   public const bool STRICT_DAT = false;
 
   public IModel Import(GeoModelFileBundle modelFileBundle) {

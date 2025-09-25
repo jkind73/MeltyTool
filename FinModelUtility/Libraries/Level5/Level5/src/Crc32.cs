@@ -1,6 +1,6 @@
 ﻿namespace level5;
 
-public class Crc32 {
+public sealed class Crc32 {
   public static uint Crc32C(byte[] input) {
     var hash = 0xffffffffu;
     for (var i = 0; i < input.Length; i++)

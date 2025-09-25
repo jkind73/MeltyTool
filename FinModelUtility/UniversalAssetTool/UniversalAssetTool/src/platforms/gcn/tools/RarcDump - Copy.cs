@@ -11,7 +11,7 @@ using schema.binary;
 using schema.binary.attributes;
 
 namespace uni.platforms.gcn.tools {
-  public class RarcDump2 {
+  public sealed class RarcDump2 {
     public bool Run(IFileHierarchyFile rarcFile, bool cleanup) {
       Asserts.True(
           rarcFile.Impl.Exists,
@@ -167,7 +167,7 @@ string nodeName = getString(0x20 + n.filenameOffset + h.stringTableOffset, f);
         _chdir("..");       */
     }
 
-    public class RarcHeader {
+    public sealed class RarcHeader {
       public string type; //'RARC'
       public uint size; //size of the file
       [Unknown]
@@ -186,7 +186,7 @@ string nodeName = getString(0x20 + n.filenameOffset + h.stringTableOffset, f);
       public uint[] unknown5 = new uint[2];
     }
 
-    public class RarcNode {
+    public sealed class RarcNode {
       public string type;
       public ushort numFileEntries; //how many files belong to this node?
       public uint firstFileEntryOffset;
@@ -195,7 +195,7 @@ string nodeName = getString(0x20 + n.filenameOffset + h.stringTableOffset, f);
       public string fileName;
     }
 
-    public class FileEntry {
+    public sealed class FileEntry {
       public ushort
           id; //file id. If this is 0xFFFF, then this entry is a subdirectory link
 

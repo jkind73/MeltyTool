@@ -8,8 +8,8 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.common.progress;
 
-public class ValueFractionProgress
-    : ViewModelBase, IMutablePercentageProgressValue<object> {
+public sealed class ValueFractionProgress
+    : BViewModel, IMutablePercentageProgressValue<object> {
   private bool isComplete_;
 
   public float Progress { get; private set; }

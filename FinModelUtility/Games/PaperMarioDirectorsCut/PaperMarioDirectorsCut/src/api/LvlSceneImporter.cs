@@ -21,7 +21,7 @@ using pmdc.schema.lvl;
 
 namespace pmdc.api;
 
-public class LvlSceneFileBundle : ISceneFileBundle {
+public sealed class LvlSceneFileBundle : ISceneFileBundle {
   public string? GameName => "paper_mario_directors_cut";
 
   public IReadOnlyTreeFile MainFile => this.LvlFile;
@@ -30,7 +30,7 @@ public class LvlSceneFileBundle : ISceneFileBundle {
   public required IReadOnlyTreeDirectory RootDirectory { get; init; }
 }
 
-public class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
+public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
   public IScene Import(LvlSceneFileBundle sceneFileBundle) {
     var lvlFile = sceneFileBundle.LvlFile;
     var lvl = lvlFile.ReadNewFromText<Lvl>();

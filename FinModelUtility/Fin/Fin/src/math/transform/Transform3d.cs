@@ -14,7 +14,7 @@ public partial interface ITransform3d
   public new Vector3? EulerRadians { get; set; }
 }
 
-public class Transform3d : ITransform3d {
+public sealed class Transform3d : ITransform3d {
   private Quaternion? rotation_;
   private Vector3? eulerRadians_;
 

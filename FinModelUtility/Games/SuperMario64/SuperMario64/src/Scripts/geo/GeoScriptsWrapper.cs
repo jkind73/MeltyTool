@@ -11,7 +11,7 @@ namespace sm64.Scripts {
         uint off);
   }
 
-  public class GeoScriptsWrapper : IGeoScripts {
+  public sealed class GeoScriptsWrapper : IGeoScripts {
     private readonly IGeoScripts geoScriptsImplementation_ = new GeoScriptsV2();
 
     public void parse(

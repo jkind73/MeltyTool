@@ -14,7 +14,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace pikmin1.schema {
   using Plane = mod.collision.Plane;
 
-  public class GcnSerializablesTests {
+  public sealed class GcnSerializablesTests {
     [Test]
     public void TestBaseCollTriInfo()
       => TestGcnSerializableSimple(new BaseCollTriInfo());

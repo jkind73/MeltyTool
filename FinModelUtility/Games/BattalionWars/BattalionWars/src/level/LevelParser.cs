@@ -6,7 +6,7 @@ using modl.xml.level;
 
 namespace modl.level;
 
-public class LevelParser {
+public sealed class LevelParser {
   public IReadOnlyList<IBwObject> Parse(
       IReadOnlyGenericFile levelXmlFile,
       GameVersion gameVersion)

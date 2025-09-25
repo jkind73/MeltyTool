@@ -6,7 +6,7 @@ using fin.picross.solver.methods.hard;
 
 namespace fin.picross.solver;
 
-public class PicrossSolver {
+public sealed class PicrossSolver {
   public IReadOnlyList<IReadOnlySet<IPicrossMove>> Solve(
       IPicrossDefinition picrossDefinition,
       out IPicrossBoardState finalBoardState) {

@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace grezzo.schema.zsi;
 
-public class MeshEntry : IZsiSection, IBinaryDeserializable {
+public sealed class MeshEntry : IZsiSection, IBinaryDeserializable {
   public short XMax { get; set; }
   public short ZMax { get; set; }
   public short XMin { get; set; }

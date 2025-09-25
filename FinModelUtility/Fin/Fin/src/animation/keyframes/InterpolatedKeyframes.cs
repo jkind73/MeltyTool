@@ -13,7 +13,7 @@ public interface IInterpolatableKeyframes<TKeyframe, T>
     : IKeyframes<TKeyframe>,
       IConfiguredInterpolatable<T> where TKeyframe : IKeyframe<T>;
 
-public class InterpolatedKeyframes<TKeyframe, T>(
+public sealed class InterpolatedKeyframes<TKeyframe, T>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, T> interpolator,
     IndividualInterpolationConfig<T>? individualConfig = null)

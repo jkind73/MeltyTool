@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace UoT.util {
-  public class AssertException : Exception {
+  public sealed class AssertException : Exception {
     public AssertException() : base() { }
 
     public AssertException(string message) : base(message) { }

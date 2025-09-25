@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace grezzo.schema.cmb;
 
-public class CmbHeader : IBinaryDeserializable {
+public sealed class CmbHeader : IBinaryDeserializable {
   // TODO: Better way to do this?
   public static Version Version { get; set; }
 

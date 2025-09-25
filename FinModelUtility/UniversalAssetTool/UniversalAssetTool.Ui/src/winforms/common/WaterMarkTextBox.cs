@@ -5,7 +5,7 @@ using System.Windows.Forms;
 namespace uni.ui.winforms.common;
 
 // From https://www.codeproject.com/Articles/27849/WaterMark-TextBox-For-Desktop-Applications-Using-C.
-public class WaterMarkTextBox : TextBox {
+public sealed class WaterMarkTextBox : TextBox {
   private Font? oldFont = null;
   private Boolean waterMarkTextEnabled = false;
 

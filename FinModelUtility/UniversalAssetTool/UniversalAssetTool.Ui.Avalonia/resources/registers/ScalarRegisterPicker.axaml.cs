@@ -8,7 +8,7 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.registers;
 
-public class ScalarRegisterPickerViewModelForDesigner
+public sealed class ScalarRegisterPickerViewModelForDesigner
     : ScalarRegisterPickerViewModel {
   public ScalarRegisterPickerViewModelForDesigner() {
     this.ScalarRegister
@@ -18,7 +18,7 @@ public class ScalarRegisterPickerViewModelForDesigner
   }
 }
 
-public class ScalarRegisterPickerViewModel : ViewModelBase {
+public class ScalarRegisterPickerViewModel : BViewModel {
   public required IScalarRegister ScalarRegister {
     get;
     set {

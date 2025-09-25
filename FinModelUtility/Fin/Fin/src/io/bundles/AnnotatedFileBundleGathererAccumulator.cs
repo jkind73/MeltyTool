@@ -5,7 +5,7 @@ using fin.util.progress;
 
 namespace fin.io.bundles;
 
-public class AnnotatedFileBundleGathererAccumulator
+public sealed class AnnotatedFileBundleGathererAccumulator
     : AnnotatedFileBundleGathererAccumulator<
         AnnotatedFileBundleGathererAccumulator>;
 
@@ -53,7 +53,7 @@ public class AnnotatedFileBundleGathererAccumulator<TSelf>
   }
 }
 
-public class AnnotatedFileBundleGathererAccumulatorWithInput<T>(T input)
+public sealed class AnnotatedFileBundleGathererAccumulatorWithInput<T>(T input)
     : AnnotatedFileBundleGathererAccumulator<
           AnnotatedFileBundleGathererAccumulatorWithInput<T>>,
       IAnnotatedFileBundleGathererAccumulatorWithInput<T,

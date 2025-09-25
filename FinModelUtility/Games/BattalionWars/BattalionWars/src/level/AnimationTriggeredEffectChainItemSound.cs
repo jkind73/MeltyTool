@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class AnimationTriggeredEffectChainItemSound : BLevelObject;
+public sealed class AnimationTriggeredEffectChainItemSound : BLevelObject;

@@ -9,7 +9,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data;
 
-public class ListDictionaryTests {
+public sealed class ListDictionaryTests {
   [Test]
   public void TestClear() {
     var impl = new ListDictionary<string?, string>();

@@ -7,4 +7,4 @@ public interface IViewModelBase
       IHandleObservableErrors,
       IReactiveObject;
 
-public class ViewModelBase : ReactiveObject, IViewModelBase;
+public abstract class BViewModel : ReactiveObject, IViewModelBase;

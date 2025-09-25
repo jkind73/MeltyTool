@@ -22,7 +22,7 @@ using TextureMinFilter = grezzo.schema.cmb.TextureMinFilter;
 
 namespace grezzo.material;
 
-public class CmbFixedFunctionMaterial {
+public sealed class CmbFixedFunctionMaterial {
   private const bool USE_FIXED_FUNCTION = true;
   private const bool USE_JANKY_TRANSPARENCY = false;
 

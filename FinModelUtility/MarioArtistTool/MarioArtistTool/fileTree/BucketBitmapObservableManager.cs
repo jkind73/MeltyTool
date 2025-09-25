@@ -8,7 +8,7 @@ using marioartisttool.util;
 
 namespace MarioArtistTool.fileTree;
 
-public class BucketBitmapObservableManager {
+public sealed class BucketBitmapObservableManager {
   private static readonly Bitmap IDLE_IMAGE_
       = AssetLoaderUtil.LoadBitmap("bucket/idle.png");
 

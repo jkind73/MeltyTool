@@ -34,7 +34,7 @@ public static class IndexedDictionaryExtensions {
   }
 }
 
-public class IndexedDictionary<TValue>(int capacity)
+public sealed class IndexedDictionary<TValue>(int capacity)
     : IIndexedDictionary<TValue> {
   private readonly List<(bool hasValue, TValue value)> impl_ = new(capacity);
 

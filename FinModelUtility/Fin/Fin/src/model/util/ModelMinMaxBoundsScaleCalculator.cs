@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace fin.model.util;
 
-public class ModelMinMaxBoundsScaleCalculator
+public sealed class ModelMinMaxBoundsScaleCalculator
     : BMinMaxBoundsScaleCalculator<IReadOnlyModel> {
   private readonly BoneTransformManager boneTransformManager_ = new();
 

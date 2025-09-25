@@ -24,7 +24,7 @@ public interface IDisplayListReader {
                                SchemaBinaryReader br);
 }
 
-public class DisplayListReader : IDisplayListReader {
+public sealed class DisplayListReader : IDisplayListReader {
   public IDisplayList ReadDisplayList(IReadOnlyN64Memory n64Memory,
                                       IOpcodeParser opcodeParser,
                                       uint segmentedAddress)
@@ -78,7 +78,7 @@ public class DisplayListReader : IDisplayListReader {
     }
 }
 
-public class DisplayList : IDisplayList {
+public sealed class DisplayList : IDisplayList {
   public required IReadOnlyList<IOpcodeCommand> OpcodeCommands {
     get;
     init;

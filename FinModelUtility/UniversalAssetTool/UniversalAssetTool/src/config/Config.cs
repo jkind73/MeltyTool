@@ -16,7 +16,7 @@ public enum ScaleSourceType {
   GAME_CONFIG,
 }
 
-public class Config {
+public sealed class Config {
   private static Config? instance_;
 
   public static Config Instance {

@@ -20,7 +20,7 @@ namespace ModelPluginWrappers.src.noesis {
     string readline();
   }
 
-  public class NoeBitStreamReader(
+  public sealed class NoeBitStreamReader(
       byte[] data,
       NoeEndianness endianness = NoeEndianness.NOE_LITTLEENDIAN)
       : INoeBitStreamReader {

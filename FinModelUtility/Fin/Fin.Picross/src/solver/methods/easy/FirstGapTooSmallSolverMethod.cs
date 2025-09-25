@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods.easy;
 
-public class FirstGapTooSmallSolverMethod : BBidirectionalSolverMethod {
+public sealed class FirstGapTooSmallSolverMethod : BBidirectionalSolverMethod {
   public override IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState boardState,
       IPicrossLineState lineState,

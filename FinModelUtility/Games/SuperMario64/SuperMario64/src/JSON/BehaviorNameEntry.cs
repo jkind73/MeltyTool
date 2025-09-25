@@ -1,5 +1,5 @@
 ﻿namespace sm64.JSON {
-  public class BehaviorNameEntry {
+  public sealed class BehaviorNameEntry {
     string name = "";
     uint behavior = 0;
 

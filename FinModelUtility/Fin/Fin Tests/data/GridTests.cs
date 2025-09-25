@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data;
 
-public class GridTests {
+public sealed class GridTests {
   [Test]
   public void TestDefaultValue() {
     var impl = new Grid<string>(3, 3, "foobar");

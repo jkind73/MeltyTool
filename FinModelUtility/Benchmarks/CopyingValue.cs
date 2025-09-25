@@ -5,7 +5,7 @@ using CommunityToolkit.HighPerformance;
 using SixLabors.ImageSharp.PixelFormats;
 
 namespace benchmarks {
-  public class CopyingValue {
+  public sealed class CopyingValue {
     private static int size_ = 10;
 
     private int[] intSrc_ = new int[size_];

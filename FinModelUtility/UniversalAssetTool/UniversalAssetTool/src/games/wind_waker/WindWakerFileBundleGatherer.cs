@@ -15,7 +15,7 @@ using jsystem.api;
 
 namespace uni.games.wind_waker;
 
-public class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "wind_waker";
 
   protected override void GatherFileBundlesFromHierarchy(
@@ -151,7 +151,7 @@ public class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
         IReadOnlyList<IFileHierarchyFile> bckFiles);
   }
 
-  public class PrefixOrganizeMethod : IOrganizeMethod {
+  public sealed class PrefixOrganizeMethod : IOrganizeMethod {
     public IReadOnlyList<IFileHierarchyFile> GetBcksForBmd(
         IFileHierarchyFile bmdFile,
         IReadOnlyList<IFileHierarchyFile> bckFiles) {
@@ -160,7 +160,7 @@ public class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
     }
   }
 
-  public class NameMatchOrganizeMethod(string name) : IOrganizeMethod {
+  public sealed class NameMatchOrganizeMethod(string name) : IOrganizeMethod {
     public IReadOnlyList<IFileHierarchyFile> GetBcksForBmd(
         IFileHierarchyFile bmdFile,
         IReadOnlyList<IFileHierarchyFile> bckFiles) {
@@ -174,7 +174,7 @@ public class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
     }
   }
 
-  public class SuffixOrganizeMethod(int suffixLength) : IOrganizeMethod {
+  public sealed class SuffixOrganizeMethod(int suffixLength) : IOrganizeMethod {
     public IReadOnlyList<IFileHierarchyFile> GetBcksForBmd(
         IFileHierarchyFile bmdFile,
         IReadOnlyList<IFileHierarchyFile> bckFiles) {

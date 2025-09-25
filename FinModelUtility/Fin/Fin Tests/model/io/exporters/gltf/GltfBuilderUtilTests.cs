@@ -6,7 +6,7 @@ using SharpGLTF.Geometry.VertexTypes;
 
 namespace fin.model.io.exporters.gltf;
 
-public class GltfBuilderUtilTests {
+public sealed class GltfBuilderUtilTests {
   [Test]
   [TestCase(false, false, ExpectedResult = typeof(VertexPosition))]
   [TestCase(true, false, ExpectedResult = typeof(VertexPositionNormal))]

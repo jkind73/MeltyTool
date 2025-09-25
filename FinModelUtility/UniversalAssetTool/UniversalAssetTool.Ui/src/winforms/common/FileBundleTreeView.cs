@@ -14,7 +14,7 @@ using uni.ui.winforms.common.fileTreeView;
 
 namespace uni.ui.winforms.common;
 
-public class FileBundleTreeView : FileTreeView<IFileBundleDirectory> {
+public sealed class FileBundleTreeView : FileTreeView<IFileBundleDirectory> {
   protected override void PopulateImpl(IFileBundleDirectory directoryRoot,
                                        ParentFileNode uiRoot) {
       foreach (var subdir in directoryRoot.Subdirs) {

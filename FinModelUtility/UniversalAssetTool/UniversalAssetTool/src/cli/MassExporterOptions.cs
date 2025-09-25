@@ -38,94 +38,94 @@ public interface IMassExporterOptions<out TMassExporter> : IMassExporterOptions
 
 [Verb("animal_crossing",
       HelpText = "Export models en-masse from Animal Crossing.")]
-public class AnimalCrossingOptions
+public sealed class AnimalCrossingOptions
     : IMassExporterOptions<AnimalCrossingMassExporter>;
 
 [Verb("battalion_wars_1",
       HelpText = "Export models en-masse from Battalion Wars 1.")]
-public class BattalionWars1Options
+public sealed class BattalionWars1Options
     : IMassExporterOptions<BattalionWars1MassExporter>;
 
 [Verb("battalion_wars_2",
       HelpText = "Export models en-masse from Battalion Wars 2.")]
-public class BattalionWars2Options
+public sealed class BattalionWars2Options
     : IMassExporterOptions<BattalionWars2MassExporter>;
 
 [Verb("chibi_robo", HelpText = "Export models en-masse from Chibi-Robo!")]
-public class ChibiRoboOptions : IMassExporterOptions<ChibiRoboMassExporter>;
+public sealed class ChibiRoboOptions : IMassExporterOptions<ChibiRoboMassExporter>;
 
 [Verb("glover",
       HelpText = "Export models en-masse from Glover.")]
-public class GloverOptions : IMassExporterOptions<GloverMassExporter>;
+public sealed class GloverOptions : IMassExporterOptions<GloverMassExporter>;
 
 [Verb("halo_wars",
       HelpText = "Export models en-masse from Halo Wars.")]
-public class HaloWarsOptions : IMassExporterOptions<HaloWarsMassExporter>;
+public sealed class HaloWarsOptions : IMassExporterOptions<HaloWarsMassExporter>;
 
 [Verb("luigis_mansion",
       HelpText = "Export models en-masse from Luigi's Mansion.")]
-public class LuigisMansionOptions
+public sealed class LuigisMansionOptions
     : IMassExporterOptions<LuigisMansionMassExporter>;
 
 [Verb("luigis_mansion_3d",
       HelpText = "Export models en-masse from Luigi's Mansion 3D.")]
-public class LuigisMansion3dOptions
+public sealed class LuigisMansion3dOptions
     : IMassExporterOptions<LuigisMansion3dMassExporter>;
 
 [Verb("majoras_mask_3d",
       HelpText = "Export models en-masse from Majora's Mask 3D.")]
-public class MajorasMask3dOptions
+public sealed class MajorasMask3dOptions
     : IMassExporterOptions<MajorasMask3dMassExporter>;
 
 [Verb("mario_kart_double_dash",
       HelpText = "Export models en-masse from Mario Kart: Double Dash.")]
-public class MarioKartDoubleDashOptions
+public sealed class MarioKartDoubleDashOptions
     : IMassExporterOptions<MarioKartDoubleDashMassExporter>;
 
 [Verb("midnight_club_2",
       HelpText = "Export models en-masse from Midnight Club 2.")]
-public class MidnightClub2Options
+public sealed class MidnightClub2Options
     : IMassExporterOptions<MidnightClub2MassExporter>;
 
 [Verb("ocarina_of_time_3d",
       HelpText = "Export models en-masse from Ocarina of Time 3D.")]
-public class OcarinaOfTime3dOptions
+public sealed class OcarinaOfTime3dOptions
     : IMassExporterOptions<OcarinaOfTime3dMassExporter>;
 
 [Verb("paper_mario_the_thousand_year_door",
       HelpText
           = "Export models en-masse from Paper Mario: The Thousand Year Door.")]
-public class PaperMarioTheThousandYearDoorOptions
+public sealed class PaperMarioTheThousandYearDoorOptions
     : IMassExporterOptions<PaperMarioTheThousandYearDoorMassExporter>;
 
 [Verb("pikmin_1", HelpText = "Export models en-masse from Pikmin 1.")]
-public class Pikmin1Options
+public sealed class Pikmin1Options
     : IMassExporterOptions<Pikmin1MassExporter>;
 
 [Verb("pikmin_2", HelpText = "Export models en-masse from Pikmin 2.")]
-public class Pikmin2Options : IMassExporterOptions<Pikmin2MassExporter>;
+public sealed class Pikmin2Options : IMassExporterOptions<Pikmin2MassExporter>;
 
 [Verb("professor_layton_vs_phoenix_wright",
       HelpText
           = "Export models en-masse from Professor Layton vs. Phoenix Wright.")]
-public class ProfessorLaytonVsPhoenixWrightOptions
+public sealed class ProfessorLaytonVsPhoenixWrightOptions
     : IMassExporterOptions<ProfessorLaytonVsPhoenixWrightMassExporter>;
 
 [Verb("super_mario_64_ds",
       HelpText = "Export models en-masse from Super Mario 64 DS.")]
-public class SuperMario64DsOptions
+public sealed class SuperMario64DsOptions
       : IMassExporterOptions<SuperMario64DsMassExporter>;
 
 [Verb("super_mario_sunshine",
       HelpText = "Export models en-masse from Super Mario Sunshine.")]
-public class SuperMarioSunshineOptions
+public sealed class SuperMarioSunshineOptions
     : IMassExporterOptions<SuperMarioSunshineMassExporter>;
 
 [Verb("super_smash_bros_melee",
       HelpText = "Export models en-masse from Super Smash Bros. Melee.")]
-public class SuperSmashBrosMeleeOptions
+public sealed class SuperSmashBrosMeleeOptions
     : IMassExporterOptions<SuperSmashBrosMeleeMassExporter>;
 
 [Verb("wind_waker",
       HelpText = "Export models en-masse from Wind Waker.")]
-public class WindWakerOptions : IMassExporterOptions<WindWakerMassExporter>;
+public sealed class WindWakerOptions : IMassExporterOptions<WindWakerMassExporter>;

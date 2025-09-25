@@ -283,7 +283,7 @@
       DO_NOT_CARE
     }
 
-    public class JAL_CALL {
+    public sealed class JAL_CALL {
       public uint JAL_ADDRESS = 0, a0 = 0, a1 = 0, a2 = 0, a3 = 0;
 
       public override string ToString() {
@@ -299,7 +299,7 @@
       }
     }
 
-    public class Instruction {
+    public sealed class Instruction {
       public OPCODE opCode;
       public GP_REGISTER gp_1, gp_dest;
       public short immediate = 0;

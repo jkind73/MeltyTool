@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class ObjectiveMarkerBase : BLevelObject;
+public sealed class ObjectiveMarkerBase : BLevelObject;

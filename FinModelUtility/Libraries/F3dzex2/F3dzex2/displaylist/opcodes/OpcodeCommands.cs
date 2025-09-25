@@ -12,14 +12,14 @@ using fin.util.hex;
 
 namespace f3dzex2.displaylist.opcodes;
 
-public class NoopOpcodeCommand : IOpcodeCommand;
+public sealed class NoopOpcodeCommand : IOpcodeCommand;
 
-public class SimpleDlOpcodeCommand : IOpcodeCommand {
+public sealed class SimpleDlOpcodeCommand : IOpcodeCommand {
   public uint SegmentedAddress { get; set; }
   public bool PushCurrentDlToStack { get; set; }
 }
 
-public class DlOpcodeCommand : IOpcodeCommand {
+public sealed class DlOpcodeCommand : IOpcodeCommand {
   public required uint SegmentedAddress { get; set; }
   public required IReadOnlyList<IDisplayList> PossibleBranches { get; set; }
   public required bool PushCurrentDlToStack { get; set; }
@@ -30,11 +30,11 @@ public class DlOpcodeCommand : IOpcodeCommand {
 /// <summary>
 ///   Stops executing current DL and returns to one at top of stack.
 /// </summary>
-public class EndDlOpcodeCommand : IOpcodeCommand {
+public sealed class EndDlOpcodeCommand : IOpcodeCommand {
   public override string ToString() => "0xDF / G_ENDDL";
 }
 
-public class MtxOpcodeCommand : IOpcodeCommand {
+public sealed class MtxOpcodeCommand : IOpcodeCommand {
   public uint RamAddress { get; set; }
 
   public byte Params { get; set; }
@@ -49,22 +49,22 @@ public class MtxOpcodeCommand : IOpcodeCommand {
   public bool ModelView => !this.Projection;
 }
 
-public class PopMtxOpcodeCommand : IOpcodeCommand {
+public sealed class PopMtxOpcodeCommand : IOpcodeCommand {
   public uint NumberOfMatrices { get; set; }
 }
 
-public class SimpleVtxOpcodeCommand : IOpcodeCommand {
+public sealed class SimpleVtxOpcodeCommand : IOpcodeCommand {
   public byte NumVerticesToLoad { get; set; }
   public byte IndexToBeginStoringVertices { get; set; }
   public uint SegmentedAddress { get; set; }
 }
 
-public class VtxOpcodeCommand : IOpcodeCommand {
+public sealed class VtxOpcodeCommand : IOpcodeCommand {
   public IReadOnlyList<F3dVertex> Vertices { get; set; }
   public byte IndexToBeginStoringVertices { get; set; }
 }
 
-public class ModifyVtxOpcodeCommand : IOpcodeCommand;
+public sealed class ModifyVtxOpcodeCommand : IOpcodeCommand;
 
 public enum TriVertexOrder {
   ABC = 0,
@@ -72,7 +72,7 @@ public enum TriVertexOrder {
   BCA = 2
 }
 
-public class Tri1OpcodeCommand : IOpcodeCommand {
+public sealed class Tri1OpcodeCommand : IOpcodeCommand {
   public TriVertexOrder VertexOrder { get; set; }
   public byte VertexIndexA { get; set; }
   public byte VertexIndexB { get; set; }
@@ -100,7 +100,7 @@ public class Tri1OpcodeCommand : IOpcodeCommand {
   }
 }
 
-public class Tri2OpcodeCommand : IOpcodeCommand {
+public sealed class Tri2OpcodeCommand : IOpcodeCommand {
   public TriVertexOrder VertexOrder0 { get; set; }
   public byte VertexIndexA0 { get; set; }
   public byte VertexIndexB0 { get; set; }
@@ -154,21 +154,21 @@ public class Tri2OpcodeCommand : IOpcodeCommand {
   }
 }
 
-public class SetEnvColorOpcodeCommand : IOpcodeCommand {
+public sealed class SetEnvColorOpcodeCommand : IOpcodeCommand {
   public byte R { get; set; }
   public byte G { get; set; }
   public byte B { get; set; }
   public byte A { get; set; }
 }
 
-public class SetFogColorOpcodeCommand : IOpcodeCommand {
+public sealed class SetFogColorOpcodeCommand : IOpcodeCommand {
   public byte R { get; set; }
   public byte G { get; set; }
   public byte B { get; set; }
   public byte A { get; set; }
 }
 
-public class SetPrimColorOpcodeCommand : IOpcodeCommand {
+public sealed class SetPrimColorOpcodeCommand : IOpcodeCommand {
   public byte R { get; set; }
   public byte G { get; set; }
   public byte B { get; set; }
@@ -192,7 +192,7 @@ public static class TileDescriptorExtensions {
     => tileDescriptorIndex == TileDescriptorIndex.TX_RENDERTILE;
 }
 
-public class TextureOpcodeCommand : IOpcodeCommand {
+public sealed class TextureOpcodeCommand : IOpcodeCommand {
   public TileDescriptorIndex TileDescriptorIndex { get; set; }
   public TileDescriptorState NewTileDescriptorState { get; set; }
   public byte MaximumNumberOfMipmaps { get; set; }
@@ -200,7 +200,7 @@ public class TextureOpcodeCommand : IOpcodeCommand {
   public ushort VerticalScaling { get; set; }
 }
 
-public class SetTimgOpcodeCommand : IOpcodeCommand {
+public sealed class SetTimgOpcodeCommand : IOpcodeCommand {
   public N64ColorFormat ColorFormat { get; set; }
   public BitsPerTexel BitsPerTexel { get; set; }
   public ushort Width { get; set; }
@@ -255,15 +255,15 @@ public static class GeometryModeExtensions {
             : UvType.STANDARD;
 }
 
-public class SetGeometryModeOpcodeCommand : IOpcodeCommand {
+public sealed class SetGeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToEnable { get; set; }
 }
 
-public class ClearGeometryModeOpcodeCommand : IOpcodeCommand {
+public sealed class ClearGeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToDisable { get; set; }
 }
 
-public class GeometryModeOpcodeCommand : IOpcodeCommand {
+public sealed class GeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToDisable { get; set; }
   public GeometryMode FlagsToEnable { get; set; }
 }
@@ -289,7 +289,7 @@ public static class F3dWrapModeExtensions {
     };
 }
 
-public class SetTileOpcodeCommand : IOpcodeCommand {
+public sealed class SetTileOpcodeCommand : IOpcodeCommand {
   public TileDescriptorIndex TileDescriptorIndex { get; set; }
   public N64ColorFormat ColorFormat { get; set; }
   public BitsPerTexel BitsPerTexel { get; set; }
@@ -307,7 +307,7 @@ public class SetTileOpcodeCommand : IOpcodeCommand {
   public ushort OffsetOfTextureInTmem { get; set; }
 }
 
-public class SetTileSizeOpcodeCommand : IOpcodeCommand {
+public sealed class SetTileSizeOpcodeCommand : IOpcodeCommand {
   public TileDescriptorIndex TileDescriptorIndex { get; set; }
   public float Uls { get; set; }
   public float Ult { get; set; }
@@ -315,12 +315,12 @@ public class SetTileSizeOpcodeCommand : IOpcodeCommand {
   public float Lrt { get; set; }
 }
 
-public class SetCombineOpcodeCommand : IOpcodeCommand {
+public sealed class SetCombineOpcodeCommand : IOpcodeCommand {
   public required CombinerCycleParams CombinerCycleParams0 { get; init; }
   public required CombinerCycleParams CombinerCycleParams1 { get; init; }
 }
 
-public class LoadBlockOpcodeCommand : IOpcodeCommand {
+public sealed class LoadBlockOpcodeCommand : IOpcodeCommand {
   public required TileDescriptorIndex TileDescriptorIndex { get; init; }
   public required ushort Texels { get; init; }
   public float Uls { get; set; }
@@ -328,7 +328,7 @@ public class LoadBlockOpcodeCommand : IOpcodeCommand {
   public ushort Dxt { get; init; }
 }
 
-public class LoadTileOpcodeCommand : IOpcodeCommand {
+public sealed class LoadTileOpcodeCommand : IOpcodeCommand {
   public required TileDescriptorIndex TileDescriptorIndex { get; init; }
   public float Uls { get; set; }
   public float Ult { get; set; }
@@ -336,7 +336,7 @@ public class LoadTileOpcodeCommand : IOpcodeCommand {
   public float Lrt { get; init; }
 }
 
-public class LoadTlutOpcodeCommand : IOpcodeCommand {
+public sealed class LoadTlutOpcodeCommand : IOpcodeCommand {
   public required TileDescriptorIndex TileDescriptorIndex { get; init; }
   public required ushort NumColorsToLoad { get; init; }
 }
@@ -346,19 +346,19 @@ public enum DmemAddress {
   G_MV_L1 = 0x88,
 }
 
-public class MoveMemOpcodeCommand : IOpcodeCommand {
+public sealed class MoveMemOpcodeCommand : IOpcodeCommand {
   public DmemAddress DmemAddress { get; set; }
 
   public uint SegmentedAddress { get; set; }
 }
 
-public class SetOtherModeHOpcodeCommand : IOpcodeCommand {
+public sealed class SetOtherModeHOpcodeCommand : IOpcodeCommand {
   public ushort Shift { get; set; }
   public ushort Length { get; set; }
   public uint Data { get; set; }
 }
 
-public class SetOtherModeLOpcodeCommand : IOpcodeCommand {
+public sealed class SetOtherModeLOpcodeCommand : IOpcodeCommand {
   public ushort Shift { get; set; }
   public ushort Length { get; set; }
   public uint Data { get; set; }

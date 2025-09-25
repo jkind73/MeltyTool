@@ -10,7 +10,7 @@ namespace KSoft.Text
 	/// <summary>Exception for use as an inner exception when processing text files and there's line/column information available</summary>
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors")]
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2237:MarkISerializableTypesWithSerializable")]
-	public class TextLineInfoException
+	public sealed class TextLineInfoException
 		: Exception
 		, ITextLineInfo
 	{

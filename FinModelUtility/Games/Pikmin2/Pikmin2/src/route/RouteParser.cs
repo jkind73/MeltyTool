@@ -5,7 +5,7 @@ using fin.util.asserts;
 
 namespace games.pikmin2.route;
 
-public class RouteParser {
+public sealed class RouteParser {
   public IGraphNode<IRouteGraphNodeData>[] Parse(StreamReader streamReader) {
       var lines = new List<string>();
       string? rawLine;

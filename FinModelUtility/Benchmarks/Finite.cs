@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class Finite {
+  public sealed class Finite {
     private const int n = 10000000;
 
     [Benchmark]

@@ -7,7 +7,7 @@ using fin.data.dictionaries;
 
 namespace fin.data.lazy;
 
-public class LazyCaseInvariantStringDictionary<TValue>
+public sealed class LazyCaseInvariantStringDictionary<TValue>
     : ILazyDictionary<string, TValue> {
   private readonly ILazyDictionary<string, TValue> impl_;
 

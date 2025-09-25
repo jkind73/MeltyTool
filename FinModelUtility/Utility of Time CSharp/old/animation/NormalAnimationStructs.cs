@@ -4,7 +4,7 @@ namespace UoT {
   // Based on the structs at:
   // https://wiki.cloudmodding.com/oot/Animation_Format#Normal_Animations
 
-  public class NormalAnimation : IAnimation {
+  public sealed class NormalAnimation : IAnimation {
     public ushort[] Angles = [];
     public IList<Vec3s> Positions;
     public NormalAnimationTrack[] Tracks = [];
@@ -22,7 +22,7 @@ namespace UoT {
     public FacialState GetFacialState(int _) => FacialState.DEFAULT;
   }
 
-  public class NormalAnimationTrack : IAnimationTrack {
+  public sealed class NormalAnimationTrack : IAnimationTrack {
     public int Type { get; set; } // 0 = constant, 1 = keyframe
     public IList<ushort> Frames { get; set; } = [];
   }

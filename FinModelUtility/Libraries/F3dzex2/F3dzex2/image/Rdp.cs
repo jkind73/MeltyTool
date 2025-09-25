@@ -141,7 +141,7 @@ public interface IRdp {
   CombinerCycleParams CombinerCycleParams1 { get; set; }
 }
 
-public class Rdp : IRdp {
+public sealed class Rdp : IRdp {
   public ITmem Tmem { get; set; }
 
   public uint PaletteSegmentedAddress { get; set; }

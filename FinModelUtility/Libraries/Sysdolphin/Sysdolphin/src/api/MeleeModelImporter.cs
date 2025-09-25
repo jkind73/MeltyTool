@@ -12,7 +12,7 @@ using sysdolphin.schema.melee;
 
 namespace sysdolphin.api;
 
-public class MeleeModelImporter : IModelImporter<MeleeModelFileBundle> {
+public sealed class MeleeModelImporter : IModelImporter<MeleeModelFileBundle> {
   public IModel Import(MeleeModelFileBundle modelFileBundle) {
     var datModelFileBundle = new DatModelFileBundle {
         DatFile = modelFileBundle.PrimaryDatFile,

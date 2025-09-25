@@ -9,7 +9,7 @@ using jsystem.GCN;
 
 namespace jsystem {
   [TestFixtureSource(nameof(GetGoldenDirectories_))]
-  public class BmdModelGoldenTests
+  public sealed class BmdModelGoldenTests
       : BModelGoldenTests<BmdModelFileBundle, BmdModelImporter> {
     private readonly IFileHierarchyDirectory goldenDirectory_;
     private readonly BMD bmd_;

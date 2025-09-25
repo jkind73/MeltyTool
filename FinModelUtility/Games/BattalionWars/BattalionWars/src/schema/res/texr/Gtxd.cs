@@ -8,7 +8,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace modl.schema.res.texr;
 
-public class Gtxd : BTexr, ITexr {
+public sealed class Gtxd : BTexr, ITexr {
   public IImage Image { get; private set; }
 
   [Unknown]

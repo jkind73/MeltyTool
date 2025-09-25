@@ -10,7 +10,7 @@ namespace gm.schema.dataWin.chunk.txtr;
 ///   Shamelessly stolen from:
 ///   https://github.com/puggsoy/GMS-Explorer/blob/master/GMS%20Explorer/ChunkItems/SpriteSheet.cs#L11
 /// </summary>
-public class SpriteSheet : IBinaryDeserializable {
+public sealed class SpriteSheet : IBinaryDeserializable {
   public IImage Image { get; set; }
 
   public void Read(IBinaryReader br) {

@@ -5,7 +5,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.vector3;
 
-public class Vector3KeyframeInterpolator
+public sealed class Vector3KeyframeInterpolator
     : Vector3KeyframeInterpolator<Keyframe<Vector3>> {
   public static Vector3KeyframeInterpolator Instance { get; } = new();
   private Vector3KeyframeInterpolator() { }

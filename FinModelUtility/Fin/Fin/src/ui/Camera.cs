@@ -4,7 +4,7 @@ using fin.math.rotations;
 
 namespace fin.ui;
 
-public class Camera : ICamera {
+public sealed class Camera : ICamera {
   // TODO: Add x/y/z locking.
 
   public static Camera NewLookingAt(float x,

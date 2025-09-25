@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace fin.ui.avalonia.buttons;
 
-public class ReportIssueButtonViewModel : ViewModelBase {
+public sealed class ReportIssueButtonViewModel : BViewModel {
   public bool ShowText {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);

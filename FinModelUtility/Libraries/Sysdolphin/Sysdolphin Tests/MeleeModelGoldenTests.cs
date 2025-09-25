@@ -8,7 +8,7 @@ using sysdolphin.api;
 
 namespace sysdolphin;
 
-public class MeleeModelGoldenTests
+public sealed class MeleeModelGoldenTests
     : BModelGoldenTests<MeleeModelFileBundle, MeleeModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.phantom_hourglass;
 
-public class PhantomHourglassFileBundleGatherer
+public sealed class PhantomHourglassFileBundleGatherer
     : BDsFileBundleGatherer {
   public override string Name => "phantom_hourglass";
 

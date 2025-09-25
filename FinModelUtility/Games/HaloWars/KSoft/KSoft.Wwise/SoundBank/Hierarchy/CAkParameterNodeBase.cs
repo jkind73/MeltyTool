@@ -6,7 +6,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Wwise.SoundBank
 {
-	public class CAkParameterNodeBase
+	public sealed class CAkParameterNodeBase
 		: IO.IEndianStreamSerializable
 	{
 		struct FXData

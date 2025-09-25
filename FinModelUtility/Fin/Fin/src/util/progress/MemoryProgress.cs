@@ -2,7 +2,7 @@
 
 namespace fin.util.progress;
 
-public class MemoryProgress<T> : IProgress<T> {
+public sealed class MemoryProgress<T> : IProgress<T> {
   private readonly Progress<T> impl_;
   private IProgress<T> Impl => this.impl_;
 

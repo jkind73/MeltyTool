@@ -4,7 +4,7 @@ using HaloWarsTools;
 
 namespace hw.api;
 
-public class VisSceneImporter : ISceneImporter<VisSceneFileBundle> {
+public sealed class VisSceneImporter : ISceneImporter<VisSceneFileBundle> {
   public IScene Import(VisSceneFileBundle sceneFileBundle) {
     var visResource =
         HWVisResource.FromFile(sceneFileBundle.Context,

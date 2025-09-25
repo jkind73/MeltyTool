@@ -6,7 +6,7 @@ using uni.config;
 
 namespace uni.games;
 
-public class RootFileBundleGatherer {
+public sealed class RootFileBundleGatherer {
   public IFileBundleDirectory GatherAllFiles(
       IMutablePercentageProgress mutablePercentageProgress,
       out IReadOnlyList<(INamedAnnotatedFileBundleGatherer gatherer,

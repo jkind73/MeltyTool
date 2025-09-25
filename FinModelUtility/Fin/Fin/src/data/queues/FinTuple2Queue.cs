@@ -18,7 +18,7 @@ public interface ITuple2Queue<T1, T2> : IEnumerable<(T1, T2)> {
   bool TryPeek(out T1 value1, out T2 value2);
 }
 
-public class FinTuple2Queue<T1, T2> : ITuple2Queue<T1, T2> {
+public sealed class FinTuple2Queue<T1, T2> : ITuple2Queue<T1, T2> {
   private readonly FinQueue<(T1, T2)> impl_ = new();
 
   public FinTuple2Queue() { }

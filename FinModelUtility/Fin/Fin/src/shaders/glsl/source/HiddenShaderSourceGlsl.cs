@@ -1,6 +1,6 @@
 ﻿namespace fin.shaders.glsl.source;
 
-public class HiddenShaderSourceGlsl : IShaderSourceGlsl {
+public sealed class HiddenShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource
 
     => $$"""

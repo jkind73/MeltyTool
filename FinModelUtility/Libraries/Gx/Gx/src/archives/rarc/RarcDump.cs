@@ -7,7 +7,7 @@ using gx.tools;
 
 namespace gx.archives.rarc;
 
-public class RarcDump {
+public sealed class RarcDump {
   public bool Run(
       IFileHierarchyFile rarcFile,
       bool cleanup,

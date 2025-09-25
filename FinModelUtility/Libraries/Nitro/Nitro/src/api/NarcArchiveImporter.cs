@@ -13,7 +13,7 @@ public record NarcArchiveBundle(IReadOnlyTreeFile NarcFile)
   public IReadOnlyTreeFile ArchiveFile => this.NarcFile;
 }
 
-public class NarcArchiveImporter
+public sealed class NarcArchiveImporter
     : BUncompressedArchiveImporter<NarcArchiveBundle> {
   protected override IEnumerable<UncompressedArchiveSubFile> EnumerateSubFiles(
       IBinaryReader archiveBr,

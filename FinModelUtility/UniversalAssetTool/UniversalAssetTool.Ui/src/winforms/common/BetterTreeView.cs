@@ -75,7 +75,7 @@ public interface IBetterTreeNode<T> where T : class {
   void EnsureParentIsExpanded();
 }
 
-public class BetterTreeView<T> : IBetterTreeView<T> where T : class {
+public sealed class BetterTreeView<T> : IBetterTreeView<T> where T : class {
   // TODO: Add tests.
   // TODO: Add support for different hierarchies.
 

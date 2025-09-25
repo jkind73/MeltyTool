@@ -10,7 +10,7 @@ using QuickFont;
 
 namespace fin.ui.rendering.gl.texture;
 
-public class GlTextTexture : IGlTexture {
+public sealed class GlTextTexture : IGlTexture {
   private readonly GlFbo impl_;
 
   public GlTextTexture(string text,

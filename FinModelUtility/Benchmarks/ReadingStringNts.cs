@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class ReadingStringNts {
+  public sealed class ReadingStringNts {
     private const int n = 100000;
 
     [Benchmark]

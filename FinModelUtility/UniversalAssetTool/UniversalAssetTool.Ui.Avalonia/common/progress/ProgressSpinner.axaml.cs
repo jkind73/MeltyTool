@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.common.progress;
 
-public class ProgressSpinnerViewModelForDesigner
+public sealed class ProgressSpinnerViewModelForDesigner
     : ProgressSpinnerViewModel {
   public ProgressSpinnerViewModelForDesigner() {
     this.Progress = new ValueFractionProgress();
@@ -36,7 +36,7 @@ public class ProgressSpinnerViewModelForDesigner
   }
 }
 
-public class ProgressSpinnerViewModel : ViewModelBase {
+public class ProgressSpinnerViewModel : BViewModel {
   public ValueFractionProgress Progress {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);

@@ -10,7 +10,7 @@ using uni.util.io;
 
 namespace uni.games.pikmin_1;
 
-public class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
   private readonly IModelSeparator separator_
       = new ModelSeparator(directory => directory.LocalPath)
           .Register(new AllAnimationsModelSeparatorMethod(),

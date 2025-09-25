@@ -15,7 +15,7 @@ public interface IScaleSource {
   float GetScale(IReadOnlyModel model);
 }
 
-public class ScaleSource(ScaleSourceType type) : IScaleSource {
+public sealed class ScaleSource(ScaleSourceType type) : IScaleSource {
   private readonly IScaleSource impl_ = type switch {
       ScaleSourceType.NONE           => new NullScaleSource(),
       ScaleSourceType.MIN_MAX_BOUNDS => new MinMaxBoundsScaleSource(),
@@ -27,12 +27,12 @@ public class ScaleSource(ScaleSourceType type) : IScaleSource {
   public float GetScale(IReadOnlyModel model) => this.impl_.GetScale(model);
 }
 
-public class NullScaleSource : IScaleSource {
+public sealed class NullScaleSource : IScaleSource {
   public float GetScale(ISceneInstance _1) => 1;
   public float GetScale(IReadOnlyModel _1) => 1;
 }
 
-public class MinMaxBoundsScaleSource : IScaleSource {
+public sealed class MinMaxBoundsScaleSource : IScaleSource {
   public float GetScale(ISceneInstance scene)
     => new SceneMinMaxBoundsScaleCalculator().CalculateScale(scene);
 
@@ -40,7 +40,7 @@ public class MinMaxBoundsScaleSource : IScaleSource {
     => new ModelMinMaxBoundsScaleCalculator().CalculateScale(model);
 }
 
-public class GameConfigScaleSource : IScaleSource {
+public sealed class GameConfigScaleSource : IScaleSource {
   public float GetScale(ISceneInstance scene)
     => this.TryToGetScaleFromGameConfig_(scene.Definition.FileBundle,
                                          out float scale)

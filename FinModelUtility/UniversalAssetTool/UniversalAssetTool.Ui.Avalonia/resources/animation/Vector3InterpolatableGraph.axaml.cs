@@ -17,7 +17,7 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.animation;
 
-public class Vector3InterpolatableGraphViewModelForDesigner
+public sealed class Vector3InterpolatableGraphViewModelForDesigner
     : Vector3InterpolatableGraphViewModel {
   public Vector3InterpolatableGraphViewModelForDesigner() {
     var sharedConfig = new SharedInterpolationConfig {
@@ -48,7 +48,7 @@ public class Vector3InterpolatableGraphViewModelForDesigner
   }
 }
 
-public class Vector3InterpolatableGraphViewModel : ViewModelBase {
+public class Vector3InterpolatableGraphViewModel : BViewModel {
   public IAxesConfiguredInterpolatable<Vector3> Keyframes {
     get;
     set {

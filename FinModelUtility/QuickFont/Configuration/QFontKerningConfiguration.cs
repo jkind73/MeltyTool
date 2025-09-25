@@ -9,7 +9,7 @@ using System.Collections.Generic;
 #nullable disable
 namespace QuickFont.Configuration
 {
-  public class QFontKerningConfiguration
+  public sealed class QFontKerningConfiguration
   {
     private readonly Dictionary<char, CharacterKerningRule> _characterKerningRules = new Dictionary<char, CharacterKerningRule>();
     public byte AlphaEmptyPixelTolerance;

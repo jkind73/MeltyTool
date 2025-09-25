@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace fin.schema.data;
 
-public class PassThruMagicUInt32SizedSection<TMagic, TData>(
+public sealed class PassThruMagicUInt32SizedSection<TMagic, TData>(
     IMagicConfig<TMagic, TData> config,
     TData data)
     : IMagicSection<TMagic, TData>

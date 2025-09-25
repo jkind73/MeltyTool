@@ -7,7 +7,7 @@ using marioartist.api;
 
 namespace uni.games.mario_artist;
 
-public class MarioArtistFileBundleGatherer : BPrereqsFileBundleGatherer {
+public sealed class MarioArtistFileBundleGatherer : BPrereqsFileBundleGatherer {
   public override string Name => "mario_artist";
 
   protected override void GatherFileBundlesFromHierarchy(

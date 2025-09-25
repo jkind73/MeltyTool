@@ -15,7 +15,7 @@ public readonly struct GenericAnimKey<T> {
   public required InterpolationType InterpolationType { get; init; }
 }
 
-public class GenericKeyGroup<T> {
+public sealed class GenericKeyGroup<T> {
   /// <summary>
   /// A read-only view of the keys
   /// </summary>

@@ -7,7 +7,7 @@ using fin.util.asserts;
 
 namespace fin.util.cmd;
 
-public class ProcessUtil {
+public sealed class ProcessUtil {
   public static Process ExecuteBlocking(
       IReadOnlySystemFile exeFile,
       params string[] args) {
@@ -33,7 +33,7 @@ public class ProcessUtil {
     ASYNC
   }
 
-  public class ProcessSetup(IReadOnlySystemFile exeFile, params string[] args) {
+  public sealed class ProcessSetup(IReadOnlySystemFile exeFile, params string[] args) {
     public IReadOnlySystemFile ExeFile { get; set; } = exeFile;
     public string[] Args { get; set; } = args;
 

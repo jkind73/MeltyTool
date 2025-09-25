@@ -8,7 +8,7 @@ using hw.schema.xtt;
 
 namespace hw.api;
 
-public class XtdModelImporter : IModelImporter<XtdModelFileBundle> {
+public sealed class XtdModelImporter : IModelImporter<XtdModelFileBundle> {
   public IModel Import(XtdModelFileBundle modelFileBundle) {
     var xtdFile = modelFileBundle.XtdFile;
     var xttFile = modelFileBundle.XttFile;

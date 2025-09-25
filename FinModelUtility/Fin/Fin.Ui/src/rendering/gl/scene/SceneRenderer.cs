@@ -2,7 +2,7 @@
 
 namespace fin.ui.rendering.gl.scene;
 
-public class SceneRenderer : IRenderable, IDisposable {
+public sealed class SceneRenderer : IRenderable, IDisposable {
   public SceneRenderer(ISceneInstance scene) {
       this.AreaRenderers
       = scene.Areas

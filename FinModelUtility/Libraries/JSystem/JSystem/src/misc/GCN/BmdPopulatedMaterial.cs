@@ -11,7 +11,7 @@ using jsystem.schema.j3dgraph.bmd.mat3;
 
 namespace jsystem.GCN;
 
-public class BmdPopulatedMaterial : IPopulatedMaterial {
+public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
   public string Name { get; set; }
   public GxCullMode CullMode { get; set; }
   public byte ColorChannelControlsCountIndex;

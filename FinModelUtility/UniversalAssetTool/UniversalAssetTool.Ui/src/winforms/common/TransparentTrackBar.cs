@@ -2,7 +2,7 @@
 
 namespace uni.ui.winforms.common;
 
-public class TransparentTrackBar : TrackBar {
+public sealed class TransparentTrackBar : TrackBar {
 
   public TransparentTrackBar() {
       this.SetStyle(ControlStyles.SupportsTransparentBackColor, true);

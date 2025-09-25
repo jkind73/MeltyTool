@@ -10,7 +10,7 @@ using schema.binary;
 
 namespace level5.schema;
 
-public class Prm {
+public sealed class Prm {
   public string Name { get; private set; }
 
   public uint[] AnimationReferenceHashes { get; private set; }
@@ -293,7 +293,7 @@ public class Prm {
   }
 }
 
-public class GenericVertex {
+public sealed class GenericVertex {
   public Vector3 Pos { get; set; }
   public Vector3 Nrm { get; set; }
   public Vector2 Uv0 { get; set; }

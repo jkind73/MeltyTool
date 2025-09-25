@@ -7,7 +7,7 @@ using CommunityToolkit.Diagnostics;
 
 namespace fin.math.splines;
 
-public class LinearSpline(IReadOnlyList<Vector3> positions) {
+public sealed class LinearSpline(IReadOnlyList<Vector3> positions) {
   public Vector3 GetPositionAtOffset(float offset) {
     Guard.IsGreaterThan(offset, 0);
 

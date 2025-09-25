@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fin.util.progress;
 
-public class DelayedSplitPercentageProgress(int capacity = 0)
+public sealed class DelayedSplitPercentageProgress(int capacity = 0)
     : IPercentageProgress {
   private bool isComplete_;
   private readonly List<PercentageProgress> progresses_ = new(capacity);

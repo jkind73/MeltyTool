@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace gx.compression.yaz0;
 
-public class Yaz0Dec {
+public sealed class Yaz0Dec {
   public bool Run(IFileHierarchyFile srcFile, bool cleanup)
     => this.Run(srcFile, srcFile.Impl.CloneWithFileType(".rarc"), cleanup);
 

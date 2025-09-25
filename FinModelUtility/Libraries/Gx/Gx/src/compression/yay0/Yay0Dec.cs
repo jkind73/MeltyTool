@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace gx.compression.yay0;
 
-public class Yay0Dec {
+public sealed class Yay0Dec {
   public bool Run(IFileHierarchyFile srcFile,
                   ISystemFile dstFile,
                   bool cleanup) {

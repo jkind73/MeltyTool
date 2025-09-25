@@ -1,6 +1,6 @@
 ﻿namespace visceral.api;
 
-public class PackedVectorTests {
+public sealed class PackedVectorTests {
   [Test]
   [TestCase(0b1000000010, ExpectedResult = -510)]
   [TestCase(0b1101010110, ExpectedResult = -170)]

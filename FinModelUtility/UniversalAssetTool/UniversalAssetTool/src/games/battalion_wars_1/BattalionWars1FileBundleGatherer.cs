@@ -9,7 +9,7 @@ using uni.util.io;
 
 namespace uni.games.battalion_wars_1;
 
-public class BattalionWars1FileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class BattalionWars1FileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "battalion_wars_1";
 
   protected override void GatherFileBundlesFromHierarchy(

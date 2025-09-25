@@ -5,7 +5,7 @@ using fin.io;
 
 namespace fin.model.io.importers.assimp;
 
-public class AssimpModelImporterPlugin : IModelImporterPlugin {
+public sealed class AssimpModelImporterPlugin : IModelImporterPlugin {
   public string DisplayName => "Assimp";
   public string Description => "Loads standard model formats via Assimp.";
 

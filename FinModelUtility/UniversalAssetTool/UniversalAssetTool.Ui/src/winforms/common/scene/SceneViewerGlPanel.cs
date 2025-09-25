@@ -13,7 +13,7 @@ using uni.model;
 
 namespace uni.ui.winforms.common.scene;
 
-public class SceneViewerGlPanel : BGlPanel, ISceneViewer {
+public sealed class SceneViewerGlPanel : BGlPanel, ISceneViewer {
   private readonly SceneViewerGl viewerImpl_ = new();
 
   private bool isMouseDown_ = false;

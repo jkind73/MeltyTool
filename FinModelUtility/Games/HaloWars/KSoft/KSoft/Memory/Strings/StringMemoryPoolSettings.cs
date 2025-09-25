@@ -4,7 +4,7 @@ namespace KSoft.Memory.Strings
 	/// <summary>
 	/// Configuration properties for defining how a <see cref="StringMemoryPool"/> serializes strings and generates string reference data
 	/// </summary>
-	public class StringMemoryPoolSettings //: IO.IEndianStreamable
+	public sealed class StringMemoryPoolSettings //: IO.IEndianStreamable
 	{
 		/// <summary>String serializing definition for the <see cref="StringMemoryPool"/></summary>
 		public StringStorage Storage { get; private set; }

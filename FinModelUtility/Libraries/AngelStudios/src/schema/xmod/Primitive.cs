@@ -10,7 +10,7 @@ public enum PrimitiveType {
   TRIANGLES,
 }
 
-public class Primitive : ITextDeserializable {
+public sealed class Primitive : ITextDeserializable {
   public PrimitiveType Type { get; set; }
   public IReadOnlyList<int> VertexIndices { get; set; }
 

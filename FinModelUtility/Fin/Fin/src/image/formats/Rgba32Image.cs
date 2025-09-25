@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.formats;
 
-public class Rgba32Image : BImage<Rgba32> {
+public sealed class Rgba32Image : BImage<Rgba32> {
   public Rgba32Image(int width, int height) : this(
       PixelFormat.RGBA8888,
       width,

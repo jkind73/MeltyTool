@@ -95,7 +95,7 @@ namespace KSoft.T4.Bitwise
 			yield return new ByteSwapableIntegerDefinition(PrimitiveDefinitions.kUInt64, 40);
 		} }
 
-		public class IntegerByteSwapCodeGenerator
+		public sealed class IntegerByteSwapCodeGenerator
 		{
 			TextTemplating.TextTransformation mFile;
 			ByteSwapableIntegerDefinition mDef;

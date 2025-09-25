@@ -10,7 +10,7 @@ using schema.binary;
 
 namespace visceral.api;
 
-public class BnkReader {
+public sealed class BnkReader {
   public enum MaybeBoneType {
     ROOT = 0x2,
     PARENT = 0x5,

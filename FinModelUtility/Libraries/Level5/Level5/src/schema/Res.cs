@@ -7,8 +7,8 @@ using schema.binary;
 
 namespace level5.schema;
 
-public class Resource {
-  public class Material {
+public sealed class Resource {
+  public sealed class Material {
     public string Name { get; set; }
     public int Index { get; set; } = -1;
     public string TexName { get; set; }

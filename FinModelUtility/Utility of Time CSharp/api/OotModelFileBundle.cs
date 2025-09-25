@@ -4,7 +4,7 @@ using fin.model.io;
 using UoT.memory;
 
 namespace UoT.api {
-  public class OotModelFileBundle(
+  public sealed class OotModelFileBundle(
       IReadOnlyTreeDirectory directory,
       IReadOnlyTreeFile ootRom,
       IZFile zFile) : IModelFileBundle {

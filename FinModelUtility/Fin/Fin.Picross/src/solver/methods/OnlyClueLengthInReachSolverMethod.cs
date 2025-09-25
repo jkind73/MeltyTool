@@ -3,7 +3,7 @@ using fin.picross.moves;
 
 namespace fin.picross.solver.methods;
 
-public class OnlyClueLengthInReachSolverMethod : BBidirectionalSolverMethod {
+public sealed class OnlyClueLengthInReachSolverMethod : BBidirectionalSolverMethod {
   public override IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState,

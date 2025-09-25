@@ -14,7 +14,7 @@ public interface IModelRequirements {
   public uint NumBones { get; }
 }
 
-public class ModelRequirements : IModelRequirements {
+public sealed class ModelRequirements : IModelRequirements {
   public static IModelRequirements FromModel(IReadOnlyModel model)
     => new ModelRequirements(model);
 

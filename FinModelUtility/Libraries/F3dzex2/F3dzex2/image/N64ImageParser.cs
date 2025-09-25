@@ -80,7 +80,7 @@ public static class BitsPerTexelExtensions {
     };
 }
 
-public class N64ImageParser(IN64Hardware n64Hardware) {
+public sealed class N64ImageParser(IN64Hardware n64Hardware) {
   public static void SplitN64ImageFormat(byte imageFormat,
                                          out N64ColorFormat colorFormat,
                                          out BitsPerTexel bitsPerTexel) {

@@ -30,7 +30,7 @@ public partial class Uint16SizedString : IBinaryConvertible {
   public string Name { get; set; }
 }
 
-public class SchemaSharpFileLister {
+public sealed class SchemaSharpFileLister {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
   //Code based heavily on https://stackoverflow.com/q/47471744

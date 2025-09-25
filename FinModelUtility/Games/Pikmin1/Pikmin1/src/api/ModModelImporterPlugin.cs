@@ -6,7 +6,7 @@ using fin.model;
 using fin.model.io;
 
 namespace pikmin1.api {
-  public class ModModelImporterPlugin : IModelImporterPlugin {
+  public sealed class ModModelImporterPlugin : IModelImporterPlugin {
     public string DisplayName => "Mod";
 
     public string Description => "Pikmin 1 model format.";

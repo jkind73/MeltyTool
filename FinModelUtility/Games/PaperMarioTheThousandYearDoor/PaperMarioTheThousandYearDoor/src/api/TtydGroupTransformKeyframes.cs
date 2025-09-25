@@ -3,7 +3,7 @@
 namespace ttyd.api;
 
 // TODO: Optimize this
-public class TtydGroupTransformKeyframes(
+public sealed class TtydGroupTransformKeyframes(
     float[] initialTransforms,
     int animationLength) {
   private readonly

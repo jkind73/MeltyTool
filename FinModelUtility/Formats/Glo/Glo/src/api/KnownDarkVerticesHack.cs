@@ -17,7 +17,7 @@ namespace glo.api;
 ///   Vertices that are in roughly the same position as the door's vertices
 ///   will be set to black and will be aligned to remove gaps.
 /// </summary>
-public class KnownDarkVerticesHack {
+public sealed class KnownDarkVerticesHack {
   /// <summary>
   ///   Known surfaces in the game that represent the doors you can walk
   ///   through--these are all assumed to have black vertex colors.

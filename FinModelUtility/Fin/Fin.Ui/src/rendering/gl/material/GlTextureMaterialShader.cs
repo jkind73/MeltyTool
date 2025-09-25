@@ -8,7 +8,7 @@ using fin.ui.rendering.gl.texture;
 
 namespace fin.ui.rendering.gl.material;
 
-public class GlTextureMaterialShader(
+public sealed class GlTextureMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyTextureMaterial material,

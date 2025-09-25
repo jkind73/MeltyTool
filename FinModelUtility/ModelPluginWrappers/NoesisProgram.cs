@@ -30,7 +30,7 @@ namespace ModelPluginWrappers {
       public Func<byte[], PythonList, bool> loadModel;
     }
 
-    public class Rpg {
+    public sealed class Rpg {
       private readonly ModelImpl model_ = ModelImpl.CreateForViewer();
 
       private string name_;

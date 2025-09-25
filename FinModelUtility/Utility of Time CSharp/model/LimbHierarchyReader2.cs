@@ -44,7 +44,7 @@ namespace UoT.model {
     public uint LowLodDisplayListSegmentedAddress { get; set; }
   }
 
-  public class LimbHierarchyReader2 {
+  public sealed class LimbHierarchyReader2 {
     /// <summary>
     ///   Parses a limb hierarchy according to the following spec:
     ///   https://wiki.cloudmodding.com/oot/Animation_Format#Hierarchy

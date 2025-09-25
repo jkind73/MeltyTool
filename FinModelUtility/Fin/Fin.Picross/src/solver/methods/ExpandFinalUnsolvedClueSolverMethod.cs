@@ -3,7 +3,7 @@ using fin.util.enumerables;
 
 namespace fin.picross.solver.methods;
 
-public class ExpandFinalUnsolvedClueSolverMethod : IPicrossSolverMethod {
+public sealed class ExpandFinalUnsolvedClueSolverMethod : IPicrossSolverMethod {
   public IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState) {

@@ -7,7 +7,7 @@ using jsystem.api;
 
 namespace games.pikmin2.api;
 
-public class Pikmin2SceneImporter : ISceneImporter<Pikmin2SceneFileBundle> {
+public sealed class Pikmin2SceneImporter : ISceneImporter<Pikmin2SceneFileBundle> {
   public IScene Import(Pikmin2SceneFileBundle sceneFileBundle) {
       var levelBmd = sceneFileBundle.LevelBmd;
       var routeTxt = sceneFileBundle.RouteTxt;

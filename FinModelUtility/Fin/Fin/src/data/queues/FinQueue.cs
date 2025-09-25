@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace fin.data.queues;
 
-public class FinQueue<T> : IFinQueue<T> {
+public sealed class FinQueue<T> : IFinQueue<T> {
   private readonly Queue<T> impl_ = new();
 
   public FinQueue() { }

@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace fin.math.rotations;
 
 [DefaultFloatingPointTolerance(.0001)]
-public class RadiansUtilTests {
+public sealed class RadiansUtilTests {
   private const float PI = MathF.PI;
 
   [Test]

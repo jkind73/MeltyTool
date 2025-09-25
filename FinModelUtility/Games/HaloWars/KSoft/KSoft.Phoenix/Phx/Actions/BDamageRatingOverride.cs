@@ -3,7 +3,7 @@
 namespace KSoft.Phoenix.Phx
 {
 	// TODO: change to a struct?
-	public class BDamageRatingOverride
+	public sealed class BDamageRatingOverride
 		: IO.ITagElementStringNameStreamable
 		, IEqualityComparer<BDamageRatingOverride>
 	{

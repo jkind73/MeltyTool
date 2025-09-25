@@ -1,6 +1,6 @@
 ﻿namespace fin.data.dictionaries;
 
-public class BidirectionalDictionary<T1, T2> {
+public sealed class BidirectionalDictionary<T1, T2> {
   private readonly NullFriendlyDictionary<T1, T2> impl1To2_ = new();
   private readonly NullFriendlyDictionary<T2, T1> impl2To1_ = new();
 

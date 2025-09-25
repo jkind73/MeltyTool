@@ -3,7 +3,7 @@
 using Newtonsoft.Json.Linq;
 
 namespace sm64.JSON {
-  public class BehaviorNameFile {
+  public sealed class BehaviorNameFile {
     private static uint parseUInt(string str) {
       bool isHex = false;
       if (str.StartsWith("0x")) {

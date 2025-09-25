@@ -9,7 +9,7 @@ using ttyd.api;
 
 namespace ttyd;
 
-public class TtydModelGoldenTests
+public sealed class TtydModelGoldenTests
     : BModelGoldenTests<TtydModelFileBundle, TtydModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

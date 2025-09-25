@@ -44,7 +44,7 @@ public interface IBlendFunction {
   GxLogicOp LogicOp { get; }
 }
 
-public class BlendFunctionImpl : IBlendFunction {
+public sealed class BlendFunctionImpl : IBlendFunction {
   public GxBlendMode BlendMode { get; set; }
   public GxBlendFactor SrcFactor { get; set; }
   public GxBlendFactor DstFactor { get; set; }

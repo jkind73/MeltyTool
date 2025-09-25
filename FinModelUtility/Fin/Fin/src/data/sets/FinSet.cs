@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.sets;
 
-public class FinSet<T>(ISet<T> impl) : IFinSet<T> {
+public sealed class FinSet<T>(ISet<T> impl) : IFinSet<T> {
   public FinSet() : this(new HashSet<T>()) { }
 
   public int Count => impl.Count;

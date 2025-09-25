@@ -17,7 +17,7 @@ using uni.ui.avalonia.toolbars;
 
 namespace uni.ui.avalonia.ViewModels;
 
-public class MainViewModelForDesigner {
+public sealed class MainViewModelForDesigner {
   public ProgressPanelViewModel FileBundleTreeAsyncPanelViewModel { get; }
 
   public AudioPlayerPanelViewModel AudioPlayerPanel { get; } = new();
@@ -60,7 +60,7 @@ public class MainViewModelForDesigner {
   }
 }
 
-public class MainViewModel : ViewModelBase {
+public sealed class MainViewModel : BViewModel {
   public AudioPlayerPanelViewModel AudioPlayerPanel { get; } = new();
 
   public MainViewModel() {

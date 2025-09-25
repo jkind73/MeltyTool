@@ -9,7 +9,7 @@ using xmod.api;
 
 namespace uni.games.midnight_club_2;
 
-public class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleGatherer {
+public sealed class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleGatherer {
   public string Name => "midnight_club_2";
 
   public void GatherFileBundles(

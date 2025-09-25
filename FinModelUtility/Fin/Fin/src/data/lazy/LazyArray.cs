@@ -8,7 +8,7 @@ namespace fin.data.lazy;
 /// <summary>
 ///   Array implementation that lazily populates its entries when accessed.
 /// </summary>
-public class LazyArray<T> : ILazyArray<T> {
+public sealed class LazyArray<T> : ILazyArray<T> {
   private readonly T[] impl_;
   private readonly bool[] populated_;
   private readonly Func<int, T> handler_;

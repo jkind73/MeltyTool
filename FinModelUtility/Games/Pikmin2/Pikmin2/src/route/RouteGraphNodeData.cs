@@ -9,7 +9,7 @@ public interface IRouteGraphNodeData : IIndexable {
   float Radius { get; }
 }
 
-public class RouteGraphNodeData : IRouteGraphNodeData {
+public sealed class RouteGraphNodeData : IRouteGraphNodeData {
   public required int Index { get; init; }
   public required Vector3 Position { get; init; }
   public required float Radius { get; init; }

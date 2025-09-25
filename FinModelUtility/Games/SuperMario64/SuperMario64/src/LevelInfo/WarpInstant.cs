@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace sm64.LevelInfo {
-  public class WarpInstant {
+  public sealed class WarpInstant {
     private const ushort NUM_OF_CATERGORIES = 2;
 
     private byte triggerID;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.lists;
 
-public class ForgivingArrayView<T>(IList<T> impl, T defaultValue)
+public sealed class ForgivingArrayView<T>(IList<T> impl, T defaultValue)
     : IEnumerable<T> {
   public int Count => impl.Count;
 

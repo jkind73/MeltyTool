@@ -13,12 +13,12 @@ using gm.schema.d3d;
 
 namespace gm.api;
 
-public class D3dModelFileBundle : IModelFileBundle {
+public sealed class D3dModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile ModFile { get; init; }
   public IReadOnlyTreeFile MainFile => this.ModFile;
 }
 
-public class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
+public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   public IModel Import(D3dModelFileBundle modelFileBundle) {
     var modFile = modelFileBundle.ModFile;
     var mod = modFile.ReadNewFromText<D3d>();

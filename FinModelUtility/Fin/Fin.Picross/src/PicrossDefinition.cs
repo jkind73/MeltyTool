@@ -3,7 +3,7 @@ using fin.io;
 
 namespace fin.picross;
 
-public class PicrossDefinition(int width, int height) : IPicrossDefinition {
+public sealed class PicrossDefinition(int width, int height) : IPicrossDefinition {
   private readonly bool[] impl_ = new bool[width * height];
 
   public string Name { get; set; }

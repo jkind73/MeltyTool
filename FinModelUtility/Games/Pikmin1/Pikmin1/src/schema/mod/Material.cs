@@ -373,7 +373,7 @@ public partial class TextureData
   }
 }
 
-public class MaterialContainer {
+public sealed class MaterialContainer {
   public readonly List<Material> materials = [];
   public readonly List<TEVInfo> texEnvironments = [];
 }

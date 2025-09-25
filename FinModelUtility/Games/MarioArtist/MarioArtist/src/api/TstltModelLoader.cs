@@ -898,7 +898,7 @@ public partial class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
 [BinarySchema]
-public partial class Vertex : IBinaryDeserializable {
+public sealed partial class Vertex : IBinaryDeserializable {
   public Vector3s Position { get; } = new();
 
   private ushort padding_ = 0;

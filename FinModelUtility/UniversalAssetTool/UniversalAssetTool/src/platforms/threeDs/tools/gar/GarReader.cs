@@ -10,7 +10,7 @@ using LzssDecompressor = fin.compression.LzssDecompressor;
 
 namespace uni.platforms.threeDs.tools.gar;
 
-public class GarReader : IArchiveReader<SubArchiveContentFile> {
+public sealed class GarReader : IArchiveReader<SubArchiveContentFile> {
   public bool IsValidArchive(Stream archive) => true;
 
   public IArchiveStream<SubArchiveContentFile> Decompress(Stream archive) {

@@ -8,7 +8,7 @@ using Asserts = fin.util.asserts.Asserts;
 
 namespace fin.compression;
 
-public class LzssDecompressor {
+public sealed class LzssDecompressor {
   public bool TryToDecompress(IBinaryReader br, out byte[]? data) {
     if (br.TryReadNew(out LzssHeader? header)) {
       Asserts.Equal(br.Length, 0x10 + header!.CompressedSize);

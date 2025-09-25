@@ -9,7 +9,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.queues;
 
-public class FinTupleQueueTests {
+public sealed class FinTupleQueueTests {
   [Test]
   public void TestEnqueueSeparately() {
     var queue = new FinQueue<(string, string)>();

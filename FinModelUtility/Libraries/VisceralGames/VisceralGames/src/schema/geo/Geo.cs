@@ -8,7 +8,7 @@ using visceral.api;
 
 namespace visceral.schema.geo;
 
-public class Geo : IBinaryDeserializable {
+public sealed class Geo : IBinaryDeserializable {
   public string ModelName { get; set; }
 
   public IReadOnlyList<Bone> Bones { get; set; }
@@ -185,13 +185,13 @@ public class Geo : IBinaryDeserializable {
     this.Meshes = meshes;
   }
 
-  public class Bone {
+  public sealed class Bone {
     public required string Name { get; init; }
     public required Matrix4x4 Matrix { get; init; }
     public required uint Id { get; init; }
   }
 
-  public class Mesh {
+  public sealed class Mesh {
     public required string Name { get; init; }
     public required uint MtlbId { get; init; }
     public required ushort BaseVertexIndex { get; init; }
@@ -199,7 +199,7 @@ public class Geo : IBinaryDeserializable {
     public required IReadOnlyList<Face> Faces { get; init; }
   }
 
-  public class Vertex {
+  public sealed class Vertex {
     public required Vector3 Position { get; init; }
     public required Vector3 Normal { get; init; }
     public required Vector4 Tangent { get; init; }
@@ -209,7 +209,7 @@ public class Geo : IBinaryDeserializable {
     public required IReadOnlyList<float> Weights { get; init; }
   }
 
-  public class Face {
+  public sealed class Face {
     public required IReadOnlyList<ushort> Indices { get; init; }
   }
 }

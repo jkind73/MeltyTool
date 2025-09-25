@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class AirVehicle : BLevelObject;
+public sealed class AirVehicle : BLevelObject;

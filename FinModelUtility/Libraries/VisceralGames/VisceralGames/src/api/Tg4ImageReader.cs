@@ -22,7 +22,7 @@ public record Tg4ImageFileBundle {
   public required IReadOnlyTreeFile Tg4dFile { get; init; }
 }
 
-public class Tg4ImageReader {
+public sealed class Tg4ImageReader {
   public IImage ReadImage(Tg4ImageFileBundle bundle) {
     var headerFile = bundle.Tg4hFile;
     var dataFile = bundle.Tg4dFile;

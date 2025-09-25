@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace fin.model.util;
 
-public class RenderPriorityOrderedSetTests {
+public sealed class RenderPriorityOrderedSetTests {
   [Test]
   public void TestSimplestOrder() {
     var impl = new RenderPriorityOrderedSet<string> {

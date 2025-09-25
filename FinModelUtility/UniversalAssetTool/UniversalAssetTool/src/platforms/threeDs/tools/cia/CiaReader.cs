@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace uni.platforms.threeDs.tools.cia;
 
-public class CiaReader : IArchiveReader<SubArchiveContentFile> {
+public sealed class CiaReader : IArchiveReader<SubArchiveContentFile> {
   public bool IsValidArchive(Stream archive) => true;
 
   public IArchiveStream<SubArchiveContentFile> Decompress(Stream archive)

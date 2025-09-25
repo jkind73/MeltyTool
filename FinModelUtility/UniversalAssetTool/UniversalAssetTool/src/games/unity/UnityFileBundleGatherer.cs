@@ -8,7 +8,7 @@ using uni.platforms.desktop;
 
 namespace uni.games.unity;
 
-public class UnityFileBundleGatherer : INamedAnnotatedFileBundleGatherer {
+public sealed class UnityFileBundleGatherer : INamedAnnotatedFileBundleGatherer {
   public string Name => "unity";
 
   public void GatherFileBundles(

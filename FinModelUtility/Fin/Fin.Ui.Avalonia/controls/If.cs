@@ -6,7 +6,7 @@ using Avalonia.Metadata;
 
 namespace fin.ui.avalonia.controls;
 
-public class If : Control {
+public sealed class If : Control {
   private object contentWhenTrue_;
   private object? contentWhenFalse_;
   private bool? renderedValue_;

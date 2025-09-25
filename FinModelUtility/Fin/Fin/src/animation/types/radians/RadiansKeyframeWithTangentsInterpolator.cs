@@ -3,7 +3,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.radians;
 
-public class RadiansKeyframeWithTangentsInterpolator
+public sealed class RadiansKeyframeWithTangentsInterpolator
     : RadiansKeyframeWithTangentsInterpolator<KeyframeWithTangents<float>> {
   public static RadiansKeyframeWithTangentsInterpolator Instance { get; }
     = new();

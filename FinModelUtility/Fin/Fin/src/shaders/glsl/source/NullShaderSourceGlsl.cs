@@ -5,7 +5,7 @@ using fin.util.enumerables;
 
 namespace fin.shaders.glsl.source;
     
-public class NullShaderSourceGlsl(
+public sealed class NullShaderSourceGlsl(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IShaderRequirements shaderRequirements)

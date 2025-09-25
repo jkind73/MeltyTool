@@ -6,7 +6,7 @@ using fin.util.enumerables;
 
 namespace fin.shaders.glsl.source;
 
-public class TextureShaderSourceGlsl : IShaderSourceGlsl {
+public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
   public TextureShaderSourceGlsl(IReadOnlyModel model,
                                  IModelRequirements modelRequirements,
                                  IReadOnlyTextureMaterial material,

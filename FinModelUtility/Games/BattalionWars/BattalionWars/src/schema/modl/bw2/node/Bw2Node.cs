@@ -20,7 +20,7 @@ public enum WeirdFlag {
   VALUE_4, 
 }
 
-public class Bw2Node(int additionalDataCount) : IBwNode, IBinaryDeserializable {
+public sealed class Bw2Node(int additionalDataCount) : IBwNode, IBinaryDeserializable {
   public string GetIdentifier() => this.Name;
   public string Name { get; set; }
 

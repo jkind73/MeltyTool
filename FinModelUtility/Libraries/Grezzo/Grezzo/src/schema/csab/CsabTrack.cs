@@ -12,7 +12,7 @@ public enum TrackType {
   ROTATION
 }
 
-public class CsabTrack : IBinaryDeserializable {
+public sealed class CsabTrack : IBinaryDeserializable {
   private readonly Csab parent_;
   private Func<IBinaryReader, int> readRawLinearFloat_;
   private Func<IBinaryReader, int> readRawLinearShort_;

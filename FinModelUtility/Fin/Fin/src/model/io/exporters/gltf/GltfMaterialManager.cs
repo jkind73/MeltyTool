@@ -19,7 +19,7 @@ using AlphaMode = SharpGLTF.Materials.AlphaMode;
 
 namespace fin.model.io.exporters.gltf;
 
-public class GltfMaterialBuilder {
+public sealed class GltfMaterialBuilder {
   private readonly struct Fin2GltfImageConverter(
       IReadOnlyImage[] finImages,
       IDictionary<IReadOnlyImage, MemoryImage> gltfImageByFinImage)

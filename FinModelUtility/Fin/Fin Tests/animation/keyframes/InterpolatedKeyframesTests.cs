@@ -11,7 +11,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.animation.keyframes;
 
-public class InterpolatedKeyframesTests {
+public sealed class InterpolatedKeyframesTests {
   [Test]
   public void TestAddToEnd() {
     var impl = new InterpolatedKeyframes<Keyframe<float>, float>(

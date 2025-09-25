@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.color;
 
-public class ColorUtilTests {
+public sealed class ColorUtilTests {
   [Test]
   [TestCase(ushort.MinValue, 0, 0, 0)]
   [TestCase((ushort) 128, 0, 16, 0)]

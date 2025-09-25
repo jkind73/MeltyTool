@@ -9,7 +9,7 @@ namespace fin.image.io.pixel;
 /// <summary>
 ///   Helper class for reading 4-bit intensity pixels.
 /// </summary>
-public class I4PixelReader : IPixelReader<La16> {
+public sealed class I4PixelReader : IPixelReader<La16> {
   public IImage<La16> CreateImage(int width, int height)
     => new I8Image(PixelFormat.I4, width, height);
 

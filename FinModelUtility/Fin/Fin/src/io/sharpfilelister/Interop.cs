@@ -7,7 +7,7 @@ using System.Security;
 namespace fin.io.sharpfilelister;
 
 [SuppressUnmanagedCodeSecurity]
-public class Interop {
+public sealed class Interop {
   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
   public unsafe struct WIN32_FIND_DATAW {
     public FileAttributes dwFileAttributes;

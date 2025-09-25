@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class ScriptSprite : BLevelObject;
+public sealed class ScriptSprite : BLevelObject;

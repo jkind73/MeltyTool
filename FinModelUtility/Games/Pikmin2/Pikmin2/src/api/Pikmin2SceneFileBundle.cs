@@ -3,7 +3,7 @@ using fin.scene;
 
 namespace games.pikmin2.api;
 
-public class Pikmin2SceneFileBundle : ISceneFileBundle {
+public sealed class Pikmin2SceneFileBundle : ISceneFileBundle {
   public string? GameName => "pikmin_2";
   public IReadOnlyTreeFile? MainFile => this.LevelBmd;
 

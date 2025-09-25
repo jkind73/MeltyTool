@@ -172,7 +172,7 @@ namespace KSoft.T4.Bitwise
 		} }
 		#endregion
 
-		public class IntegerByteAccessCodeGenerator
+		public sealed class IntegerByteAccessCodeGenerator
 		{
 			static readonly string kByteKeyword = NumberCodeDefinition.TypeCodeToKeyword(TypeCode.Byte);
 

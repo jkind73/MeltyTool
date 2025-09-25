@@ -19,7 +19,7 @@ public interface ITuple3Queue<T1, T2, T3> : IEnumerable<(T1, T2, T3)> {
   bool TryPeek(out T1 value1, out T2 value2, out T3 value3);
 }
 
-public class FinTuple3Queue<T1, T2, T3> : ITuple3Queue<T1, T2, T3> {
+public sealed class FinTuple3Queue<T1, T2, T3> : ITuple3Queue<T1, T2, T3> {
   private readonly FinQueue<(T1, T2, T3)> impl_ = new();
 
   public FinTuple3Queue() { }

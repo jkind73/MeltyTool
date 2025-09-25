@@ -7,7 +7,7 @@ using fin.testing.model;
 using grezzo.api;
 
 namespace grezzo {
-  public class CmbModelGoldenTests
+  public sealed class CmbModelGoldenTests
       : BModelGoldenTests<CmbModelFileBundle, CmbModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]

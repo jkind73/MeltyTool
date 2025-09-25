@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.animation.keyframes;
 
-public class KeyframeDefinitionsWithBinarySearchTests {
+public sealed class KeyframeDefinitionsWithBinarySearchTests {
   [Test]
   public void TestAddToEnd() {
     var impl = new KeyframeDefinitionsWithBinarySearch<string>();

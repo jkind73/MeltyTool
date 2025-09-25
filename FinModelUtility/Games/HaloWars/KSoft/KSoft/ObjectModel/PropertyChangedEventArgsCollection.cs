@@ -9,7 +9,7 @@ using Exprs = System.Linq.Expressions;
 
 namespace KSoft.ObjectModel
 {
-	public class PropertyChangedEventArgsCollection : IEnumerable<System.ComponentModel.PropertyChangedEventArgs>
+	public sealed class PropertyChangedEventArgsCollection : IEnumerable<System.ComponentModel.PropertyChangedEventArgs>
 	{
 		List<System.ComponentModel.PropertyChangedEventArgs> mEventArgs;
 

@@ -31,35 +31,35 @@ namespace UoT.memory {
   }
 
 
-  public class ZObject(Segment segment) : BZFile(segment) {
+  public sealed class ZObject(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.OBJECT;
   }
 
 
-  public class ZCodeFiles(Segment segment) : BZFile(segment) {
+  public sealed class ZCodeFiles(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.CODE;
   }
 
 
-  public class ZScene(Segment segment) : BZFile(segment) {
+  public sealed class ZScene(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.SCENE;
 
     // TODO: Make nonnull via init, C#9.
     public ZMap[]? Maps;
   }
 
-  public class ZMap(Segment segment) : BZFile(segment) {
+  public sealed class ZMap(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.MAP;
 
     // TODO: Make nonnull via init, C#9.
     public ZScene? Scene { get; set; }
   }
 
-  public class ZObjectSet(Segment segment) : BZFile(segment) {
+  public sealed class ZObjectSet(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.OBJECT_SET;
   }
 
-  public class ZOtherData(Segment segment) : BZFile(segment) {
+  public sealed class ZOtherData(Segment segment) : BZFile(segment) {
     public override ZFileType Type => ZFileType.OTHER;
   }
 }

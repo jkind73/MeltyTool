@@ -33,7 +33,7 @@ using IFileBundleNode = INode<IAnnotatedFileBundle>;
 
 // Top-level view model types
 public class FileBundleTreeViewModel
-    : ViewModelBase, IFilterTreeViewViewModel<IAnnotatedFileBundle> {
+    : BViewModel, IFilterTreeViewViewModel<IAnnotatedFileBundle> {
   private readonly IReadOnlyList<IFileBundleNode> nodes_;
 
   private readonly ISynchronizedView<IFileBundleNode, IFileBundleNode>
@@ -157,7 +157,7 @@ public class FileBundleTreeViewModel
   }
 }
 
-public class FileBundleTreeViewModelForDesigner()
+public sealed class FileBundleTreeViewModelForDesigner()
     : FileBundleTreeViewModel([
         new FileBundleDirectoryNode("Animals",
         [
@@ -175,12 +175,12 @@ public class FileBundleTreeViewModelForDesigner()
 
 // Node types
 public abstract class BFileBundleNode(string text)
-    : ViewModelBase, IFileTreeNode {
+    : BViewModel, IFileTreeNode {
   public string Text => text;
   public IFileTreeParentNode? Parent { get; set; }
 }
 
-public class FileBundleDirectoryNode
+public sealed class FileBundleDirectoryNode
     : BFileBundleNode, IFileBundleNode, IFileTreeParentNode {
   private readonly IReadOnlyList<IFileBundleNode>? subNodes_;
 
@@ -249,7 +249,7 @@ public class FileBundleDirectoryNode
     => this.subNodes_?.Cast<IFileTreeNode>() ?? [];
 }
 
-public class FileBundleLeafNode(
+public sealed class FileBundleLeafNode(
     string label,
     IAnnotatedFileBundle data)
     : BFileBundleNode(label), IFileBundleNode, IFileTreeLeafNode {
@@ -274,7 +274,7 @@ public class FileBundleLeafNode(
   public bool InFilter { get; private set; } = true;
 }
 
-public class FileBundleFilter(IReadOnlySet<string> tokens)
+public sealed class FileBundleFilter(IReadOnlySet<string> tokens)
     : IFilter<IAnnotatedFileBundle> {
   public static FileBundleFilter? FromText(string? text) {
     var tokens = text?.Split([' ', '\t', '\n'],

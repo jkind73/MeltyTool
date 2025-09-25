@@ -14,7 +14,7 @@ namespace sysdolphin.schema;
 ///   References:
 ///     - https://github.com/jam1garner/Smash-Forge/blob/c0075bca364366bbea2d3803f5aeae45a4168640/Smash%20Forge/Filetypes/Melee/DAT.cs
 /// </summary>
-public class DatSubfile : IBinaryDeserializable {
+public sealed class DatSubfile : IBinaryDeserializable {
   private readonly List<RootNode> rootNodes_ = [];
 
   private uint dataBlockOffset_;
@@ -291,7 +291,7 @@ public enum RootNodeType {
   TLUT_DESC,
 }
 
-public class RootNode {
+public sealed class RootNode {
   private string name_;
 
   public RootNodeData Data { get; } = new();

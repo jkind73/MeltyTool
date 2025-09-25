@@ -4,7 +4,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class Packet : ITextDeserializable {
+public sealed class Packet : ITextDeserializable {
   public IReadOnlyList<Adjunct> Adjuncts { get; set; }
   public IReadOnlyList<Primitive> Primitives { get; set; }
   public IReadOnlyList<int> MatrixTable { get; set; }

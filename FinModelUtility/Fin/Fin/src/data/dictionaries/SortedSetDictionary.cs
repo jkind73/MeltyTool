@@ -9,7 +9,7 @@ namespace fin.data.dictionaries;
 ///   a key will be stored in that key's corresponding sorted set. Sets will
 ///   automatically be sorted as elements are added.
 /// </summary>
-public class SortedSetDictionary<TKey, TValue>
+public sealed class SortedSetDictionary<TKey, TValue>
     : IFinCollection<(TKey Key, SortedSet<TValue> Value)> {
   private readonly NullFriendlyDictionary<TKey, SortedSet<TValue>> impl_ =
       new();

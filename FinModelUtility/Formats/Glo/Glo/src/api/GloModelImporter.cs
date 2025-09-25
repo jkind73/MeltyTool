@@ -24,7 +24,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace glo.api;
 
-public class GloModelImporter : IModelImporter<GloModelFileBundle> {
+public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
   private readonly string[] hiddenNames_ = ["Box01", "puzzle"];
 
   private readonly string[] mirrorTextures_ = ["Badg2.bmp"];

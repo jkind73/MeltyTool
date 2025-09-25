@@ -5,7 +5,7 @@ using System.Security;
 namespace fin.io.sharpfilelister;
 
 [SuppressUnmanagedCodeSecurity]
-public class Interop2 {
+public sealed class Interop2 {
   [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
   public static extern IntPtr FindFirstFileW(IntPtr lpFileName,
                                              IntPtr lpFindFileData);

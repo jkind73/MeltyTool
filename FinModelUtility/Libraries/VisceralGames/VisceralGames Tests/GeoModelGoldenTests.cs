@@ -8,7 +8,7 @@ using visceral.api;
 
 namespace visceral;
 
-public class GeoModelGoldenTests
+public sealed class GeoModelGoldenTests
     : BModelGoldenTests<GeoModelFileBundle, GeoModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

@@ -12,7 +12,7 @@ public partial class ModelImpl<TVertex> {
   public IReadOnlyLighting? Lighting { get; }
 }
 
-public class LightingImpl : ILighting {
+public sealed class LightingImpl : ILighting {
   private readonly List<ILight> lights_ = [];
 
   public IReadOnlyList<ILight> Lights => this.lights_;

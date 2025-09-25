@@ -24,7 +24,7 @@ public interface IF3dVertices {
   Matrix4x4 Matrix { get; set; }
 }
 
-public class F3dVertices(
+public sealed class F3dVertices(
     IN64Hardware n64Hardware,
     ModelImpl<Normal1Color2UvVertexImpl> model) : IF3dVertices {
   private const int VERTEX_COUNT = 32;

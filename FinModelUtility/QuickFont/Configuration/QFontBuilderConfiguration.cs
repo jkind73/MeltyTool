@@ -12,7 +12,7 @@ using System.Linq;
 #nullable disable
 namespace QuickFont.Configuration
 {
-  public class QFontBuilderConfiguration : QFontConfiguration
+  public sealed class QFontBuilderConfiguration : QFontConfiguration
   {
     private const string BASIC_SET = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890.:,;'\"(!?)+-*/=_{}[]@~#\\<>|^%$£&€°µ";
     private const string FRENCH_QUOTES = "«»‹›";

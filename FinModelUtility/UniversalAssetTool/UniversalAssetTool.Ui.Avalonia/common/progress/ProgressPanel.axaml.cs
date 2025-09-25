@@ -8,14 +8,14 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.common.progress;
 
-public class ProgressPanelViewModelForDesigner
+public sealed class ProgressPanelViewModelForDesigner
     : ProgressPanelViewModel {
   public ProgressPanelViewModelForDesigner() {
     this.Progress = ValueFractionProgress.FromTimer(3, "Hello world!");
   }
 }
 
-public class ProgressPanelViewModel : ViewModelBase {
+public class ProgressPanelViewModel : BViewModel {
   public ValueFractionProgress Progress {
     get;
     set {

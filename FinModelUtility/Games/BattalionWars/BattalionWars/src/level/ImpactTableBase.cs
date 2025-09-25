@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class ImpactTableBase : BLevelObject;
+public sealed class ImpactTableBase : BLevelObject;

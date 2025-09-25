@@ -23,7 +23,7 @@ public partial interface IListDictionary<TKey, TValue> {
 ///   An implementation for a dictionary of lists. Each value added for a key
 ///   will be stored in that key's corresponding list.
 /// </summary>
-public class ListDictionary<TKey, TValue>(
+public sealed class ListDictionary<TKey, TValue>(
     IFinDictionary<TKey, IList<TValue>> impl)
     : IListDictionary<TKey, TValue> {
   public ListDictionary() : this(

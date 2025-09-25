@@ -15,7 +15,7 @@ public interface IExceptionContext {
   string Steps { get; }
 }
 
-public class LoadFileException(IReadOnlyTreeFile file) : IExceptionContext {
+public sealed class LoadFileException(IReadOnlyTreeFile file) : IExceptionContext {
   public string Title
     => $"[Bug] Failed to load {file.FullPath}";
 
@@ -23,7 +23,7 @@ public class LoadFileException(IReadOnlyTreeFile file) : IExceptionContext {
     => $"1. Attempted to load {file.FullPath}.";
 }
 
-public class LoadFileBundleExceptionContext(IGameAndLocalPath fb)
+public sealed class LoadFileBundleExceptionContext(IGameAndLocalPath fb)
     : IExceptionContext {
   public string Title
     => $"[Bug] Failed to load {fb.GameAndLocalPath}";
@@ -32,7 +32,7 @@ public class LoadFileBundleExceptionContext(IGameAndLocalPath fb)
     => $"1. Attempted to load {fb.GameAndLocalPath}.";
 }
 
-public class RenderFileBundleExceptionContext(IFileBundle fb)
+public sealed class RenderFileBundleExceptionContext(IFileBundle fb)
     : IExceptionContext {
   public string Title
     => $"[Bug] Failed to render {fb.TrueFullPath}";

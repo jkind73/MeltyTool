@@ -14,7 +14,7 @@ namespace fin.image.io.pixel;
 ///   Helper class for reading 16-bit RGBA pixels, where the red/green/blue
 ///   channels each have 5 bits and the alpha channel has 1 bit.
 /// </summary>
-public class Rgba5551PixelReader : IPixelReader<Rgba32> {
+public sealed class Rgba5551PixelReader : IPixelReader<Rgba32> {
   public IImage<Rgba32> CreateImage(int width, int height)
     => new Rgba32Image(PixelFormat.RGBA5551, width, height);
 

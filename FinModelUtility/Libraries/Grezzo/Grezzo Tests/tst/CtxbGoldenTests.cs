@@ -12,7 +12,7 @@ using schema.binary.testing;
 using Version = grezzo.schema.cmb.Version;
 
 namespace grezzo {
-  public class CtxbGoldenTests {
+  public sealed class CtxbGoldenTests {
     [Test]
     [TestCaseSource(nameof(GetGoldenFiles_))]
     public async Task TestExportsGoldenAsExpected(

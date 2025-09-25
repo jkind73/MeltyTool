@@ -68,12 +68,12 @@ public partial class FixedFunctionEquations<TIdentifier> {
   }
 }
 
-public class ScalarExpression(IReadOnlyList<IScalarValue> terms)
+public sealed class ScalarExpression(IReadOnlyList<IScalarValue> terms)
     : BScalarValue, IScalarExpression {
   public IReadOnlyList<IScalarValue> Terms { get; } = terms;
 }
 
-public class ScalarTerm(
+public sealed class ScalarTerm(
     IReadOnlyList<IScalarValue> numeratorFactors,
     IReadOnlyList<IScalarValue>? denominatorFactors = null)
     : BScalarValue, IScalarTerm {
@@ -84,7 +84,7 @@ public class ScalarTerm(
     = denominatorFactors;
 }
 
-public class ScalarConstant(float value) : BScalarValue, IScalarConstant {
+public sealed class ScalarConstant(float value) : BScalarValue, IScalarConstant {
   public static readonly ScalarConstant ONE = new(1);
   public static readonly ScalarConstant[] ONE_ARRAY = [ONE];
   public static readonly ScalarConstant ZERO = new(0);

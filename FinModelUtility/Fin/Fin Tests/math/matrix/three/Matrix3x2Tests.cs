@@ -7,7 +7,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.matrix.three;
 
-public class Matrix3x2Tests {
+public sealed class Matrix3x2Tests {
   [Test]
   public void TestFloatArrayConstructor() {
     var values = new float[FinMatrix3x2.CELL_COUNT];

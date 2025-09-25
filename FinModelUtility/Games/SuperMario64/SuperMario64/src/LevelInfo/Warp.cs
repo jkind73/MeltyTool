@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace sm64.LevelInfo {
-  public class Warp {
+  public sealed class Warp {
     public Warp(bool isPaintingWarp) {
       this.isPaintingWarp = isPaintingWarp;
     }

@@ -14,7 +14,7 @@ using schema.binary.testing;
 
 namespace glo;
 
-public class
+public sealed class
     GloModelGoldenTests
     : BModelGoldenTests<GloModelFileBundle,
         GloModelImporter> {

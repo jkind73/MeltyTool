@@ -23,7 +23,7 @@ public interface IShaderRequirements {
   public bool[] UsedColors { get; }
 }
 
-public class ShaderRequirements : IShaderRequirements {
+public sealed class ShaderRequirements : IShaderRequirements {
   public static ShaderRequirements FromModelAndMaterial(IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyMaterial? material)

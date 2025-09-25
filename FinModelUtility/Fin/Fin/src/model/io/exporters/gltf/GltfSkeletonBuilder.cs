@@ -10,7 +10,7 @@ namespace fin.model.io.exporters.gltf;
 using GltfNode = Node;
 using GltfSkin = Skin;
 
-public class GltfSkeletonBuilder {
+public sealed class GltfSkeletonBuilder {
   public (GltfNode, IReadOnlyBone)[] BuildAndBindSkeleton(
       GltfNode rootNode,
       GltfSkin skin,

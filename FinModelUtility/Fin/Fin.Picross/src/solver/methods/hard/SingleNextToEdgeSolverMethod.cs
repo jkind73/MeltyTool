@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods.hard;
 
-public class SingleNextToEdgeSolverMethod : BBidirectionalSolverMethod {
+public sealed class SingleNextToEdgeSolverMethod : BBidirectionalSolverMethod {
   public override IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState,

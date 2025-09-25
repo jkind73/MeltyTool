@@ -13,14 +13,14 @@ using fin.util.asserts;
 using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.model.skeleton {
-  public class SkeletonTreeViewModelForDesigner
+  public sealed class SkeletonTreeViewModelForDesigner
       : SkeletonTreeViewModel {
     public SkeletonTreeViewModelForDesigner() {
       this.Skeleton = ModelDesignerUtil.CreateStubModel().Skeleton;
     }
   }
 
-  public class SkeletonTreeViewModel : ViewModelBase {
+  public class SkeletonTreeViewModel : BViewModel {
     public required IReadOnlySkeleton? Skeleton {
       get;
       set {
@@ -40,7 +40,7 @@ namespace uni.ui.avalonia.resources.model.skeleton {
     }
   }
 
-  public class SkeletonNode(IReadOnlyBone bone) : ViewModelBase {
+  public sealed class SkeletonNode(IReadOnlyBone bone) : BViewModel {
     public IReadOnlyBone Bone => bone;
 
     public IReadOnlyList<SkeletonNode> Children { get; }
@@ -86,7 +86,7 @@ namespace uni.ui.avalonia.resources.model.skeleton {
     }
   }
 
-  public class BoneSelectedEventArgs : RoutedEventArgs {
+  public sealed class BoneSelectedEventArgs : RoutedEventArgs {
     public required IReadOnlyBone Bone { get; init; }
   }
 }

@@ -9,7 +9,7 @@ using schema.binary;
 
 namespace jsystem.schema.j3dgraph.bmd.shp1;
 
-public class BatchAttributes : IVertexDescriptor, IBinaryDeserializable {
+public sealed class BatchAttributes : IVertexDescriptor, IBinaryDeserializable {
   private readonly LinkedList<(GxVertexAttribute, GxAttributeType?, GxColorComponentType?)> impl_
       = [];
 

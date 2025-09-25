@@ -11,7 +11,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.matrix.four;
 
-public class FinMatrix4x4UtilTests {
+public sealed class FinMatrix4x4UtilTests {
   [Test]
   public void TestTranslation() {
       var expectedTranslation = new Vector3(2, 3, 4);

@@ -24,14 +24,14 @@ using Bitmap = Avalonia.Media.Imaging.Bitmap;
 
 namespace uni.ui.avalonia.resources.texture;
 
-public class TexturePreviewViewModelForDesigner : TexturePreviewViewModel {
+public sealed class TexturePreviewViewModelForDesigner : TexturePreviewViewModel {
   public TexturePreviewViewModelForDesigner() {
     this.Texture = ModelDesignerUtil.CreateStubTexture(32, 48);
     this.ImageMargin = new Thickness(10);
   }
 }
 
-public class TexturePreviewViewModel : ViewModelBase {
+public class TexturePreviewViewModel : BViewModel {
   private static readonly Bitmap missingImage_
       = FinImage.Create1x1FromColor(Color.Magenta).AsAvaloniaImage();
 

@@ -11,7 +11,7 @@ using fin.image.util;
 
 namespace fin.language.equations.fixedFunction;
 
-public class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
+public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   private readonly IReadOnlyList<IReadOnlyModelAnimation> animations_
       = model.AnimationManager.Animations;
 

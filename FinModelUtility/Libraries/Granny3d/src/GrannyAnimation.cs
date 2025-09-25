@@ -3,7 +3,7 @@
 using schema.binary;
 
 namespace granny3d {
-  public class GrannyAnimation : IGrannyAnimation, IBinaryDeserializable {
+  public sealed class GrannyAnimation : IGrannyAnimation, IBinaryDeserializable {
     public string Name { get; private set; }
     public float Duration { get; private set; }
     public float TimeStep { get; private set; }
@@ -30,7 +30,7 @@ namespace granny3d {
     }
   }
 
-  public class GrannyTrackGroup : IGrannyTrackGroup, IBinaryDeserializable {
+  public sealed class GrannyTrackGroup : IGrannyTrackGroup, IBinaryDeserializable {
     public string Name { get; private set; }
 
     public GrannyTransform InitialPlacement { get; } = new();
@@ -67,7 +67,7 @@ namespace granny3d {
     }
   }
 
-  public class GrannyVariant : IBinaryDeserializable {
+  public sealed class GrannyVariant : IBinaryDeserializable {
     public void Read(IBinaryReader br) {
       // TODO: type
       GrannyUtils.SubreadRef(

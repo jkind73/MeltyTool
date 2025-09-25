@@ -14,13 +14,13 @@ using ReactiveUI;
 
 
 namespace uni.ui.avalonia.resources.model.mesh {
-  public class MeshTreeViewModelForDesigner : MeshTreeViewModel {
+  public sealed class MeshTreeViewModelForDesigner : MeshTreeViewModel {
     public MeshTreeViewModelForDesigner() {
       this.Meshes = ModelDesignerUtil.CreateStubModel().Skin.Meshes;
     }
   }
 
-  public class MeshTreeViewModel : ViewModelBase {
+  public class MeshTreeViewModel : BViewModel {
     public required IReadOnlyList<IReadOnlyMesh>? Meshes {
       get;
       set {
@@ -37,7 +37,7 @@ namespace uni.ui.avalonia.resources.model.mesh {
     }
   }
 
-  public class MeshTreeNode : ViewModelBase {
+  public sealed class MeshTreeNode : BViewModel {
     public MeshTreeNode(IReadOnlyList<MeshTreeNode> children)
       => this.Children = children;
 

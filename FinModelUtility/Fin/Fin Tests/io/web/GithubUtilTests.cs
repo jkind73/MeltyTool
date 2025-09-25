@@ -13,7 +13,7 @@ namespace fin.io.web;
 public record MockGameAndLocalPath(string GameName, string LocalPath)
     : IGameAndLocalPath;
 
-public class GitHubUtilTests {
+public sealed class GitHubUtilTests {
   private void SomeMethod1_<T>(T value) => this.SomeMethod2_("Foobar");
 
   private void SomeMethod2_(string message)

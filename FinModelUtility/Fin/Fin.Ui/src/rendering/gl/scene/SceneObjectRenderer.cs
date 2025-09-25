@@ -4,7 +4,7 @@ using fin.scene;
 
 namespace fin.ui.rendering.gl.scene;
 
-public class SceneObjectRenderer : IRenderable, IDisposable {
+public sealed class SceneObjectRenderer : IRenderable, IDisposable {
   private readonly ISceneObjectInstance sceneObject_;
   private readonly SceneModelRenderer[] modelRenderers_;
 

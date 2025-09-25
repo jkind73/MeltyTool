@@ -3,7 +3,7 @@ using schema.text.reader;
 
 namespace gm.schema.omd;
 
-public class Omd : ITextDeserializable {
+public sealed class Omd : ITextDeserializable {
   public OmdMaterial[] Materials { get; set; }
   public OmdMesh[] Meshes { get; set; }
 

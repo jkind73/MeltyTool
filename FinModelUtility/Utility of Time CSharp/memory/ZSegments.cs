@@ -12,7 +12,7 @@ using fin.schema;
 using schema.binary;
 
 namespace UoT.memory {
-  public class ZSegments {
+  public sealed class ZSegments {
     public static ZSegments Instance { get; private set; }
 
     public IReadOnlyList<ZObject> Objects { get; }

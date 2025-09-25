@@ -3,7 +3,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.single;
 
-public class FloatKeyframeWithTangentsInterpolator
+public sealed class FloatKeyframeWithTangentsInterpolator
     : FloatKeyframeWithTangentsInterpolator<KeyframeWithTangents<float>> {
   public static FloatKeyframeWithTangentsInterpolator Instance { get; } = new();
   private FloatKeyframeWithTangentsInterpolator() { }

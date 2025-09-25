@@ -10,7 +10,7 @@ using sm64.schema;
 using sm64.Scripts;
 
 namespace sm64.LevelInfo {
-  public class AreaBackgroundInfo {
+  public sealed class AreaBackgroundInfo {
     public uint address = 0;
     public ushort id_or_color = 0;
     public bool isEndCakeImage = false;
@@ -20,7 +20,7 @@ namespace sm64.LevelInfo {
     public List<uint> fogColor_romLocation = [];
   }
 
-  public class Area(
+  public sealed class Area(
       IN64Hardware<ISm64Memory> sm64Hardware,
       ushort areaID,
       uint geoLayoutPointer,
@@ -60,7 +60,7 @@ namespace sm64.LevelInfo {
     }
   }
 
-  public class Level {
+  public sealed class Level {
     private ushort levelID;
 
     public ushort LevelID {

@@ -6,7 +6,7 @@ using fin.testing;
 
 namespace Fin.Compression_Tests;
 
-public class Lz77GoldenTests {
+public sealed class Lz77GoldenTests {
   [Test]
   [TestCaseSource(nameof(Get0x10GoldenDirectories_))]
   public void Test0x10(

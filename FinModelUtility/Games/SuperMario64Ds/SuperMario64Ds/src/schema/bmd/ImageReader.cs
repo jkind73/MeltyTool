@@ -14,7 +14,7 @@ namespace sm64ds.schema.bmd;
 ///   Shamelessly stolen from:
 ///   https://github.com/Arisotura/SM64DSe/blob/master/SM64DSFormats/BMD.NitroTexture.cs
 /// </summary>
-public class ImageReader {
+public sealed class ImageReader {
   public static IImage ReadImage(Texture texture,
                                  Palette? palette) {
     switch (texture.TextureType) {

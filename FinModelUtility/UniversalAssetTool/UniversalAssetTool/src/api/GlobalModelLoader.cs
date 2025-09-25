@@ -48,7 +48,7 @@ using sonicadventure.api;
 
 namespace uni.api;
 
-public class GlobalModelImporter : IModelImporter<IModelFileBundle> {
+public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
   public IModel Import(IModelFileBundle modelFileBundle)
     => modelFileBundle switch {
         AseMeshModelFileBundle aseMeshModelFileBundle

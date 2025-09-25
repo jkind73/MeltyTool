@@ -279,12 +279,12 @@ public static class BinaryReaderExtensions {
     => descriptor.ArrayOffset + descriptor.Stride * index;
 }
 
-public class DatPrimitive {
+public sealed class DatPrimitive {
   public required GxPrimitiveType Type { get; init; }
   public required IReadOnlyList<DatVertex> Vertices { get; init; }
 }
 
-public class DatVertex {
+public sealed class DatVertex {
   public required Vector3 Position { get; set; }
   public int? WeightId { get; set; }
   public Vector3? Normal { get; set; }
@@ -295,7 +295,7 @@ public class DatVertex {
   public IColor? Color { get; set; }
 }
 
-public class PObjWeight {
+public sealed class PObjWeight {
   public required uint JObjOffset { get; init; }
   public required float Weight { get; init; }
 }

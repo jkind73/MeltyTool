@@ -9,7 +9,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.csab;
 
 [Endianness(Endianness.LittleEndian)]
-public class Csab : IBinaryDeserializable {
+public sealed class Csab : IBinaryDeserializable {
   public uint Version { get; set; }
   public bool IsPastVersion4 => this.Version > 4;
 

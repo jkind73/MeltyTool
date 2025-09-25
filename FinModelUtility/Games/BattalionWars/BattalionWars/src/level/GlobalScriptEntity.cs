@@ -1,5 +1,5 @@
 ﻿namespace modl.level;
 
-public class GlobalScriptEntity : BLevelObject {
+public sealed class GlobalScriptEntity : BLevelObject {
   public GameScriptResource Script { get; set; }
 }

@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace fin.math.matrix.four;
 
-public class FinVector4 {
+public sealed class FinVector4 {
   private Vector4 impl_;
 
   public FinVector4() { }

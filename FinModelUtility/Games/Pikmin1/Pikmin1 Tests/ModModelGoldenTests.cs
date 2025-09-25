@@ -9,7 +9,7 @@ using NUnit.Framework;
 using pikmin1.api;
 
 namespace pikmin1 {
-  public class ModModelGoldenTests
+  public sealed class ModModelGoldenTests
       : BModelGoldenTests<ModModelFileBundle, ModModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]

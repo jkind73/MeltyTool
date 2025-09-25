@@ -9,7 +9,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.lazy;
 
-public class LazyAsyncDictionaryTests {
+public sealed class LazyAsyncDictionaryTests {
   [Test]
   public async Task TestWithKeyAndValueHandler() {
     var invokeCount = 0;

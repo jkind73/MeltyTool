@@ -1,6 +1,6 @@
 ﻿namespace modl.level;
 
-public class SoundBase : BLevelObject {
+public sealed class SoundBase : BLevelObject {
   public float Priority { get; set; }
   public float Volume { get; set; }
   public float VolumeVariation { get; set; }

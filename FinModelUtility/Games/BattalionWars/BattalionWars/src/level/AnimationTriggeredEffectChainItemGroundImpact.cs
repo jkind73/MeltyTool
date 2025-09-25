@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class AnimationTriggeredEffectChainItemGroundImpact : BLevelObject;
+public sealed class AnimationTriggeredEffectChainItemGroundImpact : BLevelObject;

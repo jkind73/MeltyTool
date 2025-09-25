@@ -5,7 +5,7 @@ using fin.util.asserts;
 
 namespace fin.language.equations.fixedFunction;
 
-public class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
+public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
   public string Print(IFixedFunctionEquations<TIdentifier> equations) {
     var sb = new StringBuilder();
 

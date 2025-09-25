@@ -9,7 +9,7 @@ using uni.games;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace uni {
-  public class RootFileBundleGathererTests {
+  public sealed class RootFileBundleGathererTests {
     [TearDown]
     public void Setup() {
       FinFileSystem.FileSystem = new FileSystem();

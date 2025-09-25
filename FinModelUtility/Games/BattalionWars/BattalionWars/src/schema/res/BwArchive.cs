@@ -7,7 +7,7 @@ using schema.binary.attributes;
 
 namespace modl.schema.res;
 
-public class BwArchive : IBinaryDeserializable {
+public sealed class BwArchive : IBinaryDeserializable {
   public TexrSection TexrSection { get; } = new();
   public Sond Sond { get; } = new();
 
@@ -34,7 +34,7 @@ public partial class Sond : IBinaryConvertible {
   public byte[] Data { get; private set; }
 }
 
-public class BwFile : IBinaryDeserializable {
+public sealed class BwFile : IBinaryDeserializable {
   public string Type { get; private set; }
   public string FileName { get; private set; }
   public byte[] Data { get; private set; }

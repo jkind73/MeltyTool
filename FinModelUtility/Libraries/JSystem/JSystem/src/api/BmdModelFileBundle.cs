@@ -7,7 +7,7 @@ using fin.util.enumerables;
 
 namespace jsystem.api;
 
-public class BmdModelFileBundle : IModelFileBundle {
+public sealed class BmdModelFileBundle : IModelFileBundle {
   public IReadOnlyTreeFile MainFile => this.BmdFile;
 
   public IEnumerable<IReadOnlyGenericFile> Files

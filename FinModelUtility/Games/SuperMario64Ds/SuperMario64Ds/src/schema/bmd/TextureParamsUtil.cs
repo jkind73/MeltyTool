@@ -5,7 +5,7 @@ using fin.model;
 
 namespace sm64ds.schema.bmd;
 
-public class TextureParams {
+public sealed class TextureParams {
   public Vector2 Translation { get; set; }
   public float Rotation { get; set; }
   public Vector2 Scale { get; set; }

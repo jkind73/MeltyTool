@@ -13,7 +13,7 @@ public sealed class QuaternionKeyframeWithTangentsInterpolator
   private QuaternionKeyframeWithTangentsInterpolator() { }
 }
 
-public class QuaternionKeyframeWithTangentsInterpolator<TKeyframe>
+public sealed class QuaternionKeyframeWithTangentsInterpolator<TKeyframe>
     : IKeyframeInterpolator<TKeyframe, Quaternion>
     where TKeyframe : IKeyframeWithTangents<Quaternion> {
   public Quaternion Interpolate(

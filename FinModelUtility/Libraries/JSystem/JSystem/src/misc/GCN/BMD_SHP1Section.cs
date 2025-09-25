@@ -148,7 +148,7 @@ public partial class BMD {
         br.Position = position;
       }
 
-      public class Packet {
+      public sealed class Packet {
         public Primitive[] Primitives;
         public ushort[] MatrixTable;
         public MatrixData MatrixData;
@@ -194,11 +194,11 @@ public partial class BMD {
           this.Primitives = primitiveList.ToArray();
         }
 
-        public class Primitive {
+        public sealed class Primitive {
           public GxPrimitiveType Type;
           public Index[] Points;
 
-          public class Index {
+          public sealed class Index {
             public ushort?[] ColorIndices;
             public ushort?[] TexCoordIndices;
             public ushort MatrixIndex;

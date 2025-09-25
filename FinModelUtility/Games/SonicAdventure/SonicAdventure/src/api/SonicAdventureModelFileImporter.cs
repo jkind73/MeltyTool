@@ -19,7 +19,7 @@ using Object = sonicadventure.schema.model.Object;
 
 namespace sonicadventure.api;
 
-public class SonicAdventureModelFileImporter
+public sealed class SonicAdventureModelFileImporter
     : IModelImporter<SonicAdventureModelFileBundle> {
   public IModel Import(SonicAdventureModelFileBundle fileBundle) {
     using var fs = fileBundle.ModelFile.OpenRead();

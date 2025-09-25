@@ -8,7 +8,7 @@ using uni.platforms.threeDs.tools.gar;
 
 namespace uni.platforms.threeDs;
 
-public class ThreeDsFileHierarchyExtractor {
+public sealed class ThreeDsFileHierarchyExtractor {
   public bool TryToExtractFromGame(string gameName,
                                    out IFileHierarchy fileHierarchy,
                                    IArchiveExtractor.ArchiveFileProcessor? archiveFileNameProcessor = null) {

@@ -10,7 +10,7 @@ public interface IOpcodeParser {
 ///   Shamelessly stolen from:
 ///   https://github.com/scurest/apicula/blob/07c4d8facdcb015d118bf26a29d37c8b41021bfd/src/nitro/render_cmds.rs#L40
 /// </summary>
-public class OpcodeParser : IOpcodeParser {
+public sealed class OpcodeParser : IOpcodeParser {
   public IList<IOpcode> Parse(IBinaryReader br) {
     var opcodes = new List<IOpcode>();
     while (true) {

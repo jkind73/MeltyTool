@@ -8,7 +8,7 @@ using fin.util.progress;
 
 namespace fin.io.bundles;
 
-public class ParallelAnnotatedFileBundleGathererAccumulator
+public sealed class ParallelAnnotatedFileBundleGathererAccumulator
     : IAnnotatedFileBundleGathererAccumulator<
         ParallelAnnotatedFileBundleGathererAccumulator> {
   private readonly DelayedSplitPercentageProgress progress_ = new();

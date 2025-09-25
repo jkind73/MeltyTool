@@ -87,7 +87,7 @@ public partial class Evp1Data : IBinaryConvertible {
     }
   }
 
-  public class MultiMatrix {
+  public sealed class MultiMatrix {
     public ushort[] Indices { get; init; }
     public float[] Weights { get; init; }
   }

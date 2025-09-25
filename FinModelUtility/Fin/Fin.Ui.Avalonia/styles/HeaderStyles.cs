@@ -15,7 +15,7 @@ namespace fin.ui.avalonia.styles;
 using SelectorDelegate = Func<Selector?, Selector>;
 using NonnullSelectorDelegate = Func<Selector, Selector>;
 
-public class HeaderStyles : Styles {
+public sealed class HeaderStyles : Styles {
   public HeaderStyles() {
     var maxSizeIndex = 1;
     var minSizeIndex = 4;

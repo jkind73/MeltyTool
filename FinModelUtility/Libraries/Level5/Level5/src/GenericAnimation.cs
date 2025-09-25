@@ -1,6 +1,6 @@
 ﻿namespace level5;
 
-public class GenericAnimation {
+public sealed class GenericAnimation {
   public string Name { get; set; }
   public uint NameHash { get; set; }
 

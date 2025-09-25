@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.util.lists;
 
-public class ListBinarySearchExtensionsTests {
+public sealed class ListBinarySearchExtensionsTests {
   public record A(int Value);
 
   public readonly struct AStaticComparer(int value)

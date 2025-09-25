@@ -3,14 +3,14 @@
 namespace uni.cli;
 
 [Verb("ui", HelpText = "Open UI")]
-public class UiOptions;
+public sealed class UiOptions;
 
 [Verb("list_plugins",
       HelpText = "Lists all of the supported plugins for conversion.")]
-public class ListPluginOptions;
+public sealed class ListPluginOptions;
 
 [Verb("convert", HelpText = "Converts model(s) from one format to another. The best plugin will automatically be detected based on the list of input files.")]
-public class ConvertOptions {
+public sealed class ConvertOptions {
   [Option('i',
           "inputs",
           Required = true,
@@ -37,4 +37,4 @@ public class ConvertOptions {
 [Verb("debug",
       HelpText =
           "Extract models with hardcoded input files. Not meant for general use.")]
-public class DebugOptions;
+public sealed class DebugOptions;

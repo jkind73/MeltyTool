@@ -5,7 +5,7 @@ using gx.displayList;
 
 namespace pikmin1.schema.mod;
 
-public class Pikmin1VertexDescriptor(uint value, bool hasNormals)
+public sealed class Pikmin1VertexDescriptor(uint value, bool hasNormals)
     : BVertexDescriptor(value) {
   public bool UseNbt { get; private set; }
 

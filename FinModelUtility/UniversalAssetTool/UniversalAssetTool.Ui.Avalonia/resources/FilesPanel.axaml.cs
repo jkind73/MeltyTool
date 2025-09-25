@@ -10,7 +10,7 @@ using fin.util.strings;
 
 namespace uni.ui.avalonia.resources;
 
-public class FilesPanelViewModelForDesigner() {
+public sealed class FilesPanelViewModelForDesigner() {
   public IReadOnlyList<string> Paths { get; } = [
       "//foo/bar/file.mod",
       "//foo/bar/some-very-long-path-that-cannot-be-fully-shown.mod",
@@ -19,7 +19,7 @@ public class FilesPanelViewModelForDesigner() {
   ];
 }
 
-public class FilesPanelViewModel {
+public sealed class FilesPanelViewModel {
   public FilesPanelViewModel(IResource? resource) {
     var files = resource?.Files;
     if (files == null) {

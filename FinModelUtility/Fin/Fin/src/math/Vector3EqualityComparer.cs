@@ -6,7 +6,7 @@ using fin.util.hash;
 
 namespace fin.math;
 
-public class Vector3EqualityComparer(float precision)
+public sealed class Vector3EqualityComparer(float precision)
     : IEqualityComparer<Vector3> {
   public bool Equals(Vector3 lhs, Vector3 rhs)
     => Math.Abs(lhs.X - rhs.X) < precision &&

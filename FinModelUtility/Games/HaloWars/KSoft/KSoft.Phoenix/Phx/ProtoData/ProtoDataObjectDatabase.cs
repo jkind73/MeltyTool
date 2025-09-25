@@ -16,7 +16,7 @@ namespace KSoft.Phoenix.Phx
 		Collections.IHasUndefinedProtoMemberInterface GetMembersInterface(int objectKind);
 	};
 
-	public class ProtoDataObjectDatabase
+	public sealed class ProtoDataObjectDatabase
 		: IEquatable<ProtoDataObjectDatabase>
 	{
 		public ProtoDataObjectSourceKind ObjectSourceKind { get; private set; }

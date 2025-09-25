@@ -8,7 +8,7 @@ using CommunityToolkit.HighPerformance;
 
 
 namespace benchmarks {
-  public class Simd {
+  public sealed class Simd {
     private readonly int n_ = 100;
 
     private readonly byte[] values_ = Enumerable.Range(0, 100000)

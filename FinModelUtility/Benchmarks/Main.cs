@@ -2,7 +2,7 @@
 using BenchmarkDotNet.Running;
 
 namespace benchmarks {
-  public class Program {
+  public sealed class Program {
     public static void Main(string[] args) {
       var summary = BenchmarkRunner.Run<Finite>(
           ManualConfig.Create(DefaultConfig.Instance)

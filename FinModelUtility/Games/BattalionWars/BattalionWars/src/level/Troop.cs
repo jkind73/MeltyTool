@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class Troop : BLevelObject;
+public sealed class Troop : BLevelObject;

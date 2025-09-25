@@ -7,7 +7,7 @@ using vrml.api;
 
 namespace uni.games.odyssey_of_hyrule;
 
-public class OdysseyOfHyruleFileBundleGatherer : IAnnotatedFileBundleGatherer {
+public sealed class OdysseyOfHyruleFileBundleGatherer : IAnnotatedFileBundleGatherer {
   public string Name => "odyssey_of_hyrule";
 
   public void GatherFileBundles(

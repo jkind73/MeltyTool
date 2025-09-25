@@ -7,7 +7,7 @@ using fin.model.io;
 
 namespace grezzo.api;
 
-public class CmbModelImporterPlugin : IModelImporterPlugin {
+public sealed class CmbModelImporterPlugin : IModelImporterPlugin {
   public string DisplayName => "Cmb";
 
   public string Description => "Grezzo's model format.";

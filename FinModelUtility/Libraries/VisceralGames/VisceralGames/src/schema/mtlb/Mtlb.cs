@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace visceral.schema.mtlb;
 
-public class Mtlb : IBinaryDeserializable {
+public sealed class Mtlb : IBinaryDeserializable {
   public string Name { get; private set; }
 
   public IReadOnlyList<MtlbChannel> HighLodMaterialChannels {
@@ -142,7 +142,7 @@ internal static class MtlbChannelTypeExtensions {
                or MtlbChannelType.SpecularTexSampler;
 }
 
-public class MtlbChannel {
+public sealed class MtlbChannel {
   public MtlbChannelCategory MtlbChannelCategory { get; set; }
   public MtlbChannelType Type { get; set; }
   public Vector4? ColorValues { get; set; }

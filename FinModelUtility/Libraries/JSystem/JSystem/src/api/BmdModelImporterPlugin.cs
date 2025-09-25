@@ -8,7 +8,7 @@ using fin.model.io;
 
 namespace jsystem.api;
 
-public class BmdModelImporterPlugin : IModelImporterPlugin {
+public sealed class BmdModelImporterPlugin : IModelImporterPlugin {
   public string DisplayName => "Bmd";
 
   public string Description

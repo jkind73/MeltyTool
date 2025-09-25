@@ -4,7 +4,7 @@ using fin.model.io;
 
 namespace glo.api;
 
-public class GloModelImporterPlugin : IModelImporterPlugin {
+public sealed class GloModelImporterPlugin : IModelImporterPlugin {
   public string DisplayName => "Glo";
 
   public string Description

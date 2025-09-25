@@ -54,7 +54,7 @@ public interface IN64Memory : IReadOnlyN64Memory {
   void SetSegment(uint segmentIndex, Segment segment);
 }
 
-public class N64Memory(
+public sealed class N64Memory(
     byte[] data,
     Endianness endianness = Endianness.BigEndian) : IN64Memory {
   private readonly ListDictionary<uint, Segment> segments_ = new();

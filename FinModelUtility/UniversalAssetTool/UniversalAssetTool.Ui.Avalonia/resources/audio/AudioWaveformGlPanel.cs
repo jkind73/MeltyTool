@@ -8,7 +8,7 @@ using OpenTK.Graphics.ES30;
 
 namespace uni.ui.avalonia.resources.audio;
 
-public class AudioWaveformGlPanel : BOpenTkControl {
+public sealed class AudioWaveformGlPanel : BOpenTkControl {
   private readonly AotWaveformRenderer waveformRenderer_ = new();
 
   public static readonly DirectProperty<AudioWaveformGlPanel,

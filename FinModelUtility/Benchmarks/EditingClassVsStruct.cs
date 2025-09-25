@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class EditingClassVsStruct {
+  public sealed class EditingClassVsStruct {
     private const int n = 100000;
 
     interface IXyzw {

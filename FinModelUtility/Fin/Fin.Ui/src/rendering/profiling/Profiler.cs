@@ -4,7 +4,7 @@ using OpenTK.Graphics.ES30;
 
 namespace fin.ui.rendering.profiling;
 
-public class ProfilerStats : IProfilerStats {
+public sealed class ProfilerStats : IProfilerStats {
   private readonly Stopwatch frameStopwatch_ = new();
 
   private readonly Stopwatch cpuLookUpAnimationFrameStopwatch_ = new();

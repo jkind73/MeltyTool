@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace fin.schema.data;
 
-public class SwitchMagicUInt32SizedSectionMap<TMagic, TData>(
+public sealed class SwitchMagicUInt32SizedSectionMap<TMagic, TData>(
     ISwitchMagicConfig<TMagic, TData> config)
     : IBinaryConvertible, IEnumerable<(TMagic, TData)>
     where TMagic : notnull

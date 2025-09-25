@@ -1,6 +1,5 @@
 ﻿
 namespace KSoft.Collections
 {
-	public abstract class BListParams
-		: BCollectionParams;
+	public abstract class BListParams : BCollectionParams;
 }

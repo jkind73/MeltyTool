@@ -7,7 +7,7 @@ namespace gx.displayList;
 [GenerateOneOf]
 public partial class IndexOrColor : OneOfBase<ushort, Rgba32>;
 
-public class GxVertex {
+public sealed class GxVertex {
   public ushort PositionIndex { get; set; }
   public ushort? JointIndex { get; set; }
   public ushort? NormalIndex { get; set; }

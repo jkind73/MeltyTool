@@ -17,7 +17,7 @@ public interface ILogger {
   void LogError(string message);
 }
 
-public class Logging {
+public sealed class Logging {
   private static bool VERBOSE_ = true;
 
   private static ILoggerFactory FACTORY_ = LoggerFactory.Create(

@@ -8,7 +8,7 @@ using NUnit.Framework;
 
 namespace fin.io.hierarchy;
 
-public class CachedFileHierarchyGoldenTests {
+public sealed class CachedFileHierarchyGoldenTests {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
   public void TestExportsGoldenAsExpected(

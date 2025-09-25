@@ -5,7 +5,7 @@ using fin.color;
 
 namespace fin.model.accessor;
 
-public class MaximalVertexAccessor : IVertexAccessor {
+public sealed class MaximalVertexAccessor : IVertexAccessor {
   private IReadOnlyVertex currentVertex_;
 
   public static IVertexAccessor GetAccessorForModel(IReadOnlyModel model)

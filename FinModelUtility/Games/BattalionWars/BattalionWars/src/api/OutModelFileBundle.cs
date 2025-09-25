@@ -2,7 +2,7 @@
 
 namespace modl.api;
 
-public class OutModelFileBundle : IBattalionWarsModelFileBundle {
+public sealed class OutModelFileBundle : IBattalionWarsModelFileBundle {
   public IReadOnlyTreeFile MainFile => this.OutFile;
 
   public required GameVersion GameVersion { get; init; }

@@ -24,7 +24,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.model.io.importers.assimp;
 
-public class AssimpModelImporter : IModelImporter<AssimpModelFileBundle> {
+public sealed class AssimpModelImporter : IModelImporter<AssimpModelFileBundle> {
   public IModel Import(AssimpModelFileBundle modelFileBundle) {
     var mainFile = modelFileBundle.MainFile;
 

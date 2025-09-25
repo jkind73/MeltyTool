@@ -1,12 +1,12 @@
 ﻿namespace modl.schema.modl.common;
 
-public class BwMesh {
+public sealed class BwMesh {
   public uint Flags { get; set; }
   public uint MaterialIndex { get; set; }
   public List<BwTriangleStrip> TriangleStrips { get; set; }
 }
 
-public class BwTriangleStrip {
+public sealed class BwTriangleStrip {
   public IReadOnlyList<BwVertexAttributeIndices> VertexAttributeIndicesList {
     get;
     set;

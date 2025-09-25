@@ -7,7 +7,7 @@ using Vector4 = System.Numerics.Vector4;
 
 namespace fin.ui.rendering.gl.ubo;
 
-public class LightsUbo : IDisposable {
+public sealed class LightsUbo : IDisposable {
   private const int SIZE_OF_LIGHT = (UboUtil.SIZE_OF_VECTOR3 + 4) +
                                     (UboUtil.SIZE_OF_VECTOR3 + 4) +
                                     UboUtil.SIZE_OF_VECTOR4 +

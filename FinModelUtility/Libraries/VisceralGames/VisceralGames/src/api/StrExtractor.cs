@@ -33,7 +33,7 @@ using FileInfo = visceral.schema.str.content.FileInfo;
 
 namespace visceral.api;
 
-public class StrExtractor {
+public sealed class StrExtractor {
   private readonly ILogger logger_ = Logging.Create<StrExtractor>();
 
   public void Extract(

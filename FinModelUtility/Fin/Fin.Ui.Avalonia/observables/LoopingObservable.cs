@@ -5,7 +5,7 @@ using fin.util.time;
 
 namespace fin.ui.avalonia.observables;
 
-public class LoopingObservable<T> : IObservable<T> {
+public sealed class LoopingObservable<T> : IObservable<T> {
   private readonly ReplaySubject<T> impl_ = new(1);
 
   private TimedCallback timedCallback_;

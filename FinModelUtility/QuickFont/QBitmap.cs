@@ -11,7 +11,7 @@ using System.Drawing.Imaging;
 #nullable disable
 namespace QuickFont
 {
-  public class QBitmap
+  public sealed class QBitmap
   {
     public Bitmap Bitmap;
     public BitmapData BitmapData;

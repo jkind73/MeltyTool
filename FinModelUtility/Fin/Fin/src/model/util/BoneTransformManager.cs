@@ -70,7 +70,7 @@ public interface IBoneTransformManager : IReadOnlyBoneTransformManager {
   );
 }
 
-public class BoneTransformManager : IBoneTransformManager {
+public sealed class BoneTransformManager : IBoneTransformManager {
   // TODO: This is going to be slow, can we put this somewhere else for O(1) access?
   private readonly IndexableDictionary<IReadOnlyBone, IFinMatrix4x4>
       bonesToWorldMatrices_ = new();

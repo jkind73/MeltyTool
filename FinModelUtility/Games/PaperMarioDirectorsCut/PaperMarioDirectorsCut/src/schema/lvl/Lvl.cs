@@ -21,7 +21,7 @@ public enum FloorBlockFlags {
   NO_REPEAT = 1 << 2,
 }
 
-public class Lvl : ITextDeserializable {
+public sealed class Lvl : ITextDeserializable {
   public string? BackgroundName { get; set; }
   public bool HasRoomModel { get; set; }
 

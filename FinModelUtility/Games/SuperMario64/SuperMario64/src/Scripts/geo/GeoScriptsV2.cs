@@ -12,7 +12,7 @@ using sm64.scripts;
 using sm64.scripts.geo;
 
 namespace sm64.Scripts {
-  public class GeoScriptsV2 : IGeoScripts {
+  public sealed class GeoScriptsV2 : IGeoScripts {
     public void parse(
         IReadOnlySm64Memory n64Memory,
         Model3DLods mdlLods,

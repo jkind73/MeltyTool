@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.nodes;
 
-public class TreeNodeTests {
+public sealed class TreeNodeTests {
   [Test]
   public void TestIterating() {
     var nodeRoot = new TreeNode<string> { Value = "root" };

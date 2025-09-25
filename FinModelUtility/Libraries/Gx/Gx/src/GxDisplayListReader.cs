@@ -9,7 +9,7 @@ using GxPrimitive = gx.displayList.GxPrimitive;
 
 namespace gx;
 
-public class GxDisplayListReader {
+public sealed class GxDisplayListReader {
   public GxPrimitive? Read(IBinaryReader br,
                            IVertexDescriptor vertexDescriptor) {
     this.ReadOpcode(br, vertexDescriptor, out var primitive);

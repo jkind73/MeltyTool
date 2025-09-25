@@ -2,7 +2,7 @@
 
 namespace modl.schema.anim;
 
-public class WeirdFloatMathTests {
+public sealed class WeirdFloatMathTests {
   [Test]
   [TestCase(3100000000, -0.00009453f)]
   [TestCase(3150000000, -0.005895f)]

@@ -37,7 +37,7 @@ public abstract class MfsTreeIoObject(IReadOnlyTreeDirectory? parent)
   }
 }
 
-public class MfsTreeDirectory(
+public sealed class MfsTreeDirectory(
     IReadOnlyTreeDirectory? parent,
     MfsDirectory impl,
     LinkedList<MfsTreeDirectory> subdirs,
@@ -194,7 +194,7 @@ public class MfsTreeDirectory(
     => throw new NotImplementedException();
 }
 
-public class MfsTreeFile(
+public sealed class MfsTreeFile(
     IReadOnlyTreeDirectory parent,
     LeoDisk disk,
     MfsRamVolume volume,

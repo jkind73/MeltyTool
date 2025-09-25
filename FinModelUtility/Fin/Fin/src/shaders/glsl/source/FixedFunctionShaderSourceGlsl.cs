@@ -3,7 +3,7 @@ using fin.model;
 
 namespace fin.shaders.glsl.source;
 
-public class FixedFunctionShaderSourceGlsl(
+public sealed class FixedFunctionShaderSourceGlsl(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyFixedFunctionMaterial material,

@@ -41,7 +41,7 @@ public partial class CiaContent : IChildOf<Cia>, IBinaryDeserializable {
     }
 }
 
-public class ContentInfo {
+public sealed class ContentInfo {
   public required long Offset { get; init; }
   public required long Size { get; init; }
   public required uint Id { get; init; }

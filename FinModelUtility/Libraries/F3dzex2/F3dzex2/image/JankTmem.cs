@@ -46,7 +46,7 @@ public struct JankTileDescriptor : IReadOnlyTileDescriptor {
 ///   References:
 ///   https://github.com/Emill/n64-fast3d-engine/blob/master/gfx_pc.c#L605
 /// </summary>
-public class JankTmem(IN64Hardware n64Hardware) : ITmem {
+public sealed class JankTmem(IN64Hardware n64Hardware) : ITmem {
   private class SetTextureImageParams {
     public uint SegmentedAddress { get; set; }
     public N64ColorFormat ColorFormat { get; set; }

@@ -4,7 +4,7 @@ using schema.text.reader;
 
 namespace xmod.schema.ped;
 
-public class Ped : ITextDeserializable {
+public sealed class Ped : ITextDeserializable {
   public string SkelName { get; set; }
   public string[] XmodNames { get; set; }
   public IDictionary<string, string> AnimMap { get; set; }

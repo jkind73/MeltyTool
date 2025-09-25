@@ -12,7 +12,7 @@ namespace fin.image.io.pixel;
 /// <summary>
 ///   Helper class for reading 32-bit RGBA pixels.
 /// </summary>
-public class Rgba32PixelReader : IPixelReader<Rgba32> {
+public sealed class Rgba32PixelReader : IPixelReader<Rgba32> {
   public IImage<Rgba32> CreateImage(int width, int height)
     => new Rgba32Image(PixelFormat.RGBA8888, width, height);
 

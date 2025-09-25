@@ -8,7 +8,7 @@ using fin.testing.audio;
 
 namespace ast;
 
-public class AstGoldenTests
+public sealed class AstGoldenTests
     : BAudioGoldenTests<AstAudioFileBundle, AstAudioReader> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

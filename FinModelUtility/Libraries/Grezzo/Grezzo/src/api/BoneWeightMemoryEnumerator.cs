@@ -9,7 +9,7 @@ using grezzo.schema.cmb.sklm;
 
 namespace grezzo.api;
 
-public class BoneWeightMemoryEnumerator : IMemoryEnumerator<IBoneWeight[]> {
+public sealed class BoneWeightMemoryEnumerator : IMemoryEnumerator<IBoneWeight[]> {
   private readonly Cmb cmb_;
   private readonly Sepd shape_;
   private readonly bool hasBi_;

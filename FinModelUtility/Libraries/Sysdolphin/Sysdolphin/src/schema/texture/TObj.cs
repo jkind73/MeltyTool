@@ -138,7 +138,7 @@ public static class TObjFlagsExtensions {
 ///    - https://github.com/jam1garner/Smash-Forge/blob/c0075bca364366bbea2d3803f5aeae45a4168640/Smash%20Forge/Filetypes/Melee/LibWii/TLP.cs#L166
 ///    - https://github.com/Ploaj/HSDLib/blob/93a906444f34951c6eed4d8c6172bba43d4ada98/HSDRaw/Common/HSD_TOBJ.cs#L92
 /// </summary>
-public class TObj : IBinaryDeserializable {
+public sealed class TObj : IBinaryDeserializable {
   public uint StringOffset { get; private set; }
   public string? Name { get; set; }
 

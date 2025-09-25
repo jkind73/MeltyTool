@@ -85,7 +85,7 @@ public interface ITevStageProps {
   ColorRegister alpha_regid { get; }
 }
 
-public class TevStagePropsImpl : ITevStageProps {
+public sealed class TevStagePropsImpl : ITevStageProps {
   public GxCc color_a { get; set; }
   public GxCc color_b { get; set; }
   public GxCc color_c { get; set; }

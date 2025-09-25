@@ -23,7 +23,7 @@ using vrml.api;
 
 namespace uni.api;
 
-public class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
+public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
   public IScene Import(ISceneFileBundle sceneFileBundle)
     => sceneFileBundle switch {
         BolSceneFileBundle bolSceneFileBundle

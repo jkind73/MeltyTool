@@ -22,7 +22,7 @@ public interface ITevOrder {
   GxKonstAlphaSel KonstAlphaSel { get; }
 }
 
-public class TevOrderImpl : ITevOrder {
+public sealed class TevOrderImpl : ITevOrder {
   public GxTexCoord TexCoordId { get; set; }
   public GxTexMap TexMap { get; set; }
   public GxColorChannel ColorChannelId { get; set; }

@@ -7,7 +7,7 @@
 #nullable disable
 namespace QuickFont
 {
-  public class ShaderLocations
+  public sealed class ShaderLocations
   {
     public int ShaderProgram { get; set; }
 

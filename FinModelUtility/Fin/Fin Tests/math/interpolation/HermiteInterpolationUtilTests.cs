@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.interpolation;
 
-public class HermiteInterpolationUtilTests {
+public sealed class HermiteInterpolationUtilTests {
   [Test]
   public void TestInterpolationStartAndEnd() {
     var fromTime = 1;

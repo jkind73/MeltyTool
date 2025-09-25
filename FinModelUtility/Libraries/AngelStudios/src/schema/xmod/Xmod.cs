@@ -4,7 +4,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class Xmod : ITextDeserializable {
+public sealed class Xmod : ITextDeserializable {
   public IReadOnlyList<Vector3> Positions { get; set; }
   public IReadOnlyList<Vector3> Normals { get; set; }
   public IReadOnlyList<Vector4> Colors { get; set; }

@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods;
 
-public class GapsAroundFirstClueSolverMethod : BBidirectionalSolverMethod {
+public sealed class GapsAroundFirstClueSolverMethod : BBidirectionalSolverMethod {
   public override IEnumerable<PicrossCellMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState,

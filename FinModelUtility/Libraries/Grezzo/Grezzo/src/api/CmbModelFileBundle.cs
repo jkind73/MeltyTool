@@ -6,7 +6,7 @@ using fin.util.enumerables;
 
 namespace grezzo.api;
 
-public class CmbModelFileBundle(
+public sealed class CmbModelFileBundle(
     IReadOnlyTreeFile cmbFile,
     IReadOnlyList<IReadOnlyTreeFile>? csabFiles,
     IReadOnlyList<IReadOnlyTreeFile>? ctxbFiles,

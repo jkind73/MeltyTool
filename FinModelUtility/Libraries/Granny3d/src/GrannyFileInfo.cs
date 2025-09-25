@@ -7,7 +7,7 @@ namespace granny3d {
   ///   Based on HaloWarsDocs file template:
   ///   https://github.com/HaloMods/HaloWarsDocs/blob/master/010Editor/Granny.bt
   /// </summary>
-  public class GrannyFileInfo : IGrannyFileInfo, IBinaryDeserializable {
+  public sealed class GrannyFileInfo : IGrannyFileInfo, IBinaryDeserializable {
     public string FromFileName { get; private set; }
 
     public IList<IGrannySkeleton> SkeletonHeaderList { get; } =

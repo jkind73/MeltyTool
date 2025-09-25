@@ -5,7 +5,7 @@ using fin.data.lists;
 
 namespace fin.data.counters;
 
-public class CounterArray : IFinList<int> {
+public sealed class CounterArray : IFinList<int> {
   private readonly List<int> impl_ = [];
 
   public int Count => this.impl_.Count;

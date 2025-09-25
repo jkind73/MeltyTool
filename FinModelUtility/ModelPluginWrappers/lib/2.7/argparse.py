@@ -23,7 +23,7 @@ command-line and writes the result to a file::
     args.log.write('%s' % sum(args.integers))
     args.log.close()
 
-The module contains the following public classes:
+The module contains the following public sealed classes:
 
     - ArgumentParser -- The main entry point for command-line parsing. As the
         example above shows, the add_argument() method is used to populate

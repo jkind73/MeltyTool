@@ -72,7 +72,7 @@ public interface IColorChannelControl {
   int? VertexColorIndex => null;
 }
 
-public class ColorChannelControlImpl : IColorChannelControl {
+public sealed class ColorChannelControlImpl : IColorChannelControl {
   public bool LightingEnabled { get; set; }
   public GxColorSrc MaterialSrc { get; set; }
   public GxLightMask LitMask { get; set; }

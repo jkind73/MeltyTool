@@ -5,7 +5,7 @@ using gx.displayList;
 
 namespace modl.schema.modl.common;
 
-public class BattalionWarsVertexDescriptor(uint value)
+public sealed class BattalionWarsVertexDescriptor(uint value)
     : BVertexDescriptor(value) {
   protected override IEnumerable<(GxVertexAttribute, GxAttributeType?,
           GxColorComponentType?)>

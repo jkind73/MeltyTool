@@ -1,7 +1,7 @@
 ﻿using fin.math.matrix.four;
 
 namespace sm64.Scripts {
-  public class GeoScriptNode {
+  public sealed class GeoScriptNode {
     public GeoScriptNode(GeoScriptNode? parent,
                          IReadOnlyFinMatrix4x4 inMatrix) {
       this.parent = parent;

@@ -34,7 +34,7 @@ public interface IMipMapLevel<out TImage> where TImage : notnull {
 }
 
 
-public class DxtImpl<TImage> : IDxt<TImage> where TImage : notnull {
+public sealed class DxtImpl<TImage> : IDxt<TImage> where TImage : notnull {
   public DxtImpl(ICubeMap<TImage> cubeMap) => this.CubeMap = cubeMap;
   public DxtImpl(IMipMap<TImage> mipmaps) => this.MipMap = mipmaps;
 
@@ -55,7 +55,7 @@ public class DxtImpl<TImage> : IDxt<TImage> where TImage : notnull {
   }
 }
 
-public class CubeMapImpl<TImage> : ICubeMap<TImage> where TImage : notnull {
+public sealed class CubeMapImpl<TImage> : ICubeMap<TImage> where TImage : notnull {
   public IMipMap<TImage>? PositiveX { get; set; }
   public IMipMap<TImage>? NegativeX { get; set; }
 
@@ -91,7 +91,7 @@ public class CubeMapImpl<TImage> : ICubeMap<TImage> where TImage : notnull {
   }
 }
 
-public class MipMap<TImage>(IList<IMipMapLevel<TImage>> levels)
+public sealed class MipMap<TImage>(IList<IMipMapLevel<TImage>> levels)
     : IMipMap<TImage>
     where TImage : notnull {
   public MipMap() : this(new List<IMipMapLevel<TImage>>()) { }
@@ -118,7 +118,7 @@ public static class MipMapUtil {
       new MipMapLevel<IImage>(image, image.Width, image.Height);
 }
 
-public class MipMapLevel<TImage>(TImage impl, int width, int height)
+public sealed class MipMapLevel<TImage>(TImage impl, int width, int height)
     : IMipMapLevel<TImage>
     where TImage : notnull {
   public TImage Impl { get; } = impl;

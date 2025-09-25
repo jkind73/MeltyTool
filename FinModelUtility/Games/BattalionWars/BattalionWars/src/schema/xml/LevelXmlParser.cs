@@ -25,7 +25,7 @@ public interface IBwObject {
   string? ModelName { get; set; }
 }
 
-public class LevelObject : IBwObject {
+public sealed class LevelObject : IBwObject {
   public required string Id { get; init; }
   public string? ModelName { get; set; }
 
@@ -45,12 +45,12 @@ public class LevelObject : IBwObject {
   }
 }
 
-public class SkydomeObject : IBwObject {
+public sealed class SkydomeObject : IBwObject {
   public required string Id { get; init; }
   public string? ModelName { get; set; }
 }
 
-public class LevelXmlParser {
+public sealed class LevelXmlParser {
   public IScene Parse(BwSceneFileBundle bwSceneFileBundle) {
     var mainXmlFile = bwSceneFileBundle.MainXmlFile;
     var gameVersion = bwSceneFileBundle.GameVersion;

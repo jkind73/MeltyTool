@@ -15,7 +15,7 @@ public readonly struct SubArchiveContentFile : IArchiveContentFile {
   public required int Length { get; init; }
 }
 
-public class SubArchiveStream(Stream impl)
+public sealed class SubArchiveStream(Stream impl)
     : IArchiveStream<SubArchiveContentFile> {
   public IBinaryReader AsBinaryReader()
     => new SchemaBinaryReader(impl);
@@ -45,7 +45,7 @@ public class SubArchiveStream(Stream impl)
   }
 }
 
-public class SubArchiveExtractor : IArchiveExtractor<SubArchiveContentFile> {
+public sealed class SubArchiveExtractor : IArchiveExtractor<SubArchiveContentFile> {
   public ArchiveExtractionResult TryToExtractIntoNewDirectory<TArchiveReader>(
       IReadOnlyTreeFile archive,
       ISystemDirectory dst)

@@ -21,7 +21,7 @@ public partial interface ISetDictionary<TKey, TValue>
 ///   An implementation for a dictionary of sets. Each value added for a key
 ///   will be stored in that key's corresponding set.
 /// </summary>
-public class SetDictionary<TKey, TValue>(
+public sealed class SetDictionary<TKey, TValue>(
     IFinDictionary<TKey, ISet<TValue>> impl)
     : ISetDictionary<TKey, TValue> {
   public SetDictionary() : this(

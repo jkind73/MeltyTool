@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class FetchDirectories {
+  public sealed class FetchDirectories {
     [Benchmark]
     public void FetchDirectoriesSeparately() => this.FetchDirectoriesSeparatelyImpl().ToArray();
 

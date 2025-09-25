@@ -2,7 +2,7 @@
 
 namespace modl.level;
 
-public class TextureResource : BLevelObject {
+public sealed class TextureResource : BLevelObject {
   public TextureResource(XmlLevelObject xmlObject) {
 
   }

@@ -8,7 +8,7 @@ using ssm.api;
 
 namespace uni.games.super_smash_bros_melee;
 
-public class SuperSmashBrosMeleeFileBundleGatherer
+public sealed class SuperSmashBrosMeleeFileBundleGatherer
     : BGameCubeFileBundleGatherer {
   private const string STAGE_PREFIX = "Gr";
   private const string TROPHY_PREFIX = "Ty";

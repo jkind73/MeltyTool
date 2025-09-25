@@ -9,7 +9,7 @@ using vrml.api;
 
 namespace uni.games.vrwdw;
 
-public class VrwdwFileBundleGatherer : BPrereqsFileBundleGatherer {
+public sealed class VrwdwFileBundleGatherer : BPrereqsFileBundleGatherer {
   public override string Name => "vrwdw";
 
   protected override void GatherFileBundlesFromHierarchy(

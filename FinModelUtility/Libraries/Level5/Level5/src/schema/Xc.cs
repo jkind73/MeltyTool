@@ -11,7 +11,7 @@ namespace level5.schema;
 
 public record XcFile(string Name, byte[] Data);
 
-public class Xc : IBinaryDeserializable {
+public sealed class Xc : IBinaryDeserializable {
   public ListDictionary<string, XcFile> FilesByExtension { get; } = new();
 
   public void Read(IBinaryReader br) {

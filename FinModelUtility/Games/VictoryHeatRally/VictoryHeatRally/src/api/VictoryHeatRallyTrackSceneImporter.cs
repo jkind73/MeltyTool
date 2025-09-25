@@ -19,14 +19,14 @@ using Newtonsoft.Json;
 
 namespace vhr.api;
 
-public class VictoryHeatRallyTrackSceneFileBundle : ISceneFileBundle {
+public sealed class VictoryHeatRallyTrackSceneFileBundle : ISceneFileBundle {
   public IReadOnlyTreeFile TrackJsonFile { get; set; }
   public IReadOnlyTreeDirectory ExtractedDirectory { get; set; }
   public IReadOnlyTreeDirectory DataDirectory { get; set; }
   public IReadOnlyTreeFile? MainFile => TrackJsonFile;
 }
 
-public class VictoryHeatRallyTrackSceneImporter
+public sealed class VictoryHeatRallyTrackSceneImporter
     : ISceneImporter<VictoryHeatRallyTrackSceneFileBundle> {
   public IScene Import(VictoryHeatRallyTrackSceneFileBundle fileBundle) {
     var trackJsonFile = fileBundle.TrackJsonFile;

@@ -8,7 +8,7 @@ using schema.binary;
 
 namespace gx.image;
 
-public class GxImageReader : IImageReader {
+public sealed class GxImageReader : IImageReader {
   private readonly IImageReader impl_;
 
   public GxImageReader(int width, int height, GxTextureFormat format) {

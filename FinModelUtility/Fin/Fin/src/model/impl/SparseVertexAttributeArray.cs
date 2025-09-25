@@ -13,7 +13,7 @@ public interface IVertexAttributeArray<T> : IEnumerable<(int, T)>
   T? this[int index] { get; set; }
 }
 
-public class SingleVertexAttribute<T> : IVertexAttributeArray<T>
+public sealed class SingleVertexAttribute<T> : IVertexAttributeArray<T>
     where T : notnull {
   private T value_;
 
@@ -33,7 +33,7 @@ public class SingleVertexAttribute<T> : IVertexAttributeArray<T>
   }
 }
 
-public class SparseVertexAttributeArray<T> : IVertexAttributeArray<T>
+public sealed class SparseVertexAttributeArray<T> : IVertexAttributeArray<T>
     where T : notnull {
   private List<T?>? impl_;
 

@@ -9,7 +9,7 @@ using schema.binary;
 
 namespace ast.api;
 
-public class AstAudioReader : IAudioImporter<AstAudioFileBundle> {
+public sealed class AstAudioReader : IAudioImporter<AstAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       AstAudioFileBundle audioFileBundle) {

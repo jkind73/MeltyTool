@@ -12,4 +12,4 @@ public enum XmlLevelAttributeType {
   MATRIX_4X4
 }
 
-public class XmlLevelAttribute : BXmlLevelTypedItemList<XmlLevelAttributeType>, IXmlLevelObjectField;
+public sealed class XmlLevelAttribute : BXmlLevelTypedItemList<XmlLevelAttributeType>, IXmlLevelObjectField;

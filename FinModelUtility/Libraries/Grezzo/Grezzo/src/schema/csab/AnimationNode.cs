@@ -5,7 +5,7 @@ using schema.binary;
 
 namespace grezzo.schema.csab;
 
-public class AnimationNode(Csab parent) : IBinaryDeserializable {
+public sealed class AnimationNode(Csab parent) : IBinaryDeserializable {
   public ushort BoneIndex { get; set; }
 
   public IReadOnlyList<CsabTrack> TranslationAxes { get; } = Enumerable.Range(0, 3)

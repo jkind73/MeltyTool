@@ -15,7 +15,7 @@ using fin.util.asserts;
 
 namespace HaloWarsTools;
 
-public class HWVisResource : HWXmlResource {
+public sealed class HWVisResource : HWXmlResource {
   public SceneImpl Scene { get; private set; }
   public HWModel[] Models { get; private set; }
 
@@ -180,7 +180,7 @@ public class HWVisResource : HWXmlResource {
       new HashSet<VisSubModelRef>();
   }
 
-  public class VisSubModelRef {
+  public sealed class VisSubModelRef {
     public string ModelName { get; set; }
     public string? ToBone { get; set; }
     public string? FromBone { get; set; }

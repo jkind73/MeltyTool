@@ -19,7 +19,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb;
 
 [Endianness(Endianness.LittleEndian)]
-public class Cmb : IBinaryDeserializable {
+public sealed class Cmb : IBinaryDeserializable {
   public readonly CmbHeader header = new();
 
   private const int TWEAK_AUTO_SIZE = -8;

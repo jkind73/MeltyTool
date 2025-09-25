@@ -39,7 +39,7 @@ public interface IModelSeparator {
       IList<IFileHierarchyFile> animationFiles);
 }
 
-public class ModelSeparator(DirectoryToId directoryToId)
+public sealed class ModelSeparator(DirectoryToId directoryToId)
     : IModelSeparator {
   private readonly Dictionary<string, IModelSeparatorMethod> impl_ = new();
 
@@ -97,7 +97,7 @@ public class ModelSeparator(DirectoryToId directoryToId)
   }
 }
 
-public class NoAnimationsModelSeparatorMethod
+public sealed class NoAnimationsModelSeparatorMethod
     : IModelSeparatorMethod {
   public IEnumerable<IModelBundle> Separate(
       IList<IFileHierarchyFile> modelFiles,
@@ -109,7 +109,7 @@ public class NoAnimationsModelSeparatorMethod
                 Array.Empty<IFileHierarchyFile>()));
 }
 
-public class AllAnimationsModelSeparatorMethod
+public sealed class AllAnimationsModelSeparatorMethod
     : IModelSeparatorMethod {
   public IEnumerable<IModelBundle> Separate(
       IList<IFileHierarchyFile> modelFiles,
@@ -121,7 +121,7 @@ public class AllAnimationsModelSeparatorMethod
                 animationFiles));
 }
 
-public class PrimaryModelSeparatorMethod(string primaryModelName)
+public sealed class PrimaryModelSeparatorMethod(string primaryModelName)
     : IModelSeparatorMethod {
   public IEnumerable<IModelBundle> Separate(
       IList<IFileHierarchyFile> modelFiles,
@@ -188,7 +188,7 @@ public abstract class BUnclaimedMatchModelSeparatorMethod
   protected abstract bool IsModelThatTakesRest(IFileHierarchyFile modelFile);
 }
 
-public class ExactCasesMethod : BUnclaimedMatchModelSeparatorMethod {
+public sealed class ExactCasesMethod : BUnclaimedMatchModelSeparatorMethod {
   private Dictionary<string, ISet<string>> impl_ = new();
   private HashSet<string>? rest_;
 
@@ -220,7 +220,7 @@ public class ExactCasesMethod : BUnclaimedMatchModelSeparatorMethod {
     => this.rest_?.Contains(modelFile.Name.ToString()) ?? false;
 }
 
-public class PrefixCasesMethod : BUnclaimedMatchModelSeparatorMethod {
+public sealed class PrefixCasesMethod : BUnclaimedMatchModelSeparatorMethod {
   private Dictionary<string, IList<string>> impl_ = new();
   private HashSet<string>? rest_;
 
@@ -255,7 +255,7 @@ public class PrefixCasesMethod : BUnclaimedMatchModelSeparatorMethod {
     => this.rest_?.Any(modelFile.Name.ToString().StartsWith) ?? false;
 }
 
-/*public class BoneCountMethod : BUnclaimedMatchModelSeparatorMethod {
+/*public sealed class BoneCountMethod : BUnclaimedMatchModelSeparatorMethod {
   private readonly Func<IFileHierarchyFile, int> getBoneCountFromModelFile_;
 
   private readonly Func<IFileHierarchyFile, int>
@@ -302,7 +302,7 @@ public class PrefixCasesMethod : BUnclaimedMatchModelSeparatorMethod {
   }
 }*/
 
-public class PrefixModelSeparatorMethod
+public sealed class PrefixModelSeparatorMethod
     : BUnclaimedMatchModelSeparatorMethod {
   public override IList<IFileHierarchyFile> PreprocessModelFiles(
       IList<IFileHierarchyFile> modelFiles)
@@ -321,7 +321,7 @@ public class PrefixModelSeparatorMethod
     => false;
 }
 
-public class SameNameSeparatorMethod
+public sealed class SameNameSeparatorMethod
     : BUnclaimedMatchModelSeparatorMethod {
   public override IEnumerable<IFileHierarchyFile> GetAnimationsForModel(
       IFileHierarchyFile modelFile,
@@ -335,7 +335,7 @@ public class SameNameSeparatorMethod
     => false;
 }
 
-public class NameModelSeparatorMethod(string name)
+public sealed class NameModelSeparatorMethod(string name)
     : BUnclaimedMatchModelSeparatorMethod {
   private readonly string name_ = name.ToLower();
 
@@ -350,7 +350,7 @@ public class NameModelSeparatorMethod(string name)
     => false;
 }
 
-public class SuffixModelSeparatorMethod(int suffixLength)
+public sealed class SuffixModelSeparatorMethod(int suffixLength)
     : BUnclaimedMatchModelSeparatorMethod {
   public override IEnumerable<IFileHierarchyFile> GetAnimationsForModel(
       IFileHierarchyFile modelFile,
@@ -366,7 +366,7 @@ public class SuffixModelSeparatorMethod(int suffixLength)
     => false;
 }
 
-public class ModelBundle(
+public sealed class ModelBundle(
     IFileHierarchyFile modelFile,
     IList<IFileHierarchyFile> animationFiles)
     : IModelBundle {

@@ -6,7 +6,7 @@ using fin.util.enumerables;
 
 namespace grezzo.api;
 
-public class ZsiModelFileBundle(IReadOnlyTreeFile zsiFile)
+public sealed class ZsiModelFileBundle(IReadOnlyTreeFile zsiFile)
     : IModelFileBundle {
   public IReadOnlyTreeFile MainFile => zsiFile;
   public IEnumerable<IReadOnlyGenericFile> Files => zsiFile.Yield();

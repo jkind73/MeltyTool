@@ -3,7 +3,7 @@
 using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class CopyingAndReversingValues {
+  public sealed class CopyingAndReversingValues {
     private const int n = 100000000;
 
     public MemoryStream ms = new MemoryStream(n * sizeof(float));

@@ -3,7 +3,7 @@ using fin.model.io;
 
 namespace glo.api;
 
-public class GloModelFileBundle(
+public sealed class GloModelFileBundle(
     IReadOnlyTreeFile gloFile,
     IReadOnlyList<IReadOnlyTreeDirectory> textureDirectories)
     : IModelFileBundle {

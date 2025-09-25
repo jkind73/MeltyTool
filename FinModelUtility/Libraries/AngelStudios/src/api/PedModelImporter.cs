@@ -13,7 +13,7 @@ using xmod.schema.skel;
 
 namespace xmod.api;
 
-public class PedModelImporter : IModelImporter<PedModelFileBundle> {
+public sealed class PedModelImporter : IModelImporter<PedModelFileBundle> {
   public IModel Import(PedModelFileBundle modelFileBundle) {
     var pedFile = modelFileBundle.PedFile;
     var ped = pedFile.ReadNewFromText<Ped>();

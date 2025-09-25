@@ -5,7 +5,7 @@ using fin.util.enumerables;
 
 namespace fin.shaders.glsl.source;
 
-public class StandardShaderSourceGlsl : IShaderSourceGlsl {
+public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   public StandardShaderSourceGlsl(
       IReadOnlyModel model,
       IModelRequirements modelRequirements,

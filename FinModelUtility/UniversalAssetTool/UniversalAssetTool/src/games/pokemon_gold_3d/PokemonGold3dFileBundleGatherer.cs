@@ -7,7 +7,7 @@ using gm.api;
 
 namespace uni.games.pokemon_gold_3d;
 
-public class PokemonGold3dFileBundleGatherer : BPrereqsFileBundleGatherer {
+public sealed class PokemonGold3dFileBundleGatherer : BPrereqsFileBundleGatherer {
   public override string Name => "pokemon_gold_3d";
 
   protected override void GatherFileBundlesFromHierarchy(

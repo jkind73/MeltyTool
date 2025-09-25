@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods;
 
-public class GapsBetweenNeighboringCluesSolverMethod : IPicrossSolverMethod {
+public sealed class GapsBetweenNeighboringCluesSolverMethod : IPicrossSolverMethod {
   public IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,
       IPicrossLineState lineState) {

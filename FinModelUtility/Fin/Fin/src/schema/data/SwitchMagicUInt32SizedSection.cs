@@ -15,7 +15,7 @@ public interface ISwitchMagicConfig<TMagic, TData>
 ///   be adequate for most cases, except when the data class needs to access
 ///   parent data.
 /// </summary>
-public class SwitchMagicUInt32SizedSection<TMagic, TData>(
+public sealed class SwitchMagicUInt32SizedSection<TMagic, TData>(
     ISwitchMagicConfig<TMagic, TData> config)
     : IMagicSection<TMagic, TData>
     where TMagic : notnull

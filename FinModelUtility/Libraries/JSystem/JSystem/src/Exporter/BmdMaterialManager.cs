@@ -12,7 +12,7 @@ using jsystem.schema.jutility.bti;
 
 namespace jsystem.exporter;
 
-public class BmdMaterialManager {
+public sealed class BmdMaterialManager {
   private readonly BMD bmd_;
   private readonly IList<IGxTexture> textures_;
   private readonly IList<GxFixedFunctionMaterial> materials_;

@@ -9,7 +9,7 @@ using fin.util.hash;
 
 namespace fin.model.impl;
 
-public class TextureTransform : ITextureTransform {
+public sealed class TextureTransform : ITextureTransform {
   public bool IsTransform3d { get; private set; }
 
   public Vector3? Center { get; private set; }

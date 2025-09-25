@@ -11,7 +11,7 @@ using schema.binary;
 
 namespace f3dzex2.displaylist.opcodes.f3dzex2;
 
-public class SimpleF3dzex2OpcodeParser {
+public sealed class SimpleF3dzex2OpcodeParser {
   public IOpcodeCommand Parse(IBinaryReader br) {
     var baseOffset = br.Position;
     var opcode = (F3dzex2Opcode) br.ReadByte();

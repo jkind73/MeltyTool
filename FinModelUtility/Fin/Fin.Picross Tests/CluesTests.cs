@@ -4,7 +4,7 @@ namespace fin.picross;
 
 using Assert = NUnit.Framework.Legacy.ClassicAssert;
 
-public class CluesTests {
+public sealed class CluesTests {
   [Test]
   public void TestAllEmpty() {
     var picrossDefinition = new PicrossDefinition(5, 10);

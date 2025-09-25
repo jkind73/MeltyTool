@@ -4,7 +4,7 @@ using fin.shaders.glsl;
 
 namespace fin.ui.rendering.gl.ubo;
 
-public class MatricesUbo {
+public sealed class MatricesUbo {
   private readonly int bufferSize_;
   private readonly GlUbo impl_;
 

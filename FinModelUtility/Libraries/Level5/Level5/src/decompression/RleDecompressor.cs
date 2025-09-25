@@ -2,7 +2,7 @@
 
 namespace level5.decompression;
 
-public class RleArrayDecompressor : ISpanDecompressor {
+public sealed class RleArrayDecompressor : ISpanDecompressor {
   public bool TryToGetLength(ReadOnlySpan<byte> src, out int length) {
       DecompressionUtils.GetLengthAndType(src,
                                           out length,

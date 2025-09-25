@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace modl.schema.anim.bw1;
 
-public class Bw1Anim : IAnim, IBinaryDeserializable {
+public sealed class Bw1Anim : IAnim, IBinaryDeserializable {
   public List<IBwAnimBone> AnimBones { get; private set; }
   public List<AnimBoneFrames> AnimBoneFrames { get; private set; }
 

@@ -20,7 +20,7 @@ public record AseMeshModelFileBundle(
   public IReadOnlyTreeFile MainFile => this.AseMeshFile;
 }
 
-public class AseMeshModelImporter : IModelImporter<AseMeshModelFileBundle> {
+public sealed class AseMeshModelImporter : IModelImporter<AseMeshModelFileBundle> {
   public IModel Import(AseMeshModelFileBundle fileBundle) {
     var aseMesh = fileBundle.AseMeshFile.ReadNew<AseMesh>();
 

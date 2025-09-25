@@ -33,8 +33,8 @@ namespace UoT.hacks.fields {
   }
 
 
-  public class DiscreteField<T> : IDiscreteField<T> {
-    public class Builder(string name) {
+  public sealed class DiscreteField<T> : IDiscreteField<T> {
+    public sealed class Builder(string name) {
       private IDiscreteValue<T>? defaultValue_;
 
       private readonly List<IDiscreteValue<T>> possibleValues_ = [];

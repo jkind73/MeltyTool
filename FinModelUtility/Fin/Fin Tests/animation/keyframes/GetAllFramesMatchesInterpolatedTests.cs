@@ -13,7 +13,7 @@ using NUnit.Framework;
 
 namespace fin.animation.keyframes;
 
-public class GetAllFramesMatchesInterpolatedTests {
+public sealed class GetAllFramesMatchesInterpolatedTests {
   [Test]
   public void TestStairstepNonlooping() {
     var impl = new StairStepKeyframes<float>(

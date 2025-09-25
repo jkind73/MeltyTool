@@ -36,7 +36,7 @@ using schema.binary;
 
 namespace pikmin1.api;
 
-public class ModModelImporter : IModelImporter<ModModelFileBundle> {
+public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
   /// <summary>
   ///   GX's active matrices. These are deferred to when a vertex matrix is
   ///   -1, which corresponds to using an active matrix from a previous

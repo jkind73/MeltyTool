@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.great_ace_attorney;
 
-public class GreatAceAttorneyFileBundleGatherer
+public sealed class GreatAceAttorneyFileBundleGatherer
     : B3dsFileBundleGatherer {
   public override string Name => "great_ace_attorney";
 

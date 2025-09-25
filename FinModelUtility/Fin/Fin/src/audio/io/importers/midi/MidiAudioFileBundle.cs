@@ -2,7 +2,7 @@
 
 namespace fin.audio.io.importers.midi;
 
-public class MidiAudioFileBundle(
+public sealed class MidiAudioFileBundle(
     IReadOnlyTreeFile midiFile,
     IReadOnlyTreeFile soundFontFile) : IAudioFileBundle {
   public string? GameName { get; init; }

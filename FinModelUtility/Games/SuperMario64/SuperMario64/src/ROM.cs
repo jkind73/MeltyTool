@@ -25,7 +25,7 @@ namespace sm64 {
     MIXED // .v64
   };
 
-  public class ROM {
+  public sealed class ROM {
     private static ROM? instance; // Singleton
 
     public static ROM Instance => instance ??= new ROM();

@@ -18,7 +18,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace xmod.api;
 
-public class TexImageReader {
+public sealed class TexImageReader {
   public IImage ReadImage(IReadOnlyGenericFile texFile) {
     using var br = new SchemaBinaryReader(texFile.OpenRead());
     var width = br.ReadUInt16();

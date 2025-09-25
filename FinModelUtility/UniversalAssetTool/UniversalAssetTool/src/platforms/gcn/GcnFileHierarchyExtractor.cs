@@ -13,7 +13,7 @@ using uni.platforms.gcn.tools;
 
 namespace uni.platforms.gcn;
 
-public class GcnFileHierarchyExtractor {
+public sealed class GcnFileHierarchyExtractor {
   private readonly RarcDump rarcDump_ = new();
   private readonly RelDump relDump_ = new();
   private readonly Yay0Dec yay0Dec_ = new();
@@ -138,7 +138,7 @@ public class GcnFileHierarchyExtractor {
     return fileHierarchy;
   }
 
-  public class Options {
+  public sealed class Options {
     private readonly HashSet<string> rarcDumpExtensions_ = [];
     private readonly HashSet<string> rarcDumpPruneNames_ = [];
     private readonly HashSet<string> yay0DecExtensions_ = [];

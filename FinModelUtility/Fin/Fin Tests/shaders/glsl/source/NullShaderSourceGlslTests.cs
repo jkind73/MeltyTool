@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.shaders.glsl.source;
 
-public class NullShaderSourceGlslTests {
+public sealed class NullShaderSourceGlslTests {
   [Test]
   [TestCase(false, false, false)]
   [TestCase(false, false, true)]

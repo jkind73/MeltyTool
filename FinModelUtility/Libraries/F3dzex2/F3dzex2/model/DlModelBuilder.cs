@@ -27,7 +27,7 @@ using Color = System.Drawing.Color;
 
 namespace f3dzex2.model;
 
-public class DlModelBuilder {
+public sealed class DlModelBuilder {
   private readonly IN64Hardware n64Hardware_;
   private IMesh? currentMesh_;
 

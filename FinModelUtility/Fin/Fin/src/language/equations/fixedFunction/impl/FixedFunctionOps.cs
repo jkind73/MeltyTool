@@ -66,7 +66,7 @@ public static class ColorWrapperExtensions {
     => new(scalarValue);
 }
 
-public class ColorFixedFunctionOps<TIdentifier>(
+public sealed class ColorFixedFunctionOps<TIdentifier>(
     IFixedFunctionEquations<TIdentifier> equations)
     : BFixedFunctionOps<IColorValue, IColorConstant>, IColorOps
     where TIdentifier : notnull {
@@ -287,7 +287,7 @@ public class ColorFixedFunctionOps<TIdentifier>(
   }
 }
 
-public class ScalarFixedFunctionOps<TIdentifier>(
+public sealed class ScalarFixedFunctionOps<TIdentifier>(
     IFixedFunctionEquations<TIdentifier> equations)
     : BFixedFunctionOps<IScalarValue, IScalarConstant>,
       IScalarOps

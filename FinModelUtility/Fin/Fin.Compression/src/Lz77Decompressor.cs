@@ -9,7 +9,7 @@ namespace fin.compression;
 ///   Shamelessly stolen from:
 ///   https://github.com/scurest/apicula/blob/3d4e91e14045392a49c89e86dab8cb936225588c/src/decompress/mod.rs
 /// </summary>
-public class Lz77Decompressor : BBinaryReaderToArrayDecompressor {
+public sealed class Lz77Decompressor : BBinaryReaderToArrayDecompressor {
   public override bool TryDecompress(IBinaryReader br, out byte[] data) {
     br.PushContainerEndianness(Endianness.LittleEndian);
     br.AssertString("LZ77");

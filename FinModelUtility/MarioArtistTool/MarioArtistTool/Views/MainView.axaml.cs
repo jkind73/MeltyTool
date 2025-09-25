@@ -40,7 +40,7 @@ public partial class MainView : UserControl {
         case ".tstlt": {
           try {
             var bundle = new TstltModelFileBundle(file);
-            var model = new TstltModelLoader().Import(bundle, out var gender);
+            var model = TstltModelLoader.Import(bundle, out var gender);
 
             switch (gender) {
               case Gender.BOY: {

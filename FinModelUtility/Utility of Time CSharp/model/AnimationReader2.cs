@@ -13,7 +13,7 @@ using UoT.memory;
 
 
 namespace UoT.model {
-  public class AnimationReader2 {
+  public sealed class AnimationReader2 {
     /// <summary>
     ///   Parses a set of animations according to the spec at:
     ///   https://wiki.cloudmodding.com/oot/Animation_Format#Normal_Animations

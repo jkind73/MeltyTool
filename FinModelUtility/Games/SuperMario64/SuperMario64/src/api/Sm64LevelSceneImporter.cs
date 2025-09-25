@@ -11,7 +11,7 @@ using sm64.Scripts;
 
 namespace sm64.api;
 
-public class Sm64LevelSceneFileBundle(
+public sealed class Sm64LevelSceneFileBundle(
     IReadOnlyTreeDirectory directory,
     IReadOnlyTreeFile sm64Rom,
     LevelId levelId)
@@ -25,7 +25,7 @@ public class Sm64LevelSceneFileBundle(
   public string TrueFullPath => this.Sm64Rom.FullPath;
 }
 
-public class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBundle> {
+public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBundle> {
   public IScene Import(Sm64LevelSceneFileBundle levelModelFileBundle) {
     var sm64Level = Sm64LevelImporter.LoadLevel(levelModelFileBundle);
 

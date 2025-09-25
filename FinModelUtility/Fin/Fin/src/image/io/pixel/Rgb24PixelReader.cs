@@ -12,7 +12,7 @@ namespace fin.image.io.pixel;
 /// <summary>
 ///   Helper class for reading 24-bit RGB pixels.
 /// </summary>
-public class Rgb24PixelReader : IPixelReader<Rgb24> {
+public sealed class Rgb24PixelReader : IPixelReader<Rgb24> {
   public IImage<Rgb24> CreateImage(int width, int height)
     => new Rgb24Image(PixelFormat.RGB888, width, height);
 

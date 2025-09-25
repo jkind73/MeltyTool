@@ -15,7 +15,7 @@ public partial interface IIndexableSet<TIndexable> : IFinSet<TIndexable>
   new bool Contains(int index);
 }
 
-public class IndexableSet<TIndexable>(int capacity) : IIndexableSet<TIndexable>
+public sealed class IndexableSet<TIndexable>(int capacity) : IIndexableSet<TIndexable>
     where TIndexable : IIndexable {
   private readonly List<(bool hasValue, TIndexable value)>
       impl_ = new(capacity);

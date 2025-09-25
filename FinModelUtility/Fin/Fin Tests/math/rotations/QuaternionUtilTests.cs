@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math.rotations;
 
-public class QuaternionUtilTests {
+public sealed class QuaternionUtilTests {
   [Test]
   [TestCase(0, 0, 0, 0, 0, 0, 1)]
   [TestCase(2 * MathF.PI, 2 * MathF.PI, 2 * MathF.PI, 0, 0, 0, -1)]

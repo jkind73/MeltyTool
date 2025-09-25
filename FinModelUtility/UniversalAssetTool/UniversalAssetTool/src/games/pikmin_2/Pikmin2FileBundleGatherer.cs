@@ -12,7 +12,7 @@ using uni.platforms.gcn;
 
 namespace uni.games.pikmin_2;
 
-public class Pikmin2FileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class Pikmin2FileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "pikmin_2";
 
   public override GcnFileHierarchyExtractor.Options Options 

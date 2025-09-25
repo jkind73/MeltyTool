@@ -10,7 +10,7 @@ using fin.util.progress;
 
 namespace uni.games.ever_oasis;
 
-public class EverOasisFileBundleGatherer : INamedAnnotatedFileBundleGatherer {
+public sealed class EverOasisFileBundleGatherer : INamedAnnotatedFileBundleGatherer {
   public string Name => "ever_oasis";
 
   public void GatherFileBundles(

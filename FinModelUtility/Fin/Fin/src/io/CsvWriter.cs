@@ -5,7 +5,7 @@ using fin.util.asserts;
 
 namespace fin.io;
 
-public class CsvWriter {
+public sealed class CsvWriter {
   private readonly StringBuilder impl_ = new();
   private readonly char separator_;
 

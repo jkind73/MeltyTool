@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 
 namespace sm64 {
-  public class PlaceholderTests {
+  public sealed class PlaceholderTests {
     [Test]
     public void TestPlaceholder() {
     }

@@ -8,7 +8,7 @@ using fin.ui.rendering.gl.texture;
 
 namespace fin.ui.rendering.gl.material;
 
-public class CachedTextureUniformData {
+public sealed class CachedTextureUniformData {
   private readonly bool needsStruct_;
 
   public int TextureIndex { get; }

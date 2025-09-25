@@ -5,7 +5,7 @@ using fin.util.enumerables;
 
 namespace fin.shaders.glsl.source;
 
-public class ColorShaderSourceGlsl : IShaderSourceGlsl {
+public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
   public ColorShaderSourceGlsl(IReadOnlyModel model,
                                IModelRequirements modelRequirements,
                                IReadOnlyMaterial material,

@@ -1,5 +1,5 @@
 ﻿namespace UoT.hacks {
-  public class DefaultAnimationBankHack {
+  public sealed class DefaultAnimationBankHack {
     public static string? GetDefaultAnimationBankForObject(string filename) {
       if (filename == "object_link_boy" ||
           filename == "object_link_child" ||

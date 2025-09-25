@@ -2,7 +2,7 @@
 
 namespace uni.platforms.threeDs.tools.gar.schema;
 
-public class Gar5FileType : IGarFileType {
+public sealed class Gar5FileType : IGarFileType {
   public uint FileCount { get; }
   public int FirstFileIndex { get; }
   public int TypeNameOffset { get; }

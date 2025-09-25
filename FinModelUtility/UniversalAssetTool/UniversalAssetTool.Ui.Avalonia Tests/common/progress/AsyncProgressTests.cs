@@ -2,7 +2,7 @@
 
 namespace uni.ui.avalonia.common.progress;
 
-public class AsyncProgressTests {
+public sealed class AsyncProgressTests {
   [Test]
   public void TestFromResult() {
     var value = "hello";

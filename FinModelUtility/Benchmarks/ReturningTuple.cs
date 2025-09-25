@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class ReturningTuple {
+  public sealed class ReturningTuple {
     private const int n = 100000;
 
     struct Xyzw {

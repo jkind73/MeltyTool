@@ -11,7 +11,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data.lazy;
 
-public class LazyDictionaryTests {
+public sealed class LazyDictionaryTests {
   [Test]
   public void TestWithKeyAndValueHandler() {
     var invokeCount = 0;

@@ -6,7 +6,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class Adjunct : ITextDeserializable {
+public sealed class Adjunct : ITextDeserializable {
   public int PositionIndex { get; set; }
   public int NormalIndex { get; set; }
   public int ColorIndex { get; set; }

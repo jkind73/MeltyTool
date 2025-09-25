@@ -24,7 +24,7 @@ namespace KSoft.Wwise.SoundBank
 			}
 			#endregion
 		};
-		public class StringGroup
+		public sealed class StringGroup
 			: IO.IEndianStreamSerializable
 		{
 			AKBKHashHeader mHeader;

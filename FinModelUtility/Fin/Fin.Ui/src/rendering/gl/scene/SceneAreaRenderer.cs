@@ -3,7 +3,7 @@ using fin.scene;
 
 namespace fin.ui.rendering.gl.scene;
 
-public class SceneAreaRenderer : IRenderable, IDisposable {
+public sealed class SceneAreaRenderer : IRenderable, IDisposable {
   private readonly SceneObjectRenderer[] objectRenderers_;
 
   public SceneAreaRenderer(ISceneAreaInstance sceneArea,

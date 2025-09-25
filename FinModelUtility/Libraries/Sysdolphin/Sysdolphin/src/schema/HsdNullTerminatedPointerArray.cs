@@ -2,7 +2,7 @@
 
 namespace sysdolphin.schema;
 
-public class HsdNullTerminatedPointerArray<T> : IBinaryDeserializable
+public sealed class HsdNullTerminatedPointerArray<T> : IBinaryDeserializable
     where T : IBinaryDeserializable, new() {
   private readonly List<T> values_ = [];
 

@@ -10,8 +10,8 @@ using jsystem.schema.j3dgraph.bmd.jnt1;
 
 namespace jsystem._3D_Formats;
 
-public class MA {
-  public class Node(
+public sealed class MA {
+  public sealed class Node(
       Jnt1Entry entry,
       string name,
       int parentJointIndex) {

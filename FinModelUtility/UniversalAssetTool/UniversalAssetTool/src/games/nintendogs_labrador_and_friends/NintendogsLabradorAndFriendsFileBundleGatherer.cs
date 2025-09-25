@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.nintendogs_labrador_and_friends;
 
-public class NintendogsLabradorAndFriendsFileBundleGatherer
+public sealed class NintendogsLabradorAndFriendsFileBundleGatherer
     : BDsFileBundleGatherer {
   public override string Name => "nintendogs_labrador_and_friends";
 

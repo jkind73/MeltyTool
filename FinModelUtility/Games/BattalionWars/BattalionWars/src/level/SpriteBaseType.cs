@@ -4,7 +4,7 @@ using fin.color;
 
 namespace modl.level;
 
-public class SpriteBaseType : BLevelObject {
+public sealed class SpriteBaseType : BLevelObject {
   public TextureResource Texture { get; set; }
   public uint Properties { get; set; }
   public IColor Color { get; set; }

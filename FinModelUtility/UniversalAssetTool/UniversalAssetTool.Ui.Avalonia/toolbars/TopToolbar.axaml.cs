@@ -7,11 +7,11 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.toolbars;
 
-public class TopToolbarModelForDesigner : TopToolbarModel {
+public sealed class TopToolbarModelForDesigner : TopToolbarModel {
   public new IFileBundle? FileBundle => null;
 }
 
-public class TopToolbarModel : ViewModelBase {
+public class TopToolbarModel : BViewModel {
   public IFileBundle? FileBundle {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);

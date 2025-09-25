@@ -7,7 +7,7 @@ using fin.math.xyz;
 
 namespace fin.model.impl;
 
-public class OneColor2UvVertexImpl
+public sealed class OneColor2UvVertexImpl
     : IVertex,
       ISingleColorVertex,
       IMultiUvVertex {
@@ -91,7 +91,7 @@ public class OneColor2UvVertexImpl
     => this.uv_[uvIndex] = new Vector2(u, v);
 }
 
-public class NormalUvVertexImpl
+public sealed class NormalUvVertexImpl
     : IVertex,
       INormalVertex,
       ISingleUvVertex {
@@ -163,7 +163,7 @@ public class NormalUvVertexImpl
   public Vector2? GetUv() => this.uv_;
 }
 
-public class Normal1Color1UvVertexImpl
+public sealed class Normal1Color1UvVertexImpl
     : INormalVertex,
       ISingleColorVertex,
       ISingleUvVertex {
@@ -263,7 +263,7 @@ public class Normal1Color1UvVertexImpl
   public Vector2? GetUv() => this.uv_;
 }
 
-public class Normal1Color2UvVertexImpl
+public sealed class Normal1Color2UvVertexImpl
     : INormalVertex,
       ISingleColorVertex,
       IMultiUvVertex {
@@ -380,7 +380,7 @@ public class Normal1Color2UvVertexImpl
     => this.SetUv(uvIndex, new Vector2(u, v));
 }
 
-public class NormalTangent1Color1UvVertexImpl
+public sealed class NormalTangent1Color1UvVertexImpl
     : INormalTangentVertex,
       ISingleColorVertex,
       ISingleUvVertex {
@@ -496,7 +496,7 @@ public class NormalTangent1Color1UvVertexImpl
   public Vector2? GetUv() => this.uv_;
 }
 
-public class NormalTangentMultiColorMultiUvVertexImpl
+public sealed class NormalTangentMultiColorMultiUvVertexImpl
     : INormalTangentVertex,
       ISingleColorVertex,
       IMultiColorVertex,

@@ -3,7 +3,7 @@ using fin.model.io.importers;
 
 namespace modl.api;
 
-public class BattalionWarsModelImporter 
+public sealed class BattalionWarsModelImporter 
     : IModelImporter<IBattalionWarsModelFileBundle> {
   public IModel Import(IBattalionWarsModelFileBundle modelFileBundle)
     => modelFileBundle switch {

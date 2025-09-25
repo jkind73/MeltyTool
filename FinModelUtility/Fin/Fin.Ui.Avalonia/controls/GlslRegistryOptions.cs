@@ -14,7 +14,7 @@ namespace fin.ui.avalonia.controls;
 ///   - https://github.com/nesrak1/UABEA/blob/5adb448deeefa1b88881f1fa44243009b352db3a/UABEAvalonia/TextHighlighting/UABEDumpRegistryOptions.cs#L18
 ///   - https://github.com/polym0rph/GLSL.tmbundle/blob/master/Syntaxes/GLSL.tmLanguage
 /// </summary>
-public class GlslRegistryOptions : IRegistryOptions {
+public sealed class GlslRegistryOptions : IRegistryOptions {
   private readonly RegistryOptions impl_ = new(ThemeName.DarkPlus);
 
   public IRawGrammar GetGrammar(string _) {

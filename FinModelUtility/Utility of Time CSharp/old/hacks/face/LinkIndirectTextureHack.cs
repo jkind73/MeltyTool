@@ -4,7 +4,7 @@ using UoT.hacks;
 using UoT.hacks.fields;
 
 namespace UoT {
-  public class LinkIndirectTextureHack : IIndirectTextureHack {
+  public sealed class LinkIndirectTextureHack : IIndirectTextureHack {
     public IReadOnlyList<IField> Fields { get; } =
       new List<IField>().AsReadOnly();
 

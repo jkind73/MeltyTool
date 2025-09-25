@@ -16,7 +16,7 @@ using uni.ui.avalonia.common;
 using uni.ui.avalonia.resources.model;
 
 namespace uni.ui.avalonia.resources.texture {
-  public class NullTexturesPanelViewModelForDesigner
+  public sealed class NullTexturesPanelViewModelForDesigner
       : TexturesPanelViewModel;
 
   public class EmptyTexturesPanelViewModelForDesigner
@@ -27,7 +27,7 @@ namespace uni.ui.avalonia.resources.texture {
     }
   }
 
-  public class PopulatedTexturesPanelViewModelForDesigner
+  public sealed class PopulatedTexturesPanelViewModelForDesigner
       : TexturesPanelViewModel {
     public PopulatedTexturesPanelViewModelForDesigner() {
       var (model, material) = ModelDesignerUtil.CreateStubModelAndMaterial();
@@ -35,8 +35,8 @@ namespace uni.ui.avalonia.resources.texture {
     }
   }
 
-  public class KeyValuePairViewModel(string key, string? value)
-      : ViewModelBase {
+  public sealed class KeyValuePairViewModel(string key, string? value)
+      : BViewModel {
     public string Key => key;
     public string? Value => value;
 
@@ -45,7 +45,7 @@ namespace uni.ui.avalonia.resources.texture {
       => new(tuple.key, tuple.value?.ToString());
   }
 
-  public class TexturesPanelViewModel : ViewModelBase {
+  public class TexturesPanelViewModel : BViewModel {
     public (IReadOnlyModel, IReadOnlyList<IReadOnlyTexture>)? ModelAndTextures {
       get;
       set {

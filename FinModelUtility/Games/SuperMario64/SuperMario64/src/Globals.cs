@@ -3,7 +3,7 @@ using sm64.memory;
 using sm64.Scripts;
 
 namespace sm64 {
-  public class ScriptDumpCommandInfo {
+  public sealed class ScriptDumpCommandInfo {
     public byte[] data;
     public uint romAddress, segAddress;
     public string description;
@@ -13,7 +13,7 @@ namespace sm64 {
     public new string ToString() => this.description;
   }
 
-  public class Globals {
+  public sealed class Globals {
     public static bool DEBUG_PLG = false; // parsing level geometry flag
     public static uint DEBUG_PDL = 0x00000000; // parsing display list value
     public static bool DEBUG_PARSING_LEVEL_AREA = false;

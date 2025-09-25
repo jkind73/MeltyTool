@@ -28,7 +28,7 @@ public enum HWBinaryResourceChunkType : ulong {
   UGX_CachedDataSignatureHW2 = 0x060034C2, // 0xC2340006
 }
 
-public class HWBinaryResourceChunk {
+public sealed class HWBinaryResourceChunk {
   public HWBinaryResourceChunkType Type;
   public uint Offset;
   public uint Size;

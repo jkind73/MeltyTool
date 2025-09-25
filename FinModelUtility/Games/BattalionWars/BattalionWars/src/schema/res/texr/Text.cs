@@ -5,7 +5,7 @@ using schema.binary;
 
 namespace modl.schema.res.texr;
 
-public class Text : BTexr, ITexr {
+public sealed class Text : BTexr, ITexr {
   public IImage Image { get; private set; }
 
   [Unknown]

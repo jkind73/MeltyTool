@@ -9,7 +9,7 @@ using uni.platforms.gcn;
 
 namespace uni.games.super_mario_sunshine;
 
-public class SuperMarioSunshineFileBundleGatherer
+public sealed class SuperMarioSunshineFileBundleGatherer
     : BGameCubeFileBundleGatherer {
   public override string Name => "super_mario_sunshine";
 

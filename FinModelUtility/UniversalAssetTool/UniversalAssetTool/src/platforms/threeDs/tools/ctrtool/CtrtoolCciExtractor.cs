@@ -9,7 +9,7 @@ using uni.platforms.gcn.tools;
 namespace uni.platforms.threeDs.tools.ctrtool;
 
 public static partial class Ctrtool {
-  public class CciExtractor {
+  public sealed class CciExtractor {
     public bool Run(IReadOnlySystemFile romFile,
                     out IFileHierarchy hierarchy) {
       Asserts.True(

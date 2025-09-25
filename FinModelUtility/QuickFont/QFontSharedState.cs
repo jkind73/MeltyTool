@@ -9,7 +9,7 @@ using OpenTK.Graphics.OpenGL4;
 #nullable disable
 namespace QuickFont
 {
-  public class QFontSharedState
+  public sealed class QFontSharedState
   {
     public QFontSharedState(TextureUnit defaultTextureUnit, ShaderLocations shaderVariables)
     {

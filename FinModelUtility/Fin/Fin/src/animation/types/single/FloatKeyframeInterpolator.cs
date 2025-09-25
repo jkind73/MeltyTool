@@ -5,7 +5,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.single;
 
-public class FloatKeyframeInterpolator
+public sealed class FloatKeyframeInterpolator
     : FloatKeyframeInterpolator<Keyframe<float>> {
   public static FloatKeyframeInterpolator Instance { get; } = new();
   private FloatKeyframeInterpolator() { }

@@ -25,12 +25,12 @@ using ttyd.schema.tpl;
 
 namespace ttyd.api;
 
-public class TtydModelFileBundle : IModelFileBundle {
+public sealed class TtydModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile ModelFile { get; init; }
   public IReadOnlyTreeFile MainFile => this.ModelFile;
 }
 
-public class TtydModelImporter : IModelImporter<TtydModelFileBundle> {
+public sealed class TtydModelImporter : IModelImporter<TtydModelFileBundle> {
   public IModel Import(TtydModelFileBundle fileBundle) {
     var modelFile = fileBundle.ModelFile;
     var ttydModel = modelFile.ReadNew<Model>(Endianness.BigEndian);

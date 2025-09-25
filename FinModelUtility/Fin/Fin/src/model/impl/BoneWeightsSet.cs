@@ -4,7 +4,7 @@ using fin.util.hash;
 
 namespace fin.model.impl;
 
-public class BoneWeightsSet {
+public sealed class BoneWeightsSet {
   private Dictionary<int, IBoneWeights> boneWeightsByHashcode_ = new();
 
   public void Add(IBoneWeights boneWeights)

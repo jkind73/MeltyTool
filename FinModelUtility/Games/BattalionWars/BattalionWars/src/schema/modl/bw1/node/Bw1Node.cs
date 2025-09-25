@@ -14,7 +14,7 @@ using schema.binary;
 
 namespace modl.schema.modl.bw1.node;
 
-public class Bw1Node(int additionalDataCount) : IBwNode, IBinaryDeserializable {
+public sealed class Bw1Node(int additionalDataCount) : IBwNode, IBinaryDeserializable {
   public uint WeirdId { get; set; }
   public bool IsHidden => (this.WeirdId & 0x80) != 0;
 

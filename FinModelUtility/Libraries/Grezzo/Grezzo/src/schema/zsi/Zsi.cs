@@ -7,7 +7,7 @@ using schema.binary;
 
 namespace grezzo.schema.zsi;
 
-public class Zsi : IBinaryDeserializable {
+public sealed class Zsi : IBinaryDeserializable {
   public byte Version { get; set; }
   public string Name { get; set; }
 

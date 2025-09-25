@@ -11,7 +11,7 @@ using fin.util.progress;
 
 namespace uni.games.majoras_mask_3d;
 
-public class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
+public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
   private readonly IModelSeparator separator_
       = new ModelSeparator(directory => directory.Name)
         .Register(new AllAnimationsModelSeparatorMethod(),

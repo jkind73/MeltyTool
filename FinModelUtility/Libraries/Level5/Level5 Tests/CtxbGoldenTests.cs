@@ -8,7 +8,7 @@ using level5.schema;
 
 namespace level5;
 
-public class XiGoldenTests {
+public sealed class XiGoldenTests {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
   public async Task TestExportsGoldenAsExpected(

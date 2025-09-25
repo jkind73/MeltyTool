@@ -2,7 +2,7 @@
 
 namespace modl.level;
 
-public class Objective : BLevelObject {
+public sealed class Objective : BLevelObject {
   public uint Text { get; set; }
   public IColor Color { get; set; }
   public uint Flags { get; set; }

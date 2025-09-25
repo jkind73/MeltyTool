@@ -5,7 +5,7 @@ using modl.xml.level;
 
 namespace modl.level;
 
-public class Waypoint : BLevelObject {
+public sealed class Waypoint : BLevelObject {
   public Waypoint? NextWp { get; set; }
   public uint Flags { get; set; }
   public float PauseTime { get; set; }

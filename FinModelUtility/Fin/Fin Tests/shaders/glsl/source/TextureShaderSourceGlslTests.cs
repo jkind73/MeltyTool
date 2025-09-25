@@ -8,7 +8,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.shaders.glsl.source;
 
-public class TextureShaderSourceGlslTests {
+public sealed class TextureShaderSourceGlslTests {
   [Test]
   public void TestWithoutNormalsNotMasked()
     => AssertGlsl_(

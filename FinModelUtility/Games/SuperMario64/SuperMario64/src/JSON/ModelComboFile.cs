@@ -3,7 +3,7 @@
 using Newtonsoft.Json.Linq;
 
 namespace sm64.JSON {
-  public class ModelComboFile {
+  public sealed class ModelComboFile {
     private static byte parseByte(string str) {
       bool isHex = false;
       if (str.StartsWith("0x")) {

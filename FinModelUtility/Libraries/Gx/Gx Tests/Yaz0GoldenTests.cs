@@ -7,7 +7,7 @@ using gx.compression.yaz0;
 
 namespace gx;
 
-public class Yaz0GoldenTests {
+public sealed class Yaz0GoldenTests {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
   public void TestExportsGoldenAsExpected(

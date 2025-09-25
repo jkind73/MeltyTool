@@ -8,7 +8,7 @@ using vrml.api;
 
 namespace vrml;
 
-public class VrmlModelGoldenTests
+public sealed class VrmlModelGoldenTests
     : BModelGoldenTests<VrmlModelFileBundle, VrmlModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

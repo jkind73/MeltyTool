@@ -2,7 +2,7 @@
 
 namespace uni.games.halo_wars;
 
-public class HaloWarsMassExporter : IMassExporter {
+public sealed class HaloWarsMassExporter : IMassExporter {
   public void ExportAll()
     => ExporterUtil.ExportAllOfTypeForCli(new HaloWarsFileBundleGatherer(),
                                           new XtdModelImporter());

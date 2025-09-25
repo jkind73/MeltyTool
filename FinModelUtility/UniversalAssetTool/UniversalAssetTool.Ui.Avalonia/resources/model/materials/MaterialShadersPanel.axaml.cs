@@ -10,14 +10,14 @@ using fin.ui.avalonia;
 using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.model.materials {
-  public class MaterialShadersPanelViewModelForDesigner
+  public sealed class MaterialShadersPanelViewModelForDesigner
       : MaterialShadersPanelViewModel {
     public MaterialShadersPanelViewModelForDesigner() {
       this.ModelAndMaterial = (ModelImpl.CreateForViewer(), null);
     }
   }
 
-  public class MaterialShadersPanelViewModel : ViewModelBase {
+  public class MaterialShadersPanelViewModel : BViewModel {
     public required (IReadOnlyModel, IReadOnlyMaterial?) ModelAndMaterial {
       get;
       set {

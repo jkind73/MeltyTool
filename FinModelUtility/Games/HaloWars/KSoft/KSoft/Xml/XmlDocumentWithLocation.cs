@@ -13,7 +13,7 @@ namespace KSoft.Xml
 	[SuppressMessage("Microsoft.Design", "CA1058:TypesShouldNotExtendCertainBaseTypes")]
 	[SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	[SuppressMessage("Microsoft.Design", "CA3077:InsecureDTDProcessingInAPIDesign")]
-	public class XmlDocumentWithLocation : XmlDocument
+	public sealed class XmlDocumentWithLocation : XmlDocument
 	{
 		IXmlLineInfo mLoadReader;
 

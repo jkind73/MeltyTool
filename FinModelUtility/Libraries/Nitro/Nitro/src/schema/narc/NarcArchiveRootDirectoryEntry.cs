@@ -4,7 +4,7 @@
 ///   Shamelessly stolen from:
 ///   https://github.com/nickworonekin/narchive/blob/master/src/Narchive/Formats/NarcArchiveRootDirectoryEntry.cs
 /// </summary>
-public class NarcArchiveRootDirectoryEntry : NarcArchiveDirectoryEntry {
+public sealed class NarcArchiveRootDirectoryEntry : NarcArchiveDirectoryEntry {
   /// <summary>
   /// Gets the index of the root directory, which is always 0.
   /// </summary>

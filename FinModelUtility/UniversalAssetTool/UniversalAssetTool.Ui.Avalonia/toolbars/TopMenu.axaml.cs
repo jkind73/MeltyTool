@@ -18,11 +18,11 @@ using uni.ui.winforms.common.fileTreeView;
 
 namespace uni.ui.avalonia.toolbars;
 
-public class TopMenuModelForDesigner : TopMenuModel {
+public sealed class TopMenuModelForDesigner : TopMenuModel {
   public new IFileTreeParentNode? SelectedDirectory => null;
 }
 
-public class TopMenuModel : ViewModelBase {
+public class TopMenuModel : BViewModel {
   public TopMenuModel() {
     this.SelectedDirectory = null;
     SelectedFileTreeDirectoryService.OnFileTreeDirectorySelected

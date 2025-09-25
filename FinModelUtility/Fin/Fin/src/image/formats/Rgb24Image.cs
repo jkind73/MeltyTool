@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.formats;
 
-public class Rgb24Image : BImage<Rgb24> {
+public sealed class Rgb24Image : BImage<Rgb24> {
   public Rgb24Image(PixelFormat format, int width, int height) : this(
       format,
       new Image<Rgb24>(FinImage.ImageSharpConfig, width, height)) { }

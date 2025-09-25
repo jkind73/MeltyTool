@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.counters;
 
-public class CounterSet<T> : IEnumerable<KeyValuePair<T, int>> where T : notnull {
+public sealed class CounterSet<T> : IEnumerable<KeyValuePair<T, int>> where T : notnull {
   private readonly Dictionary<T, int> impl_ = new();
 
   public int GetCount(T key) => this.impl_.GetValueOrDefault(key, 0);

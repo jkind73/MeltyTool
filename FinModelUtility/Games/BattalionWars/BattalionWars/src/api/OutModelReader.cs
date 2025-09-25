@@ -26,7 +26,7 @@ using schema.binary;
 
 namespace modl.api;
 
-public class OutModelImporter : IModelImporter<OutModelFileBundle> {
+public sealed class OutModelImporter : IModelImporter<OutModelFileBundle> {
   public IModel Import(OutModelFileBundle modelFileBundle)
     => modelFileBundle.TextureDirectories != null
         ? this.ImportModel(modelFileBundle,

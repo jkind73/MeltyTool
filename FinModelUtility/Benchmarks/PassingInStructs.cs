@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class PassingInStructs {
+  public sealed class PassingInStructs {
     private const int n = 100000;
 
     struct XyzwStruct {

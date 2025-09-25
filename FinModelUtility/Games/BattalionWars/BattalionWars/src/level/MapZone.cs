@@ -6,7 +6,7 @@ public enum ZoneType {
   MISSION_BOUNDARY
 }
 
-public class MapZone : BLevelObject {
+public sealed class MapZone : BLevelObject {
   public ZoneType ZoneType { get; set; }
   public float Radius { get; set; }
   public Vector4 Size { get; set; }

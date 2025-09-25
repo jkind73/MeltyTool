@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data;
 
-public class NullFriendlyDictionaryTests {
+public sealed class NullFriendlyDictionaryTests {
   [Test]
   public void TestAdd() {
     var impl = new NullFriendlyDictionary<string?, string>();

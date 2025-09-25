@@ -10,7 +10,7 @@ using System.Drawing;
 #nullable disable
 namespace QuickFont
 {
-  public class QFontRenderOptions
+  public sealed class QFontRenderOptions
   {
     public Color Colour = Color.White;
     public float CharacterSpacing = 0.05f;

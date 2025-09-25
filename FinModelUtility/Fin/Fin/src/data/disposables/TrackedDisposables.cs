@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace fin.data.disposables;
 
-public class TrackedDisposables<T> : IEnumerable<T>
+public sealed class TrackedDisposables<T> : IEnumerable<T>
     where T : class, IFinDisposable {
   private readonly LinkedList<WeakReference<T>> impl_ = [];
 

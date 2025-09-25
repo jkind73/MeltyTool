@@ -14,7 +14,7 @@ using MicrosoftLoggerProvider = ILoggerProvider;
 /// <summary>
 ///   From https://stackoverflow.com/questions/55924730/is-it-possible-to-disable-category-output-in-net-core-consolelogger-and-debuglo
 /// </summary>
-public class CleanConsoleLogger : MicrosoftLogger {
+public sealed class CleanConsoleLogger : MicrosoftLogger {
   public LogLevel LogLevel { get; set; } = LogLevel.Information;
 
   public IDisposable? BeginScope<TState>(TState state) => null;
@@ -52,7 +52,7 @@ public class CleanConsoleLogger : MicrosoftLogger {
   }
 }
 
-public class CleanConsoleLoggerProvider : MicrosoftLoggerProvider {
+public sealed class CleanConsoleLoggerProvider : MicrosoftLoggerProvider {
   private readonly ConcurrentDictionary<string, CleanConsoleLogger> _loggers = new ConcurrentDictionary<string, CleanConsoleLogger>();
 
   public MicrosoftLogger CreateLogger(string categoryName)

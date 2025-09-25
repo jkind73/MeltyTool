@@ -7,7 +7,7 @@ using schema.binary;
 
 namespace ttyd.schema.tpl;
 
-public class TplImageReader : IImageReader {
+public sealed class TplImageReader : IImageReader {
   private readonly IImageReader impl_;
 
   public TplImageReader(int width, int height, TplImageFormat format) {

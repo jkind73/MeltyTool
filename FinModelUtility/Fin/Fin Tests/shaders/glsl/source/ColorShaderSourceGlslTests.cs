@@ -6,7 +6,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.shaders.glsl.source;
 
-public class ColorShaderSourceGlslTests {
+public sealed class ColorShaderSourceGlslTests {
   [Test]
   public void TestWithoutNormalsNotMasked()
     => AssertGlsl_(

@@ -8,7 +8,7 @@ using sysdolphin.api;
 
 namespace sysdolphin;
 
-public class DatModelGoldenTests
+public sealed class DatModelGoldenTests
     : BModelGoldenTests<DatModelFileBundle, DatModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

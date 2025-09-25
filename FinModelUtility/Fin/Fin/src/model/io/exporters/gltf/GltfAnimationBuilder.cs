@@ -11,7 +11,7 @@ namespace fin.model.io.exporters.gltf;
 
 using GltfNode = Node;
 
-public class GltfAnimationBuilder {
+public sealed class GltfAnimationBuilder {
   public void BuildAnimations(
       ModelRoot gltfModel,
       (GltfNode, IReadOnlyBone)[] skinNodesAndBones,

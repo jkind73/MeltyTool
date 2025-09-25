@@ -10,7 +10,7 @@ namespace marioartist.schema.leo;
 /// Shamelessly stolen from:
 /// https://github.com/LuigiBlood/mfs_manager/blob/master/mfs_library/Leo/LeoDisk.cs
 /// </summary>
-public class LeoDisk {
+public sealed class LeoDisk {
   public enum DiskFormat {
     SDK,
     D64,

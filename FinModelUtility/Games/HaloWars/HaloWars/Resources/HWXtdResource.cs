@@ -15,7 +15,7 @@ using fin.model.impl;
 
 namespace HaloWarsTools;
 
-public class HWXtdResource : HWBinaryResource {
+public sealed class HWXtdResource : HWBinaryResource {
   public IModel Mesh { get; private set; }
 
   public IImage AmbientOcclusionTexture { get; private set; }

@@ -2,7 +2,7 @@
 
 namespace uni.games.professor_layton_vs_phoenix_wright;
 
-public class ProfessorLaytonVsPhoenixWrightMassExporter : IMassExporter {
+public sealed class ProfessorLaytonVsPhoenixWrightMassExporter : IMassExporter {
   public void ExportAll()
     => ExporterUtil.ExportAllForCli(
         new ProfessorLaytonVsPhoenixWrightFileBundleGatherer(),

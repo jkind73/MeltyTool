@@ -14,7 +14,7 @@ using uni.api;
 
 namespace uni.ui.winforms.common.audio;
 
-public class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
+public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   private IReadOnlyList<IAudioFileBundle>? audioFileBundles_;
   private ShuffledListView<IAudioFileBundle>? shuffledListView_;
   private readonly IAudioManager<short> audioManager_ =

@@ -38,7 +38,7 @@ using Image = Avalonia.Controls.Image;
 
 namespace marioartisttool.ViewModels;
 
-public class MainViewModelForDesigner : MainViewModel {
+public sealed class MainViewModelForDesigner : MainViewModel {
   public MainViewModelForDesigner() {
     var rootSubdirs = new LinkedList<MfsTreeDirectory>();
     var root
@@ -67,7 +67,7 @@ public class MainViewModelForDesigner : MainViewModel {
   }
 }
 
-public class MainViewModel : ViewModelBase {
+public class MainViewModel : BViewModel {
   public Cursor Cursor { get; }
     = LoadCursorFromAsset_("thumb_in.png", new PixelPoint(2, 2));
 

@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class AdvancedWeaponBase : BLevelObject;
+public sealed class AdvancedWeaponBase : BLevelObject;

@@ -6,7 +6,7 @@ using ssm.api;
 
 namespace uni.games.kirby_air_ride;
 
-public class KirbyAirRideFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class KirbyAirRideFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "kirby_air_ride";
 
   protected override void GatherFileBundlesFromHierarchy(

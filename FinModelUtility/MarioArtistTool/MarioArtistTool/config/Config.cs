@@ -2,7 +2,7 @@
 
 namespace MarioArtistTool.config;
 
-public class Config {
+public sealed class Config {
   private const string FILE_NAME = "./config.json";
 
   public static Config INSTANCE { get; } = LoadConfig_();

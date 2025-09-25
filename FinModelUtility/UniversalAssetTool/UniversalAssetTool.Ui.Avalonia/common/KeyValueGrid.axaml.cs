@@ -7,7 +7,7 @@ using fin.ui.avalonia;
 using ReactiveUI;
 
 namespace uni.ui.avalonia.common {
-  public class KeyValueGridViewModelForDesigner
+  public sealed class KeyValueGridViewModelForDesigner
       : KeyValueGridViewModel {
     public KeyValueGridViewModelForDesigner() {
       this.KeyValuePairs = [
@@ -24,15 +24,15 @@ namespace uni.ui.avalonia.common {
     }
   }
 
-  public class KeyValueGridViewModel : ViewModelBase {
+  public class KeyValueGridViewModel : BViewModel {
     public ObservableCollection<KeyValuePairViewModel> KeyValuePairs {
       get;
       set => this.RaiseAndSetIfChanged(ref field, value);
     } = [];
   }
 
-  public class KeyValuePairViewModel(string key, string? value)
-      : ViewModelBase {
+  public sealed class KeyValuePairViewModel(string key, string? value)
+      : BViewModel {
     public string Key => key;
     public string? Value => value;
 

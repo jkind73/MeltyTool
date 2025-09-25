@@ -1,5 +1,5 @@
 ﻿ namespace UoT.hacks.displaylist {
-  public class LinkChildDisplayListHack {
+  public sealed class LinkChildDisplayListHack {
     /// <summary>
     ///   The offset of the display list to render for Link's left hand. For
     ///   the debug rom, this is indirectly stored in RDRAM at 0x224714. This

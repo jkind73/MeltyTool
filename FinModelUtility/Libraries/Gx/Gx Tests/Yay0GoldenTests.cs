@@ -7,7 +7,7 @@ using gx.compression.yay0;
 
 namespace gx;
 
-public class Yay0GoldenTests {
+public sealed class Yay0GoldenTests {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
   public void TestExportsGoldenAsExpected(

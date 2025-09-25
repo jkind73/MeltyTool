@@ -1,5 +1,5 @@
 ﻿namespace modl.level;
 
-public class NodeHierarchyResource : BLevelObject {
+public sealed class NodeHierarchyResource : BLevelObject {
   public string Name { get; set; }
 }

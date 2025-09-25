@@ -13,7 +13,7 @@ using ReactiveUI;
 using uni.ui.avalonia.resources.texture;
 
 namespace uni.ui.avalonia.resources.model.materials {
-  public class MaterialTexturesPanelViewModelForDesigner
+  public sealed class MaterialTexturesPanelViewModelForDesigner
       : MaterialTexturesPanelViewModel {
     public MaterialTexturesPanelViewModelForDesigner() {
       var (model, material) = ModelDesignerUtil.CreateStubModelAndMaterial();
@@ -21,7 +21,7 @@ namespace uni.ui.avalonia.resources.model.materials {
     }
   }
 
-  public class MaterialTexturesPanelViewModel : ViewModelBase {
+  public class MaterialTexturesPanelViewModel : BViewModel {
     public (IReadOnlyModel, IReadOnlyList<IReadOnlyTexture>)? ModelAndTextures {
       get;
       set {

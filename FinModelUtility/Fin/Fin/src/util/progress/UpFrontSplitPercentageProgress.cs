@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace fin.util.progress;
 
-public class UpFrontSplitPercentageProgress : IPercentageProgress {
+public sealed class UpFrontSplitPercentageProgress : IPercentageProgress {
   private bool isComplete_;
   private readonly PercentageProgress[] progresses_;
   private readonly bool[] eachIsComplete_;

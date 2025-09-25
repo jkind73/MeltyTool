@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace modl.schema.res.texr;
 
-public class TexrSection : IBinaryConvertible {
+public sealed class TexrSection : IBinaryConvertible {
   private enum TexrMode {
     BW1,
     BW2

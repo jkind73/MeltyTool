@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace fin.data.indexable;
 
-public class IndexedSetDictionary<TValue>
+public sealed class IndexedSetDictionary<TValue>
     : IEnumerable<(int, IReadOnlySet<TValue>)> {
   private readonly IndexedDictionary<HashSet<TValue>> impl_ = new();
 

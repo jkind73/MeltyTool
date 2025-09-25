@@ -9,7 +9,7 @@ public interface IBoneMapper {
   void SetBoneAtSegmentedAddress(uint ramAddress, IBone bone);
 }
 
-public class BoneMapper : IBoneMapper {
+public sealed class BoneMapper : IBoneMapper {
   private readonly Dictionary<uint, IBone> impl_ = new();
 
   public bool TryToGetBoneAtSegmentedAddress(

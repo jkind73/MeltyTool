@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace uni.platforms.gcn.tools;
 
-public class CisoStream : Stream {
+public sealed class CisoStream : Stream {
   private readonly Stream impl_;
   private readonly long offset_ = 0x8000;
   private readonly bool[] blockMap_;

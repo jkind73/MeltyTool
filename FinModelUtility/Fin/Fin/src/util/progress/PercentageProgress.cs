@@ -2,7 +2,7 @@
 
 namespace fin.util.progress;
 
-public class PercentageProgress : IMutablePercentageProgress {
+public sealed class PercentageProgress : IMutablePercentageProgress {
   private bool isComplete_;
   public float Progress { get; private set; }
 

@@ -13,7 +13,7 @@ using ReactiveUI;
 using uni.ui.avalonia.resources.model;
 
 namespace uni.ui.avalonia.resources.animation {
-  public class AnimationPlaybackPanelViewModelForDesigner
+  public sealed class AnimationPlaybackPanelViewModelForDesigner
       : AnimationPlaybackPanelViewModel {
     public AnimationPlaybackPanelViewModelForDesigner() {
       var animation = ModelDesignerUtil.CreateStubAnimation();
@@ -25,7 +25,7 @@ namespace uni.ui.avalonia.resources.animation {
     }
   }
 
-  public class AnimationPlaybackPanelViewModel : ViewModelBase {
+  public class AnimationPlaybackPanelViewModel : BViewModel {
     private IAnimationPlaybackManager? animationPlaybackManager_;
 
     public IAnimationPlaybackManager? AnimationPlaybackManager {

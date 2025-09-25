@@ -16,7 +16,7 @@ using fin.util.linq;
 
 namespace fin.ui.rendering.viewer;
 
-public class BackgroundRenderer : IRenderable {
+public sealed class BackgroundRenderer : IRenderable {
   private IModelRenderer? impl_;
 
   private float prevCameraYawRadians_;

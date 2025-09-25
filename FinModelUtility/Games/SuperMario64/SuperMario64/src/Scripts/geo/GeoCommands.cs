@@ -233,7 +233,7 @@ namespace sm64.scripts {
     public uint Function { get; set; }
   }
 
-  public class GeoTranslateAndRotateCommand : IGeoCommandWithDisplayList {
+  public sealed class GeoTranslateAndRotateCommand : IGeoCommandWithDisplayList {
     public GeoCommandId Id => GeoCommandId.TRANSLATE_AND_ROTATE;
 
     /// <summary>

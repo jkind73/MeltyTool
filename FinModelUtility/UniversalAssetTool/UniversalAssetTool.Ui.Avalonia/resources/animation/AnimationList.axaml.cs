@@ -18,7 +18,7 @@ using ReactiveUI;
 using uni.ui.avalonia.resources.model;
 
 namespace uni.ui.avalonia.resources.animation {
-  public class AnimationListViewModelForDesigner
+  public sealed class AnimationListViewModelForDesigner
       : AnimationListViewModel {
     public AnimationListViewModelForDesigner() {
       this.Animations = ModelDesignerUtil.CreateStubModel()
@@ -27,7 +27,7 @@ namespace uni.ui.avalonia.resources.animation {
     }
   }
 
-  public class AnimationListViewModel : ViewModelBase {
+  public class AnimationListViewModel : BViewModel {
     public required IReadOnlyList<IReadOnlyAnimation>? Animations {
       get;
       set {
@@ -60,7 +60,7 @@ namespace uni.ui.avalonia.resources.animation {
     }
   }
 
-  public class AnimationViewModel : ViewModelBase {
+  public sealed class AnimationViewModel : BViewModel {
     public required IReadOnlyAnimation Animation {
       get;
       set {
@@ -114,7 +114,7 @@ namespace uni.ui.avalonia.resources.animation {
     }
   }
 
-  public class AnimationSelectedEventArgs : RoutedEventArgs {
+  public sealed class AnimationSelectedEventArgs : RoutedEventArgs {
     public required AnimationViewModel Animation { get; init; }
   }
 }

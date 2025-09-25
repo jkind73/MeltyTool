@@ -10,7 +10,7 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.common.progress;
 
-public class AsyncPanelViewModelForDesigner
+public sealed class AsyncPanelViewModelForDesigner
     : AsyncPanelViewModel {
   public AsyncPanelViewModelForDesigner() {
     this.Progress = AsyncProgress.FromTask(
@@ -18,7 +18,7 @@ public class AsyncPanelViewModelForDesigner
   }
 }
 
-public class AsyncPanelViewModel : ViewModelBase {
+public class AsyncPanelViewModel : BViewModel {
   public AsyncProgress Progress {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);

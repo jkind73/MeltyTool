@@ -4,7 +4,7 @@ using fin.util.hash;
 
 namespace f3dzex2.image;
 
-public class ImageParams : IEquatable<ImageParams> {
+public sealed class ImageParams : IEquatable<ImageParams> {
   public N64ColorFormat ColorFormat { get; set; } = N64ColorFormat.RGBA;
   public BitsPerTexel BitsPerTexel { get; set; } = BitsPerTexel._16BPT;
 

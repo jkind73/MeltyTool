@@ -13,7 +13,7 @@ using ReactiveUI;
 using uni.ui.avalonia.resources.model;
 
 namespace uni.ui.avalonia.resources.animation {
-  public class AnimationsPanelViewModelForDesigner
+  public sealed class AnimationsPanelViewModelForDesigner
       : AnimationsPanelViewModel {
     public AnimationsPanelViewModelForDesigner() {
       this.AnimationPlaybackManager = new FrameAdvancer {
@@ -25,7 +25,7 @@ namespace uni.ui.avalonia.resources.animation {
   }
 
   public class KeyValuePairViewModel(string key, string? value)
-      : ViewModelBase {
+      : BViewModel {
     public string Key => key;
     public string? Value => value;
 
@@ -34,7 +34,7 @@ namespace uni.ui.avalonia.resources.animation {
       => new(tuple.key, tuple.value?.ToString());
   }
 
-  public class AnimationsPanelViewModel : ViewModelBase {
+  public class AnimationsPanelViewModel : BViewModel {
     public IReadOnlyList<IReadOnlyAnimation>? Animations {
       get;
       set {

@@ -6,7 +6,7 @@ using fin.shaders.glsl;
 
 namespace fin.ui.rendering.gl.material;
 
-public class GlColorMaterialShader(
+public sealed class GlColorMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyColorMaterial colorMaterial)

@@ -6,7 +6,7 @@ using fin.math;
 
 namespace fin.animation.keyframes;
 
-public class KeyframeDefinitions<T>(int initialCapacity = 0)
+public sealed class KeyframeDefinitions<T>(int initialCapacity = 0)
     : IKeyframeDefinitions<T> {
   // List used to store the specific keyframe at each index. Wasteful
   // memory-wise, but allows us to have O(1) frame lookups in terms of time.

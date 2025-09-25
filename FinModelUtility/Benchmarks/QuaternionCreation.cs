@@ -7,7 +7,7 @@ using fin.math.rotations;
 using MathNet.Numerics;
 
 namespace benchmarks {
-  public class QuaternionCreation {
+  public sealed class QuaternionCreation {
     private const int n = 1000;
 
     private const float X_RADIANS = 0;

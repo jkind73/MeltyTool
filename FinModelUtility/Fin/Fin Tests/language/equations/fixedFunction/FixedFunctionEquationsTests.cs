@@ -8,7 +8,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.language.equations.fixedFunction;
 
-public class FixedFunctionEquationsTests {
+public sealed class FixedFunctionEquationsTests {
   [Test]
   public void TestInOutScalars() {
     var equations = new FixedFunctionEquations<string>();

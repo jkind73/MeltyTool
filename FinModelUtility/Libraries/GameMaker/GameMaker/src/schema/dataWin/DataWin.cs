@@ -5,7 +5,7 @@ using schema.binary;
 
 namespace gm.schema.dataWin;
 
-public class DataWin : IBinaryDeserializable {
+public sealed class DataWin : IBinaryDeserializable {
   public Gen8 Gen8 { get; set; }
   public Sprt Sprt { get; set; }
   public Txtr Txtr { get; set; }

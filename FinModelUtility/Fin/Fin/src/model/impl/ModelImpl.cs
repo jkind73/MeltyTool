@@ -26,7 +26,7 @@ public partial class ModelImpl<TVertex>
   public required IReadOnlySet<IReadOnlyGenericFile> Files { get; init; }
 }
 
-public class ModelImpl : ModelImpl<NormalTangentMultiColorMultiUvVertexImpl> {
+public sealed class ModelImpl : ModelImpl<NormalTangentMultiColorMultiUvVertexImpl> {
   public static ModelImpl CreateForViewer()
     => new() {
         FileBundle = null,

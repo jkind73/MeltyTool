@@ -6,7 +6,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.io.dxt;
 
-public class Dxt1ImageReader(
+public sealed class Dxt1ImageReader(
     int width,
     int height,
     int subTileCountInAxis = 2,

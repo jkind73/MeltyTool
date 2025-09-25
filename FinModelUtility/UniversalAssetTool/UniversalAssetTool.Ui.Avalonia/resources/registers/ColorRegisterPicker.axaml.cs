@@ -11,7 +11,7 @@ using IColorRegister = fin.language.equations.fixedFunction.IColorRegister;
 
 namespace uni.ui.avalonia.resources.registers;
 
-public class ColorRegisterPickerViewModelForDesigner
+public sealed class ColorRegisterPickerViewModelForDesigner
     : ColorRegisterPickerViewModel {
   public ColorRegisterPickerViewModelForDesigner() {
     this.ColorRegister
@@ -21,7 +21,7 @@ public class ColorRegisterPickerViewModelForDesigner
   }
 }
 
-public class ColorRegisterPickerViewModel : ViewModelBase {
+public class ColorRegisterPickerViewModel : BViewModel {
   public required IColorRegister ColorRegister {
     get;
     set {

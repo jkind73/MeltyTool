@@ -2,7 +2,7 @@
 
 namespace sysdolphin.schema;
 
-public class Dat : IBinaryDeserializable {
+public sealed class Dat : IBinaryDeserializable {
   private const bool IGNORE_ERROR_SUBFILES = true;
 
   public LinkedList<DatSubfile> Subfiles { get; } = [];

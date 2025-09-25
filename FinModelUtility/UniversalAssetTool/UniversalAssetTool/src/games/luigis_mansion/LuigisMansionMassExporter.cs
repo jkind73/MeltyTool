@@ -2,7 +2,7 @@
 
 namespace uni.games.luigis_mansion;
 
-public class LuigisMansionMassExporter : IMassExporter {
+public sealed class LuigisMansionMassExporter : IMassExporter {
   public void ExportAll() {
       if (!new GcnFileHierarchyExtractor().TryToExtractFromGame(
               "luigis_mansion",

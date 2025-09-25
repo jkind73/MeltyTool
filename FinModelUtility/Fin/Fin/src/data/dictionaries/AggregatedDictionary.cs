@@ -9,7 +9,7 @@ namespace fin.data.dictionaries;
 ///
 ///   Helpful for things like finding minimums/maximums.
 /// </summary>
-public class AggregatedDictionary<TKey, TValue>(
+public sealed class AggregatedDictionary<TKey, TValue>(
     AggregatedDictionary<TKey, TValue>.AggregatorFunction aggregateFunc,
     IFinDictionary<TKey, TValue> impl)
     : IFinDictionary<TKey, TValue> {

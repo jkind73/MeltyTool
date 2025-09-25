@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace fin.math.rotations;
 
-public class FinTrigTests {
+public sealed class FinTrigTests {
   [Test]
   [TestCase(-.5f * MathF.PI)]
   [TestCase(0)]

@@ -9,7 +9,7 @@ using fin.io;
 
 namespace uni.games.chibi_robo;
 
-public class ChibiRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class ChibiRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "chibi_robo";
 
   protected override void GatherFileBundlesFromHierarchy(

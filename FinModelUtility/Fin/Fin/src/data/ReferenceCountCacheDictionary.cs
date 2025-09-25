@@ -8,7 +8,7 @@ public interface IReferenceCountCacheDictionary<in TKey, out TValue> {
   public void DecrementAndMaybeDispose(TKey key);
 }
 
-public class ReferenceCountCacheDictionary<TKey, TValue>(
+public sealed class ReferenceCountCacheDictionary<TKey, TValue>(
     Func<TKey, TValue> createHandler,
     Action<TKey, TValue>? disposeHandler = null)
     : IReferenceCountCacheDictionary<TKey, TValue>

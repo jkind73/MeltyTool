@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 
 namespace sm64.LevelInfo {
-  public class CustomSortedCategoryAttribute(
+  public sealed class CustomSortedCategoryAttribute(
       string category,
       ushort categoryPos,
       ushort totalCategories)

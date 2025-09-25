@@ -11,7 +11,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.shaders.glsl.source;
 
-public class FixedFunctionShaderSourceGlslTests {
+public sealed class FixedFunctionShaderSourceGlslTests {
   [Test]
   public void TestWithNothing()
     => AssertGlsl_(

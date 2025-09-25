@@ -9,7 +9,7 @@ using ReactiveUI;
 
 namespace fin.ui.avalonia.dialogs;
 
-public class ExceptionDialogViewModelForDesigner : ExceptionDialogViewModel {
+public sealed class ExceptionDialogViewModelForDesigner : ExceptionDialogViewModel {
   public ExceptionDialogViewModelForDesigner() {
     try {
       var array = new int[1];
@@ -20,7 +20,7 @@ public class ExceptionDialogViewModelForDesigner : ExceptionDialogViewModel {
   }
 }
 
-public class ExceptionDialogViewModel : ViewModelBase {
+public class ExceptionDialogViewModel : BViewModel {
   public Exception Exception {
     get;
     set {

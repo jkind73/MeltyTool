@@ -4,7 +4,7 @@ using MeltySynth;
 
 namespace fin.audio.io.importers.midi;
 
-public class MidiAudioImporter : IAudioImporter<MidiAudioFileBundle> {
+public sealed class MidiAudioImporter : IAudioImporter<MidiAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       MidiAudioFileBundle audioFileBundle) {

@@ -14,7 +14,7 @@ public interface IGltfModelExporter : IModelExporter {
   ModelRoot CreateModelRoot(IReadOnlyModel model, float scale);
 }
 
-public class GltfModelExporter : IGltfModelExporter {
+public sealed class GltfModelExporter : IGltfModelExporter {
   private readonly ILogger logger_ = Logging.Create<GltfModelExporter>();
 
   public bool UvIndices { get; set; }

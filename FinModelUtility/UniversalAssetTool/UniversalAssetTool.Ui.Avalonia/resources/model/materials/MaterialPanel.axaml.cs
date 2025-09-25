@@ -11,14 +11,14 @@ using uni.ui.avalonia.common;
 
 
 namespace uni.ui.avalonia.resources.model.materials {
-  public class MaterialPanelViewModelForDesigner
+  public sealed class MaterialPanelViewModelForDesigner
       : MaterialPanelViewModel {
     public MaterialPanelViewModelForDesigner() {
       this.ModelAndMaterial = ModelDesignerUtil.CreateStubModelAndMaterial();
     }
   }
 
-  public class MaterialPanelViewModel : ViewModelBase {
+  public class MaterialPanelViewModel : BViewModel {
     public required (IReadOnlyModel, IReadOnlyMaterial?) ModelAndMaterial {
       get;
       set {

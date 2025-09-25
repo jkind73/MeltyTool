@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.doshin_the_giant;
 
-public class DoshinTheGiantFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class DoshinTheGiantFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "doshin_the_giant";
 
   protected override void GatherFileBundlesFromHierarchy(

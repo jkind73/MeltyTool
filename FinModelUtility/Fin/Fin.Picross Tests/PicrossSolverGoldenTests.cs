@@ -9,7 +9,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.picross.solver;
 
-public class PicrossSolverGoldenTests {
+public sealed class PicrossSolverGoldenTests {
   /*[Test]
   [TestCaseSource(nameof(GetGoldenFilesForMarioPicross1_))]
   public void TestPicrossSolverForMariosPicross1(

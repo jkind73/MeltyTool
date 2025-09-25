@@ -4,7 +4,7 @@ using System.Numerics;
 using fin.math.rotations;
 
 namespace fin.model.impl;
-public class RotationImpl : IRotation {
+public sealed class RotationImpl : IRotation {
   private const float DEG_2_RAD = MathF.PI / 180;
   private const float RAD_2_DEG = 1 / DEG_2_RAD;
 

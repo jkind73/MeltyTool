@@ -38,7 +38,7 @@ public partial class Rcb : IBinaryDeserializable {
     this.Skeletons = br.ReadNews<Skeleton>((int) skeletonCount);
   }
 
-  public class Skeleton : IBinaryDeserializable {
+  public sealed class Skeleton : IBinaryDeserializable {
     public uint BnkId { get; private set; }
     public string SkeletonName { get; private set; }
     public IReadOnlyList<int> BoneParentIdMap { get; private set; }

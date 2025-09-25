@@ -1,7 +1,7 @@
 ﻿
 
 /*namespace fin.testing {
-  public class FakeDirectory : IDirectory {
+  public sealed class FakeDirectory : IDirectory {
     private IDirectory? parent_;
     private List<IDirectory> subdirs_ = new();
 
@@ -77,5 +77,5 @@
     }
   }
 
-  public class FakeFile : IFile {}
+  public sealed class FakeFile : IFile {}
 }*/

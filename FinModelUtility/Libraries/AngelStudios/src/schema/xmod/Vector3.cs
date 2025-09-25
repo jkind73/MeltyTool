@@ -7,7 +7,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class Vector3 : ITextDeserializable, IXyz {
+public sealed class Vector3 : ITextDeserializable, IXyz {
   public Vector3() { }
 
   public Vector3(float x, float y, float z) {

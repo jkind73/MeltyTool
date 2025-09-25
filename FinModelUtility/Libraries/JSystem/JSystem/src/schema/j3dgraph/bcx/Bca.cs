@@ -152,7 +152,7 @@ public partial class Bca : IBcx {
         }
       }
 
-      public class JointAnim : IJointAnim {
+      public sealed class JointAnim : IJointAnim {
         public JointAnim(
             AnimatedJoint joint,
             float[] scales,

@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.util.io;
 
-public class FileHierarchyAssetBundleSeparator(
+public sealed class FileHierarchyAssetBundleSeparator(
     IFileHierarchy fileHierarchy,
     Action<IFileHierarchyDirectory, IFileBundleOrganizer> handler)
     : IAnnotatedFileBundleGatherer {

@@ -4,7 +4,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.math;
 
-public class FinMathTests {
+public sealed class FinMathTests {
   [Test]
   [TestCase(1, 0, 0, ExpectedResult = 0)]
   [TestCase(1, 0, 5, ExpectedResult = 1)]

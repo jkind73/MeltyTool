@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace visceral.api;
 
-public class MtlbFileIdsDictionary : IReadOnlyFileIdsDictionary {
+public sealed class MtlbFileIdsDictionary : IReadOnlyFileIdsDictionary {
   private readonly IFileIdsDictionary impl_;
 
   public MtlbFileIdsDictionary(IReadOnlyTreeDirectory baseDirectory) {

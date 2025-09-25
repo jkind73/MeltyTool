@@ -16,7 +16,7 @@ using marioartisttool.util;
 
 namespace MarioArtistTool.scenery;
 
-public class GirlSceneryRenderer : IRenderable {
+public sealed class GirlSceneryRenderer : IRenderable {
   private readonly IModelRenderer flowerRenderer_;
 
   private readonly Matrix4x4 topLeftMatrix_

@@ -9,7 +9,7 @@ using modl.api;
 
 namespace modl;
 
-public class OutModelGoldenTests
+public sealed class OutModelGoldenTests
     : BModelGoldenTests<OutModelFileBundle, OutModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

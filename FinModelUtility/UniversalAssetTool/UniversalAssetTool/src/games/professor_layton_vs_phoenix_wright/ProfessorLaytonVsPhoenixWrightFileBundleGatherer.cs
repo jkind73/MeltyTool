@@ -10,7 +10,7 @@ using uni.util.io;
 
 namespace uni.games.professor_layton_vs_phoenix_wright;
 
-public class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
+public sealed class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
     : B3dsFileBundleGatherer {
   public override string Name => "professor_layton_vs_phoenix_wright";
 

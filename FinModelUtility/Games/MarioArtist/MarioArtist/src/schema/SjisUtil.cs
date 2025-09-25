@@ -42,7 +42,7 @@ public static class SjisUtil {
   }
 
   //Decoder
-  public class CustomDecoder : DecoderFallback {
+  public sealed class CustomDecoder : DecoderFallback {
     public string DefaultString;
     internal Dictionary<ushort, char> mapping;
 
@@ -64,7 +64,7 @@ public static class SjisUtil {
     }
   }
 
-  public class CustomDecoderFallbackBuffer : DecoderFallbackBuffer {
+  public sealed class CustomDecoderFallbackBuffer : DecoderFallbackBuffer {
     int count = -1; // Number of characters to return
     int index = -1; // Index of character to return
     CustomDecoder fb;

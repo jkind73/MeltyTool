@@ -25,7 +25,7 @@ public record GxTextureBundle<TDiscriminator>(
     ITextureMatrixInfo? TextureMatrixInfo,
     TDiscriminator? Discriminator) : IGxTextureBundle;
 
-public class GxLazyTextureDictionary(IModel model)
+public sealed class GxLazyTextureDictionary(IModel model)
     : GxLazyTextureDictionary<int, int>(model);
 
 public class GxLazyTextureDictionary<TState, TDiscriminator>

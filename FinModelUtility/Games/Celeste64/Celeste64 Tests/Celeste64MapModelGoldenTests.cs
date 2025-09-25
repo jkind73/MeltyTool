@@ -8,7 +8,7 @@ using fin.testing;
 
 namespace Celeste64;
 
-public class Celeste64MapModelGoldenTests
+public sealed class Celeste64MapModelGoldenTests
     : BModelGoldenTests<Celeste64MapModelFileBundle,
         Celeste64MapModelImporter> {
   [Test]

@@ -12,12 +12,12 @@ using schema.binary;
 
 namespace level5.schema;
 
-public class Mtn2 {
+public sealed class Mtn2 {
   public GenericAnimation Anim { get; } = new GenericAnimation();
 
   public ListDictionary<uint, (short, short)> Somethings { get; } = new();
 
-  public class AnimTrack {
+  public sealed class AnimTrack {
     public int Type { get; set; }
     public int DataType { get; set; }
 

@@ -17,7 +17,7 @@ public record FileBundleGathererProgressViewModel(
   //public required IFileBundleDirectory Directory { get; init; }
 }
 
-public class FileBundleGatherersProgressViewModelForDesigner
+public sealed class FileBundleGatherersProgressViewModelForDesigner
     : FileBundleGatherersProgressViewModel {
   public FileBundleGatherersProgressViewModelForDesigner() {
     this.FileBundleGatherers = [
@@ -37,7 +37,7 @@ public class FileBundleGatherersProgressViewModelForDesigner
   }
 }
 
-public class FileBundleGatherersProgressViewModel : ViewModelBase {
+public class FileBundleGatherersProgressViewModel : BViewModel {
   public required IReadOnlyList<FileBundleGathererProgressViewModel>?
       FileBundleGatherers {
     get;

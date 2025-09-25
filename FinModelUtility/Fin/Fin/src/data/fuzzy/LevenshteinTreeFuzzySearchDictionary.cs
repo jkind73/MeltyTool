@@ -6,7 +6,7 @@ using fin.data.dictionaries;
 
 namespace fin.data.fuzzy;
 
-public class
+public sealed class
     LevenshteinTreeFuzzySearchDictionary<T> : IFuzzySearchDictionary<T> {
   private readonly ListDictionary<T, string> dataToKeywords_ = new();
 

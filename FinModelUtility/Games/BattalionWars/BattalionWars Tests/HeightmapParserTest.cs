@@ -2,7 +2,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace modl.schema.terrain;
 
-public class HeightmapParserTest {
+public sealed class HeightmapParserTest {
   [Test]
   public void Test() {
     var chunkCountInAxis = 64;

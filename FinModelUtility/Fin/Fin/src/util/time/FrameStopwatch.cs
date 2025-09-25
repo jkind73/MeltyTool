@@ -11,7 +11,7 @@ public interface IStopwatch {
   void Restart();
 }
 
-public class FrameStopwatch : IStopwatch {
+public sealed class FrameStopwatch : IStopwatch {
   public enum State {
     STOPPED,
     PLAYING,

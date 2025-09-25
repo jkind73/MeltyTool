@@ -17,7 +17,7 @@ namespace grezzo.image;
 ///   Stolen from:
 ///   https://github.com/magcius/noclip.website/blob/master/src/oot3d/pica_texture.ts
 /// </summary>
-public class CmbImageReader : IImageReader {
+public sealed class CmbImageReader : IImageReader {
   private readonly IImageReader impl_;
 
   public CmbImageReader(int width, int height, GlTextureFormat format) {

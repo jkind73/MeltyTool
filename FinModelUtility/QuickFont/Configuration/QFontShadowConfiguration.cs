@@ -7,7 +7,7 @@
 #nullable disable
 namespace QuickFont.Configuration
 {
-  public class QFontShadowConfiguration
+  public sealed class QFontShadowConfiguration
   {
     public float Scale = 1f;
     public ShadowType Type;

@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class DestroyBase : BLevelObject;
+public sealed class DestroyBase : BLevelObject;

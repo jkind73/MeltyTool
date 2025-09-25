@@ -4,7 +4,7 @@ using fin.shaders.glsl.source;
 
 namespace fin.ui.rendering.gl.material;
 
-public class GlHiddenMaterialShader(
+public sealed class GlHiddenMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements)
     : BGlMaterialShader<IReadOnlyMaterial?>(model,

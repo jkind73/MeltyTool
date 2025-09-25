@@ -22,7 +22,7 @@ public interface IColor {
   Vector3 Rgbf => new(this.Rf, this.Gf, this.Bf);
 }
 
-public class FinColor : IColor {
+public sealed class FinColor : IColor {
   private FinColor(byte rb, byte gb, byte bb, byte ab) {
     this.Rb = rb;
     this.Gb = gb;

@@ -5,7 +5,7 @@ using fin.animation.keyframes;
 
 namespace fin.animation.types.vector2;
 
-public class Vector2KeyframeWithTangentsInterpolator
+public sealed class Vector2KeyframeWithTangentsInterpolator
     : Vector2KeyframeWithTangentsInterpolator<KeyframeWithTangents<Vector2>> {
   public static Vector2KeyframeWithTangentsInterpolator Instance { get; }
     = new();

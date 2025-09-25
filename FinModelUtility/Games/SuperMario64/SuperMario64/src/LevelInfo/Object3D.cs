@@ -7,7 +7,7 @@ using sm64.LevelInfo;
 using sm64.Scripts;
 
 namespace sm64 {
-  public class Object3D {
+  public sealed class Object3D {
     public enum FLAGS {
       POSITION_X = 0x1,
       POSITION_Y = 0x2,

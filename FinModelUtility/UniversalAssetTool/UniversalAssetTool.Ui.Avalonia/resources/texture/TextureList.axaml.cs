@@ -18,7 +18,7 @@ using uni.ui.avalonia.resources.model;
 
 namespace uni.ui.avalonia.resources.texture;
 
-public class TextureListViewModelForDesigner
+public sealed class TextureListViewModelForDesigner
     : TextureListViewModel {
   public TextureListViewModelForDesigner() {
     var (model, material) = ModelDesignerUtil.CreateStubModelAndMaterial();
@@ -26,7 +26,7 @@ public class TextureListViewModelForDesigner
   }
 }
 
-public class TextureListViewModel : ViewModelBase {
+public class TextureListViewModel : BViewModel {
   private (IReadOnlyModel, IReadOnlyList<IReadOnlyTexture>)?
       modelAndTextures_;
 
@@ -77,7 +77,7 @@ public class TextureListViewModel : ViewModelBase {
   }
 }
 
-public class TextureViewModel : ViewModelBase {
+public sealed class TextureViewModel : BViewModel {
   public TexturePreviewViewModel texturePreviewViewModel_;
 
   public required IReadOnlyTexture Texture {
@@ -130,6 +130,6 @@ public partial class TextureList : UserControl {
   }
 }
 
-public class TextureSelectedEventArgs : RoutedEventArgs {
+public sealed class TextureSelectedEventArgs : RoutedEventArgs {
   public required TextureViewModel Texture { get; init; }
 }

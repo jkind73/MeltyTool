@@ -5,7 +5,7 @@ using KSoft.Phoenix.Resource;
 
 namespace HaloWarsTools;
 
-public class HWContext(string gameInstallDirectory, string scratchDirectory) {
+public sealed class HWContext(string gameInstallDirectory, string scratchDirectory) {
   public string GameInstallDirectory = gameInstallDirectory;
   public string ScratchDirectory = scratchDirectory;
 

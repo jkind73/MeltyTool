@@ -4,7 +4,7 @@ namespace UoT {
   /// <summary>
   ///   Hack class for setting specific environment colors for given models.
   /// </summary>
-  public class EnvironmentColorHacks {
+  public sealed class EnvironmentColorHacks {
     // TODO: Add a tab for these toggles.
     // TODO: Add toggle for Link's tunic.
 

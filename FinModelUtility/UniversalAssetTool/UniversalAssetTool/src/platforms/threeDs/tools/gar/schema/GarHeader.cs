@@ -4,7 +4,7 @@ using schema.binary;
 
 namespace uni.platforms.threeDs.tools.gar.schema;
 
-public class GarHeader {
+public sealed class GarHeader {
   public int Version { get; }
 
   public int Size { get; }

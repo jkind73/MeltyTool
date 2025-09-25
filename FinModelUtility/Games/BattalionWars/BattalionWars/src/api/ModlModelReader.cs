@@ -27,7 +27,7 @@ using schema.binary;
 
 namespace modl.api;
 
-public class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle> {
+public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle> {
   public Task<IModel> ImportAsync(ModlModelFileBundle modelFileBundle)
     => this.ImportModelAsync(modelFileBundle,
                              modelFileBundle.ModlFile,

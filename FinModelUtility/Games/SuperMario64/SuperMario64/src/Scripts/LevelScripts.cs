@@ -6,7 +6,7 @@ using sm64.LevelInfo;
 using sm64.memory;
 
 namespace sm64.Scripts {
-  public class LevelScripts {
+  public sealed class LevelScripts {
     private static uint bytesToInt(byte[] b, int offset, int length) {
       switch (length) {
         case 1: return b[0 + offset];

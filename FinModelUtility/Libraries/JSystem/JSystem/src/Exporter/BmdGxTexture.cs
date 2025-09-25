@@ -14,7 +14,7 @@ using jsystem.schema.jutility.bti;
 
 namespace jsystem.exporter;
 
-public class BmdGxTexture : IGxTexture {
+public sealed class BmdGxTexture : IGxTexture {
   public BmdGxTexture(
       string name,
       Bti header,

@@ -6,7 +6,7 @@ using SharpGLTF.Validation;
 
 namespace fin.model.io.exporters.gltf.lowlevel;
 
-public class LowLevelGltfModelExporter : IGltfModelExporter {
+public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
   private readonly ILogger logger_ = Logging.Create<GltfModelExporter>();
 
   public bool UvIndices { get; set; }

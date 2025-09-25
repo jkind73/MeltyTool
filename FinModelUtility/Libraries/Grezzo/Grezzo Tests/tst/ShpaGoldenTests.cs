@@ -11,7 +11,7 @@ using schema.binary;
 using Version = grezzo.schema.cmb.Version;
 
 namespace grezzo {
-  public class ShpaGoldenTests {
+  public sealed class ShpaGoldenTests {
     [Test]
     [TestCaseSource(nameof(GetGoldenFiles_))]
     public async Task TestExportsGoldenAsExpected(

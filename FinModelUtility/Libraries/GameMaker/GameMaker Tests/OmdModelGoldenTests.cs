@@ -8,7 +8,7 @@ using gm.api;
 
 namespace gm;
 
-public class OmdModelGoldenTests
+public sealed class OmdModelGoldenTests
     : BModelGoldenTests<OmdModelFileBundle, OmdModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]

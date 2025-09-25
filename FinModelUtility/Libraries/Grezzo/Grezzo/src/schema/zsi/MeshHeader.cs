@@ -2,7 +2,7 @@
 
 namespace grezzo.schema.zsi;
 
-public class MeshHeader : IBinaryDeserializable {
+public sealed class MeshHeader : IBinaryDeserializable {
   public byte Type { get; set; }
   public byte EntryCount { get; set; }
   public short Unk { get; set; }

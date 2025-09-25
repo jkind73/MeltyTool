@@ -2,7 +2,7 @@
 
 namespace ttyd.schema.tpl;
 
-public class Tpl : IBinaryDeserializable {
+public sealed class Tpl : IBinaryDeserializable {
   public IReadOnlyList<TplTexture> Textures { get; private set; }
 
   public void Read(IBinaryReader br) {

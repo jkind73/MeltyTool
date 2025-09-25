@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.pokemon_diamond;
 
-public class PokemonDiamondFileBundleGatherer
+public sealed class PokemonDiamondFileBundleGatherer
     : BDsFileBundleGatherer {
   public override string Name => "pokemon_diamond";
 

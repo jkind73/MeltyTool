@@ -6,7 +6,7 @@ using rollingMadness.api;
 
 namespace uni.games.rolling_madness_3d;
 
-public class RollingMadness3dFileBundleGatherer : BPrereqsFileBundleGatherer {
+public sealed class RollingMadness3dFileBundleGatherer : BPrereqsFileBundleGatherer {
   public override string Name => "rolling_madness_3d";
 
   protected override void GatherFileBundlesFromHierarchy(

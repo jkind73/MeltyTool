@@ -11,12 +11,12 @@ using uni.config;
 
 namespace uni.ui.avalonia.settings;
 
-public class EnumCheckboxesViewModelForDesigner()
+public sealed class EnumCheckboxesViewModelForDesigner()
     : EnumCheckboxesViewModel(
         new FinSet<Enum>(),
         GetValuesAndControlsForEnum(new HashSet<ExportedFormat>()));
 
-public class EnumCheckboxesViewModel : ViewModelBase {
+public class EnumCheckboxesViewModel : BViewModel {
   public IReadOnlyList<CheckBox> Checkboxes { get; }
 
   public static EnumCheckboxesViewModel From<TEnum>(ISet<TEnum> values)

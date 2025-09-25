@@ -13,7 +13,7 @@ using uni.platforms.gcn;
 
 namespace uni.games.mario_kart_double_dash;
 
-public class MarioKartDoubleDashFileBundleGatherer
+public sealed class MarioKartDoubleDashFileBundleGatherer
     : BGameCubeFileBundleGatherer {
   public override string Name => "mario_kart_double_dash";
 

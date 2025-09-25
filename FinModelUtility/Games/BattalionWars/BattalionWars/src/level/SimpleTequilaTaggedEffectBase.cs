@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class SimpleTequilaTaggedEffectBase : BLevelObject;
+public sealed class SimpleTequilaTaggedEffectBase : BLevelObject;

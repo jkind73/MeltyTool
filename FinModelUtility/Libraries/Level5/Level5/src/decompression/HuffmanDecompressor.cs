@@ -2,7 +2,7 @@
 
 namespace level5.decompression;
 
-public class HuffmanArrayDecompressor(byte aType) : ISpanDecompressor {
+public sealed class HuffmanArrayDecompressor(byte aType) : ISpanDecompressor {
   public bool TryToGetLength(ReadOnlySpan<byte> src, out int length) {
       DecompressionUtils.GetLengthAndType(src,
                                           out length,

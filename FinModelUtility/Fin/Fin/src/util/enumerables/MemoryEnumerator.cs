@@ -28,7 +28,7 @@ public interface IMemoryEnumerator<TValue> {
   }
 }
 
-public class MemoryEnumerator<T>(
+public sealed class MemoryEnumerator<T>(
     IEnumerator<T> impl,
     MemoryEnumerator<T, T>.TryMoveNextDelegate tryMoveNextHandler)
     : MemoryEnumerator<T, T>(impl, tryMoveNextHandler);

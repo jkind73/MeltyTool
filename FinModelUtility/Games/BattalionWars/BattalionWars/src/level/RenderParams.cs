@@ -6,7 +6,7 @@ public enum MaterialLightingMode {
   MODULATE
 }
 
-public class RenderParams : BLevelObject {
+public sealed class RenderParams : BLevelObject {
   public IColor FogColor { get; set; }
   public IColor SkyColor { get; set; }
   public MaterialLightingMode GlobalLightingMode { get; set; }

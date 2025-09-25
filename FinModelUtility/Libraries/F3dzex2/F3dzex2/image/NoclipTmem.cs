@@ -11,7 +11,7 @@ using fin.util.asserts;
 
 namespace f3dzex2.image;
 
-public class TileState {
+public sealed class TileState {
   public int cacheKey;
   public N64ColorFormat fmt;
   public BitsPerTexel siz;
@@ -106,7 +106,7 @@ public class TileState {
   }
 }
 
-public class TextureImageState {
+public sealed class TextureImageState {
   public N64ColorFormat colorFormat;
   public BitsPerTexel bitsPerTexel;
   public ushort width;
@@ -123,7 +123,7 @@ public class TextureImageState {
   }
 }
 
-public class TextureState {
+public sealed class TextureState {
   public float scaleS;
   public float scaleT;
   public uint maxExtraMipmapLevels;
@@ -154,7 +154,7 @@ public class TextureState {
 ///   Shamelessly stolen from:
 ///   https://github.com/magcius/noclip.website/blob/40a191b5519d879396f1dc207d4553c775dc4d3c/src/PokemonSnap/f3dex2.ts
 /// </summary>
-public class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
+public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
   private bool stateChanged_;
   private TextureState spTextureState_ = new();
 

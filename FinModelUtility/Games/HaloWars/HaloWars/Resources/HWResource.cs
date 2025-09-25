@@ -19,7 +19,7 @@ public enum HWResourceType {
   Vis  // Visual Representation
 }
 
-public class HWResourceTypeDefinition(
+public sealed class HWResourceTypeDefinition(
     HWResourceType type,
     Type resourceClass) {
   public HWResourceType Type = type;

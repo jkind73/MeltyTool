@@ -8,7 +8,7 @@ public interface IModelExporterParams {
   float Scale { get; }
 }
 
-public class ModelExporterParams : IModelExporterParams {
+public sealed class ModelExporterParams : IModelExporterParams {
   public required ISystemFile OutputFile { get; set; }
   public required IReadOnlyModel Model { get; set; }
   public float Scale { get; set; } = 1;

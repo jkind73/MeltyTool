@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.data;
 
-public class IndexableDictionaryTests {
+public sealed class IndexableDictionaryTests {
   private class IndexableImpl(int index) : IIndexable {
     public int Index { get; } = index;
   }

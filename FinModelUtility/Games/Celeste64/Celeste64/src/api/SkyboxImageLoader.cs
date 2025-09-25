@@ -5,7 +5,7 @@ using fin.io;
 
 namespace Celeste64.api;
 
-public class SkyboxImageLoader {
+public sealed class SkyboxImageLoader {
   public static void LoadSkyboxImages(IReadOnlyGenericFile skyboxImageFile,
                                       out IImage topImage,
                                       out IImage backImage,

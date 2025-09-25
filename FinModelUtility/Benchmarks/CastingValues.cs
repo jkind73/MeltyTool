@@ -1,7 +1,7 @@
 ﻿using BenchmarkDotNet.Attributes;
 
 namespace benchmarks {
-  public class CastingValues {
+  public sealed class CastingValues {
     private const int n = 100000000;
 
     [Benchmark]

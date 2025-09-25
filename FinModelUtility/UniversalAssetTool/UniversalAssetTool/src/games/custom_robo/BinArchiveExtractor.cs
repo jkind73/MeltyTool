@@ -5,7 +5,7 @@ using schema.util.streams;
 
 namespace uni.games.custom_robo;
 
-public class BinArchiveExtractor {
+public sealed class BinArchiveExtractor {
   public void Extract(IReadOnlyGenericFile binFile,
                       ISystemDirectory outDirectory) {
     using var br =

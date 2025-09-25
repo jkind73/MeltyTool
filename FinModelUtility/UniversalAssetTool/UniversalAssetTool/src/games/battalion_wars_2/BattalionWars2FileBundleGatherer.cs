@@ -11,7 +11,7 @@ using uni.util.io;
 
 namespace uni.games.battalion_wars_2;
 
-public class BattalionWars2FileBundleGatherer
+public sealed class BattalionWars2FileBundleGatherer
     : INamedAnnotatedFileBundleGatherer {
   public string Name => "battalion_wars_2";
 

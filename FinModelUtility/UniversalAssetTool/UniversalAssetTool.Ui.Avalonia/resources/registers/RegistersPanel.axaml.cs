@@ -11,13 +11,13 @@ using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.registers;
 
-public class RegistersPanelViewModelForDesigner : RegistersPanelViewModel {
+public sealed class RegistersPanelViewModelForDesigner : RegistersPanelViewModel {
   public RegistersPanelViewModelForDesigner() {
     this.Registers = RegistersDesignerUtil.CreateStubRegisters();
   }
 }
 
-public class RegistersPanelViewModel : ViewModelBase {
+public class RegistersPanelViewModel : BViewModel {
   private IFixedFunctionRegisters registers_;
 
   public required IFixedFunctionRegisters? Registers {

@@ -6,7 +6,7 @@ using schema.binary;
 
 namespace fin.schema.data;
 
-public class PassThruJankSizedSection<T>(T data) : ISizedSection<T>
+public sealed class PassThruJankSizedSection<T>(T data) : ISizedSection<T>
     where T : IBinaryConvertible {
   public uint Size { get; private set; }
   public bool UseSize { get; set; } = false;

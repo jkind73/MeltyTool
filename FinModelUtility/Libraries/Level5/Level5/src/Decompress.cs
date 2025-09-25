@@ -1,6 +1,6 @@
 ﻿namespace level5;
 
-public class Decompress {
+public sealed class Decompress {
   /*
   public static byte[] YAY0(byte[] fileData) {
     DataReader code = new DataReader(new MemoryStream(fileData));

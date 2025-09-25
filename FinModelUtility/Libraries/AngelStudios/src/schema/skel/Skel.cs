@@ -6,12 +6,12 @@ using schema.text.reader;
 
 namespace xmod.schema.skel;
 
-public class BoneCounter {
+public sealed class BoneCounter {
   private int currentId_;
   public int GetAndIncrement() => this.currentId_++;
 }
 
-public class SkelBone(BoneCounter boneCounter) : ITextDeserializable {
+public sealed class SkelBone(BoneCounter boneCounter) : ITextDeserializable {
 
 
   public int Id { get; set; }
@@ -56,7 +56,7 @@ public class SkelBone(BoneCounter boneCounter) : ITextDeserializable {
   }
 }
 
-public class Skel : ITextDeserializable {
+public sealed class Skel : ITextDeserializable {
   public uint Version { get; set; }
   public SkelBone Root { get; set; }
 

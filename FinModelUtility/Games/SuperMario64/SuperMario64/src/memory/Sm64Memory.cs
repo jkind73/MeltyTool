@@ -17,7 +17,7 @@ namespace sm64.memory {
     new byte? AreaId { get; set; }
   }
 
-  public class Sm64Memory : ISm64Memory {
+  public sealed class Sm64Memory : ISm64Memory {
     public byte? AreaId { get; set; }
 
     public Endianness Endianness => Endianness.BigEndian;

@@ -11,7 +11,7 @@ namespace fin.image.io.pixel;
 /// <summary>
 ///   Helper class for reading 8-bit luminance pixels.
 /// </summary>
-public class L8PixelReader : IPixelReader<L8> {
+public sealed class L8PixelReader : IPixelReader<L8> {
   public IImage<L8> CreateImage(int width, int height)
     => new L8Image(PixelFormat.L8, width, height);
 

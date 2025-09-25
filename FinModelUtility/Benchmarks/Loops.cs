@@ -7,7 +7,7 @@ using CommunityToolkit.HighPerformance;
 
 
 namespace benchmarks {
-  public class Loops {
+  public sealed class Loops {
     private readonly int n_ = 100;
 
     private readonly Vector3[] values_

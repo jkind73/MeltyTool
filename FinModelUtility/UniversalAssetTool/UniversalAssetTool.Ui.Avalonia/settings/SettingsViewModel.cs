@@ -9,7 +9,7 @@ using uni.config;
 
 namespace uni.ui.avalonia.settings;
 
-public class SettingsViewModel
+public sealed class SettingsViewModel
     : ConfigModule<SettingsViewModel>,
       GeneralSettings.IDebugSettings,
       ExporterSettings.IExporterGeneralSettings,

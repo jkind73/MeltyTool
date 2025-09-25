@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace fin.util.time;
 
-public class TimedCallback : IDisposable {
+public sealed class TimedCallback : IDisposable {
   private readonly Action callback_;
   private Timer? impl_;
 

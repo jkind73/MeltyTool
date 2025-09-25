@@ -4,7 +4,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.formats;
 
-public class IndexedImage8(
+public sealed class IndexedImage8(
     PixelFormat pixelFormat,
     IImage<L8> impl,
     IColor[] palette)

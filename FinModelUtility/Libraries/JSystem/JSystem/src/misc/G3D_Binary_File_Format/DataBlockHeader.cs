@@ -9,7 +9,7 @@ using schema.binary;
 
 namespace jsystem.G3D_Binary_File_Format;
 
-public class DataBlockHeader {
+public sealed class DataBlockHeader {
   public string kind;
   public uint size;
 

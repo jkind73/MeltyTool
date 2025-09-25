@@ -8,7 +8,7 @@ using fin.math.floats;
 
 namespace fin.animation.types.vector3;
 
-public class SeparateVector3Keyframes<TKeyframe>(
+public sealed class SeparateVector3Keyframes<TKeyframe>(
     ISharedInterpolationConfig sharedConfig,
     IKeyframeInterpolator<TKeyframe, float> interpolator,
     IndividualInterpolationConfig<float>? individualConfigX,

@@ -159,7 +159,7 @@ public partial class Bck : IBcx {
         public ushort TangentMode;
       }
 
-      public class JointAnim : IJointAnim {
+      public sealed class JointAnim : IJointAnim {
         public JointAnim(
             AnimatedJoint joint,
             float[] scales,
@@ -287,7 +287,7 @@ public partial class Bck : IBcx {
           }
         }
 
-        public class Key(
+        public sealed class Key(
             int frame,
             float value,
             float incomingTangent,

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.sets;
 
-public class OrderedHashSet<T> : IFinSet<T> {
+public sealed class OrderedHashSet<T> : IFinSet<T> {
   // TODO: Can this be optimized??
   private readonly LinkedList<T> list_ = [];
   private readonly HashSet<T> set_ = [];

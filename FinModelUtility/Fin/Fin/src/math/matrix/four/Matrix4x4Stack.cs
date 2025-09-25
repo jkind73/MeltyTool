@@ -15,7 +15,7 @@ public interface IMatrix4x4Stack {
   void MultiplyInPlace(in Matrix4x4 other);
 }
 
-public class Matrix4x4Stack : IMatrix4x4Stack {
+public sealed class Matrix4x4Stack : IMatrix4x4Stack {
   private readonly Stack<Matrix4x4> impl_ = new([Matrix4x4.Identity]);
 
   public Matrix4x4 Top {

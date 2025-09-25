@@ -19,7 +19,7 @@ using Sledge.Formats.Map.Objects;
 
 namespace Celeste64.api;
 
-public class Celeste64MapSceneFileBundle : ISceneFileBundle {
+public sealed class Celeste64MapSceneFileBundle : ISceneFileBundle {
   public required IReadOnlyTreeFile MapFile { get; init; }
   public required IReadOnlyTreeDirectory ModelDirectory { get; init; }
   public required IReadOnlyTreeDirectory SpritesDirectory { get; init; }
@@ -32,7 +32,7 @@ public class Celeste64MapSceneFileBundle : ISceneFileBundle {
 ///   Shamelessly stolen from:
 ///   https://github.com/EXOK/Celeste64/blob/bf7b209b7c56dad0e86a225f4d591ae3bccff455/Source/Data/Map.cs#L26
 /// </summary>
-public class Celeste64MapSceneImporter
+public sealed class Celeste64MapSceneImporter
     : ISceneImporter<Celeste64MapSceneFileBundle> {
   public IScene Import(Celeste64MapSceneFileBundle fileBundle) {
     using var s = fileBundle.MapFile.OpenRead();

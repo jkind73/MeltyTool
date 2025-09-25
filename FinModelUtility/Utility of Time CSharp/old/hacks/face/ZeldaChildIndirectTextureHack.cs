@@ -4,7 +4,7 @@ using UoT.hacks;
 using UoT.hacks.fields;
 
 namespace UoT {
-  public class ZeldaChildIndirectTextureHack : IIndirectTextureHack {
+  public sealed class ZeldaChildIndirectTextureHack : IIndirectTextureHack {
     // TODO: Support different eyes/mouths depending on animation frame.
     // TODO: Where are the rest of the expressions?
     // TODO: Where are happy eyes/mouth?

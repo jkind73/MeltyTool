@@ -11,7 +11,7 @@ using System.Drawing;
 namespace QuickFont
 {
   [DebuggerDisplay("{Character} Pg:{Page}")]
-  public class QFontGlyph
+  public sealed class QFontGlyph
   {
     public int Page;
     public Rectangle Rect;

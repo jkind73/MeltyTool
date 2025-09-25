@@ -3,7 +3,7 @@ using fin.model.io;
 
 namespace hw.api;
 
-public class XtdModelFileBundle(
+public sealed class XtdModelFileBundle(
     IReadOnlyTreeFile xtdFile,
     IReadOnlyTreeFile xttFile)
     : IHaloWarsFileBundle, IModelFileBundle {

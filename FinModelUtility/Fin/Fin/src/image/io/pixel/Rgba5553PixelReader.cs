@@ -10,7 +10,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.io.pixel;
 
-public class Rgba5553PixelReader : IPixelReader<Rgba32> {
+public sealed class Rgba5553PixelReader : IPixelReader<Rgba32> {
   public IImage<Rgba32> CreateImage(int width, int height)
     => new Rgba32Image(PixelFormat.RGBA5553, width, height);
 

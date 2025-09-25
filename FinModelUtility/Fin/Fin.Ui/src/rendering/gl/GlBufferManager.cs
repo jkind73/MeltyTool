@@ -438,7 +438,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
 
   public void UpdateBuffer() => this.vao_.UpdateBuffer();
 
-  public class GlBufferRenderer : IGlBufferRenderer {
+  public sealed class GlBufferRenderer : IGlBufferRenderer {
     private readonly int vaoId_;
     private int eboId_;
     private PrimitiveType beginMode_;

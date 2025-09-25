@@ -1,3 +1,3 @@
 ﻿namespace gm.schema.dataWin.chunk.sprt;
 
-public class Sprt : BListChunk<Sprite>;
+public sealed class Sprt : BListChunk<Sprite>;

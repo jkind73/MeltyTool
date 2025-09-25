@@ -10,7 +10,7 @@ public interface IIndexedDescendantsSet {
   bool TryGetDescendants(int parent, out HashSet<int> descendants);
 }
 
-public class IndexedDescendantsSet : IIndexedDescendantsSet {
+public sealed class IndexedDescendantsSet : IIndexedDescendantsSet {
   private readonly IndexedDictionary<int> parents_ = new();
   private readonly IndexedSetDictionary<int> descendants_ = new();
 

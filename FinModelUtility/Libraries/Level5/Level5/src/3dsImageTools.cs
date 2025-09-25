@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace level5;
 
-public class _3dsImageTools {
+public sealed class _3dsImageTools {
   public enum TexFormat {
     RGBA8 = 0x00,
     RGB8,

@@ -13,7 +13,7 @@ public interface ISetSplitter<TKey, out TValue> {
   IReadOnlyList<TValue> Remaining();
 }
 
-public class SetSplitter<TKey, TValue>(
+public sealed class SetSplitter<TKey, TValue>(
     IEnumerable<TValue> values,
     Func<TValue, TKey> valueToKey,
     IEqualityComparer<TKey>? comparer)

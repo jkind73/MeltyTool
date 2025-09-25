@@ -10,7 +10,7 @@ using jsystem.api;
 
 namespace uni.games.twilight_princess;
 
-public class TwilightPrincessFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class TwilightPrincessFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "twilight_princess";
 
   protected override void GatherFileBundlesFromHierarchy(

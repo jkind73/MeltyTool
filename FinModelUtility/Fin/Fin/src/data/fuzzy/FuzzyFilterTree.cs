@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace fin.data.fuzzy;
 
-public class FuzzyFilterTree<T> : IFuzzyFilterTree<T> {
+public sealed class FuzzyFilterTree<T> : IFuzzyFilterTree<T> {
   // TODO: Add tests.
   // TODO: Add support for different sorting systems.
 

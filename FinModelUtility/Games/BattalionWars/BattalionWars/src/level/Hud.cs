@@ -1,3 +1,3 @@
 ﻿namespace modl.level;
 
-public class Hud : BLevelObject;
+public sealed class Hud : BLevelObject;

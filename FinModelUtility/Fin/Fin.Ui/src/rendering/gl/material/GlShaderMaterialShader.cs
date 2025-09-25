@@ -5,7 +5,7 @@ using fin.ui.rendering.gl.texture;
 
 namespace fin.ui.rendering.gl.material;
 
-public class GlShaderMaterialShader(
+public sealed class GlShaderMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyShaderMaterial shaderMaterial)

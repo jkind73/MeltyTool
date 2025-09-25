@@ -2,4 +2,4 @@
 
 namespace modl.schema.modl.bw1.node;
 
-public class Bw1PosMatIdxMap() : BPosMatIdxMap(1);
+public sealed class Bw1PosMatIdxMap() : BPosMatIdxMap(1);

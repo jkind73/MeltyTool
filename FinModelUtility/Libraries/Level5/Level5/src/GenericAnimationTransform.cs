@@ -9,7 +9,7 @@ public enum AnimNodeHashType {
 /// Stores animation data for transformations
 /// Information is stored in tracks <see cref="GenericTransformTrack"/>
 /// </summary>
-public class GenericAnimationTransform {
+public sealed class GenericAnimationTransform {
   public string Name { get; set; }
 
   public uint Hash { get; set; }
@@ -81,7 +81,7 @@ public static class AnimationTrackFormatExtensions {
 /// A track for <see cref="SBTransformAnimation"/>
 /// See <see cref="AnimationTrackFormat"/> for supported types
 /// </summary>
-public class GenericTransformTrack(AnimationTrackFormat type) {
+public sealed class GenericTransformTrack(AnimationTrackFormat type) {
   public AnimationTrackFormat Type { get; internal set; } = type;
 
   public GenericKeyGroup<float> Keys { get; } = new GenericKeyGroup<float>();

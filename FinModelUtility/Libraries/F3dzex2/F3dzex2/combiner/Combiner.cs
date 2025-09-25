@@ -49,7 +49,7 @@ public enum CycleType : byte {
   FILL
 }
 
-public class CombinerCycleParams {
+public sealed class CombinerCycleParams {
   public static (CombinerCycleParams, CombinerCycleParams)
       FromTexture0AndLightingAndPrimitive(bool withAlpha)
     => (new() {

@@ -14,7 +14,7 @@ using System.Drawing;
 namespace QuickFont
 {
   [DebuggerDisplay("Text = {_DisplayTest_dbg}")]
-  public class QFontDrawingPrimitive
+  public sealed class QFontDrawingPrimitive
   {
     public Matrix4 ModelViewMatrix = Matrix4.Identity;
 

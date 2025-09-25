@@ -2,7 +2,7 @@
 
 namespace fin.picross.solver.methods;
 
-public class FillSmallestUnknownsBetweenEmptiesSolverMethod
+public sealed class FillSmallestUnknownsBetweenEmptiesSolverMethod
     : IPicrossSolverMethod {
   public IEnumerable<IPicrossMove1d> TryToFindMoves(
       IPicrossBoardState _,

@@ -4,7 +4,7 @@ using schema.text.reader;
 
 namespace xmod.schema.xmod;
 
-public class TextureId : ITextDeserializable {
+public sealed class TextureId : ITextDeserializable {
   public int Index { get; set; }
   public string Name { get; set; }
 

@@ -8,7 +8,7 @@ using pmdc.api;
 
 namespace uni.games.paper_mario_directors_cut;
 
-public class PaperMarioDirectorsCutFileBundleGatherer
+public sealed class PaperMarioDirectorsCutFileBundleGatherer
     : BPrereqsFileBundleGatherer {
   public override string Name => "paper_mario_directors_cut";
 

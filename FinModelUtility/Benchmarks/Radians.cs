@@ -3,7 +3,7 @@
 using fin.math.rotations;
 
 namespace benchmarks {
-  public class Radians {
+  public sealed class Radians {
     private const int n = 100000;
 
     public const float lhs = 1;

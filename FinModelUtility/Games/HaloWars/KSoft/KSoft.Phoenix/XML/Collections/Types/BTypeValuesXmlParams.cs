@@ -1,8 +1,7 @@
 ﻿
 namespace KSoft.Phoenix.XML
 {
-	public class BTypeValuesXmlParams<T>
-		: BListExplicitIndexXmlParams<T>
+	public sealed class BTypeValuesXmlParams<T> : BListExplicitIndexXmlParams<T>
 	{
 		/// <summary>Sets ElementName and DataName (which defaults to XML attribute usage)</summary>
 		/// <param name="elementName"></param>

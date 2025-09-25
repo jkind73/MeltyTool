@@ -10,7 +10,7 @@ namespace fin.animation.interpolation;
 ///   Helper class for interpolating a track with a variable "mag filter" for
 ///   higher framerates.
 /// </summary>
-public class MagFilterInterpolatable<T>(IInterpolator<T> interpolator)
+public sealed class MagFilterInterpolatable<T>(IInterpolator<T> interpolator)
     : IInterpolatable<T> {
   public AnimationInterpolationMagFilter AnimationInterpolationMagFilter {
     get;

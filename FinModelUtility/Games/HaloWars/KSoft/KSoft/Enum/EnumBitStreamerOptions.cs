@@ -22,7 +22,7 @@ namespace KSoft.IO
 		} }
 
 		#region Common option implementations
-		public class ShouldUseNoneSentinelEncoding : EnumBitStreamerOptions
+		public sealed class ShouldUseNoneSentinelEncoding : EnumBitStreamerOptions
 		{
 			public override bool UseNoneSentinelEncoding { get {
 				return true;
@@ -35,7 +35,7 @@ namespace KSoft.IO
 				return true;
 			} }
 		};
-		public class ShouldBitSwapWithOneBitGuard : ShouldBitSwap
+		public sealed class ShouldBitSwapWithOneBitGuard : ShouldBitSwap
 		{
 			public override bool BitSwapGuardAgainstOneBit { get {
 				return true;

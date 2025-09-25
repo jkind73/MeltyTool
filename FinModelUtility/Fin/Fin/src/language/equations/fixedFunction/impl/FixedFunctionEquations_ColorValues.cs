@@ -150,13 +150,13 @@ public partial class FixedFunctionEquations<TIdentifier> {
   }
 }
 
-public class ColorValueSwizzle(IColorValue source, ColorSwizzle swizzleType)
+public sealed class ColorValueSwizzle(IColorValue source, ColorSwizzle swizzleType)
     : BScalarValue, IColorValueSwizzle {
   public IColorValue Source { get; } = source;
   public ColorSwizzle SwizzleType { get; } = swizzleType;
 }
 
-public class ColorExpression(IReadOnlyList<IColorValue> terms)
+public sealed class ColorExpression(IReadOnlyList<IColorValue> terms)
     : BColorValue, IColorExpression {
   public IReadOnlyList<IColorValue> Terms { get; } = terms;
 
@@ -187,7 +187,7 @@ public class ColorExpression(IReadOnlyList<IColorValue> terms)
                                 .ToArray());
 }
 
-public class ColorTerm(
+public sealed class ColorTerm(
     IReadOnlyList<IColorValue> numeratorFactors,
     IReadOnlyList<IColorValue>? denominatorFactors = null)
     : BColorValue, IColorTerm {
@@ -267,7 +267,7 @@ public static class FixedFunctionUtils {
   }
 }
 
-public class ColorConstant : BColorValue, IColorConstant {
+public sealed class ColorConstant : BColorValue, IColorConstant {
   public static readonly ColorConstant ONE = new(1);
   public static readonly ColorConstant[] ONE_ARRAY = [ONE];
   public static readonly ColorConstant ZERO = new(0);
@@ -349,7 +349,7 @@ public class ColorConstant : BColorValue, IColorConstant {
   }
 }
 
-public class ColorWrapper(
+public sealed class ColorWrapper(
     IScalarValue r,
     IScalarValue g,
     IScalarValue b)
@@ -386,7 +386,7 @@ public class ColorWrapper(
   }
 }
 
-public class ColorValueTernaryOperator
+public sealed class ColorValueTernaryOperator
     : BColorValue,
       IColorValueTernaryOperator {
   public BoolComparisonType ComparisonType { get; set; }

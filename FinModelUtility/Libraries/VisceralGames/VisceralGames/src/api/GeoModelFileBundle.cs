@@ -4,7 +4,7 @@ using fin.util.enumerables;
 
 namespace visceral.api;
 
-public class GeoModelFileBundle : IModelFileBundle {
+public sealed class GeoModelFileBundle : IModelFileBundle {
   public IReadOnlyTreeFile? MainFile
     => this.RcbFile ?? this.GeoFiles.First();
 

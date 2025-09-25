@@ -15,7 +15,7 @@ using NaturalSort.Extension;
 using ReactiveUI;
 
 namespace uni.ui.avalonia.resources.model.materials {
-  public class MaterialsPanelViewModelForDesigner
+  public sealed class MaterialsPanelViewModelForDesigner
       : MaterialsPanelViewModel {
     public MaterialsPanelViewModelForDesigner() {
       var (model, material) = ModelDesignerUtil.CreateStubModelAndMaterial();
@@ -23,7 +23,7 @@ namespace uni.ui.avalonia.resources.model.materials {
     }
   }
 
-  public class MaterialsPanelViewModel : ViewModelBase {
+  public class MaterialsPanelViewModel : BViewModel {
     private (IReadOnlyModel, IReadOnlyList<IReadOnlyMaterial?>)
         modelAndMaterials_;
 

@@ -8,7 +8,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.util.enumerables;
 
-public class EnumerableExtensionsTests {
+public sealed class EnumerableExtensionsTests {
   [Test]
   public void TestSeparatePairsWithNone()
     => CollectionAssert.AreEqual(

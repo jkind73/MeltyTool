@@ -43,7 +43,7 @@ namespace MiniJSON {
     //  using System.Collections.Generic;
     //  using MiniJSON;
     //
-    //  public class MiniJSONTest : MonoBehaviour {
+    //  public sealed class MiniJSONTest : MonoBehaviour {
     //      void Start () {
     //          var jsonString = "{ \"array\": [1.44,2,3], " +
     //                          "\"object\": {\"key1\":\"value1\", \"key2\":256}, " +

@@ -17,7 +17,7 @@ public record BolSceneFileBundle(IFileHierarchyFile BolFile)
   public IReadOnlyTreeFile? MainFile => this.BolFile;
 }
 
-public class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
+public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
   public IScene Import(BolSceneFileBundle fileBundle) {
     var bol = fileBundle.BolFile.ReadNew<Bol>();
 

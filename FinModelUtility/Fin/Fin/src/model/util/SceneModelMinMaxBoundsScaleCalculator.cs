@@ -7,7 +7,7 @@ using fin.scene;
 
 namespace fin.model.util;
 
-public class SceneModelMinMaxBoundsScaleCalculator
+public sealed class SceneModelMinMaxBoundsScaleCalculator
     : BMinMaxBoundsScaleCalculator<ISceneModel> {
   private readonly BoneTransformManager boneTransformManager_ = new();
 
