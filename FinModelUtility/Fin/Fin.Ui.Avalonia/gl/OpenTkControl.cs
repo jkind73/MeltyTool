@@ -1,10 +1,7 @@
 ﻿using System;
 
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
-using Avalonia.Rendering;
 using Avalonia.Threading;
 
 using fin.ui.rendering.gl;
@@ -14,16 +11,10 @@ using OpenTK.Graphics.ES30;
 
 namespace fin.ui.avalonia.gl;
 
-public abstract class BOpenTkControl
-    : OpenGlControlBase, ICustomHitTest {
+public class OpenTkControl(Action initGl, Action renderGl, Action teardownGl)
+    : OpenGlControlBase {
   private AvaloniaOpenTkContext? avaloniaTkContext_;
   private TimedCallback renderCallback_;
-
-  public event Action? OnInit;
-
-  protected abstract void InitGl();
-  protected abstract void RenderGl();
-  protected abstract void TeardownGl();
 
   private static bool isLoaded_ = false;
 
@@ -37,8 +28,7 @@ public abstract class BOpenTkControl
     }
 
     GlUtil.SwitchContext(this);
-    this.InitGl();
-    this.OnInit?.Invoke();
+    initGl();
 
     this.renderCallback_ = TimedCallback.WithFrequency(
         () => Dispatcher.UIThread.Post(this.RequestNextFrameRendering,
@@ -50,22 +40,9 @@ public abstract class BOpenTkControl
     this.RequestNextFrameRendering();
 
     GlUtil.SwitchContext(this);
-    this.RenderGl();
+    renderGl();
   }
 
   protected sealed override void OnOpenGlDeinit(GlInterface gl)
-    => this.TeardownGl();
-
-  public bool HitTest(Point point) => this.Bounds.Contains(point);
-
-  protected void GetBoundsForGlViewport(out int width, out int height) {
-    var scaling = 1f;
-    if (TopLevel.GetTopLevel(this) is Window window) {
-      scaling = (float) window.RenderScaling;
-    }
-
-    var bounds = this.Bounds;
-    width = (int) (scaling * bounds.Width);
-    height = (int) (scaling * bounds.Height);
-  }
+    => teardownGl();
 }

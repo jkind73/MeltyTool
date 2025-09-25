@@ -12,7 +12,7 @@ using fin.ui.rendering.gl.model;
 
 namespace fin.ui.avalonia.scene;
 
-public sealed class SceneInstanceViewerGlPanel : BOpenTkControl, ISceneViewer {
+public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
   private readonly SceneViewerGl viewerImpl_ = new();
 
   private bool isMouseDown_ = false;
