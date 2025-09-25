@@ -19,7 +19,7 @@ jobs:
       - id: should_run
         continue-on-error: true
         name: check latest commit is less than a day
-        if: ${{ inputs.manual == 'false' }}
+        if: ${{ inputs.manual != 'true' }}
         run: |
           echo "should_run=false" >> $GITHUB_ENV
           if git rev-list --after="24 hours" ${{ github.sha }} | grep .; then
