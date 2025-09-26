@@ -16,7 +16,7 @@ using fin.util.linq;
 
 namespace fin.ui.rendering.viewer;
 
-public sealed class BackgroundRenderer : IRenderable {
+public sealed class BackgroundRenderer : IRenderable, IDisposable {
   private IModelRenderer? impl_;
 
   private float prevCameraYawRadians_;
@@ -25,6 +25,8 @@ public sealed class BackgroundRenderer : IRenderable {
   private IShaderUniform<float> scrollXUniform_;
 
   private bool textureDirty_ = false;
+
+  public void Dispose() => this.impl_?.Dispose();
 
   public IReadOnlyImage? BackgroundImage {
     get;

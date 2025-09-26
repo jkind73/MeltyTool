@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 
@@ -27,7 +28,7 @@ public interface ISceneImporter<in TSceneFileBundle>
 ///   game that are each separated by a loading screen.
 /// </summary>
 [GenerateReadOnly]
-public partial interface IScene : IResource {
+public partial interface IScene : IResource, IDisposable {
   new IReadOnlyList<ISceneArea> Areas { get; }
   ISceneArea AddArea();
 
@@ -42,7 +43,7 @@ public partial interface IScene : IResource {
 ///   a dungeon.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneArea {
+public partial interface ISceneArea : IDisposable {
   new IReadOnlyList<ISceneObject> Objects { get; }
   ISceneObject AddObject();
 
@@ -61,7 +62,7 @@ public partial interface ISceneArea {
 ///   characters.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneObject {
+public partial interface ISceneObject : IDisposable {
   new Vector3 Position { get; }
   new IRotation Rotation { get; }
   new Vector3 Scale { get; }
@@ -86,7 +87,7 @@ public partial interface ISceneObject {
 }
 
 [UnionCandidate]
-public interface ISceneNodeComponent;
+public interface ISceneNodeComponent : IDisposable;
 
 public interface ISceneNodeTickComponent : ISceneNodeComponent {
   void Tick(ISceneObjectInstance self);

@@ -9,6 +9,13 @@ namespace fin.scene;
 
 public partial class SceneImpl : IScene {
   private readonly List<ISceneArea> areas_ = [];
+
+  public void Dispose() {
+    foreach (var area in this.areas_) {
+      area.Dispose();
+    }
+  }
+
   public IReadOnlyList<ISceneArea> Areas => this.areas_;
 
   public ISceneArea AddArea() {

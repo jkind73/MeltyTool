@@ -16,7 +16,7 @@ using marioartisttool.util;
 
 namespace MarioArtistTool.scenery;
 
-public sealed class GirlSceneryRenderer : IRenderable {
+public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
   private readonly IModelRenderer flowerRenderer_;
 
   private readonly Matrix4x4 topLeftMatrix_
@@ -75,19 +75,23 @@ public sealed class GirlSceneryRenderer : IRenderable {
     this.flowerRenderer_ = new ModelRenderer(backgroundFlowerModel);
   }
 
+  public void Dispose() => this.flowerRenderer_.Dispose();
+
   public void Render() {
     var timeSeconds
-        = (float) (6 + FrameTime.ElapsedTimeSinceApplicationOpened.TotalSeconds);
+        = (float) (6 + FrameTime.ElapsedTimeSinceApplicationOpened
+                                .TotalSeconds);
 
-    Span<(float cycleSeconds, Matrix4x4 matrix, Color color)> cycleSecondsAndMatrices = [
-        ((timeSeconds - 0) % 6, this.topLeftMatrix_, Color.Yellow),
-        ((timeSeconds - 1) % 6, this.middleLeftMatrix_, Color.Green),
-        ((timeSeconds - 2) % 6, this.bottomLeftMatrix_, Color.Cyan),
+    Span<(float cycleSeconds, Matrix4x4 matrix, Color color)>
+        cycleSecondsAndMatrices = [
+            ((timeSeconds - 0) % 6, this.topLeftMatrix_, Color.Yellow),
+            ((timeSeconds - 1) % 6, this.middleLeftMatrix_, Color.Green),
+            ((timeSeconds - 2) % 6, this.bottomLeftMatrix_, Color.Cyan),
 
-        ((timeSeconds - 3) % 6, this.topRightMatrix_, Color.DarkBlue),
-        ((timeSeconds - 4) % 6, this.middleRightMatrix_, Color.Blue),
-        ((timeSeconds - 5) % 6, this.bottomRightMatrix_, Color.HotPink),
-    ];
+            ((timeSeconds - 3) % 6, this.topRightMatrix_, Color.DarkBlue),
+            ((timeSeconds - 4) % 6, this.middleRightMatrix_, Color.Blue),
+            ((timeSeconds - 5) % 6, this.bottomRightMatrix_, Color.HotPink),
+        ];
 
     foreach (var (cycleSeconds, matrix, color) in cycleSecondsAndMatrices) {
       var alpha = cycleSeconds switch {
@@ -127,3 +131,4 @@ public sealed class GirlSceneryRenderer : IRenderable {
         scale * new Vector3(size, 1));
   }
 }
+

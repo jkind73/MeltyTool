@@ -10,6 +10,13 @@ public partial class SceneImpl {
   private class SceneObjectImpl : ISceneObject {
     private readonly List<ISceneModel> models_ = [];
     private readonly List<ISceneNodeComponent> components_ = [];
+
+    public void Dispose() {
+      foreach (var component in this.components_) {
+        component.Dispose();
+      }
+    }
+
     public Vector3 Position { get; private set; }
     public IRotation Rotation { get; } = new RotationImpl();
     public Vector3 Scale { get; private set; } = new Vector3(1, 1, 1);

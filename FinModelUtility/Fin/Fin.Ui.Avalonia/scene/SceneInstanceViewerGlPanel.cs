@@ -1,5 +1,6 @@
 ﻿using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 
 using fin.animation;
 using fin.model;
@@ -189,6 +190,16 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
       return;
     }
 
+    if (this.sceneChangeRequested_) {
+      this.sceneChangeRequested_ = false;
+
+      this.viewerImpl_.Scene?.Dispose();
+      (this.viewerImpl_.Scene?.Definition as IScene)?.Dispose();
+
+      this.viewerImpl_.Scene = this.upcomingScene_;
+      this.upcomingScene_ = null;
+    }
+
     if (this.AllowMovingCamera) {
       var forwardVector =
           (this.isForwardDown_ ? 1 : 0) - (this.isBackwardDown_ ? 1 : 0);
@@ -223,9 +234,15 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.viewerImpl_.Render();
   }
 
+  private bool sceneChangeRequested_;
+  private ISceneInstance? upcomingScene_;
+
   public ISceneInstance? Scene {
     get => this.viewerImpl_.Scene;
-    set => this.viewerImpl_.Scene = value;
+    set {
+      this.sceneChangeRequested_ = true;
+      this.upcomingScene_ = value;
+    }
   }
 
   public ISceneModelInstance? FirstSceneModel

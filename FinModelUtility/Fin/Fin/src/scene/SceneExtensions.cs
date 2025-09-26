@@ -13,6 +13,7 @@ using fin.model.util;
 using fin.ui;
 using fin.ui.rendering;
 
+
 namespace fin.scene;
 
 public static class SceneExtensions {
@@ -27,12 +28,13 @@ public static class SceneExtensions {
 
   private class LambdaSceneNodeTickComponent(
       Action<ISceneObjectInstance> handler) : ISceneNodeTickComponent {
+    public void Dispose() { }
     public void Tick(ISceneObjectInstance self) => handler(self);
   }
 
   public static void AddRenderable(this ISceneObject sceneObject,
                                    IRenderable renderable)
-    => sceneObject.AddRenderComponent(_ => renderable.Render());
+    => sceneObject.AddComponent(new RenderableSceneNodeRenderComponent(renderable));
 
   public static void AddRenderComponent(this ISceneObject sceneObject,
                                         Action<ISceneObjectInstance> handler)
@@ -40,7 +42,14 @@ public static class SceneExtensions {
 
   private class LambdaSceneNodeRenderComponent(
       Action<ISceneObjectInstance> handler) : ISceneNodeRenderComponent {
+    public void Dispose() { }
     public void Render(ISceneObjectInstance self) => handler(self);
+  }
+
+  private class RenderableSceneNodeRenderComponent(IRenderable impl) 
+      : ISceneNodeRenderComponent {
+    public void Dispose() => (impl as IDisposable)?.Dispose();
+    public void Render(ISceneObjectInstance self) => impl.Render();
   }
 
   public static void CreateDefaultLighting(this IScene scene,
@@ -131,7 +140,7 @@ public static class SceneExtensions {
       light.Strength = individualStrength;
 
 
-      var defaultAttenuation = new Vector3f { X = 1.075f };
+      var defaultAttenuation = new Vector3f {X = 1.075f};
       light.SetAttenuationFunction(AttenuationFunction.SPECULAR);
       light.SetCosineAttenuation(defaultAttenuation);
       light.SetDistanceAttenuation(defaultAttenuation);

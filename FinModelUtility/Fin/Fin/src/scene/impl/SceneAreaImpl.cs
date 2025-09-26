@@ -9,6 +9,12 @@ public partial class SceneImpl {
   private class SceneAreaImpl : ISceneArea {
     private readonly List<ISceneObject> objects_ = [];
 
+    public void Dispose() {
+      foreach (var obj in this.objects_) {
+        obj.Dispose();
+      }
+    }
+
     public IReadOnlyList<ISceneObject> Objects => this.objects_;
 
     public ISceneObject AddObject() {
