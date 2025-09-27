@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 using fin.animation.interpolation;
 using fin.animation.keyframes;
 using fin.math.floats;
+using fin.math.interpolation;
+using fin.util.asserts;
+
+using NoAlloq;
 
 namespace fin.animation.types.vector3;
 
@@ -78,7 +83,6 @@ public sealed class SeparateVector3Keyframes<TKeyframe>(
     }
   }
 
-  // TODO: Implement this
   public bool TryGetSimpleKeyframes(
       out IReadOnlyList<(float frame, Vector3 value)> keyframes,
       out IReadOnlyList<(Vector3 tangentIn, Vector3 tangentOut)>?
@@ -87,77 +91,97 @@ public sealed class SeparateVector3Keyframes<TKeyframe>(
     var yAxis = this.Axes[1];
     var zAxis = this.Axes[2];
 
-    if (!xAxis.HasAnyData || !yAxis.HasAnyData || !zAxis.HasAnyData) {
+    if (!xAxis.HasAnyData && !yAxis.HasAnyData && !zAxis.HasAnyData) {
+      keyframes = [];
+      tangentKeyframes = null;
+      return true;
+    }
+
+    Span<(IInterpolatableKeyframes<TKeyframe, float> keyframes,
+        IInterpolatableKeyframes<KeyframeWithTangents<float>, float>? keyframesWithTangents,
+        IndividualInterpolationConfig<float>? config)> axes = [
+        (xAxis,
+         xAxis as IInterpolatableKeyframes<KeyframeWithTangents<float>, float>,
+         individualConfigX),
+        (yAxis,
+         yAxis as IInterpolatableKeyframes<KeyframeWithTangents<float>, float>,
+         individualConfigY),
+        (zAxis,
+         zAxis as IInterpolatableKeyframes<KeyframeWithTangents<float>, float>,
+         individualConfigZ),
+    ];
+
+    if (axes.Any(a => !a.keyframes.HasAnyData &&
+                      !(a.config?.DefaultValue?.Try(out _) ?? false))) {
       keyframes = null!;
       tangentKeyframes = null;
       return false;
     }
 
-    var xDefinitions = xAxis.Definitions;
-    var yDefinitions = yAxis.Definitions;
-    var zDefinitions = zAxis.Definitions;
-    if (xDefinitions.Count != yDefinitions.Count ||
-        xDefinitions.Count != zDefinitions.Count) {
-      keyframes = null!;
-      tangentKeyframes = null;
-      return false;
-    }
+    var unionKeyframes
+        = xAxis.Definitions
+               .Concat(yAxis.Definitions)
+               .Concat(zAxis.Definitions)
+               .Select(keyframe => keyframe.Frame)
+               .Distinct()
+               .Order()
+               .ToArray();
 
-    var length = xDefinitions.Count;
-    for (var i = 0; i < length; ++i) {
-      if (!xDefinitions[i].Frame.IsRoughly(yDefinitions[i].Frame) ||
-          !xDefinitions[i].Frame.IsRoughly(zDefinitions[i].Frame)) {
-        keyframes = null!;
-        tangentKeyframes = null;
-        return false;
-      }
-    }
+    var unionKeyframeCount = unionKeyframes.Length;
 
-    if (xDefinitions
-            is IReadOnlyList<KeyframeWithTangents<float>> xTangentDefinitions &&
-        yDefinitions
-            is IReadOnlyList<KeyframeWithTangents<float>> yTangentDefinitions &&
-        zDefinitions
-            is IReadOnlyList<KeyframeWithTangents<float>> zTangentDefinitions) {
-      var mutableKeyframes = new (float, Vector3)[length];
-      var mutableTangentKeyframes = new (Vector3, Vector3)[length];
-      for (var i = 0; i < length; ++i) {
-        var xKeyframe = xTangentDefinitions[i];
-        var yKeyframe = yTangentDefinitions[i];
-        var zKeyframe = zTangentDefinitions[i];
+    {
+      var mutableKeyframes = new (float, Vector3)[unionKeyframeCount];
+      for (var k = 0; k < unionKeyframeCount; ++k) {
+        var keyframe = unionKeyframes[k];
+        var value = new Vector3();
 
-        mutableKeyframes[i] = (xKeyframe.Frame,
-                               new Vector3(xKeyframe.ValueOut,
-                                           yKeyframe.ValueOut,
-                                           zKeyframe.ValueOut));
-        mutableTangentKeyframes[i]
-            = (new Vector3(xKeyframe.TangentIn ?? 0,
-                           yKeyframe.TangentIn ?? 0,
-                           zKeyframe.TangentIn ?? 0),
-               new Vector3(xKeyframe.TangentOut ?? 0,
-                           yKeyframe.TangentOut ?? 0,
-                           zKeyframe.TangentOut ?? 0));
+        for (var i = 0; i < axes.Length; ++i) {
+          var axis = axes[i];
+          Asserts.True(
+              axis.keyframes.TryGetAtFrameOrDefault(keyframe,
+                                                    axis.config,
+                                                    out var axisValue));
+          value[i] = axisValue;
+        }
+
+        mutableKeyframes[k] = (keyframe, value);
       }
 
       keyframes = mutableKeyframes;
-      tangentKeyframes = mutableTangentKeyframes;
-      return true;
+    }
+
+    if (axes.Any(a => a.keyframesWithTangents == null)) {
+      tangentKeyframes = null;
     } else {
-      var mutableKeyframes = new (float, Vector3)[length];
-      for (var i = 0; i < length; ++i) {
-        var xKeyframe = xDefinitions[i];
-        var yKeyframe = yDefinitions[i];
-        var zKeyframe = zDefinitions[i];
+      var mutableTangentKeyframes = new (Vector3, Vector3)[unionKeyframeCount];
 
-        mutableKeyframes[i] = (xKeyframe.Frame,
-                               new Vector3(xKeyframe.ValueOut,
-                                           yKeyframe.ValueOut,
-                                           zKeyframe.ValueOut));
+      for (var k = 0; k < unionKeyframeCount; ++k) {
+        var keyframe = unionKeyframes[k];
+
+        var tangentIn = new Vector3();
+        var tangentOut = new Vector3();
+
+        for (var i = 0; i < axes.Length; ++i) {
+          var axis = axes[i];
+          if (!HermiteInterpolationUtil.TryGetTangent(
+                  axis.keyframesWithTangents!,
+                  keyframe,
+                  out var axisTangentIn,
+                  out var axisTangentOut)) {
+            tangentKeyframes = null;
+            return false;
+          }
+
+          tangentIn[i] = axisTangentIn;
+          tangentOut[i] = axisTangentOut;
+        }
+
+        mutableTangentKeyframes[k] = (tangentIn, tangentOut);
       }
 
-      keyframes = mutableKeyframes;
-      tangentKeyframes = null;
-      return true;
+      tangentKeyframes = mutableTangentKeyframes;
     }
+
+    return true;
   }
 }

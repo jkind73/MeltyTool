@@ -6,6 +6,27 @@ namespace fin.math.interpolation;
 
 public sealed class HermiteInterpolationUtilTests {
   [Test]
+  public void TestGetTangent() {
+    var fromTime = 0;
+    var fromValue = 5;
+    var fromTangent = 5;
+    var toTime = 10;
+    var toValue = 15;
+    var toTangent = -10;
+
+    Assert.AreEqual(2.75f,
+                    HermiteInterpolationUtil.GetTangent(
+                        fromValue,
+                        fromTime,
+                        fromTangent,
+                        toValue,
+                        toTime,
+                        toTangent,
+                        5));
+  }
+
+
+  [Test]
   public void TestInterpolationStartAndEnd() {
     var fromTime = 1;
     var fromValue = 2;
