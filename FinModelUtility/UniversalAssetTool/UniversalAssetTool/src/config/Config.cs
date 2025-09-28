@@ -54,6 +54,11 @@ public partial class GeneralSettings {
 public partial class ViewerSettings {
   public bool AutomaticallyPlayGameAudioForModel { get; set; }
 
+  public bool PreferGlNativeInterop {
+    get => FinConfig.PreferGlNativeInterop;
+    set => FinConfig.PreferGlNativeInterop = value;
+  }
+
   public bool ShowGrid { get; set; }
 
   public bool ShowSkeleton {

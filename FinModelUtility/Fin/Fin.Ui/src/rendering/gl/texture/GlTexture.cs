@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 
 using fin.image;
 using fin.image.formats;
+using fin.math.floats;
 using fin.model;
 
 using OpenTK.Graphics.ES30;
@@ -68,6 +69,7 @@ public sealed class GlTexture : IGlTexture {
         GL.TexParameter(target,
                         TextureParameterName.TextureMaxLevel,
                         mipmapImages.Length - 1);
+        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       var finBorderColor = texture.BorderColor;
@@ -82,6 +84,7 @@ public sealed class GlTexture : IGlTexture {
                       (int) ConvertFinWrapToGlWrap_(
                           texture.WrapModeV,
                           hasBorderColor));
+      GlUtil.AssertNoErrorsWhenDebugging();
 
       if (hasBorderColor) {
         var glBorderColor = new[] {
@@ -111,6 +114,7 @@ public sealed class GlTexture : IGlTexture {
               FinTextureMinFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
                   .LinearMipmapLinear,
           }));
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(
           target,
           TextureParameterName.TextureMagFilter,
@@ -121,15 +125,20 @@ public sealed class GlTexture : IGlTexture {
                                                .TextureMagFilter.Linear,
               _ => throw new ArgumentOutOfRangeException()
           }));
-      GL.TexParameter(target,
-                      TextureParameterName.TextureLodBias,
-                      texture.LodBias);
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(target,
                       TextureParameterName.TextureMinLod,
                       texture.MinLod);
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(target,
                       TextureParameterName.TextureMaxLod,
                       texture.MaxLod);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      if (!texture.LodBias.IsRoughly0()) {
+        GL.TexParameter(target,
+                        TextureParameterName.TextureLodBias,
+                        texture.LodBias);
+      }
     }
 
     GlUtil.AssertNoErrorsWhenDebugging();

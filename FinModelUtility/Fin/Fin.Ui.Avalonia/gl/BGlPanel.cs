@@ -6,6 +6,8 @@ using Avalonia.Controls;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 
+using fin.config;
+
 namespace fin.ui.avalonia.gl;
 
 public abstract class BGlPanel : Panel, ICustomHitTest {
@@ -20,8 +22,10 @@ public abstract class BGlPanel : Panel, ICustomHitTest {
       var renderGl = this.RenderGl;
       var teardownGl = this.TeardownGl;
 
-      if (await SharpDxInteropControl.TryToAddTo(this, initGl, renderGl, teardownGl)) {
-        return;
+      if (FinConfig.PreferGlNativeInterop) {
+        if (await SharpDxInteropControl.TryToAddTo(this, initGl, renderGl, teardownGl)) {
+          return;
+        }
       }
 
       this.Children.Add(new OpenTkControl(initGl, renderGl, teardownGl));

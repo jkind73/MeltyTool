@@ -47,7 +47,7 @@ public sealed class SettingsViewModel
   [property: Config(
       Category = CATEGORY_GENERAL,
       Group = GROUP_GENERAL_DEBUG,
-      Header = "Verbose Console",
+      Header = "Verbose console",
       Description = "Whether to print verbose logs to the console.")]
   public bool VerboseConsole {
     get => Config_.General.Debug.VerboseConsole;
@@ -58,9 +58,10 @@ public sealed class SettingsViewModel
   [property: Config(
       Category = CATEGORY_EXPORTER,
       Group = GROUP_EXPORTER_GENERAL,
-      Header = "Export All Textures",
+      Header = "Export all textures",
       Description
-          = "Whether to export all textures read from the format, even if they're not used in the exported model.")]
+          = "Whether to export all textures read from the format, even if " +
+            "they're not used in the exported model.")]
   public bool ExportAllTextures {
     get => Config_.Exporter.General.ExportAllTextures;
     set => Config_.Exporter.General.ExportAllTextures = value;
@@ -69,7 +70,7 @@ public sealed class SettingsViewModel
   [property: Config(
       Category = CATEGORY_EXPORTER,
       Group = GROUP_EXPORTER_GENERAL,
-      Header = "Exported Formats",
+      Header = "Exported formats",
       Description = "Which model formats to export.")]
   public HashSet<ExportedFormat> ExportedFormats {
     get => Config_.Exporter.General.ExportedFormats;
@@ -79,7 +80,7 @@ public sealed class SettingsViewModel
   [property: Config(
       Category = CATEGORY_EXPORTER,
       Group = GROUP_EXPORTER_GENERAL,
-      Header = "Exported Model Scale Source",
+      Header = "Exported model scale source",
       Description = "How models should be scaled when exporting.")]
   public ScaleSourceType ExportedModelScaleSource {
     get => Config_.Exporter.General.ExportedModelScaleSource;
@@ -90,7 +91,7 @@ public sealed class SettingsViewModel
   [property: Config(
       Category = CATEGORY_EXPORTER,
       Group = GROUP_EXPORTER_THIRD_PARTY,
-      Header = "Export Bone Scale Animations Separately",
+      Header = "Export bone scale animations separately",
       Description
           = "Whether to export bone scale animations in a separate file.")]
   public bool ExportBoneScaleAnimationsSeparately {
@@ -102,12 +103,12 @@ public sealed class SettingsViewModel
   // Extractor Settings
   [property: Config(
       Category = GROUP_EXTRACTOR,
-      Header = "Cache File Hierarchies",
+      Header = "Cache file hierarchies",
       Description
           = "Whether to cache extracted file hierarchies. Reading the file " +
             "hierarchy from a cache file is significantly faster than " +
-            "querying the file system, so this will decrease the time the " +
-            "UI takes to start up.")]
+            "querying the file system, so this will decrease latency when " +
+            "starting up the UI.")]
   public bool CacheFileHierarchies {
     get => Config_.Extractor.CacheFileHierarchies;
     set => Config_.Extractor.CacheFileHierarchies = value;
@@ -115,7 +116,7 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_EXTRACTOR,
-      Header = "Clean Up Archives",
+      Header = "Clean up archives",
       Description
           = "Whether to clean up archives after extracting them. This helps " +
             "reduce memory usage and prevents redundant work the next time " +
@@ -127,7 +128,7 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_EXTRACTOR,
-      Header = "Extract ROMs in Parallel",
+      Header = "Extract ROMs in parallel",
       Description
           = "Whether to extract ROMs in parallel using multithreading.")]
   public bool ExtractRomsInParallel {
@@ -137,12 +138,12 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_EXTRACTOR,
-      Header = "Verify Cached File Hierarchy Size",
+      Header = "Verify cached file hierarchy size",
       Description
           = "Whether to verify the total directory size of cached file " +
             "hierarchies. This will allow the UI to automatically " +
             "regenerate out-of-date cached file hierarchies, but will " +
-            "increase the time the UI takes to start up.")]
+            "increase latency when starting up the UI.")]
   public bool VerifyCachedFileHierarchySize {
     get => Config_.Extractor.VerifyCachedFileHierarchySize;
     set => Config_.Extractor.VerifyCachedFileHierarchySize = value;
@@ -151,9 +152,10 @@ public sealed class SettingsViewModel
   // Viewer Settings
   [property: Config(
       Category = GROUP_VIEWER,
-      Header = "Automatically Play Game Audio For Model",
+      Header = "Automatically play game audio for model",
       Description
-          = "Whether to automatically play audio from the current game when viewing a model.")]
+          = "Whether to automatically play audio from the current game when " +
+            "viewing a model.")]
   public bool AutomaticallyPlayGameAudioForModel {
     get => Config_.Viewer.AutomaticallyPlayGameAudioForModel;
     set => Config_.Viewer.AutomaticallyPlayGameAudioForModel = value;
@@ -161,7 +163,20 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_VIEWER,
-      Header = "Show Grid",
+      Header = "Prefer GL native interop",
+      Description
+          = "Whether to prefer native interop for OpenGL. This will " +
+            "significantly improve performance, but isn't always available. " +
+            "Might cause some graphical issues and/or crashes, there are " +
+            "still some issues to resolve.")]
+  public bool PreferGlNativeInterop {
+    get => Config_.Viewer.PreferGlNativeInterop;
+    set => Config_.Viewer.PreferGlNativeInterop = value;
+  }
+
+  [property: Config(
+      Category = GROUP_VIEWER,
+      Header = "Show grid",
       Description = "Whether to render the grid in the 3D view.")]
   public bool ShowGrid {
     get => Config_.Viewer.ShowGrid;
@@ -170,7 +185,7 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_VIEWER,
-      Header = "Show Skeleton",
+      Header = "Show skeleton",
       Description = "Whether to render the skeleton in the 3D view.")]
   public bool ShowSkeleton {
     get => Config_.Viewer.ShowSkeleton;
@@ -179,8 +194,8 @@ public sealed class SettingsViewModel
 
   [property: Config(
       Category = GROUP_VIEWER,
-      Header = "Viewer Model Scale Source",
-      Description = "How models should be scaled when rendering.")]
+      Header = "Viewer model scale source",
+      Description = "How models should be scaled within the 3D view.")]
   public ScaleSourceType ViewerModelScaleSource {
     get => Config_.Viewer.ViewerModelScaleSource;
     set => Config_.Viewer.ViewerModelScaleSource = value;

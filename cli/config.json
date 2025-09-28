@@ -25,8 +25,9 @@
   },
   "Viewer": {
     "AutomaticallyPlayGameAudioForModel": false,
+    "PreferGlNativeInterop": false,
     "ShowGrid": true,
     "ShowSkeleton": false,
-    "ViewerModelScaleSource": "MIN_MAX_BOUNDS"
+    "ViewerModelScaleSource": "MIN_MAX_BOUNDS",
   }
 }
