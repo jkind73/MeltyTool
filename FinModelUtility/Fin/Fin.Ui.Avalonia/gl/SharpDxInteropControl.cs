@@ -1,6 +1,7 @@
 ﻿// Copied and adapted from https://github.com/AvaloniaUI/Avalonia/blob/release/11.3.0/samples/GpuInterop
 
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -305,7 +306,7 @@ public class SharpDxInteropControl : Control {
 
     this.openTkWindow_!.ClientSize = (size.Width, size.Height);
     GlUtil.SwitchContext(this.openTkWindow_.Context);
-    GL.Viewport(0, 0, size.Width, size.Height);
+    GlUtil.SetViewport(new Rectangle(0, 0, size.Width, size.Height));
 
     this.currentImageDisposable_?.Dispose();
     if (this.hCfbs_[0] != 0) {

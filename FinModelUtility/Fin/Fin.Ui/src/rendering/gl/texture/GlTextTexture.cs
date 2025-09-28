@@ -52,9 +52,9 @@ public sealed class GlTextTexture : IGlTexture {
     this.impl_ = new GlFbo(width, height);
 
     this.impl_.TargetFbo();
-    GL.Viewport(0, 0, width, height);
-    GL.ClearColor(0, 0, 0, 0);
-    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+    GlUtil.SetViewport(new Rectangle(0, 0, width, height));
+    GlUtil.SetClearColor(Color.Transparent);
+    GlUtil.ClearColorAndDepth();
     drawing.Draw();
     GL.Flush();
     this.impl_.UntargetFbo();

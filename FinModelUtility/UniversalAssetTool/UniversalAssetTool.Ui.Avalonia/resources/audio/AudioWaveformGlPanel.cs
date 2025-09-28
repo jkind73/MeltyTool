@@ -1,4 +1,6 @@
-﻿using Avalonia;
+﻿using System.Drawing;
+
+using Avalonia;
 
 using fin.audio;
 using fin.ui.avalonia.gl;
@@ -30,10 +32,10 @@ public sealed class AudioWaveformGlPanel : BGlPanel {
 
   protected override void RenderGl() {
     this.GetBoundsForGlViewport(out var width, out var height);
-    GL.Viewport(0, 0, width, height);
+    GlUtil.SetViewport(new Rectangle(0, 0, width, height));
 
-    GL.ClearColor(0, 0, 0, 0);
-    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+    GlUtil.SetClearColor(Color.Transparent);
+    GlUtil.ClearColorAndDepth();
 
     {
       GlTransform.MatrixMode(TransformMatrixMode.PROJECTION);

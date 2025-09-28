@@ -1,4 +1,6 @@
-﻿using fin.animation;
+﻿using System.Drawing;
+
+using fin.animation;
 using fin.io.web;
 using fin.model;
 using fin.scene;
@@ -116,7 +118,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
     var width = this.Width;
     var height = this.Height;
-    GL.Viewport(0, 0, width, height);
+    GlUtil.SetViewport(new Rectangle(0, 0, width, height));
 
     // Dynamically update the near/far planes when far away to prevent clipping.
     var glNearPlane = this.NearPlane;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 using fin.audio;
 using fin.audio.io;
@@ -93,7 +94,7 @@ public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   protected override void RenderGl() {
       var width = this.Width;
       var height = this.Height;
-      GL.Viewport(0, 0, width, height);
+      GlUtil.SetViewport(new Rectangle(0, 0, width, height));
 
       GlUtil.ClearColorAndDepth();
 
