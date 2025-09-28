@@ -18,8 +18,10 @@ namespace uni.ui.winforms.common.audio;
 public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   private IReadOnlyList<IAudioFileBundle>? audioFileBundles_;
   private ShuffledListView<IAudioFileBundle>? shuffledListView_;
+
   private readonly IAudioManager<short> audioManager_ =
       AlAudioManager.TryToCreateOrStub();
+
   private readonly IAudioPlayer<short> audioPlayer_;
 
   private readonly AotWaveformRenderer waveformRenderer_ = new();
@@ -27,41 +29,61 @@ public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   private readonly TimedCallback playNextCallback_;
 
   public AudioPlayerGlPanel() {
-      this.Disposed += (_, _) => this.audioManager_.Dispose();
+    this.Disposed += (_, _) => this.audioManager_.Dispose();
 
-      this.audioPlayer_ = this.audioManager_.AudioPlayer;
+    this.audioPlayer_ = this.audioManager_.AudioPlayer;
 
-      var playNextLock = new object();
-      this.playNextCallback_ = new TimedCallback(() => {
-        lock (playNextLock) {
-          if (this.shuffledListView_ == null) {
-            return;
-          }
+    var playNextLock = new object();
+    this.playNextCallback_ = new TimedCallback(() => {
+                                                 lock (playNextLock) {
+                                                   if (this.shuffledListView_ ==
+                                                    null) {
+                                                     return;
+                                                   }
 
-          var activeSound = this.waveformRenderer_.ActivePlayback;
-          if (activeSound?.State == PlaybackState.PLAYING) {
-            return;
-          }
+                                                   var activeSound
+                                                       = this.waveformRenderer_
+                                                           .ActivePlayback;
+                                                   if (activeSound?.State ==
+                                                    PlaybackState.PLAYING) {
+                                                     return;
+                                                   }
 
-          this.waveformRenderer_.ActivePlayback = null;
-          activeSound?.Stop();
-          activeSound?.Dispose();
+                                                   this.waveformRenderer_
+                                                       .ActivePlayback = null;
+                                                   activeSound?.Stop();
+                                                   activeSound?.Dispose();
 
-          if (this.shuffledListView_.TryGetNext(out var audioFileBundle)) {
-            var audioBuffer = new GlobalAudioReader().ImportAudio(
-                this.audioManager_,
-                audioFileBundle);
+                                                   if (this.shuffledListView_
+                                                    .TryGetNext(
+                                                        out var
+                                                            audioFileBundle)) {
+                                                     var audioBuffer
+                                                         = new
+                                                             GlobalAudioReader()
+                                                         .ImportAudio(
+                                                             this.audioManager_,
+                                                             audioFileBundle);
 
-            activeSound = this.waveformRenderer_.ActivePlayback =
-                              this.audioPlayer_.CreatePlayback(audioBuffer[0]);
-            activeSound.Volume = .1f;
-            activeSound.Play();
+                                                     activeSound
+                                                         = this
+                                                                 .waveformRenderer_
+                                                                 .ActivePlayback
+                                                             =
+                                                             this.audioPlayer_
+                                                                 .CreatePlayback(
+                                                                     audioBuffer
+                                                                         [0]);
+                                                     activeSound.Volume = .1f;
+                                                     activeSound.Play();
 
-            this.OnChange(audioFileBundle);
-          }
-        }
-      }, .1f);
-    }
+                                                     this.OnChange(
+                                                         audioFileBundle);
+                                                   }
+                                                 }
+                                               },
+                                               .1f);
+  }
 
   /// <summary>
   ///   Sets the audio file bundles to play in the player.
@@ -69,21 +91,21 @@ public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   public IReadOnlyList<IAudioFileBundle>? AudioFileBundles {
     get => this.audioFileBundles_;
     set {
-        var originalValue = this.audioFileBundles_;
-        this.audioFileBundles_ = value;
+      var originalValue = this.audioFileBundles_;
+      this.audioFileBundles_ = value;
 
-        this.waveformRenderer_.ActivePlayback?.Stop();
-        this.waveformRenderer_.ActivePlayback = null;
+      this.waveformRenderer_.ActivePlayback?.Stop();
+      this.waveformRenderer_.ActivePlayback = null;
 
-        this.shuffledListView_
-            = value != null
-                  ? new ShuffledListView<IAudioFileBundle>(value)
-                  : null;
+      this.shuffledListView_
+          = value != null
+              ? new ShuffledListView<IAudioFileBundle>(value)
+              : null;
 
-        if (value == null && originalValue != null) {
-          this.OnChange(null);
-        }
+      if (value == null && originalValue != null) {
+        this.OnChange(null);
       }
+    }
   }
 
   public event Action<IAudioFileBundle?> OnChange = delegate { };
@@ -92,37 +114,35 @@ public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
   private void ResetGl_() => GlUtil.ResetGl();
 
   protected override void RenderGl() {
-      var width = this.Width;
-      var height = this.Height;
-      GlUtil.SetViewport(new Rectangle(0, 0, width, height));
+    var width = this.Width;
+    var height = this.Height;
+    GlUtil.SetViewport(new Rectangle(0, 0, width, height));
 
-      GlUtil.ClearColorAndDepth();
+    GlUtil.ClearColorAndDepth();
 
-      this.RenderOrtho_();
-    }
+    this.RenderOrtho_();
+  }
 
   private void RenderOrtho_() {
-      var width = this.Width;
-      var height = this.Height;
+    var width = this.Width;
+    var height = this.Height;
 
-      {
-        GlTransform.MatrixMode(TransformMatrixMode.PROJECTION);
-        GlTransform.LoadIdentity();
-        GlTransform.Ortho2d(0, width, height, 0);
+    {
+      GlTransform.MatrixMode(TransformMatrixMode.PROJECTION);
+      GlTransform.LoadIdentity();
+      GlTransform.Ortho2d(0, width, height, 0);
 
-        GlTransform.MatrixMode(TransformMatrixMode.VIEW);
-        GlTransform.LoadIdentity();
+      GlTransform.MatrixMode(TransformMatrixMode.VIEW);
+      GlTransform.LoadIdentity();
 
-        GlTransform.MatrixMode(TransformMatrixMode.MODEL);
-        GlTransform.LoadIdentity();
-      }
-
-      GL.LineWidth(1.5f);
-
-      var amplitude = height * .45f;
-      this.waveformRenderer_.Width = width;
-      this.waveformRenderer_.Amplitude = amplitude;
-      this.waveformRenderer_.MiddleY = height / 2f;
-      this.waveformRenderer_.Render();
+      GlTransform.MatrixMode(TransformMatrixMode.MODEL);
+      GlTransform.LoadIdentity();
     }
+
+    var amplitude = height * .45f;
+    this.waveformRenderer_.Width = width;
+    this.waveformRenderer_.Amplitude = amplitude;
+    this.waveformRenderer_.MiddleY = height / 2f;
+    this.waveformRenderer_.Render();
+  }
 }

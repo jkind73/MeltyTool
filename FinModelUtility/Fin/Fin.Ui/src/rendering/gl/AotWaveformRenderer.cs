@@ -2,6 +2,7 @@
 
 using fin.audio;
 using fin.math;
+using fin.model;
 using fin.model.impl;
 using fin.ui.rendering.gl.model;
 
@@ -28,11 +29,15 @@ public sealed class AotWaveformRenderer : IRenderable {
       var model = ModelImpl.CreateForViewer(1000);
 
       var material = model.MaterialManager.AddColorMaterial(Color.Red);
+      material.DepthCompareType = DepthCompareType.Always;
+      material.CullingMode = CullingMode.SHOW_BOTH;
 
       var skin = model.Skin;
 
       this.vertices_ = skin.TypedVertices;
-      skin.AddMesh().AddLineStrip(this.vertices_).SetMaterial(material);
+      var lineStrip = skin.AddMesh().AddLineStrip(this.vertices_);
+          lineStrip.SetMaterial(material);
+          lineStrip.SetLineWidth(1f);
 
       this.renderer_ = ModelRenderer.CreateDynamic(model);
     }
@@ -101,7 +106,6 @@ public sealed class AotWaveformRenderer : IRenderable {
       }
     }
 
-    GL.LineWidth(1);
     this.renderer_.UpdateBuffer();
     this.renderer_.Render();
   }

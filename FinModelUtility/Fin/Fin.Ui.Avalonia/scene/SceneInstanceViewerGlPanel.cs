@@ -191,6 +191,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     }
 
     if (this.sceneChangeRequested_) {
+      LoadingStatusService.IsLoading = true;
       this.sceneChangeRequested_ = false;
 
       GlUtil.ResetGl();
@@ -200,6 +201,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
 
       this.viewerImpl_.Scene = this.upcomingScene_;
       this.upcomingScene_ = null;
+      LoadingStatusService.IsLoading = false;
     }
 
     if (this.AllowMovingCamera) {

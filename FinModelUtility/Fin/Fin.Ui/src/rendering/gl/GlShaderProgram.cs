@@ -1,5 +1,6 @@
 ﻿using fin.data;
 using fin.data.lazy;
+using fin.util.asserts;
 
 using OpenTK.Graphics.ES30;
 
@@ -7,6 +8,8 @@ using OpenTK.Graphics.ES30;
 namespace fin.ui.rendering.gl;
 
 public sealed partial class GlShaderProgram : IShaderProgram {
+  private const bool ASSERT_COMPILATION = true;
+
   private bool isDisposed_;
   private readonly CachedShaderProgram cachedShaderProgram_;
 
@@ -108,9 +111,12 @@ public sealed partial class GlShaderProgram : IShaderProgram {
         out var shaderErrorLength,
         out var shaderError);
 
-    if (shaderError?.Length > 0) {
-      ;
+    if (ASSERT_COMPILATION) {
+      if (shaderError?.Length > 0) {
+        Asserts.Fail(shaderError);
+      }
     }
+
     GlUtil.AssertNoErrorsWhenDebugging();
 
     return shaderId;
@@ -140,8 +146,10 @@ public sealed partial class GlShaderProgram : IShaderProgram {
     private readonly LazyDictionary<string, int> lazyUniforms_;
 
     public CachedShaderProgram() {
-      this.lazyUniforms_ = new(
-          uniformName => GL.GetUniformLocation(this.ProgramId, uniformName));
+      this.lazyUniforms_ = new(uniformName
+                                   => GL.GetUniformLocation(
+                                       this.ProgramId,
+                                       uniformName));
     }
 
     public required int ProgramId { get; init; }

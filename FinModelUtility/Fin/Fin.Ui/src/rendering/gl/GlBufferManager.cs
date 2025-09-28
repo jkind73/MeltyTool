@@ -270,7 +270,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       }
 
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.BindVertexArray(this.vaoId_);
+      GlUtil.BindVao(this.vaoId_);
 
       var vertexAttribIndex = 0;
 
@@ -415,7 +415,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       }
 
       // Make sure the buffers are not changed by outside code
-      GL.BindVertexArray(0);
+      GlUtil.BindVao(0);
       GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
       GlUtil.AssertNoErrorsWhenDebugging();
     }
@@ -482,7 +482,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       this.isFlipped_ = mergedPrimitive.IsFlipped;
 
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.BindVertexArray(this.vaoId_);
+      GlUtil.BindVao(this.vaoId_);
       GL.GenBuffers(1, out this.eboId_);
 
       IReadOnlyList<int> restartIndex = [
@@ -508,7 +508,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
                     this.indices_,
                     BufferUsageHint.StaticDraw);
 
-      GL.BindVertexArray(0);
       GlUtil.AssertNoErrorsWhenDebugging();
     }
 
@@ -533,6 +532,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
       GlUtil.AssertNoErrorsWhenDebugging();
 
+      GlUtil.ValidateCurrentProgram();
       GL.DrawElements(
           this.beginMode_,
           this.indices_.Length,
