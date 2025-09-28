@@ -5,6 +5,7 @@ using fin.image;
 using fin.image.formats;
 using fin.math.floats;
 using fin.model;
+using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.ES30;
 
@@ -22,7 +23,7 @@ public sealed class GlTexture : IGlTexture {
 
 
   private const int UNDEFINED_ID = -1;
-  private readonly IReadOnlyTexture texture_;
+  private readonly IReadOnlyTexture? texture_;
 
   public static GlTexture FromTexture(IReadOnlyTexture texture) {
     if (!cache_.TryGetValue(texture, out var glTexture)) {
@@ -276,17 +277,20 @@ public sealed class GlTexture : IGlTexture {
   }
 
   private void ReleaseUnmanagedResources_() {
+    if (GlMaterialConstants.IsCommonTexture(this)) {
+      return;
+    }
+
     this.IsDisposed = true;
-    cache_.Remove(this.texture_);
+    if (this.texture_ != null) {
+      cache_.Remove(this.texture_);
+    }
 
     var id = this.Id;
     GL.DeleteTextures(1, ref id);
 
     this.Id = UNDEFINED_ID;
   }
-
-  public int Width => this.texture_.Image.Width;
-  public int Height => this.texture_.Image.Height;
 
   public int Id { get; private set; } = UNDEFINED_ID;
 

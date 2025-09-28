@@ -56,8 +56,7 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
     this.impl_?.Dispose();
 
     foreach (var cachedTextureUniformData in this.cachedTextureUniformDatas_) {
-      GlMaterialConstants.DisposeIfNotCommon(
-          cachedTextureUniformData.GlTexture);
+      cachedTextureUniformData.GlTexture.Dispose();
     }
 
     this.DisposeInternal();

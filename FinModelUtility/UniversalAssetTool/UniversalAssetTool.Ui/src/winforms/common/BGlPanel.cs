@@ -12,24 +12,24 @@ namespace uni.ui.winforms.common;
 public abstract partial class BGlPanel : UserControl {
   private readonly TimedCallback timedCallback;
 
-  private static float DEFAULT_FRAMERATE_ { get; } = 
+  private static float DEFAULT_FRAMERATE_ { get; } =
     EnumDisplaySettingsUtil.GetDisplayFrequency();
 
   protected BGlPanel() {
     this.InitializeComponent();
 
-      if (!DesignModeUtil.InDesignMode) {
-        GlUtil.Init();
-        this.impl_.CreateGraphics();
-        this.impl_.MakeCurrent();
+    if (!DesignModeUtil.InDesignMode) {
+      GlUtil.InitDll();
+      this.impl_.CreateGraphics();
+      this.impl_.MakeCurrent();
 
-        GlUtil.SwitchContext(this.impl_.Context);
-        this.InitGl();
+      GlUtil.SwitchContext(this.impl_.Context);
+      this.InitGl();
 
-        this.timedCallback =
-            TimedCallback.WithFrequency(this.Invalidate, DEFAULT_FRAMERATE_);
-      }
+      this.timedCallback =
+          TimedCallback.WithFrequency(this.Invalidate, DEFAULT_FRAMERATE_);
     }
+  }
 
   public float Framerate {
     get => this.timedCallback.Frequency;
@@ -41,21 +41,21 @@ public abstract partial class BGlPanel : UserControl {
   protected abstract void RenderGl();
 
   protected override void OnPaint(PaintEventArgs pe) {
-      base.OnPaint(pe);
-      if (!DesignModeUtil.InDesignMode) {
-        // TODO: This may not actually be needed? The concern is whether or not
-        // makeCurrent is potentially a race condition
-        GlUtil.RunLockedGl(() => {
-          GlUtil.SwitchContext(this.impl_.Context);
-          this.impl_.MakeCurrent();
+    base.OnPaint(pe);
+    if (!DesignModeUtil.InDesignMode) {
+      // TODO: This may not actually be needed? The concern is whether or not
+      // makeCurrent is potentially a race condition
+      GlUtil.RunLockedGl(() => {
+        GlUtil.SwitchContext(this.impl_.Context);
+        this.impl_.MakeCurrent();
 
-          this.RenderGl();
+        this.RenderGl();
 
-          GL.Flush();
-          this.impl_.SwapBuffers();
+        GL.Flush();
+        this.impl_.SwapBuffers();
 
-          this.impl_.Context.MakeNoneCurrent();
-        });
-      }
+        this.impl_.Context.MakeNoneCurrent();
+      });
     }
+  }
 }

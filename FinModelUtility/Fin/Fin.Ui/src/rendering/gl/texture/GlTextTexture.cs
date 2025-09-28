@@ -74,8 +74,6 @@ public sealed class GlTextTexture : IGlTexture {
     this.impl_.Dispose();
   }
 
-  public int Width => this.impl_.Width;
-  public int Height => this.impl_.Height;
   public int Id => this.impl_.ColorTextureId;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]

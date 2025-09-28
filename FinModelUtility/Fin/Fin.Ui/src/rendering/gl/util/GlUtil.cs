@@ -1,5 +1,6 @@
 ﻿using fin.model;
 using fin.shaders.glsl;
+using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.ES30;
 
@@ -8,7 +9,7 @@ namespace fin.ui.rendering.gl;
 public static partial class GlUtil {
   public static bool IsInitialized { get; private set; }
 
-  public static void Init() {
+  public static void InitDll() {
     if (IsInitialized) {
       return;
     }
@@ -29,6 +30,8 @@ public static partial class GlUtil {
 
 
   public static void ResetGl() {
+    GlMaterialConstants.Initialize();
+
     GL.ClearDepth(5.0F);
     GL.Enable(EnableCap.PrimitiveRestartFixedIndex);
 
