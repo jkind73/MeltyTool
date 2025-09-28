@@ -7,6 +7,8 @@ public partial class GlState {
 }
 
 public static partial class GlUtil {
+  public static void ResetVao() => BindVao(0);
+
   public static void BindVao(int vaoId) {
     if (currentState_.CurrentVaoId == vaoId) {
       return;

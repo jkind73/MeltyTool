@@ -271,10 +271,12 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
 
       GlUtil.AssertNoErrorsWhenDebugging();
       GlUtil.BindVao(this.vaoId_);
+      GlUtil.AssertNoErrorsWhenDebugging();
 
       var vertexAttribIndex = 0;
 
       // Position
+      GlUtil.AssertNoErrorsWhenDebugging();
       var vertexAttribPosition = vertexAttribIndex++;
       GL.BindBuffer(BufferTarget.ArrayBuffer,
                     this.vboIds_[vertexAttribPosition]);
@@ -292,9 +294,11 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
           false,
           0,
           0);
+      GlUtil.AssertNoErrorsWhenDebugging();
 
       // Normal
       if (this.normalData_ != null) {
+        GlUtil.AssertNoErrorsWhenDebugging();
         var vertexAttribNormal = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
                       this.vboIds_[vertexAttribNormal]);
@@ -312,10 +316,12 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
+        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       // Tangent
       if (this.tangentData_ != null) {
+        GlUtil.AssertNoErrorsWhenDebugging();
         var vertexAttribTangent = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
                       this.vboIds_[vertexAttribTangent]);
@@ -333,9 +339,11 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
+        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       if (numBones > 0) {
+        GlUtil.AssertNoErrorsWhenDebugging();
         // Bone ids
         var vertexAttribBoneIds = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
@@ -370,11 +378,13 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
+        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       // Uv
       if (this.uvData_ != null) {
         for (var i = 0; i < this.uvData_.Length; ++i) {
+          GlUtil.AssertNoErrorsWhenDebugging();
           var vertexAttribUv = vertexAttribIndex++;
           GL.BindBuffer(BufferTarget.ArrayBuffer, this.vboIds_[vertexAttribUv]);
           GL.BufferData(BufferTarget.ArrayBuffer,
@@ -389,6 +399,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
               false,
               0,
               0);
+          GlUtil.AssertNoErrorsWhenDebugging();
         }
       }
 
@@ -396,6 +407,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       // Color
       if (this.colorData_ != null) {
         for (var i = 0; i < this.colorData_.Length; ++i) {
+          GlUtil.AssertNoErrorsWhenDebugging();
           var vertexAttribColor = vertexAttribIndex++;
           GL.BindBuffer(BufferTarget.ArrayBuffer,
                         this.vboIds_[vertexAttribColor]);
@@ -411,11 +423,12 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
               false,
               0,
               0);
+          GlUtil.AssertNoErrorsWhenDebugging();
         }
       }
 
       // Make sure the buffers are not changed by outside code
-      GlUtil.BindVao(0);
+      GlUtil.ResetVao();
       GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
       GlUtil.AssertNoErrorsWhenDebugging();
     }

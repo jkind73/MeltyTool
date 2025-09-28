@@ -29,9 +29,6 @@ public sealed class AotWaveformRenderer : IRenderable {
       var model = ModelImpl.CreateForViewer(1000);
 
       var material = model.MaterialManager.AddColorMaterial(Color.Red);
-      material.DepthCompareType = DepthCompareType.Always;
-      material.CullingMode = CullingMode.SHOW_BOTH;
-
       var skin = model.Skin;
 
       this.vertices_ = skin.TypedVertices;
