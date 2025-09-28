@@ -84,7 +84,6 @@ class D3d11Swapchain {
 
     this.pendingImages_.Remove(img);
     var rv = new AnonymousDisposable(() => {
-      img.Present();
       this.pendingImages_.Add(img);
     });
     image = img;

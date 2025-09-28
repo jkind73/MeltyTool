@@ -281,7 +281,9 @@ public class SharpDxInteropControl : Control {
 
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
     this.renderGl_();
 
     this.currentImage_.Present();

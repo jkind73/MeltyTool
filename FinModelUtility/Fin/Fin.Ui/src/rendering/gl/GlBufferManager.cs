@@ -531,6 +531,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
 
       GlUtil.AssertNoErrorsWhenDebugging();
       GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
+      GlUtil.AssertNoErrorsWhenDebugging();
 
       GL.DrawElements(
           this.beginMode_,
