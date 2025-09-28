@@ -4,10 +4,12 @@
 // MVID: 0B734F03-6CB9-4E1A-B817-4DAA44B7F881
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.ES30;
 using System;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+
+using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
 
 #nullable disable
 namespace QuickFont
@@ -35,20 +37,24 @@ namespace QuickFont
     {
       this.Width = dataSource.Width;
       this.Height = dataSource.Height;
-      Helper.SafeGLEnable(EnableCap.Texture2D, (Action) (() =>
-      {
-        GlUtil.AssertNoErrorsWhenDebugging();
-        GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-        GL.GenTextures(1, out this._textureID);
-        GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, 33069);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, 33069);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, 9729);
-        GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 9729);
-        GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, dataSource.Scan0);
-        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-        GlUtil.AssertNoErrorsWhenDebugging();
-      }));
+
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.GenTextures(1, out this._textureID);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.TexImage2D(TextureTarget2d.Texture2D, 0, TextureComponentCount.Rgba8, this.Width, this.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, dataSource.Scan0);
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.GenerateMipmap(TextureTarget.Texture2D);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     private static byte[] ConvertBgraToRgba(BitmapData dataSource)

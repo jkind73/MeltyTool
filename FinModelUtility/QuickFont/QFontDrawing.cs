@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.ES30;
 using OpenTK.Mathematics;
 
 #nullable disable
@@ -66,7 +66,6 @@ namespace QuickFont
     private static void InitialiseStaticState()
     {
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.Enable(EnableCap.Texture2D);
       int shader1 = GL.CreateShader(ShaderType.VertexShader);
       int shader2 = GL.CreateShader(ShaderType.FragmentShader);
       if (shader1 == -1 || shader2 == -1)
@@ -78,6 +77,7 @@ namespace QuickFont
       ];
       int params1 = 0;
       int params2 = 0;
+      GlUtil.AssertNoErrorsWhenDebugging();
       foreach (string str in strArray)
       {
         GL.ShaderSource(shader1, str + QFontDrawing.LoadShaderFromResource("simple.vs"));
@@ -91,6 +91,7 @@ namespace QuickFont
       }
       if (params1 == 0 || params2 == 0)
         throw new Exception(string.Format("Shaders were not compiled correctly. Info logs are\nVert:\n{0}\nFrag:\n{1}", (object) GL.GetShaderInfoLog(shader1), (object) GL.GetShaderInfoLog(shader2)));
+      GlUtil.AssertNoErrorsWhenDebugging();
       int program = GL.CreateProgram();
       GL.AttachShader(program, shader1);
       GL.AttachShader(program, shader2);
@@ -103,6 +104,7 @@ namespace QuickFont
       GL.DetachShader(program, shader2);
       GL.DeleteShader(shader1);
       GL.DeleteShader(shader2);
+      GlUtil.AssertNoErrorsWhenDebugging();
       int uniformLocation1 = GL.GetUniformLocation(program, "proj_matrix");
       int uniformLocation2 = GL.GetUniformLocation(program, "modelview_matrix");
       int uniformLocation3 = GL.GetUniformLocation(program, "tex_object");
@@ -143,7 +145,7 @@ namespace QuickFont
       if (this._useDefaultBlendFunction)
       {
         GL.Enable(EnableCap.Blend);
-        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+        GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
       }
       GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ProjectionMatrixUniformLocation, false, ref this._projectionMatrix);
       GL.Uniform1(this.InstanceSharedState.ShaderVariables.SamplerLocation, 0);
