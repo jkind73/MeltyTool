@@ -193,6 +193,8 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     if (this.sceneChangeRequested_) {
       this.sceneChangeRequested_ = false;
 
+      GlUtil.ResetGl();
+
       this.viewerImpl_.Scene?.Dispose();
       (this.viewerImpl_.Scene?.Definition as IScene)?.Dispose();
 

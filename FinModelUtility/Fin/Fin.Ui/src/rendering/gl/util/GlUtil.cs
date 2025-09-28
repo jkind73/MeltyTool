@@ -1,4 +1,7 @@
-﻿using OpenTK.Graphics.ES30;
+﻿using fin.model;
+using fin.shaders.glsl;
+
+using OpenTK.Graphics.ES30;
 
 namespace fin.ui.rendering.gl;
 
@@ -34,5 +37,9 @@ public static partial class GlUtil {
     ResetCulling();
     ResetDepth();
     ResetFlipFaces();
+
+    for (var i = 0; i < MaterialConstants.MAX_TEXTURES; ++i) {
+      UnbindTexture(i);
+    }
   }
 }

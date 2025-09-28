@@ -43,10 +43,13 @@ public static partial class GlUtil {
 
   public static Color GetBlendColor() => currentState_.BlendColor;
 
-  public static void ResetBlending() => SetBlending(
-      FinBlendEquation.ADD,
-      FinBlendFactor.SRC_ALPHA,
-      FinBlendFactor.ONE_MINUS_SRC_ALPHA);
+  public static void ResetBlending() {
+    SetBlendColor(Color.White);
+    SetBlending(
+        FinBlendEquation.ADD,
+        FinBlendFactor.SRC_ALPHA,
+        FinBlendFactor.ONE_MINUS_SRC_ALPHA);
+  }
 
   public static bool SetBlending(
       FinBlendEquation blendEquation,
