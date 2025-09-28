@@ -24,16 +24,19 @@ namespace QuickFont
 
     public static void SafeGLEnable(EnableCap cap, Action code)
     {
+      GlUtil.AssertNoErrorsWhenDebugging();
       int num = GL.IsEnabled(cap) ? 1 : 0;
       GL.Enable(cap);
       code();
       if (num != 0)
         return;
       GL.Disable(cap);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public static void SafeGLEnable(EnableCap[] caps, Action code)
     {
+      GlUtil.AssertNoErrorsWhenDebugging();
       bool[] flagArray = new bool[caps.Length];
       for (int index = 0; index < caps.Length; ++index)
       {
@@ -48,6 +51,7 @@ namespace QuickFont
         if (!flagArray[index])
           GL.Disable(caps[index]);
       }
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public static int ToRgba(Color color)

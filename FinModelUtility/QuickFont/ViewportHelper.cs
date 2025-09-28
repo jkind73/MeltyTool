@@ -27,7 +27,9 @@ namespace QuickFont
     public static void UpdateCurrentViewport()
     {
       int[] data = new int[4];
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.GetInteger(GetPName.Viewport, data);
+      GlUtil.AssertNoErrorsWhenDebugging();
       ViewportHelper.currentViewport_ = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
     }
 

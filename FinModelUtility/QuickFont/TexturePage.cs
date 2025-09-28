@@ -37,6 +37,7 @@ namespace QuickFont
       this.Height = dataSource.Height;
       Helper.SafeGLEnable(EnableCap.Texture2D, (Action) (() =>
       {
+        GlUtil.AssertNoErrorsWhenDebugging();
         GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
         GL.GenTextures(1, out this._textureID);
         GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
@@ -46,6 +47,7 @@ namespace QuickFont
         GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, 9729);
         GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0, OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, dataSource.Scan0);
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+        GlUtil.AssertNoErrorsWhenDebugging();
       }));
     }
 
@@ -63,6 +65,10 @@ namespace QuickFont
       return destination;
     }
 
-    public void Dispose() => GL.DeleteTexture(this.TextureID);
+    public void Dispose() {
+      GlUtil.AssertNoErrorsWhenDebugging();
+      GL.DeleteTexture(this.TextureID);
+      GlUtil.AssertNoErrorsWhenDebugging();
+    }
   }
 }

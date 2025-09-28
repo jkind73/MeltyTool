@@ -4,14 +4,15 @@
 // MVID: 0B734F03-6CB9-4E1A-B817-4DAA44B7F881
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Mathematics;
 
 #nullable disable
 namespace QuickFont
@@ -64,6 +65,7 @@ namespace QuickFont
 
     private static void InitialiseStaticState()
     {
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.Enable(EnableCap.Texture2D);
       int shader1 = GL.CreateShader(ShaderType.VertexShader);
       int shader2 = GL.CreateShader(ShaderType.FragmentShader);
@@ -117,6 +119,7 @@ namespace QuickFont
         SamplerLocation = uniformLocation3,
         ColorCoordAttribLocation = attribLocation3
       });
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     private void InitialiseState(QFontSharedState state)
@@ -135,6 +138,7 @@ namespace QuickFont
 
     public void Draw()
     {
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.UseProgram(this.InstanceSharedState.ShaderVariables.ShaderProgram);
       if (this._useDefaultBlendFunction)
       {
@@ -163,6 +167,7 @@ namespace QuickFont
       }
       GL.BindVertexArray(0);
       GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public void DisableShader()
