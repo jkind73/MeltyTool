@@ -10,11 +10,13 @@ public partial class GlShaderProgram {
     protected bool IsDirty { get; private set; }
 
     public void PassValueToProgramIfDirty() {
-        if (this.IsDirty) {
-          this.IsDirty = false;
-          this.PassValueToProgram();
-        }
+      if (this.IsDirty) {
+        GlUtil.AssertNoErrorsWhenDebugging();
+        this.IsDirty = false;
+        this.PassValueToProgram();
+        GlUtil.AssertNoErrorsWhenDebugging();
       }
+    }
 
     protected void MarkDirty() => this.IsDirty = true;
     protected abstract void PassValueToProgram();

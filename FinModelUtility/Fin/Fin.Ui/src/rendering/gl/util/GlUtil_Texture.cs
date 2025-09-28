@@ -20,6 +20,7 @@ public static partial class GlUtil {
       return;
     }
 
+    AssertNoErrorsWhenDebugging();
     if (currentState_.ActiveTexture != textureIndex) {
       GL.ActiveTexture(TextureUnit.Texture0 +
                        (currentState_.ActiveTexture = textureIndex));
@@ -28,9 +29,10 @@ public static partial class GlUtil {
     GL.BindTexture(TextureTarget.Texture2D,
                    currentState_.CurrentTextureBindings[textureIndex]
                        = value);
+    AssertNoErrorsWhenDebugging();
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void UnbindTexture(int textureIndex)
-    => BindTexture(textureIndex, -1);
+    => BindTexture(textureIndex, 0);
 }

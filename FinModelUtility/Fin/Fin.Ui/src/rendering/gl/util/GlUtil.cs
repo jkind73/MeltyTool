@@ -32,8 +32,11 @@ public static partial class GlUtil {
   public static void ResetGl() {
     GlMaterialConstants.Initialize();
 
+    AssertNoErrorsWhenDebugging();
     GL.ClearDepth(5.0F);
+    AssertNoErrorsWhenDebugging();
     GL.Enable(EnableCap.PrimitiveRestartFixedIndex);
+    AssertNoErrorsWhenDebugging();
 
     ResetBlending();
     ResetClearColor();

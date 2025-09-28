@@ -12,12 +12,14 @@ public sealed class GlUbo : IDisposable {
     this.id_ = GL.GenBuffer();
     this.buffer_ = new byte[bufferSize];
 
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindBuffer(BufferTarget.UniformBuffer, this.id_);
     GL.BufferData(BufferTarget.UniformBuffer,
                   bufferSize,
                   IntPtr.Zero,
                   BufferUsageHint.StreamDraw);
     GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   ~GlUbo() => this.ReleaseUnmanagedResources_();
@@ -27,7 +29,11 @@ public sealed class GlUbo : IDisposable {
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_() => GL.DeleteBuffer(this.id_);
+  private void ReleaseUnmanagedResources_() {
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.DeleteBuffer(this.id_);
+    GlUtil.AssertNoErrorsWhenDebugging();
+  }
 
   public unsafe void UpdateDataIfChanged(ReadOnlySpan<byte> newData) {
     if (newData.SequenceEqual(this.buffer_)) {
@@ -36,17 +42,22 @@ public sealed class GlUbo : IDisposable {
 
     newData.CopyTo(this.buffer_);
     fixed (byte* bufferPtr = &newData.GetPinnableReference()) {
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.BindBuffer(BufferTarget.UniformBuffer, this.id_);
       GL.BufferSubData(BufferTarget.UniformBuffer,
                        IntPtr.Zero,
                        new IntPtr(newData.Length),
                        new IntPtr(bufferPtr));
       GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
   }
 
-  public void Bind()
-    => GL.BindBufferBase(BufferRangeTarget.UniformBuffer,
-                         this.bindingIndex_,
-                         this.id_);
+  public void Bind() {
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.BindBufferBase(BufferRangeTarget.UniformBuffer,
+                      this.bindingIndex_,
+                      this.id_);
+    GlUtil.AssertNoErrorsWhenDebugging();
+  }
 }

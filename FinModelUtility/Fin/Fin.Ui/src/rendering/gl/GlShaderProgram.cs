@@ -15,7 +15,9 @@ public sealed partial class GlShaderProgram : IShaderProgram {
           src => CreateAndCompileShader_(src, ShaderType.VertexShader),
           (_, id) => {
             if (id != UNDEFINED_ID) {
+              GlUtil.AssertNoErrorsWhenDebugging();
               GL.DeleteShader(id);
+              GlUtil.AssertNoErrorsWhenDebugging();
             }
           });
 
@@ -24,7 +26,9 @@ public sealed partial class GlShaderProgram : IShaderProgram {
           src => CreateAndCompileShader_(src, ShaderType.FragmentShader),
           (_, id) => {
             if (id != UNDEFINED_ID) {
+              GlUtil.AssertNoErrorsWhenDebugging();
               GL.DeleteShader(id);
+              GlUtil.AssertNoErrorsWhenDebugging();
             }
           });
 
@@ -40,11 +44,13 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                     fragmentShaderCache_.GetAndIncrement(
                         fragmentSrc);
 
+                GlUtil.AssertNoErrorsWhenDebugging();
                 var programId = GL.CreateProgram();
 
                 GL.AttachShader(programId, vertexShaderId);
                 GL.AttachShader(programId, fragmentShaderId);
                 GL.LinkProgram(programId);
+                GlUtil.AssertNoErrorsWhenDebugging();
 
                 return new CachedShaderProgram {
                     ProgramId = programId,
@@ -53,7 +59,9 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                 };
               },
               (vertexAndFragmentSrc, cachedShaderProgram) => {
+                GlUtil.AssertNoErrorsWhenDebugging();
                 GL.DeleteProgram(cachedShaderProgram.ProgramId);
+                GlUtil.AssertNoErrorsWhenDebugging();
 
                 var (vertexSrc, fragmentSrc) = vertexAndFragmentSrc;
                 vertexShaderCache_.DecrementAndMaybeDispose(vertexSrc);
@@ -87,6 +95,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
 
   private static int CreateAndCompileShader_(string src,
                                              ShaderType shaderType) {
+    GlUtil.AssertNoErrorsWhenDebugging();
     var shaderId = GL.CreateShader(shaderType);
     GL.ShaderSource(shaderId, 1, [src], (int[]) null);
     GL.CompileShader(shaderId);
@@ -102,6 +111,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
     if (shaderError?.Length > 0) {
       ;
     }
+    GlUtil.AssertNoErrorsWhenDebugging();
 
     return shaderId;
   }

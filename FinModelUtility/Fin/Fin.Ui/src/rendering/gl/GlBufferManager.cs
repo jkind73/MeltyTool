@@ -156,9 +156,11 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
         }
       }
 
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.GenVertexArrays(1, out this.vaoId_);
       this.vboIds_ = new int[vboCount];
       GL.GenBuffers(this.vboIds_.Length, this.vboIds_);
+      GlUtil.AssertNoErrorsWhenDebugging();
 
       this.UpdateBuffer();
     }
@@ -171,8 +173,10 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
     }
 
     private void ReleaseUnmanagedResources_() {
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.DeleteVertexArrays(1, ref this.vaoId_);
       GL.DeleteBuffers(this.vboIds_.Length, this.vboIds_);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public int VaoId => this.vaoId_;
@@ -265,6 +269,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
         }
       }
 
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.BindVertexArray(this.vaoId_);
 
       var vertexAttribIndex = 0;
@@ -412,6 +417,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       // Make sure the buffers are not changed by outside code
       GL.BindVertexArray(0);
       GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
   }
 
@@ -475,6 +481,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       };
       this.isFlipped_ = mergedPrimitive.IsFlipped;
 
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.BindVertexArray(this.vaoId_);
       GL.GenBuffers(1, out this.eboId_);
 
@@ -502,6 +509,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
                     BufferUsageHint.StaticDraw);
 
       GL.BindVertexArray(0);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     ~GlBufferRenderer() => this.ReleaseUnmanagedResources_();
@@ -512,13 +520,16 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
     }
 
     private void ReleaseUnmanagedResources_() {
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.DeleteBuffers(1, ref this.eboId_);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public void Render() {
       GlUtil.SetFlipFaces(this.isFlipped_);
       GlUtil.BindVao(this.vaoId_);
 
+      GlUtil.AssertNoErrorsWhenDebugging();
       GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
 
       GL.DrawElements(
@@ -526,6 +537,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
           this.indices_.Length,
           INDEX_TYPE,
           IntPtr.Zero);
+      GlUtil.AssertNoErrorsWhenDebugging();
     }
   }
 }

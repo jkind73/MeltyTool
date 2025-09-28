@@ -35,6 +35,7 @@ public sealed class GlTexture : IGlTexture {
   }
 
   public GlTexture(IReadOnlyImage image) {
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.GenTextures(1, out int id);
     this.Id = id;
 
@@ -43,6 +44,7 @@ public sealed class GlTexture : IGlTexture {
     {
       this.LoadImageIntoTexture_(image, 0);
     }
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   private GlTexture(IReadOnlyTexture texture) {
@@ -287,7 +289,9 @@ public sealed class GlTexture : IGlTexture {
     }
 
     var id = this.Id;
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.DeleteTextures(1, ref id);
+    GlUtil.AssertNoErrorsWhenDebugging();
 
     this.Id = UNDEFINED_ID;
   }

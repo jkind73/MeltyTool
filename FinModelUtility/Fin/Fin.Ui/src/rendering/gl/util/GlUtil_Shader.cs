@@ -15,7 +15,9 @@ public static partial class GlUtil {
       return;
     }
 
+    AssertNoErrorsWhenDebugging();
     currentState_.CurrentShader = shader;
     GL.UseProgram(shader);
+    AssertNoErrorsWhenDebugging();
   }
 }

@@ -19,6 +19,7 @@ public sealed class GlFbo : IFinDisposable {
     this.Width = width;
     this.Height = height;
 
+    GlUtil.AssertNoErrorsWhenDebugging();
     // Create Color Tex
     GL.GenTextures(1, out this.colorTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.colorTextureId_);
@@ -83,6 +84,7 @@ public sealed class GlFbo : IFinDisposable {
                             TextureTarget2d.Texture2D,
                             this.depthTextureId_,
                             0);
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   ~GlFbo() => this.ReleaseUnmanagedResources_();
@@ -97,9 +99,11 @@ public sealed class GlFbo : IFinDisposable {
   private void ReleaseUnmanagedResources_() {
     this.IsDisposed = true;
 
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.DeleteFramebuffers(1, ref this.fboId_);
     GL.DeleteTextures(1, ref this.colorTextureId_);
     GL.DeleteTextures(1, ref this.depthTextureId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   public int Width { get; }
