@@ -10,6 +10,8 @@ using fin.ui.rendering.gl.scene;
 using fin.ui.rendering.viewer;
 using fin.util.time;
 
+using OpenTK.Graphics.ES30;
+
 
 namespace fin.ui.rendering.gl;
 
@@ -172,6 +174,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
     this.RenderSkybox_();
     this.RenderScene_();
+
+    GL.Flush();
 
     FrameTime.MarkEndOfFrameForFpsDisplay();
   }
