@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Text;
 
 using fin.util.asserts;
 
@@ -28,22 +29,29 @@ public static partial class GlUtil {
 
     AssertNoErrorsWhenDebugging();
     GL.ValidateProgram(programId);
-    GL.GetProgram(programId,
-                  GetProgramParameterName.ValidateStatus,
-                  out var validateStatus);
+    GL.GetProgram(
+        programId,
+        GetProgramParameterName.ValidateStatus,
+        out var validateStatus);
 
     if (validateStatus == 0) {
-      var bufferSize = 10000;
+      var errorSb
+          = new StringBuilder("Failed to validate shader program: ");
+
+      GL.GetProgram(
+          programId,
+          GetProgramParameterName.InfoLogLength,
+          out var infoLogLength);
       GL.GetProgramInfoLog(
           programId,
-          bufferSize,
-          out var shaderErrorLength,
-          out var shaderError);
+          infoLogLength,
+          out _,
+          out var validateError);
+      errorSb.Append(validateError);
 
-      if (shaderError?.Length > 0) {
-        Asserts.Fail(shaderError);
-      }
+      Asserts.Fail(errorSb.ToString());
     }
+
     AssertNoErrorsWhenDebugging();
   }
 }

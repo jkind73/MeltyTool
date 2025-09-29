@@ -1,4 +1,6 @@
-﻿using fin.data;
+﻿using System.Text;
+
+using fin.data;
 using fin.data.lazy;
 using fin.util.asserts;
 
@@ -9,6 +11,7 @@ namespace fin.ui.rendering.gl;
 
 public sealed partial class GlShaderProgram : IShaderProgram {
   private const bool ASSERT_COMPILATION = true;
+  private const bool ASSERT_LINK = true;
 
   private bool isDisposed_;
   private readonly CachedShaderProgram cachedShaderProgram_;
@@ -53,6 +56,32 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                 GL.AttachShader(programId, vertexShaderId);
                 GL.AttachShader(programId, fragmentShaderId);
                 GL.LinkProgram(programId);
+
+                if (ASSERT_LINK) {
+                  GL.GetProgram(
+                      programId,
+                      GetProgramParameterName.LinkStatus,
+                      out var linkStatus);
+
+                  if (linkStatus == 0) {
+                    var errorSb
+                        = new StringBuilder("Failed to link shader program: ");
+
+                    GL.GetProgram(
+                        programId,
+                        GetProgramParameterName.InfoLogLength,
+                        out var infoLogLength);
+                    GL.GetProgramInfoLog(
+                        programId,
+                        infoLogLength,
+                        out _,
+                        out var linkError);
+                    errorSb.Append(linkError);
+
+                    Asserts.Fail(errorSb.ToString());
+                  }
+                }
+
                 GlUtil.AssertNoErrorsWhenDebugging();
 
                 return new CachedShaderProgram {
@@ -103,17 +132,25 @@ public sealed partial class GlShaderProgram : IShaderProgram {
     GL.ShaderSource(shaderId, 1, [src], (int[]) null);
     GL.CompileShader(shaderId);
 
-    // TODO: Throw/return this error
-    var bufferSize = 10000;
-    GL.GetShaderInfoLog(
-        shaderId,
-        bufferSize,
-        out var shaderErrorLength,
-        out var shaderError);
-
     if (ASSERT_COMPILATION) {
-      if (shaderError?.Length > 0) {
-        Asserts.Fail(shaderError);
+      GL.GetShader(shaderId,
+                   ShaderParameter.CompileStatus,
+                   out var compileStatus);
+
+      if (compileStatus == 0) {
+        var errorSb = new StringBuilder("Failed to compile shader: ");
+
+        GL.GetShader(shaderId,
+                     ShaderParameter.InfoLogLength,
+                     out var infoLogLength);
+        GL.GetShaderInfoLog(
+            shaderId,
+            infoLogLength,
+            out _,
+            out var compileError);
+        errorSb.Append(compileError);
+
+        Asserts.Fail(errorSb.ToString());
       }
     }
 
