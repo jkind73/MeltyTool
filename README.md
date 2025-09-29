@@ -30,6 +30,7 @@ If you'd like to vote on new games or features that should be supported, please 
 - [@Cuyler36](https://github.com/Cuyler36), aka CulyerAC, whose [RELDumper](https://github.com/Cuyler36/RELDumper) is used to extract the contents of .rel/.map files.
 - [@DavidSM64](https://github.com/DavidSM64), whose [Quad64](https://github.com/DavidSM64/Quad64) is used as the base for the SM64 importer.
 - [@DickBlackshack](https://github.com/DickBlackshack), aka Rich Whitehouse, whose [Noesis](https://richwhitehouse.com/index.php?content=inc_projects.php&showproject=91) model viewer's plugins were leveraged to add support for various formats.
+- [@Dragorn421](https://github.com/Dragorn421), whose [DragoStuff](https://github.com/Dragorn421/DragoStuff/tree/aa1ac3434f2701739570adf77377c29e1e3171c1) library was used as the basis for Direct3D interop in Avalonia.
 - [@Dummiesman](https://github.com/Dummiesman), whose [AngelStudiosBlenderAddon](https://github.com/Dummiesman/AngelStudiosBlenderAddon) Blender plugin was heavily referenced to import Midnight Club 2 assets.
 - [@Emill](https://github.com/Emill), whose [Nintendo 64 Fast3D renderer](https://github.com/Emill/n64-fast3d-engine) was heavily referenced to vastly improve TMEM emulation.
 - [@EstevanBR](https://github.com/EstevanBR), whose [DATReaderC](https://github.com/EstevanBR/DATReaderC) was referenced as the starting point for the .dat importer.
