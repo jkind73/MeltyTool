@@ -31,7 +31,7 @@ public static partial class GlUtil {
       float opacity = .6f) {
     SetBlendColor(Color.FromArgb((byte) (255 * opacity), 0, 0, 0));
     SetBlending(BlendEquation.ADD,
-                BlendFactor.CONST_ALPHA,
+                BlendFactor.CONST_COLOR,
                 BlendFactor.ONE_MINUS_CONST_ALPHA);
     DisableChangingBlending = true;
 
