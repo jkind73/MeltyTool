@@ -137,4 +137,11 @@ public static class LinqExtensions {
       first = false;
     }
   }
+
+  public static bool All(this IEnumerable<bool> src)
+    => src.All(v => v);
+
+  public static bool All<T>(this IEnumerable<T> src,
+                            Func<T, int, bool> predicate)
+    => src.Select(predicate).All();
 }

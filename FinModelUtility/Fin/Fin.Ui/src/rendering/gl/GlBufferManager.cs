@@ -22,7 +22,7 @@ public interface IGlBufferManager : IDisposable {
       IReadOnlyList<IReadOnlyVertex> triangleVertices,
       bool isFlipped = false);
 
-  IGlBufferRenderer CreateRenderer(MergedPrimitive mergedPrimitive);
+  IGlBufferRenderer CreateRenderer(in MergedPrimitive mergedPrimitive);
 }
 
 public interface IDynamicGlBufferManager : IGlBufferManager {
@@ -452,18 +452,22 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
                             isFlipped,
                             triangleVertices);
 
-  public IGlBufferRenderer CreateRenderer(MergedPrimitive mergedPrimitive)
+  public IGlBufferRenderer CreateRenderer(in MergedPrimitive mergedPrimitive)
     => new GlBufferRenderer(this.vao_.VaoId, mergedPrimitive);
 
   public void UpdateBuffer() => this.vao_.UpdateBuffer();
 
   public sealed class GlBufferRenderer : IGlBufferRenderer {
     private readonly int vaoId_;
-    private int eboId_;
     private PrimitiveType beginMode_;
     private readonly bool isFlipped_;
 
-    private readonly int[] indices_;
+    // Present if in indices mode
+    private int eboId_;
+    private readonly int[]? indices_;
+
+    // Present if in vertex mode
+    private readonly int vertexCount_;
 
     private const DrawElementsType INDEX_TYPE = DrawElementsType.UnsignedInt;
 
@@ -481,7 +485,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
 
     public GlBufferRenderer(
         int vaoId,
-        MergedPrimitive mergedPrimitive) {
+        in MergedPrimitive mergedPrimitive) {
       this.vaoId_ = vaoId;
       this.beginMode_ = mergedPrimitive.PrimitiveType switch {
           FinPrimitiveType.POINTS         => PrimitiveType.Points,
@@ -506,20 +510,27 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
               _                              => throw new ArgumentOutOfRangeException()
           })
       ];
-      this.indices_ =
-          mergedPrimitive
-              .Vertices
-              .Select(vertices
-                          => vertices.Select(vertex => vertex.Index))
-              .Intersperse(restartIndex)
-              .SelectMany(indices => indices)
-              .ToArray();
 
-      GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
-      GL.BufferData(BufferTarget.ElementArrayBuffer,
-                    new IntPtr(sizeof(int) * this.indices_.Length),
-                    this.indices_,
-                    BufferUsageHint.StaticDraw);
+      var vertices = mergedPrimitive.Vertices.SelectMany(e => e).ToArray();
+
+      if (!vertices.All((v, i) => v.Index == i)) {
+        this.indices_ =
+            mergedPrimitive
+                .Vertices
+                .Select(vertices
+                            => vertices.Select(vertex => vertex.Index))
+                .Intersperse(restartIndex)
+                .SelectMany(indices => indices)
+                .ToArray();
+
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
+        GL.BufferData(BufferTarget.ElementArrayBuffer,
+                      new IntPtr(sizeof(int) * this.indices_.Length),
+                      this.indices_,
+                      BufferUsageHint.StaticDraw);
+      } else {
+        this.vertexCount_ = vertices.Length;
+      }
 
       GlUtil.AssertNoErrorsWhenDebugging();
     }
@@ -541,16 +552,24 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       GlUtil.SetFlipFaces(this.isFlipped_);
       GlUtil.BindVao(this.vaoId_);
 
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
-      GlUtil.AssertNoErrorsWhenDebugging();
+      if (this.indices_ != null) {
+        GlUtil.AssertNoErrorsWhenDebugging();
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
+        GlUtil.AssertNoErrorsWhenDebugging();
 
-      GlUtil.ValidateCurrentProgram();
-      GL.DrawElements(
-          this.beginMode_,
-          this.indices_.Length,
-          INDEX_TYPE,
-          IntPtr.Zero);
+        GlUtil.ValidateCurrentProgram();
+        GL.DrawElements(
+            this.beginMode_,
+            this.indices_.Length,
+            INDEX_TYPE,
+            IntPtr.Zero);
+      } else {
+        GL.DrawArrays(
+            this.beginMode_,
+            0,
+            this.vertexCount_);
+      }
+
       GlUtil.AssertNoErrorsWhenDebugging();
     }
   }

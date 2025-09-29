@@ -19,7 +19,7 @@ public partial class ModelRenderer {
         IReadOnlyModel model,
         IModelRequirements modelRequirements,
         IReadOnlyMaterial? material,
-        MergedPrimitive mergedPrimitive) {
+        in MergedPrimitive mergedPrimitive) {
       this.Material = material;
 
       this.MaterialShader = GlMaterialShader.FromMaterial(model,
