@@ -116,7 +116,7 @@ public sealed class D3D11SwapchainImage {
     this.texture_ = new Texture2D(
         device,
         new Texture2DDescription {
-            Format = Format.R8G8B8A8_UNorm,
+            Format = Format.B8G8R8A8_UNorm,
             Width = size.Width,
             Height = size.Height,
             ArraySize = 1,
@@ -140,7 +140,7 @@ public sealed class D3D11SwapchainImage {
     this.properties_ = new PlatformGraphicsExternalImageProperties {
         Width = size.Width,
         Height = size.Height,
-        Format = PlatformGraphicsExternalImageFormat.B8G8R8A8UNorm,
+        Format = PlatformGraphicsExternalImageFormat.B8G8R8A8UNorm
     };
 
     this.RenderTargetView = new RenderTargetView(device, this.texture_);

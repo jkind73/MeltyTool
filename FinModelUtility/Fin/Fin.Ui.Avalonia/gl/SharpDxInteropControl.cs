@@ -207,11 +207,10 @@ public class SharpDxInteropControl : Control {
       ICompositionGpuInterop interop
   ) {
     if (
-        interop.SupportedImageHandleTypes.Contains(
+        !interop.SupportedImageHandleTypes.Contains(
             KnownPlatformGraphicsExternalImageHandleTypes
                 .D3D11TextureGlobalSharedHandle
-        ) !=
-        true
+        )
     )
       return (
           false,
