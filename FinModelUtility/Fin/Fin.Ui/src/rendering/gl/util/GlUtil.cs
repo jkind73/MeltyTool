@@ -1,5 +1,4 @@
 ﻿using fin.model;
-using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.ES30;

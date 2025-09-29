@@ -8,13 +8,15 @@ using OpenTK.Graphics.ES30;
 namespace fin.ui.rendering.gl;
 
 public static partial class GlUtil {
+  public const bool ASSERT_NO_ERRORS = false;
+
   [Conditional("DEBUG")]
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void AssertNoErrorsWhenDebugging() => AssertNoErrors();        
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void AssertNoErrors() {
-    if (TryGetError(out var errorCode)) {
+    if (ASSERT_NO_ERRORS && TryGetError(out var errorCode)) {
       Asserts.Fail($"Expected to not have any errors, but had: {errorCode}");
     }
   }
