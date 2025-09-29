@@ -5,7 +5,6 @@ using System.Numerics;
 
 using fin.animation.interpolation;
 using fin.animation.keyframes;
-using fin.math.floats;
 using fin.math.interpolation;
 using fin.util.asserts;
 

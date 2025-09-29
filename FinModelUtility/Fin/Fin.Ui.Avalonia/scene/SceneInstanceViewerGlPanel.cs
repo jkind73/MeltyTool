@@ -1,6 +1,5 @@
 ﻿using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Threading;
 
 using fin.animation;
 using fin.model;

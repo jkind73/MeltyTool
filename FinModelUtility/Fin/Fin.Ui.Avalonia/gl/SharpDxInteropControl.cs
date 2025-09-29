@@ -15,11 +15,8 @@ using Avalonia.Rendering.Composition;
 
 using fin.ui.rendering.gl;
 
-using Melville.SharpFont.Fnt;
-
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
-using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -27,7 +24,6 @@ using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
-using DrawBufferMode = OpenTK.Graphics.OpenGL.DrawBufferMode;
 using FramebufferAttachment = OpenTK.Graphics.OpenGL.FramebufferAttachment;
 using FramebufferErrorCode = OpenTK.Graphics.OpenGL.FramebufferErrorCode;
 using FramebufferTarget = OpenTK.Graphics.OpenGL.FramebufferTarget;
