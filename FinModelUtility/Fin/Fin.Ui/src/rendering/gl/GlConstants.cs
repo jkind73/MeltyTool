@@ -9,14 +9,12 @@ public static class GlConstants {
   public static Version Version { get; } = new(3, 1);
   public static bool Compatibility => true;
 
-  public static NativeWindowSettings NativeWindowSettings { get; } =
-    CreateNewNativeWindowSettings();
-
   public static NativeWindowSettings CreateNewNativeWindowSettings() {
     var nativeWindowSettings = new NativeWindowSettings {
         API = Api,
         APIVersion = Version,
-        Vsync = VSyncMode.On
+        Vsync = VSyncMode.On,
+        StartVisible = false
     };
 
     if (Compatibility) {

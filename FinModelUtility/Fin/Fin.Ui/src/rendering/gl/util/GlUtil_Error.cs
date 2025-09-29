@@ -8,7 +8,7 @@ using OpenTK.Graphics.ES30;
 namespace fin.ui.rendering.gl;
 
 public static partial class GlUtil {
-  public const bool ASSERT_NO_ERRORS = false;
+  public const bool ASSERT_NO_ERRORS = true;
 
   [Conditional("DEBUG")]
   [MethodImpl(MethodImplOptions.AggressiveInlining)]

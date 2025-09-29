@@ -4,7 +4,9 @@ using fin.data.disposables;
 
 using OpenTK.Graphics.ES30;
 
+using GL0 = OpenTK.Graphics.OpenGL.GL;
 using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
+using PixelInternalFormat = OpenTK.Graphics.OpenGL.PixelInternalFormat;
 using TextureMagFilter = OpenTK.Graphics.ES30.TextureMagFilter;
 using TextureMinFilter = OpenTK.Graphics.ES30.TextureMinFilter;
 
@@ -32,38 +34,43 @@ public sealed class GlFbo : IFinDisposable {
                   PixelFormat.Rgba,
                   PixelType.UnsignedByte,
                   IntPtr.Zero);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
                     (int) TextureMinFilter.Linear);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapT,
                     (int) TextureWrapMode.ClampToBorder);
+    GlUtil.AssertNoErrorsWhenDebugging();
 
     // Create Depth Tex
     GL.GenTextures(1, out this.depthTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
-    GL.TexImage2D(TextureTarget2d.Texture2D,
-                  0,
-                  TextureComponentCount.DepthComponent32f,
-                  width,
-                  height,
-                  0,
-                  PixelFormat.DepthComponent,
-                  PixelType.UnsignedInt,
-                  IntPtr.Zero);
+    GL0.TexImage2D(OpenTK.Graphics.OpenGL.TextureTarget.Texture2D,
+                   0,
+                   PixelInternalFormat.DepthComponent,
+                   width,
+                   height,
+                   0,
+                   OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent,
+                   OpenTK.Graphics.OpenGL.PixelType.UnsignedInt,
+                   IntPtr.Zero);
     // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
                     (int) TextureMinFilter.Linear);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
@@ -73,12 +80,15 @@ public sealed class GlFbo : IFinDisposable {
 
     // Create a FBO and attach the textures
     GL.GenFramebuffers(1, out this.fboId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.ColorAttachment0,
                             TextureTarget2d.Texture2D,
                             this.colorTextureId_,
                             0);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.DepthAttachment,
                             TextureTarget2d.Texture2D,
@@ -118,8 +128,11 @@ public sealed class GlFbo : IFinDisposable {
   public void BindDepth(int textureIndex = 0)
     => GlUtil.BindTexture(textureIndex, this.depthTextureId_);
 
-  public void TargetFbo()
-    => GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+  public void TargetFbo() {
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
+  }
 
   public void UntargetFbo()
     => GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);

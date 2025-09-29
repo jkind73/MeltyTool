@@ -2,6 +2,7 @@
 
 using OpenTK.Graphics.ES30;
 
+
 namespace fin.ui.rendering.gl;
 
 public partial class GlState {
@@ -10,19 +11,21 @@ public partial class GlState {
 
 public static partial class GlUtil {
   public static void ClearColorAndDepth() {
-      ResetDepth();
-      GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-    }
+    ResetDepth();
+    GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+  }
 
   public static void ResetClearColor()
     => SetClearColor(Color.FromArgb(51, 128, 179));
 
   public static void SetClearColor(Color color) {
-      if (currentState_.ClearColor == color) {
-        return;
-      }
-
-      currentState_.ClearColor = color;
-      GL.ClearColor(color);
+    if (currentState_.ClearColor == color) {
+      return;
     }
+
+    currentState_.ClearColor = color;
+    AssertNoErrorsWhenDebugging();
+    GL.ClearColor(color);
+    AssertNoErrorsWhenDebugging();
+  }
 }

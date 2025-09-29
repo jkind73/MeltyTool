@@ -1,5 +1,6 @@
 ﻿using OpenTK.Windowing.Desktop;
 
+
 namespace fin.ui.rendering.gl;
 
 public static class HeadlessGl {
@@ -11,7 +12,9 @@ public static class HeadlessGl {
     }
 
     GLFWProvider.CheckForMainThread = false;
-    headlessWindow_ = new GameWindow(GameWindowSettings.Default, GlConstants.NativeWindowSettings);
+    headlessWindow_ = new GameWindow(
+        GameWindowSettings.Default,
+        GlConstants.CreateNewNativeWindowSettings());
   }
 
   public static void MakeCurrent() {

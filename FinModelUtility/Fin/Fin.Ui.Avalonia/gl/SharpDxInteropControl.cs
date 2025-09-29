@@ -233,7 +233,6 @@ public class SharpDxInteropControl : Control {
     this.context_ = this.device_.ImmediateContext;
 
     var nativeWindowSettings = GlConstants.CreateNewNativeWindowSettings();
-    nativeWindowSettings.StartVisible = false;
     nativeWindowSettings.ClientSize = new(100, 100);
 
     this.openTkWindow_ = new NativeWindow(nativeWindowSettings);

@@ -70,25 +70,17 @@ namespace QuickFont
       int shader2 = GL.CreateShader(ShaderType.FragmentShader);
       if (shader1 == -1 || shader2 == -1)
         throw new Exception(string.Format("Error creating shader name for {0}", shader1 == -1 ? (shader2 == -1 ? (object) "vert and frag shaders" : (object) "vert shader") : (object) "frag shader"));
-      string[] strArray = [
-          "#version 130\n\n",
-        "#version 140\n\n",
-        "#version 150\n\n"
-      ];
       int params1 = 0;
       int params2 = 0;
       GlUtil.AssertNoErrorsWhenDebugging();
-      foreach (string str in strArray)
-      {
-        GL.ShaderSource(shader1, str + QFontDrawing.LoadShaderFromResource("simple.vs"));
-        GL.ShaderSource(shader2, str + QFontDrawing.LoadShaderFromResource("simple.fs"));
-        GL.CompileShader(shader1);
-        GL.CompileShader(shader2);
-        GL.GetShader(shader1, ShaderParameter.CompileStatus, out params1);
-        GL.GetShader(shader2, ShaderParameter.CompileStatus, out params2);
-        if (params1 != 0 && params2 != 0)
-          break;
-      }
+       
+      GL.ShaderSource(shader1, QFontDrawing.LoadShaderFromResource("simple_es.vs"));
+      GL.ShaderSource(shader2, QFontDrawing.LoadShaderFromResource("simple_es.fs"));
+      GL.CompileShader(shader1);
+      GL.CompileShader(shader2);
+      GL.GetShader(shader1, ShaderParameter.CompileStatus, out params1);
+      GL.GetShader(shader2, ShaderParameter.CompileStatus, out params2);
+
       if (params1 == 0 || params2 == 0)
         throw new Exception(string.Format("Shaders were not compiled correctly. Info logs are\nVert:\n{0}\nFrag:\n{1}", (object) GL.GetShaderInfoLog(shader1), (object) GL.GetShaderInfoLog(shader2)));
       GlUtil.AssertNoErrorsWhenDebugging();
