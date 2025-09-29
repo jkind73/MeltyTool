@@ -79,6 +79,7 @@ public sealed class BucketBitmapObservableManager {
 
   private void UpdateState_() {
     this.lastCancellationTokenSource_?.Cancel();
+    this.lastCancellationTokenSource_?.Dispose();
 
     var newCancellationTokenSource = new CancellationTokenSource();
     this.lastCancellationTokenSource_ = newCancellationTokenSource;
@@ -125,6 +126,7 @@ public sealed class BucketBitmapObservableManager {
         var hasHat = !next.IsOpen();
         this.HatImage.OnNext(hasHat ? HAT_IMAGE_ : null);
       }
-    });
+    },
+    newCancellationTokenSource.Token);
   }
 }

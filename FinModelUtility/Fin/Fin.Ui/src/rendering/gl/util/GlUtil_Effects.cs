@@ -22,7 +22,6 @@ public static partial class GlUtil {
 
     DisableChangingBlending = false;
     DisableChangingDepth = false;
-    SetBlendColor(Color.White);
     ResetBlending();
     ResetDepth();
   }
@@ -39,7 +38,6 @@ public static partial class GlUtil {
     render();
 
     DisableChangingBlending = false;
-    SetBlendColor(Color.White);
     ResetBlending();
   }
 }

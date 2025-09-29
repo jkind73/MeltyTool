@@ -89,6 +89,9 @@ public class MainViewModel : BViewModel {
         LoadCursorFromAsset_("file_2.png", PixelPoint.Origin, fileCursorScale),
         LoadCursorFromAsset_("file_3.png", PixelPoint.Origin, fileCursorScale));
 
+      var bbomByTreeIoObject
+          = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
+
       this.FileSystemTreeSource
           = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(
               root.Children) {
@@ -125,6 +128,8 @@ public class MainViewModel : BViewModel {
                               stackPanel.Children.Add(icon);
                             } else if (x is MfsTreeDirectory d) {
                               bbom = new BucketBitmapObservableManager();
+                              bbomByTreeIoObject[x] = bbom;
+
                               var bucketImage = bbom.BucketImage;
                               var hatImage = bbom.HatImage;
 
@@ -259,15 +264,15 @@ public class MainViewModel : BViewModel {
                                   border.DoubleTapped += (_, _) => {
                                     var expanderCell =
                                         border.GetParentExpanderCell();
-                                    bbom.IsOpen = expanderCell.IsExpanded =
-                                        !expanderCell.IsExpanded;
+                                    expanderCell.IsExpanded
+                                        = !expanderCell.IsExpanded;
                                   };
 
                                   bucketPanel.Tapped += (_, _) => {
                                     var expanderCell =
                                         border.GetParentExpanderCell();
-                                    bbom.IsOpen = expanderCell.IsExpanded =
-                                        !expanderCell.IsExpanded;
+                                    expanderCell.IsExpanded
+                                        = !expanderCell.IsExpanded;
                                   };
                                 }
                               }
@@ -293,6 +298,11 @@ public class MainViewModel : BViewModel {
             MfsFileSystemService.SelectFile(file);
           }
         };
+
+        this.FileSystemTreeSource.RowExpanded += (_, e)
+            => bbomByTreeIoObject[e.Row.Model].IsOpen = true;
+        this.FileSystemTreeSource.RowCollapsed += (_, e)
+            => bbomByTreeIoObject[e.Row.Model].IsOpen = false;
       });
     };
   }
