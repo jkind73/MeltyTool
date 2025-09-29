@@ -31,7 +31,11 @@ public static class AppBuilderUtil {
                  })
                  .With(new Win32PlatformOptions {
                      RenderingMode = [Win32RenderingMode.AngleEgl],
-                     CompositionMode = [Win32CompositionMode.LowLatencyDxgiSwapChain]
+                     CompositionMode = [
+                         Win32CompositionMode.LowLatencyDxgiSwapChain,
+                         Win32CompositionMode.WinUIComposition,
+                         Win32CompositionMode.DirectComposition
+                     ]
                  })
                  .With(new SkiaOptions {
                      // Use as much memory as available, similar to WPF. This
