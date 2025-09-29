@@ -258,9 +258,9 @@ public class SharpDxInteropControl : Control {
     this.openTkWindow_ = null;
 
     // TODO: Free these on destroy
-    this.fboId_ = GL.GenFramebuffer();
-    this.colorTextureId_ = (uint) GL.GenTexture();
-    this.depthTextureId_ = (uint) GL.GenTexture();
+    GL.DeleteFramebuffers(1, [this.fboId_]);
+    GL.DeleteTextures(1, [this.colorTextureId_]);
+    GL.DeleteTextures(1, [this.depthTextureId_]);
 
     this.teardownGl_();
   }

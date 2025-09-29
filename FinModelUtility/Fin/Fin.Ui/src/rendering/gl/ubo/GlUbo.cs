@@ -13,12 +13,12 @@ public sealed class GlUbo : IDisposable {
     this.buffer_ = new byte[bufferSize];
 
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.BindBuffer(BufferTarget.UniformBuffer, this.id_);
+    GlUtil.BindUbo(this.id_);
     GL.BufferData(BufferTarget.UniformBuffer,
                   bufferSize,
                   IntPtr.Zero,
                   BufferUsageHint.StreamDraw);
-    GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+    GlUtil.ResetUbo();
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
@@ -43,12 +43,12 @@ public sealed class GlUbo : IDisposable {
     newData.CopyTo(this.buffer_);
     fixed (byte* bufferPtr = &newData.GetPinnableReference()) {
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.BindBuffer(BufferTarget.UniformBuffer, this.id_);
+      GlUtil.BindUbo(this.id_);
       GL.BufferSubData(BufferTarget.UniformBuffer,
                        IntPtr.Zero,
                        new IntPtr(newData.Length),
                        new IntPtr(bufferPtr));
-      GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+      GlUtil.ResetUbo();
       GlUtil.AssertNoErrorsWhenDebugging();
     }
   }

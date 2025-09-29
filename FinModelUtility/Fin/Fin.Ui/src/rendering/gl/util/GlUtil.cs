@@ -43,6 +43,7 @@ public static partial class GlUtil {
     ResetCulling();
     ResetDepth();
     ResetFlipFaces();
+    ResetUbo();
     ResetVao();
 
     for (var i = 0; i < MaterialConstants.MAX_TEXTURES; ++i) {
