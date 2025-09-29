@@ -15,8 +15,11 @@ using Avalonia.Rendering.Composition;
 
 using fin.ui.rendering.gl;
 
+using Melville.SharpFont.Fnt;
+
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -234,9 +237,11 @@ public class SharpDxInteropControl : Control {
     this.swapchain_ = new D3d11Swapchain(this.device_, interop, surface);
     this.context_ = this.device_.ImmediateContext;
 
-    this.openTkWindow_ = new NativeWindow(
-        new() { StartVisible = false, ClientSize = new(100, 100) }
-    );
+    var nativeWindowSettings = GlConstants.CreateNewNativeWindowSettings();
+    nativeWindowSettings.StartVisible = false;
+    nativeWindowSettings.ClientSize = new(100, 100);
+
+    this.openTkWindow_ = new NativeWindow(nativeWindowSettings);
 
     return (
         true,
@@ -342,15 +347,17 @@ public class SharpDxInteropControl : Control {
 
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexImage2D(TextureTarget.Texture2D,
                   0,
-                  PixelInternalFormat.DepthComponent32f,
+                  PixelInternalFormat.DepthComponent,
                   size.Width,
                   size.Height,
                   0,
                   PixelFormat.DepthComponent,
                   PixelType.UnsignedInt,
                   IntPtr.Zero);
+    GlUtil.AssertNoErrorsWhenDebugging();
     // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
@@ -358,6 +365,7 @@ public class SharpDxInteropControl : Control {
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
+    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
@@ -379,7 +387,6 @@ public class SharpDxInteropControl : Control {
         TextureTarget.Texture2D,
         this.depthTextureId_,
         0);
-    GL.DrawBuffer(DrawBufferMode.ColorAttachment0);
     GlUtil.AssertNoErrorsWhenDebugging();
 
     var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
