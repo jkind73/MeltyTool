@@ -98,7 +98,7 @@ public sealed class D3D11SwapchainImage {
   private readonly Texture2D texture_;
   public Texture2D Texture => this.texture_;
   private readonly KeyedMutex mutex_;
-  private readonly IntPtr handle_;
+  private readonly PlatformHandle platformHandle_;
   private PlatformGraphicsExternalImageProperties properties_;
   private ICompositionImportedGpuImage? imported_;
   public Task? LastPresent { get; private set; }
@@ -129,8 +129,14 @@ public sealed class D3D11SwapchainImage {
         }
     );
     this.mutex_ = this.texture_.QueryInterface<KeyedMutex>();
-    using (var res = this.texture_.QueryInterface<DxgiResource>())
-      this.handle_ = res.SharedHandle;
+    using (var res = this.texture_.QueryInterface<DxgiResource>()) {
+      var handle = res.SharedHandle;
+      this.platformHandle_ = new PlatformHandle(
+          handle,
+          KnownPlatformGraphicsExternalImageHandleTypes
+              .D3D11TextureGlobalSharedHandle
+      );
+    }
     this.properties_ = new PlatformGraphicsExternalImageProperties {
         Width = size.Width,
         Height = size.Height,
@@ -147,11 +153,7 @@ public sealed class D3D11SwapchainImage {
   public void Present() {
     this.mutex_.Release(1);
     this.imported_ ??= this.interop_.ImportImage(
-        new PlatformHandle(
-            this.handle_,
-            KnownPlatformGraphicsExternalImageHandleTypes
-                .D3D11TextureGlobalSharedHandle
-        ),
+        this.platformHandle_,
         this.properties_
     );
     this.LastPresent = this.target_.UpdateWithKeyedMutexAsync(this.imported_, 1, 0);
