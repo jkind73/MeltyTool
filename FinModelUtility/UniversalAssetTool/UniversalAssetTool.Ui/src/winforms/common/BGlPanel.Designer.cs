@@ -1,5 +1,7 @@
 ﻿using System;
 
+using fin.ui.rendering.gl;
+
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.GLControl;
@@ -39,7 +41,13 @@ namespace uni.ui.winforms.common {
       glControlSettings.BlueBits = 8;
       glControlSettings.AlphaBits = 8;
       glControlSettings.DepthBits = 32;
-      glControlSettings.APIVersion = Version.Parse("4.0.0.0");
+      glControlSettings.APIVersion = new Version(GlConstants.MajorVersion, GlConstants.MinorVersion);
+      glControlSettings.API
+          = GlConstants.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL;
+
+      if (GlConstants.Compatibility) {
+        glControlSettings.Profile = ContextProfile.Compatability;
+      }
 
       this.impl_ = new GLControl(glControlSettings);
 

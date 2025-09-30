@@ -18,12 +18,12 @@ public static class AppBuilderUtil {
                  .UsePlatformDetect()
                  .With(new AngleOptions {
                      GlProfiles = [
+                         // This needs to be OpenGL ES to start up, but we'll
+                         // use a different version of OpenGL downstream.
                          new GlVersion(
-                             GlConstants.Es
-                                 ? GlProfileType.OpenGLES
-                                 : GlProfileType.OpenGL,
-                             GlConstants.MajorVersion,
-                             GlConstants.MinorVersion,
+                             GlProfileType.OpenGLES,
+                             3,
+                             1,
                              GlConstants.Compatibility)
                      ],
                  })
