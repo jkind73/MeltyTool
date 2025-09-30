@@ -155,7 +155,7 @@ public sealed class SceneViewerGlPanel : BGlPanel, ISceneViewer {
                            };
     }
 
-  protected override void InitGl() => GlUtil.ResetGl();
+  protected override void InitGl() => GlUtil.InitGl();
 
   protected override void RenderGl() {
       var forwardVector =

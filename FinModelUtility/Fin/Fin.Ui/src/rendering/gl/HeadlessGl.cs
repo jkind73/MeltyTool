@@ -22,6 +22,6 @@ public static class HeadlessGl {
 
     GlUtil.SwitchContext(headlessWindow_);
     headlessWindow_.MakeCurrent();
-    GlUtil.ResetGl();
+    GlUtil.InitGl();
   }
 }

@@ -26,7 +26,7 @@ public sealed class AudioWaveformGlPanel : BGlPanel {
     set => this.SetValue(ActivePlaybackProperty, value);
   }
 
-  protected override void InitGl() => GlUtil.ResetGl();
+  protected override void InitGl() => GlUtil.InitGl();
   protected override void TeardownGl() { }
 
   protected override void RenderGl() {

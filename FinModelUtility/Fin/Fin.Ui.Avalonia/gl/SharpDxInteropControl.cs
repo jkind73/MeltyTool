@@ -217,7 +217,7 @@ public class SharpDxInteropControl : Control {
     using var adapter = factory.GetAdapter1(0);
     this.device_ = new Device(
         adapter,
-        DeviceCreationFlags.None,
+        GlConstants.Debug ? DeviceCreationFlags.Debug : DeviceCreationFlags.None,
         new[] {
             FeatureLevel.Level_12_1,
             FeatureLevel.Level_12_0,

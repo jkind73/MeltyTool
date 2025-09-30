@@ -108,8 +108,7 @@ public sealed class AudioPlayerGlPanel : BGlPanel, IAudioPlayerPanel {
 
   public event Action<IAudioFileBundle?> OnChange = delegate { };
 
-  protected override void InitGl() => this.ResetGl_();
-  private void ResetGl_() => GlUtil.ResetGl();
+  protected override void InitGl() => GlUtil.InitGl();
 
   protected override void RenderGl() {
     var width = this.Width;

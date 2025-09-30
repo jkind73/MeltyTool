@@ -18,6 +18,10 @@ public static class GlfwConstants {
       nativeWindowSettings.Profile = ContextProfile.Compatability;
     }
 
+    if (GlConstants.Debug) {
+      nativeWindowSettings.Flags = ContextFlags.Debug;
+    }
+
     return nativeWindowSettings;
   }
 }

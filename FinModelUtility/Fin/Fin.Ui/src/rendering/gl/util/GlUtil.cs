@@ -1,4 +1,6 @@
-﻿using fin.model;
+﻿using System.Runtime.InteropServices;
+
+using fin.model;
 using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.ES30;
@@ -27,10 +29,35 @@ public static partial class GlUtil {
     }
   }
 
+  public static void InitGl() {
+    AssertNoErrorsWhenDebugging();
 
-  public static void ResetGl() {
+    GL.Enable(EnableCap.DebugOutput);
+    GL.DebugMessageCallback(
+        (source,
+         type,
+         id,
+         severity,
+         length,
+         messagePtr,
+         userParam) => {
+          var message = Marshal.PtrToStringAnsi(messagePtr);
+
+          if (type == DebugType.DebugTypeError) {
+            throw new Exception(message);
+          }
+
+          Console.WriteLine(message);
+        },
+        0);
+    AssertNoErrorsWhenDebugging();
+
     GlMaterialConstants.Initialize();
 
+    ResetGl();
+  }
+
+  public static void ResetGl() {
     AssertNoErrorsWhenDebugging();
     GL.ClearDepth(5.0F);
     AssertNoErrorsWhenDebugging();

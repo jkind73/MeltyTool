@@ -181,7 +181,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
         handledEventsToo: true);
   }
 
-  protected override void InitGl() => GlUtil.ResetGl();
+  protected override void InitGl() => GlUtil.InitGl();
   protected override void TeardownGl() { }
 
   protected override void RenderGl() {
