@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 #nullable disable
@@ -137,7 +137,7 @@ namespace QuickFont
       if (this._useDefaultBlendFunction)
       {
         GL.Enable(EnableCap.Blend);
-        GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+        GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
       }
       GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ProjectionMatrixUniformLocation, false, ref this._projectionMatrix);
       GL.Uniform1(this.InstanceSharedState.ShaderVariables.SamplerLocation, 0);

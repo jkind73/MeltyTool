@@ -1,7 +1,7 @@
 ﻿using fin.model;
 using fin.util.enums;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace fin.ui.rendering.gl;
 

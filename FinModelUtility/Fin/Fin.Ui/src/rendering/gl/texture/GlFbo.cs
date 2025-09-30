@@ -2,13 +2,7 @@
 
 using fin.data.disposables;
 
-using OpenTK.Graphics.ES30;
-
-using GL0 = OpenTK.Graphics.OpenGL.GL;
-using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
-using PixelInternalFormat = OpenTK.Graphics.OpenGL.PixelInternalFormat;
-using TextureMagFilter = OpenTK.Graphics.ES30.TextureMagFilter;
-using TextureMinFilter = OpenTK.Graphics.ES30.TextureMinFilter;
+using OpenTK.Graphics.OpenGL4;
 
 namespace fin.ui.rendering.gl.texture;
 
@@ -25,9 +19,9 @@ public sealed class GlFbo : IFinDisposable {
     // Create Color Tex
     GL.GenTextures(1, out this.colorTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.colorTextureId_);
-    GL.TexImage2D(TextureTarget2d.Texture2D,
+    GL.TexImage2D(TextureTarget.Texture2D,
                   0,
-                  TextureComponentCount.Rgba8,
+                  PixelInternalFormat.Rgba8,
                   width,
                   height,
                   0,
@@ -53,15 +47,15 @@ public sealed class GlFbo : IFinDisposable {
     // Create Depth Tex
     GL.GenTextures(1, out this.depthTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
-    GL0.TexImage2D(OpenTK.Graphics.OpenGL.TextureTarget.Texture2D,
-                   0,
-                   PixelInternalFormat.DepthComponent,
-                   width,
-                   height,
-                   0,
-                   OpenTK.Graphics.OpenGL.PixelFormat.DepthComponent,
-                   OpenTK.Graphics.OpenGL.PixelType.UnsignedInt,
-                   IntPtr.Zero);
+    GL.TexImage2D(TextureTarget.Texture2D,
+                  0,
+                  PixelInternalFormat.DepthComponent,
+                  width,
+                  height,
+                  0,
+                  PixelFormat.DepthComponent,
+                  PixelType.UnsignedInt,
+                  IntPtr.Zero);
     // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
@@ -85,13 +79,13 @@ public sealed class GlFbo : IFinDisposable {
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.ColorAttachment0,
-                            TextureTarget2d.Texture2D,
+                            TextureTarget.Texture2D,
                             this.colorTextureId_,
                             0);
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.DepthAttachment,
-                            TextureTarget2d.Texture2D,
+                            TextureTarget.Texture2D,
                             this.depthTextureId_,
                             0);
     GlUtil.AssertNoErrorsWhenDebugging();

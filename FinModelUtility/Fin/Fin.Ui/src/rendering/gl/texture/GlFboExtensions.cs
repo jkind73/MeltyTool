@@ -1,11 +1,11 @@
 ﻿using fin.image;
 using fin.image.formats;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using SixLabors.ImageSharp.PixelFormats;
 
-using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
+using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
 namespace fin.ui.rendering.gl.texture;
 

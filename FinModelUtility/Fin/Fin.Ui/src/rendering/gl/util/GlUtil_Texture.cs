@@ -2,7 +2,7 @@
 
 using fin.model;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace fin.ui.rendering.gl;
 

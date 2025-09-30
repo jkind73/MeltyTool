@@ -7,12 +7,12 @@ using fin.math.floats;
 using fin.model;
 using fin.ui.rendering.gl.material;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using FinTextureMinFilter = fin.model.TextureMinFilter;
-using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
+using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 using TextureMagFilter = fin.model.TextureMagFilter;
-using TextureMinFilter = OpenTK.Graphics.ES30.TextureMinFilter;
+using TextureMinFilter = OpenTK.Graphics.OpenGL4.TextureMinFilter;
 
 
 namespace fin.ui.rendering.gl.texture;
@@ -67,7 +67,7 @@ public sealed class GlTexture : IGlTexture {
                                or FinTextureMinFilter.NEAR_MIPMAP_LINEAR
                                or FinTextureMinFilter.LINEAR_MIPMAP_NEAR
                                or FinTextureMinFilter.LINEAR_MIPMAP_LINEAR) {
-        GL.GenerateMipmap(TextureTarget.Texture2D);
+        GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
       } else {
         GL.TexParameter(target,
                         TextureParameterName.TextureMaxLevel,
@@ -163,7 +163,7 @@ public sealed class GlTexture : IGlTexture {
       case Rgba32Image rgba32Image: {
         using var fastLock = rgba32Image.UnsafeLock();
         PassBytesIntoImage_(level,
-                            TextureComponentCount.Rgba8,
+                            PixelInternalFormat.Rgba8,
                             imageWidth,
                             imageHeight,
                             PixelFormat.Rgba,
@@ -173,7 +173,7 @@ public sealed class GlTexture : IGlTexture {
       case Rgb24Image rgb24Image: {
         using var fastLock = rgb24Image.UnsafeLock();
         PassBytesIntoImage_(level,
-                            TextureComponentCount.Rgb8,
+                            PixelInternalFormat.Rgb8,
                             imageWidth,
                             imageHeight,
                             PixelFormat.Rgb,
@@ -234,7 +234,7 @@ public sealed class GlTexture : IGlTexture {
           }
         });
         PassBytesIntoImage_(level,
-                            TextureComponentCount.Rgba8,
+                            PixelInternalFormat.Rgba8,
                             imageWidth,
                             imageHeight,
                             PixelFormat.Rgba,
@@ -246,7 +246,7 @@ public sealed class GlTexture : IGlTexture {
 
   private static unsafe void PassBytesIntoImage_(
       int level,
-      TextureComponentCount internalFormat,
+      PixelInternalFormat internalFormat,
       int imageWidth,
       int imageHeight,
       PixelFormat pixelFormat,
@@ -256,7 +256,7 @@ public sealed class GlTexture : IGlTexture {
     // This is required to fix a rare issue with alignment:
     // https://stackoverflow.com/questions/52460143/texture-not-showing-correctly
     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-    GL.TexImage2D(TextureTarget2d.Texture2D,
+    GL.TexImage2D(TextureTarget.Texture2D,
                   level,
                   internalFormat,
                   imageWidth,
@@ -309,9 +309,9 @@ public sealed class GlTexture : IGlTexture {
           WrapMode.CLAMP => hasBorderColor
               ? (int) TextureWrapMode.ClampToBorder
               : (int) TextureWrapMode.ClampToEdge,
-          WrapMode.REPEAT => (int) TextureWrapMode.Repeat,
-          WrapMode.MIRROR_CLAMP or WrapMode.MIRROR_REPEAT
-              => (int) All.MirroredRepeat,
+          WrapMode.REPEAT        => (int) TextureWrapMode.Repeat,
+          WrapMode.MIRROR_CLAMP  => (int) All.MirrorClampToEdge,
+          WrapMode.MIRROR_REPEAT => (int) All.MirroredRepeat,
           _ => throw new ArgumentOutOfRangeException(
               nameof(wrapMode),
               wrapMode,

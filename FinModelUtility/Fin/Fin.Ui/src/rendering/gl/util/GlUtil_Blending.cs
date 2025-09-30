@@ -1,13 +1,13 @@
 ﻿using System.Drawing;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using FinLogicOp = fin.model.LogicOp;
 using FinBlendEquation = fin.model.BlendEquation;
-using GlBlendEquation = OpenTK.Graphics.ES30.BlendEquationMode;
+using GlBlendEquation = OpenTK.Graphics.OpenGL4.BlendEquationMode;
 using FinBlendFactor = fin.model.BlendFactor;
-using GlBlendFactorSrc = OpenTK.Graphics.ES30.BlendingFactorSrc;
-using GlBlendFactorDst = OpenTK.Graphics.ES30.BlendingFactorDest;
+using GlBlendFactorSrc = OpenTK.Graphics.OpenGL4.BlendingFactorSrc;
+using GlBlendFactorDst = OpenTK.Graphics.OpenGL4.BlendingFactorDest;
 
 
 namespace fin.ui.rendering.gl;
@@ -93,8 +93,8 @@ public static partial class GlUtil {
     if (isColorNone && isAlphaNone) {
       GL.Disable(EnableCap.Blend);
       GL.BlendEquation(GlBlendEquation.FuncAdd);
-      GL.BlendFunc(BlendingFactorSrc.SrcAlpha,
-                   BlendingFactorDest.OneMinusSrcAlpha);
+      GL.BlendFunc(BlendingFactor.SrcAlpha,
+                   BlendingFactor.OneMinusSrcAlpha);
     } else {
       GL.Enable(EnableCap.Blend);
 

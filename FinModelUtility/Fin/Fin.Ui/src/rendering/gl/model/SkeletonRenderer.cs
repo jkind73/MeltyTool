@@ -9,7 +9,7 @@ using fin.model.impl;
 using fin.model.util;
 using fin.util.asserts;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using LogicOp = fin.model.LogicOp;
 

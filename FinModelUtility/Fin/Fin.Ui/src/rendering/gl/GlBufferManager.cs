@@ -9,10 +9,10 @@ using fin.ui.rendering.gl.model;
 using fin.util.enumerables;
 using fin.util.linq;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using FinPrimitiveType = fin.model.PrimitiveType;
-using PrimitiveType = OpenTK.Graphics.ES30.PrimitiveType;
+using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 
 namespace fin.ui.rendering.gl;
 

@@ -2,7 +2,7 @@
 
 using fin.math;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 namespace sm64.Scripts {
   public sealed class CollisionTriangleList {

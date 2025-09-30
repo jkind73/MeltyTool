@@ -3,7 +3,7 @@
 using fin.ui.rendering.gl;
 using fin.util.time;
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 
 using uni.util.windows;
 

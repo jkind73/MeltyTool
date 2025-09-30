@@ -4,12 +4,12 @@
 // MVID: 0B734F03-6CB9-4E1A-B817-4DAA44B7F881
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
-using OpenTK.Graphics.ES30;
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-using PixelFormat = OpenTK.Graphics.ES30.PixelFormat;
+using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
 #nullable disable
 namespace QuickFont
@@ -51,9 +51,9 @@ namespace QuickFont
       GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexImage2D(TextureTarget2d.Texture2D, 0, TextureComponentCount.Rgba8, this.Width, this.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataSource.Scan0);
+      GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, this.Width, this.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataSource.Scan0);
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.GenerateMipmap(TextureTarget.Texture2D);
+      GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
       GlUtil.AssertNoErrorsWhenDebugging();
     }
 
