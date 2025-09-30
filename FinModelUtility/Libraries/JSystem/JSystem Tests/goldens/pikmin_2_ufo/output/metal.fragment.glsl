@@ -1,4 +1,4 @@
-#version 310 es
+#version 460
 precision highp float;
 
 uniform vec3 color_GxColorRegister7;

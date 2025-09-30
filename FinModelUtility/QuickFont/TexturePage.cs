@@ -51,7 +51,7 @@ namespace QuickFont
       GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexImage2D(TextureTarget2d.Texture2D, 0, TextureComponentCount.Bgra8Ext, this.Width, this.Height, 0, PixelFormat.Bgra, PixelType.UnsignedByte, dataSource.Scan0);
+      GL.TexImage2D(TextureTarget2d.Texture2D, 0, TextureComponentCount.Rgba8, this.Width, this.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataSource.Scan0);
       GlUtil.AssertNoErrorsWhenDebugging();
       GL.GenerateMipmap(TextureTarget.Texture2D);
       GlUtil.AssertNoErrorsWhenDebugging();

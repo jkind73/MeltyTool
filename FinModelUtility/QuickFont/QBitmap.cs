@@ -165,9 +165,9 @@ namespace QuickFont
     public unsafe void PutPixel32(int px, int py, byte r, byte g, byte b, byte a)
     {
       IntPtr num = (IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4;
-      *(sbyte*) num = (sbyte) b;
+      *(sbyte*) num = (sbyte) r;
       *(sbyte*) (num + 1) = (sbyte) g;
-      *(sbyte*) (num + 2) = (sbyte) r;
+      *(sbyte*) (num + 2) = (sbyte) b;
       *(sbyte*) (num + 3) = (sbyte) a;
     }
 
@@ -180,9 +180,9 @@ namespace QuickFont
       ref byte a)
     {
       byte* numPtr = (byte*) ((IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4);
-      b = *numPtr;
+      r = *numPtr;
       g = numPtr[1];
-      r = numPtr[2];
+      b = numPtr[2];
       a = numPtr[3];
     }
 

@@ -1,4 +1,4 @@
-#version 310 es
+#version 460
 precision highp float;
 
 uniform float scalar_3dsAlpha5;

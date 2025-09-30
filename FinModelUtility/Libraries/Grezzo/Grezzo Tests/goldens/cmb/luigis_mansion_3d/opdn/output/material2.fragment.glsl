@@ -1,4 +1,4 @@
-#version 310 es
+#version 460
 precision highp float;
 
 layout (std140, binding = 1) uniform Matrices {
