@@ -14,8 +14,6 @@ public static partial class GlUtil {
       return;
     }
 
-    AssertNoErrorsWhenDebugging();
     GL.BindVertexArray(currentState_.CurrentVaoId = vaoId);
-    AssertNoErrorsWhenDebugging();
   }
 }

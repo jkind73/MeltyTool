@@ -35,7 +35,6 @@ public sealed class GlTexture : IGlTexture {
   }
 
   public GlTexture(IReadOnlyImage image) {
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.GenTextures(1, out int id);
     this.Id = id;
 
@@ -44,13 +43,10 @@ public sealed class GlTexture : IGlTexture {
     {
       this.LoadImageIntoTexture_(image, 0);
     }
-    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   private GlTexture(IReadOnlyTexture texture) {
     this.texture_ = texture;
-
-    GlUtil.AssertNoErrorsWhenDebugging();
 
     GL.GenTextures(1, out int id);
     this.Id = id;
@@ -72,7 +68,6 @@ public sealed class GlTexture : IGlTexture {
         GL.TexParameter(target,
                         TextureParameterName.TextureMaxLevel,
                         mipmapImages.Length - 1);
-        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       var finBorderColor = texture.BorderColor;
@@ -87,7 +82,6 @@ public sealed class GlTexture : IGlTexture {
                       (int) ConvertFinWrapToGlWrap_(
                           texture.WrapModeV,
                           hasBorderColor));
-      GlUtil.AssertNoErrorsWhenDebugging();
 
       if (hasBorderColor) {
         var glBorderColor = new[] {
@@ -117,7 +111,6 @@ public sealed class GlTexture : IGlTexture {
               FinTextureMinFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
                   .LinearMipmapLinear,
           }));
-      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(
           target,
           TextureParameterName.TextureMagFilter,
@@ -128,23 +121,18 @@ public sealed class GlTexture : IGlTexture {
                                                .TextureMagFilter.Linear,
               _ => throw new ArgumentOutOfRangeException()
           }));
-      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(target,
                       TextureParameterName.TextureMinLod,
                       texture.MinLod);
-      GlUtil.AssertNoErrorsWhenDebugging();
       GL.TexParameter(target,
                       TextureParameterName.TextureMaxLod,
                       texture.MaxLod);
-      GlUtil.AssertNoErrorsWhenDebugging();
       if (!texture.LodBias.IsRoughly0()) {
         GL.TexParameter(target,
                         TextureParameterName.TextureLodBias,
                         texture.LodBias);
       }
     }
-
-    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   private static readonly MemoryPool<byte> pool_ = MemoryPool<byte>.Shared;
@@ -251,8 +239,6 @@ public sealed class GlTexture : IGlTexture {
       int imageHeight,
       PixelFormat pixelFormat,
       byte* scan0) {
-    GlUtil.AssertNoErrorsWhenDebugging();
-
     // This is required to fix a rare issue with alignment:
     // https://stackoverflow.com/questions/52460143/texture-not-showing-correctly
     GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
@@ -265,8 +251,6 @@ public sealed class GlTexture : IGlTexture {
                   pixelFormat,
                   PixelType.UnsignedByte,
                   (IntPtr) scan0);
-
-    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   ~GlTexture() => this.ReleaseUnmanagedResources_();
@@ -289,9 +273,7 @@ public sealed class GlTexture : IGlTexture {
     }
 
     var id = this.Id;
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.DeleteTextures(1, ref id);
-    GlUtil.AssertNoErrorsWhenDebugging();
 
     this.Id = UNDEFINED_ID;
   }

@@ -24,8 +24,6 @@ public static partial class GlUtil {
     }
 
     currentState_.ClearColor = color;
-    AssertNoErrorsWhenDebugging();
     GL.ClearColor(color);
-    AssertNoErrorsWhenDebugging();
   }
 }

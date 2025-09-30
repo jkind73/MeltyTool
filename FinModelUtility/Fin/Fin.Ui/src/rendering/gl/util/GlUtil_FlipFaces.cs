@@ -15,9 +15,7 @@ public static partial class GlUtil {
         return;
       }
 
-      AssertNoErrorsWhenDebugging();
       currentState_.FlipFaces = flipFaces;
       GL.FrontFace(flipFaces ? FrontFaceDirection.Cw : FrontFaceDirection.Ccw);
-      AssertNoErrorsWhenDebugging();
     }
 }

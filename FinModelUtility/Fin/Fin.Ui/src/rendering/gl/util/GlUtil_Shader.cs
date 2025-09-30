@@ -18,16 +18,13 @@ public static partial class GlUtil {
       return;
     }
 
-    AssertNoErrorsWhenDebugging();
     currentState_.CurrentShader = shader;
     GL.UseProgram(shader);
-    AssertNoErrorsWhenDebugging();
   }
 
   public static void ValidateCurrentProgram() {
     var programId = currentState_.CurrentShader;
 
-    AssertNoErrorsWhenDebugging();
     GL.ValidateProgram(programId);
     GL.GetProgram(
         programId,
@@ -51,7 +48,5 @@ public static partial class GlUtil {
 
       Asserts.Fail(errorSb.ToString());
     }
-
-    AssertNoErrorsWhenDebugging();
   }
 }

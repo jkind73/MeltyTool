@@ -281,9 +281,7 @@ public class SharpDxInteropControl : Control {
 
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
     this.renderGl_();
 
     this.currentImage_.Present();
@@ -339,9 +337,7 @@ public class SharpDxInteropControl : Control {
       throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
     }
 
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexImage2D(TextureTarget.Texture2D,
                   0,
                   PixelInternalFormat.DepthComponent,
@@ -351,7 +347,6 @@ public class SharpDxInteropControl : Control {
                   PixelFormat.DepthComponent,
                   PixelType.UnsignedInt,
                   IntPtr.Zero);
-    GlUtil.AssertNoErrorsWhenDebugging();
     // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
@@ -359,14 +354,12 @@ public class SharpDxInteropControl : Control {
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapT,
                     (int) TextureWrapMode.ClampToBorder);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
     GL.FramebufferTexture2D(
         FramebufferTarget.Framebuffer,
@@ -381,7 +374,6 @@ public class SharpDxInteropControl : Control {
         TextureTarget.Texture2D,
         this.depthTextureId_,
         0);
-    GlUtil.AssertNoErrorsWhenDebugging();
 
     var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
     if (fbStatus != FramebufferErrorCode.FramebufferComplete) {

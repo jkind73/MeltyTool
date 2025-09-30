@@ -14,8 +14,6 @@ public static partial class GlUtil {
       return;
     }
 
-    AssertNoErrorsWhenDebugging();
     GL.Viewport(viewport);
-    AssertNoErrorsWhenDebugging();
   }
 }

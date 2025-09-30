@@ -156,11 +156,9 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
         }
       }
 
-      GlUtil.AssertNoErrorsWhenDebugging();
       GL.GenVertexArrays(1, out this.vaoId_);
       this.vboIds_ = new int[vboCount];
       GL.GenBuffers(this.vboIds_.Length, this.vboIds_);
-      GlUtil.AssertNoErrorsWhenDebugging();
 
       this.UpdateBuffer();
     }
@@ -173,10 +171,8 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
     }
 
     private void ReleaseUnmanagedResources_() {
-      GlUtil.AssertNoErrorsWhenDebugging();
       GL.DeleteVertexArrays(1, ref this.vaoId_);
       GL.DeleteBuffers(this.vboIds_.Length, this.vboIds_);
-      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     public int VaoId => this.vaoId_;
@@ -269,14 +265,11 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
         }
       }
 
-      GlUtil.AssertNoErrorsWhenDebugging();
       GlUtil.BindVao(this.vaoId_);
-      GlUtil.AssertNoErrorsWhenDebugging();
 
       var vertexAttribIndex = 0;
 
       // Position
-      GlUtil.AssertNoErrorsWhenDebugging();
       var vertexAttribPosition = vertexAttribIndex++;
       GL.BindBuffer(BufferTarget.ArrayBuffer,
                     this.vboIds_[vertexAttribPosition]);
@@ -294,11 +287,9 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
           false,
           0,
           0);
-      GlUtil.AssertNoErrorsWhenDebugging();
 
       // Normal
       if (this.normalData_ != null) {
-        GlUtil.AssertNoErrorsWhenDebugging();
         var vertexAttribNormal = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
                       this.vboIds_[vertexAttribNormal]);
@@ -316,12 +307,10 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
-        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       // Tangent
       if (this.tangentData_ != null) {
-        GlUtil.AssertNoErrorsWhenDebugging();
         var vertexAttribTangent = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
                       this.vboIds_[vertexAttribTangent]);
@@ -339,11 +328,9 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
-        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       if (numBones > 0) {
-        GlUtil.AssertNoErrorsWhenDebugging();
         // Bone ids
         var vertexAttribBoneIds = vertexAttribIndex++;
         GL.BindBuffer(BufferTarget.ArrayBuffer,
@@ -378,13 +365,11 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             false,
             0,
             0);
-        GlUtil.AssertNoErrorsWhenDebugging();
       }
 
       // Uv
       if (this.uvData_ != null) {
         for (var i = 0; i < this.uvData_.Length; ++i) {
-          GlUtil.AssertNoErrorsWhenDebugging();
           var vertexAttribUv = vertexAttribIndex++;
           GL.BindBuffer(BufferTarget.ArrayBuffer, this.vboIds_[vertexAttribUv]);
           GL.BufferData(BufferTarget.ArrayBuffer,
@@ -399,7 +384,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
               false,
               0,
               0);
-          GlUtil.AssertNoErrorsWhenDebugging();
         }
       }
 
@@ -407,7 +391,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       // Color
       if (this.colorData_ != null) {
         for (var i = 0; i < this.colorData_.Length; ++i) {
-          GlUtil.AssertNoErrorsWhenDebugging();
           var vertexAttribColor = vertexAttribIndex++;
           GL.BindBuffer(BufferTarget.ArrayBuffer,
                         this.vboIds_[vertexAttribColor]);
@@ -423,14 +406,12 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
               false,
               0,
               0);
-          GlUtil.AssertNoErrorsWhenDebugging();
         }
       }
 
       // Make sure the buffers are not changed by outside code
       GlUtil.ResetVao();
       GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-      GlUtil.AssertNoErrorsWhenDebugging();
     }
   }
 
@@ -498,7 +479,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       };
       this.isFlipped_ = mergedPrimitive.IsFlipped;
 
-      GlUtil.AssertNoErrorsWhenDebugging();
       GlUtil.BindVao(this.vaoId_);
       GL.GenBuffers(1, out this.eboId_);
 
@@ -531,8 +511,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       } else {
         this.vertexCount_ = vertices.Length;
       }
-
-      GlUtil.AssertNoErrorsWhenDebugging();
     }
 
     ~GlBufferRenderer() => this.ReleaseUnmanagedResources_();
@@ -542,20 +520,15 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
       GC.SuppressFinalize(this);
     }
 
-    private void ReleaseUnmanagedResources_() {
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.DeleteBuffers(1, ref this.eboId_);
-      GlUtil.AssertNoErrorsWhenDebugging();
-    }
+    private void ReleaseUnmanagedResources_()
+      => GL.DeleteBuffers(1, ref this.eboId_);
 
     public void Render() {
       GlUtil.SetFlipFaces(this.isFlipped_);
       GlUtil.BindVao(this.vaoId_);
 
       if (this.indices_ != null) {
-        GlUtil.AssertNoErrorsWhenDebugging();
         GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
-        GlUtil.AssertNoErrorsWhenDebugging();
 
         GlUtil.ValidateCurrentProgram();
         GL.DrawElements(
@@ -569,8 +542,6 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
             0,
             this.vertexCount_);
       }
-
-      GlUtil.AssertNoErrorsWhenDebugging();
     }
   }
 }

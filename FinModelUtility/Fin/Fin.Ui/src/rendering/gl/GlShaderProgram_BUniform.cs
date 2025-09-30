@@ -11,10 +11,8 @@ public partial class GlShaderProgram {
 
     public void PassValueToProgramIfDirty() {
       if (this.IsDirty) {
-        GlUtil.AssertNoErrorsWhenDebugging();
         this.IsDirty = false;
         this.PassValueToProgram();
-        GlUtil.AssertNoErrorsWhenDebugging();
       }
     }
 

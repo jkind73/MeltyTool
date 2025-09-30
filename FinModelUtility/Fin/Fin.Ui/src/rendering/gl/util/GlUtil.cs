@@ -22,7 +22,6 @@ public static partial class GlUtil {
 
   private static readonly object GL_LOCK_ = new();
 
-
   public static void RunLockedGl(Action handler) {
     lock (GL_LOCK_) {
       handler();
@@ -30,8 +29,6 @@ public static partial class GlUtil {
   }
 
   public static void InitGl() {
-    AssertNoErrorsWhenDebugging();
-
     GL.Enable(EnableCap.DebugOutput);
     GL.DebugMessageCallback(
         (source,
@@ -50,7 +47,6 @@ public static partial class GlUtil {
           Console.WriteLine(message);
         },
         0);
-    AssertNoErrorsWhenDebugging();
 
     GlMaterialConstants.Initialize();
 
@@ -58,11 +54,8 @@ public static partial class GlUtil {
   }
 
   public static void ResetGl() {
-    AssertNoErrorsWhenDebugging();
     GL.ClearDepth(5.0F);
-    AssertNoErrorsWhenDebugging();
     GL.Enable(EnableCap.PrimitiveRestartFixedIndex);
-    AssertNoErrorsWhenDebugging();
 
     ResetBlending();
     ResetClearColor();

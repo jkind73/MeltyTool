@@ -15,7 +15,6 @@ public sealed class GlFbo : IFinDisposable {
     this.Width = width;
     this.Height = height;
 
-    GlUtil.AssertNoErrorsWhenDebugging();
     // Create Color Tex
     GL.GenTextures(1, out this.colorTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.colorTextureId_);
@@ -28,21 +27,18 @@ public sealed class GlFbo : IFinDisposable {
                   PixelFormat.Rgba,
                   PixelType.UnsignedByte,
                   IntPtr.Zero);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
                     (int) TextureMinFilter.Linear);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapT,
                     (int) TextureWrapMode.ClampToBorder);
-    GlUtil.AssertNoErrorsWhenDebugging();
 
     // Create Depth Tex
     GL.GenTextures(1, out this.depthTextureId_);
@@ -57,14 +53,12 @@ public sealed class GlFbo : IFinDisposable {
                   PixelType.UnsignedInt,
                   IntPtr.Zero);
     // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMinFilter,
                     (int) TextureMinFilter.Linear);
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureMagFilter,
                     (int) TextureMagFilter.Linear);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D,
                     TextureParameterName.TextureWrapS,
                     (int) TextureWrapMode.ClampToBorder);
@@ -74,21 +68,17 @@ public sealed class GlFbo : IFinDisposable {
 
     // Create a FBO and attach the textures
     GL.GenFramebuffers(1, out this.fboId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.ColorAttachment0,
                             TextureTarget.Texture2D,
                             this.colorTextureId_,
                             0);
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer,
                             FramebufferAttachment.DepthAttachment,
                             TextureTarget.Texture2D,
                             this.depthTextureId_,
                             0);
-    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   ~GlFbo() => this.ReleaseUnmanagedResources_();
@@ -103,11 +93,9 @@ public sealed class GlFbo : IFinDisposable {
   private void ReleaseUnmanagedResources_() {
     this.IsDisposed = true;
 
-    GlUtil.AssertNoErrorsWhenDebugging();
     GL.DeleteFramebuffers(1, ref this.fboId_);
     GL.DeleteTextures(1, ref this.colorTextureId_);
     GL.DeleteTextures(1, ref this.depthTextureId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   public int Width { get; }
@@ -122,11 +110,8 @@ public sealed class GlFbo : IFinDisposable {
   public void BindDepth(int textureIndex = 0)
     => GlUtil.BindTexture(textureIndex, this.depthTextureId_);
 
-  public void TargetFbo() {
-    GlUtil.AssertNoErrorsWhenDebugging();
-    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GlUtil.AssertNoErrorsWhenDebugging();
-  }
+  public void TargetFbo()
+    => GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
 
   public void UntargetFbo()
     => GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
