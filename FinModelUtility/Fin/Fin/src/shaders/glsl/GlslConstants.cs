@@ -1,8 +1,13 @@
-﻿namespace fin.shaders.glsl;
+﻿using fin.ui.rendering.gl;
+
+namespace fin.shaders.glsl;
 
 public static class GlslConstants {
-  public const string VERTEX_SHADER_VERSION = "310 es";
-  public const string FRAGMENT_SHADER_VERSION = "310 es";
+  public static string SHADER_VERSION { get; }
+    = $"{GlConstants.MajorVersion}{GlConstants.MinorVersion}0{(GlConstants.Es ? " es" : "")}";
+
+  public static string VERTEX_SHADER_VERSION => SHADER_VERSION;
+  public static string FRAGMENT_SHADER_VERSION => SHADER_VERSION;
 
   public const string FLOAT_PRECISION = "precision highp float;";
 

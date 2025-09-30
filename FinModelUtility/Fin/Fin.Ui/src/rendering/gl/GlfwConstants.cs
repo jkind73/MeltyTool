@@ -4,20 +4,17 @@ using OpenTK.Windowing.Desktop;
 
 namespace fin.ui.rendering.gl;
 
-public static class GlConstants {
-  public static ContextAPI Api => ContextAPI.OpenGLES;
-  public static Version Version { get; } = new(3, 1);
-  public static bool Compatibility => true;
-
+public static class GlfwConstants {
   public static NativeWindowSettings CreateNewNativeWindowSettings() {
     var nativeWindowSettings = new NativeWindowSettings {
-        API = Api,
-        APIVersion = Version,
+        API = GlConstants.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL,
+        APIVersion
+            = new Version(GlConstants.MajorVersion, GlConstants.MinorVersion),
         Vsync = VSyncMode.On,
         StartVisible = false
     };
 
-    if (Compatibility) {
+    if (GlConstants.Compatibility) {
       nativeWindowSettings.Profile = ContextProfile.Compatability;
     }
 

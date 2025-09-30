@@ -232,7 +232,7 @@ public class SharpDxInteropControl : Control {
     this.swapchain_ = new D3d11Swapchain(this.device_, interop, surface);
     this.context_ = this.device_.ImmediateContext;
 
-    var nativeWindowSettings = GlConstants.CreateNewNativeWindowSettings();
+    var nativeWindowSettings = GlfwConstants.CreateNewNativeWindowSettings();
     nativeWindowSettings.ClientSize = new(100, 100);
 
     this.openTkWindow_ = new NativeWindow(nativeWindowSettings);

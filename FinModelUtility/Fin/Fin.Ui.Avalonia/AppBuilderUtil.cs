@@ -19,13 +19,11 @@ public static class AppBuilderUtil {
                  .With(new AngleOptions {
                      GlProfiles = [
                          new GlVersion(
-                             GlConstants.Api switch {
-                                 ContextAPI.OpenGLES => GlProfileType.OpenGLES,
-                                 ContextAPI.OpenGL => GlProfileType.OpenGL,
-                                 _ => throw new ArgumentOutOfRangeException()
-                             },
-                             GlConstants.Version.Major,
-                             GlConstants.Version.Minor,
+                             GlConstants.Es
+                                 ? GlProfileType.OpenGLES
+                                 : GlProfileType.OpenGL,
+                             GlConstants.MajorVersion,
+                             GlConstants.MinorVersion,
                              GlConstants.Compatibility)
                      ],
                  })
