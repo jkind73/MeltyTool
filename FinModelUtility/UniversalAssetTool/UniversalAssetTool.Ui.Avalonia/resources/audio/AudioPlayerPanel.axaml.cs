@@ -120,7 +120,8 @@ public sealed class AudioPlayerPanelViewModel
   public void PlayRandomFromShuffledList(bool onlyIfNotPlaying = false) {
     lock (this.playNextLock_) {
       if (onlyIfNotPlaying &&
-          this.activePlayback_?.State == PlaybackState.PLAYING) {
+          this.activePlayback_?.State is PlaybackState.PLAYING
+                                         or PlaybackState.PAUSED) {
         return;
       }
 

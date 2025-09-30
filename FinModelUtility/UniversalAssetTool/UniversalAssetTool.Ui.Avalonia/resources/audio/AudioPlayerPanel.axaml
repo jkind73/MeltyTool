@@ -27,11 +27,11 @@
                 Height="12"
                 Kind="Close" />
           </Button>
-
-          <TextBlock 
+          
+          <SelectableTextBlock
             VerticalAlignment="Center"
             Classes="h3 spaceFirst"
-            Text="{Binding AudioBuffer.FileBundle.MainFile}" />
+            Text="{Binding AudioBuffer.FileBundle.MainFile.DisplayFullPath}" />
         </DockPanel>
 
         <Border HorizontalAlignment="Stretch"
