@@ -23,8 +23,8 @@ namespace jsystem {
     }
 
     [Test]
-    public void TestExportsGoldenAsExpected()
-      => this.AssertGolden(this.goldenDirectory_);
+    public async Task TestExportsGoldenAsExpected()
+      => await this.AssertGolden(this.goldenDirectory_);
 
     [Test]
     public async Task TestExportBmdDrw1s()

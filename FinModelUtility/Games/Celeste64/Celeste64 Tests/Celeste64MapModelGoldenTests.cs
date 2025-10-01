@@ -13,9 +13,9 @@ public sealed class Celeste64MapModelGoldenTests
         Celeste64MapModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-  public void TestExportsGoldenAsExpected(
+  public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override Celeste64MapModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

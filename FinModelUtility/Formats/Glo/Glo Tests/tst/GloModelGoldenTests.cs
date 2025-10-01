@@ -32,9 +32,9 @@ public sealed class
 
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-  public void TestExportsGoldenAsExpected(
+  public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override GloModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

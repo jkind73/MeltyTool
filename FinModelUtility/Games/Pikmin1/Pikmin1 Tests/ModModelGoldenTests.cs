@@ -13,9 +13,9 @@ namespace pikmin1 {
       : BModelGoldenTests<ModModelFileBundle, ModModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]
-    public void TestExportsGoldenAsExpected(
+    public async Task TestExportsGoldenAsExpected(
         IFileHierarchyDirectory goldenDirectory)
-      => this.AssertGolden(goldenDirectory);
+      => await this.AssertGolden(goldenDirectory);
 
     public override ModModelFileBundle GetFileBundleFromDirectory(
         IFileHierarchyDirectory directory) {

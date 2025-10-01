@@ -11,9 +11,9 @@ namespace hw {
       : BModelGoldenTests<XtdModelFileBundle, XtdModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]
-    public void TestExportsGoldenAsExpected(
+    public async Task TestExportsGoldenAsExpected(
         IFileHierarchyDirectory goldenDirectory)
-      => this.AssertGolden(goldenDirectory);
+      => await this.AssertGolden(goldenDirectory);
 
     public override XtdModelFileBundle GetFileBundleFromDirectory(
         IFileHierarchyDirectory directory)

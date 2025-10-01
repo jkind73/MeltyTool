@@ -9,9 +9,9 @@ namespace Fin.Compression_Tests;
 public sealed class Lz77GoldenTests {
   [Test]
   [TestCaseSource(nameof(Get0x10GoldenDirectories_))]
-  public void Test0x10(
+  public async Task Test0x10(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   private static IFileHierarchyDirectory[] Get0x10GoldenDirectories_()
     => GoldenAssert.GetGoldenDirectories(
@@ -20,8 +20,8 @@ public sealed class Lz77GoldenTests {
                                    .AssertGetExistingSubdir("Lz77/0x10"))
                    .ToArray();
 
-  public void AssertGolden(IFileHierarchyDirectory goldenSubdir)
-    => GoldenAssert.AssertGoldenFiles(
+  public async Task AssertGolden(IFileHierarchyDirectory goldenSubdir)
+    => await GoldenAssert.AssertGoldenFiles(
         goldenSubdir,
         (inputDirectory, targetDirectory) => {
           var lz10File = inputDirectory.FilesWithExtension(".lz77").Single();

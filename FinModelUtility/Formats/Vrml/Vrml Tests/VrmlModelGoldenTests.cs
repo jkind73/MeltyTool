@@ -12,9 +12,9 @@ public sealed class VrmlModelGoldenTests
     : BModelGoldenTests<VrmlModelFileBundle, VrmlModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-    public void TestExportsGoldenAsExpected(
+    public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override VrmlModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

@@ -12,9 +12,9 @@ public sealed class Sm64dsModelGoldenTests
     : BModelGoldenTests<Sm64dsModelFileBundle, Sm64dsModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-  public void TestExportsGoldenAsExpected(
+  public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override Sm64dsModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory) {

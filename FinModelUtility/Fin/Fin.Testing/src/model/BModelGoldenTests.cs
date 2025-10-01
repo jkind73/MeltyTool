@@ -8,8 +8,9 @@ public abstract class BModelGoldenTests<TModelFileBundle, TModelImporter>
     : BGoldenTests<TModelFileBundle>
     where TModelFileBundle : IModelFileBundle
     where TModelImporter : IModelImporter<TModelFileBundle>, new() {
-  public void AssertGolden(IFileHierarchyDirectory goldenDirectory)
-    => ModelGoldenAssert.AssertGolden(goldenDirectory,
-                                      new TModelImporter(),
-                                      this.GetFileBundleFromDirectory);
+  public async Task AssertGolden(IFileHierarchyDirectory goldenDirectory)
+    => await ModelGoldenAssert.AssertGolden(
+        goldenDirectory,
+        new TModelImporter(),
+        this.GetFileBundleFromDirectory);
 }

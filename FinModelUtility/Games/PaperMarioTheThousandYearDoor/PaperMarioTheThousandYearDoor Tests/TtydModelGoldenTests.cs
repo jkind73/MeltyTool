@@ -13,9 +13,9 @@ public sealed class TtydModelGoldenTests
     : BModelGoldenTests<TtydModelFileBundle, TtydModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-  public void TestExportsGoldenAsExpected(
+  public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override TtydModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

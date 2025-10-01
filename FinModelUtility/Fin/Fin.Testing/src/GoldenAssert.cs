@@ -50,7 +50,7 @@ public static class GoldenAssert {
                     .Where(subdir => !subdir.Name.SequenceEqual(TMP_NAME));
   }
 
-  public static void AssertGoldenFiles(
+  public static async Task AssertGoldenFiles(
       IFileHierarchyDirectory goldenSubdir,
       Action<IFileHierarchyDirectory, ISystemDirectory> handler) {
     var inputDirectory = goldenSubdir.AssertGetExistingSubdir("input");

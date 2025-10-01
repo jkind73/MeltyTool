@@ -11,9 +11,9 @@ namespace grezzo {
       : BModelGoldenTests<CmbModelFileBundle, CmbModelImporter> {
     [Test]
     [TestCaseSource(nameof(GetGoldenDirectories_))]
-    public void TestExportsGoldenAsExpected(
+    public async Task TestExportsGoldenAsExpected(
         IFileHierarchyDirectory goldenDirectory)
-      => this.AssertGolden(goldenDirectory);
+      => await this.AssertGolden(goldenDirectory);
 
     public override CmbModelFileBundle GetFileBundleFromDirectory(
         IFileHierarchyDirectory directory) {

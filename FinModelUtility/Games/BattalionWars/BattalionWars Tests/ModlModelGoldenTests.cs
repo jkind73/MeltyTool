@@ -12,9 +12,9 @@ public sealed class ModlModelGoldenTests
     : BModelGoldenTests<ModlModelFileBundle, ModlModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
-  public void TestExportsGoldenAsExpected(
+  public async Task TestExportsGoldenAsExpected(
       IFileHierarchyDirectory goldenDirectory)
-    => this.AssertGolden(goldenDirectory);
+    => await this.AssertGolden(goldenDirectory);
 
   public override ModlModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

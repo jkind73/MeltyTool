@@ -11,14 +11,14 @@ namespace fin.testing.model;
 public static class ModelGoldenAssert {
   private static string[] EXTENSIONS = [".glb"];
 
-  public static void AssertGolden<TModelBundle>(
+  public static async Task AssertGolden<TModelBundle>(
       IFileHierarchyDirectory goldenSubdir,
       IModelImporter<TModelBundle> modelImporter,
       Func<IFileHierarchyDirectory, TModelBundle>
           gatherModelBundleFromInputDirectory)
       where TModelBundle : IModelFileBundle {
     QuaternionUtil.UseSlowButConsistentSlerp();
-    GoldenAssert.AssertGoldenFiles(
+    await GoldenAssert.AssertGoldenFiles(
         goldenSubdir,
         (inputDirectory, targetDirectory) => {
           var modelBundle = gatherModelBundleFromInputDirectory(inputDirectory);
