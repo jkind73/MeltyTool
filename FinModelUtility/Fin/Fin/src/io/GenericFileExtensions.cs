@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 using fin.util.json;
 
@@ -68,6 +69,14 @@ public static class GenericFileExtensions {
     using var s = file.OpenRead();
     using var ms = new MemoryStream();
     s.CopyTo(ms);
+    return ms.ToArray();
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static async Task<byte[]> ReadAllBytesAsync(this IReadOnlyGenericFile file) {
+    await using var s = file.OpenRead();
+    using var ms = new MemoryStream();
+    await s.CopyToAsync(ms);
     return ms.ToArray();
   }
 

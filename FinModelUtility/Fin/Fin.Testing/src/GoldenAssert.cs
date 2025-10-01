@@ -57,37 +57,37 @@ public static class GoldenAssert {
     var outputDirectory = goldenSubdir.AssertGetExistingSubdir("output");
     var hasGoldenExport = !outputDirectory.IsEmpty;
 
-    GoldenAssert.RunInTestDirectory_(
+    await GoldenAssert.RunInTestDirectory_(
         goldenSubdir,
-        tmpDirectory => {
+        async tmpDirectory => {
           var targetDirectory =
               hasGoldenExport ? tmpDirectory : outputDirectory.Impl;
 
           handler(inputDirectory, targetDirectory);
 
           if (hasGoldenExport) {
-            GoldenAssert.AssertFilesInDirectoriesAreIdentical_(
+            await GoldenAssert.AssertFilesInDirectoriesAreIdentical_(
                 tmpDirectory,
                 outputDirectory.Impl);
           }
         });
   }
 
-  private static void RunInTestDirectory_(
+  private static async Task RunInTestDirectory_(
       IFileHierarchyDirectory goldenSubdir,
-      Action<ISystemDirectory> handler) {
+      Func<ISystemDirectory, Task> handler) {
     var tmpDirectory = goldenSubdir.Impl.GetOrCreateSubdir(TMP_NAME);
     tmpDirectory.DeleteContents();
 
     try {
-      handler(tmpDirectory);
+      await handler(tmpDirectory);
     } finally {
       tmpDirectory.DeleteContents();
       tmpDirectory.Delete();
     }
   }
 
-  private static void AssertFilesInDirectoriesAreIdentical_(
+  private static async Task AssertFilesInDirectoriesAreIdentical_(
       IReadOnlyTreeDirectory lhs,
       IReadOnlyTreeDirectory rhs) {
     var lhsFiles = lhs.GetExistingFiles()
@@ -131,7 +131,7 @@ public static class GoldenAssert {
       var rhsFile = rhsFiles[name];
       try {
         try {
-          AssertFilesAreIdentical_(lhsFile, rhsFile);
+          await AssertFilesAreIdentical_(lhsFile, rhsFile);
         } catch {
           if (lhsFile.FileType.ToLower() is ".bmp"
                                             or ".jpg"
@@ -149,39 +149,16 @@ public static class GoldenAssert {
     }
   }
 
-  private static void AssertFilesAreIdentical_(
+  private static async Task AssertFilesAreIdentical_(
       IReadOnlyTreeFile lhs,
       IReadOnlyTreeFile rhs) {
-    using var lhsStream = lhs.OpenRead();
-    using var rhsStream = rhs.OpenRead();
+    var lhsAndRhsBytes
+        = await Task.WhenAll(lhs.ReadAllBytesAsync(), rhs.ReadAllBytesAsync());
 
-    Assert.AreEqual(lhsStream.Length, rhsStream.Length);
+    var lhsBytes = lhsAndRhsBytes[0];
+    var rhsBytes = lhsAndRhsBytes[1];
 
-    var bytesToRead = sizeof(long);
-    int iterations =
-        (int) Math.Ceiling((double) lhsStream.Length / bytesToRead);
-
-    long lhsLong = 0;
-    long rhsLong = 0;
-
-    var lhsSpan = new Span<long>(ref lhsLong).AsBytes();
-    var rhsSpan = new Span<long>(ref rhsLong).AsBytes();
-
-    for (int i = 0; i < iterations; i++) {
-      lhsStream.Read(lhsSpan);
-      rhsStream.Read(rhsSpan);
-
-      if (lhsLong != rhsLong) {
-        lhsStream.Position = 0;
-        var lhsChecksum = Crc32.HashToUInt32(lhsStream.ReadAllBytes());
-
-        rhsStream.Position = 0;
-        var rhsChecksum = Crc32.HashToUInt32(rhsStream.ReadAllBytes());
-
-        Asserts.Fail(
-            $"Files with name \"{lhs.Name}\" are different around byte #: {i * bytesToRead}.\nCrc32 was 0x{lhsChecksum.ToHex()}, now is 0x{rhsChecksum.ToHex()}");
-      }
-    }
+    CollectionAssert.AreEqual(lhsBytes, rhsBytes);
   }
 
   private static void AssertImageFilesAreIdentical_(
