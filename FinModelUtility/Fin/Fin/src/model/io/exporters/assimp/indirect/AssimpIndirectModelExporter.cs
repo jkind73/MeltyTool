@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -68,7 +69,8 @@ public sealed class AssimpIndirectModelExporter : IModelExporter {
         : new LowLevelGltfModelExporter();
 
     var isGltfFormat = (ExportFormatDescription format)
-        => format.FileExtension is "gltf" or "glb";
+        => format.FileExtension.EndsWith("gltf", StringComparison.OrdinalIgnoreCase) ||
+           format.FileExtension.EndsWith("glb", StringComparison.OrdinalIgnoreCase);
     var gltfFormats = exportedFormats
                       .Where(isGltfFormat)
                       .ToArray();
@@ -118,30 +120,9 @@ public sealed class AssimpIndirectModelExporter : IModelExporter {
         var gltfOutputFile =
             outputFile.CloneWithFileType($".{gltfFormat.FileExtension}");
 
-        var outputDirectoryPath = outputDirectory.FullPath;
-        var gltfWriteSettings = WriteContext.Create(
-            (path, bytes)
-                => FinFileSystem.File.WriteAllBytes(
-                    Path.Join(outputDirectoryPath, path), bytes),
-            (path) => FinFileSystem.File.Create(
-                Path.Join(outputDirectoryPath, path)));
-        gltfWriteSettings.ImageWriting = gltfModelExporter.Embedded
-            ? ResourceWriteMode.EmbeddedAsBase64
-            : ResourceWriteMode.SatelliteFile;
-
-        if (this.LowLevel) {
-          gltfWriteSettings.MergeBuffers = false;
-          gltfWriteSettings.Validation = ValidationMode.Skip;
-        }
-
-        var name
-            = Path.GetFileNameWithoutExtension(
-                gltfOutputFile.FullNameWithoutExtension);
-        if (gltfFormat.FileExtension == "glb") {
-          gltfWriteSettings.WriteBinarySchema2(name, gltfModelRoot);
-        } else {
-          gltfWriteSettings.WriteTextSchema2(name, gltfModelRoot);
-        }
+        gltfModelRoot.Export(gltfOutputFile.FullPath,
+                             gltfModelExporter.Embedded,
+                             this.LowLevel);
 
         if (this.ForceGarbageCollection) {
           GcUtil.ForceCollectEverything();
@@ -190,6 +171,7 @@ public sealed class AssimpIndirectModelExporter : IModelExporter {
             PostProcessSteps.FindInvalidData |
             PostProcessSteps.JoinIdenticalVertices;
 
+        // TODO: Write to abstracted filesystem instead
         var success =
             ctx.ExportFile(assScene,
                            outputPath,

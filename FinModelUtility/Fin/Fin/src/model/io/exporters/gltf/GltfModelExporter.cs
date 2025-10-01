@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 using fin.log;
 using fin.util.asserts;
@@ -66,8 +67,7 @@ public sealed class GltfModelExporter : IGltfModelExporter {
         finToTexCoordAndGltfMaterial);
 
     var joints = skinNodeAndBones
-                 .Select(
-                     skinNodeAndBone => skinNodeAndBone.Item1)
+                 .Select(skinNodeAndBone => skinNodeAndBone.Item1)
                  .ToArray();
     foreach (var (gltfMesh, hasJoints) in gltfMeshes) {
       // TODO: What causes this to happen???
@@ -94,22 +94,16 @@ public sealed class GltfModelExporter : IGltfModelExporter {
     var scale = modelExporterParams.Scale;
 
     Asserts.True(
-        outputFile.FileType.EndsWith(".gltf") ||
-        outputFile.FileType.EndsWith(".glb"),
+        outputFile.FileType.EndsWith(".gltf", StringComparison.OrdinalIgnoreCase) ||
+        outputFile.FileType.EndsWith(".glb", StringComparison.OrdinalIgnoreCase),
         "Target file is not a GLTF format!");
 
     this.logger_.BeginScope("Export");
 
-    var modelRoot = this.CreateModelRoot(model, scale);
-
-    var writeSettings = new WriteSettings {
-        ImageWriting = this.Embedded
-            ? ResourceWriteMode.EmbeddedAsBase64
-            : ResourceWriteMode.SatelliteFile,
-    };
-
     var outputPath = outputFile.FullPath;
     this.logger_.LogInformation($"Writing to {outputPath}...");
-    modelRoot.Save(outputPath, writeSettings);
+
+    var modelRoot = this.CreateModelRoot(model, scale);
+    modelRoot.Export(outputPath, this.Embedded, false);
   }
 }

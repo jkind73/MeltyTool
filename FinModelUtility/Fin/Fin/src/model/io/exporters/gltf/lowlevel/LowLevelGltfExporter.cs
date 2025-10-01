@@ -1,4 +1,6 @@
-﻿using fin.log;
+﻿using System;
+
+using fin.log;
 using fin.util.asserts;
 
 using SharpGLTF.Schema2;
@@ -81,24 +83,16 @@ public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
     var scale = modelExporterParams.Scale;
 
     Asserts.True(
-        outputFile.FileType.EndsWith(".gltf") ||
-        outputFile.FileType.EndsWith(".glb"),
+        outputFile.FileType.EndsWith(".gltf", StringComparison.OrdinalIgnoreCase) ||
+        outputFile.FileType.EndsWith(".glb", StringComparison.OrdinalIgnoreCase),
         "Target file is not a GLTF format!");
 
     this.logger_.BeginScope("Export");
 
-    var modelRoot = this.CreateModelRoot(model, scale);
-
-    var writeSettings = new WriteSettings {
-        ImageWriting = this.Embedded
-            ? ResourceWriteMode.EmbeddedAsBase64
-            : ResourceWriteMode.SatelliteFile,
-        MergeBuffers = false,
-        Validation = ValidationMode.Skip,
-    };
-
     var outputPath = outputFile.FullPath;
     this.logger_.LogInformation($"Writing to {outputPath}...");
-    modelRoot.Save(outputPath, writeSettings);
+
+    var modelRoot = this.CreateModelRoot(model, scale);
+    modelRoot.Export(outputPath, this.Embedded, true);
   }
 }

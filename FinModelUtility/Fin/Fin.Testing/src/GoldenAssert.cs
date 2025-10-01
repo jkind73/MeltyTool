@@ -1,5 +1,6 @@
 ﻿using System.IO.Hashing;
 using System.Reflection;
+using System.Text;
 
 using CommunityToolkit.HighPerformance;
 
@@ -94,7 +95,37 @@ public static class GoldenAssert {
     var rhsFiles = rhs.GetExistingFiles()
                       .ToDictionary(file => file.Name.ToString());
 
-    CollectionAssert.AreEquivalent(lhsFiles.Keys, rhsFiles.Keys);
+    var lhsFullPaths = lhsFiles.Keys.ToHashSet();
+    var rhsFullPaths = rhsFiles.Keys.ToHashSet();
+
+    if (!lhsFullPaths.SetEquals(rhsFullPaths)) {
+      var lhsOnly = lhsFullPaths.Where(v => !rhsFullPaths.Contains(v))
+                                .Order()
+                                .ToArray();
+      var rhsOnly = rhsFullPaths.Where(v => !lhsFullPaths.Contains(v))
+                                .Order()
+                                .ToArray();
+
+      var sb = new StringBuilder();
+      sb.AppendLine(
+          "Expected fileset to be identical to golden's, but there were the following differences:");
+
+      if (lhsOnly.Length > 0) {
+        sb.AppendLine("Lhs only:");
+        foreach (var lhsPath in lhsOnly) {
+          sb.AppendLine($" - {lhsPath}");
+        }
+      }
+
+      if (rhsOnly.Length > 0) {
+        sb.AppendLine("Rhs only:");
+        foreach (var rhsPath in rhsOnly) {
+          sb.AppendLine($" - {rhsPath}");
+        }
+      }
+
+      Assert.Fail(sb.ToString());
+    }
 
     foreach (var (name, lhsFile) in lhsFiles) {
       var rhsFile = rhsFiles[name];
