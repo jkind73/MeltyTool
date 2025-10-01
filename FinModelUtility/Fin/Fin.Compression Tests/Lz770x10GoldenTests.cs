@@ -20,18 +20,11 @@ public sealed class Lz77GoldenTests {
                                    .AssertGetExistingSubdir("Lz77/0x10"))
                    .ToArray();
 
-  public void AssertGolden(IFileHierarchyDirectory goldenSubdir) {
-    var inputDirectory = goldenSubdir.AssertGetExistingSubdir("input");
-    var lz10File = inputDirectory.FilesWithExtension(".lz77").Single();
-
-    var outputDirectory = goldenSubdir.AssertGetExistingSubdir("output");
-    var hasGoldenExport = !outputDirectory.IsEmpty;
-
-    GoldenAssert.RunInTestDirectory(
+  public void AssertGolden(IFileHierarchyDirectory goldenSubdir)
+    => GoldenAssert.AssertGoldenFiles(
         goldenSubdir,
-        tmpDirectory => {
-          var targetDirectory =
-              hasGoldenExport ? tmpDirectory : outputDirectory.Impl;
+        (inputDirectory, targetDirectory) => {
+          var lz10File = inputDirectory.FilesWithExtension(".lz77").Single();
 
           using var br = lz10File.OpenReadAsBinary();
           var decompressedBytes = new Lz77Decompressor().Decompress(br);
@@ -40,12 +33,5 @@ public sealed class Lz77GoldenTests {
               Path.Combine(targetDirectory.FullPath,
                            $"{lz10File.NameWithoutExtension}.bin"));
           targetFile.WriteAllBytes(decompressedBytes);
-
-          if (hasGoldenExport) {
-            GoldenAssert.AssertFilesInDirectoriesAreIdentical(
-                tmpDirectory,
-                outputDirectory.Impl);
-          }
         });
-  }
 }

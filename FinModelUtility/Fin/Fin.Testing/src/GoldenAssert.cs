@@ -57,7 +57,7 @@ public static class GoldenAssert {
     var outputDirectory = goldenSubdir.AssertGetExistingSubdir("output");
     var hasGoldenExport = !outputDirectory.IsEmpty;
 
-    GoldenAssert.RunInTestDirectory(
+    GoldenAssert.RunInTestDirectory_(
         goldenSubdir,
         tmpDirectory => {
           var targetDirectory =
@@ -66,14 +66,14 @@ public static class GoldenAssert {
           handler(inputDirectory, targetDirectory);
 
           if (hasGoldenExport) {
-            GoldenAssert.AssertFilesInDirectoriesAreIdentical(
+            GoldenAssert.AssertFilesInDirectoriesAreIdentical_(
                 tmpDirectory,
                 outputDirectory.Impl);
           }
         });
   }
 
-  public static void RunInTestDirectory(
+  private static void RunInTestDirectory_(
       IFileHierarchyDirectory goldenSubdir,
       Action<ISystemDirectory> handler) {
     var tmpDirectory = goldenSubdir.Impl.GetOrCreateSubdir(TMP_NAME);
@@ -87,7 +87,7 @@ public static class GoldenAssert {
     }
   }
 
-  public static void AssertFilesInDirectoriesAreIdentical(
+  private static void AssertFilesInDirectoriesAreIdentical_(
       IReadOnlyTreeDirectory lhs,
       IReadOnlyTreeDirectory rhs) {
     var lhsFiles = lhs.GetExistingFiles()
