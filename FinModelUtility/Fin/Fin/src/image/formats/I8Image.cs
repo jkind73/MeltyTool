@@ -3,17 +3,17 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.image.formats;
 
-public sealed class I8Image : BImage<L8> {
+public sealed class I8Image : BImage<La16> {
   public I8Image(PixelFormat format, int width, int height) : this(
       format,
-      new Image<L8>(FinImage.ImageSharpConfig, width, height)) { }
+      new Image<La16>(FinImage.ImageSharpConfig, width, height)) { }
 
-  internal I8Image(PixelFormat format, Image<L8> impl) : base(
+  internal I8Image(PixelFormat format, Image<La16> impl) : base(
       format) {
     this.Impl = impl;
   }
 
-  protected override Image<L8> Impl { get; }
+  protected override Image<La16> Impl { get; }
 
   public override void Access(IImage.AccessHandler accessHandler)
     => FinImage.Access(
@@ -27,7 +27,7 @@ public sealed class I8Image : BImage<L8> {
               out byte b,
               out byte a) {
             getHandler(x, y, out var pixel);
-            r = g = b = a = pixel.PackedValue;
+            r = g = b = a = pixel.L;
           }
 
           accessHandler(InternalGetHandler);
