@@ -113,19 +113,7 @@ public static class GoldenAssert {
     foreach (var (name, lhsFile) in lhsFiles) {
       var rhsFile = rhsFiles[name];
       try {
-        try {
-          await AssertFilesAreIdentical_(lhsFile, rhsFile);
-        } catch {
-          if (lhsFile.FileType.ToLower() is ".bmp"
-                                            or ".jpg"
-                                            or ".jpeg"
-                                            or ".gif"
-                                            or ".png") {
-            AssertImageFilesAreIdentical_(lhsFile, rhsFile);
-          } else {
-            throw;
-          }
-        }
+        await AssertFilesAreIdentical_(lhsFile, rhsFile);
       } catch (Exception ex) {
         throw new Exception($"Found a change in file {name}: ", ex);
       }
@@ -142,7 +130,19 @@ public static class GoldenAssert {
     var lhsBytes = lhsAndRhsBytes[0];
     var rhsBytes = lhsAndRhsBytes[1];
 
-    CollectionAssert.AreEqual(lhsBytes, rhsBytes);
+    try {
+      Assert.IsTrue(lhsBytes.SequenceEqual(rhsBytes));
+    } catch {
+      if (lhs.FileType.ToLower() is ".bmp"
+                                        or ".jpg"
+                                        or ".jpeg"
+                                        or ".gif"
+                                        or ".png") {
+        AssertImageFilesAreIdentical_(lhs, rhs);
+      } else {
+        CollectionAssert.AreEqual(lhsBytes, rhsBytes);
+      }
+    }
   }
 
   private static void AssertImageFilesAreIdentical_(
