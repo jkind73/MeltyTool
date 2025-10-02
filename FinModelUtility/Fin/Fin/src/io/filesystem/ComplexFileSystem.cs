@@ -5,10 +5,8 @@ using System.IO.Abstractions.TestingHelpers;
 namespace fin.io.filesystem;
 
 public sealed partial class ComplexFileSystem : IFileSystem {
-  public const char IMAGINARY_DRIVE = '_';
-
   private readonly FileSystem real_ = new();
-  private readonly MockFileSystem imaginary_ = new();
+  private readonly ImaginaryFileSystem imaginary_ = new();
 
   private IFileSystem currentFileSystem_;
 
@@ -21,7 +19,9 @@ public sealed partial class ComplexFileSystem : IFileSystem {
 
   private IFileSystem GetFileSystemForPath_(string path) {
     if (path is [var driveChar, ':', ..]) {
-      return driveChar == IMAGINARY_DRIVE ? this.imaginary_ : this.real_;
+      return driveChar == '_'
+          ? this.imaginary_
+          : this.real_;
     }
 
     return this.currentFileSystem_;

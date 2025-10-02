@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 
 namespace fin.io.filesystem;
 
@@ -12,7 +13,7 @@ public partial class ComplexFileSystem {
   private sealed class DirectoryImpl(ComplexFileSystem impl) : IDirectory {
     public IFileSystem FileSystem => impl;
 
-    // Tricky ones
+    // Tricky
     public void Move(string sourceDirName, string destDirName) {
       var sourceFileSystem = impl.GetFileSystemForPath_(sourceDirName);
       var destFileSystem = impl.GetFileSystemForPath_(destDirName);
@@ -39,7 +40,15 @@ public partial class ComplexFileSystem {
     public string GetCurrentDirectory()
       => impl.currentFileSystem_.Directory.GetCurrentDirectory();
 
-    // Simple ones
+    public IDirectoryInfo CreateTempSubdirectory(string? prefix = null) {
+      var dir = impl.imaginary_.Directory;
+      var path = System.IO.Path.Join(ImaginaryFileSystem.TEMP_DIRECTORY,
+                                     Guid.CreateVersion7().ToString());
+
+      return dir.CreateDirectory(path);
+    }
+
+    // Simple
     public IDirectoryInfo CreateDirectory(string path)
       => impl
          .GetFileSystemForPath_(path)
@@ -61,12 +70,6 @@ public partial class ComplexFileSystem {
          .GetFileSystemForPath_(path)
          .Directory
          .CreateSymbolicLink(path, pathToTarget);
-
-    public IDirectoryInfo CreateTempSubdirectory(string? prefix = null)
-      => impl
-         .imaginary_
-         .Directory
-         .CreateTempSubdirectory(prefix);
 
     public void Delete(string path)
       => impl
@@ -154,9 +157,9 @@ public partial class ComplexFileSystem {
         string path,
         string searchPattern)
       => impl
-          .GetFileSystemForPath_(path)
-          .Directory
-          .EnumerateFileSystemEntries(path, searchPattern);
+         .GetFileSystemForPath_(path)
+         .Directory
+         .EnumerateFileSystemEntries(path, searchPattern);
 
     public IEnumerable<string> EnumerateFileSystemEntries(string path,
       string searchPattern,
@@ -228,9 +231,9 @@ public partial class ComplexFileSystem {
 
     public string[] GetFiles(string path)
       => impl
-          .GetFileSystemForPath_(path)
-          .Directory
-          .GetFiles(path);
+         .GetFileSystemForPath_(path)
+         .Directory
+         .GetFiles(path);
 
     public string[] GetFiles(string path, string searchPattern)
       => impl
@@ -332,7 +335,7 @@ public partial class ComplexFileSystem {
          .Directory
          .SetCreationTimeUtc(path, creationTimeUtc);
 
-    public void SetLastAccessTime(string path, DateTime lastAccessTime) 
+    public void SetLastAccessTime(string path, DateTime lastAccessTime)
       => impl
          .GetFileSystemForPath_(path)
          .Directory

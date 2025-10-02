@@ -18,7 +18,7 @@ public partial class ComplexFileSystem {
   private sealed class FileImpl(ComplexFileSystem impl) : IFile {
     public IFileSystem FileSystem => impl;
 
-    // Tricky ones
+    // Tricky
     public void Move(string sourceFileName, string destFileName) {
       var sourceFileSystem = impl.GetFileSystemForPath_(sourceFileName);
       var destFileSystem = impl.GetFileSystemForPath_(destFileName);
@@ -84,7 +84,7 @@ public partial class ComplexFileSystem {
       throw new NotImplementedException();
     }
 
-    // Simple ones
+    // Simple
     public void AppendAllBytes(string path, byte[] bytes)
       => impl.GetFileSystemForPath_(path)
              .File

@@ -12,4 +12,7 @@ public static class FinFileSystem {
 
   public static IoFile File => FileSystem.File;
   public static IoDirectory Directory => FileSystem.Directory;
+
+  public static ISystemDirectory CreateVirtualTempDirectory()
+    => new FinDirectory(Directory.CreateTempSubdirectory().FullName);
 }

@@ -1,14 +1,13 @@
-﻿using System.IO.Hashing;
+﻿using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
+using System.IO.Hashing;
 using System.Reflection;
 using System.Text;
 
-using CommunityToolkit.HighPerformance;
-
 using fin.image;
 using fin.io;
+using fin.io.hierarchy;
 using fin.util.asserts;
-using fin.util.hex;
-using fin.util.streams;
 using fin.util.strings;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -55,36 +54,20 @@ public static class GoldenAssert {
       Action<IFileHierarchyDirectory, ISystemDirectory> handler) {
     var inputDirectory = goldenSubdir.AssertGetExistingSubdir("input");
     var outputDirectory = goldenSubdir.AssertGetExistingSubdir("output");
-    var hasGoldenExport = !outputDirectory.IsEmpty;
 
-    await GoldenAssert.RunInTestDirectory_(
-        goldenSubdir,
-        async tmpDirectory => {
-          var targetDirectory =
-              hasGoldenExport ? tmpDirectory : outputDirectory.Impl;
-
-          handler(inputDirectory, targetDirectory);
-
-          if (hasGoldenExport) {
-            await GoldenAssert.AssertFilesInDirectoriesAreIdentical_(
-                tmpDirectory,
-                outputDirectory.Impl);
-          }
-        });
-  }
-
-  private static async Task RunInTestDirectory_(
-      IFileHierarchyDirectory goldenSubdir,
-      Func<ISystemDirectory, Task> handler) {
-    var tmpDirectory = goldenSubdir.Impl.GetOrCreateSubdir(TMP_NAME);
-    tmpDirectory.DeleteContents();
-
-    try {
-      await handler(tmpDirectory);
-    } finally {
-      tmpDirectory.DeleteContents();
-      tmpDirectory.Delete();
+    if (outputDirectory.IsEmpty) {
+      handler(inputDirectory, outputDirectory.Impl);
+      return;
     }
+
+    var tmpDirectory = FinFileSystem.CreateVirtualTempDirectory();
+    handler(inputDirectory, tmpDirectory);
+
+    await GoldenAssert.AssertFilesInDirectoriesAreIdentical_(
+        tmpDirectory,
+        outputDirectory.Impl);
+
+    tmpDirectory.Delete(true);
   }
 
   private static async Task AssertFilesInDirectoriesAreIdentical_(
@@ -153,7 +136,8 @@ public static class GoldenAssert {
       IReadOnlyTreeFile lhs,
       IReadOnlyTreeFile rhs) {
     var lhsAndRhsBytes
-        = await Task.WhenAll(lhs.ReadAllBytesAsync(), rhs.ReadAllBytesAsync());
+        = await Task.WhenAll(lhs.ReadAllBytesAsync(),
+                             rhs.ReadAllBytesAsync());
 
     var lhsBytes = lhsAndRhsBytes[0];
     var rhsBytes = lhsAndRhsBytes[1];
