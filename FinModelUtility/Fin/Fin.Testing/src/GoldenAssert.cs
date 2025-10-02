@@ -1,12 +1,8 @@
-﻿using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
-using System.IO.Hashing;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 
 using fin.image;
 using fin.io;
-using fin.io.hierarchy;
 using fin.util.asserts;
 using fin.util.strings;
 
