@@ -1,12 +1,14 @@
 ﻿using System.IO.Abstractions;
 
-using IoFile = System.IO.Abstractions.IFile;
+using fin.io.filesystem;
+
 using IoDirectory = System.IO.Abstractions.IDirectory;
+using IoFile = System.IO.Abstractions.IFile;
 
 namespace fin.io;
 
 public static class FinFileSystem {
-  public static IFileSystem FileSystem { get; set; } = new FileSystem();
+  public static IFileSystem FileSystem { get; set; } = new ComplexFileSystem();
 
   public static IoFile File => FileSystem.File;
   public static IoDirectory Directory => FileSystem.Directory;
