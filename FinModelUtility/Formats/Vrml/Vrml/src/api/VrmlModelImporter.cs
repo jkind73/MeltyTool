@@ -4,6 +4,7 @@ using System.Numerics;
 using fin.animation.keyframes;
 using fin.color;
 using fin.common;
+using fin.data.dictionaries;
 using fin.data.lazy;
 using fin.data.queues;
 using fin.image;
@@ -49,93 +50,147 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
   }
 
   public static IModel Import(IGroupNode vrmlScene,
-                       IReadOnlyDictionary<string, INode> definitions,
-                       IVrmlFileBundle fileBundle,
-                       HashSet<IReadOnlyGenericFile> fileSet) {
+                              IReadOnlyDictionary<string, INode> definitions,
+                              IVrmlFileBundle fileBundle,
+                              HashSet<IReadOnlyGenericFile> fileSet) {
+    var orientationInterpolatorNodes = new HashSet<OrientationInterpolatorNode>();
+    var positionInterpolatorNodes = new HashSet<PositionInterpolatorNode>();
+    var routeNodes = new HashSet<RouteNode>();
+    var shapeHintsNodes = new HashSet<ShapeHintsNode>();
+    var textNodes = new HashSet<TextNode>();
+    var timeSensorNodes = new HashSet<TimeSensorNode>();
+    {
+      var allVrmlNodes = vrmlScene.GetAllChildren().ToArray();
+      foreach (var node in allVrmlNodes) {
+        switch (node) {
+          case OrientationInterpolatorNode orientationInterpolatorNode: {
+              orientationInterpolatorNodes.Add(orientationInterpolatorNode);
+              break;
+            }
+          case PositionInterpolatorNode positionInterpolatorNode: {
+              positionInterpolatorNodes.Add(positionInterpolatorNode);
+              break;
+            }
+          case RouteNode routeNode: {
+              routeNodes.Add(routeNode);
+              break;
+            }
+          case IShapeNode shapeNode: {
+              if (shapeNode.Geometry is TextNode textNode) {
+                textNodes.Add(textNode);
+              }
+              break;
+            }
+          case ShapeHintsNode shapeHintsNode: {
+              shapeHintsNodes.Add(shapeHintsNode);
+              break;
+            }
+          case TimeSensorNode timeSensorNode: {
+              timeSensorNodes.Add(timeSensorNode);
+              break;
+            }
+        }
+      }
+    }
+
+
     var wrlFile = fileBundle.WrlFile;
     var wrlDirectory = wrlFile.AssertGetParent();
-    var finModel = new ModelImpl {FileBundle = fileBundle, Files = fileSet};
+    var finModel = new ModelImpl { FileBundle = fileBundle, Files = fileSet };
 
     var lazyTextureDictionary
         = new LazyDictionary<(string, ITextureTransformNode?),
             IReadOnlyTexture>(tuple => {
-          var (name, transformNode) = tuple;
+              var (name, transformNode) = tuple;
 
-          var imageFile = wrlDirectory.AssertGetExistingFile(name);
-          fileSet.Add(imageFile);
+              var imageFile = wrlDirectory.AssertGetExistingFile(name);
+              fileSet.Add(imageFile);
 
-          var finTexture
-              = finModel.MaterialManager.CreateTexture(
-                  FinImage.FromFile(imageFile));
-          finTexture.Name = imageFile.NameWithoutExtension.ToString();
-          finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
+              var finTexture
+                  = finModel.MaterialManager.CreateTexture(
+                      FinImage.FromFile(imageFile));
+              finTexture.Name = imageFile.NameWithoutExtension.ToString();
+              finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
 
-          var transform = finTexture.TextureTransform;
+              var transform = finTexture.TextureTransform;
 
-          if (transformNode != null) {
-            var center = transformNode.Center;
-            if (center != null) {
-              transform.SetCenter2d(center.Value.X, center.Value.Y);
-            }
+              if (transformNode != null) {
+                var center = transformNode.Center;
+                if (center != null) {
+                  transform.SetCenter2d(center.Value.X, center.Value.Y);
+                }
 
-            var rotation = transformNode.Rotation;
-            if (rotation != null) {
-              transform.SetRotationRadians2d(rotation.Value);
-            }
+                var rotation = transformNode.Rotation;
+                if (rotation != null) {
+                  transform.SetRotationRadians2d(rotation.Value);
+                }
 
-            var scale = transformNode.Scale;
-            if (scale != null) {
-              transform.SetScale2d(scale.Value.X, scale.Value.Y);
-            }
+                var scale = transformNode.Scale;
+                if (scale != null) {
+                  transform.SetScale2d(scale.Value.X, scale.Value.Y);
+                }
 
-            var translation = transformNode.Translation;
-            if (translation != null) {
-              transform.SetTranslation2d(translation.Value.X,
-                                          translation.Value.Y);
-            }
-          }
+                var translation = transformNode.Translation;
+                if (translation != null) {
+                  transform.SetTranslation2d(translation.Value.X,
+                                              translation.Value.Y);
+                }
+              }
 
-          return finTexture;
-        });
+              return finTexture;
+            });
 
     HeadlessGl.MakeCurrent();
     FreeTypeFontUtil.InitIfNeeded();
 
     var fontSize = 72f;
-    var lazyFontDictionary = new LazyDictionary<FontStyleNode, QFont>(
-        fontStyleNode => {
-          var baseFontName = fontStyleNode.Family switch {
-              Family.SANS  => "OpenSans",
-              Family.SERIF => "Merriweather",
-              _            => throw new ArgumentOutOfRangeException()
-          };
 
-          var styleText = fontStyleNode.Style switch {
-              Style.BOLD        => "Bold",
-              Style.BOLD_ITALIC => "BoldItalic",
-              Style.ITALIC      => "Italic",
-              Style.PLAIN       => "Regular",
-          };
+    var charsByFont = new SetDictionary<(Family family, Style style), char>();
+    foreach (var textNode in textNodes) {
+      var fontStyleNode = textNode.FontStyle;
+      charsByFont.Add((fontStyleNode.Family, fontStyleNode.Style),
+                      textNode.String.SelectMany(s => s));
+    }
 
-          var fontFile = CommonFiles.COMMON_DIRECTORY.AssertGetExistingFile(
-              $"{baseFontName}-{styleText}.ttf");
+    var fontDictionary = new Dictionary<(Family family, Style style), QFont>();
+    foreach (var ((family, style), chars) in charsByFont) {
+      var baseFontName = family switch {
+        Family.SANS => "OpenSans",
+        Family.SERIF => "Merriweather",
+        _ => throw new ArgumentOutOfRangeException()
+      };
 
-          return new QFont(
-              fontFile.FullPath,
-              fontSize,
-              new QFontBuilderConfiguration(false));
-        });
+      var styleText = style switch {
+        Style.BOLD => "Bold",
+        Style.BOLD_ITALIC => "BoldItalic",
+        Style.ITALIC => "Italic",
+        Style.PLAIN => "Regular",
+      };
+
+      var fontFile = CommonFiles.COMMON_DIRECTORY.AssertGetExistingFile(
+          $"{baseFontName}-{styleText}.ttf");
+
+      fontDictionary[(family, style)] = new QFont(
+          fontFile.FullPath,
+          fontSize,
+          new QFontBuilderConfiguration(false) {
+            CharSet = string.Join("", chars),
+            TextGenerationRenderHint = TextGenerationRenderHint.AntiAlias,
+          });
+    }
+
     var lazyTextTextureDictionary = new LazyDictionary<TextNode, ITexture>(
         textNode => {
           var text = string.Join('\n', textNode.String);
 
           var fontAlignment = textNode.FontStyle.MajorJustify switch {
-              Justify.BEGIN or Justify.FIRST => QFontAlignment.Left,
-              Justify.MIDDLE                 => QFontAlignment.Centre,
-              Justify.END                    => QFontAlignment.Right,
+            Justify.BEGIN or Justify.FIRST => QFontAlignment.Left,
+            Justify.MIDDLE => QFontAlignment.Centre,
+            Justify.END => QFontAlignment.Right,
           };
 
-          var qFont = lazyFontDictionary[textNode.FontStyle];
+          var fontStyleNode = textNode.FontStyle;
+          var qFont = fontDictionary[(fontStyleNode.Family, fontStyleNode.Style)];
           using var glTextTexture
               = new GlTextTexture(text, qFont, Color.White, fontAlignment);
           var image = glTextTexture.ConvertToImage(true);
@@ -210,20 +265,15 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
     var finSkeleton = finModel.Skeleton;
     var finSkin = finModel.Skin;
 
-    var allVrmlNodes = vrmlScene.GetAllChildren().ToArray();
-    var vertexOrdering
-        = allVrmlNodes.WhereIs<INode, ShapeHintsNode>()
-                      .SingleOrDefault()
-                      ?.VertexOrdering ??
-          VertexOrder.COUNTER_CLOCKWISE;
+    var vertexOrdering = shapeHintsNodes.SingleOrDefault()?.VertexOrdering ??
+                         VertexOrder.COUNTER_CLOCKWISE;
 
-    var maxCycleInterval = allVrmlNodes.WhereIs<INode, TimeSensorNode>()
-                                       .Select(t => t.CycleInterval)
-                                       .MaxOrDefault();
+    var maxCycleInterval =
+        timeSensorNodes.Select(t => t.CycleInterval).MaxOrDefault();
 
     IModelAnimation? animation = null;
-    if (allVrmlNodes.WhereIs<INode, OrientationInterpolatorNode>().Any() ||
-        allVrmlNodes.WhereIs<INode, PositionInterpolatorNode>().Any()) {
+    if (orientationInterpolatorNodes.Any() ||
+        positionInterpolatorNodes.Any()) {
       animation = finModel.AnimationManager.AddAnimation();
       animation.FrameRate = 30;
       animation.FrameCount = (int) (animation.FrameRate * maxCycleInterval);
@@ -233,7 +283,7 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
     var rotationTracksByName = new Dictionary<string, IBoneTracks>();
     var translationBoneNames = new HashSet<string?>();
     var rotationBoneNames = new HashSet<string?>();
-    foreach (var routeNode in allVrmlNodes.WhereIs<INode, RouteNode>()) {
+    foreach (var routeNode in routeNodes) {
       if (routeNode.Dst.TryRemoveEnd(".translation",
                                      out var translationBoneName)) {
         translationBoneNames.Add(translationBoneName);
@@ -310,179 +360,180 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
 
       switch (vrmlNode) {
         case IIsbPictureNode pictureNode: {
-          var image = pictureNode.Frames[0];
-          var appearance = new AppearanceNode {
+            var image = pictureNode.Frames[0];
+            var appearance = new AppearanceNode {
               Material = new MaterialNode(),
               Texture = image,
-          };
+            };
 
-          var finMaterial = lazyMaterialDictionary[(appearance, null, false)];
+            var finMaterial = lazyMaterialDictionary[(appearance, null, false)];
 
-          var vtx0 = finSkin.AddVertex(0, 0, 1);
-          vtx0.SetUv(0, 1 - 0);
-          var vtx1 = finSkin.AddVertex(1, 0, 1);
-          vtx1.SetUv(1, 1 - 0);
-          var vtx2 = finSkin.AddVertex(1, 1, 1);
-          vtx2.SetUv(1, 1 - 1);
-          var vtx3 = finSkin.AddVertex(0, 1, 1);
-          vtx3.SetUv(0, 1 - 1);
+            var vtx0 = finSkin.AddVertex(0, 0, 1);
+            vtx0.SetUv(0, 1 - 0);
+            var vtx1 = finSkin.AddVertex(1, 0, 1);
+            vtx1.SetUv(1, 1 - 0);
+            var vtx2 = finSkin.AddVertex(1, 1, 1);
+            vtx2.SetUv(1, 1 - 1);
+            var vtx3 = finSkin.AddVertex(0, 1, 1);
+            vtx3.SetUv(0, 1 - 1);
 
-          if (finBone != finSkeleton.Root) {
-            var boneWeights = finSkin.GetOrCreateBoneWeights(
-                VertexSpace.RELATIVE_TO_BONE,
-                finBone);
+            if (finBone != finSkeleton.Root) {
+              var boneWeights = finSkin.GetOrCreateBoneWeights(
+                  VertexSpace.RELATIVE_TO_BONE,
+                  finBone);
 
-            vtx0.SetBoneWeights(boneWeights);
-            vtx1.SetBoneWeights(boneWeights);
-            vtx2.SetBoneWeights(boneWeights);
-            vtx3.SetBoneWeights(boneWeights);
+              vtx0.SetBoneWeights(boneWeights);
+              vtx1.SetBoneWeights(boneWeights);
+              vtx2.SetBoneWeights(boneWeights);
+              vtx3.SetBoneWeights(boneWeights);
+            }
+
+            var finMesh = finSkin.AddMesh();
+            var finPrimitive = finMesh.AddQuads([vtx0, vtx1, vtx2, vtx3]);
+            finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
+            finPrimitive.SetMaterial(finMaterial);
+
+            AddFaceNormal_([vtx0, vtx1, vtx2, vtx3], finPrimitive.VertexOrder);
+
+            break;
           }
-
-          var finMesh = finSkin.AddMesh();
-          var finPrimitive = finMesh.AddQuads([vtx0, vtx1, vtx2, vtx3]);
-          finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
-          finPrimitive.SetMaterial(finMaterial);
-
-          AddFaceNormal_([vtx0, vtx1, vtx2, vtx3], finPrimitive.VertexOrder);
-
-          break;
-        }
         case IShapeNode shapeNode: {
-          var geometry = shapeNode.Geometry;
-          var hasVertexColor
-              = (shapeNode.Geometry as IndexedFaceSetNode)?.Color != null;
-          var finMaterial = lazyMaterialDictionary[(shapeNode.Appearance,
-                                                    geometry as TextNode,
-                                                    hasVertexColor)];
-          var finMesh = finSkin.AddMesh();
+            var geometry = shapeNode.Geometry;
+            var hasVertexColor
+                = (shapeNode.Geometry as IndexedFaceSetNode)?.Color != null;
+            var finMaterial = lazyMaterialDictionary[(shapeNode.Appearance,
+                                                      geometry as TextNode,
+                                                      hasVertexColor)];
+            var finMesh = finSkin.AddMesh();
 
-          switch (geometry) {
-            case BoxNode boxNode: {
-              finMesh.AddSimpleCube(finSkin,
-                                    -boxNode.Size / 2,
-                                    boxNode.Size / 2,
-                                    finMaterial,
-                                    finBone);
-              break;
-            }
-            case IndexedFaceSetNode indexedFaceSetNode: {
-              foreach (var faceVertices in GetIndexFaceSetCoordGroups_(
-                           indexedFaceSetNode)) {
-                var boneWeights = finBone != finSkeleton.Root
-                    ? finSkin.GetOrCreateBoneWeights(
-                        VertexSpace.RELATIVE_TO_BONE,
-                        finBone)
-                    : null;
-
-                var finVertices = new LinkedList<INormalVertex>();
-                foreach (var vrmlVertex in faceVertices) {
-                  var (coordIndex, texCoordIndex, colorIndex) = vrmlVertex;
-
-                  var coord = indexedFaceSetNode.Coord.Point[coordIndex];
-                  var texCoord = texCoordIndex != null
-                      ? indexedFaceSetNode.TexCoord?.Point[texCoordIndex.Value]
-                      : null;
-                  var color = colorIndex != null
-                      ? indexedFaceSetNode.Color?.Color[colorIndex.Value]
-                      : null;
-
-                  var finVertex = finSkin.AddVertex(coord);
-                  if (texCoord != null) {
-                    finVertex.SetUv(texCoord.Value.X, 1 - texCoord.Value.Y);
-                  }
-
-                  if (color != null) {
-                    var finColor = FinColor.FromRgbFloats(color.Value.X,
-                      color.Value.Y,
-                      color.Value.Z);
-                    finVertex.SetColor(finColor);
-                  }
-
-                  if (boneWeights != null) {
-                    finVertex.SetBoneWeights(boneWeights);
-                  }
-
-                  finVertices.AddLast(finVertex);
-                }
-
-                var finVerticesArray = finVertices.ToArray();
-                if (finVerticesArray.Length >= 3) {
-                  IPrimitive finPrimitive;
-                  if (finVertices.Count == 3) {
-                    AddFaceNormal_(finVerticesArray, vertexOrdering);
-                    finPrimitive = finMesh.AddTriangles(finVerticesArray);
-                  } else if (finVertices.Count == 4) {
-                    AddFaceNormal_(finVerticesArray, vertexOrdering);
-                    finPrimitive = finMesh.AddQuads(finVerticesArray);
-                  } else {
-                    var triangulatedVertices
-                        = TriangulateVertices_(finVertices.ToArray());
-                    AddFaceNormal_(triangulatedVertices, vertexOrdering);
-
-                    finPrimitive = finMesh.AddTriangles(triangulatedVertices);
-                  }
-
-                  finPrimitive.SetVertexOrder(vertexOrdering)
-                              .SetMaterial(finMaterial);
-                }
-              }
-
-              break;
-            }
-            case SphereNode sphereNode: {
-              finMesh.AddSimpleSphere(finSkin,
-                                      Vector3.Zero,
-                                      sphereNode.Radius,
-                                      8,
-                                      finMaterial,
-                                      finBone);
-              break;
-            }
-            case TextNode textNode: {
-              var scale = 1 / fontSize;
-              scale *= .6f; //.75
-              scale *= textNode.FontStyle.Size;
-
-              var font = lazyFontDictionary[textNode.FontStyle];
-
-              var firstLineHeight
-                  = font.Measure(textNode.String[0]).Height * scale;
-
-              var text = string.Join('\n', textNode.String);
-              var size = font.Measure(text);
-              var width = size.Width * scale;
-              var height = size.Height * scale;
-
-              var depth = .05f;
-
-              var point1 = new Vector3(-width / 2f, firstLineHeight, depth);
-              var point2
-                  = new Vector3(width / 2f, firstLineHeight - height, depth);
-
-              switch (textNode.FontStyle.MajorJustify) {
-                case Justify.BEGIN or Justify.FIRST: {
-                  point1 += new Vector3(width / 2, 0, 0);
-                  point2 += new Vector3(width / 2, 0, 0);
+            switch (geometry) {
+              case BoxNode boxNode: {
+                  finMesh.AddSimpleCube(finSkin,
+                                        -boxNode.Size / 2,
+                                        boxNode.Size / 2,
+                                        finMaterial,
+                                        finBone);
                   break;
                 }
-                case Justify.END: {
-                  point1 -= new Vector3(width / 2, 0, 0);
-                  point2 -= new Vector3(width / 2, 0, 0);
+              case IndexedFaceSetNode indexedFaceSetNode: {
+                  foreach (var faceVertices in GetIndexFaceSetCoordGroups_(
+                               indexedFaceSetNode)) {
+                    var boneWeights = finBone != finSkeleton.Root
+                        ? finSkin.GetOrCreateBoneWeights(
+                            VertexSpace.RELATIVE_TO_BONE,
+                            finBone)
+                        : null;
+
+                    var finVertices = new LinkedList<INormalVertex>();
+                    foreach (var vrmlVertex in faceVertices) {
+                      var (coordIndex, texCoordIndex, colorIndex) = vrmlVertex;
+
+                      var coord = indexedFaceSetNode.Coord.Point[coordIndex];
+                      var texCoord = texCoordIndex != null
+                          ? indexedFaceSetNode.TexCoord?.Point[texCoordIndex.Value]
+                          : null;
+                      var color = colorIndex != null
+                          ? indexedFaceSetNode.Color?.Color[colorIndex.Value]
+                          : null;
+
+                      var finVertex = finSkin.AddVertex(coord);
+                      if (texCoord != null) {
+                        finVertex.SetUv(texCoord.Value.X, 1 - texCoord.Value.Y);
+                      }
+
+                      if (color != null) {
+                        var finColor = FinColor.FromRgbFloats(color.Value.X,
+                          color.Value.Y,
+                          color.Value.Z);
+                        finVertex.SetColor(finColor);
+                      }
+
+                      if (boneWeights != null) {
+                        finVertex.SetBoneWeights(boneWeights);
+                      }
+
+                      finVertices.AddLast(finVertex);
+                    }
+
+                    var finVerticesArray = finVertices.ToArray();
+                    if (finVerticesArray.Length >= 3) {
+                      IPrimitive finPrimitive;
+                      if (finVertices.Count == 3) {
+                        AddFaceNormal_(finVerticesArray, vertexOrdering);
+                        finPrimitive = finMesh.AddTriangles(finVerticesArray);
+                      } else if (finVertices.Count == 4) {
+                        AddFaceNormal_(finVerticesArray, vertexOrdering);
+                        finPrimitive = finMesh.AddQuads(finVerticesArray);
+                      } else {
+                        var triangulatedVertices
+                            = TriangulateVertices_(finVertices.ToArray());
+                        AddFaceNormal_(triangulatedVertices, vertexOrdering);
+
+                        finPrimitive = finMesh.AddTriangles(triangulatedVertices);
+                      }
+
+                      finPrimitive.SetVertexOrder(vertexOrdering)
+                                  .SetMaterial(finMaterial);
+                    }
+                  }
+
                   break;
                 }
-              }
+              case SphereNode sphereNode: {
+                  finMesh.AddSimpleSphere(finSkin,
+                                          Vector3.Zero,
+                                          sphereNode.Radius,
+                                          8,
+                                          finMaterial,
+                                          finBone);
+                  break;
+                }
+              case TextNode textNode: {
+                  var scale = 1 / fontSize;
+                  scale *= .6f; //.75
+                  scale *= textNode.FontStyle.Size;
 
-              finMesh.AddSimpleFloor(finSkin,
-                                     point1,
-                                     point2,
-                                     finMaterial,
-                                     finBone);
-              break;
+                  var fontStyleNode = textNode.FontStyle;
+                  var font = fontDictionary[(fontStyleNode.Family, fontStyleNode.Style)];
+
+                  var firstLineHeight
+                      = font.Measure(textNode.String[0]).Height * scale;
+
+                  var text = string.Join('\n', textNode.String);
+                  var size = font.Measure(text);
+                  var width = size.Width * scale;
+                  var height = size.Height * scale;
+
+                  var depth = .05f;
+
+                  var point1 = new Vector3(-width / 2f, firstLineHeight, depth);
+                  var point2
+                      = new Vector3(width / 2f, firstLineHeight - height, depth);
+
+                  switch (textNode.FontStyle.MajorJustify) {
+                    case Justify.BEGIN or Justify.FIRST: {
+                        point1 += new Vector3(width / 2, 0, 0);
+                        point2 += new Vector3(width / 2, 0, 0);
+                        break;
+                      }
+                    case Justify.END: {
+                        point1 -= new Vector3(width / 2, 0, 0);
+                        point2 -= new Vector3(width / 2, 0, 0);
+                        break;
+                      }
+                  }
+
+                  finMesh.AddSimpleFloor(finSkin,
+                                         point1,
+                                         point2,
+                                         finMaterial,
+                                         finBone);
+                  break;
+                }
             }
+
+            break;
           }
-
-          break;
-        }
       }
 
       if (vrmlNode is IGroupNode groupNode) {
@@ -490,7 +541,7 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
       }
     }
 
-    foreach (var routeNode in allVrmlNodes.WhereIs<INode, RouteNode>()) {
+    foreach (var routeNode in routeNodes) {
       if (!routeNode.Src.TryRemoveEnd(".value_changed", out var srcName)) {
         continue;
       }

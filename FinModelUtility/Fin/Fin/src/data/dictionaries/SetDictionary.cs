@@ -4,6 +4,7 @@ using System.Linq;
 
 using readOnly;
 
+
 namespace fin.data.dictionaries;
 
 [GenerateReadOnly]
@@ -15,6 +16,7 @@ public partial interface ISetDictionary<TKey, TValue>
   new bool TryGetSet(TKey key, out ISet<TValue>? list);
 
   void Add(TKey key, TValue value);
+  void Add(TKey key, IEnumerable<TValue> values);
 }
 
 /// <summary>
@@ -37,6 +39,16 @@ public sealed class SetDictionary<TKey, TValue>(
     }
 
     set.Add(value);
+  }
+
+  public void Add(TKey key, IEnumerable<TValue> values) {
+    if (!impl.TryGetValue(key, out var set)) {
+      impl[key] = set = new HashSet<TValue>();
+    }
+
+    foreach (var value in values) {
+      set.Add(value);
+    }
   }
 
   public ISet<TValue> this[TKey key] => impl[key];

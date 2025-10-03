@@ -27,7 +27,7 @@ namespace QuickFont.Configuration
 
     public CharacterKerningRule GetCharacterKerningRule(char c)
     {
-      return this._characterKerningRules.ContainsKey(c) ? this._characterKerningRules[c] : CharacterKerningRule.Normal;
+      return this._characterKerningRules.TryGetValue(c, out CharacterKerningRule rule) ? rule : CharacterKerningRule.Normal;
     }
 
     public CharacterKerningRule GetOverridingCharacterKerningRuleForPair(string str)
