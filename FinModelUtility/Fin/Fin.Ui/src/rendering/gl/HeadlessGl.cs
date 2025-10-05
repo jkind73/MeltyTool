@@ -14,7 +14,9 @@ public static class HeadlessGl {
     GLFWProvider.CheckForMainThread = false;
     headlessWindow_ = new GameWindow(
         GameWindowSettings.Default,
-        GlfwConstants.CreateNewNativeWindowSettings());
+        new NativeWindowSettings {
+            StartVisible = false,
+        });
   }
 
   public static void MakeCurrent() {
