@@ -71,6 +71,7 @@ If you'd like to vote on new games or features that should be supported, please 
 - [@nico](https://github.com/nico), aka thakis, whose [szstools](http://amnoid.de/gc/) CLI was originally used to extract the contents of GameCube .isos and whose [ddsview](http://www.amnoid.de/ddsview/index.html) tool was referenced to fix Halo Wars DXT5A/ATI1/BC4 parsing.
 - [@Nominom](https://github.com/Nominom), whose [BCnEncoder.NET](https://github.com/Nominom/BCnEncoder.NET) library is used to parse DXT1/3/5 images.
 - [@oxyplot](https://github.com/oxyplot), whose [oxyplot-avalonia](https://github.com/oxyplot/oxyplot-avalonia) library is used to render graphs of animation values.
+- [@PeterLemon](https://github.com/PeterLemon), aka krom, whose [MA3D1 Blender import script](https://64dd.org/tools.html) was referenced to add support for .ma3d1 models.
 - [@PistonMiner](https://github.com/PistonMiner), whose [ttyd-tools](https://github.com/PistonMiner/ttyd-tools) documentation was referenced to add support for importing Paper Mario: The Thousand Year Door's animated group models.
 - [@Ploaj](https://github.com/Ploaj), whose [HSDLib](https://github.com/Ploaj/HSDLib) library was heavily referenced to fix the Super Smash Bros. Melee .dat importer (since HSDLib has nearly perfect accuracy!!) and [Metanoia](https://github.com/Ploaj/Metanoia) library was heavily referenced to add support for parsing Level-5 formats. 
 - [@polym0rph](https://github.com/polym0rph), whose [GLSL.tmbundle](https://github.com/polym0rph/GLSL.tmbundle) was used to add TextMate syntax highlighting support for .glsl files in the material viewer.
@@ -102,7 +103,7 @@ If you'd like to vote on new games or features that should be supported, please 
   - Paper Mario: The Thousand Year Door (`paper_mario_the_thousand_year_door.[ciso/gcm/iso/nkit.iso]`)
 - .ase.mesh (PC)
   - [Rolling Madness 3D](http://www.lucaelia.com/games.php)
-- J3dGraph (.bmd/.bdl) (GCN)
+- J3dGraph (.bdl/.bmd) (GCN)
   - Mario Kart: Double Dash (`mario_kart_double_dash.[ciso/gcm/iso/nkit.iso]`)
   - Pikmin 2 (`pikmin_2.[ciso/gcm/iso/nkit.iso]`)
   - Super Mario Sunshine (`super_mario_sunshine.[ciso/gcm/iso/nkit.iso]`)
@@ -131,8 +132,11 @@ If you'd like to vote on new games or features that should be supported, please 
 - (Picross puzzles)
   - Mario's Picross (`marios_picross_1.gb`)
   - Picross 2 (AKA Mario's Picross 2) (`marios_picross_2.gb`)
-- .tstlt (N64)
-  - Mario Artist: Talent Studio (rip these first with [mfs_manager](https://github.com/LuigiBlood/mfs_manager) and include them in `roms/mario_artist/prereqs`)
+- Mario Artist (.ma3d1/.tstlt) (N64)
+  
+  *(Rip these first with [mfs_manager](https://github.com/LuigiBlood/mfs_manager) and include them in `roms/mario_artist/prereqs`.)*
+  - Mario Artist: Polygon Studio
+  - Mario Artist: Talent Studio
 - .vis/.xtd (PC)
   - Halo Wars (Steam)
 - VRML (.wrl)
@@ -152,35 +156,35 @@ Then, follow the steps below.
 
 ### Viewing/extracting models from ROMs automatically
 
-1) Drop ROM(s) in the `cli/roms/` directory. Make sure their names match the corresponding name above! (	Games with brackets should accept any of the listed extensions.)
+1) Drop ROM(s) in the `roms/` directory. Make sure their names match the corresponding name above! (	Games with brackets should accept any of the listed extensions.)
 
 #### Viewing/extracting models via the UI
 
-2) Double-click the `launch_ui.bat` file in the `cli/` directory. This will first rip all of the files from the game, and then gather the currently supported models. This can take a while on the first execution, but future executions will reuse the exported files.
+2) Double-click the `launch_ui.bat` file in the root directory. This will first rip all of the files from the game, and then gather the currently supported models. This can take a while on the first execution, but future executions will reuse the exported files.
 3) The viewer will open with nothing initially selected. Navigate through the models in the left-hand column and select a model you wish to view/extract. Once selected, the model will be loaded/rendered with as close of a representation to the original game as possible.
-4) The model can be extracted by clicking the <img alt="export" src="https://user-images.githubusercontent.com/15970939/204157246-43aa2e0d-628b-49c7-abb9-bfc2d52b16a0.png" height="16px" /> icon in the top bar. It will automatically be placed relative to the `cli/out/[game_name]/` directory, in a chain of folders matching the ROM's original file structure. The model may not look exactly as it appeared in the viewer, because some material features are not supported in common model formats.
+4) The model can be extracted by clicking the <img alt="export" src="https://user-images.githubusercontent.com/15970939/204157246-43aa2e0d-628b-49c7-abb9-bfc2d52b16a0.png" height="16px" /> icon in the top bar. It will automatically be placed relative to the `out/[game_name]/` directory, in a chain of folders matching the ROM's original file structure. The model may not look exactly as it appeared in the viewer, because some material features are not supported in common model formats.
 5) All of the models in a given directory can be extracted by clicking the <img alt="export_all" src="https://user-images.githubusercontent.com/15970939/204157353-7b3dffb6-7061-4c3d-b90f-461764598b4d.png" height="16px" /> icon in the top bar. Current progress will be displayed in the status bar on the bottom while models are extracted in the background. To stop this operation, click the <img alt="cancel" src="https://user-images.githubusercontent.com/15970939/230075836-a38a1e1b-489f-4240-ae63-12edaa6050d2.png" height="16px" /> icon on the right side of the status bar.
 
 #### Extracting all files from a given game via a batch script
 
-2) Double-click the corresponding `rip_[game_name].bat` file in the `cli/` directory. This will first rip all of the files from the game, and then the currently supported models. This can take a while on the first execution, but future executions will reuse the exported files.
-3) Extracted models will appear within the corresponding `cli/out/[game_name]/` directory.  
+2) Double-click the corresponding `rip_[game_name].bat` file in the root directory. This will first rip all of the files from the game, and then the currently supported models. This can take a while on the first execution, but future executions will reuse the exported files.
+3) Extracted models will appear within the corresponding `out/[game_name]/` directory.  
 
 ### Converting models
 
 The tool can also be used to convert models via the command-line like so:
 ```
-  cli/tools/universal_asset_tool/universal_asset_tool.exe convert -i [input files] -o [output file]
+  tools/universal_asset_tool/universal_asset_tool.exe convert -i [input files] -o [output file]
 ```
 
 Here's an example with some files from Pikmin 1:
 ```
-  cli/tools/universal_asset_tool/universal_asset_tool.exe convert -i chappy.mod chappy.anm -o chappy.fbx
+  tools/universal_asset_tool/universal_asset_tool.exe convert -i chappy.mod chappy.anm -o chappy.fbx
 ```
 
 The best plugin will automatically be detected based on the list of input files. For a list of supported plugins, use the following command:
 ```
-  cli/tools/universal_asset_tool/universal_asset_tool.exe list_plugins
+  tools/universal_asset_tool/universal_asset_tool.exe list_plugins
 ```
 
 ## Notes about exported models
