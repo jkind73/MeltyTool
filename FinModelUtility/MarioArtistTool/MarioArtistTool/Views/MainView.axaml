@@ -22,52 +22,59 @@
   </UserControl.Styles>
 
   <DockPanel>
-    <Panel Width="250"
-           DockPanel.Dock="Left">
-      <Grid>
-        <Border>
-          <Border.Background>
-            <VisualBrush TileMode="Tile"
-                         Stretch="Uniform"
-                         DestinationRect="0,0,32,32">
-              <VisualBrush.Visual>
-                <Image Width="32" Height="32">
-                  <Image.Source>
-                    <DrawingImage>
-                      <DrawingImage.Drawing>
-                        <DrawingGroup>
-                          <GeometryDrawing Geometry="M0,0 L2,0 2,2, 0,2Z"
-                                           Brush="#23503f" />
-                          <GeometryDrawing Geometry="M0,1 L2,1 2,2, 1,2 1,0 0,0Z"
-                                           Brush="#22473d" />
-                        </DrawingGroup>
-                      </DrawingImage.Drawing>
-                    </DrawingImage>
-                  </Image.Source>
-                </Image>
-              </VisualBrush.Visual>
-            </VisualBrush>
-          </Border.Background>
+    <DockPanel Width="250"
+               DockPanel.Dock="Left"
+               Background="Black">
+	  <Image DockPanel.Dock="Top"
+             Source="/Assets/file_select/top_bar.png"
+             Height="28"
+             HorizontalAlignment="Left" />
+      <Panel>
+        <Grid>
+          <Border>
+            <Border.Background>
+              <VisualBrush TileMode="Tile"
+                           Stretch="Uniform"
+                           DestinationRect="0,0,32,32">
+                <VisualBrush.Visual>
+                  <Image Width="32" Height="32">
+                    <Image.Source>
+                      <DrawingImage>
+                        <DrawingImage.Drawing>
+                          <DrawingGroup>
+                            <GeometryDrawing Geometry="M0,0 L2,0 2,2, 0,2Z"
+                                             Brush="#23503f" />
+                            <GeometryDrawing Geometry="M0,1 L2,1 2,2, 1,2 1,0 0,0Z"
+                                             Brush="#22473d" />
+                          </DrawingGroup>
+                        </DrawingImage.Drawing>
+                      </DrawingImage>
+                    </Image.Source>
+                  </Image>
+                </VisualBrush.Visual>
+              </VisualBrush>
+            </Border.Background>
+          </Border>
+
+          <Image Source="/Assets/file_select/gradient_dark.png"
+                 Stretch="Fill"
+                 BlendMode="Multiply"
+                 Opacity=".5" />
+
+          <Image Source="/Assets/file_select/gradient_light.png"
+                 Stretch="Fill"
+                 BlendMode="ColorDodge"
+                 Opacity=".9" />
+        </Grid>
+
+        <Border Padding="4">
+          <controls:If Condition="{Binding FileSystemTreeSource, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TreeDataGrid Source="{Binding FileSystemTreeSource}"
+                          ShowColumnHeaders="False" />
+          </controls:If>
         </Border>
-
-        <Image Source="/Assets/file_select/gradient_dark.png"
-               Stretch="Fill"
-               BlendMode="Multiply"
-               Opacity=".5" />
-
-        <Image Source="/Assets/file_select/gradient_light.png"
-               Stretch="Fill"
-               BlendMode="ColorDodge"
-               Opacity=".9" />
-      </Grid>
-
-      <Border Padding="4">
-        <controls:If Condition="{Binding FileSystemTreeSource, Converter={x:Static ObjectConverters.IsNotNull}}">
-          <TreeDataGrid Source="{Binding FileSystemTreeSource}"
-                        ShowColumnHeaders="False" />
-        </controls:If>
-      </Border>
-    </Panel>
+      </Panel>
+    </DockPanel>
 
     <Panel>
       <scene:SceneInstanceViewerGlPanel

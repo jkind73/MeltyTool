@@ -6,7 +6,7 @@ using Avalonia.Media.Imaging;
 
 using marioartisttool.util;
 
-namespace MarioArtistTool.fileTree;
+namespace MarioArtistTool.file_select;
 
 public sealed class BucketBitmapObservableManager {
   private static readonly Bitmap IDLE_IMAGE_

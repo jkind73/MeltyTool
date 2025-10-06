@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MarioArtistTool.fileTree;
+namespace MarioArtistTool.file_select;
 
 public enum BucketBitmapState {
   IDLE,

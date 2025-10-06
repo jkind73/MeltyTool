@@ -22,7 +22,7 @@ using marioartist.api;
 using marioartist.schema;
 using marioartist.schema.mfs;
 
-using MarioArtistTool.fileTree;
+using MarioArtistTool.file_select;
 
 using marioartisttool.services;
 using marioartisttool.util;
@@ -123,6 +123,7 @@ public class MainViewModel : BViewModel {
 
                               var icon = new Image {
                                   Source = avaloniaImage,
+                                  Margin = new Thickness(0, 0, 2, 0),
                               };
 
                               stackPanel.Children.Add(icon);
