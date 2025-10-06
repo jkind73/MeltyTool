@@ -24,6 +24,7 @@ public static class MfsFileSystemService {
       var diskFile = new FinFile(config.MostRecentDiskFile);
       if (diskFile.Exists) {
         MfsFileSystemService.LoadDiskFile(diskFile, config.MostRecentFileName);
+        return;
       }
     }
 

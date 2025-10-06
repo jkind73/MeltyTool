@@ -31,6 +31,10 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerPressedEvent,
         (_, args) => {
+          if (!this.AllowMovingCamera) {
+            return;
+          }
+
           var currentPoint = args.GetCurrentPoint(this);
           var properties = currentPoint.Properties;
 
@@ -44,6 +48,10 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerReleasedEvent,
         (_, args) => {
+          if (!this.AllowMovingCamera) {
+            return;
+          }
+
           var currentPoint = args.GetCurrentPoint(this);
           var properties = currentPoint.Properties;
 
@@ -58,6 +66,10 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerMovedEvent,
         (_, args) => {
+          if (!this.AllowMovingCamera) {
+            return;
+          }
+
           var currentPoint = args.GetCurrentPoint(this);
           var position = currentPoint.Position;
 
@@ -99,6 +111,10 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         KeyDownEvent,
         (_, args) => {
+          if (!this.AllowMovingCamera) {
+            return;
+          }
+
           switch (args.Key) {
             case Key.W: {
               this.isForwardDown_ = true;
@@ -141,6 +157,10 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         KeyUpEvent,
         (_, args) => {
+          if (!this.AllowMovingCamera) {
+            return;
+          }
+
           switch (args.Key) {
             case Key.W: {
               this.isForwardDown_ = false;

@@ -75,7 +75,8 @@
         IsTabStop="True"
         TabIndex="0"
         Focusable="True"
-        ShowGrid="False" />
+        ShowGrid="False"
+        AllowMovingCamera="False" />
     </Panel>
   </DockPanel>
 </UserControl>
