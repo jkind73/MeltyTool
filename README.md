@@ -71,6 +71,7 @@ If you'd like to vote on new games or features that should be supported, please 
 - [@nico](https://github.com/nico), aka thakis, whose [szstools](http://amnoid.de/gc/) CLI was originally used to extract the contents of GameCube .isos and whose [ddsview](http://www.amnoid.de/ddsview/index.html) tool was referenced to fix Halo Wars DXT5A/ATI1/BC4 parsing.
 - [@Nominom](https://github.com/Nominom), whose [BCnEncoder.NET](https://github.com/Nominom/BCnEncoder.NET) library is used to parse DXT1/3/5 images.
 - [@oxyplot](https://github.com/oxyplot), whose [oxyplot-avalonia](https://github.com/oxyplot/oxyplot-avalonia) library is used to render graphs of animation values.
+- [@PeterLemon](https://github.com/PeterLemon), aka krom, whose [MA3D1 Blender import script](https://64dd.org/tools.html) was referenced to add support for .ma3d1 models.
 - [@PistonMiner](https://github.com/PistonMiner), whose [ttyd-tools](https://github.com/PistonMiner/ttyd-tools) documentation was referenced to add support for importing Paper Mario: The Thousand Year Door's animated group models.
 - [@Ploaj](https://github.com/Ploaj), whose [HSDLib](https://github.com/Ploaj/HSDLib) library was heavily referenced to fix the Super Smash Bros. Melee .dat importer (since HSDLib has nearly perfect accuracy!!) and [Metanoia](https://github.com/Ploaj/Metanoia) library was heavily referenced to add support for parsing Level-5 formats. 
 - [@polym0rph](https://github.com/polym0rph), whose [GLSL.tmbundle](https://github.com/polym0rph/GLSL.tmbundle) was used to add TextMate syntax highlighting support for .glsl files in the material viewer.
@@ -102,7 +103,7 @@ If you'd like to vote on new games or features that should be supported, please 
   - Paper Mario: The Thousand Year Door (`paper_mario_the_thousand_year_door.[ciso/gcm/iso/nkit.iso]`)
 - .ase.mesh (PC)
   - [Rolling Madness 3D](http://www.lucaelia.com/games.php)
-- J3dGraph (.bmd/.bdl) (GCN)
+- J3dGraph (.bdl/.bmd) (GCN)
   - Mario Kart: Double Dash (`mario_kart_double_dash.[ciso/gcm/iso/nkit.iso]`)
   - Pikmin 2 (`pikmin_2.[ciso/gcm/iso/nkit.iso]`)
   - Super Mario Sunshine (`super_mario_sunshine.[ciso/gcm/iso/nkit.iso]`)
@@ -131,8 +132,11 @@ If you'd like to vote on new games or features that should be supported, please 
 - (Picross puzzles)
   - Mario's Picross (`marios_picross_1.gb`)
   - Picross 2 (AKA Mario's Picross 2) (`marios_picross_2.gb`)
-- .tstlt (N64)
-  - Mario Artist: Talent Studio (rip these first with [mfs_manager](https://github.com/LuigiBlood/mfs_manager) and include them in `roms/mario_artist/prereqs`)
+- Mario Artist (.ma3d1/.tstlt) (N64)
+  
+  *(Rip these first with [mfs_manager](https://github.com/LuigiBlood/mfs_manager) and include them in `roms/mario_artist/prereqs`.)*
+  - Mario Artist: Polygon Studio
+  - Mario Artist: Talent Studio
 - .vis/.xtd (PC)
   - Halo Wars (Steam)
 - VRML (.wrl)
