@@ -85,6 +85,8 @@ public static class MfsFileSystemService {
                                                 out var mostRecentFile) &&
           mostRecentFile is MfsTreeFile) {
         MfsFileSystemService.SelectFile(mostRecentFile as MfsTreeFile);
+      } else {
+        MfsFileSystemService.SelectFile(null);
       }
     } catch (Exception e) {
       ExceptionService.HandleException(e, new LoadFileException(diskFile));

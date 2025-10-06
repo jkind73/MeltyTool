@@ -59,7 +59,7 @@ public static class BucketBitmapStateUtils {
     while (!cancellationToken.IsCancellationRequested &&
            TryGetNextState_(from, to, out var next)) {
       yield return next;
-      await Task.Delay((int) (STATE_TIME * 1000));
+      await Task.Delay((int) (STATE_TIME * 1000), cancellationToken);
       from = next;
     }
   }

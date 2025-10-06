@@ -5,6 +5,7 @@
              xmlns:vm="clr-namespace:marioartisttool.ViewModels"
              xmlns:scene="clr-namespace:fin.ui.avalonia.scene;assembly=Fin.Ui.Avalonia"
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
+             xmlns:fileSelect="clr-namespace:MarioArtistTool.file_select"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="marioartisttool.Views.MainView"
              x:DataType="vm:MainViewModel"
@@ -23,12 +24,9 @@
 
   <DockPanel>
     <DockPanel Width="250"
-               DockPanel.Dock="Left"
-               Background="Black">
-	  <Image DockPanel.Dock="Top"
-             Source="/Assets/file_select/top_bar.png"
-             Height="28"
-             HorizontalAlignment="Left" />
+               DockPanel.Dock="Left">
+      <fileSelect:FileSelectTopBar DockPanel.Dock="Top" />
+
       <Panel>
         <Grid>
           <Border>

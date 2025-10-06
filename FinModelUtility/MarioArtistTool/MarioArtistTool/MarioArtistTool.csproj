@@ -21,4 +21,10 @@
     <ProjectReference Include="..\..\Fin\Fin\Fin.csproj" />
     <ProjectReference Include="..\..\Games\MarioArtist\MarioArtist\MarioArtist.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="file_select\FileSelectTopBar.axaml.cs">
+      <DependentUpon>FileSelectTopBar.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
