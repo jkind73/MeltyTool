@@ -37,6 +37,18 @@ public partial class MainView : UserControl {
       IRenderable? sceneryRenderer = null;
 
       switch (file?.FileType.ToLower()) {
+        case ".ma3d1": {
+          var bundle = new Ma3d1ModelFileBundle(file);
+          var model = new Ma3d1ModelLoader().Import(bundle);
+
+          var obj = area.AddObject();
+          obj.AddSceneModel(model);
+
+          var lightingObj = area.AddObject();
+          scene.CreateDefaultLighting(lightingObj);
+
+          break;
+        }
         case ".tstlt": {
           try {
             var bundle = new TstltModelFileBundle(file);
@@ -45,20 +57,23 @@ public partial class MainView : UserControl {
             switch (gender) {
               case Gender.BOY: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("backgrounds/boy/background.png");
+                    = AssetLoaderUtil.LoadImage(
+                        "backgrounds/boy/background.png");
                 area.BackgroundImageScale = .3f;
                 break;
               }
               case Gender.GIRL: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("backgrounds/girl/background.png");
+                    = AssetLoaderUtil.LoadImage(
+                        "backgrounds/girl/background.png");
                 area.BackgroundImageScale = .3f;
                 sceneryRenderer = new GirlSceneryRenderer();
                 break;
               }
               case Gender.OTHER: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("backgrounds/other/background.png");
+                    = AssetLoaderUtil.LoadImage(
+                        "backgrounds/other/background.png");
                 area.BackgroundImageScale = .3f;
                 break;
               }
@@ -83,6 +98,11 @@ public partial class MainView : UserControl {
             this.ViewerGlPanel.Scene = null;
           }
 
+          var camera = this.ViewerGlPanel.Camera;
+          camera.Position = new Vector3(0, -1.35f, .3f);
+          camera.PitchDegrees = 0;
+          camera.YawDegrees = 90;
+
           break;
         }
       }
@@ -91,6 +111,7 @@ public partial class MainView : UserControl {
         // Hides the default skybox.
         area.CreateCustomSkyboxObject();
       }
+
       if (sceneryRenderer != null) {
         var backgroundObj = area.AddObject();
         backgroundObj.AddRenderable(sceneryRenderer);
@@ -101,10 +122,5 @@ public partial class MainView : UserControl {
 
       LoadingStatusService.IsLoading = false;
     };
-
-    var camera = this.ViewerGlPanel.Camera;
-    camera.Position = new Vector3(0, -1.35f, .3f);
-    camera.PitchDegrees = 0;
-    camera.YawDegrees = 90;
   }
 }

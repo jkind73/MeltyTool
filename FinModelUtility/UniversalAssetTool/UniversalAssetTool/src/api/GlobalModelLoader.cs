@@ -75,8 +75,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new GloModelImporter().Import(gloModelFileBundle),
         GltfModelFileBundle gltfModelFileBundle
             => new GltfModelImporter().Import(gltfModelFileBundle),
-        XtdModelFileBundle xtdModelFileBundle
-            => new XtdModelImporter().Import(xtdModelFileBundle),
+        Ma3d1ModelFileBundle ma3d1ModelFileBundle
+            => new Ma3d1ModelLoader().Import(ma3d1ModelFileBundle),
         MeleeModelFileBundle meleeModelFileBundle
             => new MeleeModelImporter().Import(meleeModelFileBundle),
         ModModelFileBundle modModelFileBundle
@@ -106,6 +106,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new XcModelImporter().Import(xcModelFileBundle),
         XmodModelFileBundle xmodModelFileBundle
             => new XmodModelImporter().Import(xmodModelFileBundle),
+        XtdModelFileBundle xtdModelFileBundle
+            => new XtdModelImporter().Import(xtdModelFileBundle),
         ZsiModelFileBundle zsiModelFileBundle
             => new ZsiModelImporter().Import(zsiModelFileBundle),
         _ => throw new ArgumentOutOfRangeException(nameof(modelFileBundle))
