@@ -58,7 +58,7 @@ public partial class MainView : UserControl {
               }
               case Gender.OTHER: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("backgrounds/girl/other.png");
+                    = AssetLoaderUtil.LoadImage("backgrounds/other/background.png");
                 area.BackgroundImageScale = .3f;
                 break;
               }
@@ -72,8 +72,8 @@ public partial class MainView : UserControl {
             characterObj.AddSceneModel(model);
 
             var shadowObj = area.AddObject();
-            shadowObj.SetPosition(100, 0, -300);
-            shadowObj.SetScale(1, 1, 0f);
+            shadowObj.SetPosition(20, -20, -100);
+            shadowObj.SetScale(1, 1, 0);
             shadowObj.AddComponent(new ShadowRenderer(model));
 
             var lightingObj = area.AddObject();
