@@ -32,4 +32,7 @@ public sealed partial class Mesh : IBinaryDeserializable {
   [RAtPositionOrNull(nameof(TriangleDefinitionsOffset), -1)]
   [RSequenceLengthSource(nameof(TriangleCount))]
   public Triangle[]? Triangles { get; set; }
+
+  [Skip]
+  public Argb1555Image Texture { get; set; }
 }

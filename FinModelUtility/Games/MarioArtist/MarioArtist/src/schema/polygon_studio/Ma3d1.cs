@@ -8,7 +8,5 @@ namespace marioartist.schema.polygon_studio;
 public sealed partial class Ma3d1 : IBinaryDeserializable {
   public MfsThumbnail Thumbnail { get; } = new();
   public Ma3d1Header Header { get; } = new();
-
-  [RAtPosition(nameof(Header.DataOffset))]
-  public Ma3d1Data Data { get; } = new();
+  public MeshData MeshData { get; } = new();
 }
