@@ -1,7 +1,10 @@
-﻿using Avalonia.Input;
+﻿using System.Numerics;
+
+using Avalonia.Input;
 using Avalonia.Interactivity;
 
 using fin.animation;
+using fin.config.avalonia.services;
 using fin.model;
 using fin.scene;
 using fin.services;
@@ -16,6 +19,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
   private readonly SceneViewerGl viewerImpl_ = new();
 
   private bool isMouseDown_ = false;
+  private Vector2 mousePosition_;
   private (float, float)? prevMousePosition_ = null;
 
   private bool isForwardDown_ = false;
@@ -31,10 +35,6 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerPressedEvent,
         (_, args) => {
-          if (!this.AllowMovingCamera) {
-            return;
-          }
-
           var currentPoint = args.GetCurrentPoint(this);
           var properties = currentPoint.Properties;
 
@@ -48,10 +48,6 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerReleasedEvent,
         (_, args) => {
-          if (!this.AllowMovingCamera) {
-            return;
-          }
-
           var currentPoint = args.GetCurrentPoint(this);
           var properties = currentPoint.Properties;
 
@@ -66,12 +62,14 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         PointerMovedEvent,
         (_, args) => {
+          var currentPoint = args.GetCurrentPoint(this);
+          var position = currentPoint.Position;
+          this.mousePosition_
+              = new Vector2((float) position.X, (float) position.Y);
+
           if (!this.AllowMovingCamera) {
             return;
           }
-
-          var currentPoint = args.GetCurrentPoint(this);
-          var position = currentPoint.Position;
 
           if (this.isMouseDown_) {
             var mouseLocation = ((float) position.X, (float) position.Y);
@@ -249,6 +247,12 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.GetBoundsForGlViewport(out var width, out var height);
     this.viewerImpl_.Width = width;
     this.viewerImpl_.Height = height;
+
+    MainViewInputService.Resolution = new Vector2(width, height);
+    MainViewInputService.MouseDown = this.isMouseDown_;
+    MainViewInputService.NormalizedMousePosition
+        = new Vector2((float) (this.mousePosition_.X / this.Bounds.Width),
+                      (float) (this.mousePosition_.Y / this.Bounds.Height));
 
     this.viewerImpl_.GlobalScale = UiConstants.GLOBAL_SCALE;
     this.viewerImpl_.NearPlane = UiConstants.NEAR_PLANE;

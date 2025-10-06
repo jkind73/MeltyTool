@@ -2,9 +2,11 @@
 using Avalonia.Controls;
 
 using fin.util.asserts;
+using fin.util.types;
 
-namespace marioartisttool.services;
+namespace fin.config.avalonia.services;
 
+[IocCandiate]
 public static class TopLevelService {
   public static TopLevel Instance { get; private set; }
 

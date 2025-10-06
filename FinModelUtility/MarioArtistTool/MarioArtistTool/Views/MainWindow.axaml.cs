@@ -3,6 +3,7 @@
 using Avalonia.Controls;
 using Avalonia.Threading;
 
+using fin.config.avalonia.services;
 using fin.services;
 using fin.ui.avalonia.dialogs;
 

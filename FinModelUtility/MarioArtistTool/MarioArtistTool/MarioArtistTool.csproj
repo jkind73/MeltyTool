@@ -27,4 +27,8 @@
       <DependentUpon>FileSelectTopBar.axaml</DependentUpon>
     </Compile>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
 </Project>

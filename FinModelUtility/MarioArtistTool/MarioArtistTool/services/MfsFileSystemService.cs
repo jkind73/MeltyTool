@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Avalonia.Platform.Storage;
 
+using fin.config.avalonia.services;
 using fin.io;
 using fin.io.web;
 using fin.services;

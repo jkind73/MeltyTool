@@ -12,11 +12,12 @@ using fin.ui.rendering;
 using marioartist.api;
 using marioartist.schema.talent_studio;
 
-using MarioArtistTool.config;
-using MarioArtistTool.backgrounds;
-
 using marioartisttool.services;
 using marioartisttool.util;
+
+using MarioArtistTool.backgrounds;
+using MarioArtistTool.config;
+using MarioArtistTool.view;
 
 
 namespace marioartisttool.Views;
@@ -88,6 +89,9 @@ public partial class MainView : UserControl {
 
             var characterObj = area.AddObject();
             characterObj.AddSceneModel(model);
+
+            var talentHeadTickComponent = new RotateTalentTickComponent();
+            characterObj.AddComponent(talentHeadTickComponent);
 
             var shadowObj = area.AddObject();
             shadowObj.SetPosition(20, -20, -100);
