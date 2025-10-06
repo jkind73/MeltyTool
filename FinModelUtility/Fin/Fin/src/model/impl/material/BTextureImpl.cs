@@ -33,6 +33,8 @@ public partial class ModelImpl<TVertex> {
       => this.Name.ReplaceInvalidFilenameCharacters() +
          this.BestImageFormat.GetExtension();
 
+    public bool ThreePointFiltering { get; set; }
+
     public int UvIndex { get; set; }
     public UvType UvType { get; set; }
 

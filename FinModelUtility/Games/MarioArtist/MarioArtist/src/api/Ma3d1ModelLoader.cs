@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 
-using fin.data.queues;
 using fin.io;
 using fin.model;
 using fin.model.impl;
@@ -26,9 +25,11 @@ public sealed class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
     var finMaterialManager = finModel.MaterialManager;
     var finSkin = finModel.Skin;
     foreach (var ma3d1Mesh in ma3d1.MeshData.Meshes) {
-      var (finMaterial, _)
+      var (finMaterial, finTexture)
           = finMaterialManager.AddSimpleTextureMaterialFromImage(
               ma3d1Mesh.Texture.ToImage());
+
+      finTexture.ThreePointFiltering = true;
 
       var finMesh = finSkin.AddMesh();
 

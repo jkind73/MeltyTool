@@ -28,11 +28,17 @@ public sealed class MaterialParams : IEquatable<MaterialParams> {
                   .With(this.CullingMode);
 
   public bool Equals(MaterialParams other)
-    => IEquatable<TextureParams>.Equals(this.TextureParams0,
-                                        other.TextureParams0) &&
-       IEquatable<TextureParams>.Equals(this.TextureParams1,
-                                        other.TextureParams1) &&
-       this.CombinerCycleParams0.Equals(other.CombinerCycleParams0) &&
-       this.CombinerCycleParams1.Equals(other.CombinerCycleParams1) &&
+    => IEquatable<TextureParams>.Equals(
+           this.TextureParams0,
+           other.TextureParams0) &&
+       IEquatable<TextureParams>.Equals(
+           this.TextureParams1,
+           other.TextureParams1) &&
+       IEquatable<CombinerCycleParams>.Equals(
+           this.CombinerCycleParams0,
+           other.CombinerCycleParams0) &&
+       IEquatable<CombinerCycleParams>.Equals(
+           this.CombinerCycleParams1,
+           other.CombinerCycleParams1) &&
        this.CullingMode == other.CullingMode;
 }

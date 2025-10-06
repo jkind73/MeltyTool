@@ -48,6 +48,17 @@ public sealed class GlTexture : IGlTexture {
   private GlTexture(IReadOnlyTexture texture) {
     this.texture_ = texture;
 
+    FinTextureMinFilter minFilter;
+    TextureMagFilter magFilter;
+    if (!texture.ThreePointFiltering) {
+      minFilter = texture.MinFilter;
+      magFilter = texture.MagFilter;
+    } else {
+      // TODO: This is just an assumption for now, what should this be?
+      minFilter = FinTextureMinFilter.NEAR;
+      magFilter = TextureMagFilter.NEAR;
+    }
+
     GL.GenTextures(1, out int id);
     this.Id = id;
 
@@ -59,10 +70,10 @@ public sealed class GlTexture : IGlTexture {
       this.LoadMipmapImagesIntoTexture_(mipmapImages);
 
       if (mipmapImages.Length == 1 &&
-          texture.MinFilter is FinTextureMinFilter.NEAR_MIPMAP_NEAR
-                               or FinTextureMinFilter.NEAR_MIPMAP_LINEAR
-                               or FinTextureMinFilter.LINEAR_MIPMAP_NEAR
-                               or FinTextureMinFilter.LINEAR_MIPMAP_LINEAR) {
+          minFilter is FinTextureMinFilter.NEAR_MIPMAP_NEAR
+                       or FinTextureMinFilter.NEAR_MIPMAP_LINEAR
+                       or FinTextureMinFilter.LINEAR_MIPMAP_NEAR
+                       or FinTextureMinFilter.LINEAR_MIPMAP_LINEAR) {
         GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
       } else {
         GL.TexParameter(target,
@@ -99,7 +110,7 @@ public sealed class GlTexture : IGlTexture {
       GL.TexParameter(
           target,
           TextureParameterName.TextureMinFilter,
-          (int) (texture.MinFilter switch {
+          (int) (minFilter switch {
               FinTextureMinFilter.NEAR   => TextureMinFilter.Nearest,
               FinTextureMinFilter.LINEAR => TextureMinFilter.Linear,
               FinTextureMinFilter.NEAR_MIPMAP_NEAR => TextureMinFilter
@@ -114,7 +125,7 @@ public sealed class GlTexture : IGlTexture {
       GL.TexParameter(
           target,
           TextureParameterName.TextureMagFilter,
-          (int) (texture.MagFilter switch {
+          (int) (magFilter switch {
               TextureMagFilter.NEAR => OpenTK.Graphics.OpenGL.TextureMagFilter
                                              .Nearest,
               TextureMagFilter.LINEAR => OpenTK.Graphics.OpenGL

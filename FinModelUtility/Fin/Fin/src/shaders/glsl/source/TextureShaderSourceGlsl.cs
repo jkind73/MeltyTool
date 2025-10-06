@@ -33,7 +33,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
            """);
     }
 
-    fragmentSrc.AppendTextureStructIfNeeded(material.Textures, animations);
+    fragmentSrc.AppendTextureHeadersIfNeeded(material.Textures, animations);
     fragmentSrc.AppendLine();
 
     if (material.DiffuseColor != null) {
@@ -83,14 +83,14 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     }
 
     fragmentSrc.AppendLine(
-        $$"""
+        """
 
-          void main() {
-          """);
+        void main() {
+        """);
 
     fragmentSrc.AppendLine(
         $"  fragColor = {GlslUtil.ReadColorFromTexture("diffuseTexture", $"uv{uvIndex}", diffuseTexture, animations)}" +
-        (hasColors ? $" * vertexColor0" : "") +
+        (hasColors ? " * vertexColor0" : "") +
         (material.DiffuseColor != null ? " * diffuseColor" : "") +
         ";");
 

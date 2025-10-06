@@ -41,9 +41,7 @@ namespace sm64.memory {
       throw new NotImplementedException();
     }
 
-    public bool IsValidSegment(uint segmentIndex) {
-      throw new NotImplementedException();
-    }
+    public bool IsValidSegment(uint segmentIndex) => true;
 
     public bool IsValidSegmentedAddress(uint segmentedAddress) {
       throw new NotImplementedException();

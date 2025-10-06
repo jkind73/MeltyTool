@@ -91,7 +91,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
             .Select(equations.DoOutputsDependOnTextureSource)
             .ToArray();
 
-    sb.AppendTextureStructIfNeeded(
+    sb.AppendTextureHeadersIfNeeded(
         dependsOnIndividualTextures
             .Select((dependsOnTexture, i) => (i, dependsOnTexture))
             .Where(tuple => tuple.dependsOnTexture)

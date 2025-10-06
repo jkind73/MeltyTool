@@ -35,4 +35,6 @@ public static class GlslConstants {
   public const string MIN_ALPHA_BEFORE_DISCARD_MASK_TEXT = ".95";
   public const float MIN_ALPHA_BEFORE_DISCARD_TRANSPARENT = .01f;
   public const string MIN_ALPHA_BEFORE_DISCARD_TRANSPARENT_TEXT = ".01";
+
+  public const string TEXTURE_3_POINT_NAME = "texture_3point";
 }

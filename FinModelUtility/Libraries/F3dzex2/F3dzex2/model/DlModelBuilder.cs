@@ -195,6 +195,7 @@ public sealed class DlModelBuilder {
               ? String.Format("0x{0:X8}", textureParams.SegmentedAddress)
               : $"rgb({color.R}, {color.G}, {color.B})";
 
+          texture.ThreePointFiltering = true;
           texture.WrapModeU = wrapModeU;
           texture.WrapModeV = wrapModeV;
           texture.UvType = uvType;

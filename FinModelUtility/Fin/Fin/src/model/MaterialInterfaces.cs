@@ -437,6 +437,8 @@ public partial interface ITexture : IIndexable, INamed {
   new UvType UvType { get; set; }
   new ColorType ColorType { get; set; }
 
+  new bool ThreePointFiltering { get; set; }
+
   new IReadOnlyImage[] MipmapImages { get; }
   new IReadOnlyImage Image => this.MipmapImages[0];
   new Bitmap ImageData { get; }

@@ -50,7 +50,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
            """);
     }
 
-    fragmentShaderSrc.AppendTextureStructIfNeeded(
+    fragmentShaderSrc.AppendTextureHeadersIfNeeded(
         material.Textures,
         animations);
 
