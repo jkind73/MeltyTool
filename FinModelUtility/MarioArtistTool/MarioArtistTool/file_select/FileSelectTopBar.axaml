@@ -12,7 +12,8 @@
 
     <Button x:Name="DiskSwapButton"
             Canvas.Left="-5"
-            Canvas.Top="-2">
+            Canvas.Top="-2"
+            ToolTip.Tip="Swap 64DD disk file">
       <Image x:Name="DiskSwapIcon" 
              Height="21" />
     </Button>
