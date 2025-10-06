@@ -14,7 +14,7 @@ using fin.util.time;
 
 using marioartisttool.util;
 
-namespace MarioArtistTool.scenery;
+namespace MarioArtistTool.backgrounds;
 
 public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
   private readonly IModelRenderer flowerRenderer_;
@@ -47,7 +47,7 @@ public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
     var backgroundFlowerModel = ModelImpl.CreateForViewer(4);
 
     var backgroundFlowerImage
-        = AssetLoaderUtil.LoadImage("scenery_flower.png");
+        = AssetLoaderUtil.LoadImage("backgrounds/girl/flower.png");
     var backgroundFlowerTexture
         = backgroundFlowerModel.MaterialManager.CreateTexture(
             backgroundFlowerImage);

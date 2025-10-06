@@ -13,7 +13,7 @@ using marioartist.api;
 using marioartist.schema.talent_studio;
 
 using MarioArtistTool.config;
-using MarioArtistTool.scenery;
+using MarioArtistTool.backgrounds;
 
 using marioartisttool.services;
 using marioartisttool.util;
@@ -45,20 +45,20 @@ public partial class MainView : UserControl {
             switch (gender) {
               case Gender.BOY: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("background_boy.png");
+                    = AssetLoaderUtil.LoadImage("backgrounds/boy/background.png");
                 area.BackgroundImageScale = .3f;
                 break;
               }
               case Gender.GIRL: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("background_girl.png");
+                    = AssetLoaderUtil.LoadImage("backgrounds/girl/background.png");
                 area.BackgroundImageScale = .3f;
                 sceneryRenderer = new GirlSceneryRenderer();
                 break;
               }
               case Gender.OTHER: {
                 area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage("background_other.png");
+                    = AssetLoaderUtil.LoadImage("backgrounds/girl/other.png");
                 area.BackgroundImageScale = .3f;
                 break;
               }

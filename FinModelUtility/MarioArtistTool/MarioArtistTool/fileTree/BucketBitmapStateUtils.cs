@@ -7,45 +7,45 @@ namespace MarioArtistTool.fileTree;
 
 public enum BucketBitmapState {
   IDLE,
+  WAVE_0_IN,
   WAVE_1_IN,
   WAVE_2_IN,
   WAVE_3_IN,
-  WAVE_4_IN,
-  WAVE_4_OUT,
   WAVE_3_OUT,
   WAVE_2_OUT,
   WAVE_1_OUT,
+  WAVE_0_OUT,
   WAVING,
+  OPEN_0,
   OPEN_1,
   OPEN_2,
   OPEN_3,
   OPEN_4,
   OPEN_5,
   OPEN_6,
-  OPEN_7,
   OPEN,
 }
 
 public static class BucketBitmapStateExtensions {
   public static bool IsWaving(this BucketBitmapState state)
-    => state is BucketBitmapState.WAVE_1_IN
+    => state is BucketBitmapState.WAVE_0_IN
+                or BucketBitmapState.WAVE_1_IN
                 or BucketBitmapState.WAVE_2_IN
                 or BucketBitmapState.WAVE_3_IN
-                or BucketBitmapState.WAVE_4_IN
-                or BucketBitmapState.WAVE_4_OUT
                 or BucketBitmapState.WAVE_3_OUT
                 or BucketBitmapState.WAVE_2_OUT
                 or BucketBitmapState.WAVE_1_OUT
+                or BucketBitmapState.WAVE_0_OUT
                 or BucketBitmapState.WAVING;
 
   public static bool IsOpen(this BucketBitmapState state)
-    => state is BucketBitmapState.OPEN_1
+    => state is BucketBitmapState.OPEN_0
+                or BucketBitmapState.OPEN_1
                 or BucketBitmapState.OPEN_2
                 or BucketBitmapState.OPEN_3
                 or BucketBitmapState.OPEN_4
                 or BucketBitmapState.OPEN_5
                 or BucketBitmapState.OPEN_6
-                or BucketBitmapState.OPEN_7
                 or BucketBitmapState.OPEN;
 }
 
@@ -74,7 +74,7 @@ public static class BucketBitmapStateUtils {
 
     // Opening
     if (to == BucketBitmapState.OPEN) {
-      to = BucketBitmapState.OPEN_7;
+      to = BucketBitmapState.OPEN_6;
     }
 
     if (from.IsOpen() && to.IsOpen()) {
@@ -99,10 +99,10 @@ public static class BucketBitmapStateUtils {
 
     // Continuously waving
     if (from.IsWaving() && to.IsWaving()) {
-      if (from == BucketBitmapState.WAVE_1_OUT) {
+      if (from == BucketBitmapState.WAVE_0_OUT) {
+        next = BucketBitmapState.WAVE_0_IN;
+      } else if (from == BucketBitmapState.WAVE_1_OUT) {
         next = BucketBitmapState.WAVE_1_IN;
-      } else if (from == BucketBitmapState.WAVE_2_OUT) {
-        next = BucketBitmapState.WAVE_2_IN;
       } else {
         next = from + 1;
       }
@@ -111,7 +111,7 @@ public static class BucketBitmapStateUtils {
     }
 
     if (from.IsWaving()) {
-      if (from is BucketBitmapState.WAVE_1_OUT) {
+      if (from is BucketBitmapState.WAVE_0_OUT) {
         next = BucketBitmapState.IDLE;
       } else {
         next = from + 1;
@@ -121,7 +121,7 @@ public static class BucketBitmapStateUtils {
     }
 
     if (from == BucketBitmapState.IDLE && to.IsWaving()) {
-      next = BucketBitmapState.WAVE_1_IN;
+      next = BucketBitmapState.WAVE_0_IN;
       return true;
     }
 

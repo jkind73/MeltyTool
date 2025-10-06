@@ -4,7 +4,7 @@ using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.model;
 
 
-namespace MarioArtistTool.scenery;
+namespace MarioArtistTool.backgrounds;
 
 public sealed class ShadowRenderer(IReadOnlyModel model)
     : ISceneNodeRenderComponent {

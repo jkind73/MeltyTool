@@ -85,9 +85,9 @@ public class MainViewModel : BViewModel {
 
       var fileCursorScale = 1;
       var fileCursorObservable = new LoopingObservable<Cursor>(.1f,
+        LoadCursorFromAsset_("file_0.png", PixelPoint.Origin, fileCursorScale),
         LoadCursorFromAsset_("file_1.png", PixelPoint.Origin, fileCursorScale),
-        LoadCursorFromAsset_("file_2.png", PixelPoint.Origin, fileCursorScale),
-        LoadCursorFromAsset_("file_3.png", PixelPoint.Origin, fileCursorScale));
+        LoadCursorFromAsset_("file_2.png", PixelPoint.Origin, fileCursorScale));
 
       var bbomByTreeIoObject
           = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
