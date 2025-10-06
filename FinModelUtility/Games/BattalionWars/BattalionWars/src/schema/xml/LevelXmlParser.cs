@@ -320,7 +320,7 @@ public sealed class LevelXmlParser {
                            IReadOnlyTreeFile outFile,
                            out IBwTerrain bwTerrain,
                            float terrainLightScale) {
-    sceneArea.AddObject()
+    sceneArea.AddRootNode()
              .AddSceneModel(
                  new OutModelImporter().ImportModel(
                      new OutModelFileBundle {
@@ -404,7 +404,7 @@ public sealed class LevelXmlParser {
 
     files.Add(modelMap.Values.SelectMany(m => m.Files));
 
-    var levelObjMap = new Dictionary<string, ISceneObject>();
+    var levelObjMap = new Dictionary<string, ISceneNode>();
 
     foreach (var obj in objectMap.Values) {
       switch (obj) {
@@ -415,7 +415,7 @@ public sealed class LevelXmlParser {
             var skydomeModel = modelMap[skyboxObj.ModelName];
             skydomeModel.DisableDepthOnAllMaterials();
 
-            var skydomeObject = sceneArea.CreateCustomSkyboxObject();
+            var skydomeObject = sceneArea.CreateCustomSkyboxNode();
             skydomeObject.AddSceneModel(skydomeModel);
             skydomeObject.SetScale(10f, 10f, 10f);
             skydomeObject.Rotation.SetDegrees(90, 0, 0);
@@ -457,7 +457,7 @@ public sealed class LevelXmlParser {
             }
 
             if (child.ModelName != null) {
-              var sceneObject = sceneArea.AddObject();
+              var sceneObject = sceneArea.AddRootNode();
 
               childMatrix.Decompose(out var translation,
                                     out var rotation,

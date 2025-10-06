@@ -21,7 +21,7 @@ public sealed class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
     var finScene = new SceneImpl { FileBundle = fileBundle, Files = fileSet };
 
     var area = finScene.AddArea();
-    var obj = area.AddObject();
+    var obj = area.AddRootNode();
 
     var (vrmlScene, definitions) = VrmlParser.Parse(wrlFileStream);
     var allVrmlNodes = vrmlScene.GetAllChildren();
@@ -34,7 +34,7 @@ public sealed class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
       var b = (byte) (skyColor.Z * 255);
       area.BackgroundColor = Color.FromArgb(255, r, g, b);
 
-      area.CreateCustomSkyboxObject();
+      area.CreateCustomSkyboxNode();
     }
 
     var finLighting = finScene.CreateLighting();
@@ -46,7 +46,7 @@ public sealed class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
 
       var camera = Camera.Instance;
 
-      var lightingOwner = area.AddObject();
+      var lightingOwner = area.AddRootNode();
       lightingOwner.AddTickComponent(_ => {
         headlight.SetPosition(camera.Position);
         headlight.SetNormal(camera.Normal);

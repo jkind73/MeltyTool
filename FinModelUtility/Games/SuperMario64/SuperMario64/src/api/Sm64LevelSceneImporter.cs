@@ -72,7 +72,7 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
   }
 
   private static void AddAreaModelToScene_(ISceneArea finArea, Area sm64Area)
-    => finArea.AddObject()
+    => finArea.AddRootNode()
               .AddSceneModel(sm64Area.AreaModel.HighestLod2.Model);
 
   private static void AddAreaObjectToScene_(
@@ -84,7 +84,7 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
       return;
     }
 
-    var finObject = finArea.AddObject();
+    var finObject = finArea.AddRootNode();
     finObject.AddSceneModel(finModel);
     finObject.SetPosition(sm64Object.xPos, sm64Object.yPos, sm64Object.zPos);
     finObject.SetRotationDegrees(sm64Object.xRot,

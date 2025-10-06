@@ -82,7 +82,7 @@ public sealed class ZsiSceneImporter : ISceneImporter<ZsiSceneFileBundle> {
       var finArea = finScene.AddArea();
       foreach (var meshHeader in zsi.MeshHeaders) {
         foreach (var meshEntry in meshHeader.MeshEntries) {
-          var finObject = finArea.AddObject();
+          var finObject = finArea.AddRootNode();
 
           var opaqueMesh = meshEntry.OpaqueMesh;
           if (opaqueMesh != null) {

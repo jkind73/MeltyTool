@@ -7,7 +7,7 @@ namespace fin.scene;
 
 public partial class SceneImpl {
   private class SceneAreaImpl : ISceneArea {
-    private readonly List<ISceneObject> objects_ = [];
+    private readonly List<ISceneNode> objects_ = [];
 
     public void Dispose() {
       foreach (var obj in this.objects_) {
@@ -15,10 +15,10 @@ public partial class SceneImpl {
       }
     }
 
-    public IReadOnlyList<ISceneObject> Objects => this.objects_;
+    public IReadOnlyList<ISceneNode> RootNodes => this.objects_;
 
-    public ISceneObject AddObject() {
-      var obj = new SceneObjectImpl();
+    public ISceneNode AddRootNode() {
+      var obj = new SceneNodeImpl();
       this.objects_.Add(obj);
       return obj;
     }
@@ -26,9 +26,9 @@ public partial class SceneImpl {
     public Color? BackgroundColor { get; set; }
     public IReadOnlyImage? BackgroundImage { get; set; }
     public float BackgroundImageScale { get; set; } = 1;
-    public ISceneObject? CustomSkyboxObject { get; set; }
+    public ISceneNode? CustomSkyboxNode { get; set; }
 
-    public ISceneObject CreateCustomSkyboxObject()
-      => this.CustomSkyboxObject = new SceneObjectImpl();
+    public ISceneNode CreateCustomSkyboxNode()
+      => this.CustomSkyboxNode = new SceneNodeImpl();
   }
 }

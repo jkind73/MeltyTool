@@ -17,55 +17,65 @@ using fin.ui.rendering;
 namespace fin.scene;
 
 public static class SceneExtensions {
-  public static ISceneObject SetPosition(this ISceneObject sceneObject,
+  public static ISceneNode SetPosition(this ISceneNode sceneNode,
                                          Vector3 position)
-    => sceneObject.SetPosition(position.X, position.Y, position.Z);
+    => sceneNode.SetPosition(position.X, position.Y, position.Z);
 
 
-  public static void AddTickComponent(this ISceneObject sceneObject,
-                                      Action<ISceneObjectInstance> handler)
-    => sceneObject.AddComponent(new LambdaSceneNodeTickComponent(handler));
+  public static void AddTickComponent(this ISceneNode sceneNode,
+                                      Action<ISceneNodeInstance> handler)
+    => sceneNode.AddComponent(new LambdaSceneNodeTickComponent(handler));
 
   private class LambdaSceneNodeTickComponent(
-      Action<ISceneObjectInstance> handler) : ISceneNodeTickComponent {
+      Action<ISceneNodeInstance> handler) : ISceneNodeTickComponent {
     public void Dispose() { }
-    public void Tick(ISceneObjectInstance self) => handler(self);
+    public void Tick(ISceneNodeInstance self) => handler(self);
   }
 
-  public static void AddRenderable(this ISceneObject sceneObject,
+  public static void AddRenderable(this ISceneNode sceneNode,
                                    IRenderable renderable)
-    => sceneObject.AddComponent(new RenderableSceneNodeRenderComponent(renderable));
+    => sceneNode.AddComponent(new RenderableSceneNodeRenderComponent(renderable));
 
-  public static void AddRenderComponent(this ISceneObject sceneObject,
-                                        Action<ISceneObjectInstance> handler)
-    => sceneObject.AddComponent(new LambdaSceneNodeRenderComponent(handler));
+  public static void AddRenderComponent(this ISceneNode sceneNode,
+                                        Action<ISceneNodeInstance> handler)
+    => sceneNode.AddComponent(new LambdaSceneNodeRenderComponent(handler));
 
   private class LambdaSceneNodeRenderComponent(
-      Action<ISceneObjectInstance> handler) : ISceneNodeRenderComponent {
+      Action<ISceneNodeInstance> handler) : ISceneNodeRenderComponent {
     public void Dispose() { }
-    public void Render(ISceneObjectInstance self) => handler(self);
+    public void Render(ISceneNodeInstance self) => handler(self);
   }
 
   private class RenderableSceneNodeRenderComponent(IRenderable impl) 
       : ISceneNodeRenderComponent {
     public void Dispose() => (impl as IDisposable)?.Dispose();
-    public void Render(ISceneObjectInstance self) => impl.Render();
+    public void Render(ISceneNodeInstance self) => impl.Render();
+  }
+
+  public static IEnumerable<ISceneNode> EnumerateAllNodes(this IScene scene) {
+    var queue
+        = new FinQueue<ISceneNode>(scene.Areas.SelectMany(a => a.RootNodes));
+    while (queue.TryDequeue(out var node)) {
+      yield return node;
+      queue.Enqueue(node.ChildNodes);
+    }
+  }
+
+  public static IEnumerable<IReadOnlyModel> EnumerateAllModels(this IScene scene) {
+    var queue
+        = new FinQueue<IReadOnlySceneModel>(scene.EnumerateAllNodes().SelectMany(n => n.Models));
+    while (queue.TryDequeue(out var model)) {
+      yield return model.Model;
+      queue.Enqueue(model.Children.Values);
+    }
   }
 
   public static void CreateDefaultLighting(this IScene scene,
-                                           ISceneObject lightingOwner) {
+                                           ISceneNode lightingOwner) {
     var needsLights = false;
     var neededLightIndices = new HashSet<int>();
 
-    var sceneModelQueue = new FinQueue<IReadOnlySceneModel>(
-        scene.Areas.SelectMany(area
-                                   => area.Objects
-                                          .SelectMany(obj => obj.Models)));
-    while (sceneModelQueue.TryDequeue(out var sceneModel)) {
-      sceneModelQueue.Enqueue(sceneModel.Children.Values);
-
-      var finModel = sceneModel.Model;
-
+    foreach (var finModel in scene.EnumerateAllModels().Distinct()) {
       var useLighting =
           new UseLightingDetector().ShouldUseLightingFor(finModel);
       if (!useLighting) {

@@ -7,7 +7,8 @@ using fin.model.impl;
 namespace fin.scene;
 
 public partial class SceneImpl {
-  private class SceneObjectImpl : ISceneObject {
+  private class SceneNodeImpl : ISceneNode {
+    private readonly List<ISceneNode> childNodes_ = [];
     private readonly List<ISceneModel> models_ = [];
     private readonly List<ISceneNodeComponent> components_ = [];
 
@@ -17,16 +18,24 @@ public partial class SceneImpl {
       }
     }
 
+    public IReadOnlyList<ISceneNode> ChildNodes => this.childNodes_;
+
+    public ISceneNode AddChildNode() {
+      var childNode = new SceneNodeImpl();
+      this.childNodes_.Add(childNode);
+      return childNode;
+    }
+
     public Vector3 Position { get; private set; }
     public IRotation Rotation { get; } = new RotationImpl();
     public Vector3 Scale { get; private set; } = new Vector3(1, 1, 1);
 
-    public ISceneObject SetPosition(float x, float y, float z) {
+    public ISceneNode SetPosition(float x, float y, float z) {
       this.Position = new Vector3(x, y, z);
       return this;
     }
 
-    public ISceneObject SetRotationRadians(float xRadians,
+    public ISceneNode SetRotationRadians(float xRadians,
                                            float yRadians,
                                            float zRadians) {
       this.Rotation.SetRadians(
@@ -37,7 +46,7 @@ public partial class SceneImpl {
       return this;
     }
 
-    public ISceneObject SetRotationDegrees(float xDegrees,
+    public ISceneNode SetRotationDegrees(float xDegrees,
                                            float yDegrees,
                                            float zDegrees) {
       this.Rotation.SetDegrees(
@@ -48,7 +57,7 @@ public partial class SceneImpl {
       return this;
     }
 
-    public ISceneObject SetScale(float x, float y, float z) {
+    public ISceneNode SetScale(float x, float y, float z) {
       this.Scale = new Vector3(x, y, z);
       return this;
     }
@@ -63,7 +72,7 @@ public partial class SceneImpl {
 
     public IReadOnlyList<ISceneNodeComponent> Components => this.components_;
 
-    public ISceneObject AddComponent(ISceneNodeComponent component) {
+    public ISceneNode AddComponent(ISceneNodeComponent component) {
       this.components_.Add(component);
       return this;
     }

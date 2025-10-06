@@ -8,9 +8,9 @@ using fin.model;
 namespace fin.scene.instance;
 
 public partial class SceneInstanceImpl {
-  private class SceneObjectInstanceImpl(IReadOnlySceneObject sceneObject)
-      : ISceneObjectInstance {
-    ~SceneObjectInstanceImpl() => this.ReleaseUnmanagedResources_();
+  private class SceneNodeInstanceImpl(IReadOnlySceneNode sceneObject)
+      : ISceneNodeInstance {
+    ~SceneNodeInstanceImpl() => this.ReleaseUnmanagedResources_();
 
     public void Dispose() {
       this.ReleaseUnmanagedResources_();
@@ -21,22 +21,31 @@ public partial class SceneInstanceImpl {
       foreach (var model in this.Models) {
         model.Dispose();
       }
+
+      foreach (var child in this.ChildNodes) {
+        child.Dispose();
+      }
     }
 
-    public IReadOnlySceneObject Definition => sceneObject;
+    public IReadOnlySceneNode Definition => sceneObject;
+
+    public IReadOnlyList<ISceneNodeInstance> ChildNodes { get; }
+      = sceneObject.ChildNodes
+                   .Select(n => new SceneNodeInstanceImpl(n))
+                   .ToArray();
 
     public Vector3 Position { get; private set; } = sceneObject.Position;
     public IRotation Rotation { get; } = sceneObject.Rotation;
     public Vector3 Scale { get; private set; } = sceneObject.Scale;
 
-    public ISceneObjectInstance SetPosition(float x, float y, float z) {
+    public ISceneNodeInstance SetPosition(float x, float y, float z) {
       this.Position = new Vector3(x, y, z);
       return this;
     }
 
-    public ISceneObjectInstance SetRotationRadians(float xRadians,
-                                                   float yRadians,
-                                                   float zRadians) {
+    public ISceneNodeInstance SetRotationRadians(float xRadians,
+                                                 float yRadians,
+                                                 float zRadians) {
       this.Rotation.SetRadians(
           xRadians,
           yRadians,
@@ -45,9 +54,9 @@ public partial class SceneInstanceImpl {
       return this;
     }
 
-    public ISceneObjectInstance SetRotationDegrees(float xDegrees,
-                                                   float yDegrees,
-                                                   float zDegrees) {
+    public ISceneNodeInstance SetRotationDegrees(float xDegrees,
+                                                 float yDegrees,
+                                                 float zDegrees) {
       this.Rotation.SetDegrees(
           xDegrees,
           yDegrees,
@@ -56,7 +65,7 @@ public partial class SceneInstanceImpl {
       return this;
     }
 
-    public ISceneObjectInstance SetScale(float x, float y, float z) {
+    public ISceneNodeInstance SetScale(float x, float y, float z) {
       this.Scale = new Vector3(x, y, z);
       return this;
     }
@@ -71,6 +80,10 @@ public partial class SceneInstanceImpl {
         if (component is ISceneNodeTickComponent tickComponent) {
           tickComponent.Tick(this);
         }
+      }
+
+      foreach (var child in this.ChildNodes) {
+        child.Tick();
       }
     }
 

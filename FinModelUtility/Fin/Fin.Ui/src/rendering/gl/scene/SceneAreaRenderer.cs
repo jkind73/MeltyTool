@@ -4,20 +4,20 @@ using fin.scene;
 namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneAreaRenderer : IRenderable, IDisposable {
-  private readonly SceneObjectRenderer[] objectRenderers_;
+  private readonly SceneNodeRenderer[] rootNodeRenderers_;
 
   public SceneAreaRenderer(ISceneAreaInstance sceneArea,
                            IReadOnlyLighting? lighting) {
     var customSkybox = sceneArea.CustomSkyboxObject;
     this.CustomSkyboxRenderer = customSkybox != null
-        ? new SceneObjectRenderer(customSkybox, lighting)
+        ? new SceneNodeRenderer(customSkybox, lighting)
         : null;
 
-    this.objectRenderers_
+    this.rootNodeRenderers_
         = sceneArea
-          .Objects
+          .RootNodes
           .Where(obj => obj != customSkybox)
-          .Select(obj => new SceneObjectRenderer(obj, lighting))
+          .Select(obj => new SceneNodeRenderer(obj, lighting))
           .ToArray();
   }
 
@@ -30,18 +30,18 @@ public sealed class SceneAreaRenderer : IRenderable, IDisposable {
 
   private void ReleaseUnmanagedResources_() {
     this.CustomSkyboxRenderer?.Dispose();
-    foreach (var objRenderer in this.ObjectRenderers) {
+    foreach (var objRenderer in this.RootNodeRenderers) {
       objRenderer.Dispose();
     }
   }
 
-  public IReadOnlyList<SceneObjectRenderer> ObjectRenderers
-    => this.objectRenderers_;
+  public IReadOnlyList<SceneNodeRenderer> RootNodeRenderers
+    => this.rootNodeRenderers_;
 
-  public SceneObjectRenderer? CustomSkyboxRenderer { get; }
+  public SceneNodeRenderer? CustomSkyboxRenderer { get; }
 
   public void Render() {
-    foreach (var objRenderer in this.objectRenderers_) {
+    foreach (var objRenderer in this.rootNodeRenderers_) {
       objRenderer.Render();
     }
   }

@@ -17,21 +17,21 @@ public partial class SceneInstanceImpl {
 
     private void ReleaseUnmanagedResources_() {
       this.CustomSkyboxObject?.Dispose();
-      foreach (var obj in this.Objects) {
+      foreach (var obj in this.RootNodes) {
         obj.Dispose();
       }
     }
 
     public IReadOnlySceneArea Definition => sceneArea;
 
-    public IReadOnlyList<ISceneObjectInstance> Objects { get; } = sceneArea
-        .Objects
-        .Select(o => new SceneObjectInstanceImpl(o))
+    public IReadOnlyList<ISceneNodeInstance> RootNodes { get; } = sceneArea
+        .RootNodes
+        .Select(o => new SceneNodeInstanceImpl(o))
         .ToArray();
 
     public void Tick() {
-      foreach (var obj in this.Objects) {
-        obj.Tick();
+      foreach (var node in this.RootNodes) {
+        node.Tick();
       }
     }
 
@@ -41,7 +41,7 @@ public partial class SceneInstanceImpl {
       get => this.viewerScale_;
       set {
         this.viewerScale_ = value;
-        foreach (var obj in this.Objects) {
+        foreach (var obj in this.RootNodes) {
           obj.ViewerScale = this.viewerScale_;
         }
       }
@@ -49,9 +49,9 @@ public partial class SceneInstanceImpl {
 
     public Color? BackgroundColor => sceneArea.BackgroundColor;
 
-    public ISceneObjectInstance? CustomSkyboxObject { get; }
-      = sceneArea.CustomSkyboxObject != null
-          ? new SceneObjectInstanceImpl(sceneArea.CustomSkyboxObject)
+    public ISceneNodeInstance? CustomSkyboxObject { get; }
+      = sceneArea.CustomSkyboxNode != null
+          ? new SceneNodeInstanceImpl(sceneArea.CustomSkyboxNode)
           : null;
   }
 }

@@ -84,7 +84,7 @@ public sealed class MainViewModel : BViewModel {
           var sceneModelInstances
               = sceneInstance
                 .Areas
-                .SelectMany(a => a.Objects)
+                .SelectMany(a => a.RootNodes)
                 .SelectMany(o => o.Models)
                 .ToArray();
 

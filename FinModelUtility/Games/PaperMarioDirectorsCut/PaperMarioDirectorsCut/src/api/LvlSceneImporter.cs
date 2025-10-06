@@ -52,7 +52,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
           = new OmdModelImporter().Import(new OmdModelFileBundle {
               OmdFile = modelFile
           });
-      finArea.AddObject().AddSceneModel(finModel);
+      finArea.AddRootNode().AddSceneModel(finModel);
     }
 
     var textureDirectory
@@ -125,7 +125,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
           }
         }
 
-        finArea.AddObject().AddSceneModel(floorBlockModel);
+        finArea.AddRootNode().AddSceneModel(floorBlockModel);
       }
     }
 
@@ -133,7 +133,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
       var treeModel = CreateTreeModel_(sceneFileBundle.RootDirectory);
 
       foreach (var treePosition in lvl.Trees) {
-        finArea.AddObject()
+        finArea.AddRootNode()
                .SetPosition(treePosition.X, treePosition.Z, treePosition.Y)
                .AddSceneModel(treeModel);
       }
@@ -143,7 +143,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
       var saveBlockModel = CreateSaveBlockModel_(sceneFileBundle.RootDirectory);
 
       foreach (var saveBlockPosition in lvl.SaveBlocks) {
-        finArea.AddObject()
+        finArea.AddRootNode()
                .SetPosition(saveBlockPosition.X, saveBlockPosition.Z, saveBlockPosition.Y)
                .AddSceneModel(saveBlockModel);
       }
@@ -152,10 +152,10 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
     if (sceneFileBundle.LvlFile.Name is "battle.lvl") {
       var battleWallModel = CreateBattleWallModel_(lazyImageMap);
 
-      finArea.AddObject()
+      finArea.AddRootNode()
              .SetPosition(176, 0, 176)
              .AddSceneModel(battleWallModel);
-      finArea.AddObject()
+      finArea.AddRootNode()
              .SetPosition(176, 0, 464)
              .AddSceneModel(battleWallModel);
 
@@ -179,7 +179,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                             frontOfFloorMaterial,
                             battleFloorRootBone,
                             (1, 10));
-      finArea.AddObject()
+      finArea.AddRootNode()
              .AddSceneModel(battleFloorModel);
     }
 
@@ -189,10 +189,10 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
             .RootDirectory.AssertGetExistingSubdir("Backgrounds")
             .AssertGetExistingFile($"{lvl.BackgroundName}.png");
       finArea.BackgroundImage = FinImage.FromFile(backgroundImageFile);
-      finArea.CreateCustomSkyboxObject();
+      finArea.CreateCustomSkyboxNode();
     }
 
-    finScene.CreateDefaultLighting(finArea.AddObject());
+    finScene.CreateDefaultLighting(finArea.AddRootNode());
 
     return finScene;
   }

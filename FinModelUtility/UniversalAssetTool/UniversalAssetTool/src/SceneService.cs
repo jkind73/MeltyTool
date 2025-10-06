@@ -34,7 +34,7 @@ public static class SceneService {
               Files = model.Files
           };
           var area = scene.AddArea();
-          var obj = area.AddObject();
+          var obj = area.AddRootNode();
           obj.AddSceneModel(model);
 
           scene.CreateDefaultLighting(obj);

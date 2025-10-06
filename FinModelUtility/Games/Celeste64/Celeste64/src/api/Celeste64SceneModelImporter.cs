@@ -46,7 +46,7 @@ public sealed class Celeste64MapSceneImporter
 
     var finArea = finScene.AddArea();
 
-    var mapObj = finArea.AddObject();
+    var mapObj = finArea.AddRootNode();
     mapObj.AddSceneModel(
         new Celeste64MapModelImporter().Import(
             new Celeste64MapModelFileBundle {
@@ -133,7 +133,7 @@ public sealed class Celeste64MapSceneImporter
         skyboxModel.SetAllTextureFiltering(TextureMinFilter.NEAR,
                                            TextureMagFilter.NEAR);
 
-        finArea.CreateCustomSkyboxObject().AddSceneModel(skyboxModel);
+        finArea.CreateCustomSkyboxNode().AddSceneModel(skyboxModel);
       }
     }
 
@@ -183,7 +183,7 @@ public sealed class Celeste64MapSceneImporter
       var angleRadians =
           entity.GetIntProperty("angle", 0) * FinTrig.DEG_2_RAD + MathF.PI;
 
-      var finObj = finArea.AddObject();
+      var finObj = finArea.AddRootNode();
       finObj.SetPosition(origin);
       finObj.SetRotationRadians(0, angleRadians, 0);
       finObj.SetScale(modelScale, modelScale, modelScale);
@@ -218,7 +218,7 @@ public sealed class Celeste64MapSceneImporter
       }
     }
 
-    finScene.CreateDefaultLighting(finArea.AddObject());
+    finScene.CreateDefaultLighting(finArea.AddRootNode());
 
     return finScene;
   }

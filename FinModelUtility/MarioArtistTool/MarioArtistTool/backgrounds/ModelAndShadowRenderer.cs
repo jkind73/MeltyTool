@@ -12,6 +12,6 @@ public sealed class ShadowRenderer(IReadOnlyModel model)
  
   public void Dispose() => this.impl_.Dispose();
 
-  public void Render(ISceneObjectInstance self)
+  public void Render(ISceneNodeInstance self)
     => GlUtil.RenderAsShadow(() => this.impl_.Render());
 }

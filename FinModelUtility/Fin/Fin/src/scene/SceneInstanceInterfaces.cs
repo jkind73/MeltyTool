@@ -37,11 +37,11 @@ public partial interface ISceneInstance : ITickable, IDisposable {
 public partial interface ISceneAreaInstance : ITickable, IDisposable {
   new IReadOnlySceneArea Definition { get; }
 
-  new IReadOnlyList<ISceneObjectInstance> Objects { get; }
+  new IReadOnlyList<ISceneNodeInstance> RootNodes { get; }
 
   new float ViewerScale { get; set; }
 
-  new ISceneObjectInstance? CustomSkyboxObject { get; }
+  new ISceneNodeInstance? CustomSkyboxObject { get; }
 }
 
 /// <summary>
@@ -50,23 +50,25 @@ public partial interface ISceneAreaInstance : ITickable, IDisposable {
 ///   characters.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneObjectInstance : ITickable, IDisposable {
-  new IReadOnlySceneObject Definition { get; }
+public partial interface ISceneNodeInstance : ITickable, IDisposable {
+  new IReadOnlySceneNode Definition { get; }
+
+  new IReadOnlyList<ISceneNodeInstance> ChildNodes { get; }
 
   new Vector3 Position { get; }
   new IRotation Rotation { get; }
   new Vector3 Scale { get; }
 
-  ISceneObjectInstance SetPosition(float x, float y, float z);
+  ISceneNodeInstance SetPosition(float x, float y, float z);
 
-  ISceneObjectInstance SetPosition(Vector3 position)
+  ISceneNodeInstance SetPosition(Vector3 position)
     => this.SetPosition(position.X, position.Y, position.Z);
 
-  ISceneObjectInstance SetRotationRadians(float xRadians,
+  ISceneNodeInstance SetRotationRadians(float xRadians,
                                           float yRadians,
                                           float zRadians);
 
-  ISceneObjectInstance SetRotationDegrees(float xDegrees,
+  ISceneNodeInstance SetRotationDegrees(float xDegrees,
                                           float yDegrees,
                                           float zDegrees);
 

@@ -63,7 +63,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public ISceneModelInstance? FirstSceneModel
     => this.Scene
            ?.Areas.FirstOrDefault()
-           ?.Objects.FirstOrDefault()
+           ?.RootNodes.FirstOrDefault()
            ?.Models.FirstOrDefault();
 
   public IAnimationPlaybackManager? AnimationPlaybackManager
@@ -72,7 +72,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public ISkeletonRenderer? SkeletonRenderer
     => this.sceneRenderer_
            ?.AreaRenderers.FirstOrDefault()
-           ?.ObjectRenderers.FirstOrDefault()
+           ?.RootNodeRenderers.FirstOrDefault()
            ?.ModelRenderers.FirstOrDefault()
            ?.SkeletonRenderer;
 

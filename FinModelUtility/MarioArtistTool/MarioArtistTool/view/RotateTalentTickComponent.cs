@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-using fin.config.avalonia.services;
+﻿using fin.config.avalonia.services;
 using fin.scene;
 
 namespace MarioArtistTool.view;
@@ -10,7 +8,7 @@ public class RotateTalentTickComponent : ISceneNodeTickComponent {
 
   public void Dispose() { }
 
-  public void Tick(ISceneObjectInstance self) {
+  public void Tick(ISceneNodeInstance self) {
     if (!MainViewInputService.MouseDown) {
       this.prevMouseX_ = null;
       return;
@@ -22,7 +20,7 @@ public class RotateTalentTickComponent : ISceneNodeTickComponent {
       mouseDeltaX = mouseX - this.prevMouseX_.Value;
     }
 
-    self.SetRotationRadians(0, self.Rotation.YRadians + 3 * mouseDeltaX, 0);
+    self.SetRotationRadians(0, self.Rotation.YRadians + 10 * mouseDeltaX, 0);
 
     this.prevMouseX_ = mouseX;
   }

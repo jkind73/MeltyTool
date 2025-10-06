@@ -37,7 +37,7 @@ public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
     var courseBmd
         = bmdFiles.Single(f => f.NameWithoutExtension.EndsWith("_course"));
     fileSet.Add(courseBmd);
-    finArea.AddObject()
+    finArea.AddRootNode()
            .AddSceneModel(bmdModelImporter.Import(new BmdModelFileBundle {
                BmdFile = courseBmd
            }));
@@ -52,7 +52,7 @@ public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
       });
       skyModel.DisableDepthOnAllMaterials();
 
-      var skyObject = finArea.CreateCustomSkyboxObject();
+      var skyObject = finArea.CreateCustomSkyboxNode();
       skyObject.AddSceneModel(skyModel);
 
       var scale = .05f;
@@ -75,7 +75,7 @@ public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
     foreach (var bolObj in bol.Objects) {
       var objModels = lazyObjectModels[bolObj.ObjectId];
       if (objModels != null) {
-        var finObj = finArea.AddObject();
+        var finObj = finArea.AddRootNode();
         finObj.SetPosition(bolObj.Position);
 
         foreach (var objModel in objModels) {

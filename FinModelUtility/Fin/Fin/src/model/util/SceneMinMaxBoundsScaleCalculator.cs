@@ -17,7 +17,7 @@ public sealed class SceneMinMaxBoundsScaleCalculator
     var maxZ = float.MinValue;
 
     foreach (var area in scene.Areas) {
-      foreach (var obj in area.Objects) {
+      foreach (var obj in area.RootNodes) {
         foreach (var sceneModel in obj.Models) {
           var model = sceneModel.Model;
           var boneTransformManager = sceneModel.BoneTransformManager;

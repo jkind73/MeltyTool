@@ -18,13 +18,13 @@ public sealed class Pikmin2SceneImporter : ISceneImporter<Pikmin2SceneFileBundle
       };
       var sceneArea = scene.AddArea();
 
-      var mapObj = sceneArea.AddObject();
+      var mapObj = sceneArea.AddRootNode();
       mapObj.AddSceneModel(
           new BmdModelImporter().Import(new BmdModelFileBundle {
               BmdFile = levelBmd
           }));
 
-      var routeObj = sceneArea.AddObject();
+      var routeObj = sceneArea.AddRootNode();
 
       routeObj.AddSceneModel(new RouteModelImporter().Import(routeTxt));
 

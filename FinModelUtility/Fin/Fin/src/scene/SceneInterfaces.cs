@@ -44,16 +44,16 @@ public partial interface IScene : IResource, IDisposable {
 /// </summary>
 [GenerateReadOnly]
 public partial interface ISceneArea : IDisposable {
-  new IReadOnlyList<ISceneObject> Objects { get; }
-  ISceneObject AddObject();
+  new IReadOnlyList<ISceneNode> RootNodes { get; }
+  ISceneNode AddRootNode();
 
   new Color? BackgroundColor { get; set; }
 
   new IReadOnlyImage? BackgroundImage { get; set; }
   new float BackgroundImageScale { get; set; }
 
-  new ISceneObject? CustomSkyboxObject { get; set; }
-  ISceneObject CreateCustomSkyboxObject();
+  new ISceneNode? CustomSkyboxNode { get; set; }
+  ISceneNode CreateCustomSkyboxNode();
 }
 
 /// <summary>
@@ -62,39 +62,42 @@ public partial interface ISceneArea : IDisposable {
 ///   characters.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneObject : IDisposable {
+public partial interface ISceneNode : IDisposable {
+  new IReadOnlyList<ISceneNode> ChildNodes { get; }
+  ISceneNode AddChildNode();
+
   new Vector3 Position { get; }
   new IRotation Rotation { get; }
   new Vector3 Scale { get; }
 
-  ISceneObject SetPosition(float x, float y, float z);
+  ISceneNode SetPosition(float x, float y, float z);
 
-  ISceneObject SetRotationRadians(float xRadians,
+  ISceneNode SetRotationRadians(float xRadians,
                                   float yRadians,
                                   float zRadians);
 
-  ISceneObject SetRotationDegrees(float xDegrees,
+  ISceneNode SetRotationDegrees(float xDegrees,
                                   float yDegrees,
                                   float zDegrees);
 
-  ISceneObject SetScale(float x, float y, float z);
+  ISceneNode SetScale(float x, float y, float z);
 
   new IReadOnlyList<ISceneModel> Models { get; }
   ISceneModel AddSceneModel(IReadOnlyModel model);
 
   new IReadOnlyList<ISceneNodeComponent> Components { get; }
-  ISceneObject AddComponent(ISceneNodeComponent component);
+  ISceneNode AddComponent(ISceneNodeComponent component);
 }
 
 [UnionCandidate]
 public interface ISceneNodeComponent : IDisposable;
 
 public interface ISceneNodeTickComponent : ISceneNodeComponent {
-  void Tick(ISceneObjectInstance self);
+  void Tick(ISceneNodeInstance self);
 }
 
 public interface ISceneNodeRenderComponent : ISceneNodeComponent {
-  void Render(ISceneObjectInstance self);
+  void Render(ISceneNodeInstance self);
 }
 
 /// <summary>

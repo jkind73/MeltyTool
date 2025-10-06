@@ -108,7 +108,7 @@ public sealed class HWVisResource : HWXmlResource {
     }
 
     var sceneArea = this.Scene.AddArea();
-    var sceneObj = sceneArea.AddObject();
+    var sceneObj = sceneArea.AddRootNode();
 
     var firstModel = visModels[0];
 

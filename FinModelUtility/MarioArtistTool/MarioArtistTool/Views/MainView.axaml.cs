@@ -44,10 +44,10 @@ public partial class MainView : UserControl {
           var bundle = new Ma3d1ModelFileBundle(file);
           var model = new Ma3d1ModelLoader().Import(bundle);
 
-          var obj = area.AddObject();
+          var obj = area.AddRootNode();
           obj.AddSceneModel(model);
 
-          var lightingObj = area.AddObject();
+          var lightingObj = area.AddRootNode();
           scene.CreateDefaultLighting(lightingObj);
 
           break;
@@ -87,18 +87,23 @@ public partial class MainView : UserControl {
             config.MostRecentFileName = file.FullPath;
             config.Save();
 
-            var characterObj = area.AddObject();
-            characterObj.AddSceneModel(model);
+            var rotateTalentTickComponent = new RotateTalentTickComponent();
 
-            var talentHeadTickComponent = new RotateTalentTickComponent();
-            characterObj.AddComponent(talentHeadTickComponent);
+            var characterObj = area.AddRootNode();
 
-            var shadowObj = area.AddObject();
-            shadowObj.SetPosition(20, -20, -100);
-            shadowObj.SetScale(1, 1, 0);
-            shadowObj.AddComponent(new ShadowRenderer(model));
+            var modelObj = characterObj.AddChildNode();
+            modelObj.AddSceneModel(model);
+            modelObj.AddComponent(new RotateTalentTickComponent());
 
-            var lightingObj = area.AddObject();
+            var shadowPlacementObj = characterObj.AddChildNode();
+            shadowPlacementObj.SetPosition(20, -20, -100);
+            shadowPlacementObj.SetScale(1, 1, 0);
+
+            var shadowModelObj = shadowPlacementObj.AddChildNode();
+            shadowModelObj.AddComponent(new ShadowRenderer(model));
+            shadowModelObj.AddComponent(new RotateTalentTickComponent());
+
+            var lightingObj = area.AddRootNode();
             scene.CreateDefaultLighting(lightingObj);
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));
@@ -116,11 +121,11 @@ public partial class MainView : UserControl {
 
       if (area.BackgroundImage != null) {
         // Hides the default skybox.
-        area.CreateCustomSkyboxObject();
+        area.CreateCustomSkyboxNode();
       }
 
       if (sceneryRenderer != null) {
-        var backgroundObj = area.AddObject();
+        var backgroundObj = area.AddRootNode();
         backgroundObj.AddRenderable(sceneryRenderer);
       }
 

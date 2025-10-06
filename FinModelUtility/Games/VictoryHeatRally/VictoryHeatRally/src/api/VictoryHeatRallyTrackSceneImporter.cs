@@ -35,7 +35,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
     var finScene = new SceneImpl {FileBundle = fileBundle, Files = fileSet};
 
     var finArea = finScene.AddArea();
-    finScene.CreateDefaultLighting(finArea.AddObject());
+    finScene.CreateDefaultLighting(finArea.AddRootNode());
 
     var dataDirectory = fileBundle.DataDirectory;
     var spriteDirectory =
@@ -71,7 +71,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
 
       trackModel.Skin.Meshes[0].Primitives[0].SetMaterial(textureMaterial);
 
-      var trackObject = finArea.AddObject();
+      var trackObject = finArea.AddRootNode();
       trackObject.AddSceneModel(trackModel);
     }
 
@@ -102,7 +102,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
       var nodesMesh = nodesSkin.AddMesh();
       nodesMesh.AddLineStrip(nodeVertices);
 
-      var nodesObject = finArea.AddObject();
+      var nodesObject = finArea.AddRootNode();
       nodesObject.AddSceneModel(nodesModel);
     }
 
@@ -165,7 +165,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
                                    spriteMaterial,
                                    adjBone);
 
-          var spriteObject = finArea.AddObject();
+          var spriteObject = finArea.AddRootNode();
           spriteObject.SetPosition(position);
           spriteObject.AddSceneModel(spriteModel);
 
