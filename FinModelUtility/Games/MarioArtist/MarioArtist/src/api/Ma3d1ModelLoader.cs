@@ -11,19 +11,12 @@ using fin.util.sets;
 
 using marioartist.schema.polygon_studio;
 
-public record Ma3d1ModelFileBundle(IReadOnlyTreeFile MainFile)
+public sealed record Ma3d1ModelFileBundle(IReadOnlyTreeFile MainFile)
     : IModelFileBundle;
 
-public partial class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
+public sealed class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
   public IModel Import(Ma3d1ModelFileBundle fileBundle) {
     var ma3d1 = fileBundle.MainFile.ReadNew<Ma3d1>();
-
-    var meshQueue = new FinQueue<Mesh>();
-
-    var ma3d1Mesh = ma3d1.FirstMesh;
-    if (ma3d1Mesh != null) {
-      meshQueue.Enqueue(ma3d1Mesh);
-    }
 
     var finModel = new ModelImpl {
         FileBundle = fileBundle,
@@ -31,7 +24,7 @@ public partial class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
     };
 
     var finSkin = finModel.Skin;
-    while (meshQueue.TryDequeue(out ma3d1Mesh)) {
+    foreach (var ma3d1Mesh in ma3d1.Data.Meshes) {
       var finMesh = finSkin.AddMesh();
 
       var finVertices

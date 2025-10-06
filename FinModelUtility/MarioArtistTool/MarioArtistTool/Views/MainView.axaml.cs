@@ -36,6 +36,8 @@ public partial class MainView : UserControl {
       var area = scene.AddArea();
       IRenderable? sceneryRenderer = null;
 
+      var allowMovingCamera = true;
+
       switch (file?.FileType.ToLower()) {
         case ".ma3d1": {
           var bundle = new Ma3d1ModelFileBundle(file);
@@ -50,6 +52,7 @@ public partial class MainView : UserControl {
           break;
         }
         case ".tstlt": {
+          allowMovingCamera = false;
           try {
             var bundle = new TstltModelFileBundle(file);
             var model = TstltModelLoader.Import(bundle, out var gender);
@@ -119,6 +122,8 @@ public partial class MainView : UserControl {
 
       var sceneInstance = new SceneInstanceImpl(scene);
       this.ViewerGlPanel.Scene = sceneInstance;
+
+      this.ViewerGlPanel.AllowMovingCamera = allowMovingCamera;
 
       LoadingStatusService.IsLoading = false;
     };

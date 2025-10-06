@@ -1,0 +1,89 @@
+//------------------------------------------------
+//--- 010 Editor v15.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+BigEndian();
+
+local uint COLOR_IMAGE = 0x0000ff;
+local uint COLOR_COUNT = 0x00ff00;
+local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_ORIENTATION = 0x888800;
+local uint COLOR_HEADER = 0xffffff;
+local uint COLOR_INDEX = 0x00ffff;
+
+uint CeilAlign(uint x, uint align) {
+    local float fraction = (x / (1. * align));
+    return Ceil(fraction) * align;  
+}
+
+typedef struct {
+    ushort rgba;
+
+    local ubyte r = (ubyte) (((rgba >> 11) & 0x1F) / 31.0 * 255);
+    local ubyte g = (ubyte) (((rgba >> 6) & 0x1F) / 31.0 * 255);
+    local ubyte b = (ubyte) (((rgba >> 1) & 0x1F) / 31.0 * 255);
+    local ubyte a = (rgba & 1) ? 255 : 0;
+    
+    local uint color=(((uint) b) << 16) | (((uint) g) << 8) | r;
+    
+    FSeek(FTell() - 2);
+    ushort rgba <bgcolor=color>;
+} Argb1555;
+
+struct Argb1555Image(uint width, uint height) {
+    Argb1555 pixels[width * height] <optimize=false>;
+};
+
+Argb1555Image thumbnail(24, 24);
+
+struct Header {
+    uint meshCount <bgcolor=COLOR_COUNT>;
+    uint vertexCount <bgcolor=COLOR_COUNT>;
+    uint triangleCount <bgcolor=COLOR_COUNT>;
+
+    uint dataOffset <bgcolor=COLOR_OFFSET>;
+    uint dataSize;
+
+    uint textureOffset <bgcolor=COLOR_OFFSET>;
+    uint textureSize;    
+} header <bgcolor=COLOR_HEADER>;
+
+FSeek(header.dataOffset);
+
+local uint baseOffset;
+for (int meshI = 0; meshI < header.meshCount; ++meshI) {    
+    struct Mesh {
+        uint vertexCount <bgcolor=COLOR_COUNT>;
+        uint faceCount <bgcolor=COLOR_COUNT>;
+        uint triangleCount <bgcolor=COLOR_COUNT>;
+    
+        uint shadeType;
+    
+        uint verticesOffset <bgcolor=COLOR_OFFSET>;
+        uint verticesSize;
+        
+        uint unk0Offset <bgcolor=COLOR_OFFSET>;
+        uint unk0Size;
+    
+        uint trianglesOffset <bgcolor=COLOR_OFFSET>;
+        uint trianglesSize;
+    
+        uint textureStart <bgcolor=COLOR_OFFSET>;
+        uint textureSize;
+    
+        uint nextMeshOffset;
+    
+        uint edgeCount;
+    } mesh <bgcolor=COLOR_HEADER>; 
+   
+    FSeek(header.dataOffset + mesh.nextMeshOffset);    
+}
