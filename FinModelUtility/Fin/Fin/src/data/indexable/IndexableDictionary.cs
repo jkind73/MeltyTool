@@ -24,7 +24,7 @@ public partial interface IIndexableDictionary<in TIndexable, TValue>
   new TValue this[int index] { get; set; }
   new TValue this[TIndexable key] { get; set; }
 
-  new bool Remove(TIndexable key);
+  bool Remove(TIndexable key);
 }
 
 public static class IndexableDictionaryExtensions {

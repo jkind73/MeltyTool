@@ -113,7 +113,7 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
       this.sceneModel_.BoneTransformManager.CalculateMatrices(
           skeleton.Root,
           model.Skin.BoneWeights,
-          (animation, frame),
+          this.sceneModel_.SimpleBoneTransformView,
           BoneWeightTransformType.FOR_RENDERING);
       this.sceneModel_.TextureTransformManager.CalculateMatrices(
           model.MaterialManager.Textures,

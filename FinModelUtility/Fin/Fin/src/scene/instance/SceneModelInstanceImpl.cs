@@ -5,7 +5,7 @@ using fin.animation;
 using fin.data.dictionaries;
 using fin.math;
 using fin.model;
-using fin.model.util;
+using fin.model.skeleton;
 
 namespace fin.scene.instance;
 
@@ -14,11 +14,10 @@ public partial class SceneInstanceImpl {
     private readonly ListDictionary<IReadOnlyBone, ISceneModelInstance>
         children_ = new();
 
-    private IReadOnlyModelAnimation? animation_;
-
     public SceneModelInstanceImpl(IReadOnlySceneModel model) {
       this.Definition = model;
-      this.BoneTransformManager = new BoneTransformManager();
+      this.SimpleBoneTransformView = new();
+      this.BoneTransformManager = new BoneTransformManager2();
       this.TextureTransformManager = new TextureTransformManager();
 
       this.Init_(model);
@@ -28,8 +27,9 @@ public partial class SceneInstanceImpl {
                                    SceneModelInstanceImpl parent,
                                    IReadOnlyBone bone) {
       this.Definition = model;
-      this.BoneTransformManager =
-          new BoneTransformManager((parent.BoneTransformManager, bone));
+      this.SimpleBoneTransformView = new();
+      this.BoneTransformManager = new BoneTransformManager2(
+          (parent.BoneTransformManager, bone));
       this.TextureTransformManager = new TextureTransformManager();
 
       this.Init_(model);
@@ -50,6 +50,7 @@ public partial class SceneInstanceImpl {
       this.AnimationPlaybackManager = new FrameAdvancer {
           LoopPlayback = true,
       };
+
       this.Animation =
           this.Model.AnimationManager.Animations.FirstOrDefault();
       this.AnimationPlaybackManager.IsPlaying = true;
@@ -80,17 +81,20 @@ public partial class SceneInstanceImpl {
 
     public IReadOnlyModel Model => this.Definition.Model;
 
-    public IBoneTransformManager BoneTransformManager { get; }
+    public IBoneTransformManager2 BoneTransformManager { get; }
+    public SimpleBoneTransformView SimpleBoneTransformView { get; }
     public ITextureTransformManager TextureTransformManager { get; }
 
     public IReadOnlyModelAnimation? Animation {
-      get => this.animation_;
+      get;
       set {
-        if (this.animation_ == value) {
+        if (field == value) {
           return;
         }
 
-        this.animation_ = value;
+        field = value;
+        this.SimpleBoneTransformView.AnimatedBoneTransformView.Animation
+            = value;
 
         var apm = this.AnimationPlaybackManager;
         apm.Frame = 0;
@@ -101,9 +105,12 @@ public partial class SceneInstanceImpl {
 
     public IAnimationPlaybackManager AnimationPlaybackManager {
       get;
-      private set;
+      private set {
+        field = value;
+        this.SimpleBoneTransformView.AnimatedBoneTransformView.PlaybackManager
+            = value;
+      }
     }
-
 
     public float ViewerScale { get; set; } = 1;
   }

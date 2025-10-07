@@ -6,7 +6,7 @@ using fin.math.floats;
 using fin.math.matrix.four;
 using fin.model;
 using fin.model.impl;
-using fin.model.util;
+using fin.model.skeleton;
 using fin.util.asserts;
 
 using OpenTK.Graphics.OpenGL4;
@@ -91,13 +91,13 @@ public sealed class SkeletonRenderer
   }
 
   private readonly IndexableSet<IReadOnlyBone> selectedChildren_ = [];
-  private readonly IReadOnlyBoneTransformManager boneTransformManager_;
+  private readonly IReadOnlyBoneTransformManager2 boneTransformManager_;
 
   private readonly IReadOnlyIndexableDictionary<IReadOnlyBone, Vector3>
       scaleByBone_;
 
   public SkeletonRenderer(IReadOnlyModel model,
-                          IReadOnlyBoneTransformManager boneTransformManager) {
+                          IReadOnlyBoneTransformManager2 boneTransformManager) {
     var skeleton = model.Skeleton;
 
     this.boneTransformManager_ = boneTransformManager;

@@ -6,6 +6,7 @@ using fin.animation;
 using fin.data.dictionaries;
 using fin.math;
 using fin.model;
+using fin.model.skeleton;
 using fin.model.util;
 
 using readOnly;
@@ -90,7 +91,8 @@ public partial interface ISceneModelInstance : ITickable, IDisposable {
 
   new IReadOnlyModel Model { get; }
 
-  new IBoneTransformManager BoneTransformManager { get; }
+  new IBoneTransformManager2 BoneTransformManager { get; }
+  new SimpleBoneTransformView SimpleBoneTransformView { get; }
   new ITextureTransformManager TextureTransformManager { get; }
 
   new IReadOnlyModelAnimation? Animation { get; set; }
