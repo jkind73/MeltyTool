@@ -167,8 +167,18 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   public IReadOnlyModelAnimation? Animation {
     get;
     set {
+      if (field == value) {
+        return;
+      }
+
       field = value;
       this.SimpleBoneTransformView.AnimatedBoneTransformView.Animation = value;
+      
+      var apm = this.AnimationPlaybackManager;
+
+      apm.Frame = 0;
+      apm.FrameRate = (int) (value?.FrameRate ?? 20);
+      apm.TotalFrames = value?.FrameCount ?? 0;
     }
   }
 

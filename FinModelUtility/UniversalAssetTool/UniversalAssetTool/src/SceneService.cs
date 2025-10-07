@@ -1,6 +1,7 @@
 ﻿using fin.io.web;
 using fin.scene;
 using fin.services;
+using fin.ui.rendering.gl.scene;
 
 using uni.api;
 using uni.ui.winforms.common.fileTreeView;
@@ -35,9 +36,9 @@ public static class SceneService {
           };
           var area = scene.AddArea();
           var obj = area.AddRootNode();
-          obj.AddSceneModel(model);
 
-          scene.CreateDefaultLighting(obj);
+          var lighting = scene.CreateDefaultLighting(obj, [model]);
+          obj.AddComponent(new SimpleModelRenderComponent(model, lighting));
 
           OpenScene(fileTreeLeafNode, scene);
         };
