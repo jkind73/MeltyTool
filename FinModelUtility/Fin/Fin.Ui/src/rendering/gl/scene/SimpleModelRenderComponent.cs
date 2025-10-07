@@ -67,7 +67,8 @@ public sealed class SimpleModelRenderComponent : ISceneNodeRenderComponent {
     };
 
     this.needsToAlwaysUpdateMatrices_
-        = model.Skeleton.Bones.Any(b => b.FaceTowardsCamera);
+        = model.Skeleton.Bones.Any(b => b.FaceTowardsCameraType !=
+                                        FaceTowardsCameraType.NONE);
   }
 
   ~SimpleModelRenderComponent() => this.ReleaseUnmanagedResources_();
@@ -88,7 +89,7 @@ public sealed class SimpleModelRenderComponent : ISceneNodeRenderComponent {
     var skeleton = model.Skeleton;
 
     var rootBone = skeleton.Root;
-    if (rootBone.FaceTowardsCamera) {
+    if (rootBone.FaceTowardsCameraType != FaceTowardsCameraType.NONE) {
       var camera = Camera.Instance;
       var angle = camera.YawDegrees * FinTrig.DEG_2_RAD;
       var rotateYaw =
