@@ -3,6 +3,7 @@
 using fin.animation;
 using fin.model;
 using fin.scene;
+using fin.scene.components;
 using fin.ui.rendering;
 using fin.ui.rendering.gl.model;
 
@@ -27,7 +28,7 @@ public partial class SceneViewerPanel : UserControl, ISceneViewer {
       }
   }
 
-  public ISceneModelInstance? FirstSceneModel => this.impl_.FirstSceneModel;
+  public IAnimatableModel? FirstSceneModel => this.impl_.FirstSceneModel;
 
   public IAnimationPlaybackManager? AnimationPlaybackManager 
     => this.impl_.AnimationPlaybackManager;

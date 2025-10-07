@@ -3,6 +3,7 @@
 using fin.animation;
 using fin.model;
 using fin.scene;
+using fin.scene.components;
 using fin.ui;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
@@ -204,7 +205,7 @@ public sealed class SceneViewerGlPanel : BGlPanel, ISceneViewer {
       }
   }
 
-  public ISceneModelInstance? FirstSceneModel
+  public IAnimatableModel? FirstSceneModel
     => this.viewerImpl_.FirstSceneModel;
 
   public IAnimationPlaybackManager? AnimationPlaybackManager
