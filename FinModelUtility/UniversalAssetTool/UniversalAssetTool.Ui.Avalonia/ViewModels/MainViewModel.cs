@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using fin.model;
+using fin.scene;
 using fin.ui.avalonia;
 using fin.ui.avalonia.images;
 
@@ -81,18 +82,13 @@ public sealed class MainViewModel : BViewModel {
               FileBundle = fileBundle,
           };
 
-          var sceneModelInstances
-              = sceneInstance
-                .Areas
-                .SelectMany(a => a.RootNodes)
-                .SelectMany(o => o.Models)
-                .ToArray();
-
-          if (sceneModelInstances.Length == 1) {
-            var sceneModelInstance = sceneModelInstances.Single();
-            var model = sceneModelInstance.Model;
+          var animatableModels
+              = sceneInstance.EnumerateAllAnimatableModels().ToArray();
+          if (animatableModels.Length == 1) {
+            var animatableModel = animatableModels.Single();
+            var model = animatableModel.Model;
             var animationPlaybackManager
-                = sceneModelInstance.AnimationPlaybackManager;
+                = animatableModel.AnimationPlaybackManager;
 
             this.ModelPanel = new ModelPanelViewModel { Model = model };
 
@@ -101,7 +97,7 @@ public sealed class MainViewModel : BViewModel {
                 = animationPlaybackManager;
             animationsPanel.OnAnimationSelected
                 += (_, animation)
-                    => sceneModelInstance.Animation
+                    => animatableModel.Animation
                         = animation as IReadOnlyModelAnimation;
           } else {
             this.ModelPanel = null;

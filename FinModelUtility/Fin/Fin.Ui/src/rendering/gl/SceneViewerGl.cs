@@ -4,6 +4,7 @@ using fin.animation;
 using fin.io.web;
 using fin.model;
 using fin.scene;
+using fin.scene.components;
 using fin.services;
 using fin.ui.rendering.gl.model;
 using fin.ui.rendering.gl.scene;
@@ -60,11 +61,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
     }
   }
 
-  public ISceneModelInstance? FirstSceneModel
-    => this.Scene
-           ?.Areas.FirstOrDefault()
-           ?.RootNodes.FirstOrDefault()
-           ?.Models.FirstOrDefault();
+  public IAnimatableModel? FirstSceneModel
+    => this.Scene?.EnumerateAllAnimatableModels().FirstOrDefault();
 
   public IAnimationPlaybackManager? AnimationPlaybackManager
     => this.FirstSceneModel?.AnimationPlaybackManager;

@@ -1,17 +1,18 @@
-﻿using fin.color;
-using fin.data.queues;
-using fin.model;
-using fin.schema.vector;
-
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
-using System;
-using System.Drawing;
 
+using fin.color;
+using fin.data.queues;
+using fin.model;
 using fin.model.util;
+using fin.scene.components;
+using fin.schema.vector;
 using fin.ui;
 using fin.ui.rendering;
+using fin.util.linq;
 
 
 namespace fin.scene;
@@ -53,9 +54,10 @@ public static class SceneExtensions {
     public void Render(ISceneNodeInstance self) => impl.Render();
   }
 
-  public static IEnumerable<ISceneNode> EnumerateAllNodes(this IScene scene) {
-    var queue
-        = new FinQueue<ISceneNode>(scene.Areas.SelectMany(a => a.RootNodes));
+  public static IEnumerable<IReadOnlySceneNode> EnumerateAllNodes(
+      this IReadOnlyScene scene) {
+    var queue = new FinQueue<IReadOnlySceneNode>(
+            scene.Areas.SelectMany(a => a.RootNodes));
     while (queue.TryDequeue(out var node)) {
       yield return node;
       queue.Enqueue(node.ChildNodes);
@@ -63,10 +65,18 @@ public static class SceneExtensions {
   }
 
   public static IEnumerable<IReadOnlyModel> EnumerateAllModels(
-      this IScene scene) {
-    var queue
-        = new FinQueue<IReadOnlySceneModel>(
-            scene.EnumerateAllNodes().SelectMany(n => n.Models));
+      this IReadOnlyScene scene) {
+    var queue = new FinQueue<IReadOnlySceneModel>();
+    foreach (var node in scene.EnumerateAllNodes()) {
+      queue.Enqueue(node.Models);
+
+      foreach (var modelRenderComponent in node.Components
+                                               .WhereIs<ISceneNodeComponent,
+                                                   IModelRenderComponent>()) {
+        yield return modelRenderComponent.Model;
+      }
+    }
+
     while (queue.TryDequeue(out var model)) {
       yield return model.Model;
       queue.Enqueue(model.Children.Values);

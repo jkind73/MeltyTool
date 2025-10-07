@@ -7,6 +7,7 @@ using fin.animation;
 using fin.config.avalonia.services;
 using fin.model;
 using fin.scene;
+using fin.scene.components;
 using fin.services;
 using fin.ui.avalonia.gl;
 using fin.ui.rendering;
@@ -272,8 +273,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     }
   }
 
-  public ISceneModelInstance? FirstSceneModel
-    => this.viewerImpl_.FirstSceneModel;
+  public IAnimatableModel? FirstSceneModel => this.viewerImpl_.FirstSceneModel;
 
   public IAnimationPlaybackManager? AnimationPlaybackManager
     => this.viewerImpl_.AnimationPlaybackManager;

@@ -9,11 +9,12 @@ using fin.model;
 using fin.model.skeleton;
 using fin.model.util;
 using fin.scene;
+using fin.scene.components;
 using fin.ui.rendering.gl.model;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SimpleModelRenderComponent : ISceneNodeRenderComponent {
+public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
   private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];

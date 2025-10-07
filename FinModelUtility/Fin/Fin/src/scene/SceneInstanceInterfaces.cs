@@ -8,6 +8,7 @@ using fin.math;
 using fin.model;
 using fin.model.skeleton;
 using fin.model.util;
+using fin.scene.components;
 
 using readOnly;
 
@@ -66,12 +67,12 @@ public partial interface ISceneNodeInstance : ITickable, IDisposable {
     => this.SetPosition(position.X, position.Y, position.Z);
 
   ISceneNodeInstance SetRotationRadians(float xRadians,
-                                          float yRadians,
-                                          float zRadians);
+                                        float yRadians,
+                                        float zRadians);
 
   ISceneNodeInstance SetRotationDegrees(float xDegrees,
-                                          float yDegrees,
-                                          float zDegrees);
+                                        float yDegrees,
+                                        float zDegrees);
 
   new IReadOnlyList<ISceneModelInstance> Models { get; }
 
@@ -84,19 +85,16 @@ public partial interface ISceneNodeInstance : ITickable, IDisposable {
 ///   onto bones.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneModelInstance : ITickable, IDisposable {
+public partial interface ISceneModelInstance
+    : IAnimatableModel, ITickable, IDisposable {
   new IReadOnlySceneModel Definition { get; }
 
-  new IReadOnlyListDictionary<IReadOnlyBone, ISceneModelInstance> Children { get; }
+  new IReadOnlyListDictionary<IReadOnlyBone, ISceneModelInstance> Children {
+    get;
+  }
 
-  new IReadOnlyModel Model { get; }
-
-  new IBoneTransformManager2 BoneTransformManager { get; }
   new SimpleBoneTransformView SimpleBoneTransformView { get; }
   new ITextureTransformManager TextureTransformManager { get; }
-
-  new IReadOnlyModelAnimation? Animation { get; set; }
-  new IAnimationPlaybackManager AnimationPlaybackManager { get; }
 
   new float ViewerScale { get; set; }
 }
