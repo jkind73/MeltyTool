@@ -16,13 +16,15 @@ public partial interface IIndexableDictionary<in TIndexable, TValue>
   // https://github.com/dotnet/csharplang/discussions/5623
   [Const]
   new bool ContainsKey(int index);
-  
+
   [Const]
   new bool ContainsKey(TIndexable key);
 
   void Clear();
   new TValue this[int index] { get; set; }
   new TValue this[TIndexable key] { get; set; }
+
+  new bool Remove(TIndexable key);
 }
 
 public static class IndexableDictionaryExtensions {
@@ -81,6 +83,14 @@ public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
     return this.impl_[index].hasValue;
   }
 
+  public bool Remove(TIndexable key) {
+    if (!this.ContainsKey(key)) {
+      return false;
+    }
+
+    this.impl_[key.Index] = (false, default!);
+    return true;
+  }
 
   IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
