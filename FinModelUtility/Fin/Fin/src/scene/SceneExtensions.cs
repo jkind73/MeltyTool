@@ -18,7 +18,7 @@ namespace fin.scene;
 
 public static class SceneExtensions {
   public static ISceneNode SetPosition(this ISceneNode sceneNode,
-                                         Vector3 position)
+                                       Vector3 position)
     => sceneNode.SetPosition(position.X, position.Y, position.Z);
 
 
@@ -34,7 +34,8 @@ public static class SceneExtensions {
 
   public static void AddRenderable(this ISceneNode sceneNode,
                                    IRenderable renderable)
-    => sceneNode.AddComponent(new RenderableSceneNodeRenderComponent(renderable));
+    => sceneNode.AddComponent(
+        new RenderableSceneNodeRenderComponent(renderable));
 
   public static void AddRenderComponent(this ISceneNode sceneNode,
                                         Action<ISceneNodeInstance> handler)
@@ -46,7 +47,7 @@ public static class SceneExtensions {
     public void Render(ISceneNodeInstance self) => handler(self);
   }
 
-  private class RenderableSceneNodeRenderComponent(IRenderable impl) 
+  private class RenderableSceneNodeRenderComponent(IRenderable impl)
       : ISceneNodeRenderComponent {
     public void Dispose() => (impl as IDisposable)?.Dispose();
     public void Render(ISceneNodeInstance self) => impl.Render();
@@ -61,21 +62,30 @@ public static class SceneExtensions {
     }
   }
 
-  public static IEnumerable<IReadOnlyModel> EnumerateAllModels(this IScene scene) {
+  public static IEnumerable<IReadOnlyModel> EnumerateAllModels(
+      this IScene scene) {
     var queue
-        = new FinQueue<IReadOnlySceneModel>(scene.EnumerateAllNodes().SelectMany(n => n.Models));
+        = new FinQueue<IReadOnlySceneModel>(
+            scene.EnumerateAllNodes().SelectMany(n => n.Models));
     while (queue.TryDequeue(out var model)) {
       yield return model.Model;
       queue.Enqueue(model.Children.Values);
     }
   }
 
-  public static void CreateDefaultLighting(this IScene scene,
-                                           ISceneNode lightingOwner) {
+  public static ILighting? CreateDefaultLighting(this IScene scene,
+                                                 ISceneNode lightingOwner)
+    => scene.CreateDefaultLighting(lightingOwner,
+                                   scene.EnumerateAllModels().Distinct());
+
+  public static ILighting? CreateDefaultLighting(
+      this IScene scene,
+      ISceneNode lightingOwner,
+      IEnumerable<IReadOnlyModel> finModels) {
     var needsLights = false;
     var neededLightIndices = new HashSet<int>();
 
-    foreach (var finModel in scene.EnumerateAllModels().Distinct()) {
+    foreach (var finModel in finModels) {
       var useLighting =
           new UseLightingDetector().ShouldUseLightingFor(finModel);
       if (!useLighting) {
@@ -109,7 +119,7 @@ public static class SceneExtensions {
     }
 
     if (!needsLights) {
-      return;
+      return null;
     }
 
     bool attachFirstLightToCamera = false;
@@ -150,7 +160,7 @@ public static class SceneExtensions {
       light.Strength = individualStrength;
 
 
-      var defaultAttenuation = new Vector3f {X = 1.075f};
+      var defaultAttenuation = new Vector3f { X = 1.075f };
       light.SetAttenuationFunction(AttenuationFunction.SPECULAR);
       light.SetCosineAttenuation(defaultAttenuation);
       light.SetDistanceAttenuation(defaultAttenuation);
@@ -183,5 +193,7 @@ public static class SceneExtensions {
         firstLight.SetNormal(camera.Normal);
       });
     }
+
+    return lighting;
   }
 }

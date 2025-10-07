@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Numerics;
 
 using Avalonia.Controls;
@@ -8,6 +9,7 @@ using fin.scene;
 using fin.scene.instance;
 using fin.services;
 using fin.ui.rendering;
+using fin.ui.rendering.gl.scene;
 
 using marioartist.api;
 using marioartist.schema.talent_studio;
@@ -87,12 +89,24 @@ public partial class MainView : UserControl {
             config.MostRecentFileName = file.FullPath;
             config.Save();
 
-            var rotateTalentTickComponent = new RotateTalentTickComponent();
+            var lightingObj = area.AddRootNode();
+            var lighting = scene.CreateDefaultLighting(lightingObj, [model]);
+
+            var modelRenderComponent
+                = new SimpleModelRenderComponent(model, lighting);
 
             var characterObj = area.AddRootNode();
+            characterObj.AddComponent(
+                new LookAtMouseTickComponent(
+                    modelRenderComponent.SimpleBoneTransformView,
+                    model.Skeleton
+                         .Bones
+                         .Single(b => b.Name?.StartsWith(
+                                          $"{JointIndex.NECK}:") ??
+                                      false)));
 
             var modelObj = characterObj.AddChildNode();
-            modelObj.AddSceneModel(model);
+            modelObj.AddComponent(modelRenderComponent);
             modelObj.AddComponent(new RotateTalentTickComponent());
 
             var shadowPlacementObj = characterObj.AddChildNode();
@@ -100,11 +114,9 @@ public partial class MainView : UserControl {
             shadowPlacementObj.SetScale(1, 1, 0);
 
             var shadowModelObj = shadowPlacementObj.AddChildNode();
-            shadowModelObj.AddComponent(new ShadowRenderer(model));
+            shadowModelObj.AddComponent(
+                new ShadowRenderComponent(modelRenderComponent));
             shadowModelObj.AddComponent(new RotateTalentTickComponent());
-
-            var lightingObj = area.AddRootNode();
-            scene.CreateDefaultLighting(lightingObj);
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));
             this.ViewerGlPanel.Scene = null;

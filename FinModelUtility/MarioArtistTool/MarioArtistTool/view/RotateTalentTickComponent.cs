@@ -14,7 +14,7 @@ public class RotateTalentTickComponent : ISceneNodeTickComponent {
       return;
     }
 
-    var mouseX = MainViewInputService.NormalizedMousePosition.X - .5f;
+    var mouseX = MainViewInputService.NormalizedMousePosition.X;
     var mouseDeltaX = 0f;
     if (this.prevMouseX_ != null) {
       mouseDeltaX = mouseX - this.prevMouseX_.Value;

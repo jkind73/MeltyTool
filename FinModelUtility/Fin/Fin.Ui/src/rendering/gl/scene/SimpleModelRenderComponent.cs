@@ -1,43 +1,59 @@
 ﻿using System.Numerics;
 
+using fin.animation;
 using fin.config;
-using fin.data.dictionaries;
+using fin.math;
 using fin.math.matrix.four;
 using fin.math.rotations;
 using fin.model;
+using fin.model.skeleton;
 using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.model;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneModelRenderer : IRenderable, IDisposable {
-  private readonly ISceneModelInstance sceneModel_;
+public sealed class SimpleModelRenderComponent : ISceneNodeRenderComponent {
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
   private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
   private bool isBoneSelected_;
 
-  private readonly List<(IReadOnlyBone, SceneModelRenderer[])>
-      children_ = [];
+  private bool needsToAlwaysUpdateMatrices_;
 
-  public SceneModelRenderer(ISceneModelInstance sceneModel,
-                            IReadOnlyLighting? lighting) {
-    this.sceneModel_ = sceneModel;
-    this.meshes_ = sceneModel.Model.Skin.Meshes.ToArray();
+  public SimpleModelRenderComponent(IReadOnlyModel model,
+                                    IReadOnlyLighting? lighting) {
+    this.Model = model;
+    this.meshes_ = model.Skin.Meshes.ToArray();
 
-    var model = sceneModel.Model;
+    this.SimpleBoneTransformView = new();
+
+    this.BoneTransformManager = new BoneTransformManager2();
+    this.BoneTransformManager.CalculateStaticMatricesForManualProjection(
+        this.Model,
+        true);
+
+    this.AnimationPlaybackManager = new FrameAdvancer {
+        LoopPlayback = true,
+    };
+
+    this.Animation =
+        this.Model.AnimationManager.Animations.FirstOrDefault();
+    this.AnimationPlaybackManager.IsPlaying = true;
+
+    this.TextureTransformManager = new TextureTransformManager();
+
     this.modelRenderer_ =
         new ModelRenderer(model,
-                            lighting,
-                            sceneModel.BoneTransformManager,
-                            sceneModel.TextureTransformManager) {
+                          lighting,
+                          this.BoneTransformManager,
+                          this.TextureTransformManager) {
             HiddenMeshes = this.hiddenMeshes_,
             UseLighting = new UseLightingDetector().ShouldUseLightingFor(model)
         };
 
     this.SkeletonRenderer
-        = new SkeletonRenderer(model, this.sceneModel_.BoneTransformManager);
+        = new SkeletonRenderer(model, this.BoneTransformManager);
 
     SelectedBoneService.OnBoneSelected += selectedBone => {
       var isBoneInModel = false;
@@ -50,36 +66,25 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
           = this.isBoneSelected_ ? selectedBone : null;
     };
 
-    foreach (var (bone, boneChildren) in sceneModel.Children.GetPairs()) {
-      this.children_.Add(
-          (bone,
-           boneChildren.Select(child => new SceneModelRenderer(child, lighting))
-                       .ToArray()));
-    }
+    this.needsToAlwaysUpdateMatrices_
+        = model.Skeleton.Bones.Any(b => b.FaceTowardsCamera);
   }
 
-  ~SceneModelRenderer() => this.ReleaseUnmanagedResources_();
+  ~SimpleModelRenderComponent() => this.ReleaseUnmanagedResources_();
 
   public void Dispose() {
     this.ReleaseUnmanagedResources_();
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_() {
-    this.modelRenderer_.Dispose();
-    foreach (var (_, children) in this.children_) {
-      foreach (var child in children) {
-        child.Dispose();
-      }
-    }
-  }
+  private void ReleaseUnmanagedResources_() => this.modelRenderer_.Dispose();
 
   public ISkeletonRenderer SkeletonRenderer { get; }
 
-  public void Render() {
+  public void Render(ISceneNodeInstance _) {
     GlTransform.PushMatrix();
 
-    var model = this.sceneModel_.Model;
+    var model = this.Model;
     var skeleton = model.Skeleton;
 
     var rootBone = skeleton.Root;
@@ -94,8 +99,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
           SystemMatrix4x4Util.FromRotation(rotationBuffer));
     }
 
-    var animation = this.sceneModel_.Animation;
-    var animationPlaybackManager = this.sceneModel_.AnimationPlaybackManager;
+    var animation = this.Animation;
+    var animationPlaybackManager = this.AnimationPlaybackManager;
 
     this.hiddenMeshes_.Clear();
     foreach (var mesh in this.meshes_) {
@@ -104,16 +109,20 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
       }
     }
 
-    if (animation != null) {
+    if (animation != null ||
+        this.needsToAlwaysUpdateMatrices_ ||
+        this.SimpleBoneTransformView.HasAnyOverrides) {
       animationPlaybackManager.Tick();
-
-      var frame = (float) animationPlaybackManager.Frame;
-      this.sceneModel_.BoneTransformManager.CalculateMatrices(
+      this.BoneTransformManager.CalculateMatrices(
           skeleton.Root,
           model.Skin.BoneWeights,
-          this.sceneModel_.SimpleBoneTransformView,
+          this.SimpleBoneTransformView,
           BoneWeightTransformType.FOR_RENDERING);
-      this.sceneModel_.TextureTransformManager.CalculateMatrices(
+    }
+
+    if (animation != null) {
+      var frame = (float) animationPlaybackManager.Frame;
+      this.TextureTransformManager.CalculateMatrices(
           model.MaterialManager.Textures,
           (animation, frame));
 
@@ -133,7 +142,7 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
         }
       }
     } else {
-      this.sceneModel_.TextureTransformManager.CalculateMatrices(
+      this.TextureTransformManager.CalculateMatrices(
           model.MaterialManager.Textures,
           null);
     }
@@ -144,19 +153,29 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
       this.SkeletonRenderer.Render();
     }
 
-    foreach (var (bone, boneChildren) in this.children_) {
-      GlTransform.PushMatrix();
-
-      GlTransform.MultMatrix(
-          this.sceneModel_.BoneTransformManager.GetWorldMatrix(bone).Impl);
-
-      foreach (var child in boneChildren) {
-        child.Render();
-      }
-
-      GlTransform.PopMatrix();
-    }
-
     GlTransform.PopMatrix();
+  }
+
+  public IReadOnlyModel Model { get; }
+
+  public IBoneTransformManager2 BoneTransformManager { get; }
+  public SimpleBoneTransformView SimpleBoneTransformView { get; }
+  public ITextureTransformManager TextureTransformManager { get; }
+
+  public IReadOnlyModelAnimation? Animation {
+    get;
+    set {
+      field = value;
+      this.SimpleBoneTransformView.AnimatedBoneTransformView.Animation = value;
+    }
+  }
+
+  public IAnimationPlaybackManager AnimationPlaybackManager {
+    get;
+    set {
+      field = value;
+      this.SimpleBoneTransformView.AnimatedBoneTransformView.PlaybackManager
+          = value;
+    }
   }
 }

@@ -18,7 +18,6 @@ namespace fin.ui.rendering.gl.model;
 public interface ISkeletonRenderer : IRenderable {
   IReadOnlySkeleton Skeleton { get; }
   IReadOnlyBone? SelectedBone { get; set; }
-  float Scale { get; set; }
 }
 
 /// <summary>
@@ -142,8 +141,6 @@ public sealed class SkeletonRenderer
       scaleByBone[bone] = Vector3.One;
     }
   }
-
-  public float Scale { get; set; } = 1;
 
   public void Render() {
     GL.LineWidth(1);

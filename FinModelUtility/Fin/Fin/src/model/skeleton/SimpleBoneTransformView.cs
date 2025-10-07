@@ -33,6 +33,11 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
 
   public AnimatedBoneTransformView AnimatedBoneTransformView { get; }
 
+  public bool HasAnyOverrides
+    => this.worldTranslationOverrides_.Count > 0 ||
+       this.worldRotationOverrides_.Count > 0 ||
+       this.worldScaleOverrides_.Count > 0;
+
   public void OverrideWorldTranslation(IReadOnlyBone bone,
                                        Vector3 translation)
     => this.worldTranslationOverrides_[bone] = translation;
@@ -60,6 +65,12 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
   }
 
   public bool TryGetWorldTranslation(out Vector3 translation) {
+    if (this.worldTranslationOverrides_.TryGetValue(
+            this.bone_,
+            out translation)) {
+      return true;
+    }
+
     foreach (var impl in this.impls_) {
       if (impl.TryGetWorldTranslation(out translation)) {
         return true;
@@ -71,6 +82,12 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
   }
 
   public bool TryGetWorldRotation(out Quaternion rotation) {
+    if (this.worldRotationOverrides_.TryGetValue(
+            this.bone_,
+            out rotation)) {
+      return true;
+    }
+
     if (this.bone_?.IgnoreParentScale ?? false) {
       var camera = Camera.Instance;
       var yawDegrees = camera?.YawDegrees ?? 0;
@@ -93,6 +110,12 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
   }
 
   public bool TryGetWorldScale(out Vector3 scale) {
+    if (this.worldScaleOverrides_.TryGetValue(
+            this.bone_,
+            out scale)) {
+      return true;
+    }
+
     if (this.bone_?.IgnoreParentScale ?? false) {
       return this.TryGetLocalScale(out scale);
     }

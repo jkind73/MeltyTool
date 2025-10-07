@@ -11,6 +11,8 @@ namespace fin.data.indexable;
 public partial interface IIndexableDictionary<in TIndexable, TValue>
     : IEnumerable<TValue>
     where TIndexable : IIndexable {
+  new int Count { get; }
+
   // Have to specify only contains key because "out" method parameters
   // aren't allowed to be covariant:
   // https://github.com/dotnet/csharplang/discussions/5623
@@ -49,6 +51,8 @@ public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
 
   public IndexableDictionary() : this(0) { }
 
+  public int Count { get; private set; }
+
   public void Clear() => this.impl_.Clear();
 
   public TValue this[int index] {
@@ -60,6 +64,10 @@ public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
 
       while (this.impl_.Count <= index) {
         this.impl_.Add((false, default));
+      }
+
+      if (!this.impl_[index].hasValue) {
+        ++this.Count;
       }
 
       this.impl_[index] = (true, value);
@@ -88,6 +96,7 @@ public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
       return false;
     }
 
+    --this.Count;
     this.impl_[key.Index] = (false, default!);
     return true;
   }
