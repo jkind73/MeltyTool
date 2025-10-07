@@ -14,6 +14,12 @@ public partial interface ISkeleton : IEnumerable<IReadOnlyBone> {
   new IReadOnlyList<IBone> Bones { get; }
 }
 
+public enum FaceTowardsCameraType {
+  NONE,
+  YAW_ONLY,
+  YAW_AND_PITCH
+}
+
 [GenerateReadOnly]
 public partial interface ILeafBone : IIndexable, INamed {
   new IBone Root { get; }
@@ -23,8 +29,11 @@ public partial interface ILeafBone : IIndexable, INamed {
 
   new bool IgnoreParentScale { get; set; }
 
-  IBone AlwaysFaceTowardsCamera(in Quaternion adjustment);
-  new bool FaceTowardsCamera { get; }
+  IBone AlwaysFaceTowardsCamera(
+      FaceTowardsCameraType faceTowardsCameraType,
+      in Quaternion adjustment);
+
+  new FaceTowardsCameraType FaceTowardsCameraType { get; }
   new Quaternion FaceTowardsCameraAdjustment { get; }
 }
 

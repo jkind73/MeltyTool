@@ -83,7 +83,7 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
     var skeleton = model.Skeleton;
 
     var rootBone = skeleton.Root;
-    if (rootBone.FaceTowardsCamera) {
+    if (rootBone.FaceTowardsCameraType != FaceTowardsCameraType.NONE) {
       var camera = Camera.Instance;
       var angle = camera.YawDegrees * FinTrig.DEG_2_RAD;
       var rotateYaw =

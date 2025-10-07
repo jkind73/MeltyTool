@@ -411,7 +411,8 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
           var gloSpritePosition = gloSprite.SpritePosition;
 
           var finSpriteBone = finBone.AddChild(gloSpritePosition);
-          finSpriteBone.AlwaysFaceTowardsCamera(Quaternion.Identity);
+          finSpriteBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
+                                                Quaternion.Identity);
           var finSpriteBoneWeights =
               finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                              finSpriteBone);

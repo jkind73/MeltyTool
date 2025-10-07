@@ -245,7 +245,10 @@ public sealed class BoneTransformManager : IBoneTransformManager {
       var localRotation = animationLocalRotation ?? localTransform.Rotation;
       var localScale = animationLocalScale ?? localTransform.Scale;
 
-      if (bone is { IgnoreParentScale: false, FaceTowardsCamera: false }) {
+      if (bone is {
+              IgnoreParentScale: false,
+              FaceTowardsCameraType: FaceTowardsCameraType.NONE
+          }) {
         var localMatrix = SystemMatrix4x4Util.FromTrs(localTranslation,
           localRotation,
           localScale);
@@ -442,7 +445,8 @@ public static class BoneTransformManagerExtensions {
     // Extracts translation/rotation/scale.
     matrix.CopyTranslationInto(out var translationBuffer);
     Quaternion rotationBuffer;
-    if (bone.FaceTowardsCamera && !isFirstPass) {
+    if (bone.FaceTowardsCameraType != FaceTowardsCameraType.NONE &&
+        !isFirstPass) {
       var camera = Camera.Instance;
       var yawDegrees = camera?.YawDegrees ?? 0;
       var yawRadians = yawDegrees * FinTrig.DEG_2_RAD;

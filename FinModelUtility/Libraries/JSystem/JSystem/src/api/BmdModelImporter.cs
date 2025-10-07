@@ -130,7 +130,8 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
               Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0);
           var rotatePitch =
               Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
-          bone.AlwaysFaceTowardsCamera(rotateYaw * rotatePitch);
+          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
+                                       rotateYaw * rotatePitch);
         }
 
         // Japanese word for light
@@ -138,7 +139,8 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
             node.Name.StartsWith("hikari")) {
           var rotateYaw =
               Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0);
-          bone.AlwaysFaceTowardsCamera(rotateYaw);
+          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
+                                       rotateYaw);
         }
       }
 

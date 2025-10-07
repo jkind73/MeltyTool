@@ -147,7 +147,8 @@ public sealed class Celeste64MapSceneImporter
       glowTextureMaterial.DiffuseColor = Color.Yellow;
 
       var glowBone = glowModel.Skeleton.Root;
-      glowBone.AlwaysFaceTowardsCamera(Quaternion.Identity);
+      glowBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
+                                       Quaternion.Identity);
 
       var glowSkin = glowModel.Skin;
       glowSkin.AddMesh()

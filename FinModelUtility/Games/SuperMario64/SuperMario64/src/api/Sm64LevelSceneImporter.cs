@@ -110,7 +110,9 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
     if (billboard) {
       var rotateYaw =
           Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0);
-      finModel.Skeleton.Root.AlwaysFaceTowardsCamera(rotateYaw);
+      finModel.Skeleton.Root.AlwaysFaceTowardsCamera(
+          FaceTowardsCameraType.YAW_ONLY,
+          rotateYaw);
     }
   }
 }

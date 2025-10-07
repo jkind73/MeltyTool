@@ -88,14 +88,19 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
       return true;
     }
 
-    if (this.bone_?.IgnoreParentScale ?? false) {
+    var faceTowardsCameraType = this.bone_?.FaceTowardsCameraType ??
+                                FaceTowardsCameraType.NONE;
+    if (faceTowardsCameraType != FaceTowardsCameraType.NONE) {
       var camera = Camera.Instance;
-      var yawDegrees = camera?.YawDegrees ?? 0;
-      var yawRadians = yawDegrees * FinTrig.DEG_2_RAD;
-      var yawRotation =
-          Quaternion.CreateFromYawPitchRoll(yawRadians, 0, 0);
+      var cameraRotation =
+          Quaternion.CreateFromYawPitchRoll(
+              camera.YawDegrees * FinTrig.DEG_2_RAD,
+              faceTowardsCameraType == FaceTowardsCameraType.YAW_AND_PITCH
+                  ? camera.PitchDegrees * FinTrig.DEG_2_RAD
+                  : 0,
+              0);
 
-      rotation = yawRotation * this.bone_.FaceTowardsCameraAdjustment;
+      rotation = cameraRotation * this.bone_.FaceTowardsCameraAdjustment;
       return true;
     }
 

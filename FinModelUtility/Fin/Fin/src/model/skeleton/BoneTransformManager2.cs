@@ -153,7 +153,10 @@ public sealed class BoneTransformManager2 : IBoneTransformManager2 {
         var localRotation = localTransform.Rotation;
         var localScale = localTransform.Scale;
 
-        if (bone is { IgnoreParentScale: false, FaceTowardsCamera: false }) {
+        if (bone is {
+                IgnoreParentScale: false,
+                FaceTowardsCameraType: FaceTowardsCameraType.NONE
+            }) {
           var localMatrix = SystemMatrix4x4Util.FromTrs(localTranslation,
             localRotation,
             localScale);

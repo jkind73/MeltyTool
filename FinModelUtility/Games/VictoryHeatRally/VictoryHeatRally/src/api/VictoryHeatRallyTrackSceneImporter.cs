@@ -149,6 +149,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
 
           var spriteRootBone = spriteModel.Skeleton.Root;
           spriteRootBone.AlwaysFaceTowardsCamera(
+              FaceTowardsCameraType.YAW_ONLY,
               Quaternion.Identity);
 
           var adjBone = spriteRootBone.AddChild(0, 0, 0);
