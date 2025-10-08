@@ -444,17 +444,8 @@ public static class BoneTransformManagerExtensions {
 
     // Extracts translation/rotation/scale.
     matrix.CopyTranslationInto(out var translationBuffer);
-    Quaternion rotationBuffer;
-    if (bone.FaceTowardsCameraType != FaceTowardsCameraType.NONE &&
-        !isFirstPass) {
-      var camera = Camera.Instance;
-      var yawDegrees = camera?.YawDegrees ?? 0;
-      var yawRadians = yawDegrees * FinTrig.DEG_2_RAD;
-      var yawRotation =
-          Quaternion.CreateFromYawPitchRoll(yawRadians, 0, 0);
-
-      rotationBuffer = yawRotation * bone.FaceTowardsCameraAdjustment;
-    } else {
+    if (!(!isFirstPass &&
+          bone.TryGetFaceCameraQuaternion(out var rotationBuffer))) {
       matrix.CopyRotationInto(out rotationBuffer);
     }
 

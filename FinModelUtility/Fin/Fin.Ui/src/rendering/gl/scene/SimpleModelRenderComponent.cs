@@ -89,16 +89,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     var model = this.Model;
     var skeleton = model.Skeleton;
 
-    var rootBone = skeleton.Root;
-    if (rootBone.FaceTowardsCameraType != FaceTowardsCameraType.NONE) {
-      var camera = Camera.Instance;
-      var angle = camera.YawDegrees * FinTrig.DEG_2_RAD;
-      var rotateYaw =
-          Quaternion.CreateFromYawPitchRoll(angle, 0, 0);
-
-      var rotationBuffer = rotateYaw * rootBone.FaceTowardsCameraAdjustment;
-      GlTransform.MultMatrix(
-          SystemMatrix4x4Util.FromRotation(rotationBuffer));
+    if (skeleton.Root.TryGetFaceCameraQuaternion(out var rootRotation)) {
+      GlTransform.MultMatrix(SystemMatrix4x4Util.FromRotation(rootRotation));
     }
 
     var animation = this.Animation;
@@ -173,7 +165,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
       field = value;
       this.SimpleBoneTransformView.AnimatedBoneTransformView.Animation = value;
-      
+
       var apm = this.AnimationPlaybackManager;
 
       apm.Frame = 0;

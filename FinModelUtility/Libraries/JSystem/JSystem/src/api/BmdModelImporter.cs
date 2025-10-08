@@ -127,11 +127,9 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
       if (node.Entry.JointType == JointType.MANUAL) {
         if (node.Name.StartsWith("balloon")) {
           var rotateYaw =
-              Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0);
-          var rotatePitch =
-              Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
-          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
-                                       rotateYaw * rotatePitch);
+              Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0);
+          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
+                                       rotateYaw);
         }
 
         // Japanese word for light

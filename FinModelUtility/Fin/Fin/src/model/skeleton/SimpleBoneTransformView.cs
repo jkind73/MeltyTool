@@ -2,6 +2,7 @@
 
 using fin.data.indexable;
 using fin.math.rotations;
+using fin.model.util;
 using fin.ui;
 
 namespace fin.model.skeleton;
@@ -88,19 +89,7 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
       return true;
     }
 
-    var faceTowardsCameraType = this.bone_?.FaceTowardsCameraType ??
-                                FaceTowardsCameraType.NONE;
-    if (faceTowardsCameraType != FaceTowardsCameraType.NONE) {
-      var camera = Camera.Instance;
-      var cameraRotation =
-          Quaternion.CreateFromYawPitchRoll(
-              camera.YawDegrees * FinTrig.DEG_2_RAD,
-              faceTowardsCameraType == FaceTowardsCameraType.YAW_AND_PITCH
-                  ? camera.PitchDegrees * FinTrig.DEG_2_RAD
-                  : 0,
-              0);
-
-      rotation = cameraRotation * this.bone_.FaceTowardsCameraAdjustment;
+    if (this.bone_?.TryGetFaceCameraQuaternion(out rotation) ?? false) {
       return true;
     }
 

@@ -1,8 +1,12 @@
 ﻿using System.Numerics;
 
 using fin.math.matrix.four;
+using fin.math.rotations;
 using fin.math.xyz;
+using fin.ui;
 using fin.util.asserts;
+
+using Microsoft.CodeAnalysis;
 
 namespace fin.model.util;
 
@@ -38,6 +42,30 @@ public static class SkeletonExtensions {
       currentMatrix = bone.LocalTransform.Matrix * currentMatrix;
       bone = bone.Parent;
     }
+
     return currentMatrix;
+  }
+
+  public static bool TryGetFaceCameraQuaternion(
+      this IReadOnlyBone? bone,
+      out Quaternion rotation) {
+    var faceTowardsCameraType
+        = bone?.FaceTowardsCameraType ?? FaceTowardsCameraType.NONE;
+    if (faceTowardsCameraType != FaceTowardsCameraType.NONE) {
+      var camera = Camera.Instance;
+      var cameraRotation =
+          Quaternion.CreateFromYawPitchRoll(
+              camera.YawDegrees * FinTrig.DEG_2_RAD,
+              faceTowardsCameraType == FaceTowardsCameraType.YAW_AND_PITCH
+                  ? camera.PitchDegrees * FinTrig.DEG_2_RAD
+                  : 0,
+              0);
+
+      rotation = bone.FaceTowardsCameraAdjustment * cameraRotation;
+      return true;
+    }
+
+    rotation = default;
+    return false;
   }
 }

@@ -143,18 +143,20 @@ public sealed class Celeste64MapSceneImporter
 
       var (glowTextureMaterial, _)
           = glowModel.MaterialManager.AddSimpleTextureMaterialFromFile(
-              fileBundle.SpritesDirectory.AssertGetExistingFile("gradient.png"));
+              fileBundle.SpritesDirectory
+                        .AssertGetExistingFile("gradient.png"));
       glowTextureMaterial.DiffuseColor = Color.Yellow;
+      glowTextureMaterial.IgnoreLights = true;
 
       var glowBone = glowModel.Skeleton.Root;
       glowBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
-                                       Quaternion.Identity);
+                                       Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0));
 
       var glowSkin = glowModel.Skin;
       glowSkin.AddMesh()
-              .AddSimpleWall(glowSkin,
-                             new Vector3(0, -glowSize, -glowSize),
-                             new Vector3(0, glowSize, glowSize),
+              .AddSimpleFloor(glowSkin,
+                             new Vector3(-glowSize, -glowSize, 0),
+                             new Vector3(glowSize, glowSize, 0),
                              glowTextureMaterial,
                              glowBone);
     }
@@ -188,30 +190,37 @@ public sealed class Celeste64MapSceneImporter
       finObj.SetPosition(origin);
       finObj.SetRotationRadians(0, angleRadians, 0);
       finObj.SetScale(modelScale, modelScale, modelScale);
-      foreach (var finModel in finModels) {
-        finObj.AddSceneModel(finModel);
-      }
 
-      switch (actorType) {
-        case ActorType.CASSETTE
-             or ActorType.COIN
-             or ActorType.FEATHER
-             or ActorType.REFILL
-             or ActorType.STRAWBERRY: {
-          finObj.AddTickComponent(instance => {
-            var totalSeconds
-                = (float) FrameTime.ElapsedTimeSinceApplicationOpened
-                                   .TotalSeconds;
-
-            instance.SetPosition(origin +
-                                 Vector3.UnitY *
-                                 MathF.Sin(totalSeconds * 2) *
-                                 2);
-            instance.SetRotationRadians(0, totalSeconds * 3, 0);
-          });
-
-          break;
+      var spin = actorType is ActorType.CASSETTE
+                              or ActorType.COIN
+                              or ActorType.FEATHER
+                              or ActorType.REFILL
+                              or ActorType.STRAWBERRY;
+      if (!spin) {
+        foreach (var finModel in finModels) {
+          finObj.AddSceneModel(finModel);
         }
+      } else {
+        var modelObj = finObj.AddChildNode();
+        foreach (var finModel in finModels) {
+          modelObj.AddSceneModel(finModel);
+        }
+
+        finObj.AddTickComponent(instance => {
+          var totalSeconds
+              = (float) FrameTime.ElapsedTimeSinceApplicationOpened
+                                 .TotalSeconds;
+          instance.SetPosition(origin +
+                               Vector3.UnitY *
+                               MathF.Sin(totalSeconds * 2) *
+                               2);
+        });
+        modelObj.AddTickComponent(instance => {
+          var totalSeconds
+              = (float) FrameTime.ElapsedTimeSinceApplicationOpened
+                                 .TotalSeconds;
+          instance.SetRotationRadians(0, totalSeconds * 3, 0);
+        });
       }
 
       if (actorType is ActorType.STRAWBERRY) {
