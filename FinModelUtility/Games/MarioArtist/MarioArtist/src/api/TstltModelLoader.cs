@@ -65,9 +65,9 @@ public enum JointIndex {
   BODY_ROOT = 13,
 
   // Connects head bones to body
-  NECK = 14,
+  BODY_HEAD_ADAPTER = 14,
 
-  CLAVICLE = 15,
+  NECK = 15,
 
   TORSO = 16,
   HIP = 17,
@@ -173,7 +173,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       joint.matrix = Matrix4x4.Transpose(joint.matrix);
     }
 
-    var neckJoint = joints[(int) JointIndex.NECK];
+    var neckJoint = joints[(int) JointIndex.BODY_HEAD_ADAPTER];
     Matrix4x4.Decompose(neckJoint.matrix,
                         out var neckScale,
                         out _,
@@ -220,14 +220,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
       var jointIndex = (JointIndex) i;
       var parentIndex = (int) (jointIndex switch {
-          JointIndex.HEAD_ROOT   => JointIndex.NECK,
+          JointIndex.HEAD_ROOT   => JointIndex.BODY_HEAD_ADAPTER,
           < JointIndex.BODY_ROOT => JointIndex.HEAD_ROOT,
 
           JointIndex.HIP      => JointIndex.BODY_ROOT,
           JointIndex.TORSO    => JointIndex.HIP,
-          JointIndex.CLAVICLE => JointIndex.TORSO,
-
           JointIndex.NECK => JointIndex.TORSO,
+
+          JointIndex.BODY_HEAD_ADAPTER => JointIndex.NECK,
 
           JointIndex.UPPER_LEG_0 => JointIndex.HIP,
           JointIndex.UPPER_LEG_1 => JointIndex.HIP,
@@ -454,7 +454,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var headChosenPart1Tuples = headChosenPart1s.Select(chosenPart => {
       var segment = headSegment;
       return (segment, chosenPart,
-              finBonesAndJoints[(uint) JointIndex.NECK].Item1, true);
+              finBonesAndJoints[(uint) JointIndex.BODY_HEAD_ADAPTER].Item1, true);
     });
     var bodyChosenPart1Tuples = bodyChosenPart1s.Select(chosenPart => {
       var segment = bodySegment;

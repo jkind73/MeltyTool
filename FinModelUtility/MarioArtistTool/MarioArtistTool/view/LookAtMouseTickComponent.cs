@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 
 using fin.config.avalonia.services;
 using fin.math.rotations;
@@ -8,25 +9,30 @@ using fin.scene;
 
 namespace MarioArtistTool.view;
 
+/// <summary>
+///   Needs to be a render component to be able to project the point relative
+///   to the current view.
+/// </summary>
 public class LookAtMouseTickComponent(
+    IReadOnlyBoneTransformManager2 boneTransformManager,
     SimpleBoneTransformView boneTransformView,
-    IReadOnlyBone headBone)
+    IReadOnlyBone neckBone)
     : ISceneNodeTickComponent {
   public void Dispose() { }
 
   public void Tick(ISceneNodeInstance self) {
-    if (MainViewInputService.MouseDown) {
+    if (MainViewInputService.MouseDown || !MainViewInputService.MouseInView) {
       return;
     }
 
     var mouseX = MainViewInputService.NormalizedMousePosition.X - .5f;
-    var mouseY = MainViewInputService.NormalizedMousePosition.Y - .5f;
+    var mouseY = MainViewInputService.NormalizedMousePosition.Y - .25f;
 
     boneTransformView.OverrideWorldRotation(
-        headBone,
+        neckBone,
         QuaternionUtil.CreateZyxRadians(
-            mouseX * 3 + MathF.PI / 2,
-            -mouseY * 3,
+            mouseX * 2 + MathF.PI / 2,
+            -mouseY,
     MathF.PI / 2));
   }
 }

@@ -19,9 +19,10 @@ namespace fin.ui.avalonia.scene;
 public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
   private readonly SceneViewerGl viewerImpl_ = new();
 
-  private bool isMouseDown_ = false;
+  private bool isMouseInView_;
+  private bool isMouseDown_;
   private Vector2 mousePosition_;
-  private (float, float)? prevMousePosition_ = null;
+  private (float, float)? prevMousePosition_;
 
   private bool isForwardDown_ = false;
   private bool isBackwardDown_ = false;
@@ -33,6 +34,13 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
   private bool isSlowdownActive_ = false;
 
   public SceneInstanceViewerGlPanel() {
+    this.AddHandler(
+        PointerEnteredEvent,
+        (_, _) => this.isMouseInView_ = true);
+    this.AddHandler(
+        PointerExitedEvent,
+        (_, _) => this.isMouseInView_ = false);
+
     this.AddHandler(
         PointerPressedEvent,
         (_, args) => {
@@ -250,6 +258,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.viewerImpl_.Height = height;
 
     MainViewInputService.Resolution = new Vector2(width, height);
+    MainViewInputService.MouseInView = this.isMouseInView_;
     MainViewInputService.MouseDown = this.isMouseDown_;
     MainViewInputService.NormalizedMousePosition
         = new Vector2((float) (this.mousePosition_.X / this.Bounds.Width),

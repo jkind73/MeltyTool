@@ -98,6 +98,7 @@ public partial class MainView : UserControl {
             var characterObj = area.AddRootNode();
             characterObj.AddComponent(
                 new LookAtMouseTickComponent(
+                    modelRenderComponent.BoneTransformManager,
                     modelRenderComponent.SimpleBoneTransformView,
                     model.Skeleton
                          .Bones

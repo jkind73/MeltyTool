@@ -7,9 +7,7 @@ using fin.animation.interpolation;
 using fin.data.indexable;
 using fin.math.interpolation;
 using fin.math.matrix.four;
-using fin.math.rotations;
 using fin.model.accessor;
-using fin.ui;
 
 namespace fin.model.util;
 
