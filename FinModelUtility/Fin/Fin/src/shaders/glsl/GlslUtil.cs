@@ -665,7 +665,7 @@ public static class GlslUtil {
     var needsClamp = finTexture.UsesShaderClamping();
     var textureTransformType = finTexture.GetTextureTransformType_(animations);
 
-    var sampleMethod = finTexture.ThreePointFiltering
+    var sampleMethod = (finTexture?.ThreePointFiltering ?? false)
         ? GlslConstants.TEXTURE_3_POINT_NAME
         : "texture";
 
