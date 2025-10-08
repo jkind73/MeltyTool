@@ -30,6 +30,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     var normalTexture = material.NormalTexture;
     var hasNormalTexture = normalTexture != null;
     var hasNormals = shaderRequirements.HasNormals;
+    var hasLighting = !material.IgnoreLights && hasNormals;
     var hasTangents = shaderRequirements.TangentType != TangentType.NOT_PRESENT;
     var hasBinormals = hasNormals && hasTangents;
 
@@ -42,7 +43,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     var specularTexture = material.SpecularTexture;
     var hasSpecularTexture = specularTexture != null;
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentShaderSrc.AppendLine(
           $"""
            {GlslUtil.LIGHT_HEADER}
@@ -61,22 +62,24 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
       needsNewline = true;
     }
 
-    if (hasNormalTexture) {
-      fragmentShaderSrc.AppendLine(
-          $"uniform {GlslUtil.GetTypeOfTexture(normalTexture, animations)} normalTexture;");
-      needsNewline = true;
-    }
+    if (hasLighting) {
+      if (hasNormalTexture) {
+        fragmentShaderSrc.AppendLine(
+            $"uniform {GlslUtil.GetTypeOfTexture(normalTexture, animations)} normalTexture;");
+        needsNewline = true;
+      }
 
-    if (hasSpecularTexture) {
-      fragmentShaderSrc.AppendLine(
-          $"uniform {GlslUtil.GetTypeOfTexture(specularTexture, animations)} specularTexture;");
-      needsNewline = true;
-    }
+      if (hasSpecularTexture) {
+        fragmentShaderSrc.AppendLine(
+            $"uniform {GlslUtil.GetTypeOfTexture(specularTexture, animations)} specularTexture;");
+        needsNewline = true;
+      }
 
-    if (hasAmbientOcclusionTexture) {
-      fragmentShaderSrc.AppendLine(
-          $"uniform {GlslUtil.GetTypeOfTexture(ambientOcclusionTexture, animations)} ambientOcclusionTexture;");
-      needsNewline = true;
+      if (hasAmbientOcclusionTexture) {
+        fragmentShaderSrc.AppendLine(
+            $"uniform {GlslUtil.GetTypeOfTexture(ambientOcclusionTexture, animations)} ambientOcclusionTexture;");
+        needsNewline = true;
+      }
     }
 
     if (hasEmissiveTexture) {
@@ -85,7 +88,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
       needsNewline = true;
     }
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentShaderSrc.AppendLine(
           $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
       needsNewline = true;
@@ -109,29 +112,29 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
           $"in vec4 {GlslConstants.IN_VERTEX_COLOR_NAME}0;");
     }
 
-    if (hasNormals) {
+    if (hasLighting) {
       needsLineAboveMain = true;
       fragmentShaderSrc.AppendLine(
           """
           in vec3 vertexPosition;
           in vec3 vertexNormal;
           """);
-    }
 
-    if (hasTangents) {
-      needsLineAboveMain = true;
-      fragmentShaderSrc.AppendLine(
-          """
-          in vec3 tangent;
-          """);
-    }
+      if (hasTangents) {
+        needsLineAboveMain = true;
+        fragmentShaderSrc.AppendLine(
+            """
+            in vec3 tangent;
+            """);
+      }
 
-    if (hasBinormals) {
-      needsLineAboveMain = true;
-      fragmentShaderSrc.AppendLine(
-          """
-          in vec3 binormal;
-          """);
+      if (hasBinormals) {
+        needsLineAboveMain = true;
+        fragmentShaderSrc.AppendLine(
+            """
+            in vec3 binormal;
+            """);
+      }
     }
 
     var usedUvs = shaderRequirements.UsedUvs;
@@ -142,7 +145,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
       }
     }
 
-    if (hasNormals) {
+    if (hasLighting) {
       if (needsLineAboveMain) {
         fragmentShaderSrc.AppendLine();
       }
@@ -176,7 +179,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
             (true, true) => $"{getDiffuseTextureColor} * {GlslConstants.IN_VERTEX_COLOR_NAME}0"
         }};");
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentShaderSrc.AppendLine();
       if (hasAmbientOcclusionTexture) {
         fragmentShaderSrc.AppendLine(

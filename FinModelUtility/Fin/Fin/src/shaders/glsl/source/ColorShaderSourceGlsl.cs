@@ -15,13 +15,14 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
 
     var hasColors = shaderRequirements.UsedColors.AnyTrue();
     var hasNormals = shaderRequirements.HasNormals;
+    var hasLighting = !material.IgnoreLights && hasNormals;
 
     var fragmentSrc = new StringBuilder();
     fragmentSrc.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     fragmentSrc.AppendLine(GlslConstants.FLOAT_PRECISION);
     fragmentSrc.AppendLine();
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"""
            {GlslUtil.LIGHT_HEADER}
@@ -31,7 +32,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
 
     fragmentSrc.AppendLine("uniform vec4 diffuseColor;");
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
@@ -49,7 +50,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
       fragmentSrc.AppendLine($"in vec4 {GlslConstants.IN_VERTEX_COLOR_NAME}0;");
     }
 
-    if (hasNormals) {
+    if (hasLighting) {
       hadAnyIns = true;
       fragmentSrc.AppendLine(
           """
@@ -80,7 +81,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
         }};");
 
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"""
            
@@ -91,7 +92,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     }
 
     GlslUtil.AppendAlphaDiscard(fragmentSrc, material);
-    fragmentSrc.Append("}");
+    fragmentSrc.Append('}');
 
     this.FragmentShaderSource = fragmentSrc.ToString();
   }

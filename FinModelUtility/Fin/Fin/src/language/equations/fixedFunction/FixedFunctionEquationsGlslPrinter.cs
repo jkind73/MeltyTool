@@ -58,8 +58,10 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
             ]))
             .ToArray();
     var dependsOnAnIndividualLight =
+        !material.IgnoreLights &&
         hasIndividualLights.Any(value => value);
     var dependsOnMergedLights =
+        !material.IgnoreLights &&
         equations.DoOutputsDependOn(
         [
             FixedFunctionSource.LIGHT_DIFFUSE_COLOR_MERGED,

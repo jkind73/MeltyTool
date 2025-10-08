@@ -20,12 +20,13 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     var uvIndex = diffuseTexture?.UvIndex ?? 0;
     var hasColors = shaderRequirements.UsedColors.AnyTrue();
     var hasNormals = shaderRequirements.HasNormals;
+    var hasLighting = !material.IgnoreLights && hasNormals;
 
     var fragmentSrc = new StringBuilder();
     fragmentSrc.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     fragmentSrc.AppendLine(GlslConstants.FLOAT_PRECISION);
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"""
 
@@ -43,7 +44,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     fragmentSrc.AppendLine(
         $"uniform {GlslUtil.GetTypeOfTexture(diffuseTexture, animations)} diffuseTexture;");
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
@@ -59,7 +60,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
       fragmentSrc.AppendLine($"in vec4 {GlslConstants.IN_VERTEX_COLOR_NAME}0;");
     }
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           """
           in vec3 vertexPosition;
@@ -69,7 +70,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
 
     fragmentSrc.AppendLine($"in vec2 {GlslConstants.IN_UV_NAME}{uvIndex};");
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"""
 
@@ -94,7 +95,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
         (material.DiffuseColor != null ? " * diffuseColor" : "") +
         ";");
 
-    if (hasNormals) {
+    if (hasLighting) {
       fragmentSrc.AppendLine(
           $"""
            
@@ -105,7 +106,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     }
 
     GlslUtil.AppendAlphaDiscard(fragmentSrc, material);
-    fragmentSrc.Append("}");
+    fragmentSrc.Append('}');
 
     this.FragmentShaderSource = fragmentSrc.ToString();
   }
