@@ -139,7 +139,7 @@ public sealed class Celeste64MapSceneImporter
 
     var glowModel = ModelImpl.CreateForViewer();
     {
-      var glowSize = 4;
+      var glowSize = 8;
 
       var (glowTextureMaterial, _)
           = glowModel.MaterialManager.AddSimpleTextureMaterialFromFile(
@@ -149,16 +149,14 @@ public sealed class Celeste64MapSceneImporter
       glowTextureMaterial.IgnoreLights = true;
 
       var glowBone = glowModel.Skeleton.Root;
-      glowBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
-                                       Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0));
-
       var glowSkin = glowModel.Skin;
       glowSkin.AddMesh()
-              .AddSimpleFloor(glowSkin,
-                             new Vector3(-glowSize, -glowSize, 0),
-                             new Vector3(glowSize, glowSize, 0),
-                             glowTextureMaterial,
-                             glowBone);
+              .AddSimpleYawAndPitchBillboard(
+                  glowBone,
+                  glowSkin,
+                  glowSize,
+                  glowSize,
+                  glowTextureMaterial);
     }
 
     foreach (var entity in celeste64Map.Entities) {

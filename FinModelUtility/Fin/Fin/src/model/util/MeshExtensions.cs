@@ -47,7 +47,7 @@ public static class MeshExtensions {
 
     var a = ul;
     var b = ur;
-    var c = lr;
+    var c = ll;
 
     var normal = TriangleUtil.CalculateNormal(a, b, c);
 
@@ -400,5 +400,24 @@ public static class MeshExtensions {
                        new Vector3(width / 2f, 0, 0),
                        material,
                        bone);
+  }
+
+  public static void AddSimpleYawAndPitchBillboard<TVertex>(
+      this IMesh mesh,
+      IBone bone,
+      ISkin<TVertex> skin,
+      float width,
+      float height,
+      IReadOnlyMaterial? material = null)
+      where TVertex : INormalVertex, ISingleUvVertex {
+    bone.AlwaysFaceTowardsCamera(
+        FaceTowardsCameraType.YAW_AND_PITCH,
+        Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0));
+
+    mesh.AddSimpleFloor(skin,
+                        new Vector3(-width / 2f, height/2, 0),
+                        new Vector3(width / 2f, -height/2, 0),
+                        material,
+                        bone);
   }
 }
