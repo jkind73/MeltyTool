@@ -146,25 +146,17 @@ public sealed class VictoryHeatRallyTrackSceneImporter
           var (spriteMaterial, _) = spriteModel.MaterialManager
                                                .AddSimpleTextureMaterialFromImage(
                                                    spriteImage);
-
           var spriteRootBone = spriteModel.Skeleton.Root;
-          spriteRootBone.AlwaysFaceTowardsCamera(
-              FaceTowardsCameraType.YAW_ONLY,
-              Quaternion.Identity);
-
-          var adjBone = spriteRootBone.AddChild(0, 0, 0);
-          adjBone.LocalTransform.EulerRadians = new Vector3(MathF.PI / 2, 0, 0);
-
-          var width = spriteImage.Width * xScale;
-          var height = spriteImage.Height * yScale;
+          spriteMaterial.CullingMode = CullingMode.SHOW_FRONT_ONLY;
 
           var spriteSkin = spriteModel.Skin;
           var spriteMesh = spriteSkin.AddMesh();
-          spriteMesh.AddSimpleWall(spriteSkin,
-                                   new Vector3(0, -width / 2f, -height),
-                                   new Vector3(0, width / 2f, 0),
-                                   spriteMaterial,
-                                   adjBone);
+          spriteMesh.AddSimpleYawOnlyBillboard(
+              spriteModel.Skeleton.Root,
+              spriteSkin,
+              spriteImage.Width * xScale,
+              spriteImage.Height * yScale,
+              spriteMaterial);
 
           var spriteObject = finArea.AddRootNode();
           spriteObject.SetPosition(position);

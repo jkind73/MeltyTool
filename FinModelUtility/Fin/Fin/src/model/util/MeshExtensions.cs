@@ -318,10 +318,14 @@ public static class MeshExtensions {
       var u1 = frac1 * (repeat?.Item1 ?? 1);
       var u2 = frac2 * (repeat?.Item1 ?? 1);
 
-      var ul = (new Vector3(xy1, z1), new Vector2(u1, v1), new Vector3(norm1, 0));
-      var ur = (new Vector3(xy2, z1), new Vector2(u2, v1), new Vector3(norm2, 0));
-      var lr = (new Vector3(xy2, z2), new Vector2(u2, v2), new Vector3(norm2, 0));
-      var ll = (new Vector3(xy1, z2), new Vector2(u1, v2), new Vector3(norm1, 0));
+      var ul = (new Vector3(xy1, z1), new Vector2(u1, v1),
+                new Vector3(norm1, 0));
+      var ur = (new Vector3(xy2, z1), new Vector2(u2, v1),
+                new Vector3(norm2, 0));
+      var lr = (new Vector3(xy2, z2), new Vector2(u2, v2),
+                new Vector3(norm2, 0));
+      var ll = (new Vector3(xy1, z2), new Vector2(u1, v2),
+                new Vector3(norm1, 0));
 
       mesh.AddSimpleQuad(skin, ul, ur, lr, ll, material, bone);
       mesh.AddSimpleQuad(skin, ur, ul, ll, lr, material, bone);
@@ -367,7 +371,7 @@ public static class MeshExtensions {
         var xyzUr = center + normUr * radius;
         var xyzLr = center + normLr * radius;
         var xyzLl = center + normLl * radius;
-        
+
         var ul = (xyzUl, new Vector2(u1, v1), normUl);
         var ur = (xyzUr, new Vector2(u2, v1), normUr);
         var lr = (xyzLr, new Vector2(u2, v2), normLr);
@@ -377,5 +381,24 @@ public static class MeshExtensions {
         mesh.AddSimpleQuad(skin, ur, ul, ll, lr, material, bone);
       }
     }
+  }
+
+  public static void AddSimpleYawOnlyBillboard<TVertex>(
+      this IMesh mesh,
+      IBone bone,
+      ISkin<TVertex> skin,
+      float width,
+      float height,
+      IReadOnlyMaterial? material = null)
+      where TVertex : INormalVertex, ISingleUvVertex {
+    bone.AlwaysFaceTowardsCamera(
+        FaceTowardsCameraType.YAW_ONLY,
+        Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0));
+
+    mesh.AddSimpleFloor(skin,
+                       new Vector3(-width / 2f, height, 0),
+                       new Vector3(width / 2f, 0, 0),
+                       material,
+                       bone);
   }
 }
