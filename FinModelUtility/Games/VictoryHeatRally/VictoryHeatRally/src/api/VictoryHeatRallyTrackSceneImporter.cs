@@ -146,7 +146,6 @@ public sealed class VictoryHeatRallyTrackSceneImporter
           var (spriteMaterial, _) = spriteModel.MaterialManager
                                                .AddSimpleTextureMaterialFromImage(
                                                    spriteImage);
-          var spriteRootBone = spriteModel.Skeleton.Root;
           spriteMaterial.CullingMode = CullingMode.SHOW_FRONT_ONLY;
 
           var spriteSkin = spriteModel.Skin;
