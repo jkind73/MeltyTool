@@ -1,10 +1,6 @@
-﻿using System.Numerics;
-
-using fin.animation;
+﻿using fin.animation;
 using fin.config;
 using fin.math;
-using fin.math.matrix.four;
-using fin.math.rotations;
 using fin.model;
 using fin.model.skeleton;
 using fin.model.util;
@@ -88,10 +84,6 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
     var model = this.Model;
     var skeleton = model.Skeleton;
-
-    if (skeleton.Root.TryGetFaceCameraQuaternion(out var rootRotation)) {
-      GlTransform.MultMatrix(SystemMatrix4x4Util.FromRotation(rootRotation));
-    }
 
     var animation = this.Animation;
     var animationPlaybackManager = this.AnimationPlaybackManager;

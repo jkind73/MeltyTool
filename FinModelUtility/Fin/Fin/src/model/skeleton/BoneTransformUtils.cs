@@ -29,6 +29,8 @@ public static class BoneTransformUtils {
       return boneToWorldMatrix;
     }
 
+    // TODO: In this case, this matrix needs to first invert the model matrix
+    // to be able to properly set world-space transforms
     Matrix4x4.Decompose(boneToWorldMatrix,
                         out var worldScale,
                         out var worldRotation,

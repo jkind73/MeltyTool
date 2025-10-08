@@ -1,9 +1,5 @@
-﻿using System.Numerics;
-
-using fin.config;
+﻿using fin.config;
 using fin.data.dictionaries;
-using fin.math.matrix.four;
-using fin.math.rotations;
 using fin.model;
 using fin.model.util;
 using fin.scene;
@@ -17,6 +13,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
   private readonly IModelRenderer modelRenderer_;
   private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
   private bool isBoneSelected_;
+
+  private bool needsToAlwaysUpdateMatrices_;
 
   private readonly List<(IReadOnlyBone, SceneModelRenderer[])>
       children_ = [];
@@ -56,6 +54,10 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
            boneChildren.Select(child => new SceneModelRenderer(child, lighting))
                        .ToArray()));
     }
+
+    this.needsToAlwaysUpdateMatrices_
+        = model.Skeleton.Bones.Any(b => b.FaceTowardsCameraType !=
+                                        FaceTowardsCameraType.NONE);
   }
 
   ~SceneModelRenderer() => this.ReleaseUnmanagedResources_();
@@ -82,10 +84,6 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
     var model = this.sceneModel_.Model;
     var skeleton = model.Skeleton;
 
-    if (skeleton.Root.TryGetFaceCameraQuaternion(out var rootRotation)) {
-      GlTransform.MultMatrix(SystemMatrix4x4Util.FromRotation(rootRotation));
-    }
-
     var animation = this.sceneModel_.Animation;
     var animationPlaybackManager = this.sceneModel_.AnimationPlaybackManager;
 
@@ -96,15 +94,19 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
       }
     }
 
-    if (animation != null) {
+    if (animation != null ||
+        this.needsToAlwaysUpdateMatrices_ ||
+        this.sceneModel_.SimpleBoneTransformView.HasAnyOverrides) {
       animationPlaybackManager.Tick();
-
-      var frame = (float) animationPlaybackManager.Frame;
       this.sceneModel_.BoneTransformManager.CalculateMatrices(
           skeleton.Root,
           model.Skin.BoneWeights,
           this.sceneModel_.SimpleBoneTransformView,
           BoneWeightTransformType.FOR_RENDERING);
+    }
+
+    if (animation != null) {
+      var frame = (float) animationPlaybackManager.Frame;
       this.sceneModel_.TextureTransformManager.CalculateMatrices(
           model.MaterialManager.Textures,
           (animation, frame));

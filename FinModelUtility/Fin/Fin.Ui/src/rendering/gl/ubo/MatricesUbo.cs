@@ -31,6 +31,9 @@ public sealed class MatricesUbo {
     var offset = 0;
     Span<byte> buffer = stackalloc byte[this.bufferSize_];
 
+    // TODO: Merge model/view/projection matrices with bone matrices here
+    // rather than in the shader
+    // TODO: Pass in normal matrices here
     UboUtil.AppendMatrix4x4(buffer, ref offset, modelMatrix);
     UboUtil.AppendMatrix4x4(buffer, ref offset, viewMatrix);
     UboUtil.AppendMatrix4x4(buffer, ref offset, projectionMatrix);
