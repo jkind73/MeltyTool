@@ -42,7 +42,8 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
     var bmd = bmdBr.ReadNew<Bmd>();
 
     // Set up bones
-    var finBones = new IReadOnlyBone[bmd.Bones.Length];
+    var finBoneWithoutBillboards = new IReadOnlyBone[bmd.Bones.Length];
+    var finBoneWithBillboards = new IReadOnlyBone[bmd.Bones.Length];
     var sm64Bones = bmd.Bones.OrderBy(b => b.Id).ToArray();
     {
       var rootBones = new List<Bone>();
@@ -70,18 +71,23 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
         var finBone = parentFinBone.AddChild(bone.Translation);
         finBone.Name = bone.Name;
 
-        finBones[bone.Id] = finBone;
+        finBoneWithoutBillboards[bone.Id] = finBone;
+        finBoneWithBillboards[bone.Id] = finBone;
 
         var localTransform = finBone.LocalTransform;
         localTransform.SetRotationDegrees(bone.Rotation);
         localTransform.SetScale(bone.Scale);
 
         // Maybe this is for the mesh(es) instead?
-        /*if (bone.Billboard) {
-          var rotateYaw =
-              Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0);
-          finBone.AlwaysFaceTowardsCamera(rotateYaw);
-        }*/
+        if (bone.Billboard) {
+          var billboardBone = finBone.AddChild(0, 0, 0);
+
+          billboardBone.AlwaysFaceTowardsCamera(
+              FaceTowardsCameraType.YAW_AND_PITCH,
+              Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0));
+
+          finBoneWithBillboards[bone.Id] = billboardBone;
+        }
 
         if (boneToChildMap.TryGetSet(bone, out var unorderedChildren)) {
           var firstChild
@@ -169,7 +175,7 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
             = displayList.Data.TransformIds
                          .Select(transformId
                                      => bmd.TransformToBoneMap[transformId])
-                         .Select(boneId => finBones[boneId])
+                         .Select(boneId => finBoneWithBillboards[boneId])
                          .ToArray();
 
         var opcodes = lazyOpcodeMap[displayList];
@@ -301,7 +307,7 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
         for (var i = 0; i < bca.BoneAnimationData.Length; ++i) {
           var boneAnimationData = bca.BoneAnimationData[i];
 
-          var boneTracks = finAnimation.GetOrCreateBoneTracks(finBones[i]);
+          var boneTracks = finAnimation.GetOrCreateBoneTracks(finBoneWithoutBillboards[i]);
 
           (int, float)[][] translationAxes = [
               boneAnimationData.TranslationXValues,
