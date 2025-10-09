@@ -272,7 +272,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     while (jointQueue.TryDequeue(out var jointAndIndex,
                                  out var parentMatrix,
                                  out var parentFinBone)) {
-      Matrix4x4.Invert(parentMatrix, out var invertedParentMatrix);
+      var invertedParentMatrix = parentMatrix.AssertInvert();
 
       var (joint, index) = jointAndIndex;
       var worldMatrix = joint.matrix;
