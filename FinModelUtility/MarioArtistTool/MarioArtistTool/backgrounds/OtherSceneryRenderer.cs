@@ -10,10 +10,16 @@ using fin.util.time;
 
 namespace MarioArtistTool.backgrounds;
 
-public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
-  private readonly IModelRenderer flowerRenderer_
+public sealed class OtherSceneryRenderer : IRenderable, IDisposable {
+  private readonly IModelRenderer fossilRenderer0_
       = SceneryRendererUtils.CreateModelRendererForImage(
-          "backgrounds/girl/flower.png");
+          "backgrounds/other/fossil_0.png");
+  private readonly IModelRenderer fossilRenderer1_
+      = SceneryRendererUtils.CreateModelRendererForImage(
+          "backgrounds/other/fossil_1.png");
+  private readonly IModelRenderer fossilRenderer2_
+      = SceneryRendererUtils.CreateModelRendererForImage(
+          "backgrounds/other/fossil_2.png");
 
   private readonly Matrix4x4 topLeftMatrix_
       = GetMergedMatrix_(
@@ -39,25 +45,29 @@ public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
       = GetMergedMatrix_(
           GetCenterAndSize_(new Vector2(365, 236), new Vector2(519, 387)));
 
-  public void Dispose() => this.flowerRenderer_.Dispose();
+  public void Dispose() {
+    this.fossilRenderer0_.Dispose();
+    this.fossilRenderer1_.Dispose();
+    this.fossilRenderer2_.Dispose();
+  }
 
   public void Render() {
     var timeSeconds
         = (float) (6 + FrameTime.ElapsedTimeSinceApplicationOpened
                                 .TotalSeconds);
 
-    Span<(float cycleSeconds, Matrix4x4 matrix, Color color)>
+    Span<(float cycleSeconds, IModelRenderer modelRenderer, Matrix4x4 matrix, Color color)>
         cycleSecondsAndMatrices = [
-            ((timeSeconds - 0) % 6, this.topLeftMatrix_, Color.Yellow),
-            ((timeSeconds - 1) % 6, this.middleLeftMatrix_, Color.Green),
-            ((timeSeconds - 2) % 6, this.bottomLeftMatrix_, Color.Cyan),
+            ((timeSeconds - 0) % 6, this.fossilRenderer2_, this.topLeftMatrix_, Color.Yellow),
+            ((timeSeconds - 1) % 6, this.fossilRenderer1_, this.middleLeftMatrix_, Color.Green),
+            ((timeSeconds - 2) % 6, this.fossilRenderer2_, this.bottomLeftMatrix_, Color.Cyan),
 
-            ((timeSeconds - 3) % 6, this.topRightMatrix_, Color.DarkBlue),
-            ((timeSeconds - 4) % 6, this.middleRightMatrix_, Color.Blue),
-            ((timeSeconds - 5) % 6, this.bottomRightMatrix_, Color.HotPink),
+            ((timeSeconds - 3) % 6, this.fossilRenderer1_, this.topRightMatrix_, Color.DarkBlue),
+            ((timeSeconds - 4) % 6, this.fossilRenderer0_, this.middleRightMatrix_, Color.Blue),
+            ((timeSeconds - 5) % 6, this.fossilRenderer0_, this.bottomRightMatrix_, Color.HotPink),
         ];
 
-    foreach (var (cycleSeconds, matrix, color) in cycleSecondsAndMatrices) {
+    foreach (var (cycleSeconds, renderer, matrix, color) in cycleSecondsAndMatrices) {
       var alpha = cycleSeconds switch {
           < 1 => cycleSeconds,
           > 3 => 0,
@@ -73,7 +83,7 @@ public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
 
       GlTransform.PushMatrix();
       GlTransform.MultMatrix(matrix);
-      this.flowerRenderer_.Render();
+      renderer.Render();
       GlTransform.PopMatrix();
     }
   }

@@ -81,6 +81,7 @@ public partial class MainView : UserControl {
                     = AssetLoaderUtil.LoadImage(
                         "backgrounds/other/background.png");
                 area.BackgroundImageScale = .3f;
+                sceneryRenderer = new OtherSceneryRenderer();
                 break;
               }
             }
