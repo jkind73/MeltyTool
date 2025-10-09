@@ -103,7 +103,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
           skeleton.Root,
           model.Skin.BoneWeights,
           this.SimpleBoneTransformView,
-          BoneWeightTransformType.FOR_RENDERING);
+          BoneWeightTransformType.FOR_RENDERING,
+          GlTransform.ModelMatrix);
     }
 
     if (animation != null) {

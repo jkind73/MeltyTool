@@ -17,6 +17,8 @@ using fin.util.time;
 
 using Sledge.Formats.Map.Objects;
 
+using static Assimp.Metadata;
+
 namespace Celeste64.api;
 
 public sealed class Celeste64MapSceneFileBundle : ISceneFileBundle {
@@ -147,6 +149,7 @@ public sealed class Celeste64MapSceneImporter
                         .AssertGetExistingFile("gradient.png"));
       glowTextureMaterial.DiffuseColor = Color.Yellow;
       glowTextureMaterial.IgnoreLights = true;
+      glowTextureMaterial.DepthMode = DepthMode.READ_ONLY;
 
       var glowBone = glowModel.Skeleton.Root;
       var glowSkin = glowModel.Skin;
@@ -159,8 +162,11 @@ public sealed class Celeste64MapSceneImporter
                   glowTextureMaterial);
     }
 
-    foreach (var entity in celeste64Map.Entities) {
-      var actorType = GetActorType_(entity.ClassName);
+    var entitiesAndActorTypes
+        = celeste64Map.Entities
+                      .Select(e => (e, GetActorType_(e.ClassName)))
+                      .OrderBy(tuple => tuple.Item2 is ActorType.STRAWBERRY);
+    foreach (var (entity, actorType) in entitiesAndActorTypes) {
       if (actorType == null) {
         continue;
       }
@@ -189,21 +195,20 @@ public sealed class Celeste64MapSceneImporter
       finObj.SetRotationRadians(0, angleRadians, 0);
       finObj.SetScale(modelScale, modelScale, modelScale);
 
+      if (actorType is ActorType.STRAWBERRY) {
+        finObj.AddSceneModel(glowModel);
+      }
+
+      foreach (var finModel in finModels) {
+        finObj.AddSceneModel(finModel);
+      }
+
       var spin = actorType is ActorType.CASSETTE
                               or ActorType.COIN
                               or ActorType.FEATHER
                               or ActorType.REFILL
                               or ActorType.STRAWBERRY;
-      if (!spin) {
-        foreach (var finModel in finModels) {
-          finObj.AddSceneModel(finModel);
-        }
-      } else {
-        var modelObj = finObj.AddChildNode();
-        foreach (var finModel in finModels) {
-          modelObj.AddSceneModel(finModel);
-        }
-
+      if (spin) {
         finObj.AddTickComponent(instance => {
           var totalSeconds
               = (float) FrameTime.ElapsedTimeSinceApplicationOpened
@@ -212,17 +217,8 @@ public sealed class Celeste64MapSceneImporter
                                Vector3.UnitY *
                                MathF.Sin(totalSeconds * 2) *
                                2);
-        });
-        modelObj.AddTickComponent(instance => {
-          var totalSeconds
-              = (float) FrameTime.ElapsedTimeSinceApplicationOpened
-                                 .TotalSeconds;
           instance.SetRotationRadians(0, totalSeconds * 3, 0);
         });
-      }
-
-      if (actorType is ActorType.STRAWBERRY) {
-        finObj.AddSceneModel(glowModel);
       }
     }
 

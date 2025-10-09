@@ -142,4 +142,17 @@ public static class SystemMatrix4x4Util {
                  "Failed to invert matrix!");
     return inverted;
   }
+
+  public static Matrix4x4 FilterTrs(this in Matrix4x4 matrix,
+                                    bool keepTranslation,
+                                    bool keepRotation,
+                                    bool keepScale) {
+    Matrix4x4.Decompose(matrix,
+                        out var scale,
+                        out var rotation,
+                        out var translation);
+    return FromTrs(keepTranslation ? translation : null,
+                   keepRotation ? rotation : null,
+                   keepScale ? scale : null);
+  }
 }

@@ -82,9 +82,7 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
         if (bone.Billboard) {
           var billboardBone = finBone.AddChild(0, 0, 0);
 
-          billboardBone.AlwaysFaceTowardsCamera(
-              FaceTowardsCameraType.YAW_AND_PITCH,
-              Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0));
+          billboardBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
 
           finBoneWithBillboards[bone.Id] = billboardBone;
         }

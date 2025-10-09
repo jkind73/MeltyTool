@@ -110,10 +110,6 @@ public sealed class SimpleBoneTransformView : IBoneTransformView {
       return true;
     }
 
-    if (this.bone_?.IgnoreParentScale ?? false) {
-      return this.TryGetLocalScale(out scale);
-    }
-
     foreach (var impl in this.impls_) {
       if (impl.TryGetWorldScale(out scale)) {
         return true;

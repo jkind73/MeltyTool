@@ -391,10 +391,7 @@ public static class MeshExtensions {
       float height,
       IReadOnlyMaterial? material = null)
       where TVertex : INormalVertex, ISingleUvVertex {
-    bone.AlwaysFaceTowardsCamera(
-        FaceTowardsCameraType.YAW_ONLY,
-        Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0));
-
+    bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
     mesh.AddSimpleFloor(skin,
                        new Vector3(-width / 2f, height, 0),
                        new Vector3(width / 2f, 0, 0),
@@ -410,10 +407,7 @@ public static class MeshExtensions {
       float height,
       IReadOnlyMaterial? material = null)
       where TVertex : INormalVertex, ISingleUvVertex {
-    bone.AlwaysFaceTowardsCamera(
-        FaceTowardsCameraType.YAW_AND_PITCH,
-        Quaternion.CreateFromYawPitchRoll(MathF.PI / 2, 0, 0));
-
+    bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
     mesh.AddSimpleFloor(skin,
                         new Vector3(-width / 2f, height/2, 0),
                         new Vector3(width / 2f, -height/2, 0),

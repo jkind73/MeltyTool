@@ -6,8 +6,9 @@ namespace fin.model.skeleton;
 
 public static class BoneTransformUtils {
   public static Matrix4x4 CalculateBoneToWorldMatrix(
+      IBoneTransformView boneTransformView,
       in Matrix4x4 parent,
-      IBoneTransformView boneTransformView) {
+      in Matrix4x4 modelMatrix) {
     boneTransformView.TryGetLocalTranslation(out var localTranslation);
     boneTransformView.TryGetLocalRotation(out var localRotation);
     boneTransformView.TryGetLocalScale(out var localScale);
@@ -29,9 +30,15 @@ public static class BoneTransformUtils {
       return boneToWorldMatrix;
     }
 
-    // TODO: In this case, this matrix needs to first invert the model matrix
-    // to be able to properly set world-space transforms
-    Matrix4x4.Decompose(boneToWorldMatrix,
+    // TODO: Does this stuff make sense, using the model matrix here???
+    var filteredModelMatrix =
+        modelMatrix.FilterTrs(hasWorldTranslation,
+                              hasWorldRotation,
+                              hasWorldScale);
+
+    var boneToWorldMatrixWithWorldMatrix
+        = boneToWorldMatrix * filteredModelMatrix;
+    Matrix4x4.Decompose(boneToWorldMatrixWithWorldMatrix,
                         out var worldScale,
                         out var worldRotation,
                         out var worldTranslation);
@@ -48,8 +55,12 @@ public static class BoneTransformUtils {
       worldScale = overrideWorldScale;
     }
 
-    return SystemMatrix4x4Util.FromTrs(worldTranslation,
-                                       worldRotation,
-                                       worldScale);
+    Matrix4x4.Invert(filteredModelMatrix, out var invertedModelMatrix);
+
+    return SystemMatrix4x4Util.FromTrs(
+               worldTranslation,
+               worldRotation,
+               worldScale) *
+           invertedModelMatrix;
   }
 }

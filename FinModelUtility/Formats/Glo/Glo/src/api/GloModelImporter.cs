@@ -411,12 +411,6 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
           var gloSpritePosition = gloSprite.SpritePosition;
 
           var finSpriteBone = finBone.AddChild(gloSpritePosition);
-          finSpriteBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
-                                                Quaternion.Identity);
-          var finSpriteBoneWeights =
-              finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
-                                             finSpriteBone);
-
           var textureFilename = gloSprite.TextureFilename;
 
           IMaterial? finMaterial;
@@ -431,31 +425,14 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
             previousMaterial = finMaterial;
           }
 
-          var w = gloSprite.SpriteSize.X / 4;
-          var h = gloSprite.SpriteSize.Y / 4;
-
-          var v1 = finSkin.AddVertex(0, -h / 2, -w / 2);
-          v1.SetUv(0, 0);
-          v1.SetColor(meshColor);
-          v1.SetBoneWeights(finSpriteBoneWeights);
-
-          var v2 = finSkin.AddVertex(0, -h / 2, w / 2);
-          v2.SetUv(1, 0);
-          v1.SetColor(meshColor);
-          v2.SetBoneWeights(finSpriteBoneWeights);
-
-          var v3 = finSkin.AddVertex(0, h / 2, -w / 2);
-          v3.SetUv(0, 1);
-          v1.SetColor(meshColor);
-          v3.SetBoneWeights(finSpriteBoneWeights);
-
-          var v4 = finSkin.AddVertex(0, h / 2, w / 2);
-          v4.SetUv(1, 1);
-          v1.SetColor(meshColor);
-          v4.SetBoneWeights(finSpriteBoneWeights);
-
-          finMesh.AddTriangles((v1, v3, v2), (v4, v2, v3))
-                 .SetMaterial(finMaterial!);
+          var w = gloSprite.SpriteSize.X / 2;
+          var h = gloSprite.SpriteSize.Y / 2;
+          finMesh.AddSimpleYawAndPitchBillboard(
+              finSpriteBone,
+              finSkin,
+              w,
+              h,
+              finMaterial);
         }
       }
 

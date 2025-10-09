@@ -88,7 +88,9 @@ public partial class ModelImpl<TVertex> {
       public ITransform3d LocalTransform { get; } = new Transform3d();
       public bool IgnoreParentScale { get; set; }
 
-
+      public IBone AlwaysFaceTowardsCamera(
+          FaceTowardsCameraType faceTowardsCameraType)
+        => this.AlwaysFaceTowardsCamera(faceTowardsCameraType, Quaternion.Identity);
       public IBone AlwaysFaceTowardsCamera(
           FaceTowardsCameraType faceTowardsCameraType,
           in Quaternion adjustment) {

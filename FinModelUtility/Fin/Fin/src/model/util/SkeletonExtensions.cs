@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 using fin.math.matrix.four;
 using fin.math.rotations;
@@ -53,15 +54,16 @@ public static class SkeletonExtensions {
         = bone?.FaceTowardsCameraType ?? FaceTowardsCameraType.NONE;
     if (faceTowardsCameraType != FaceTowardsCameraType.NONE) {
       var camera = Camera.Instance;
-      var cameraRotation =
-          Quaternion.CreateFromYawPitchRoll(
-              camera.YawDegrees * FinTrig.DEG_2_RAD,
-              faceTowardsCameraType == FaceTowardsCameraType.YAW_AND_PITCH
-                  ? camera.PitchDegrees * FinTrig.DEG_2_RAD
-                  : 0,
-              0);
-
-      rotation = bone.FaceTowardsCameraAdjustment * cameraRotation;
+      rotation = Quaternion.CreateFromAxisAngle(
+              Vector3.UnitZ,
+              camera.YawDegrees * FinTrig.DEG_2_RAD - MathF.PI / 2);
+      if (faceTowardsCameraType is FaceTowardsCameraType.YAW_AND_PITCH) {
+        rotation *= Quaternion.CreateFromAxisAngle(
+            Vector3.UnitX,
+            camera.PitchDegrees * FinTrig.DEG_2_RAD + MathF.PI / 2);
+      } else {
+        rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2);
+      }
       return true;
     }
 

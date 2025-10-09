@@ -126,19 +126,13 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
       // TODO: How to do this without hardcoding???
       if (node.Entry.JointType == JointType.MANUAL) {
         if (node.Name.StartsWith("balloon")) {
-          var rotateYaw =
-              Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0);
-          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
-                                       rotateYaw);
+          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
         }
 
         // Japanese word for light
         if (node.Name.StartsWith("hikair") ||
             node.Name.StartsWith("hikari")) {
-          var rotateYaw =
-              Quaternion.CreateFromYawPitchRoll(-MathF.PI / 2, 0, 0);
-          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH,
-                                       rotateYaw);
+          bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
         }
       }
 

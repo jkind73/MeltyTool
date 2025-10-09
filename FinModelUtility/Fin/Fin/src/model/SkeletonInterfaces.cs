@@ -33,6 +33,8 @@ public partial interface ILeafBone : IIndexable, INamed {
       FaceTowardsCameraType faceTowardsCameraType,
       in Quaternion adjustment);
 
+  IBone AlwaysFaceTowardsCamera(FaceTowardsCameraType faceTowardsCameraType);
+
   new FaceTowardsCameraType FaceTowardsCameraType { get; }
   new Quaternion FaceTowardsCameraAdjustment { get; }
 }

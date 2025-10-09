@@ -102,7 +102,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
           skeleton.Root,
           model.Skin.BoneWeights,
           this.sceneModel_.SimpleBoneTransformView,
-          BoneWeightTransformType.FOR_RENDERING);
+          BoneWeightTransformType.FOR_RENDERING,
+          GlTransform.ModelMatrix);
     }
 
     if (animation != null) {

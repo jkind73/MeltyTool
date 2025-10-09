@@ -35,7 +35,8 @@ public interface IBoneTransformManager2 : IReadOnlyBoneTransformManager2 {
       IReadOnlyBone rootBone,
       IReadOnlyList<IReadOnlyBoneWeights> boneWeightsList,
       IBoneTransformView? boneTransformView,
-      BoneWeightTransformType boneWeightTransformType);
+      BoneWeightTransformType boneWeightTransformType,
+      in Matrix4x4 modelMatrix);
 }
 
 public sealed class BoneTransformManager2 : IBoneTransformManager2 {
@@ -96,7 +97,8 @@ public sealed class BoneTransformManager2 : IBoneTransformManager2 {
         model.Skeleton.Root,
         model.Skin.BoneWeights,
         null,
-        BoneWeightTransformType.FOR_EXPORT_OR_CPU_PROJECTION);
+        BoneWeightTransformType.FOR_EXPORT_OR_CPU_PROJECTION,
+        Matrix4x4.Identity);
     this.InitModelVertices_(model, forcePreproject);
   }
 
@@ -105,7 +107,8 @@ public sealed class BoneTransformManager2 : IBoneTransformManager2 {
         model.Skeleton.Root,
         model.Skin.BoneWeights,
         null,
-        BoneWeightTransformType.FOR_RENDERING);
+        BoneWeightTransformType.FOR_RENDERING,
+        Matrix4x4.Identity);
     this.InitModelVertices_(model);
   }
 
@@ -116,7 +119,8 @@ public sealed class BoneTransformManager2 : IBoneTransformManager2 {
       IReadOnlyBone rootBone,
       IReadOnlyList<IReadOnlyBoneWeights> boneWeightsList,
       IBoneTransformView? boneTransformView,
-      BoneWeightTransformType boneWeightTransformType) {
+      BoneWeightTransformType boneWeightTransformType,
+      in Matrix4x4 modelMatrix) {
     var isFirstPass = boneTransformView == null;
 
     if (isFirstPass) {
@@ -141,10 +145,16 @@ public sealed class BoneTransformManager2 : IBoneTransformManager2 {
     foreach (var (bone, boneToWorldMatrix, parentBoneToWorldMatrix) in this
                  .boneList_) {
       if (!isFirstPass) {
+        var parentMatrix = parentBoneToWorldMatrix.Impl;
+        if (bone.IgnoreParentScale) {
+          parentMatrix = parentMatrix.FilterTrs(true, true, false);
+        }
+        
         boneTransformView.TargetBone(bone);
         boneToWorldMatrix.Impl = BoneTransformUtils.CalculateBoneToWorldMatrix(
-            parentBoneToWorldMatrix.Impl,
-            boneTransformView);
+            boneTransformView,
+            parentMatrix,
+            modelMatrix);
       } else {
         boneToWorldMatrix.CopyFrom(parentBoneToWorldMatrix);
 
