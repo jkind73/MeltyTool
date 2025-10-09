@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing.Drawing2D;
+using System.Numerics;
 
 using fin.math.matrix.four;
 
@@ -38,10 +39,10 @@ public static class BoneTransformUtils {
 
     var boneToWorldMatrixWithWorldMatrix
         = boneToWorldMatrix * filteredModelMatrix;
-    Matrix4x4.Decompose(boneToWorldMatrixWithWorldMatrix,
-                        out var worldScale,
-                        out var worldRotation,
-                        out var worldTranslation);
+    boneToWorldMatrixWithWorldMatrix.AssertDecompose(
+        out var worldTranslation,
+        out var worldRotation,
+        out var worldScale);
 
     if (hasWorldTranslation) {
       worldTranslation = overrideWorldTranslation;
@@ -55,8 +56,7 @@ public static class BoneTransformUtils {
       worldScale = overrideWorldScale;
     }
 
-    Matrix4x4.Invert(filteredModelMatrix, out var invertedModelMatrix);
-
+    var invertedModelMatrix = filteredModelMatrix.AssertInvert();
     return SystemMatrix4x4Util.FromTrs(
                worldTranslation,
                worldRotation,

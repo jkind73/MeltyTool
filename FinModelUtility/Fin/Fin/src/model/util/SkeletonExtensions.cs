@@ -23,12 +23,9 @@ public static class SkeletonExtensions {
     => parent.AddChild(matrix.Impl);
 
   public static IBone AddChild(this IBone parent, Matrix4x4 matrix) {
-    Asserts.True(Matrix4x4.Decompose(matrix,
-                                     out var scale,
-                                     out var rotation,
-                                     out var translation) ||
-                 !FinMatrix4x4.STRICT_DECOMPOSITION,
-                 "Failed to decompose matrix!");
+    matrix.AssertDecompose(out var translation,
+                           out var rotation,
+                           out var scale);
 
     var child = parent.AddChild(translation);
     child.LocalTransform.Rotation = rotation;

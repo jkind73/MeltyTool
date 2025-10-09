@@ -143,14 +143,24 @@ public static class SystemMatrix4x4Util {
     return inverted;
   }
 
+  public static void AssertDecompose(this in Matrix4x4 matrix,
+                                     out Vector3 translation,
+                                     out Quaternion quaternion,
+                                     out Vector3 scale)
+    => Asserts.True(Matrix4x4.Decompose(matrix,
+                                        out scale,
+                                        out quaternion,
+                                        out translation) ||
+                    !FinMatrix4x4.STRICT_DECOMPOSITION,
+                    "Failed to decompose matrix!");
+
   public static Matrix4x4 FilterTrs(this in Matrix4x4 matrix,
                                     bool keepTranslation,
                                     bool keepRotation,
                                     bool keepScale) {
-    Matrix4x4.Decompose(matrix,
-                        out var scale,
-                        out var rotation,
-                        out var translation);
+    matrix.AssertDecompose(out var translation,
+                           out var rotation,
+                           out var scale);
     return FromTrs(keepTranslation ? translation : null,
                    keepRotation ? rotation : null,
                    keepScale ? scale : null);

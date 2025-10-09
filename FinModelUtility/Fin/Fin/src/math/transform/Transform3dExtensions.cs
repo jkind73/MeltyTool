@@ -14,12 +14,9 @@ public static class Transform3dExtensions {
 
   public static void SetMatrix(this ITransform3d transform,
                                Matrix4x4 matrix) {
-    Asserts.True(Matrix4x4.Decompose(matrix,
-                                     out var scale,
-                                     out var quaternion,
-                                     out var translation) ||
-                 !FinMatrix4x4.STRICT_DECOMPOSITION,
-                 "Failed to decompose matrix!");
+    matrix.AssertDecompose(out var translation,
+                           out var quaternion,
+                           out var scale);
 
     transform.Translation = translation;
     transform.Rotation = quaternion;

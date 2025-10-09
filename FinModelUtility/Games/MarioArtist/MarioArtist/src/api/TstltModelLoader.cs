@@ -174,10 +174,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
 
     var neckJoint = joints[(int) JointIndex.BODY_HEAD_ADAPTER];
-    Matrix4x4.Decompose(neckJoint.matrix,
-                        out var neckScale,
-                        out _,
-                        out var neckTranslation);
+    neckJoint.matrix.AssertDecompose(out var neckTranslation,
+                                     out _,
+                                     out var neckScale);
     var forwardRotation =
         QuaternionUtil.CreateZyxRadians(MathF.PI / 2, 0, MathF.PI / 2);
     var neckTMatrix = Matrix4x4.CreateTranslation(neckTranslation);
@@ -188,10 +187,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       var joint = joints[i];
 
       if (i < 13) {
-        Matrix4x4.Decompose(joint.matrix,
-                            out var jointScale,
-                            out _,
-                            out var jointTranslation);
+        joint.matrix.AssertDecompose(out var jointTranslation,
+                                     out _,
+                                     out var jointScale);
 
         // What is going on???
         // HACK: Fixes position of head meshes
