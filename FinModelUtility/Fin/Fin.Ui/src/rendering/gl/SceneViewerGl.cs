@@ -200,7 +200,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         this.backgroundRenderer_.Render();
       } else if (customSkyboxRenderer != null) {
         GlTransform.Translate(this.Camera.Position);
-        GlTransform.Scale(this.GlobalScale, this.GlobalScale, this.GlobalScale);
+        GlTransform.Scale(this.GlobalScale);
         customSkyboxRenderer.Render();
       } else {
         GlTransform.Ortho2d(0, width, height, 0);
@@ -224,11 +224,9 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   private void RenderScene_() {
     GlTransform.MatrixMode(TransformMatrixMode.MODEL);
     GlTransform.LoadIdentity();
-    GlTransform.Scale(this.GlobalScale, this.GlobalScale, this.GlobalScale);
+    GlTransform.Scale(this.GlobalScale);
     GlTransform.Rotate(90, 1, 0, 0);
-    GlTransform.Scale(this.ViewerScale,
-                      this.ViewerScale,
-                      this.ViewerScale);
+    GlTransform.Scale(this.ViewerScale);
 
     try {
       this.sceneRenderer_?.Render();

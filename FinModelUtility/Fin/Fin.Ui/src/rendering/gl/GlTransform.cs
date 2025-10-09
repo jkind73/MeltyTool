@@ -95,12 +95,12 @@ public static class GlTransform {
 
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static void Scale(double x, double y, double z)
-    => Scale((float) x, (float) y, (float) z);
-
-  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(float x, float y, float z)
     => MultMatrix(SystemMatrix4x4Util.FromScale(x, y, z));
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static void Scale(float scale)
+    => MultMatrix(SystemMatrix4x4Util.FromScale(scale, scale, scale));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(Vector3 scale)
