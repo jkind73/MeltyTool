@@ -6,6 +6,7 @@ using Avalonia.Controls;
 
 using fin.io.web;
 using fin.scene;
+using fin.scene.components;
 using fin.scene.instance;
 using fin.services;
 using fin.ui.rendering;
@@ -99,7 +100,6 @@ public partial class MainView : UserControl {
             var characterObj = area.AddRootNode();
             characterObj.AddComponent(
                 new LookAtMouseTickComponent(
-                    modelRenderComponent.BoneTransformManager,
                     modelRenderComponent.SimpleBoneTransformView,
                     model.Skeleton
                          .Bones
@@ -117,7 +117,9 @@ public partial class MainView : UserControl {
 
             var shadowModelObj = shadowPlacementObj.AddChildNode();
             shadowModelObj.AddComponent(
-                new ShadowRenderComponent(modelRenderComponent));
+                new ShadowRenderComponent(
+                    new LambdaSceneNodeRenderComponent(_ => modelRenderComponent
+                        .Render(false))));
             shadowModelObj.AddComponent(new RotateTalentTickComponent());
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));

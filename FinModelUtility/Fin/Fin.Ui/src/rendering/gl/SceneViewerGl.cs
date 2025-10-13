@@ -224,9 +224,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   private void RenderScene_() {
     GlTransform.MatrixMode(TransformMatrixMode.MODEL);
     GlTransform.LoadIdentity();
-    GlTransform.Scale(this.GlobalScale);
+    GlTransform.Scale(this.GlobalScale * this.ViewerScale);
     GlTransform.Rotate(90, 1, 0, 0);
-    GlTransform.Scale(this.ViewerScale);
 
     try {
       this.sceneRenderer_?.Render();

@@ -80,7 +80,9 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
   public ISkeletonRenderer SkeletonRenderer { get; }
 
-  public void Render(ISceneNodeInstance _) {
+  public void Render(ISceneNodeInstance _) => this.Render();
+
+  public void Render(bool allowUpdatingState = true) {
     GlTransform.PushMatrix();
 
     var model = this.Model;
@@ -89,55 +91,57 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     var animation = this.Animation;
     var animationPlaybackManager = this.AnimationPlaybackManager;
 
-    this.hiddenMeshes_.Clear();
-    foreach (var mesh in this.meshes_) {
-      if (mesh.DefaultDisplayState == MeshDisplayState.HIDDEN) {
-        this.hiddenMeshes_.Add(mesh);
-      }
-    }
-
-    var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
-    if (animation != null ||
-        this.needsToAlwaysUpdateMatrices_ ||
-        // Need to update for one extra frame, if overrides were just cleared.
-        this.hadOverrides_ ||
-        hasAnyOverrides) {
-      animationPlaybackManager.Tick();
-      this.BoneTransformManager.CalculateMatrices(
-          skeleton.Root,
-          model.Skin.BoneWeights,
-          this.SimpleBoneTransformView,
-          BoneWeightTransformType.FOR_RENDERING,
-          GlTransform.ModelMatrix);
-    }
-
-    this.hadOverrides_ = hasAnyOverrides;
-
-    if (animation != null) {
-      var frame = (float) animationPlaybackManager.Frame;
-      this.TextureTransformManager.CalculateMatrices(
-          model.MaterialManager.Textures,
-          (animation, frame));
-
-      if (animation.HasAnyMeshTracks) {
-        foreach (var meshTracks in animation.MeshTracks) {
-          if (!meshTracks.DisplayStates.TryGetAtFrame(
-                  frame,
-                  out var displayState)) {
-            continue;
-          }
-
-          if (displayState == MeshDisplayState.HIDDEN) {
-            this.hiddenMeshes_.Add(meshTracks.Mesh);
-          } else {
-            this.hiddenMeshes_.Remove(meshTracks.Mesh);
-          }
+    if (allowUpdatingState) {
+      this.hiddenMeshes_.Clear();
+      foreach (var mesh in this.meshes_) {
+        if (mesh.DefaultDisplayState == MeshDisplayState.HIDDEN) {
+          this.hiddenMeshes_.Add(mesh);
         }
       }
-    } else {
-      this.TextureTransformManager.CalculateMatrices(
-          model.MaterialManager.Textures,
-          null);
+
+      var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
+      if (animation != null ||
+          this.needsToAlwaysUpdateMatrices_ ||
+          // Need to update for one extra frame, if overrides were just cleared.
+          this.hadOverrides_ ||
+          hasAnyOverrides) {
+        animationPlaybackManager.Tick();
+        this.BoneTransformManager.CalculateMatrices(
+            skeleton.Root,
+            model.Skin.BoneWeights,
+            this.SimpleBoneTransformView,
+            BoneWeightTransformType.FOR_RENDERING,
+            GlTransform.ModelMatrix);
+      }
+      
+      this.hadOverrides_ = hasAnyOverrides;
+
+      if (animation != null) {
+        var frame = (float) animationPlaybackManager.Frame;
+        this.TextureTransformManager.CalculateMatrices(
+            model.MaterialManager.Textures,
+            (animation, frame));
+
+        if (animation.HasAnyMeshTracks) {
+          foreach (var meshTracks in animation.MeshTracks) {
+            if (!meshTracks.DisplayStates.TryGetAtFrame(
+                    frame,
+                    out var displayState)) {
+              continue;
+            }
+
+            if (displayState == MeshDisplayState.HIDDEN) {
+              this.hiddenMeshes_.Add(meshTracks.Mesh);
+            } else {
+              this.hiddenMeshes_.Remove(meshTracks.Mesh);
+            }
+          }
+        }
+      } else {
+        this.TextureTransformManager.CalculateMatrices(
+            model.MaterialManager.Textures,
+            null);
+      }
     }
 
     this.modelRenderer_.Render();

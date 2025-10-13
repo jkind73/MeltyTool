@@ -2,6 +2,7 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+using fin.math.floats;
 using fin.model;
 
 using Quaternion = System.Numerics.Quaternion;
@@ -139,5 +140,28 @@ public static class QuaternionUtil {
         (f * from.W) + (a * to.W));
 
     return slerped;
+  }
+
+  public static Quaternion SlerpTowards(in this Quaternion p,
+                                        in Quaternion q,
+                                        float t,
+                                        bool shortWay) {
+    float dot = Quaternion.Dot(p, q).Clamp(-1, 1);
+    if (shortWay) {
+      if (dot < 0.0f) {
+        return SlerpTowards(-p, q, t, true);
+      }
+    }
+
+    float angle = MathF.Acos(dot);
+    if (angle.IsRoughly0()) {
+      return q;
+    }
+
+    var first = p * MathF.Sin((1f - t) * angle);
+    var second = q * MathF.Sin((t) * angle);
+    float division = 1f / MathF.Sin(angle);
+
+    return Quaternion.Normalize((first + second) * division);
   }
 }

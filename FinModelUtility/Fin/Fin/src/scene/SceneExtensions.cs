@@ -42,12 +42,6 @@ public static class SceneExtensions {
                                         Action<ISceneNodeInstance> handler)
     => sceneNode.AddComponent(new LambdaSceneNodeRenderComponent(handler));
 
-  private class LambdaSceneNodeRenderComponent(
-      Action<ISceneNodeInstance> handler) : ISceneNodeRenderComponent {
-    public void Dispose() { }
-    public void Render(ISceneNodeInstance self) => handler(self);
-  }
-
   private class RenderableSceneNodeRenderComponent(IRenderable impl)
       : ISceneNodeRenderComponent {
     public void Dispose() => (impl as IDisposable)?.Dispose();
