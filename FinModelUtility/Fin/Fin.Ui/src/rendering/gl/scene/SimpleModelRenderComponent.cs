@@ -15,6 +15,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   private readonly IModelRenderer modelRenderer_;
   private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
   private bool isBoneSelected_;
+  private bool hadOverrides_;
 
   private bool needsToAlwaysUpdateMatrices_;
 
@@ -95,9 +96,12 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
       }
     }
 
+    var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
     if (animation != null ||
         this.needsToAlwaysUpdateMatrices_ ||
-        this.SimpleBoneTransformView.HasAnyOverrides) {
+        // Need to update for one extra frame, if overrides were just cleared.
+        this.hadOverrides_ ||
+        hasAnyOverrides) {
       animationPlaybackManager.Tick();
       this.BoneTransformManager.CalculateMatrices(
           skeleton.Root,
@@ -106,6 +110,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
           BoneWeightTransformType.FOR_RENDERING,
           GlTransform.ModelMatrix);
     }
+
+    this.hadOverrides_ = hasAnyOverrides;
 
     if (animation != null) {
       var frame = (float) animationPlaybackManager.Frame;

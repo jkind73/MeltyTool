@@ -13,6 +13,7 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
   private readonly IModelRenderer modelRenderer_;
   private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
   private bool isBoneSelected_;
+  private bool hadOverrides_;
 
   private bool needsToAlwaysUpdateMatrices_;
 
@@ -94,9 +95,11 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
       }
     }
 
+    var hasAnyOverrides = this.sceneModel_.SimpleBoneTransformView.HasAnyOverrides;
     if (animation != null ||
         this.needsToAlwaysUpdateMatrices_ ||
-        this.sceneModel_.SimpleBoneTransformView.HasAnyOverrides) {
+        this.hadOverrides_ ||
+        hasAnyOverrides) {
       animationPlaybackManager.Tick();
       this.sceneModel_.BoneTransformManager.CalculateMatrices(
           skeleton.Root,
@@ -105,6 +108,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
           BoneWeightTransformType.FOR_RENDERING,
           GlTransform.ModelMatrix);
     }
+
+    this.hadOverrides_ = hasAnyOverrides;
 
     if (animation != null) {
       var frame = (float) animationPlaybackManager.Frame;
