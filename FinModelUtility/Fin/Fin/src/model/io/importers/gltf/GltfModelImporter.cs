@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 
 using fin.animation.keyframes;
+using fin.data.dictionaries;
 using fin.data.lazy;
+using fin.data.nodes;
 using fin.data.queues;
 using fin.image;
 using fin.io;
+using fin.math.matrix.four;
 using fin.math.transform;
 using fin.model.impl;
 using fin.model.util;
@@ -15,6 +19,7 @@ using fin.util.sets;
 
 using SharpGLTF.Memory;
 using SharpGLTF.Schema2;
+using SharpGLTF.Validation;
 
 using GltfPrimitiveType = SharpGLTF.Schema2.PrimitiveType;
 using Material = SharpGLTF.Schema2.Material;
@@ -26,6 +31,7 @@ namespace fin.model.io.importers.gltf;
 public record GltfModelFileBundle(IReadOnlyTreeFile GltfFile)
     : IModelFileBundle {
   public IReadOnlyTreeFile MainFile => this.GltfFile;
+  public TextureSampler? DefaultSampler { get; init; }
 }
 
 public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
@@ -38,75 +44,81 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
         Files = files
     };
 
-    var gltf = ModelRoot.Load(gltfFile.FullPath);
+    var gltf = ModelRoot.Load(gltfFile.FullPath,
+                              new ReadSettings
+                                  { Validation = ValidationMode.Skip });
 
     // Adds materials
-    var lazyFinImages = new LazyDictionary<MemoryImage, IImage>(
-        gltfImage => {
-          if (gltfImage.SourcePath != null) {
-            return FinImage.FromFile(new FinFile(gltfImage.SourcePath));
-          }
+    var lazyFinImages = new LazyDictionary<MemoryImage, IImage>(gltfImage => {
+      if (gltfImage.SourcePath != null) {
+        return FinImage.FromFile(new FinFile(gltfImage.SourcePath));
+      }
 
-          return FinImage.FromStream(
-              new MemoryStream(gltfImage.Content.ToArray()));
-        });
-    var lazyFinTextures = new LazyDictionary<Texture?, ITexture?>(
-        gltfTexture => {
-          if (gltfTexture == null) {
-            return null;
-          }
+      return FinImage.FromStream(
+          new MemoryStream(gltfImage.Content.ToArray()));
+    });
+    var lazyFinTextures = new LazyDictionary<Texture?, ITexture?>(gltfTexture
+          => {
+        if (gltfTexture == null) {
+          return null;
+        }
 
-          var finImage = lazyFinImages[gltfTexture.PrimaryImage.Content];
+        var finImage = lazyFinImages[gltfTexture.PrimaryImage.Content];
 
-          var finTexture = finModel.MaterialManager.CreateTexture(finImage);
-          finTexture.Name = gltfTexture.Name;
+        var finTexture = finModel.MaterialManager.CreateTexture(finImage);
+        finTexture.Name = gltfTexture.Name;
 
-          var gltfSampler = gltfTexture.Sampler;
-          finTexture.WrapModeU = ConvertWrapMode_(gltfSampler.WrapS);
-          finTexture.WrapModeV = ConvertWrapMode_(gltfSampler.WrapT);
+        var gltfSampler
+            = gltfTexture.Sampler ?? modelFileBundle.DefaultSampler;
+        finTexture.WrapModeU = ConvertWrapMode_(gltfSampler.WrapS);
+        finTexture.WrapModeV = ConvertWrapMode_(gltfSampler.WrapT);
 
-          finTexture.MinFilter = gltfSampler.MinFilter switch {
-              TextureMipMapFilter.NEAREST => TextureMinFilter.NEAR,
-              TextureMipMapFilter.LINEAR  => TextureMinFilter.LINEAR,
-              TextureMipMapFilter.NEAREST_MIPMAP_NEAREST => TextureMinFilter
-                  .NEAR_MIPMAP_NEAR,
-              TextureMipMapFilter.LINEAR_MIPMAP_NEAREST => TextureMinFilter
-                  .LINEAR_MIPMAP_NEAR,
-              TextureMipMapFilter.NEAREST_MIPMAP_LINEAR => TextureMinFilter
-                  .NEAR_MIPMAP_LINEAR,
-              TextureMipMapFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
-                  .LINEAR_MIPMAP_LINEAR,
-              TextureMipMapFilter.DEFAULT => TextureMinFilter
-                  .LINEAR_MIPMAP_LINEAR,
-              _ => throw new ArgumentOutOfRangeException()
-          };
-          finTexture.MagFilter = gltfSampler.MagFilter switch {
-              TextureInterpolationFilter.NEAREST => TextureMagFilter.NEAR,
-              TextureInterpolationFilter.LINEAR => TextureMagFilter.LINEAR,
-              TextureInterpolationFilter.DEFAULT => TextureMagFilter.LINEAR,
-              _ => throw new ArgumentOutOfRangeException()
-          };
+        finTexture.MinFilter = gltfSampler.MinFilter switch {
+            TextureMipMapFilter.NEAREST => TextureMinFilter.NEAR,
+            TextureMipMapFilter.LINEAR  => TextureMinFilter.LINEAR,
+            TextureMipMapFilter.NEAREST_MIPMAP_NEAREST => TextureMinFilter
+                .NEAR_MIPMAP_NEAR,
+            TextureMipMapFilter.LINEAR_MIPMAP_NEAREST => TextureMinFilter
+                .LINEAR_MIPMAP_NEAR,
+            TextureMipMapFilter.NEAREST_MIPMAP_LINEAR => TextureMinFilter
+                .NEAR_MIPMAP_LINEAR,
+            TextureMipMapFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
+                .LINEAR_MIPMAP_LINEAR,
+            TextureMipMapFilter.DEFAULT => TextureMinFilter
+                .LINEAR_MIPMAP_LINEAR,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        finTexture.MagFilter = gltfSampler.MagFilter switch {
+            TextureInterpolationFilter.NEAREST => TextureMagFilter.NEAR,
+            TextureInterpolationFilter.LINEAR => TextureMagFilter.LINEAR,
+            TextureInterpolationFilter.DEFAULT => TextureMagFilter.LINEAR,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
-          return finTexture;
-        });
-    var lazyFinMaterials = new LazyDictionary<Material, IMaterial>(
-        gltfMaterial => {
-          // TODO: Handle all properties within gltfMaterial
+        return finTexture;
+      });
+    var lazyFinMaterials = new LazyDictionary<Material, IMaterial>(gltfMaterial
+          => {
+        // TODO: Handle all properties within gltfMaterial
 
-          var finMaterial = finModel.MaterialManager.AddStandardMaterial();
-          finMaterial.Name = gltfMaterial.Name;
+        if (gltfMaterial is null) {
+          return finModel.MaterialManager.AddNullMaterial();
+        }
 
-          finMaterial.DiffuseTexture
-              = lazyFinTextures[gltfMaterial.GetDiffuseTexture()];
-          finMaterial.NormalTexture
-              = lazyFinTextures[gltfMaterial.FindChannel("Normal")?.Texture];
-          finMaterial.EmissiveTexture
-              = lazyFinTextures[gltfMaterial.FindChannel("Emissive")?.Texture];
-          finMaterial.AmbientOcclusionTexture
-              = lazyFinTextures[gltfMaterial.FindChannel("Occlusion")?.Texture];
+        var finMaterial = finModel.MaterialManager.AddStandardMaterial();
+        finMaterial.Name = gltfMaterial.Name;
 
-          return finMaterial;
-        });
+        finMaterial.DiffuseTexture
+            = lazyFinTextures[gltfMaterial.GetDiffuseTexture()];
+        finMaterial.NormalTexture
+            = lazyFinTextures[gltfMaterial.FindChannel("Normal")?.Texture];
+        finMaterial.EmissiveTexture
+            = lazyFinTextures[gltfMaterial.FindChannel("Emissive")?.Texture];
+        finMaterial.AmbientOcclusionTexture
+            = lazyFinTextures[gltfMaterial.FindChannel("Occlusion")?.Texture];
+
+        return finMaterial;
+      });
 
     // Adds rig
     var finSkeleton = finModel.Skeleton;
@@ -114,24 +126,33 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
 
     var logicalIndexToJointIndex = new Dictionary<int, int>();
     var finBoneByJointIndex = new Dictionary<int, IReadOnlyBone>();
+    var finBoneWeightsByNode = new Dictionary<Node, IReadOnlyBoneWeights>();
 
     foreach (var gltfSkin in gltf.LogicalSkins) {
       // TODO: Better way to get this?
       var gltfRootNode = gltfSkin.Joints[0].VisualParent;
 
+      var root
+          = finSkeleton.Root.AddChild(gltfSkin.Skeleton?.LocalMatrix ??
+                                      Matrix4x4.Identity);
+
       for (var i = 0; i < gltfSkin.Joints.Count; ++i) {
         logicalIndexToJointIndex[gltfSkin.Joints[i].LogicalIndex] = i;
       }
 
-      var nodeAndBoneQueue = new FinTuple2Queue<Node, IBone?>(
+      var nodeAndBoneQueue = new FinTuple2Queue<Node, IBone>(
           gltfSkin.Joints.Where(j => j.VisualParent == gltfRootNode)
-                  .Select(j => (j, (IBone?) null)));
+                  .Select(j => (j, root)));
       while (nodeAndBoneQueue.TryDequeue(out var gltfNode,
                                          out var parentFinBone)) {
         var finBone
-            = AddChildBone_(parentFinBone ?? finSkeleton.Root, gltfNode);
+            = AddChildBone_(parentFinBone, gltfNode);
 
         finBoneByNode[gltfNode] = finBone;
+        finBoneWeightsByNode[gltfNode]
+            = finModel.Skin.GetOrCreateBoneWeights(
+                VertexSpace.RELATIVE_TO_WORLD,
+                finBone);
 
         if (logicalIndexToJointIndex.TryGetValue(gltfNode.LogicalIndex,
                                                  out var jointIndex)) {
@@ -166,19 +187,38 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
     // Adds skin
     var finSkin = finModel.Skin;
 
+    var logicalNodesByParent = new SetDictionary<Node?, Node>();
     foreach (var gltfNode in gltf.LogicalNodes) {
+      logicalNodesByParent.Add(gltfNode.VisualParent, gltfNode);
+    }
+
+    var nodeQueue = new FinTuple3Queue<Node, IReadOnlyBoneWeights?, Matrix4x4>(
+        logicalNodesByParent[null]
+            .Select(n => (n, finBoneWeightsByNode.GetValueOrDefault(n),
+                          Matrix4x4.Identity)));
+    while (nodeQueue.TryDequeue(out var gltfNode,
+                                out var finBoneWeights,
+                                out var matrix)) {
+      matrix = gltfNode.LocalMatrix * matrix;
+
+      if (logicalNodesByParent.TryGetSet(gltfNode, out var children)) {
+        nodeQueue.Enqueue(
+            children!.Select(n => (n,
+                                  finBoneWeightsByNode.GetValueOrDefault(
+                                      n,
+                                      finBoneWeights), matrix)));
+      }
+
       var gltfMesh = gltfNode.Mesh;
       if (gltfMesh == null) {
         continue;
       }
 
-      var finBone = AddChildBone_(
-          (gltfNode.VisualParent != null &&
-           finBoneByNode.TryGetValue(gltfNode.VisualParent,
-                                     out var parentFinBone))
-              ? parentFinBone
-              : finSkeleton.Root,
-          gltfNode);
+      matrix.AssertDecompose(out _,
+                             out _,
+                             out var scale);
+
+      var flippedInsideOut = scale.X < 0 || scale.Y < 0 || scale.Z < 0;
 
       var finMesh = finSkin.AddMesh();
       finMesh.Name = gltfMesh.Name;
@@ -189,6 +229,7 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
         var indexAccessor = gltfPrimitive.GetIndexAccessor().AsIndicesArray();
         var positionAccessor = gltfPrimitive.GetVertexAccessor("POSITION")
                                             .AsVector3Array();
+
         var normalAccessor
             = gltfPrimitive.GetVertexAccessor("NORMAL")?.AsVector3Array();
         var texCoord0Accessor = gltfPrimitive.GetVertexAccessor("TEXCOORD_0")
@@ -206,10 +247,17 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
                 var i = (int) index;
 
                 var gltfPosition = positionAccessor[i];
-                var finVertex = finSkin.AddVertex(gltfPosition);
+                var finVertex
+                    = finSkin.AddVertex(
+                        Vector3.Transform(gltfPosition, matrix));
 
                 if (normalAccessor != null) {
-                  finVertex.SetLocalNormal(normalAccessor[i]);
+                  var localNormal = normalAccessor[i];
+                  if (flippedInsideOut) {
+                    localNormal = -localNormal;
+                  }
+                  finVertex.SetLocalNormal(
+                      Vector3.TransformNormal(localNormal, matrix));
                 }
 
                 if (texCoord0Accessor != null) {
@@ -217,10 +265,9 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
                 }
 
                 if (joints0Accessor == null || weights0Accessor == null) {
-                  finVertex.SetBoneWeights(
-                      finSkin.GetOrCreateBoneWeights(
-                          VertexSpace.RELATIVE_TO_BONE,
-                          finBone));
+                  if (finBoneWeights != null) {
+                    finVertex.SetBoneWeights(finBoneWeights);
+                  }
                 } else {
                   var joints0 = joints0Accessor[i];
                   var weights0 = weights0Accessor[i];
@@ -240,7 +287,7 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
 
                   finVertex.SetBoneWeights(
                       finSkin.GetOrCreateBoneWeights(
-                          VertexSpace.RELATIVE_TO_BONE,
+                          VertexSpace.RELATIVE_TO_WORLD,
                           boneWeights.ToArray()
                       ));
                 }
@@ -262,7 +309,9 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
         };
 
         finPrimitive.SetMaterial(finMaterial)
-                    .SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
+                    .SetVertexOrder(flippedInsideOut
+                                        ? VertexOrder.CLOCKWISE
+                                        : VertexOrder.COUNTER_CLOCKWISE);
       }
     }
 
@@ -393,8 +442,8 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
           var finRotations = finBoneTracks.UseCombinedQuaternionKeyframes();
           finRotations.SetAllStepKeyframes(
               gltfRotations.GetLinearKeys()
-                           .Select(
-                               tuple => (frameRate * tuple.Key, tuple.Value))
+                           .Select(tuple => (
+                                       frameRate * tuple.Key, tuple.Value))
                            .ToArray());
 
           break;

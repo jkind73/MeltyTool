@@ -132,18 +132,19 @@ public sealed class SkeletonRenderer
       }
 
       var maxLength = -1f;
-      var verticesDependentOnThisBone = verticesByBone[bone];
-      foreach (var vertex in verticesDependentOnThisBone ?? []) {
-        var localPosition = vertex.LocalPosition;
+      if (verticesByBone.TryGetValue(bone, out var vertices)){
+        foreach (var vertex in vertices) {
+          var localPosition = vertex.LocalPosition;
 
-        var boneWeights = vertex.BoneWeights.AssertNonnull();
-        if (boneWeights.VertexSpace == VertexSpace.RELATIVE_TO_WORLD) {
-          ProjectionUtil.ProjectPosition(
-              boneTransformManager.GetInverseBindMatrix(boneWeights).Impl,
-              ref localPosition);
+          var boneWeights = vertex.BoneWeights.AssertNonnull();
+          if (boneWeights.VertexSpace == VertexSpace.RELATIVE_TO_WORLD) {
+            ProjectionUtil.ProjectPosition(
+                boneTransformManager.GetInverseBindMatrix(boneWeights).Impl,
+                ref localPosition);
+          }
+
+          maxLength = Math.Max(maxLength, localPosition.X);
         }
-
-        maxLength = Math.Max(maxLength, localPosition.X);
       }
 
       if (!maxLength.IsRoughly(-1f)) {
