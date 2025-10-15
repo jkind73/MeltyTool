@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
+using fin.data.dictionaries;
 using fin.data.indexable;
 using fin.math.floats;
 using fin.math.matrix.four;
@@ -102,6 +103,24 @@ public sealed class SkeletonRenderer
     this.boneTransformManager_ = boneTransformManager;
     this.Skeleton = skeleton;
 
+    var verticesByBone
+        = new IndexableDictionary<IReadOnlyBone, HashSet<IReadOnlyVertex>>(
+            skeleton.Bones.Count);
+    foreach (var vertex in model.Skin.Vertices) {
+      var boneWeights = vertex.BoneWeights;
+      if (boneWeights == null) {
+        continue;
+      }
+
+      foreach (var boneWeight in boneWeights.Weights) {
+        if (verticesByBone.TryGetValue(boneWeight.Bone, out var vertexSet)) {
+          vertexSet.Add(vertex);
+        } else {
+          verticesByBone[boneWeight.Bone] = [vertex];
+        }
+      }
+    }
+
     var scaleByBone
         = new IndexableDictionary<IReadOnlyBone, Vector3>(skeleton.Bones.Count);
     this.scaleByBone_ = scaleByBone;
@@ -113,13 +132,8 @@ public sealed class SkeletonRenderer
       }
 
       var maxLength = -1f;
-      var verticesDependentOnThisBone
-          = model.Skin
-                 .Vertices
-                 .Where(v => v.BoneWeights?.Weights
-                              .Any(w => w.Bone == bone) ??
-                             false);
-      foreach (var vertex in verticesDependentOnThisBone) {
+      var verticesDependentOnThisBone = verticesByBone[bone];
+      foreach (var vertex in verticesDependentOnThisBone ?? []) {
         var localPosition = vertex.LocalPosition;
 
         var boneWeights = vertex.BoneWeights.AssertNonnull();
