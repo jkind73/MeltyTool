@@ -16,7 +16,9 @@ Separate batch scripts are provided for each supported game in order to simplify
 
 If you'd like to vote on new games or features that should be supported, please fill out the following Google Form:
 
-[Suggesting Games/Features for Fin Model Utility](https://docs.google.com/forms/d/e/1FAIpQLSfWviQFZxCAuZHYmrcIRvYy3SXRRXo6TmhJVCDsGKR5zvXJvw/viewform)
+[Suggesting Games/Features](https://docs.google.com/forms/d/e/1FAIpQLSfWviQFZxCAuZHYmrcIRvYy3SXRRXo6TmhJVCDsGKR5zvXJvw/viewform)
+
+(Sorry, I can't really make any promises as to when I'll get to these. This is moreso for documenting public interest in specific features.)
 
 ## Credits
 
