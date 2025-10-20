@@ -137,9 +137,9 @@ public static partial class GoldenAssert {
         AssertImageFilesAreIdentical_(lhs, rhs);
       } else if (lhs.FileType.ToLower() is ".glb" or ".gltf") {
         AssertModelFilesAreIdentical_(lhs, rhs);
-        throw new Exception("Unable to find error in model", e);
+        Asserts.SpansEqual(lhsBytes, rhsBytes);
       } else {
-        CollectionAssert.AreEqual(lhsBytes, rhsBytes);
+        Asserts.SpansEqual(lhsBytes, rhsBytes);
       }
     }
   }
