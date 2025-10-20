@@ -13,7 +13,7 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.testing;
 
-public static class GoldenAssert {
+public static partial class GoldenAssert {
   private const string TMP_NAME = "tmp";
 
   public static ISystemDirectory GetRootGoldensDirectory(
@@ -128,13 +128,16 @@ public static class GoldenAssert {
 
     try {
       Assert.IsTrue(lhsBytes.SequenceEqual(rhsBytes));
-    } catch {
+    } catch (Exception e) {
       if (lhs.FileType.ToLower() is ".bmp"
-                                        or ".jpg"
-                                        or ".jpeg"
-                                        or ".gif"
-                                        or ".png") {
+                                    or ".jpg"
+                                    or ".jpeg"
+                                    or ".gif"
+                                    or ".png") {
         AssertImageFilesAreIdentical_(lhs, rhs);
+      } else if (lhs.FileType.ToLower() is ".glb" or ".gltf") {
+        AssertModelFilesAreIdentical_(lhs, rhs);
+        throw new Exception("Unable to find error in model", e);
       } else {
         CollectionAssert.AreEqual(lhsBytes, rhsBytes);
       }
