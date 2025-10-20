@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace fin.data.dictionaries;
@@ -26,6 +27,9 @@ public sealed class AggregatedDictionary<TKey, TValue>(
   public IEnumerable<TKey> Keys => impl.Keys;
   public IEnumerable<TValue> Values => impl.Values;
   public bool ContainsKey(TKey key) => impl.ContainsKey(key);
+
+  public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler)
+    => impl.GetOrAdd(key, createHandler);
 
   public TValue this[TKey key] {
     get => impl[key];

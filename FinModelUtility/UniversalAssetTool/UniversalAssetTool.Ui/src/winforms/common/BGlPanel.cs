@@ -51,7 +51,7 @@ public abstract partial class BGlPanel : UserControl {
 
         this.RenderGl();
 
-        GL.Flush();
+        GL.Finish();
         this.impl_.SwapBuffers();
 
         this.impl_.Context.MakeNoneCurrent();

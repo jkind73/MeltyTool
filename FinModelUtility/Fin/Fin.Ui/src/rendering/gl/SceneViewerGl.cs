@@ -173,7 +173,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
     this.RenderSkybox_();
     this.RenderScene_();
 
-    GL.Flush();
+    GL.Finish();
 
     FrameTime.MarkEndOfFrameForFpsDisplay();
   }
