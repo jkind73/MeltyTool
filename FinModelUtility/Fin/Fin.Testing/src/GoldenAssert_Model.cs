@@ -1,4 +1,7 @@
-﻿using fin.io;
+﻿using System.Numerics;
+
+using fin.io;
+using fin.math.matrix.four;
 using fin.util.asserts;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,6 +25,18 @@ public static partial class GoldenAssert {
     AssertMaterialsIdentical_(
         lhsModel.LogicalMaterials,
         rhsModel.LogicalMaterials);
+
+    AssertSkinsIdentical_(
+        lhsModel.LogicalSkins,
+        rhsModel.LogicalSkins);
+
+    AssertMeshesIdentical_(
+        lhsModel.LogicalMeshes,
+        rhsModel.LogicalMeshes);
+
+    AssertNodesIdentical_(
+        lhsModel.LogicalNodes,
+        rhsModel.LogicalNodes);
 
     // TODO: The rest
   }
@@ -116,6 +131,63 @@ public static partial class GoldenAssert {
       var materialName = lhsMaterial.Name;
 
       // TODO: The rest
+    }
+  }
+
+  private static void AssertSkinsIdentical_(
+      IReadOnlyList<Skin> lhsSkins,
+      IReadOnlyList<Skin> rhsSkins) {
+    Assert.AreEqual(lhsSkins.Count, rhsSkins.Count);
+
+    foreach (var (lhsSkin, rhsSkin) in lhsSkins.Zip(rhsSkins)) {
+      Assert.AreEqual(lhsSkin.Name, rhsSkin.Name);
+      var skinName = lhsSkin.Name;
+
+      Assert.AreEqual(lhsSkin.InverseBindMatrices.Count, rhsSkin.InverseBindMatrices.Count);
+      foreach (var (lhsInverseBindMatrix, rhsInverseBindMatrix) in
+               lhsSkin.InverseBindMatrices.Zip(rhsSkin.InverseBindMatrices)) {
+        Asserts.Equal(lhsInverseBindMatrix, rhsInverseBindMatrix, skinName);
+      }
+
+      Assert.AreEqual(lhsSkin.Joints.Count, rhsSkin.Joints.Count);
+      foreach (var (lhsJoint, rhsJoint) in lhsSkin.Joints.Zip(rhsSkin.Joints)) {
+        Asserts.Equal(lhsJoint.Name, rhsJoint.Name, skinName);
+        var jointName = lhsJoint.Name;
+
+        Asserts.Equal(lhsJoint.LocalMatrix, rhsJoint.LocalMatrix, jointName);
+      }
+    }
+  }
+
+  private static void AssertMeshesIdentical_(
+      IReadOnlyList<Mesh> lhsMeshes,
+      IReadOnlyList<Mesh> rhsMeshes) {
+    Assert.AreEqual(lhsMeshes.Count, rhsMeshes.Count);
+
+    foreach (var (lhsMesh, rhsMesh) in lhsMeshes.Zip(rhsMeshes)) {
+      Assert.AreEqual(lhsMesh.Name, rhsMesh.Name);
+      
+      Assert.AreEqual(lhsMesh.Primitives.Count, rhsMesh.Primitives.Count);
+      foreach (var (lhsPrimitive, rhsPrimitive) in lhsMesh.Primitives.Zip(
+                   rhsMesh.Primitives)) {
+        Asserts.SequenceEqual(lhsPrimitive.IndexAccessor.AsIndicesArray(),
+                              rhsPrimitive.IndexAccessor.AsIndicesArray());
+      }
+
+      // TODO: The rest
+    }
+  }
+
+  private static void AssertNodesIdentical_(
+      IReadOnlyList<Node> lhsNodes,
+      IReadOnlyList<Node> rhsNodes) {
+    Assert.AreEqual(lhsNodes.Count, rhsNodes.Count);
+
+    foreach (var (lhsNode, rhsNode) in lhsNodes.Zip(rhsNodes)) {
+      Assert.AreEqual(lhsNode.Name, rhsNode.Name);
+      var nodeName = lhsNode.Name;
+
+      Asserts.Equal(lhsNode.LocalMatrix, rhsNode.LocalMatrix, nodeName);
     }
   }
 }
