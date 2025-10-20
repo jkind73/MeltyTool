@@ -1,8 +1,8 @@
-﻿using System.Numerics;
+﻿using System.Xml.Linq;
 
 using fin.io;
-using fin.math.matrix.four;
 using fin.util.asserts;
+using fin.util.exceptions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,9 +44,9 @@ public static partial class GoldenAssert {
   private static ModelRoot ParseModelFromBytes_(IReadOnlyTreeFile file) {
     var directory = file.AssertGetParent();
     return ReadContext.Create(f => directory
-                            .AssertGetExistingFile(f)
-                            .ReadAllBytes())
-               .ReadBinarySchema2(file.OpenRead());
+                                   .AssertGetExistingFile(f)
+                                   .ReadAllBytes())
+                      .ReadBinarySchema2(file.OpenRead());
   }
 
   private static void AssertAnimationsIdentical_(
@@ -58,43 +58,49 @@ public static partial class GoldenAssert {
       Assert.AreEqual(lhsAnimation.Name, rhsAnimation.Name);
       var animationName = lhsAnimation.Name;
 
-      Assert.AreEqual(lhsAnimation.Duration,
-                      rhsAnimation.Duration,
-                      animationName);
+      AnnotatedException.Space(
+          $"Found a change in animation {animationName}:\n",
+          () => {
+            Assert.AreEqual(lhsAnimation.Duration,
+                            rhsAnimation.Duration,
+                            animationName);
 
-      var lhsChannels = lhsAnimation.Channels;
-      var rhsChannels = rhsAnimation.Channels;
-      Assert.AreEqual(lhsChannels.Count, rhsChannels.Count, animationName);
-      foreach (var (lhsChannel, rhsChannel) in lhsChannels.Zip(
-                   rhsChannels)) {
-        Assert.AreEqual(lhsChannel.TargetNodePath,
-                        rhsChannel.TargetNodePath,
-                        animationName);
+            var lhsChannels = lhsAnimation.Channels;
+            var rhsChannels = rhsAnimation.Channels;
+            Assert.AreEqual(lhsChannels.Count,
+                            rhsChannels.Count,
+                            animationName);
+            foreach (var (lhsChannel, rhsChannel) in lhsChannels.Zip(
+                         rhsChannels)) {
+              Assert.AreEqual(lhsChannel.TargetNodePath,
+                              rhsChannel.TargetNodePath,
+                              animationName);
 
-        switch (lhsChannel.TargetNodePath) {
-          case PropertyPath.translation: {
-            AssertChannelsIdentical_(lhsChannel.GetTranslationSampler(),
-                                     rhsChannel.GetTranslationSampler(),
-                                     animationName);
-            break;
-          }
-          case PropertyPath.rotation: {
-            AssertChannelsIdentical_(lhsChannel.GetRotationSampler(),
-                                     rhsChannel.GetRotationSampler(),
-                                     animationName);
-            break;
-          }
-          case PropertyPath.scale: {
-            AssertChannelsIdentical_(lhsChannel.GetScaleSampler(),
-                                     rhsChannel.GetScaleSampler(),
-                                     animationName);
-            break;
-          }
-          default:
-            throw new NotImplementedException(
-                $"{nameof(lhsChannel.TargetNodePath)}: {lhsChannel.TargetNodePath}");
-        }
-      }
+              switch (lhsChannel.TargetNodePath) {
+                case PropertyPath.translation: {
+                  AssertChannelsIdentical_(lhsChannel.GetTranslationSampler(),
+                                           rhsChannel.GetTranslationSampler(),
+                                           animationName);
+                  break;
+                }
+                case PropertyPath.rotation: {
+                  AssertChannelsIdentical_(lhsChannel.GetRotationSampler(),
+                                           rhsChannel.GetRotationSampler(),
+                                           animationName);
+                  break;
+                }
+                case PropertyPath.scale: {
+                  AssertChannelsIdentical_(lhsChannel.GetScaleSampler(),
+                                           rhsChannel.GetScaleSampler(),
+                                           animationName);
+                  break;
+                }
+                default:
+                  throw new NotImplementedException(
+                      $"{nameof(lhsChannel.TargetNodePath)}: {lhsChannel.TargetNodePath}");
+              }
+            }
+          });
     }
   }
 
@@ -143,19 +149,30 @@ public static partial class GoldenAssert {
       Assert.AreEqual(lhsSkin.Name, rhsSkin.Name);
       var skinName = lhsSkin.Name;
 
-      Assert.AreEqual(lhsSkin.InverseBindMatrices.Count, rhsSkin.InverseBindMatrices.Count);
-      foreach (var (lhsInverseBindMatrix, rhsInverseBindMatrix) in
-               lhsSkin.InverseBindMatrices.Zip(rhsSkin.InverseBindMatrices)) {
-        Asserts.Equal(lhsInverseBindMatrix, rhsInverseBindMatrix, skinName);
-      }
+      AnnotatedException.Space(
+          $"Found a change in skin {skinName}:\n",
+          () => {
+            Assert.AreEqual(lhsSkin.InverseBindMatrices.Count,
+                            rhsSkin.InverseBindMatrices.Count);
+            foreach (var (lhsInverseBindMatrix, rhsInverseBindMatrix) in
+                     lhsSkin.InverseBindMatrices.Zip(
+                         rhsSkin.InverseBindMatrices)) {
+              Asserts.Equal(lhsInverseBindMatrix,
+                            rhsInverseBindMatrix,
+                            skinName);
+            }
 
-      Assert.AreEqual(lhsSkin.Joints.Count, rhsSkin.Joints.Count);
-      foreach (var (lhsJoint, rhsJoint) in lhsSkin.Joints.Zip(rhsSkin.Joints)) {
-        Asserts.Equal(lhsJoint.Name, rhsJoint.Name, skinName);
-        var jointName = lhsJoint.Name;
+            Assert.AreEqual(lhsSkin.Joints.Count, rhsSkin.Joints.Count);
+            foreach (var (lhsJoint, rhsJoint) in lhsSkin.Joints.Zip(
+                         rhsSkin.Joints)) {
+              Asserts.Equal(lhsJoint.Name, rhsJoint.Name, skinName);
+              var jointName = lhsJoint.Name;
 
-        Asserts.Equal(lhsJoint.LocalMatrix, rhsJoint.LocalMatrix, jointName);
-      }
+              Asserts.Equal(lhsJoint.LocalMatrix,
+                            rhsJoint.LocalMatrix,
+                            jointName);
+            }
+          });
     }
   }
 
@@ -166,15 +183,20 @@ public static partial class GoldenAssert {
 
     foreach (var (lhsMesh, rhsMesh) in lhsMeshes.Zip(rhsMeshes)) {
       Assert.AreEqual(lhsMesh.Name, rhsMesh.Name);
-      
-      Assert.AreEqual(lhsMesh.Primitives.Count, rhsMesh.Primitives.Count);
-      foreach (var (lhsPrimitive, rhsPrimitive) in lhsMesh.Primitives.Zip(
-                   rhsMesh.Primitives)) {
-        Asserts.SequenceEqual(lhsPrimitive.IndexAccessor.AsIndicesArray(),
-                              rhsPrimitive.IndexAccessor.AsIndicesArray());
-      }
 
-      // TODO: The rest
+      AnnotatedException.Space(
+          $"Found a change in mesh {lhsMesh.Name}:\n",
+          () => {
+            Assert.AreEqual(lhsMesh.Primitives.Count, rhsMesh.Primitives.Count);
+            foreach (var (lhsPrimitive, rhsPrimitive) in lhsMesh.Primitives.Zip(
+                         rhsMesh.Primitives)) {
+              Asserts.SequenceEqual(lhsPrimitive.IndexAccessor.AsIndicesArray(),
+                                    rhsPrimitive.IndexAccessor
+                                                .AsIndicesArray());
+            }
+
+            // TODO: The rest
+          });
     }
   }
 

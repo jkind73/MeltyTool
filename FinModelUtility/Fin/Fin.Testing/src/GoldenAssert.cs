@@ -4,6 +4,7 @@ using System.Text;
 using fin.image;
 using fin.io;
 using fin.util.asserts;
+using fin.util.exceptions;
 using fin.util.strings;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -108,11 +109,12 @@ public static partial class GoldenAssert {
 
     foreach (var (name, lhsFile) in lhsFiles) {
       var rhsFile = rhsFiles[name];
-      try {
-        await AssertFilesAreIdentical_(lhsFile, rhsFile);
-      } catch (Exception ex) {
-        throw new Exception($"Found a change in file {name}: ", ex);
-      }
+
+      await AnnotatedException.SpaceAsync(
+          $"Found a change in file {name}:\n",
+          async () => {
+            await AssertFilesAreIdentical_(lhsFile, rhsFile);
+          });
     }
   }
 
