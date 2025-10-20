@@ -95,8 +95,8 @@ public sealed class ListDictionaryTests {
     Assert.AreEqual(true, impl.TryGetList(null, out var nullList));
 
     Asserts.SequenceEqual([
-                              ("bar", barList!),
                               ("foo", fooList!),
+                              ("bar", barList!),
                               (null, nullList!),
                           ],
                           actualValues);

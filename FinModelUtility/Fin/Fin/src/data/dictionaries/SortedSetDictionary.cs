@@ -21,14 +21,8 @@ public sealed class SortedSetDictionary<TKey, TValue>
 
   public bool HasSet(TKey key) => this.impl_.ContainsKey(key);
 
-  public void Add(TKey key, TValue value) {
-    SortedSet<TValue> set;
-    if (!this.impl_.TryGetValue(key, out set)) {
-      this.impl_[key] = set = [];
-    }
-
-    set.Add(value);
-  }
+  public void Add(TKey key, TValue value)
+    => this.impl_.GetOrAdd(key, _ => []).Add(value);
 
   public SortedSet<TValue> this[TKey key] => this.impl_[key];
 

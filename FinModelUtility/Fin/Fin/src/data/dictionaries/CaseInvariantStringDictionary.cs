@@ -2,24 +2,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace fin.data.dictionaries;
 
-public sealed class CaseInvariantStringDictionary<T> : IFinDictionary<string, T> {
+public sealed class CaseInvariantStringDictionary<T>
+    : IFinDictionary<string, T> {
   private readonly Dictionary<string, T> impl_
       = new(StringComparer.OrdinalIgnoreCase);
 
-  private readonly Dictionary<string, T>.AlternateLookup<ReadOnlySpan<char>>
-      spanImpl_;
+  private readonly Dictionary<string, T>.AlternateLookup<
+      ReadOnlySpan<char>> spanImpl_;
 
-  public CaseInvariantStringDictionary() {
-    this.impl_ = new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase);
-    this.spanImpl_ = this.impl_.GetAlternateLookup<ReadOnlySpan<char>>();
-  }
+  public CaseInvariantStringDictionary() => this.spanImpl_
+      = this.impl_.GetAlternateLookup<ReadOnlySpan<char>>();
 
   public void Clear() => this.impl_.Clear();
 
   public int Count => this.impl_.Count;
+
+  public T GetOrAdd(string key, Func<string, T> createHandler) {
+    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+            this.impl_,
+            key,
+            out var exists);
+    if (exists) {
+      return value!;
+    }
+
+    return value = createHandler(key);
+  }
+
+  public T GetOrAdd(ReadOnlySpan<char> key,
+                    Func<ReadOnlySpan<char>, T> createHandler) {
+    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+        this.spanImpl_,
+        key,
+        out var exists);
+    if (exists) {
+      return value!;
+    }
+
+    return value = createHandler(key);
+  }
+
   public IEnumerable<string> Keys => this.impl_.Keys;
   public IEnumerable<T> Values => this.impl_.Values;
   public bool ContainsKey(string key) => this.impl_.ContainsKey(key);

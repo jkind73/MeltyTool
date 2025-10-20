@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using readOnly;
 
@@ -18,6 +19,8 @@ public partial interface IFinDictionary<TKey, TValue>
 
   new TValue this[TKey key] { get; set; }
   bool Remove(TKey key);
+
+  TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler);
 }
 
 public static class FinDictionaryExtensions {

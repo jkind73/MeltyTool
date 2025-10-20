@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using readOnly;
 
@@ -36,14 +38,8 @@ public sealed class ListDictionary<TKey, TValue>(
 
   public bool HasList(TKey key) => impl.ContainsKey(key);
 
-  public void Add(TKey key, TValue value) {
-    IList<TValue> list;
-    if (!impl.TryGetValue(key, out list)) {
-      impl[key] = list = new List<TValue>();
-    }
-
-    list.Add(value);
-  }
+  public void Add(TKey key, TValue value)
+    => impl.GetOrAdd(key, _ => []).Add(value);
 
   public IList<TValue> this[TKey key] => impl[key];
 

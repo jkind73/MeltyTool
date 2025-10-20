@@ -33,6 +33,14 @@ public sealed class LazyArray<T> : ILazyArray<T> {
     }
   }
 
+  public T GetOrAdd(int key, Func<int, T> createHandler) {
+    if (this.ContainsKey(key)) {
+      return this[key];
+    }
+
+    return this[key] = createHandler(key);
+  }
+
   public bool ContainsKey(int key)
     => this.populated_.Length > key && this.populated_[key];
 

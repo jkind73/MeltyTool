@@ -29,6 +29,9 @@ public sealed class LazyDictionary<TKey, TValue>
   public void Clear() => this.impl_.Clear();
   public bool ContainsKey(TKey key) => this.impl_.ContainsKey(key);
 
+  public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler)
+    => this.impl_.GetOrAdd(key, createHandler);
+
   public bool Remove(TKey key) => this.impl_.Remove(key);
 
   public TValue this[TKey key] {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using fin.util.sets;
+
 using readOnly;
 
 
@@ -33,23 +35,11 @@ public sealed class SetDictionary<TKey, TValue>(
 
   public int Count => impl.Values.Select(list => list.Count).Sum();
 
-  public void Add(TKey key, TValue value) {
-    if (!impl.TryGetValue(key, out var set)) {
-      impl[key] = set = new HashSet<TValue>();
-    }
+  public void Add(TKey key, TValue value)
+    => impl.GetOrAdd(key, _ => new HashSet<TValue>()).Add(value);
 
-    set.Add(value);
-  }
-
-  public void Add(TKey key, IEnumerable<TValue> values) {
-    if (!impl.TryGetValue(key, out var set)) {
-      impl[key] = set = new HashSet<TValue>();
-    }
-
-    foreach (var value in values) {
-      set.Add(value);
-    }
-  }
+  public void Add(TKey key, IEnumerable<TValue> values)
+    => impl.GetOrAdd(key, _ => new HashSet<TValue>()).Add(values);
 
   public ISet<TValue> this[TKey key] => impl[key];
 

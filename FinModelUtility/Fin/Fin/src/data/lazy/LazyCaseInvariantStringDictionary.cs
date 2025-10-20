@@ -14,17 +14,14 @@ public sealed class LazyCaseInvariantStringDictionary<TValue>
   public LazyCaseInvariantStringDictionary(Func<string, TValue> handler) {
     this.impl_ = new LazyDictionary<string, TValue>(
         handler,
-        new SimpleDictionary<string, TValue>(
-            StringComparer.OrdinalIgnoreCase));
+        new SimpleDictionary<string, TValue>(StringComparer.OrdinalIgnoreCase));
   }
 
   public LazyCaseInvariantStringDictionary(
       Func<LazyDictionary<string, TValue>, string, TValue> handler) {
     this.impl_ = new LazyDictionary<string, TValue>(
         handler,
-        new SimpleDictionary<string, TValue>(
-            new ConcurrentDictionary<string, TValue>(
-                StringComparer.OrdinalIgnoreCase)));
+        new SimpleDictionary<string, TValue>(StringComparer.OrdinalIgnoreCase));
   }
 
   public void Clear() => this.impl_.Clear();
@@ -39,6 +36,9 @@ public sealed class LazyCaseInvariantStringDictionary<TValue>
   public IEnumerable<TValue> Values => this.impl_.Values;
 
   public bool ContainsKey(string key) => this.impl_.ContainsKey(key);
+
+  public TValue GetOrAdd(string key, Func<string, TValue> createHandler)
+    => this.impl_.GetOrAdd(key, createHandler);
 
   public bool Remove(string key) => this.impl_.Remove(key);
 

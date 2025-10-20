@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Concurrent;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using fin.util.asserts;
 
@@ -12,7 +13,7 @@ namespace fin.data.dictionaries;
 ///   A dictionary that accepts null keys.
 /// </summary>
 public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, TValue> {
-  private readonly ConcurrentDictionary<TKey, TValue> impl_ = new();
+  private readonly Dictionary<TKey, TValue> impl_ = new();
 
   private bool hasNull_;
   private TValue nullValue_;
@@ -57,6 +58,27 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
     } else {
       this.impl_[key] = value;
     }
+  }
+
+  public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler) {
+    if (key == null) {
+      if (this.hasNull_) {
+        return this.nullValue_;
+      }
+
+      this.hasNull_ = true;
+      return this.nullValue_ = createHandler(default!);
+    }
+
+    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+        this.impl_,
+        key,
+        out var exists);
+    if (exists) {
+      return value!;
+    }
+
+    return value = createHandler(key);
   }
 
   public TValue this[TKey key] {

@@ -40,73 +40,76 @@ public class GxLazyTextureDictionary<TState, TDiscriminator>
       Func<IGxTextureBundle, TState, TDiscriminator>? getDiscriminator = null,
       Action<IGxTextureBundle, TState, ITexture>? handleNewTexture = null) {
     this.getDiscriminator_ = getDiscriminator;
-    this.impl_ = new(
-        (dict, texInfo) => {
-          var (_, gxTexture, texCoordGen, texMatrix, _) = texInfo;
+    this.impl_ = new((dict, texInfo) => {
+      var (_, gxTexture, texCoordGen, texMatrix, _) = texInfo;
 
-          // TODO: Share texture definitions between materials?
-          var texture =
-              model.MaterialManager.CreateTexture(gxTexture.MipmapImages);
+      // TODO: Share texture definitions between materials?
+      var texture =
+          model.MaterialManager.CreateTexture(gxTexture.MipmapImages);
 
-          texture.Name = gxTexture.Name ?? $"texture{dict.Count}";
-          texture.WrapModeU = gxTexture.WrapModeS.ToFinWrapMode();
-          texture.WrapModeV = gxTexture.WrapModeT.ToFinWrapMode();
+      texture.Name = gxTexture.Name ?? $"texture{dict.Count}";
+      texture.WrapModeU = gxTexture.WrapModeS.ToFinWrapMode();
+      texture.WrapModeV = gxTexture.WrapModeT.ToFinWrapMode();
 
-          texture.MagFilter =
-              gxTexture.MagTextureFilter.ToFinMagFilter();
-          texture.MinFilter =
-              gxTexture.MinTextureFilter.ToFinMinFilter();
-          texture.ColorType = gxTexture.ColorType;
+      texture.MagFilter =
+          gxTexture.MagTextureFilter.ToFinMagFilter();
+      texture.MinFilter =
+          gxTexture.MinTextureFilter.ToFinMinFilter();
+      texture.ColorType = gxTexture.ColorType;
 
-          texture.MinLod = gxTexture.MinLod;
-          texture.MaxLod = gxTexture.MaxLod;
-          texture.LodBias = gxTexture.LodBias;
+      texture.MinLod = gxTexture.MinLod;
+      texture.MaxLod = gxTexture.MaxLod;
+      texture.LodBias = gxTexture.LodBias;
 
-          var texGenSrc = texCoordGen.TexGenSrc;
-          switch (texGenSrc) {
-            case >= GxTexGenSrc.Tex0 and <= GxTexGenSrc.Tex7: {
-              var texCoordIndex = texGenSrc - GxTexGenSrc.Tex0;
-              texture.UvIndex = texCoordIndex;
-              break;
-            }
-            case GxTexGenSrc.Normal: {
-              texture.UvType = UvType.SPHERICAL;
-              break;
-            }
-            default: {
-              //Asserts.Fail($"Unsupported texGenSrc type: {texGenSrc}");
-              texture.UvIndex = 0;
-              break;
-            }
-          }
+      var texGenSrc = texCoordGen.TexGenSrc;
+      switch (texGenSrc) {
+        case >= GxTexGenSrc.Tex0 and <= GxTexGenSrc.Tex7: {
+          var texCoordIndex = texGenSrc - GxTexGenSrc.Tex0;
+          texture.UvIndex = texCoordIndex;
+          break;
+        }
+        case GxTexGenSrc.Normal: {
+          texture.UvType = UvType.SPHERICAL;
+          break;
+        }
+        default: {
+          //Asserts.Fail($"Unsupported texGenSrc type: {texGenSrc}");
+          texture.UvIndex = 0;
+          break;
+        }
+      }
 
-          var texMatrixType = texCoordGen.TexMatrix;
-          if (texMatrixType != GxTexMatrix.Identity) {
-            // TODO: handle special matrix types
+      var texMatrixType = texCoordGen.TexMatrix;
+      if (texMatrixType != GxTexMatrix.Identity) {
+        // TODO: handle special matrix types
 
-            var texCenter = texMatrix.Center;
-            var texTranslation = texMatrix.Translation;
-            var texScale = texMatrix.Scale;
-            var texRotationRadians =
-                texMatrix.Rotation / 32768f * MathF.PI;
+        var texCenter = texMatrix.Center;
+        var texTranslation = texMatrix.Translation;
+        var texScale = texMatrix.Scale;
+        var texRotationRadians =
+            texMatrix.Rotation / 32768f * MathF.PI;
 
-            texture.TextureTransform
-                .SetCenter2d(texCenter.X, texCenter.Y)
-                .SetTranslation2d(texTranslation.X, texTranslation.Y)
-                .SetScale2d(texScale.X, texScale.Y)
-                .SetRotationRadians2d(texRotationRadians);
-          }
+        texture.TextureTransform
+               .SetCenter2d(texCenter.X, texCenter.Y)
+               .SetTranslation2d(texTranslation.X, texTranslation.Y)
+               .SetScale2d(texScale.X, texScale.Y)
+               .SetRotationRadians2d(texRotationRadians);
+      }
 
-          handleNewTexture?.Invoke(texInfo, this.State!, texture);
+      handleNewTexture?.Invoke(texInfo, this.State!, texture);
 
-          return texture;
-        });
+      return texture;
+    });
   }
 
   public TState State { get; set; }
 
   public int Count => this.impl_.Count;
   public void Clear() => this.impl_.Clear();
+
+  public ITexture GetOrAdd(IGxTextureBundle key,
+                           Func<IGxTextureBundle, ITexture> createHandler)
+    => this.impl_.GetOrAdd(this.GetKey_(key), createHandler);
 
   public IEnumerable<IGxTextureBundle> Keys => this.impl_.Keys;
   public IEnumerable<ITexture> Values => this.impl_.Values;

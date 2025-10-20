@@ -31,6 +31,14 @@ public sealed class LazyList<T> : ILazyArray<T> {
   public bool ContainsKey(int key)
     => this.populated_.Count > key && this.populated_[key];
 
+  public T GetOrAdd(int key, Func<int, T> createHandler) {
+    if (this.ContainsKey(key)) {
+      return this[key];
+    }
+
+    return this[key] = createHandler(key);
+  }
+
   public bool Remove(int key) => this.Remove(key, out _);
 
   public bool Remove(int key, out T value) {
@@ -59,6 +67,8 @@ public sealed class LazyList<T> : ILazyArray<T> {
       return this.impl_[key] = this.handler_(key);
     }
     set {
+      this.impl_.EnsureCapacity(key);
+
       while (this.Count <= key) {
         this.impl_.Add(default!);
         this.populated_.Add(false);

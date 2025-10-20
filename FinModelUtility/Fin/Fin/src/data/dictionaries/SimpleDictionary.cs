@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Concurrent;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace fin.data.dictionaries;
 
-public sealed class SimpleDictionary<TKey, TValue>(IDictionary<TKey, TValue> impl)
+public sealed class SimpleDictionary<TKey, TValue>(Dictionary<TKey, TValue> impl)
     : IFinDictionary<TKey, TValue> where TKey : notnull {
-  public SimpleDictionary() :
-      this(new ConcurrentDictionary<TKey, TValue>()) { }
+  public SimpleDictionary() : this(new Dictionary<TKey, TValue>()) { }
 
-  public SimpleDictionary(IEqualityComparer<TKey> comparer) :
-      this(new ConcurrentDictionary<TKey, TValue>(comparer)) { }
+  public SimpleDictionary(IEqualityComparer<TKey> comparer) : this(
+      new Dictionary<TKey, TValue>(comparer)) { }
 
   public void Clear() => impl.Clear();
 
@@ -18,6 +18,18 @@ public sealed class SimpleDictionary<TKey, TValue>(IDictionary<TKey, TValue> imp
   public IEnumerable<TKey> Keys => impl.Keys;
   public IEnumerable<TValue> Values => impl.Values;
   public bool ContainsKey(TKey key) => impl.ContainsKey(key);
+
+  public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler) {
+    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+        impl,
+        key,
+        out var exists);
+    if (exists) {
+      return value!;
+    }
+
+    return value = createHandler(key);
+  }
 
   public TValue this[TKey key] {
     get => impl[key];

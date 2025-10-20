@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace fin.data;
 
@@ -16,13 +17,18 @@ public sealed class ReferenceCountCacheDictionary<TKey, TValue>(
   private readonly Dictionary<TKey, (TValue value, int count)> impl_ = new();
 
   public TValue GetAndIncrement(TKey key) {
-    if (this.impl_.TryGetValue(key, out var valueAndCount)) {
-      ++valueAndCount.count;
+    ref var valueAndCount = ref CollectionsMarshal.GetValueRefOrAddDefault(
+        this.impl_,
+        key,
+        out var exists);
+
+    if (exists) {
+      valueAndCount.count++;
       return valueAndCount.value;
     }
 
     var value = createHandler(key);
-    this.impl_.Add(key, (value, 1));
+    valueAndCount = (value, 1);
 
     return value;
   }
