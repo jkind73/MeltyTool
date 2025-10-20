@@ -15,6 +15,7 @@ using fin.math.matrix.four;
 using fin.math.transform;
 using fin.model.impl;
 using fin.model.util;
+using fin.util.linq;
 using fin.util.sets;
 
 using SharpGLTF.Memory;
@@ -117,6 +118,30 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
         finMaterial.AmbientOcclusionTexture
             = lazyFinTextures[gltfMaterial.FindChannel("Occlusion")?.Texture];
 
+        finMaterial.IgnoreLights = gltfMaterial.Unlit;
+        finMaterial.CullingMode = gltfMaterial.DoubleSided
+            ? CullingMode.SHOW_BOTH
+            : CullingMode.SHOW_FRONT_ONLY;
+
+        var metallicRoughness = gltfMaterial.FindChannel("MetallicRoughness");
+
+        var specularGlossiness = gltfMaterial.FindChannel("SpecularGlossiness");
+        if (specularGlossiness != null) {
+          if (specularGlossiness
+              ?.Parameters.FirstOrDefault(p => p.Name ==
+                                               "SpecularFactor")
+              ?.Value is Vector3 specularColor) {
+            // TODO: Pass this color into the material
+          }
+
+          if (specularGlossiness
+              ?.Parameters.FirstOrDefault(p => p.Name ==
+                                               "GlossinessFactor")
+              ?.Value is float glossiness) {
+            finMaterial.Shininess = 100 * glossiness;
+          }
+        }
+        
         return finMaterial;
       });
 
@@ -204,9 +229,9 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
       if (logicalNodesByParent.TryGetSet(gltfNode, out var children)) {
         nodeQueue.Enqueue(
             children!.Select(n => (n,
-                                  finBoneWeightsByNode.GetValueOrDefault(
-                                      n,
-                                      finBoneWeights), matrix)));
+                                   finBoneWeightsByNode.GetValueOrDefault(
+                                       n,
+                                       finBoneWeights), matrix)));
       }
 
       var gltfMesh = gltfNode.Mesh;
@@ -256,6 +281,7 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
                   if (flippedInsideOut) {
                     localNormal = -localNormal;
                   }
+
                   finVertex.SetLocalNormal(
                       Vector3.TransformNormal(localNormal, matrix));
                 }

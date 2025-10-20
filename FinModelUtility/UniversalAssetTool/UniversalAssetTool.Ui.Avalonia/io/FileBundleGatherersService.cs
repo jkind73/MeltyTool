@@ -72,8 +72,10 @@ public static class FileBundleGatherersService {
         += (_, node) => {
           switch (node) {
             case FileBundleLeafNode leafNode: {
-              SelectedFileTreeDirectoryService.SelectFileTreeDirectory(
-                  leafNode.Parent.AssertNonnull());
+              if (leafNode.Parent != null) {
+                SelectedFileTreeDirectoryService.SelectFileTreeDirectory(
+                    leafNode.Parent);
+              }
               FileBundleService.OpenFileBundle(null, leafNode.Value);
               break;
             }
