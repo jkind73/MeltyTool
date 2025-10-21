@@ -190,6 +190,7 @@ public static partial class GoldenAssert {
             Assert.AreEqual(lhsMesh.Primitives.Count, rhsMesh.Primitives.Count);
             foreach (var (lhsPrimitive, rhsPrimitive) in lhsMesh.Primitives.Zip(
                          rhsMesh.Primitives)) {
+              Assert.AreEqual(lhsPrimitive.Material, rhsPrimitive.Material);
               Asserts.SequenceEqual(lhsPrimitive.IndexAccessor.AsIndicesArray(),
                                     rhsPrimitive.IndexAccessor
                                                 .AsIndicesArray());
