@@ -6,8 +6,10 @@ using System.Numerics;
 using CommunityToolkit.HighPerformance;
 
 using fin.color;
+using fin.math.matrix.four;
 using fin.model.accessor;
 using fin.model.util;
+using fin.shaders.glsl;
 
 using SharpGLTF.Schema2;
 
@@ -38,97 +40,24 @@ public sealed class LowLevelGltfMeshBuilder {
     var points = model.Skin.Vertices;
     var pointsCount = points.Count;
 
+    var modelRequirements = ModelRequirements.FromModel(model);
+
     var positionView = gltfModel.CreateBufferView(
         4 * 3 * pointsCount,
         0,
         BufferMode.ARRAY_BUFFER);
     var positionSpan = positionView.Content.AsSpan().Cast<byte, Vector3>();
 
-    var normalView = gltfModel.CreateBufferView(
-        4 * 3 * pointsCount,
-        0,
-        BufferMode.ARRAY_BUFFER);
-    var normalSpan = normalView.Content.AsSpan().Cast<byte, Vector3>();
-
     for (var p = 0; p < pointsCount; ++p) {
       vertexAccessor.Target(points[p]);
       var point = vertexAccessor;
 
-      boneTransformManager.ProjectVertexPositionNormal(
+      boneTransformManager.ProjectVertexPositionNormalTangent(
           point,
           out var outPosition,
-          out var outNormal);
+          out var outNormal,
+          out var outTangent);
       positionSpan[p] = outPosition * scale;
-
-      if (point.LocalNormal != null) {
-        normalSpan[p] = outNormal;
-      }
-
-      /*if (point.Weights != null) {
-        vertexBuilder = vertexBuilder.WithSkinning(
-            point.Weights.Select(
-                     boneWeight
-                         => (boneToIndex[boneWeight.Bone],
-                             boneWeight.Weight))
-                 .ToArray());
-      } else {
-        vertexBuilder = vertexBuilder.WithSkinning(DEFAULT_SKINNING);
-      }
-
-      if (point.LocalNormal != null) {
-        var tangent = point.LocalTangent;
-
-        if (tangent == null) {
-          vertexBuilder = vertexBuilder.WithGeometry(
-              position,
-              new Vector3(outNormal.X, outNormal.Y, outNormal.Z));
-        } else {
-          vertexBuilder = vertexBuilder.WithGeometry(
-              position,
-              new Vector3(outNormal.X, outNormal.Y, outNormal.Z),
-              new Vector4(tangent.X, tangent.Y, tangent.Z, tangent.W));
-        }
-      }
-
-      var finColor0 = point.GetColor(0);
-      var hasColor0 = finColor0 != null;
-      var assColor0 = hasColor0
-                          ? LowLevelGltfMeshBuilder.FinToGltfColor_(
-                              finColor0)
-                          : new Vector4(1, 1, 1, 1);
-      var finColor1 = point.GetColor(1);
-      var hasColor1 = finColor1 != null;
-      var assColor1 = hasColor1
-                          ? LowLevelGltfMeshBuilder.FinToGltfColor_(
-                              finColor1)
-                          : new Vector4(1, 1, 1, 1);
-
-      var hasColor = hasColor0 || hasColor1;
-
-      var uvs = point.Uvs;
-      var hasUvs = (uvs?.Count ?? 0) > 0;
-      if (!this.UvIndices) {
-        if (hasUvs) {
-          var uv = uvs[0];
-          vertexBuilder =
-              vertexBuilder.WithMaterial(assColor0,
-                                         assColor1,
-                                         new Vector2(uv.U, uv.V));
-        } else if (hasColor) {
-          vertexBuilder =
-              vertexBuilder.WithMaterial(assColor0, assColor1);
-        }
-      } else {
-        // Importing the color directly via Assimp doesn't work for some
-        // reason.
-        vertexBuilder =
-            vertexBuilder.WithMaterial(new Vector4(1, 1, 1, 1),
-                                       new Vector2(
-                                           hasUvs ? point.Index : -1,
-                                           hasColor ? point.Index : -1));
-      }
-
-      vertices[p] = vertexBuilder;*/
     }
 
     var positionAccessor = gltfModel.CreateAccessor();
@@ -137,11 +66,61 @@ public sealed class LowLevelGltfMeshBuilder {
         0,
         pointsCount);
 
-    var normalAccessor = gltfModel.CreateAccessor();
-    normalAccessor.SetVertexData(
-        normalView,
-        0,
-        pointsCount);
+    Accessor? normalAccessor = null;
+    if (modelRequirements.HasNormals) {
+      var normalView = gltfModel.CreateBufferView(
+          4 * 3 * pointsCount,
+          0,
+          BufferMode.ARRAY_BUFFER);
+      var normalSpan = normalView.Content.AsSpan().Cast<byte, Vector3>();
+
+      for (var p = 0; p < pointsCount; ++p) {
+        vertexAccessor.Target(points[p]);
+
+        var outNormal = vertexAccessor.LocalNormal.GetValueOrDefault();
+        var transformMatrix =
+            boneTransformManager.GetTransformMatrix(vertexAccessor);
+        if (transformMatrix != null) {
+          ProjectionUtil.ProjectNormal(transformMatrix.Impl, ref outNormal);
+        }
+
+        normalSpan[p] = outNormal;
+      }
+
+      normalAccessor = gltfModel.CreateAccessor();
+      normalAccessor.SetVertexData(
+          normalView,
+          0,
+          pointsCount);
+    }
+
+    Accessor? tangentAccessor = null;
+    if (modelRequirements.HasTangents) {
+      var tangentView = gltfModel.CreateBufferView(
+          4 * 4 * pointsCount,
+          0,
+          BufferMode.ARRAY_BUFFER);
+      var tangentSpan = tangentView.Content.AsSpan().Cast<byte, Vector4>();
+
+      for (var p = 0; p < pointsCount; ++p) {
+        vertexAccessor.Target(points[p]);
+
+        var outTangent = vertexAccessor.LocalTangent.GetValueOrDefault();
+        var transformMatrix =
+            boneTransformManager.GetTransformMatrix(vertexAccessor);
+        if (transformMatrix != null) {
+          ProjectionUtil.ProjectTangent(transformMatrix.Impl, ref outTangent);
+        }
+
+        tangentSpan[p] = outTangent;
+      }
+
+      tangentAccessor = gltfModel.CreateAccessor();
+      tangentAccessor.SetVertexData(
+          tangentView,
+          0,
+          pointsCount);
+    }
 
     var gltfMeshes = new List<Mesh>();
     foreach (var finMesh in skin.Meshes) {
@@ -159,7 +138,13 @@ public sealed class LowLevelGltfMeshBuilder {
         gltfPrimitive.Material = material;
 
         gltfPrimitive.SetVertexAccessor("POSITION", positionAccessor);
-        gltfPrimitive.SetVertexAccessor("NORMAL", normalAccessor);
+        if (normalAccessor != null) {
+          gltfPrimitive.SetVertexAccessor("NORMAL", normalAccessor);
+        }
+
+        if (tangentAccessor != null) {
+          gltfPrimitive.SetVertexAccessor("TANGENT", tangentAccessor);
+        }
 
         if (finPrimitive.Type != FinPrimitiveType.QUADS &&
             finPrimitive.Type != FinPrimitiveType.QUAD_STRIP &&
@@ -169,10 +154,10 @@ public sealed class LowLevelGltfMeshBuilder {
               FinPrimitiveType.TRIANGLE_STRIP => GltfPrimitiveType
                   .TRIANGLE_STRIP,
               FinPrimitiveType.TRIANGLE_FAN => GltfPrimitiveType.TRIANGLE_FAN,
-              FinPrimitiveType.LINES        => GltfPrimitiveType.LINES,
-              FinPrimitiveType.LINE_STRIP   => GltfPrimitiveType.LINE_STRIP,
-              FinPrimitiveType.POINTS       => GltfPrimitiveType.POINTS,
-              _                             => throw new ArgumentOutOfRangeException()
+              FinPrimitiveType.LINES => GltfPrimitiveType.LINES,
+              FinPrimitiveType.LINE_STRIP => GltfPrimitiveType.LINE_STRIP,
+              FinPrimitiveType.POINTS => GltfPrimitiveType.POINTS,
+              _ => throw new ArgumentOutOfRangeException()
           };
 
           var finPrimitiveVertices = finPrimitive.Vertices;
@@ -198,7 +183,7 @@ public sealed class LowLevelGltfMeshBuilder {
     }
 
     // Vertex colors
-    if (vertexAccessor.ColorCount > 0) {
+    for (var colorI = 0; colorI < modelRequirements.NumColors; ++colorI) {
       var colorView = gltfModel.CreateBufferView(
           4 * 4 * pointsCount,
           0,
@@ -225,15 +210,16 @@ public sealed class LowLevelGltfMeshBuilder {
           pointsCount,
           DimensionType.VEC4);
 
+      var colorName = $"COLOR_{colorI}";
       foreach (var gltfMesh in gltfMeshes) {
         foreach (var gltfPrimitive in gltfMesh.Primitives) {
-          gltfPrimitive.SetVertexAccessor("COLOR_0", colorAccessor);
+          gltfPrimitive.SetVertexAccessor(colorName, colorAccessor);
         }
       }
     }
 
     // UVs
-    if (vertexAccessor.UvCount > 0) {
+    for (var uvI = 0; uvI < modelRequirements.NumUvs; ++uvI) {
       var uvView = gltfModel.CreateBufferView(
           2 * sizeof(float) * pointsCount,
           0,
@@ -255,9 +241,10 @@ public sealed class LowLevelGltfMeshBuilder {
           pointsCount,
           DimensionType.VEC2);
 
+      var uvName = $"TEXCOORD_{uvI}";
       foreach (var gltfMesh in gltfMeshes) {
         foreach (var gltfPrimitive in gltfMesh.Primitives) {
-          gltfPrimitive.SetVertexAccessor("TEXCOORD_0", uvAccessor);
+          gltfPrimitive.SetVertexAccessor(uvName, uvAccessor);
         }
       }
     }
@@ -296,6 +283,7 @@ public sealed class LowLevelGltfMeshBuilder {
         foreach (var v in vertexIndices) {
           bSpan[i++] = (byte) v;
         }
+
         break;
       }
       case IndexEncodingType.UNSIGNED_SHORT: {
@@ -304,6 +292,7 @@ public sealed class LowLevelGltfMeshBuilder {
         foreach (var v in vertexIndices) {
           sSpan[i++] = (ushort) v;
         }
+
         break;
       }
       case IndexEncodingType.UNSIGNED_INT: {
@@ -312,9 +301,10 @@ public sealed class LowLevelGltfMeshBuilder {
         foreach (var v in vertexIndices) {
           iSpan[i++] = (uint) v;
         }
+
         break;
       }
-      default:                               throw new ArgumentOutOfRangeException();
+      default: throw new ArgumentOutOfRangeException();
     }
 
     var indexAccessor = gltfModelRoot.CreateAccessor();
