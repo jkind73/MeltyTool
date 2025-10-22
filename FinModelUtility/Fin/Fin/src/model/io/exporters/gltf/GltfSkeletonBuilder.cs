@@ -21,14 +21,14 @@ public sealed class GltfSkeletonBuilder {
     var boneQueue
         = new FinQueue<(GltfNode, IReadOnlyBone)>((rootNode, rootBone));
 
-    var skinNodesAndBones = new List<(GltfNode, IReadOnlyBone)>();
+    var skinNodesAndBones = new (GltfNode, IReadOnlyBone)[skeleton.Bones.Count - 1];
     while (boneQueue.Count > 0) {
       var (node, bone) = boneQueue.Dequeue();
 
       this.ApplyBoneOrientationToNode_(node, bone, scale);
 
       if (bone != rootBone) {
-        skinNodesAndBones.Add((node, bone));
+        skinNodesAndBones[bone.Index - 1] = (node, bone);
       }
 
       boneQueue.Enqueue(
@@ -44,7 +44,7 @@ public sealed class GltfSkeletonBuilder {
     } else {
       var nullNode = rootNode.CreateNode("null");
       skin.BindJoints(nullNode);
-      skinNodesAndBones.Add((nullNode, null));
+      skinNodesAndBones = [(nullNode, null)];
     }
 
     return skinNodesAndBones.ToArray();
