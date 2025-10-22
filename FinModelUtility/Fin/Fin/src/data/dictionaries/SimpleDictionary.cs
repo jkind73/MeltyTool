@@ -5,14 +5,21 @@ using System.Runtime.InteropServices;
 
 namespace fin.data.dictionaries;
 
-public sealed class SimpleDictionary<TKey, TValue>(Dictionary<TKey, TValue> impl)
+public sealed class SimpleDictionary<TKey, TValue>(
+    Dictionary<TKey, TValue> impl)
     : IFinDictionary<TKey, TValue> where TKey : notnull {
+  private readonly object lock_ = new();
+
   public SimpleDictionary() : this(new Dictionary<TKey, TValue>()) { }
 
   public SimpleDictionary(IEqualityComparer<TKey> comparer) : this(
       new Dictionary<TKey, TValue>(comparer)) { }
 
-  public void Clear() => impl.Clear();
+  public void Clear() {
+    lock (this.lock_) {
+      impl.Clear();
+    }
+  }
 
   public int Count => impl.Count;
   public IEnumerable<TKey> Keys => impl.Keys;
@@ -20,23 +27,33 @@ public sealed class SimpleDictionary<TKey, TValue>(Dictionary<TKey, TValue> impl
   public bool ContainsKey(TKey key) => impl.ContainsKey(key);
 
   public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler) {
-    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
-        impl,
-        key,
-        out var exists);
-    if (exists) {
-      return value!;
-    }
+    lock (this.lock_) {
+      ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+          impl,
+          key,
+          out var exists);
+      if (exists) {
+        return value!;
+      }
 
-    return value = createHandler(key);
+      return value = createHandler(key);
+    }
   }
 
   public TValue this[TKey key] {
     get => impl[key];
-    set => impl[key] = value;
+    set {
+      lock (this.lock_) {
+        impl[key] = value;
+      }
+    }
   }
 
-  public bool Remove(TKey key) => impl.Remove(key);
+  public bool Remove(TKey key) {
+    lock (this.lock_) {
+      return impl.Remove(key);
+    }
+  }
 
   IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 

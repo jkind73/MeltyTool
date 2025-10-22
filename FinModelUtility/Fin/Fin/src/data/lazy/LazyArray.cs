@@ -13,6 +13,8 @@ public sealed class LazyArray<T> : ILazyArray<T> {
   private readonly bool[] populated_;
   private readonly Func<int, T> handler_;
 
+  private readonly object lock_ = new();
+
   public LazyArray(int count, Func<int, T> handler) {
     this.impl_ = new T[count];
     this.populated_ = new bool[count];
@@ -28,17 +30,21 @@ public sealed class LazyArray<T> : ILazyArray<T> {
   public int Count => this.impl_.Length;
 
   public void Clear() {
-    for (var i = 0; i < this.Count; ++i) {
-      this.populated_[i] = false;
+    lock (this.lock_) {
+      for (var i = 0; i < this.Count; ++i) {
+        this.populated_[i] = false;
+      }
     }
   }
 
   public T GetOrAdd(int key, Func<int, T> createHandler) {
-    if (this.ContainsKey(key)) {
-      return this[key];
-    }
+    lock (this.lock_) {
+      if (this.ContainsKey(key)) {
+        return this[key];
+      }
 
-    return this[key] = createHandler(key);
+      return this[key] = createHandler(key);
+    }
   }
 
   public bool ContainsKey(int key)
@@ -47,14 +53,16 @@ public sealed class LazyArray<T> : ILazyArray<T> {
   public bool Remove(int key) => this.Remove(key, out _);
 
   public bool Remove(int key, out T value) {
-    if (this.ContainsKey(key)) {
-      value = this.impl_[key];
-      this.populated_[key] = false;
-      return true;
-    }
+    lock (this.lock_) {
+      if (this.ContainsKey(key)) {
+        value = this.impl_[key];
+        this.populated_[key] = false;
+        return true;
+      }
 
-    value = default!;
-    return false;
+      value = default!;
+      return false;
+    }
   }
 
   public T this[int key] {
@@ -67,8 +75,10 @@ public sealed class LazyArray<T> : ILazyArray<T> {
       return this.impl_[key] = this.handler_(key);
     }
     set {
-      this.populated_[key] = true;
-      this.impl_[key] = value;
+      lock (this.lock_) {
+        this.populated_[key] = true;
+        this.impl_[key] = value;
+      }
     }
   }
 

@@ -18,11 +18,15 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
   private bool hasNull_;
   private TValue nullValue_;
 
+  private readonly object lock_ = new();
+
   public int Count => this.Keys.Count();
 
   public void Clear() {
-    this.impl_.Clear();
-    this.hasNull_ = false;
+    lock (this.lock_) {
+      this.impl_.Clear();
+      this.hasNull_ = false;
+    }
   }
 
   public IEnumerable<TKey?> Keys {
@@ -52,33 +56,37 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
     => key == null ? this.hasNull_ : this.impl_.ContainsKey(key);
 
   public void Add(TKey key, TValue value) {
-    if (key == null) {
-      this.hasNull_ = true;
-      this.nullValue_ = value;
-    } else {
-      this.impl_[key] = value;
+    lock (this.lock_) {
+      if (key == null) {
+        this.hasNull_ = true;
+        this.nullValue_ = value;
+      } else {
+        this.impl_[key] = value;
+      }
     }
   }
 
   public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler) {
-    if (key == null) {
-      if (this.hasNull_) {
-        return this.nullValue_;
+    lock (this.lock_) {
+      if (key == null) {
+        if (this.hasNull_) {
+          return this.nullValue_;
+        }
+
+        this.hasNull_ = true;
+        return this.nullValue_ = createHandler(default!);
       }
 
-      this.hasNull_ = true;
-      return this.nullValue_ = createHandler(default!);
-    }
+      ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+          this.impl_,
+          key,
+          out var exists);
+      if (exists) {
+        return value!;
+      }
 
-    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
-        this.impl_,
-        key,
-        out var exists);
-    if (exists) {
-      return value!;
+      return value = createHandler(key);
     }
-
-    return value = createHandler(key);
   }
 
   public TValue this[TKey key] {
@@ -100,15 +108,18 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
   public bool Remove(TKey key) => this.Remove(key, out _);
 
   public bool Remove(TKey key, out TValue value) {
-    bool didRemove;
-    if (key == null) {
-      didRemove = this.hasNull_;
-      value = this.nullValue_;
-      this.hasNull_ = false;
-    } else {
-      didRemove = this.impl_.Remove(key, out value!);
+    lock (this.lock_) {
+      bool didRemove;
+      if (key == null) {
+        didRemove = this.hasNull_;
+        value = this.nullValue_;
+        this.hasNull_ = false;
+      } else {
+        didRemove = this.impl_.Remove(key, out value!);
+      }
+
+      return didRemove;
     }
-    return didRemove;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]

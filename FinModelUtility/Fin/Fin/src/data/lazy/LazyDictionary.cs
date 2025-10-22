@@ -35,9 +35,7 @@ public sealed class LazyDictionary<TKey, TValue>
   public bool Remove(TKey key) => this.impl_.Remove(key);
 
   public TValue this[TKey key] {
-    get => this.impl_.TryGetValue(key, out var value)
-        ? value
-        : this.impl_[key] = this.handler_(key);
+    get => this.GetOrAdd(key, this.handler_);
     set => this.impl_[key] = value;
   }
 

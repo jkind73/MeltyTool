@@ -17,33 +17,43 @@ public sealed class CaseInvariantStringDictionary<T>
   public CaseInvariantStringDictionary() => this.spanImpl_
       = this.impl_.GetAlternateLookup<ReadOnlySpan<char>>();
 
-  public void Clear() => this.impl_.Clear();
+  private readonly object lock_ = new();
+
+  public void Clear() {
+    lock (this.lock_) {
+      this.impl_.Clear();
+    }
+  }
 
   public int Count => this.impl_.Count;
 
   public T GetOrAdd(string key, Func<string, T> createHandler) {
-    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
-            this.impl_,
-            key,
-            out var exists);
-    if (exists) {
-      return value!;
-    }
+    lock (this.lock_) {
+      ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+          this.impl_,
+          key,
+          out var exists);
+      if (exists) {
+        return value!;
+      }
 
-    return value = createHandler(key);
+      return value = createHandler(key);
+    }
   }
 
   public T GetOrAdd(ReadOnlySpan<char> key,
                     Func<ReadOnlySpan<char>, T> createHandler) {
-    ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
-        this.spanImpl_,
-        key,
-        out var exists);
-    if (exists) {
-      return value!;
-    }
+    lock (this.lock_) {
+      ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
+          this.spanImpl_,
+          key,
+          out var exists);
+      if (exists) {
+        return value!;
+      }
 
-    return value = createHandler(key);
+      return value = createHandler(key);
+    }
   }
 
   public IEnumerable<string> Keys => this.impl_.Keys;
@@ -55,12 +65,20 @@ public sealed class CaseInvariantStringDictionary<T>
 
   public T this[string key] {
     get => this.impl_[key];
-    set => this.impl_[key] = value;
+    set {
+      lock (this.lock_) {
+        this.impl_[key] = value;
+      }
+    }
   }
 
   public T this[ReadOnlySpan<char> key] {
     get => this.spanImpl_[key];
-    set => this.spanImpl_[key] = value;
+    set {
+      lock (this.lock_) {
+        this.spanImpl_[key] = value;
+      }
+    }
   }
 
   IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
