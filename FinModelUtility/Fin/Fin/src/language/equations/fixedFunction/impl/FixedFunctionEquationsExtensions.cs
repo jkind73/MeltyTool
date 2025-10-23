@@ -114,10 +114,6 @@ public static partial class FixedFunctionEquationsExtensions {
     var ambientAndDiffuseLightingColor
         = colorOps.Add(ambientLightColor, diffuseLightColor);
 
-    // We double it because all the other kids do. (Other fixed-function games.)
-    ambientAndDiffuseLightingColor =
-        colorOps.MultiplyWithConstant(ambientAndDiffuseLightingColor, 2);
-
     var ambientAndDiffuseComponent = colorOps.Multiply(
         ambientAndDiffuseLightingColor,
         diffuse.color);

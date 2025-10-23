@@ -127,8 +127,7 @@ vec4 applyMergedLightingColors(vec3 position, vec3 normal, float shininess, vec4
   vec4 mergedSpecularLightColor = vec4(0);
   getMergedLightColors(position, normal, shininess, mergedDiffuseLightColor, mergedSpecularLightColor);
 
-  // We double it because all the other kids do. (Other fixed-function games.)
-  vec4 diffuseComponent = 2.0 * diffuseSurfaceColor * (ambientLightColor + mergedDiffuseLightColor);
+  vec4 diffuseComponent = diffuseSurfaceColor * (ambientLightColor + mergedDiffuseLightColor);
   vec4 specularComponent = specularSurfaceColor * mergedSpecularLightColor;
   
   return clamp(diffuseComponent + specularComponent, 0.0, 1.0);

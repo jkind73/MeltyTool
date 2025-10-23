@@ -569,12 +569,6 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
         colorOps.Multiply(ambientSurfaceColor, ambientLightColor),
         diffuseLightColor);
 
-    // We double it because all the other kids do. (Other fixed-function games.)
-    if (hasDiffuseRenderMode) {
-      ambientAndDiffuseLightingColor =
-          colorOps.MultiplyWithConstant(ambientAndDiffuseLightingColor, 2);
-    }
-
     var ambientAndDiffuseComponent = colorOps.Multiply(
         ambientAndDiffuseLightingColor,
         diffuseSurfaceColor);
