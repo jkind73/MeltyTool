@@ -13,6 +13,7 @@ using fin.ui.avalonia.gl;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.model;
+using fin.ui.rendering.viewer;
 
 namespace fin.ui.avalonia.scene;
 
@@ -294,6 +295,11 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
 
   public ISkeletonRenderer? SkeletonRenderer
     => this.viewerImpl_.SkeletonRenderer;
+
+  public ISkyboxRenderer? SkyboxRenderer {
+    get => this.viewerImpl_.SkyboxRenderer;
+    set => this.viewerImpl_.SkyboxRenderer = value;
+  }
 
   public Camera Camera => this.viewerImpl_.Camera;
 

@@ -141,4 +141,7 @@ public static class ColorExtensions {
 
   public static string ToGlslVec4(this IColor color)
     => $"vec4({color.Rf:0.0###########},{color.Gf:0.0###########},{color.Bf:0.0###########},{color.Af:0.0###########})";
+
+  public static string ToGlslVec3(this IColor color)
+    => $"vec3({color.Rf:0.0###########},{color.Gf:0.0###########},{color.Bf:0.0###########})";
 }

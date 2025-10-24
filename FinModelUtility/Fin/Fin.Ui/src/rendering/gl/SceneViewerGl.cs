@@ -18,7 +18,6 @@ namespace fin.ui.rendering.gl;
 
 public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   private InfiniteGridRenderer infiniteGridRenderer_ = new();
-  private SkyboxRenderer skyboxRenderer_ = new();
   private BackgroundRenderer backgroundRenderer_ = new();
 
   private ISceneInstance? scene_;
@@ -109,6 +108,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
   public bool ShowGrid { get; set; }
+  public ISkyboxRenderer? SkyboxRenderer { get; set; } = new SkyboxRenderer();
 
   public void Render() {
     FrameTime.MarkStartOfFrame();
@@ -130,9 +130,9 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         glFarPlane += distanceFromOrigin - maxDistance;
       }
 
-      this.skyboxRenderer_.NearPlane
+      this.SkyboxRenderer?.NearPlane
           = this.infiniteGridRenderer_.NearPlane = glNearPlane;
-      this.skyboxRenderer_.FarPlane
+      this.SkyboxRenderer?.FarPlane
           = this.infiniteGridRenderer_.FarPlane = glFarPlane;
     }
 
@@ -207,7 +207,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         GlTransform.Translate(hWidth, hHeight, 0);
         GlTransform.Scale(hWidth, hHeight, 1);
 
-        this.skyboxRenderer_.Render();
+        this.SkyboxRenderer?.Render();
       }
     }
 

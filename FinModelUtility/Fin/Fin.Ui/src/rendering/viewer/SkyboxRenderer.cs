@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿
+using System.Drawing;
 
 using fin.color;
 using fin.model;
@@ -12,7 +13,12 @@ using fin.util.linq;
 
 namespace fin.ui.rendering.viewer;
 
-public sealed class SkyboxRenderer : IRenderable {
+public interface ISkyboxRenderer : IRenderable {
+  float NearPlane { get; set; }
+  float FarPlane { get; set; }
+}
+
+public sealed class SkyboxRenderer : ISkyboxRenderer {
   private IModelRenderer? impl_;
 
   private IShaderUniform<float> nearPlaneUniform_;

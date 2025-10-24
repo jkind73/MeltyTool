@@ -29,6 +29,8 @@ public partial class MainView : UserControl {
   public MainView() {
     InitializeComponent();
 
+    this.ViewerGlPanel.SkyboxRenderer = new PolygonStudioSkyboxRenderer();
+
     MfsFileSystemService.OnFileSelected += file => {
       LoadingStatusService.IsLoading = true;
 
