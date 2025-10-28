@@ -24,14 +24,19 @@ public sealed class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
 
     var finMaterialManager = finModel.MaterialManager;
     var finSkin = finModel.Skin;
-    foreach (var ma3d1Mesh in ma3d1.MeshData.Meshes) {
+
+    var ma3d1Meshes = ma3d1.MeshData.Meshes;
+    for (var i = 0; i < ma3d1Meshes.Count; ++i) {
+      var ma3d1Mesh = ma3d1Meshes[i];
+
       var (finMaterial, finTexture)
           = finMaterialManager.AddSimpleTextureMaterialFromImage(
-              ma3d1Mesh.Texture.ToImage());
+              ma3d1Mesh.Texture.ToImage(), $"texture{i}");
 
       finTexture.ThreePointFiltering = true;
 
       var finMesh = finSkin.AddMesh();
+      finMesh.Name = $"mesh{i}";
 
       var ma3d1Vertices = ma3d1Mesh.Vertices ?? [];
 

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>MarioArtist_Tests</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	<RootNamespace>marioartist</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="goldens\NewFolder\**" />
+    <EmbeddedResource Remove="goldens\NewFolder\**" />
+    <None Remove="goldens\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MarioArtist\MarioArtist.csproj" />
+  </ItemGroup>
+
+</Project>
