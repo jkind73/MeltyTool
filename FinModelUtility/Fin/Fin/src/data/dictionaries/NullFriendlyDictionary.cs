@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -12,21 +13,18 @@ namespace fin.data.dictionaries;
 /// <summary>
 ///   A dictionary that accepts null keys.
 /// </summary>
-public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, TValue> {
-  private readonly Dictionary<TKey, TValue> impl_ = new();
+public sealed class NullFriendlyDictionary<TKey, TValue>
+    : IFinDictionary<TKey, TValue> {
+  private readonly ConcurrentDictionary<TKey, TValue> impl_ = new();
 
   private bool hasNull_;
   private TValue nullValue_;
 
-  private readonly object lock_ = new();
-
   public int Count => this.Keys.Count();
 
   public void Clear() {
-    lock (this.lock_) {
-      this.impl_.Clear();
-      this.hasNull_ = false;
-    }
+    this.impl_.Clear();
+    this.hasNull_ = false;
   }
 
   public IEnumerable<TKey?> Keys {
@@ -34,6 +32,7 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
       foreach (var key in this.impl_.Keys) {
         yield return key;
       }
+
       if (this.hasNull_) {
         yield return default;
       }
@@ -45,6 +44,7 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
       foreach (var value in this.impl_.Values) {
         yield return value;
       }
+
       if (this.hasNull_) {
         yield return this.nullValue_;
       }
@@ -56,37 +56,25 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
     => key == null ? this.hasNull_ : this.impl_.ContainsKey(key);
 
   public void Add(TKey key, TValue value) {
-    lock (this.lock_) {
-      if (key == null) {
-        this.hasNull_ = true;
-        this.nullValue_ = value;
-      } else {
-        this.impl_[key] = value;
-      }
+    if (key == null) {
+      this.hasNull_ = true;
+      this.nullValue_ = value;
+    } else {
+      this.impl_[key] = value;
     }
   }
 
   public TValue GetOrAdd(TKey key, Func<TKey, TValue> createHandler) {
-    lock (this.lock_) {
-      if (key == null) {
-        if (this.hasNull_) {
-          return this.nullValue_;
-        }
-
-        this.hasNull_ = true;
-        return this.nullValue_ = createHandler(default!);
+    if (key == null) {
+      if (this.hasNull_) {
+        return this.nullValue_;
       }
 
-      ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(
-          this.impl_,
-          key,
-          out var exists);
-      if (exists) {
-        return value!;
-      }
-
-      return value = createHandler(key);
+      this.hasNull_ = true;
+      return this.nullValue_ = createHandler(default!);
     }
+
+    return this.impl_.GetOrAdd(key, createHandler);
   }
 
   public TValue this[TKey key] {
@@ -108,18 +96,16 @@ public sealed class NullFriendlyDictionary<TKey, TValue> : IFinDictionary<TKey, 
   public bool Remove(TKey key) => this.Remove(key, out _);
 
   public bool Remove(TKey key, out TValue value) {
-    lock (this.lock_) {
-      bool didRemove;
-      if (key == null) {
-        didRemove = this.hasNull_;
-        value = this.nullValue_;
-        this.hasNull_ = false;
-      } else {
-        didRemove = this.impl_.Remove(key, out value!);
-      }
-
-      return didRemove;
+    bool didRemove;
+    if (key == null) {
+      didRemove = this.hasNull_;
+      value = this.nullValue_;
+      this.hasNull_ = false;
+    } else {
+      didRemove = this.impl_.Remove(key, out value!);
     }
+
+    return didRemove;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
