@@ -6,6 +6,7 @@ using fin.scene;
 using fin.scene.components;
 using fin.ui.rendering;
 using fin.ui.rendering.gl.model;
+using fin.ui.rendering.viewer;
 
 namespace uni.ui.winforms.common.scene;
 
@@ -34,6 +35,11 @@ public partial class SceneViewerPanel : UserControl, ISceneViewer {
     => this.impl_.AnimationPlaybackManager;
 
   public ISkeletonRenderer? SkeletonRenderer => this.impl_.SkeletonRenderer;
+
+  public ISkyboxRenderer? SkyboxRenderer {
+    get => this.impl_.SkyboxRenderer;
+    set => this.impl_.SkyboxRenderer = value;
+  }
 
   public IReadOnlyModelAnimation? Animation {
     get => this.impl_.Animation;
