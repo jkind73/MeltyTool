@@ -327,7 +327,6 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
     var finMeshByDObj = new Dictionary<DObj, IMesh>();
     outFinMeshByDObj = finMeshByDObj;
 
-    finSkin.AllowMaterialRendererMerging = false;
     foreach (var (jObj, _, dObj, _) in sortedJObjsAndDObjs) {
       var defaultBoneWeights = boneWeightsByJObj[jObj];
       var mObjOffset = dObj.MObjOffset;

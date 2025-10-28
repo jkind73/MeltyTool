@@ -29,9 +29,9 @@ public sealed partial class ModelRenderer
       IReadOnlyBoneTransformManager2? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
-                           lighting,
-                           boneTransformManager,
-                           textureTransformManager);
+                         lighting,
+                         boneTransformManager,
+                         textureTransformManager);
 
   public static IDynamicModelRenderer CreateDynamic(
       IReadOnlyModel model,
@@ -39,10 +39,10 @@ public sealed partial class ModelRenderer
       IReadOnlyBoneTransformManager2? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
-                           lighting,
-                           boneTransformManager,
-                           textureTransformManager,
-                           true);
+                         lighting,
+                         boneTransformManager,
+                         textureTransformManager,
+                         true);
 
 
   private MatricesUbo? matricesUbo_;
@@ -58,25 +58,22 @@ public sealed partial class ModelRenderer
   /// </summary>
   public ModelRenderer(IReadOnlyModel model,
                        IReadOnlyLighting? lighting = null,
-                       IReadOnlyBoneTransformManager2? boneTransformManager = null,
-                       IReadOnlyTextureTransformManager? textureTransformManager = null,
+                       IReadOnlyBoneTransformManager2? boneTransformManager
+                           = null,
+                       IReadOnlyTextureTransformManager? textureTransformManager
+                           = null,
                        bool dynamic = false) {
     this.model_ = model;
     this.lighting_ = lighting;
     this.boneTransformManager_ = boneTransformManager;
-    
+
     this.bonesUsedByVertices_ = model.Skin.BonesUsedByVertices.ToArray();
     this.boneMatrices_ = new Matrix4x4[1 + this.bonesUsedByVertices_.Count];
     this.boneMatrices_[0] = Matrix4x4.Identity;
 
-    this.impl_ = (model.Skin.AllowMaterialRendererMerging)
-        ? new MergedMaterialMeshesRenderer(model,
-                                           textureTransformManager,
-                                           dynamic)
-        : new UnmergedMaterialMeshesRenderer(
-            model,
-            textureTransformManager,
-            dynamic);
+    this.impl_ = new MergedMaterialMeshesRenderer(model,
+                                                  textureTransformManager,
+                                                  dynamic);
   }
 
   ~ModelRenderer() => this.ReleaseUnmanagedResources_();
@@ -134,6 +131,7 @@ public sealed partial class ModelRenderer
 
   public void GenerateModelIfNull() => this.impl_.GenerateModelIfNull();
 
-  public IEnumerable<IGlMaterialShader> GetMaterialShaders(IReadOnlyMaterial material)
+  public IEnumerable<IGlMaterialShader> GetMaterialShaders(
+      IReadOnlyMaterial material)
     => this.impl_.GetMaterialShaders(material);
 }

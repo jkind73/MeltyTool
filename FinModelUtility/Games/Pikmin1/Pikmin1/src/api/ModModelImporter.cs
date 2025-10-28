@@ -361,8 +361,6 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
                                .ToArray()))
            .ToArray();
 
-    model.Skin.AllowMaterialRendererMerging = false;
-
     // Ripped directly from the decomp
     var sortedMatPolys = new LinkedList<JointMatPoly>();
     AddSortedMatPolysSiblings_(sortedMatPolys,

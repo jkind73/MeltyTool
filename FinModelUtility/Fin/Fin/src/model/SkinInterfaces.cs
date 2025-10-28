@@ -16,7 +16,6 @@ public partial interface ISkin {
 
   new IReadOnlyList<IMesh> Meshes { get; }
   IMesh AddMesh();
-  new bool AllowMaterialRendererMerging { get; set; }
 
   new IReadOnlyFinSet<IReadOnlyBone> BonesUsedByVertices { get; }
   new IReadOnlyList<IBoneWeights> BoneWeights { get; }
