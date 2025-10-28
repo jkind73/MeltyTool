@@ -565,7 +565,7 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
       this.NbtNormalsByIndex =
           mod.vertexnbt.Select(vertexnbt => vertexnbt.Normal).ToArray();
       this.TangentsByIndex
-          = mod.vertexnbt.Select(vertexnbt => new Vector4(vertexnbt.Tangent, 0))
+          = mod.vertexnbt.Select(vertexnbt => new Vector4(vertexnbt.Tangent, 1))
                .ToArray();
       this.ColorsByIndex =
           mod.vcolours.Select(color => (IColor) color).ToArray();

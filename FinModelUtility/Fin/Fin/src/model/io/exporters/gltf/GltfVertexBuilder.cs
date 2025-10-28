@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 
 using fin.data.indexable;
+using fin.math.floats;
 using fin.model.accessor;
 using fin.model.util;
 
@@ -76,7 +77,7 @@ public sealed class GltfVertexBuilder {
           vertexBuilder.SetGeometry(
               new VertexPositionNormal(position, normal));
         } else {
-          var tangent = outTangent / outTangent.W;
+          var tangent = Vector4.Normalize(outTangent);
           vertexBuilder.SetGeometry(
               new VertexPositionNormalTangent(
                   position,
