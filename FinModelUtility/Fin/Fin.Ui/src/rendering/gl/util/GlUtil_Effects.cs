@@ -2,6 +2,8 @@
 
 using fin.model;
 
+using OpenTK.Graphics.OpenGL4;
+
 
 namespace fin.ui.rendering.gl;
 
@@ -23,6 +25,30 @@ public static partial class GlUtil {
     DisableChangingDepth = false;
     ResetBlending();
     ResetDepth();
+  }
+
+  public static void RenderOutline(
+      Action render,
+      Color? outlineColor = null,
+      float lineWidth = 8) {
+    SetBlendColor(outlineColor ?? Color.Black);
+    SetBlending(BlendEquation.ADD,
+                BlendFactor.ZERO,
+                BlendFactor.CONST_COLOR);
+    SetDepth(DepthMode.READ_ONLY);
+    GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Line);
+    GL.LineWidth(lineWidth);
+    DisableChangingBlending = true;
+    DisableChangingDepth = true;
+
+    render();
+
+    DisableChangingBlending = false;
+    DisableChangingDepth = false;
+    SetBlendColor(Color.White);
+    ResetBlending();
+    ResetDepth();
+    GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
   }
 
   public static void RenderAsShadow(

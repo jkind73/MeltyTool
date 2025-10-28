@@ -95,6 +95,10 @@ public partial class ModelRenderer {
 
       var isSelected = selectedMesh == mesh;
       foreach (var materialMeshRenderer in this.materialMeshRenderers_!) {
+        if (isSelected) {
+          GlUtil.RenderOutline(materialMeshRenderer.Render);
+        }
+
         materialMeshRenderer.Render();
 
         if (isSelected) {

@@ -57,6 +57,8 @@ public static partial class GlUtil {
     GL.ClearDepth(5.0F);
     GL.Enable(EnableCap.PrimitiveRestartFixedIndex);
 
+    GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
+
     ResetBlending();
     ResetClearColor();
     ResetCulling();
