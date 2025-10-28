@@ -6,6 +6,8 @@ using System.Numerics;
 
 using fin.color;
 using fin.data.queues;
+using fin.math.matrix.four;
+using fin.math.rotations;
 using fin.model;
 using fin.model.util;
 using fin.scene.components;
@@ -19,9 +21,28 @@ namespace fin.scene;
 
 public static class SceneExtensions {
   public static ISceneNode SetPosition(this ISceneNode sceneNode,
-                                       Vector3 position)
+                                       in Vector3 position)
     => sceneNode.SetPosition(position.X, position.Y, position.Z);
 
+  public static ISceneNode SetScale(this ISceneNode sceneNode,
+                                    in Vector3 scale)
+    => sceneNode.SetScale(scale.X, scale.Y, scale.Z);
+
+  public static ISceneNode SetRotationRadians(this ISceneNode sceneNode,
+                                    in Vector3 rotationRadians)
+    => sceneNode.SetRotationRadians(rotationRadians.X,
+                                    rotationRadians.Y,
+                                    rotationRadians.Z);
+
+  public static ISceneNode SetMatrix(this ISceneNode sceneNode,
+                                     Matrix4x4 matrix) {
+    matrix.AssertDecompose(out var translation,
+                           out var rotation,
+                           out var scale);
+    return sceneNode.SetPosition(translation)
+                    .SetRotationRadians(rotation.ToEulerRadians())
+                    .SetScale(scale);
+  }
 
   public static void AddTickComponent(this ISceneNode sceneNode,
                                       Action<ISceneNodeInstance> handler)
@@ -51,7 +72,7 @@ public static class SceneExtensions {
   public static IEnumerable<IReadOnlySceneNode> EnumerateAllNodes(
       this IReadOnlyScene scene) {
     var queue = new FinQueue<IReadOnlySceneNode>(
-            scene.Areas.SelectMany(a => a.RootNodes));
+        scene.Areas.SelectMany(a => a.RootNodes));
     while (queue.TryDequeue(out var node)) {
       yield return node;
       queue.Enqueue(node.ChildNodes);
