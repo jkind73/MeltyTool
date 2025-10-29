@@ -110,7 +110,12 @@ public partial class MainView : UserControl {
                          .Bones
                          .Single(b => b.Name?.StartsWith(
                                           $"{JointIndex.NECK}:") ??
-                                      false)));
+                                      false),
+                    model.Skeleton
+                        .Bones
+                        .Single(b => b.Name?.StartsWith(
+                                         $"{JointIndex.TORSO}:") ??
+                                     false)));
 
             var modelObj = characterObj.AddChildNode();
             modelObj.AddComponent(modelRenderComponent);

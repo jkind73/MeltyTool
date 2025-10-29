@@ -17,12 +17,15 @@ namespace MarioArtistTool.view;
 /// </summary>
 public class LookAtMouseTickComponent(
     SimpleBoneTransformView boneTransformView,
-    IReadOnlyBone neckBone)
+    IReadOnlyBone neckBone,
+    IReadOnlyBone torsoBone)
     : ISceneNodeTickComponent {
-  private static readonly Quaternion DEFAULT
-      = CalculateEulerRadiansForMousePosition_(Vector2.Zero).CreateZyxRadians();
+  private Quaternion currentNeckRotation_
+      = new Vector3(MathF.PI / 2, -MathF.PI / 2, MathF.PI / 2)
+          .CreateZyxRadians();
 
-  private Quaternion currentRotation_ = DEFAULT;
+  private Quaternion currentTorsoRotation_
+      = new Vector3(0, -MathF.PI / 2, MathF.PI / 2).CreateZyxRadians();
 
   public void Dispose() { }
 
@@ -30,51 +33,86 @@ public class LookAtMouseTickComponent(
     var lookAtMouse = !MainViewInputService.MouseDown &&
                       MainViewInputService.MouseInView;
 
-    var fromRotation = this.currentRotation_;
-
     var bodyNode = self.ChildNodes[0];
-    var bodyYRadians = bodyNode.Rotation.YRadians + MathF.PI / 2;
 
-    var slerpTheLongWay = false;
-    Quaternion toRotation;
+    var bodyYRadiansForNeck = bodyNode.Rotation.YRadians + MathF.PI / 2;
+    var bodyYRadiansForTorso = bodyNode.Rotation.YRadians;
+
+    Quaternion newNeckRotation;
+    Quaternion newTorsoRotation;
+    newTorsoRotation
+        = new Vector3(bodyYRadiansForTorso, -MathF.PI / 2, MathF.PI / 2)
+            .CreateZyxRadians();
     if (!lookAtMouse) {
-      toRotation = new Vector3(bodyYRadians, -MathF.PI / 2, MathF.PI / 2)
-          .CreateZyxRadians();
+      newNeckRotation
+          = new Vector3(bodyYRadiansForNeck, -MathF.PI / 2, MathF.PI / 2)
+              .CreateZyxRadians();
     } else {
-      var toRadians = CalculateEulerRadiansForMousePosition_(
+      var toRadiansForNeck = CalculateEulerRadiansForMousePosition_(
           MainViewInputService.NormalizedMousePosition -
           new Vector2(.5f, .25f));
 
       var maxDeltaYRadians = 110 * FinTrig.DEG_2_RAD;
 
       var deltaYRadians
-          = RadiansUtil.CalculateRadiansTowards(bodyYRadians, toRadians.X)
-                       .Clamp(-maxDeltaYRadians, maxDeltaYRadians);
-      toRadians.X = bodyYRadians + deltaYRadians;
-      toRotation = toRadians.CreateZyxRadians();
+          = RadiansUtil
+            .CalculateRadiansTowards(bodyYRadiansForNeck, toRadiansForNeck.X)
+            .Clamp(-maxDeltaYRadians, maxDeltaYRadians);
+      toRadiansForNeck.X = bodyYRadiansForNeck + deltaYRadians;
+
+      var toRadiansForTorso = new Vector3(bodyYRadiansForTorso + deltaYRadians * .5f,
+                                          -MathF.PI / 2,
+                                          MathF.PI / 2);
 
       var bodyBackRotation
-          = new Vector3(bodyYRadians + MathF.PI, 0, 0).CreateZyxRadians();
+          = new Vector3(bodyYRadiansForNeck + MathF.PI, 0, 0)
+              .CreateZyxRadians();
 
-      var distanceToFacingBackwards
-          = Quaternion.Dot(fromRotation, bodyBackRotation);
-      var distanceToFacingNewDirection
-          = Quaternion.Dot(fromRotation, toRotation);
+      {
+        var fromRotationForNeck = this.currentNeckRotation_;
+        var toRotationForNeck = toRadiansForNeck.CreateZyxRadians();
 
-      slerpTheLongWay
-          = distanceToFacingBackwards > distanceToFacingNewDirection;
+        var distanceToFacingBackwards
+            = Quaternion.Dot(fromRotationForNeck, bodyBackRotation);
+        var distanceToFacingNewDirection
+            = Quaternion.Dot(fromRotationForNeck, toRotationForNeck);
+
+        var slerpTheLongWay
+            = distanceToFacingBackwards > distanceToFacingNewDirection;
+
+        newNeckRotation = fromRotationForNeck.SlerpTowards(toRotationForNeck,
+          5 * FrameTime.DeltaTime,
+          !slerpTheLongWay);
+      }
+
+      {
+        var fromRotationForTorso = this.currentTorsoRotation_;
+        var toRotationForTorso = toRadiansForTorso.CreateZyxRadians();
+
+        var distanceToFacingBackwards
+            = Quaternion.Dot(fromRotationForTorso, bodyBackRotation);
+        var distanceToFacingNewDirection
+            = Quaternion.Dot(fromRotationForTorso, toRotationForTorso);
+
+        var slerpTheLongWay
+            = distanceToFacingBackwards > distanceToFacingNewDirection;
+
+        newTorsoRotation = fromRotationForTorso
+            .SlerpTowards(toRotationForTorso,
+                          8 * FrameTime.DeltaTime,
+                          !slerpTheLongWay);
+      }
     }
 
-    var newRotation
-        = fromRotation.SlerpTowards(toRotation,
-                                20 * FrameTime.DeltaTime,
-                                !slerpTheLongWay);
-
-    this.currentRotation_ = newRotation;
+    this.currentNeckRotation_ = newNeckRotation;
+    this.currentTorsoRotation_ = newTorsoRotation;
 
     boneTransformView.OverrideWorldRotation(
         neckBone,
-        newRotation);
+        newNeckRotation);
+    boneTransformView.OverrideWorldRotation(
+        torsoBone,
+        newTorsoRotation);
   }
 
   private static Vector3 CalculateEulerRadiansForMousePosition_(
