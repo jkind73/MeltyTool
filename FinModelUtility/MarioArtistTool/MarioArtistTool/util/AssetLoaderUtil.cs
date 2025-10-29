@@ -45,7 +45,7 @@ public static class AssetLoaderUtil {
 
   public static Cursor LoadCursor(string cursorImageName,
                                   PixelPoint pixelPoint,
-                                  int scale = 2)
+                                  int scale = 1)
     => new(LoadBitmap($"cursors/{cursorImageName}", scale),
            new PixelPoint(pixelPoint.X * scale, pixelPoint.Y * scale));
 }

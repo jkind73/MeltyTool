@@ -53,12 +53,10 @@ public partial class FileSelectTopBar : UserControl {
 
     this.DiskSwapIcon.Bind(Image.SourceProperty, this.DiskSwapImage);
 
-    var grabCursor0 =
-        AssetLoaderUtil.LoadCursor("grab_0.png", PixelPoint.Origin);
-    var grabCursor1 =
-        AssetLoaderUtil.LoadCursor("grab_1.png", PixelPoint.Origin);
-    var grabCursor2
-        = AssetLoaderUtil.LoadCursor("grab_2.png", PixelPoint.Origin);
+    var grabOrigin = new PixelPoint(2, 2);
+    var grabCursor0 = AssetLoaderUtil.LoadCursor("grab_0.png", grabOrigin);
+    var grabCursor1 = AssetLoaderUtil.LoadCursor("grab_1.png", grabOrigin);
+    var grabCursor2 = AssetLoaderUtil.LoadCursor("grab_2.png", grabOrigin);
 
     var grabCursor = new LoopingObservable<Cursor>(.1f,
                                                    grabCursor0,
