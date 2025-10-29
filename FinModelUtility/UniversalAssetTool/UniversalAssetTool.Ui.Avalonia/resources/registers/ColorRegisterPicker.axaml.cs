@@ -1,3 +1,5 @@
+using System.Numerics;
+
 using Avalonia.Controls;
 using Avalonia.Media;
 
@@ -26,10 +28,9 @@ public class ColorRegisterPickerViewModel : BViewModel {
     get;
     set {
       this.RaiseAndSetIfChanged(ref field, value);
-      this.Color = new Color(value.Value.Ab,
-                             value.Value.Rb,
-                             value.Value.Gb,
-                             value.Value.Bb);
+
+      var rgb = value.Value * 255;
+      this.Color = new Color(255, (byte) rgb.X, (byte) rgb.Y, (byte) rgb.Z);
     }
   }
 
@@ -41,8 +42,7 @@ public class ColorRegisterPickerViewModel : BViewModel {
       }
 
       this.RaiseAndSetIfChanged(ref field, value);
-      this.ColorRegister.Value
-          = FinColor.FromRgbaBytes(value.R, value.G, value.B, value.A);
+      this.ColorRegister.Value = new Vector3(value.R, value.G, value.B) / 255;
     }
   }
 }

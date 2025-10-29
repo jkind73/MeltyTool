@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 using fin.color;
 
@@ -64,12 +65,11 @@ public sealed class FixedFunctionRegisters : IFixedFunctionRegisters {
 
     // TODO: Consider switching this to a mutable color value and merging these fields
     public IColorConstant DefaultValue { get; set; } = defaultValue;
-    public IColor Value { get; set; } = defaultValue.IntensityValue != null
-        ? FinColor.FromIntensityFloat(
-            (float) defaultValue.IntensityValue!)
-        : FinColor.FromRgbFloats((float) defaultValue.RValue,
-                                 (float) defaultValue.GValue,
-                                 (float) defaultValue.BValue);
+    public Vector3 Value { get; set; } = defaultValue.IntensityValue != null
+        ? new Vector3(defaultValue.IntensityValue.Value)
+        : new Vector3(defaultValue.RValue,
+                      defaultValue.GValue,
+                      defaultValue.BValue);
 
     public IColorValue ColorValue => this.DefaultValue;
 

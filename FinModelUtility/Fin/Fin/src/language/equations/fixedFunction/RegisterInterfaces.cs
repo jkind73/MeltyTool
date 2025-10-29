@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 using fin.color;
 
@@ -19,7 +20,7 @@ public interface IFixedFunctionRegisters {
 
 public interface IColorRegister : IColorNamedValue {
   IColorConstant DefaultValue { get; set; }
-  IColor Value { get; set; }
+  Vector3 Value { get; set; }
 }
 
 public interface IScalarRegister : IScalarNamedValue {

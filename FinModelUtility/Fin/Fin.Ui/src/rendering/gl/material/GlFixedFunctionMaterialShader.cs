@@ -102,9 +102,7 @@ public sealed class GlFixedFunctionMaterialShader(
     }
 
     foreach (var (register, uniform) in this.colorRegistersAndUniforms_) {
-      uniform.SetAndMaybeMarkDirty(new Vector3(register.Value.Rf,
-                                               register.Value.Gf,
-                                               register.Value.Bf));
+      uniform.SetAndMaybeMarkDirty(register.Value);
     }
 
     foreach (var (register, uniform) in this.scalarRegistersAndUniforms_) {
