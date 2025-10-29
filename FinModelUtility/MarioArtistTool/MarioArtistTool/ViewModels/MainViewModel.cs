@@ -68,8 +68,11 @@ public sealed class MainViewModelForDesigner : MainViewModel {
 }
 
 public class MainViewModel : BViewModel {
-  public Cursor Cursor { get; }
-    = LoadCursorFromAsset_("thumb_in.png", new PixelPoint(2, 2));
+  public Cursor ThumbInCursor { get; }
+    = AssetLoaderUtil.LoadCursor("thumb_in.png", new PixelPoint(2, 2));
+
+  public Cursor ThumbOutCursor { get; }
+    = AssetLoaderUtil.LoadCursor("thumb_out.png", new PixelPoint(2, 2));
 
   public HierarchicalTreeDataGridSource<MfsTreeIoObject>? FileSystemTreeSource {
     get;
@@ -83,11 +86,10 @@ public class MainViewModel : BViewModel {
         return;
       }
 
-      var fileCursorScale = 1;
       var fileCursorObservable = new LoopingObservable<Cursor>(.1f,
-        LoadCursorFromAsset_("file_0.png", PixelPoint.Origin, fileCursorScale),
-        LoadCursorFromAsset_("file_1.png", PixelPoint.Origin, fileCursorScale),
-        LoadCursorFromAsset_("file_2.png", PixelPoint.Origin, fileCursorScale));
+        AssetLoaderUtil.LoadCursor("file_0.png", PixelPoint.Origin),
+        AssetLoaderUtil.LoadCursor("file_1.png", PixelPoint.Origin),
+        AssetLoaderUtil.LoadCursor("file_2.png", PixelPoint.Origin));
 
       var bbomByTreeIoObject
           = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
@@ -307,12 +309,6 @@ public class MainViewModel : BViewModel {
       });
     };
   }
-
-  private static Cursor LoadCursorFromAsset_(string cursorImageName,
-                                             PixelPoint pixelPoint,
-                                             int scale = 1)
-    => new(AssetLoaderUtil.LoadBitmap($"cursors/{cursorImageName}", scale),
-           new PixelPoint(pixelPoint.X * scale, pixelPoint.Y * scale));
 }
 
 public static class AvaloniaExtensions {

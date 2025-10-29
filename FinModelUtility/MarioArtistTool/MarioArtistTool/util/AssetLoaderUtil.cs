@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 
 using Avalonia;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 
@@ -41,4 +42,10 @@ public static class AssetLoaderUtil {
     using var s = Open(imagePath);
     return FinImage.FromStream(s);
   }
+
+  public static Cursor LoadCursor(string cursorImageName,
+                                  PixelPoint pixelPoint,
+                                  int scale = 2)
+    => new(LoadBitmap($"cursors/{cursorImageName}", scale),
+           new PixelPoint(pixelPoint.X * scale, pixelPoint.Y * scale));
 }

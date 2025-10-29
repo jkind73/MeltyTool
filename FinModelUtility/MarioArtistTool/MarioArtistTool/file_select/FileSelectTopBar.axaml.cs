@@ -2,8 +2,12 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media.Imaging;
+
+using fin.ui.avalonia.observables;
 
 using marioartisttool.services;
 using marioartisttool.util;
@@ -48,6 +52,22 @@ public partial class FileSelectTopBar : UserControl {
         => MfsFileSystemService.PromptUserForDiskFileAndLoadIfValid();
 
     this.DiskSwapIcon.Bind(Image.SourceProperty, this.DiskSwapImage);
+
+    var grabCursor0 =
+        AssetLoaderUtil.LoadCursor("grab_0.png", PixelPoint.Origin);
+    var grabCursor1 =
+        AssetLoaderUtil.LoadCursor("grab_1.png", PixelPoint.Origin);
+    var grabCursor2
+        = AssetLoaderUtil.LoadCursor("grab_2.png", PixelPoint.Origin);
+
+    var grabCursor = new LoopingObservable<Cursor>(.1f,
+                                                   grabCursor0,
+                                                   grabCursor1,
+                                                   grabCursor2,
+                                                   grabCursor2,
+                                                   grabCursor1);
+
+    this.DiskSwapIcon.Bind(Image.CursorProperty, grabCursor);
   }
 
   private void UpdateDiskSwapAnimation_() {
