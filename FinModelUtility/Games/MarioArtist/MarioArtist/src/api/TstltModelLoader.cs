@@ -195,6 +195,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         // HACK: Fixes position of head meshes
         switch ((JointIndex) i) {
           case JointIndex.NOSE: {
+            // TODO: Still not quite right for some reason.
             jointTranslation = joint.matrix.Translation with {
                 Z = 0
             };
