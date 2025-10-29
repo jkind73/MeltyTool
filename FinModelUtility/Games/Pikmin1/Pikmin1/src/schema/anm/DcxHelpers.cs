@@ -1,10 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 using fin.animation;
 using fin.animation.keyframes;
 using fin.animation.types.quaternion;
 using fin.animation.types.vector3;
 using fin.model;
+
+using NoAlloq;
 
 namespace pikmin1.schema.anm {
   public static class DcxHelpers {
@@ -19,6 +22,13 @@ namespace pikmin1.schema.anm {
       animation.Name = dcx.Name;
       animation.FrameCount = (int) dcxAnimationData.FrameCount;
       animation.FrameRate = 30;
+
+      var isNotLooping
+          = dcxAnimationData.JointDataList.SelectMany(j => j.PositionAxes.Axes
+                                  .Concat(j.RotationAxes.Axes)
+                                  .Concat(j.ScaleAxes.Axes))
+                            .Any(a => a.Unknown == 1);
+      animation.UseLoopingInterpolation = !isNotLooping;
 
       foreach (var jointData in dcxAnimationData.JointDataList) {
         var jointIndex = jointData.JointIndex;

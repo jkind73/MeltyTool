@@ -67,6 +67,6 @@ namespace pikmin1.schema.anm {
     public int FrameOffset { get; set; }
 
     [Unknown]
-    public int Unknown { get; set; } // Usually 0, but sometimes 1 (e.g. intro/countdwn)
+    public int Unknown { get; private set; } // Usually 0, but sometimes 1 (e.g. intro/countdwn)
   }
 }

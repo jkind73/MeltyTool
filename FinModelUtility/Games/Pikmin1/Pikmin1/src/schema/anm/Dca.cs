@@ -64,5 +64,8 @@ namespace pikmin1.schema.anm {
   public sealed partial class DcaAxis : IDcxAxis {
     public int FrameCount { get; set; }
     public int FrameOffset { get; set; }
+
+    [Skip]
+    public int Unknown => 0;
   }
 }

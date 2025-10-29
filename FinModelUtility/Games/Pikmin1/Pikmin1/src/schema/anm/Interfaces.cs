@@ -32,5 +32,6 @@ namespace pikmin1.schema.anm {
   public interface IDcxAxis : IBinaryConvertible {
     int FrameCount { get; set; }
     int FrameOffset { get; set; }
+    int Unknown { get; }
   }
 }
