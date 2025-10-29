@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 using System.Windows.Forms;
 
 using fin.color;
@@ -97,16 +98,17 @@ public partial class RegistersTab : UserControl {
                 0,
                 row);
 
-            var finColorValue = colorRegister.Value;
+            var finColorValue = colorRegister.Value * 255;
             var sysColorValue = Color.FromArgb(
-                finColorValue.Rb,
-                finColorValue.Gb,
-                finColorValue.Bb);
+                (byte) finColorValue.X,
+                (byte) finColorValue.Y,
+                (byte) finColorValue.Z);
             var colorPicker = new ColorPicker {
                 Value = sysColorValue, Dock = DockStyle.Fill,
             };
             colorPicker.ValueChanged += newColor => {
-              colorRegister.Value = FinColor.FromSystemColor(newColor);
+              colorRegister.Value
+                  = new Vector3(newColor.R, newColor.G, newColor.B) / 255;
             };
 
             colorRegistersSection.Controls.Add(colorPicker, 1, row);
