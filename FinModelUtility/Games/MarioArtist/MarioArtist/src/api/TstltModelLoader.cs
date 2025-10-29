@@ -529,6 +529,24 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       }
     }
 
+    // HACK: Generates compiled textures for each material.
+    // TODO: Move this upstream so it happens automatically
+    foreach (var material in model.MaterialManager.All) {
+      if (material is IFixedFunctionMaterial fixedFunctionMaterial) {
+        if (fixedFunctionMaterial.TryToGetCompiledDiffuseImage(
+                out var compiledDiffuseImage)) {
+          var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
+          compiledDiffuseTexture.Name = fixedFunctionMaterial.Name;
+
+          var patternTexture = material.Textures.First();
+          compiledDiffuseTexture.WrapModeU = patternTexture.WrapModeU;
+          compiledDiffuseTexture.WrapModeV = patternTexture.WrapModeV;
+          
+          fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;
+        }
+      }
+    }
+
     return model;
   }
 
