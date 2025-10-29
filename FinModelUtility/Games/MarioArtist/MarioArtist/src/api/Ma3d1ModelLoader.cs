@@ -31,12 +31,11 @@ public sealed class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
 
       var (finMaterial, finTexture)
           = finMaterialManager.AddSimpleTextureMaterialFromImage(
-              ma3d1Mesh.Texture.ToImage(), $"texture{i}");
+              ma3d1Mesh.Texture.ToImage());
 
       finTexture.ThreePointFiltering = true;
 
       var finMesh = finSkin.AddMesh();
-      finMesh.Name = $"mesh{i}";
 
       var ma3d1Vertices = ma3d1Mesh.Vertices ?? [];
 

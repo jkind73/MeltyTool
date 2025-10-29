@@ -21,7 +21,11 @@ public partial class ModelImpl<TVertex> {
     private TransparencyType? transparencyType_;
     private Bitmap? imageData_;
 
-    public string Name { get; set; }
+    public string Name {
+      get => field ?? $"texture{index}";
+      set;
+    }
+
     public override string ToString() => this.Name;
 
     public int Index => index;

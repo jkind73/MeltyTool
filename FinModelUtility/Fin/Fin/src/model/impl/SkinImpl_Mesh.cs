@@ -21,7 +21,10 @@ public partial class ModelImpl<TVertex> {
 
       public int Index => index;
 
-      public string Name { get; set; }
+      public string Name {
+        get => field ?? $"mesh{index}";
+        set;
+      }
 
       public bool IsSubMesh => isSubMesh;
       public IReadOnlyList<IMesh> SubMeshes => this.subMeshes_;
