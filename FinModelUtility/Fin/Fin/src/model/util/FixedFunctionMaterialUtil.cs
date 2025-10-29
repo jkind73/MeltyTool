@@ -4,6 +4,7 @@ using System.Numerics;
 
 using fin.image;
 using fin.image.formats;
+using fin.image.util;
 using fin.language.equations.fixedFunction;
 using fin.math;
 
@@ -38,6 +39,12 @@ public static class FixedFunctionMaterialUtil {
 
     var textureImages = textureSources.Select(t => t?.Image).ToArray();
 
+    var isOpaque = material.TransparencyType == TransparencyType.OPAQUE ||
+                   material is {
+                       ColorDstFactor: BlendFactor.ZERO,
+                       ColorSrcFactor: BlendFactor.ONE
+                   };
+
     AccessMultipleImages_(
         textureImages,
         accessHandlers => {
@@ -57,11 +64,13 @@ public static class FixedFunctionMaterialUtil {
                                          1f * y / height,
                                          textureImages,
                                          accessHandlers) * 255;
-                var a = EvaluateScalar_(outputAlpha,
-                                        1f * x / width,
-                                        1f * y / height,
-                                        textureImages,
-                                        accessHandlers) * 255;
+                var a = isOpaque
+                    ? 255
+                    : EvaluateScalar_(outputAlpha,
+                                      1f * x / width,
+                                      1f * y / height,
+                                      textureImages,
+                                      accessHandlers) * 255;
 
                 dstScan0[y * width + x] = new Rgba32(
                     (byte) rgb.X.Clamp(0, 255),
