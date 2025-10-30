@@ -58,11 +58,17 @@ public static partial class GlUtil {
     SetBlending(BlendEquation.ADD,
                 BlendFactor.CONST_COLOR,
                 BlendFactor.ONE_MINUS_CONST_ALPHA);
+    SetDepth(DepthMode.READ_ONLY);
+    GL.DepthRange(1, 1);
     DisableChangingBlending = true;
+    DisableChangingDepth = true;
 
     render();
 
     DisableChangingBlending = false;
+    DisableChangingDepth = false;
     ResetBlending();
+    ResetDepth();
+    GL.DepthRange(0, 1);
   }
 }
