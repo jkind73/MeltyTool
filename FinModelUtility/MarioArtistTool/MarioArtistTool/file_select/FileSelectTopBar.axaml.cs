@@ -65,7 +65,7 @@ public partial class FileSelectTopBar : UserControl {
                                                    grabCursor2,
                                                    grabCursor1);
 
-    this.DiskSwapIcon.Bind(Image.CursorProperty, grabCursor);
+    this.DiskSwapButton.Bind(Image.CursorProperty, grabCursor);
   }
 
   private void UpdateDiskSwapAnimation_() {
