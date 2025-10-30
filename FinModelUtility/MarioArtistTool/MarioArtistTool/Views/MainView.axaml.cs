@@ -137,7 +137,7 @@ public partial class MainView : UserControl {
           }
 
           var camera = this.ViewerGlPanel.Camera;
-          camera.Position = new Vector3(0, -1.35f, .3f);
+          camera.Position = new Vector3(0, -1.5f, .35f);
           camera.PitchDegrees = 0;
           camera.YawDegrees = 90;
 
