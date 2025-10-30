@@ -197,6 +197,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         GlTransform.Translate(hWidth, hHeight, 0);
         GlTransform.Scale(hWidth, hHeight, 1);
 
+        this.backgroundRenderer_.AspectRatio = hWidth / hHeight;
         this.backgroundRenderer_.Render();
       } else if (customSkyboxRenderer != null) {
         GlTransform.Translate(this.Camera.Position);

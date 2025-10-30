@@ -22,6 +22,8 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
   private float prevCameraYawRadians_;
   private Vector2 prevCameraPosition_;
   private float scrollX_;
+
+  private IShaderUniform<float> aspectRatioUniform_;
   private IShaderUniform<float> scrollXUniform_;
 
   private bool textureDirty_ = false;
@@ -43,6 +45,8 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
       field = value;
     }
   } = 1;
+
+  public float AspectRatio { get; set; } = 1;
 
   public bool IsValid => this.BackgroundImage != null;
 
@@ -68,7 +72,8 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
         scrollXDelta += -deltaCameraYawRadians /
                         MathF.Tau *
                         rotationSpeed /
-                        this.BackgroundImageScale;
+                        this.BackgroundImageScale /
+                        this.AspectRatio;
 
         this.prevCameraYawRadians_ = cameraYawRadians;
       }
@@ -83,16 +88,18 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
             = deltaCameraPosition.ProjectionScalar(right);
 
         var panSpeed = 100;
-        scrollXDelta += projectionAgainstRight /
+        scrollXDelta += panSpeed *
+                        projectionAgainstRight /
                         this.BackgroundImage.Width *
-                        this.BackgroundImageScale *
-                        panSpeed;
+                        this.BackgroundImageScale /
+                        this.AspectRatio;
 
         this.prevCameraPosition_ = cameraPosition;
       }
 
-      this.scrollX_ = (this.scrollX_ + scrollXDelta) % 1;
+      this.aspectRatioUniform_.SetAndMarkDirty(this.AspectRatio);
 
+      this.scrollX_ = (this.scrollX_ + scrollXDelta) % (this.BackgroundImageScale / this.AspectRatio);
       this.scrollXUniform_.SetAndMarkDirty(this.scrollX_);
     }
 
@@ -121,6 +128,7 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
 
           {{GlslUtil.GetMatricesHeader(model)}}
 
+          uniform float aspectRatio;
           uniform float scrollX;
 
           layout(location = 0) in vec3 in_Position;
@@ -129,7 +137,7 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
           out vec2 uv;
             
           void main() {
-            uv = in_Uv0 + vec2(scrollX, 0.0);
+            uv = (in_Uv0 + vec2(scrollX, 0.0)) * vec2(aspectRatio, 1);
             gl_Position = {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}} * vec4(in_Position, 1.0);
           }
           """,
@@ -179,6 +187,8 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
     var shader = shaders.WhereIs<IGlMaterialShader, GlShaderMaterialShader>()
                         .Single();
     var shaderProgram = shader.ShaderProgram;
+    
+    this.aspectRatioUniform_ = shaderProgram.GetUniformFloat("aspectRatio");
     this.scrollXUniform_ = shaderProgram.GetUniformFloat("scrollX");
 
     this.impl_ = modelRenderer;
