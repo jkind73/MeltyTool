@@ -69,14 +69,22 @@ public sealed class MainViewModelForDesigner : MainViewModel {
 }
 
 public class MainViewModel : BViewModel {
-  public Cursor ThumbInCursor { get; }
+  public static Cursor ThumbInCursor { get; }
     = AssetLoaderUtil.LoadCursor("thumb_in.png", new PixelPoint(2, 2));
 
-  public Cursor ThumbOutCursor { get; }
+  public static Cursor ThumbOutCursor { get; }
     = AssetLoaderUtil.LoadCursor("thumb_out.png", new PixelPoint(2, 2));
+
+  public static Cursor ArrowCursor { get; }
+    = AssetLoaderUtil.LoadCursor("arrow.png", new PixelPoint(2, 2));
 
   public HierarchicalTreeDataGridSource<MfsTreeIoObject>? FileSystemTreeSource {
     get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public Cursor ViewerCursor {
+    get; 
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 

@@ -3,8 +3,10 @@ using System.Linq;
 using System.Numerics;
 
 using Avalonia.Controls;
+using Avalonia.Threading;
 
 using fin.io.web;
+using fin.model.io;
 using fin.scene;
 using fin.scene.components;
 using fin.scene.instance;
@@ -22,10 +24,18 @@ using MarioArtistTool.backgrounds;
 using MarioArtistTool.config;
 using MarioArtistTool.view;
 
+using marioartisttool.ViewModels;
+using fin.util.asserts;
+
 
 namespace marioartisttool.Views;
 
 public partial class MainView : UserControl {
+  private (Vector3 translation, float pitchDegrees, float yawDegrees)?
+      ma3d1CameraTransform_ = null;
+
+  private IModelFileBundle? currentModelFileBundle_;
+
   public MainView() {
     InitializeComponent();
 
@@ -33,6 +43,12 @@ public partial class MainView : UserControl {
 
     MfsFileSystemService.OnFileSelected += file => {
       LoadingStatusService.IsLoading = true;
+
+      var camera = this.ViewerGlPanel.Camera;
+      if (this.currentModelFileBundle_ is Ma3d1ModelFileBundle or null) {
+        this.ma3d1CameraTransform_ = (
+            camera.Position, camera.PitchDegrees, camera.YawDegrees);
+      }
 
       var scene = new SceneImpl {
           FileBundle = null,
@@ -45,6 +61,12 @@ public partial class MainView : UserControl {
       var allowMovingCamera = true;
       var showGrid = true;
 
+      var viewerCursor = MainViewModel.ArrowCursor;
+      if (this.ma3d1CameraTransform_ != null) {
+        (camera.Position, camera.PitchDegrees, camera.YawDegrees)
+            = this.ma3d1CameraTransform_.Value;
+      }
+
       switch (file?.FileType.ToLower()) {
         case ".ma3d1": {
           var bundle = new Ma3d1ModelFileBundle(file);
@@ -55,6 +77,8 @@ public partial class MainView : UserControl {
 
           var lightingObj = area.AddRootNode();
           scene.CreateDefaultLighting(lightingObj);
+
+          this.currentModelFileBundle_ = bundle;
 
           break;
         }
@@ -131,19 +155,26 @@ public partial class MainView : UserControl {
                     new LambdaSceneNodeRenderComponent(_ => modelRenderComponent
                         .Render(false))));
             shadowModelObj.AddComponent(new RotateTalentTickComponent());
+
+            this.currentModelFileBundle_ = bundle;
+            viewerCursor = MainViewModel.ThumbOutCursor;
+
+            camera.Position = new Vector3(0, -1.5f, .35f);
+            camera.PitchDegrees = 0;
+            camera.YawDegrees = 90;
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));
             this.ViewerGlPanel.Scene = null;
           }
-
-          var camera = this.ViewerGlPanel.Camera;
-          camera.Position = new Vector3(0, -1.5f, .35f);
-          camera.PitchDegrees = 0;
-          camera.YawDegrees = 90;
-
+          
           break;
         }
       }
+
+      Dispatcher.UIThread.Invoke(() => {
+        var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
+        mainViewModel.ViewerCursor = viewerCursor;
+      });
 
       if (area.BackgroundImage != null) {
         // Hides the default skybox.

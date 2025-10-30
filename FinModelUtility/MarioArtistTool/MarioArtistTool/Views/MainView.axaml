@@ -105,7 +105,7 @@
         TabIndex="0"
         Focusable="True"
         ShowGrid="True"
-        Cursor="{Binding ThumbOutCursor}" />
+        Cursor="{Binding ViewerCursor}" />
     </Panel>
   </DockPanel>
 </UserControl>
