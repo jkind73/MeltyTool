@@ -17,6 +17,7 @@ using fin.io;
 using fin.ui.avalonia;
 using fin.ui.avalonia.images;
 using fin.ui.avalonia.observables;
+using fin.ui.avalonia.util;
 
 using marioartist.api;
 using marioartist.schema;
@@ -167,10 +168,7 @@ public class MainViewModel : BViewModel {
                             var brushWhite
                                 = new SolidColorBrush(
                                     Color.FromRgb(255, 255, 255));
-                            var brushYellow
-                                = new SolidColorBrush(
-                                    Color.FromRgb(245, 181, 0));
-
+ 
                             var textBlock = new TextBlock {
                                 Text = x.Name.ToString(),
                                 Classes = {
@@ -225,14 +223,11 @@ public class MainViewModel : BViewModel {
                                   });
                             }
 
-                            Brush borderBrush;
                             uint marginTop, marginBottom;
                             if (x is MfsTreeDirectory) {
-                              borderBrush = brushYellow;
                               marginTop = 4;
                               marginBottom = marginTop / 2;
                             } else {
-                              borderBrush = brushWhite;
                               marginTop = 2;
                               marginBottom = marginTop / 2;
                             }
@@ -240,12 +235,10 @@ public class MainViewModel : BViewModel {
                             var border = new Border {
                                 Child = stackPanel,
                                 Padding = new Thickness(2),
-                                BorderThickness = new Thickness(3),
                                 CornerRadius = new CornerRadius(4),
                                 Background
                                     = new SolidColorBrush(
                                         Color.FromRgb(33, 33, 33)),
-                                BorderBrush = borderBrush,
                                 Margin = new Thickness(
                                     0,
                                     marginTop,
@@ -254,9 +247,13 @@ public class MainViewModel : BViewModel {
                             };
 
                             if (x is MfsTreeFile) {
+                              border.AddClass("TreeFile");
+
                               border.Bind(Border.CursorProperty,
                                           fileCursorObservable);
                             } else {
+                              border.AddClass("TreeDirectory");
+                              
                               if (bbom != null) {
                                 border.PointerEntered +=
                                     (_, _) => bbom.IsMouseOver = true;

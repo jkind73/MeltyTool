@@ -20,6 +20,27 @@
     <Style Selector="TreeDataGridExpanderCell DockPanel > Border">
       <Setter Property="IsVisible" Value="False" />
     </Style>
+
+    <Style Selector="Border.TreeDirectory">
+      <Setter Property="BorderBrush" Value="#F5B500" />
+      <Setter Property="BorderThickness" Value="3" />
+    </Style>
+
+    <Style Selector="Border.TreeFile">
+      <Setter Property="BorderBrush" Value="White" />
+      <Setter Property="BorderThickness" Value="3" />
+    </Style>
+
+    <Style Selector=":focus Border.TreeDirectory,
+		             Border.TreeDirectory:pointerover,
+		             :focus Border.TreeFile,
+		             Border.TreeFile:pointerover">
+      <Setter Property="BorderBrush" Value="#EC1417" />
+    </Style>
+
+    <Style Selector=":selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
   </UserControl.Styles>
 
   <DockPanel>
