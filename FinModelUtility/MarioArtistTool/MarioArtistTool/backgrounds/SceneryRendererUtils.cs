@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 
+using fin.image.util;
 using fin.language.equations.fixedFunction;
 using fin.model;
 using fin.model.impl;
@@ -11,37 +12,36 @@ using marioartisttool.util;
 namespace MarioArtistTool.backgrounds;
 
 public static class SceneryRendererUtils {
-  public const byte MAX_ALPHA = 128;
+  public const byte MAX_ALPHA = 170;
 
   public static IModelRenderer CreateModelRendererForImage(string imageAsset) {
-    var backgroundFlowerModel = ModelImpl.CreateForViewer(4);
+    var model = ModelImpl.CreateForViewer(4);
 
-    var backgroundFlowerImage = AssetLoaderUtil.LoadImage(imageAsset);
-    var backgroundFlowerTexture
-        = backgroundFlowerModel.MaterialManager.CreateTexture(
-            backgroundFlowerImage);
+    var image = AssetLoaderUtil.LoadImage(imageAsset);
+    var texture = model.MaterialManager.CreateTexture(image);
 
-    var backgroundFlowerModelMaterial
-        = backgroundFlowerModel.MaterialManager.AddFixedFunctionMaterial();
-    var equations = backgroundFlowerModelMaterial.Equations;
+    var material = model.MaterialManager.AddFixedFunctionMaterial();
+    var equations = material.Equations;
     equations.SetOutputColorAlpha(
-        backgroundFlowerModelMaterial.GenerateDiffuseMixed(
+        material.GenerateDiffuseMixed(
             (equations.CreateOrGetColorInput(FixedFunctionSource.BLEND_COLOR),
              equations.CreateOrGetScalarInput(FixedFunctionSource.BLEND_ALPHA)),
-            backgroundFlowerTexture,
+            texture,
             0xc8 / 255f,
             (false, false)));
-    backgroundFlowerModelMaterial.CullingMode = CullingMode.SHOW_BOTH;
+    material.CullingMode = CullingMode.SHOW_BOTH;
 
-    var backgroundFlowerModelSkin = backgroundFlowerModel.Skin;
+    var scale = 1f;
+
+    var backgroundFlowerModelSkin = model.Skin;
     backgroundFlowerModelSkin
         .AddMesh()
         .AddSimpleFloor(backgroundFlowerModelSkin,
-                        new Vector3(-1, 1, 0),
-                        new Vector3(1, -1, 0),
-                        backgroundFlowerModelMaterial);
+                        new Vector3(-scale, scale, 0),
+                        new Vector3(scale, -scale, 0),
+                        material);
 
-    return new ModelRenderer(backgroundFlowerModel);
+    return new ModelRenderer(model);
   }
 }
 
