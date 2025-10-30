@@ -69,6 +69,14 @@ public sealed class BucketBitmapObservableManager {
     }
   }
 
+  public bool IsFocused {
+    get;
+    set {
+      field = value;
+      this.UpdateState_();
+    }
+  }
+
   public bool IsOpen {
     get;
     set {
@@ -88,7 +96,7 @@ public sealed class BucketBitmapObservableManager {
 
     BucketBitmapState to = BucketBitmapState.IDLE;
 
-    if (this.IsMouseOver) {
+    if (this.IsMouseOver || this.IsFocused) {
       to = BucketBitmapState.WAVING;
     }
 

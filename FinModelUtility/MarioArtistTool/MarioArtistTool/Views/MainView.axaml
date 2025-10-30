@@ -31,11 +31,14 @@
       <Setter Property="BorderThickness" Value="3" />
     </Style>
 
-    <Style Selector=":focus Border.TreeDirectory,
-		             Border.TreeDirectory:pointerover,
-		             :focus Border.TreeFile,
+    <Style Selector="Border.TreeDirectory:pointerover,
 		             Border.TreeFile:pointerover">
       <Setter Property="BorderBrush" Value="#EC1417" />
+    </Style>
+
+    <Style Selector=":focus Border.TreeDirectory,
+		             :focus Border.TreeFile">
+      <Setter Property="BorderBrush" Value="#44433D" />
     </Style>
 
     <Style Selector=":selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">

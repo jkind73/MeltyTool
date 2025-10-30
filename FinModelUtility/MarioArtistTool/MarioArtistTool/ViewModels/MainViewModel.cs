@@ -44,14 +44,14 @@ public sealed class MainViewModelForDesigner : MainViewModel {
     var rootSubdirs = new LinkedList<MfsTreeDirectory>();
     var root
         = new MfsTreeDirectory(null,
-                               new MfsDirectory {Name = "/"},
+                               new MfsDirectory { Name = "/" },
                                rootSubdirs,
                                []);
 
     var subdir1Files = new LinkedList<MfsTreeFile>();
     var subdir1
         = new MfsTreeDirectory(root,
-                               new MfsDirectory {Name = "subdir1"},
+                               new MfsDirectory { Name = "subdir1" },
                                [],
                                subdir1Files);
     rootSubdirs.AddLast(subdir1);
@@ -59,7 +59,7 @@ public sealed class MainViewModelForDesigner : MainViewModel {
     var subdir2Files = new LinkedList<MfsTreeFile>();
     var subdir2
         = new MfsTreeDirectory(root,
-                               new MfsDirectory {Name = "subdir2"},
+                               new MfsDirectory { Name = "subdir2" },
                                [],
                                subdir2Files);
     rootSubdirs.AddLast(subdir2);
@@ -168,7 +168,7 @@ public class MainViewModel : BViewModel {
                             var brushWhite
                                 = new SolidColorBrush(
                                     Color.FromRgb(255, 255, 255));
- 
+
                             var textBlock = new TextBlock {
                                 Text = x.Name.ToString(),
                                 Classes = {
@@ -253,31 +253,37 @@ public class MainViewModel : BViewModel {
                                           fileCursorObservable);
                             } else {
                               border.AddClass("TreeDirectory");
-                              
+
                               if (bbom != null) {
                                 border.PointerEntered +=
                                     (_, _) => bbom.IsMouseOver = true;
                                 border.PointerExited +=
                                     (_, _) => bbom.IsMouseOver = false;
 
-                                if (bucketPanel != null) {
-                                  border.DoubleTapped += (_, _) => {
-                                    var expanderCell =
-                                        border.GetParentExpanderCell();
+                                border.AttachedToVisualTree += (_, _) => {
+                                  var expanderCell =
+                                      border.GetParentExpanderCell();
+
+                                  expanderCell.DoubleTapped += (_, _) => {
                                     expanderCell.IsExpanded
                                         = !expanderCell.IsExpanded;
                                   };
 
-                                  bucketPanel.Tapped += (_, _) => {
-                                    var expanderCell =
-                                        border.GetParentExpanderCell();
-                                    expanderCell.IsExpanded
-                                        = !expanderCell.IsExpanded;
-                                  };
-                                }
+                                  if (bucketPanel != null) {
+                                    bucketPanel.Tapped += (_, _) => {
+                                      expanderCell.IsExpanded
+                                          = !expanderCell.IsExpanded;
+                                    };
+                                  }
+
+                                  expanderCell.GotFocus += (_, _)
+                                      => bbom.IsFocused = true;
+                                  expanderCell.LostFocus += (_, _)
+                                      => bbom.IsFocused = false;
+                                };
                               }
                             }
-
+                            
                             return border;
                           }),
                           null,
@@ -316,6 +322,7 @@ public static class AvaloniaExtensions {
       if (current is TreeDataGridExpanderCell expanderCell) {
         return expanderCell;
       }
+
       current = current.GetLogicalParent();
     }
 
