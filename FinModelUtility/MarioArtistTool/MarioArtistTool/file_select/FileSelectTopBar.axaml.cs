@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,39 +18,33 @@ using marioartisttool.util;
 namespace MarioArtistTool.file_select;
 
 public partial class FileSelectTopBar : UserControl {
-  private CancellationTokenSource? lastCancellationTokenSource_;
+  private static readonly LoopingObservable<Cursor> GRAB_CURSOR_;
 
-  private const float STATE_TIME = .1f;
+  static FileSelectTopBar() {
+    var grabOrigin = new PixelPoint(2, 2);
+    var grabCursor0 = AssetLoaderUtil.LoadCursor("grab_0.png", grabOrigin);
+    var grabCursor1 = AssetLoaderUtil.LoadCursor("grab_1.png", grabOrigin);
+    var grabCursor2 = AssetLoaderUtil.LoadCursor("grab_2.png", grabOrigin);
 
-  private static readonly Bitmap IDLE_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("file_select/top_bar/disk_swap/idle.png");
-
-  private static readonly Bitmap[] ANIM_IMAGES_
-      = AssetLoaderUtil.LoadBitmaps(
-          i => $"file_select/top_bar/disk_swap/anim_{i}.png",
-          6);
-
-  public BehaviorSubject<Bitmap> DiskSwapImage { get; } = new(IDLE_IMAGE_);
-
-  private bool DiskSwapMouseOver {
-    get;
-    set {
-      if (value == field) {
-        return;
-      }
-
-      field = value;
-      this.UpdateDiskSwapAnimation_();
-    }
+    GRAB_CURSOR_ = new LoopingObservable<Cursor>(.1f,
+                                                 grabCursor0,
+                                                 grabCursor1,
+                                                 grabCursor2,
+                                                 grabCursor2,
+                                                 grabCursor1);
   }
 
   public FileSelectTopBar() {
     InitializeComponent();
 
-    this.DiskSwapButton.PointerEntered
-        += (_, _) => this.DiskSwapMouseOver = true;
-    this.DiskSwapButton.PointerExited
-        += (_, _) => this.DiskSwapMouseOver = false;
+    AnimateButton_(this.DiskSwapButton,
+                   this.DiskSwapIcon,
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/disk_swap/idle.png"),
+                   AssetLoaderUtil.LoadBitmaps(
+                       i => $"file_select/top_bar/disk_swap/anim_{i}.png",
+                       6));
+
     this.DiskSwapButton.Click += async (_, _) => {
       var originalBackground = this.DiskSwapButton.Background;
       var originalHeight = this.DiskSwapIcon.Height;
@@ -62,51 +58,37 @@ public partial class FileSelectTopBar : UserControl {
       this.DiskSwapButton.Background = originalBackground;
       this.DiskSwapIcon.Height = originalHeight;
     };
-
-    this.DiskSwapIcon.Bind(Image.SourceProperty, this.DiskSwapImage);
-
-    var grabOrigin = new PixelPoint(2, 2);
-    var grabCursor0 = AssetLoaderUtil.LoadCursor("grab_0.png", grabOrigin);
-    var grabCursor1 = AssetLoaderUtil.LoadCursor("grab_1.png", grabOrigin);
-    var grabCursor2 = AssetLoaderUtil.LoadCursor("grab_2.png", grabOrigin);
-
-    var grabCursor = new LoopingObservable<Cursor>(.1f,
-                                                   grabCursor0,
-                                                   grabCursor1,
-                                                   grabCursor2,
-                                                   grabCursor2,
-                                                   grabCursor1);
-
-    this.DiskSwapButton.Bind(Image.CursorProperty, grabCursor);
   }
 
-  private void UpdateDiskSwapAnimation_() {
-    this.lastCancellationTokenSource_?.Cancel();
-    this.lastCancellationTokenSource_?.Dispose();
+  private static void AnimateButton_(
+      Button button,
+      Image icon,
+      Bitmap idleBitmap,
+      Bitmap[] hoverBitmaps) {
+    button.Bind(Button.CursorProperty, GRAB_CURSOR_);
 
-    if (!this.DiskSwapMouseOver) {
-      this.DiskSwapImage.OnNext(IDLE_IMAGE_);
-      this.lastCancellationTokenSource_ = null;
-      return;
-    }
+    var pointerOverSubject = new BehaviorSubject<bool>(false);
+    button.PointerEntered += (_, _) => pointerOverSubject.OnNext(true);
+    button.PointerExited += (_, _) => pointerOverSubject.OnNext(false);
 
-    var newCancellationTokenSource = new CancellationTokenSource();
-    this.lastCancellationTokenSource_ = newCancellationTokenSource;
+    var focusSubject = new BehaviorSubject<bool>(false);
+    button.GotFocus += (_, _) => focusSubject.OnNext(true);
+    button.LostFocus += (_, _) => focusSubject.OnNext(false); 
+    
+    var currentBitmap =
+        Observable.CombineLatest(pointerOverSubject, focusSubject)
+                  .Select(states => {
+                    var pointerOver = states[0];
+                    var focus = states[1];
 
-    var cancellationToken = newCancellationTokenSource.Token;
+                    if (!pointerOver && !focus) {
+                      return Observable.Return(idleBitmap);
+                    }
 
-    Task.Run(
-        async () => {
-          var i = 0;
-          while (true) {
-            var image = ANIM_IMAGES_[i];
-            i = (i + 1) % ANIM_IMAGES_.Length;
 
-            this.DiskSwapImage.OnNext(image);
-
-            await Task.Delay((int) (STATE_TIME * 1000), cancellationToken);
-          }
-        },
-        cancellationToken);
+                    return new LoopingObservable<Bitmap>(.1f, hoverBitmaps);
+                  })
+                  .Switch();
+    icon.Bind(Image.SourceProperty, currentBitmap);
   }
 }

@@ -5,22 +5,23 @@
              mc:Ignorable="d" d:DesignWidth="250"
              Height="28"
              x:Class="MarioArtistTool.file_select.FileSelectTopBar">
-  <Canvas Background="Black">
-	<Button x:Name="DiskSwapButton"
-            Canvas.Left="28"
-            Canvas.Top="-2"
-            ToolTip.Tip="Swap 64DD disk file"
-            Width="39"
-            Height="33">
-	  <Image x:Name="DiskSwapIcon"
-             Height="21"
-             HorizontalAlignment="Center"
-             VerticalAlignment="Center" />
-	</Button>
+  <Grid Background="Black">
+    <StackPanel>
+      <Button x:Name="DiskSwapButton"
+              ToolTip.Tip="Swap 64DD disk file"
+              Margin="28 -2 0 0"
+              Width="39"
+              Height="33">
+        <Image x:Name="DiskSwapIcon"
+               Height="21"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+      </Button>
+	</StackPanel>
 
-    <Image Source="/Assets/file_select/top_bar/top_bar.png"
+	<Image Source="/Assets/file_select/top_bar/top_bar.png"
            Height="28"
            IsHitTestVisible="False"
            HorizontalAlignment="Left" />
-  </Canvas>
+  </Grid>
 </UserControl>
