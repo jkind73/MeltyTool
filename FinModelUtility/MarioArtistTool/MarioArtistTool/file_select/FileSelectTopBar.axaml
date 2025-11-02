@@ -9,15 +9,46 @@
     <StackPanel>
       <Button x:Name="DiskSwapButton"
               ToolTip.Tip="Swap 64DD disk file"
-              Margin="28 -2 0 0"
-              Width="39"
-              Height="33">
+              Margin="33 0 0 0"
+              Width="28"
+              Height="28">
         <Image x:Name="DiskSwapIcon"
-               Height="21"
+               Width="20"
+               Height="20"
                HorizontalAlignment="Center"
                VerticalAlignment="Center" />
       </Button>
 	</StackPanel>
+
+	<StackPanel ZIndex="5"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+      <Button x:Name="ExportAllButton"
+              ToolTip.ShowOnDisabled="True"
+              ToolTip.Tip="Export all 0 files"
+              Margin="71 0 0 0"
+              Width="20"
+              Height="19"
+              IsEnabled="False">
+        <Image x:Name="ExportAllIcon"
+               Width="20"
+               Height="19"
+               Source="../Assets/file_select/top_bar/export_current/export_current_disabled.png" />
+      </Button>
+
+	  <Button x:Name="ExportCurrentButton"
+              ToolTip.ShowOnDisabled="True"
+              ToolTip.Tip="Export current file"
+              Margin="7 0 0 0"
+              Width="20"
+              Height="19"
+              IsEnabled="False">
+        <Image x:Name="ExportCurrentIcon"
+               Width="20"
+               Height="19"
+               Source="../Assets/file_select/top_bar/export_current/export_current_disabled.png" />
+      </Button>
+    </StackPanel>
 
 	<Image Source="/Assets/file_select/top_bar/top_bar.png"
            Height="28"

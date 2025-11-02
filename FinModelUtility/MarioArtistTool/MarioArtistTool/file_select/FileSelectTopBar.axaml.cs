@@ -58,6 +58,27 @@ public partial class FileSelectTopBar : UserControl {
       this.DiskSwapButton.Background = originalBackground;
       this.DiskSwapIcon.Height = originalHeight;
     };
+
+    AnimateButton_(this.DiskSwapButton,
+                   this.DiskSwapIcon,
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/disk_swap/idle.png"),
+                   AssetLoaderUtil.LoadBitmaps(
+                       i => $"file_select/top_bar/disk_swap/anim_{i}.png",
+                       6));
+
+    this.DiskSwapButton.Click += async (_, _) => {
+      var originalBackground = this.DiskSwapButton.Background;
+
+      this.DiskSwapButton.Background
+          = new SolidColorBrush(Color.FromRgb(9, 56, 1));
+      this.DiskSwapIcon.Width = this.DiskSwapIcon.Height = 18;
+
+      await MfsFileSystemService.PromptUserForDiskFileAndLoadIfValid();
+
+      this.DiskSwapButton.Background = originalBackground;
+      this.DiskSwapIcon.Width = this.DiskSwapIcon.Height = 20;
+    };
   }
 
   private static void AnimateButton_(
@@ -67,16 +88,11 @@ public partial class FileSelectTopBar : UserControl {
       Bitmap[] hoverBitmaps) {
     button.Bind(Button.CursorProperty, GRAB_CURSOR_);
 
-    var pointerOverSubject = new BehaviorSubject<bool>(false);
-    button.PointerEntered += (_, _) => pointerOverSubject.OnNext(true);
-    button.PointerExited += (_, _) => pointerOverSubject.OnNext(false);
+    var pointerOverObservable = button.GetObservable(Button.IsPointerOverProperty);
+    var focusObservable = button.GetObservable(Button.IsFocusedProperty);
 
-    var focusSubject = new BehaviorSubject<bool>(false);
-    button.GotFocus += (_, _) => focusSubject.OnNext(true);
-    button.LostFocus += (_, _) => focusSubject.OnNext(false); 
-    
     var currentBitmap =
-        Observable.CombineLatest(pointerOverSubject, focusSubject)
+        Observable.CombineLatest(pointerOverObservable, focusObservable)
                   .Select(states => {
                     var pointerOver = states[0];
                     var focus = states[1];
