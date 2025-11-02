@@ -530,12 +530,12 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       }
     }
 
-    // HACK: Generates compiled textures for each material.
-    // TODO: Move this upstream so it happens automatically
     foreach (var material in model.MaterialManager.All) {
       if (material is IFixedFunctionMaterial fixedFunctionMaterial) {
         if (fixedFunctionMaterial.TryToGetCompiledDiffuseImage(
                 out var compiledDiffuseImage)) {
+          // HACK: Generates compiled textures for each material.
+          // TODO: Move this upstream so it happens automatically
           var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
           compiledDiffuseTexture.Name = fixedFunctionMaterial.Name;
 
@@ -544,6 +544,10 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           compiledDiffuseTexture.WrapModeV = patternTexture.WrapModeV;
           
           fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;
+
+          // HACK: Fixes transparency
+          // TODO: Move this to within F3dzex2 logic
+          fixedFunctionMaterial.SetDefaultAlphaCompare();
         }
       }
     }
