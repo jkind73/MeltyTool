@@ -10,43 +10,43 @@ namespace MarioArtistTool.file_select;
 
 public sealed class BucketBitmapObservableManager {
   private static readonly Bitmap IDLE_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/idle.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/idle.png");
 
   private static readonly Bitmap WAVE_0_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/wave_0.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/wave_0.png");
 
   private static readonly Bitmap WAVE_1_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/wave_1.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/wave_1.png");
 
   private static readonly Bitmap WAVE_2_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/wave_2.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/wave_2.png");
 
   private static readonly Bitmap WAVE_3_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/wave_3.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/wave_3.png");
 
   private static readonly Bitmap OPEN_0_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_0.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_0.png");
 
   private static readonly Bitmap OPEN_1_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_1.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_1.png");
 
   private static readonly Bitmap OPEN_2_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_2.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_2.png");
 
   private static readonly Bitmap OPEN_3_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_3.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_3.png");
 
   private static readonly Bitmap OPEN_4_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_4.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_4.png");
 
   private static readonly Bitmap OPEN_5_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_5.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_5.png");
 
   private static readonly Bitmap OPEN_6_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/open_6.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/open_6.png");
 
   private static readonly Bitmap HAT_IMAGE_
-      = AssetLoaderUtil.LoadBitmap("bucket/hat.png");
+      = AssetLoaderUtil.LoadBitmap("file_select/bucket/hat.png");
 
   public BucketBitmapState CurrentState { get; private set; }
     = BucketBitmapState.IDLE;

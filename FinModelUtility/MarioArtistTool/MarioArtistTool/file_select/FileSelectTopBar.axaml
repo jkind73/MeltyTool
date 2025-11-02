@@ -2,21 +2,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="300"
+             mc:Ignorable="d" d:DesignWidth="250"
              Height="28"
              x:Class="MarioArtistTool.file_select.FileSelectTopBar">
   <Canvas Background="Black">
-    <Button x:Name="DiskSwapButton"
-            Canvas.Left="-5"
+	<Button x:Name="DiskSwapButton"
+            Canvas.Left="28"
             Canvas.Top="-2"
             ToolTip.Tip="Swap 64DD disk file"
             Width="39"
             Height="33">
-      <Image x:Name="DiskSwapIcon" 
+	  <Image x:Name="DiskSwapIcon"
              Height="21"
              HorizontalAlignment="Center"
              VerticalAlignment="Center" />
-    </Button>
+	</Button>
 
     <Image Source="/Assets/file_select/top_bar/top_bar.png"
            Height="28"
