@@ -39,7 +39,7 @@ public partial class MainView : UserControl {
   public MainView() {
     InitializeComponent();
 
-    this.ViewerGlPanel.BackdropRenderer = new PolygonStudioSkyboxRenderer();
+    var defaultBackdropRenderer = new PolygonStudioSkyboxRenderer();
 
     MfsFileSystemService.OnFileSelected += file => {
       LoadingStatusService.IsLoading = true;
@@ -65,6 +65,8 @@ public partial class MainView : UserControl {
         (camera.Position, camera.PitchDegrees, camera.YawDegrees)
             = this.ma3d1CameraTransform_.Value;
       }
+
+      this.ViewerGlPanel.BackdropRenderer = defaultBackdropRenderer;
 
       switch (file?.FileType.ToLower()) {
         case ".ma3d1": {
