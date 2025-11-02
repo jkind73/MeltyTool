@@ -22,6 +22,9 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
   private IShaderUniform<float> farPlaneUniform_;
   private IShaderUniform<float> iTimeUniform_;
 
+  public float ViewportWidth { get; set; }
+  public float ViewportHeight { get; set; }
+
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
 
@@ -32,6 +35,19 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
     this.farPlaneUniform_.SetAndMaybeMarkDirty(this.FarPlane);
     this.iTimeUniform_.SetAndMarkDirty(
         (float) FrameTime.ElapsedTimeSinceApplicationOpened.TotalSeconds);
+
+    GlTransform.MatrixMode(TransformMatrixMode.MODEL);
+    GlTransform.LoadIdentity();
+
+    var width = this.ViewportWidth;
+    var height = this.ViewportHeight;
+
+    var hWidth = width / 2f;
+    var hHeight = height / 2f;
+
+    GlTransform.Ortho2d(0, (int) width, (int) height, 0);
+    GlTransform.Translate(hWidth, hHeight, 0);
+    GlTransform.Scale(hWidth, hHeight, 1);
 
     this.impl_.Render();
   }

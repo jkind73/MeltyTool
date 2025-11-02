@@ -30,6 +30,8 @@ public static class SceneryRendererUtils {
             0xc8 / 255f,
             (false, false)));
     material.CullingMode = CullingMode.SHOW_BOTH;
+    material.DepthCompareType = DepthCompareType.Always;
+    material.DepthMode = DepthMode.NONE;
 
     var scale = 1f;
 

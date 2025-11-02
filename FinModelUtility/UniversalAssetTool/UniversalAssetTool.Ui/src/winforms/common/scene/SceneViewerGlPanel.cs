@@ -220,9 +220,9 @@ public sealed class SceneViewerGlPanel : BGlPanel, ISceneViewer {
   public ISkeletonRenderer? SkeletonRenderer
     => this.viewerImpl_.SkeletonRenderer;
 
-  public ISkyboxRenderer? SkyboxRenderer {
-    get => this.viewerImpl_.SkyboxRenderer;
-    set => this.viewerImpl_.SkyboxRenderer = value;
+  public IOrthoRenderable? BackdropRenderer {
+    get => this.viewerImpl_.BackdropRenderer;
+    set => this.viewerImpl_.BackdropRenderer = value;
   }
 
   public Camera Camera => this.viewerImpl_.Camera;

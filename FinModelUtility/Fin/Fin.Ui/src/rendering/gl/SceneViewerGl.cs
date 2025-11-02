@@ -108,7 +108,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
   public bool ShowGrid { get; set; }
-  public ISkyboxRenderer? SkyboxRenderer { get; set; } = new SkyboxRenderer();
+  public IOrthoRenderable? BackdropRenderer { get; set; } = new SkyboxRenderer();
 
   public void Render() {
     FrameTime.MarkStartOfFrame();
@@ -130,9 +130,13 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         glFarPlane += distanceFromOrigin - maxDistance;
       }
 
-      this.SkyboxRenderer?.NearPlane
+      this.BackdropRenderer?.ViewportWidth = width;
+      this.BackdropRenderer?.ViewportHeight = height;
+
+      var skyboxRenderer = this.BackdropRenderer as ISkyboxRenderer;
+      skyboxRenderer?.NearPlane
           = this.infiniteGridRenderer_.NearPlane = glNearPlane;
-      this.SkyboxRenderer?.FarPlane
+      skyboxRenderer?.FarPlane
           = this.infiniteGridRenderer_.FarPlane = glFarPlane;
     }
 
@@ -204,11 +208,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         GlTransform.Scale(this.GlobalScale);
         customSkyboxRenderer.Render();
       } else {
-        GlTransform.Ortho2d(0, width, height, 0);
-        GlTransform.Translate(hWidth, hHeight, 0);
-        GlTransform.Scale(hWidth, hHeight, 1);
-
-        this.SkyboxRenderer?.Render();
+        this.BackdropRenderer?.Render();
       }
     }
 

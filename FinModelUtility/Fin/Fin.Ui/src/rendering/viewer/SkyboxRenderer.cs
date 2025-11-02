@@ -13,7 +13,7 @@ using fin.util.linq;
 
 namespace fin.ui.rendering.viewer;
 
-public interface ISkyboxRenderer : IRenderable {
+public interface ISkyboxRenderer : IOrthoRenderable {
   float NearPlane { get; set; }
   float FarPlane { get; set; }
 }
@@ -24,6 +24,9 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
   private IShaderUniform<float> nearPlaneUniform_;
   private IShaderUniform<float> farPlaneUniform_;
 
+  public float ViewportWidth { get; set; }
+  public float ViewportHeight { get; set; }
+
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
 
@@ -32,6 +35,19 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
     this.nearPlaneUniform_.SetAndMaybeMarkDirty(this.NearPlane);
     this.farPlaneUniform_.SetAndMaybeMarkDirty(this.FarPlane);
+
+    GlTransform.MatrixMode(TransformMatrixMode.MODEL);
+    GlTransform.LoadIdentity();
+
+    var width = this.ViewportWidth;
+    var height = this.ViewportHeight;
+
+    var hWidth = width / 2f;
+    var hHeight = height / 2f;
+
+    GlTransform.Ortho2d(0, (int) width, (int) height, 0);
+    GlTransform.Translate(hWidth, hHeight, 0);
+    GlTransform.Scale(hWidth, hHeight, 1);
 
     this.impl_.Render();
   }

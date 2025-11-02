@@ -14,5 +14,5 @@ public interface ISceneViewer {
   IAnimationPlaybackManager? AnimationPlaybackManager { get; }
   IReadOnlyModelAnimation? Animation { get; set; }
   ISkeletonRenderer? SkeletonRenderer { get; }
-  ISkyboxRenderer? SkyboxRenderer { get; set; }
+  IOrthoRenderable? BackdropRenderer { get; set; }
 }

@@ -100,12 +100,10 @@ public sealed class OtherSceneryRenderer : IRenderable, IDisposable {
       (Vector2 center, Vector2 size) tuple) {
     var (center, size) = tuple;
 
-    var scale = 1.4f;
-
     return SystemMatrix4x4Util.FromTrs(
-        scale * new Vector3(center.X - 320, 480 - center.Y, -100),
+        new Vector3(center.X, center.Y, 0),
         (Quaternion?) null,
-        scale * new Vector3(size, 1));
+        new Vector3(size, 1));
   }
 }
 

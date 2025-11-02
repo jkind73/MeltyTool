@@ -36,9 +36,9 @@ public partial class SceneViewerPanel : UserControl, ISceneViewer {
 
   public ISkeletonRenderer? SkeletonRenderer => this.impl_.SkeletonRenderer;
 
-  public ISkyboxRenderer? SkyboxRenderer {
-    get => this.impl_.SkyboxRenderer;
-    set => this.impl_.SkyboxRenderer = value;
+  public IOrthoRenderable? BackdropRenderer {
+    get => this.impl_.BackdropRenderer;
+    set => this.impl_.BackdropRenderer = value;
   }
 
   public IReadOnlyModelAnimation? Animation {

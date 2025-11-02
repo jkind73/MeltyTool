@@ -1,0 +1,83 @@
+﻿using fin.ui.rendering;
+using fin.ui.rendering.gl;
+using fin.ui.rendering.viewer;
+
+using marioartist.schema.talent_studio;
+
+using MarioArtistTool.backgrounds;
+
+using marioartisttool.util;
+
+namespace MarioArtistTool.view;
+
+public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
+  private readonly BackgroundRenderer backgroundRenderer_;
+  private readonly IRenderable? sceneryRenderer_;
+
+  public float ViewportWidth { get; set; }
+  public float ViewportHeight { get; set; }
+
+  public float NearPlane { get; set; }
+  public float FarPlane { get; set; }
+
+  public TalentStudioBackdropRenderer(Gender gender) {
+    this.backgroundRenderer_ = new BackgroundRenderer {
+        BackgroundImage = gender switch {
+            Gender.BOY =>
+                AssetLoaderUtil.LoadImage("backgrounds/boy/background.png"),
+            Gender.GIRL =>
+                AssetLoaderUtil.LoadImage("backgrounds/girl/background.png"),
+            Gender.OTHER =>
+                AssetLoaderUtil.LoadImage("backgrounds/other/background.png"),
+        },
+        BackgroundImageScale = .3f,
+    };
+
+    this.sceneryRenderer_ = gender switch {
+        Gender.BOY => null,
+        Gender.GIRL => new GirlSceneryRenderer(),
+        Gender.OTHER => new OtherSceneryRenderer(),
+    };
+  }
+
+  public void Render() {
+    GlTransform.MatrixMode(TransformMatrixMode.PROJECTION);
+    GlTransform.PushMatrix();
+    GlTransform.LoadIdentity();
+
+    GlTransform.MatrixMode(TransformMatrixMode.VIEW);
+    GlTransform.PushMatrix();
+    GlTransform.LoadIdentity();
+
+    {
+      GlTransform.MatrixMode(TransformMatrixMode.MODEL);
+      GlTransform.LoadIdentity();
+      
+      var width = this.ViewportWidth;
+      var height = this.ViewportHeight;
+
+      var hWidth = width / 2f;
+      var hHeight = height / 2f;
+
+      GlTransform.Ortho2d(0, (int) width, (int) height, 0);
+
+      GlTransform.PushMatrix();
+      GlTransform.Translate(hWidth, hHeight, 0);
+      GlTransform.Scale(hWidth, hHeight, 1);
+
+      this.backgroundRenderer_.AspectRatio = hWidth / hHeight;
+      this.backgroundRenderer_.Render();
+
+      GlTransform.PopMatrix();
+      GlTransform.Translate(hWidth - 320, hHeight - 240, 0);
+      
+      this.sceneryRenderer_?.Render();
+    }
+
+    GlTransform.MatrixMode(TransformMatrixMode.PROJECTION);
+    GlTransform.PopMatrix();
+
+    GlTransform.MatrixMode(TransformMatrixMode.VIEW);
+    GlTransform.PopMatrix();
+  }
+}

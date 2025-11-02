@@ -39,7 +39,7 @@ public partial class MainView : UserControl {
   public MainView() {
     InitializeComponent();
 
-    this.ViewerGlPanel.SkyboxRenderer = new PolygonStudioSkyboxRenderer();
+    this.ViewerGlPanel.BackdropRenderer = new PolygonStudioSkyboxRenderer();
 
     MfsFileSystemService.OnFileSelected += file => {
       LoadingStatusService.IsLoading = true;
@@ -56,7 +56,6 @@ public partial class MainView : UserControl {
       };
 
       var area = scene.AddArea();
-      IRenderable? sceneryRenderer = null;
 
       var allowMovingCamera = true;
       var showGrid = true;
@@ -89,32 +88,6 @@ public partial class MainView : UserControl {
           try {
             var bundle = new TstltModelFileBundle(file);
             var model = TstltModelLoader.Import(bundle, out var gender);
-
-            switch (gender) {
-              case Gender.BOY: {
-                area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage(
-                        "backgrounds/boy/background.png");
-                area.BackgroundImageScale = .3f;
-                break;
-              }
-              case Gender.GIRL: {
-                area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage(
-                        "backgrounds/girl/background.png");
-                area.BackgroundImageScale = .3f;
-                sceneryRenderer = new GirlSceneryRenderer();
-                break;
-              }
-              case Gender.OTHER: {
-                area.BackgroundImage
-                    = AssetLoaderUtil.LoadImage(
-                        "backgrounds/other/background.png");
-                area.BackgroundImageScale = .3f;
-                sceneryRenderer = new OtherSceneryRenderer();
-                break;
-              }
-            }
 
             var config = Config.INSTANCE;
             config.MostRecentFileName = file.FullPath;
@@ -162,6 +135,9 @@ public partial class MainView : UserControl {
             camera.Position = new Vector3(0, -1.5f, .35f);
             camera.PitchDegrees = 0;
             camera.YawDegrees = 90;
+
+            this.ViewerGlPanel.BackdropRenderer
+                = new TalentStudioBackdropRenderer(gender);
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));
             this.ViewerGlPanel.Scene = null;
@@ -175,16 +151,6 @@ public partial class MainView : UserControl {
         var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
         mainViewModel.ViewerCursor = viewerCursor;
       });
-
-      if (area.BackgroundImage != null) {
-        // Hides the default skybox.
-        area.CreateCustomSkyboxNode();
-      }
-
-      if (sceneryRenderer != null) {
-        var backgroundObj = area.AddRootNode();
-        backgroundObj.AddRenderable(sceneryRenderer);
-      }
 
       var sceneInstance = new SceneInstanceImpl(scene);
       this.ViewerGlPanel.Scene = sceneInstance;
