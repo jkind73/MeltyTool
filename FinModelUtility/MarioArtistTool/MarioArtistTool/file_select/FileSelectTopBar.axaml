@@ -6,16 +6,21 @@
              Height="28"
              x:Class="MarioArtistTool.file_select.FileSelectTopBar">
   <Canvas Background="Black">
-    <Image Source="/Assets/file_select/top_bar/top_bar.png"
-           Height="28"
-           HorizontalAlignment="Left" />
-
     <Button x:Name="DiskSwapButton"
             Canvas.Left="-5"
             Canvas.Top="-2"
-            ToolTip.Tip="Swap 64DD disk file">
+            ToolTip.Tip="Swap 64DD disk file"
+            Width="39"
+            Height="33">
       <Image x:Name="DiskSwapIcon" 
-             Height="21" />
+             Height="21"
+             HorizontalAlignment="Center"
+             VerticalAlignment="Center" />
     </Button>
+
+    <Image Source="/Assets/file_select/top_bar/top_bar.png"
+           Height="28"
+           IsHitTestVisible="False"
+           HorizontalAlignment="Left" />
   </Canvas>
 </UserControl>

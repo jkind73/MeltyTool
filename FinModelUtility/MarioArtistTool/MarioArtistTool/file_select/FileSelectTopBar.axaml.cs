@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Media.Imaging;
 
 using fin.ui.avalonia.observables;
@@ -48,8 +49,19 @@ public partial class FileSelectTopBar : UserControl {
         += (_, _) => this.DiskSwapMouseOver = true;
     this.DiskSwapButton.PointerExited
         += (_, _) => this.DiskSwapMouseOver = false;
-    this.DiskSwapButton.Click += (_, _)
-        => MfsFileSystemService.PromptUserForDiskFileAndLoadIfValid();
+    this.DiskSwapButton.Click += async (_, _) => {
+      var originalBackground = this.DiskSwapButton.Background;
+      var originalHeight = this.DiskSwapIcon.Height;
+
+      this.DiskSwapButton.Background
+          = new SolidColorBrush(Color.FromRgb(9, 56, 1));
+      this.DiskSwapIcon.Height = 18;
+
+      await MfsFileSystemService.PromptUserForDiskFileAndLoadIfValid();
+
+      this.DiskSwapButton.Background = originalBackground;
+      this.DiskSwapIcon.Height = originalHeight;
+    };
 
     this.DiskSwapIcon.Bind(Image.SourceProperty, this.DiskSwapImage);
 
