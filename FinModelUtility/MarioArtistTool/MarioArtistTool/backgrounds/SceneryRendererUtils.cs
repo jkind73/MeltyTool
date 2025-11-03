@@ -39,8 +39,8 @@ public static class SceneryRendererUtils {
     backgroundFlowerModelSkin
         .AddMesh()
         .AddSimpleFloor(backgroundFlowerModelSkin,
-                        new Vector3(-scale, scale, 0),
-                        new Vector3(scale, -scale, 0),
+                        new Vector3(-scale, -scale, 0),
+                        new Vector3(scale, scale, 0),
                         material);
 
     return new ModelRenderer(model);
