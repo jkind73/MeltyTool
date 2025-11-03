@@ -16,6 +16,10 @@ public partial class SceneImpl {
       foreach (var component in this.components_) {
         component.Dispose();
       }
+
+      foreach (var childNode in this.childNodes_) {
+        childNode.Dispose();
+      }
     }
 
     public IReadOnlyList<ISceneNode> ChildNodes => this.childNodes_;

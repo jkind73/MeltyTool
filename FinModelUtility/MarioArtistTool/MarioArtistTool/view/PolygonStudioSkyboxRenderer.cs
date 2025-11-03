@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Linq;
 
 using fin.color;
@@ -27,6 +28,15 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
 
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
+
+  ~PolygonStudioSkyboxRenderer() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() => this.impl_?.Dispose();
 
   public void Render() {
     this.impl_ ??= this.GenerateModelIfNull_();

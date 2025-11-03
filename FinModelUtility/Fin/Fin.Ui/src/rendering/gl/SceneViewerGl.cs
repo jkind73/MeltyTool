@@ -26,6 +26,21 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   private ISceneAreaInstance? singleArea_;
   private SceneAreaRenderer? singleAreaRenderer_;
 
+  ~SceneViewerGl() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() {
+    this.infiniteGridRenderer_.Dispose();
+    this.backgroundRenderer_.Dispose();
+    this.BackdropRenderer?.Dispose();
+    this.scene_?.Dispose();
+    this.sceneRenderer_?.Dispose();
+  }
+
   public ISceneInstance? Scene {
     get => this.scene_;
     set {

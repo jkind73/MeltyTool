@@ -217,9 +217,8 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
       return;
     }
 
-    if (this.sceneChangeRequested_) {
+    if (this.upcomingScene_ != null) {
       LoadingStatusService.IsLoading = true;
-      this.sceneChangeRequested_ = false;
 
       GlUtil.ResetGl();
 
@@ -229,6 +228,13 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
       this.viewerImpl_.Scene = this.upcomingScene_;
       this.upcomingScene_ = null;
       LoadingStatusService.IsLoading = false;
+    }
+
+    if (this.upcomingBackdrop_ != null) {
+      this.upcomingBackdrop_?.Dispose();
+
+      this.viewerImpl_.BackdropRenderer = this.upcomingBackdrop_;
+      this.upcomingBackdrop_ = null;
     }
 
     if (this.AllowMovingCamera) {
@@ -272,15 +278,12 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.viewerImpl_.Render();
   }
 
-  private bool sceneChangeRequested_;
   private ISceneInstance? upcomingScene_;
+  private IOrthoRenderable? upcomingBackdrop_;
 
   public ISceneInstance? Scene {
     get => this.viewerImpl_.Scene;
-    set {
-      this.sceneChangeRequested_ = true;
-      this.upcomingScene_ = value;
-    }
+    set => this.upcomingScene_ = value;
   }
 
   public IAnimatableModel? FirstSceneModel => this.viewerImpl_.FirstSceneModel;
@@ -298,7 +301,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
 
   public IOrthoRenderable? BackdropRenderer {
     get => this.viewerImpl_.BackdropRenderer;
-    set => this.viewerImpl_.BackdropRenderer = value;
+    set => this.upcomingBackdrop_ = value;
   }
 
   public Camera Camera => this.viewerImpl_.Camera;

@@ -29,7 +29,7 @@ public interface IDynamicGlBufferManager : IGlBufferManager {
   void UpdateBuffer();
 }
 
-public interface IGlBufferRenderer : IDisposable, IRenderable;
+public interface IGlBufferRenderer : IRenderable;
 
 public sealed class GlBufferManager : IDynamicGlBufferManager {
   private readonly IReadOnlyModel model_;

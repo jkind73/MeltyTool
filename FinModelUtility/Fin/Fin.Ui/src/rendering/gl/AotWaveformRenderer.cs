@@ -18,6 +18,15 @@ public sealed class AotWaveformRenderer : IRenderable {
   public float MiddleY { get; set; }
   public float Amplitude { get; set; }
 
+  ~AotWaveformRenderer() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() => this.renderer_.Dispose();
+
   public void Render() {
     if (this.ActivePlayback?.IsDisposed ?? true) {
       return;

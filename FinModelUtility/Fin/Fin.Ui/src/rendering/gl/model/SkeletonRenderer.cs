@@ -14,6 +14,7 @@ using OpenTK.Graphics.OpenGL4;
 
 using LogicOp = fin.model.LogicOp;
 
+
 namespace fin.ui.rendering.gl.model;
 
 public interface ISkeletonRenderer : IRenderable {
@@ -76,6 +77,8 @@ public sealed class SkeletonRenderer
     BONE_RENDERER_ = new ModelRenderer(model);
   }
 
+  public void Dispose() { }
+
   public IReadOnlySkeleton Skeleton { get; }
 
   public IReadOnlyBone? SelectedBone {
@@ -132,7 +135,7 @@ public sealed class SkeletonRenderer
       }
 
       var maxLength = -1f;
-      if (verticesByBone.TryGetValue(bone, out var vertices)){
+      if (verticesByBone.TryGetValue(bone, out var vertices)) {
         foreach (var vertex in vertices) {
           var localPosition = vertex.LocalPosition;
 

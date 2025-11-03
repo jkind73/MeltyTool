@@ -23,6 +23,15 @@ public sealed class InfiniteGridRenderer : IRenderable {
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
 
+  ~InfiniteGridRenderer() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() => this.impl_?.Dispose();
+
   public void Render() {
     this.impl_ ??= this.GenerateModel_();
 

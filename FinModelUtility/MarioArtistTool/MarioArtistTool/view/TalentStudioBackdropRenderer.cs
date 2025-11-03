@@ -1,12 +1,14 @@
-﻿using fin.ui.rendering;
+﻿using System;
+
+using fin.ui.rendering;
 using fin.ui.rendering.gl;
 using fin.ui.rendering.viewer;
 
 using marioartist.schema.talent_studio;
 
-using MarioArtistTool.backgrounds;
-
 using marioartisttool.util;
+
+using MarioArtistTool.backgrounds;
 
 namespace MarioArtistTool.view;
 
@@ -19,7 +21,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
 
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
-
+  
   public TalentStudioBackdropRenderer(Gender gender) {
     this.backgroundRenderer_ = new BackgroundRenderer {
         BackgroundImage = gender switch {
@@ -38,6 +40,18 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
         Gender.GIRL => new GirlSceneryRenderer(),
         Gender.OTHER => new OtherSceneryRenderer(),
     };
+  }
+
+  ~TalentStudioBackdropRenderer() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() {
+    this.backgroundRenderer_.Dispose();
+    this.sceneryRenderer_?.Dispose();
   }
 
   public void Render() {

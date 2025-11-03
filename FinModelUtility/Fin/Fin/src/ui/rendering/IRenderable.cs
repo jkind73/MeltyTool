@@ -1,5 +1,8 @@
-﻿namespace fin.ui.rendering;
+﻿using System;
 
-public interface IRenderable {
+
+namespace fin.ui.rendering;
+
+public interface IRenderable : IDisposable {
   void Render();
 }
