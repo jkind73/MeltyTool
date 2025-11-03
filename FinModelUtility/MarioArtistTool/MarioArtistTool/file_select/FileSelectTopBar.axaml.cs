@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Controls;
@@ -15,6 +18,7 @@ using fin.io;
 using fin.model.io;
 using fin.ui.avalonia;
 using fin.ui.avalonia.observables;
+using fin.util.enumerables;
 
 using marioartist.api;
 
@@ -43,12 +47,12 @@ public class FileSelectTopBarViewModel : BViewModel {
     }
   }
 
-  private string ExportAllTip {
+  public string ExportAllTip {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  private bool IsExportAllEnabled {
+  public bool IsExportAllEnabled {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
@@ -90,7 +94,8 @@ public partial class FileSelectTopBar : UserControl {
                              (IModelFileBundle) new Ma3d1ModelFileBundle(f),
                          ".tstlt" => new TstltModelFileBundle(f),
                          _        => null,
-                     }));
+                     })
+                     .Nonnull());
 
           directoryQueue.Enqueue(current.Children.OfType<MfsTreeDirectory>());
         }
@@ -99,87 +104,87 @@ public partial class FileSelectTopBar : UserControl {
       dataContext.AllModelFileBundles = fileBundles;
     };
 
-    {
-      AnimateButton_(this.DiskSwapButton,
-                     this.DiskSwapIcon,
-                     AssetLoaderUtil.LoadBitmap(
-                         "file_select/top_bar/disk_swap/idle.png"),
-                     AssetLoaderUtil.LoadBitmaps(
-                         i => $"file_select/top_bar/disk_swap/anim_{i}.png",
-                         6),
-                     null);
+    AnimateButton_(this.DiskSwapButton,
+                   this.DiskSwapIcon,
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/disk_swap/idle.png"),
+                   AssetLoaderUtil.LoadBitmaps(
+                       i => $"file_select/top_bar/disk_swap/anim_{i}.png",
+                       6),
+                   null,
+                   AssetLoaderUtil.LoadBitmap(
+                       $"file_select/top_bar/disk_swap/anim_0.png"),
+                   async () => {
+                     var originalBackground = this.DiskSwapButton.Background;
+                     var originalHeight = this.DiskSwapIcon.Height;
 
-      this.DiskSwapButton.Click += async (_, _) => {
-        var originalBackground = this.DiskSwapButton.Background;
-        var originalHeight = this.DiskSwapIcon.Height;
+                     this.DiskSwapButton.Background
+                         = new SolidColorBrush(Color.FromRgb(9, 56, 1));
+                     this.DiskSwapIcon.Height = 18;
 
-        this.DiskSwapButton.Background
-            = new SolidColorBrush(Color.FromRgb(9, 56, 1));
-        this.DiskSwapIcon.Height = 18;
+                     await MfsFileSystemService
+                         .PromptUserForDiskFileAndLoadIfValid();
 
-        await MfsFileSystemService.PromptUserForDiskFileAndLoadIfValid();
+                     this.DiskSwapButton.Background = originalBackground;
+                     this.DiskSwapIcon.Height = originalHeight;
+                   });
 
-        this.DiskSwapButton.Background = originalBackground;
-        this.DiskSwapIcon.Height = originalHeight;
-      };
+    AnimateButton_(this.ExportAllButton,
+                   this.ExportAllIcon,
+                   null,
+                   [
+                       AssetLoaderUtil.LoadBitmap(
+                           "file_select/top_bar/export_all/hover.png")
+                   ],
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/export_all/disabled.png"),
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/export_all/click_0.png"),
+                   () => ExportFileBundles_(dataContext.AllModelFileBundles));
+
+    AnimateButton_(this.ExportCurrentButton,
+                   this.ExportCurrentIcon,
+                   null,
+                   [
+                       AssetLoaderUtil.LoadBitmap(
+                           "file_select/top_bar/export_current/hover.png")
+                   ],
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/export_current/disabled.png"),
+                   AssetLoaderUtil.LoadBitmap(
+                       "file_select/top_bar/export_current/click_0.png"),
+                   async () => { });
+  }
+
+  private static async Task ExportFileBundles_(
+      IReadOnlyList<IModelFileBundle> fileBundles) {
+    var storageProvider = TopLevelService.Instance.StorageProvider;
+    var config = Config.INSTANCE;
+
+    var mostRecentDirectory = config.MostRecentOutputDirectory ?? "./";
+
+    var startLocation
+        = await storageProvider
+            .TryGetFolderFromPathAsync(mostRecentDirectory);
+
+    var selectedStorageFolders
+        = await storageProvider
+            .OpenFolderPickerAsync(new FolderPickerOpenOptions {
+                SuggestedStartLocation = startLocation,
+                Title = "Select output directory",
+            });
+    if (selectedStorageFolders is not { Count: 1 }) {
+      return;
     }
 
-    {
-      AnimateButton_(this.ExportAllButton,
-                     this.ExportAllIcon,
-                     null,
-                     [
-                         AssetLoaderUtil.LoadBitmap(
-                             "file_select/top_bar/export_all/hover.png")
-                     ],
-                     AssetLoaderUtil.LoadBitmap(
-                         "file_select/top_bar/export_all/disabled.png"));
+    var selectedStorageFolder = selectedStorageFolders[0];
+    var outputDirectory
+        = new FinDirectory(selectedStorageFolder.Path.LocalPath);
 
-      this.ExportAllButton.Click += async (_, _) => {
-        var storageProvider = TopLevelService.Instance.StorageProvider;
-        var config = Config.INSTANCE;
+    config.MostRecentOutputDirectory = outputDirectory.FullPath;
+    config.Save();
 
-        var mostRecentDirectory = config.MostRecentOutputDirectory ?? "./";
-
-        var startLocation
-            = await storageProvider
-                .TryGetFolderFromPathAsync(mostRecentDirectory);
-
-        var selectedStorageFolders
-            = await storageProvider
-                .OpenFolderPickerAsync(new FolderPickerOpenOptions {
-                    SuggestedStartLocation = startLocation,
-                    Title = "Select output directory",
-                });
-        if (selectedStorageFolders is not { Count: 1 }) {
-          return;
-        }
-
-        var selectedStorageFolder = selectedStorageFolders[0];
-        var outputDirectory
-            = new FinDirectory(selectedStorageFolder.Path.LocalPath);
-
-        config.MostRecentOutputDirectory = outputDirectory.FullPath;
-        config.Save();
-
-        ExportService.ExportBundles(dataContext.AllModelFileBundles,
-                                    outputDirectory);
-      };
-    }
-
-    {
-      AnimateButton_(this.ExportCurrentButton,
-                     this.ExportCurrentIcon,
-                     null,
-                     [
-                         AssetLoaderUtil.LoadBitmap(
-                             "file_select/top_bar/export_current/hover.png")
-                     ],
-                     AssetLoaderUtil.LoadBitmap(
-                         "file_select/top_bar/export_current/disabled.png"));
-
-      this.ExportCurrentButton.Click += async (_, _) => { };
-    }
+    ExportService.ExportBundles(fileBundles, outputDirectory);
   }
 
   private static void AnimateButton_(
@@ -187,7 +192,9 @@ public partial class FileSelectTopBar : UserControl {
       Image icon,
       Bitmap? idleBitmap,
       Bitmap[] hoverBitmaps,
-      Bitmap? disabledBitmap) {
+      Bitmap? disabledBitmap,
+      Bitmap clickedBitmap,
+      Func<Task> onClick) {
     button.Bind(Button.CursorProperty, GRAB_CURSOR_);
 
     var isEnabledObservable = button.GetObservable(Button.IsEnabledProperty);
@@ -195,14 +202,22 @@ public partial class FileSelectTopBar : UserControl {
     var isPointerOverObservable
         = button.GetObservable(Button.IsPointerOverProperty);
 
+    var isClickedSubject = new BehaviorSubject<bool>(false);
+
     var currentBitmap =
-        Observable.CombineLatest(isEnabledObservable,
+        Observable.CombineLatest(isClickedSubject,
+                                 isEnabledObservable,
                                  isFocusedObservable,
                                  isPointerOverObservable)
                   .Select(states => {
-                    var isEnabled = states[0];
-                    var isFocused = states[1];
-                    var isPointerOver = states[2];
+                    var isClicked = states[0];
+                    var isEnabled = states[1];
+                    var isFocused = states[2];
+                    var isPointerOver = states[3];
+
+                    if (isClicked) {
+                      return Observable.Return(clickedBitmap);
+                    }
 
                     if (!isEnabled) {
                       return Observable.Return(disabledBitmap);
@@ -220,5 +235,11 @@ public partial class FileSelectTopBar : UserControl {
                   })
                   .Switch();
     icon.Bind(Image.SourceProperty, currentBitmap);
+
+    button.Click += async (_, _) => {
+      isClickedSubject.OnNext(true);
+      await onClick();
+      isClickedSubject.OnNext(false);
+    };
   }
 }
