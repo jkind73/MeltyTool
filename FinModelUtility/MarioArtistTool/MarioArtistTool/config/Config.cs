@@ -20,4 +20,5 @@ public sealed class Config {
 
   public string? MostRecentDiskFile { get; set; }
   public string? MostRecentFileName { get; set; }
+  public string? MostRecentOutputDirectory { get; set; }
 }

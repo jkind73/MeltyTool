@@ -33,7 +33,7 @@
         <Image x:Name="ExportAllIcon"
                Width="20"
                Height="19"
-               Source="../Assets/file_select/top_bar/export_current/export_current_disabled.png" />
+               Source="../Assets/file_select/top_bar/export_all/disabled.png" />
       </Button>
 
 	  <Button x:Name="ExportCurrentButton"
@@ -46,7 +46,7 @@
         <Image x:Name="ExportCurrentIcon"
                Width="20"
                Height="19"
-               Source="../Assets/file_select/top_bar/export_current/export_current_disabled.png" />
+               Source="../Assets/file_select/top_bar/export_current/disabled.png" />
       </Button>
     </StackPanel>
 
