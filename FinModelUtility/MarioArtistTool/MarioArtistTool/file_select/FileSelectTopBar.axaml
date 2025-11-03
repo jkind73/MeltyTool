@@ -2,9 +2,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:fileSelect="clr-namespace:MarioArtistTool.file_select"
              mc:Ignorable="d" d:DesignWidth="250"
              Height="28"
-             x:Class="MarioArtistTool.file_select.FileSelectTopBar">
+             x:Class="MarioArtistTool.file_select.FileSelectTopBar"
+             x:DataType="fileSelect:FileSelectTopBarViewModel">
   <Grid Background="Black">
     <StackPanel>
       <Button x:Name="DiskSwapButton"
@@ -24,12 +26,12 @@
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
       <Button x:Name="ExportAllButton"
+              ToolTip.Tip="{Binding ExportAllTip}"
               ToolTip.ShowOnDisabled="True"
-              ToolTip.Tip="Export all 0 files"
               Margin="71 0 0 0"
               Width="20"
               Height="19"
-              IsEnabled="False">
+              IsEnabled="{Binding IsExportAllEnabled}">
         <Image x:Name="ExportAllIcon"
                Width="20"
                Height="19"

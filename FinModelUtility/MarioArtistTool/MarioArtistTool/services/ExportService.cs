@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -12,7 +13,7 @@ using marioartist.api;
 namespace MarioArtistTool.services;
 
 public static class ExportService {
-  public static void ExportBundles(IModelFileBundle[] bundles,
+  public static void ExportBundles(IReadOnlyList<IModelFileBundle> bundles,
                                    ISystemDirectory outputDirectory) {
     // TODO: Prompt about files before overwriting
     foreach (var bundle in bundles) {
@@ -29,7 +30,8 @@ public static class ExportService {
           continue;
         }
 
-        var modelName = bundle.DisplayName;
+        var modelName
+            = FinFileStatic.GetNameWithoutExtension(bundle.DisplayName);
 
         var dstDirectory = outputDirectory.GetOrCreateSubdir(modelName);
         var dstFile

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Linq;
 
 using Avalonia;
@@ -8,9 +10,13 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 
 using fin.config.avalonia.services;
+using fin.data.queues;
 using fin.io;
 using fin.model.io;
+using fin.ui.avalonia;
 using fin.ui.avalonia.observables;
+
+using marioartist.api;
 
 using MarioArtistTool.config;
 
@@ -20,7 +26,33 @@ using MarioArtistTool.services;
 
 using marioartisttool.util;
 
+using ReactiveUI;
+
 namespace MarioArtistTool.file_select;
+
+public class FileSelectTopBarViewModel : BViewModel {
+  public IReadOnlyList<IModelFileBundle> AllModelFileBundles {
+    get;
+    set {
+      this.RaiseAndSetIfChanged(ref field, value);
+
+      this.IsExportAllEnabled = value.Count > 0;
+      this.ExportAllTip = value.Count == 1
+          ? "Export 1 file"
+          : $"Export all {value.Count} files";
+    }
+  }
+
+  private string ExportAllTip {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  private bool IsExportAllEnabled {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+}
 
 public partial class FileSelectTopBar : UserControl {
   private static readonly LoopingObservable<Cursor> GRAB_CURSOR_;
@@ -39,10 +71,33 @@ public partial class FileSelectTopBar : UserControl {
                                                  grabCursor1);
   }
 
-  private IModelFileBundle[] allModelFileBundles_ = [];
-
   public FileSelectTopBar() {
+    var dataContext = new FileSelectTopBarViewModel();
+    this.DataContext = dataContext;
+
     InitializeComponent();
+
+    MfsFileSystemService.OnFileSystemLoaded += (root) => {
+      var fileBundles = new List<IModelFileBundle>();
+
+      if (root != null) {
+        var directoryQueue = new FinQueue<MfsTreeDirectory>(root);
+        while (directoryQueue.TryDequeue(out var current)) {
+          fileBundles.AddRange(
+              current.Children.OfType<MfsTreeFile>()
+                     .Select(f => f.FileType.ToLower() switch {
+                         ".ma3d1" =>
+                             (IModelFileBundle) new Ma3d1ModelFileBundle(f),
+                         ".tstlt" => new TstltModelFileBundle(f),
+                         _        => null,
+                     }));
+
+          directoryQueue.Enqueue(current.Children.OfType<MfsTreeDirectory>());
+        }
+      }
+
+      dataContext.AllModelFileBundles = fileBundles;
+    };
 
     {
       AnimateButton_(this.DiskSwapButton,
@@ -73,8 +128,12 @@ public partial class FileSelectTopBar : UserControl {
       AnimateButton_(this.ExportAllButton,
                      this.ExportAllIcon,
                      null,
-                     [AssetLoaderUtil.LoadBitmap("file_select/top_bar/export_all/hover.png")],
-                     AssetLoaderUtil.LoadBitmap("file_select/top_bar/export_all/disabled.png"));
+                     [
+                         AssetLoaderUtil.LoadBitmap(
+                             "file_select/top_bar/export_all/hover.png")
+                     ],
+                     AssetLoaderUtil.LoadBitmap(
+                         "file_select/top_bar/export_all/disabled.png"));
 
       this.ExportAllButton.Click += async (_, _) => {
         var storageProvider = TopLevelService.Instance.StorageProvider;
@@ -97,12 +156,14 @@ public partial class FileSelectTopBar : UserControl {
         }
 
         var selectedStorageFolder = selectedStorageFolders[0];
-        var outputDirectory = new FinDirectory(selectedStorageFolder.Path.LocalPath);
+        var outputDirectory
+            = new FinDirectory(selectedStorageFolder.Path.LocalPath);
 
         config.MostRecentOutputDirectory = outputDirectory.FullPath;
         config.Save();
 
-        ExportService.ExportBundles(this.allModelFileBundles_, outputDirectory);
+        ExportService.ExportBundles(dataContext.AllModelFileBundles,
+                                    outputDirectory);
       };
     }
 
@@ -110,12 +171,14 @@ public partial class FileSelectTopBar : UserControl {
       AnimateButton_(this.ExportCurrentButton,
                      this.ExportCurrentIcon,
                      null,
-                     [AssetLoaderUtil.LoadBitmap("file_select/top_bar/export_current/hover.png")],
-                     AssetLoaderUtil.LoadBitmap("file_select/top_bar/export_current/disabled.png"));
+                     [
+                         AssetLoaderUtil.LoadBitmap(
+                             "file_select/top_bar/export_current/hover.png")
+                     ],
+                     AssetLoaderUtil.LoadBitmap(
+                         "file_select/top_bar/export_current/disabled.png"));
 
-      this.ExportCurrentButton.Click += async (_, _) => {
-
-      };
+      this.ExportCurrentButton.Click += async (_, _) => { };
     }
   }
 
@@ -129,7 +192,8 @@ public partial class FileSelectTopBar : UserControl {
 
     var isEnabledObservable = button.GetObservable(Button.IsEnabledProperty);
     var isFocusedObservable = button.GetObservable(Button.IsFocusedProperty);
-    var isPointerOverObservable = button.GetObservable(Button.IsPointerOverProperty);
+    var isPointerOverObservable
+        = button.GetObservable(Button.IsPointerOverProperty);
 
     var currentBitmap =
         Observable.CombineLatest(isEnabledObservable,
