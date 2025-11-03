@@ -44,7 +44,7 @@
               Margin="7 0 0 0"
               Width="20"
               Height="19"
-              IsEnabled="False">
+              IsEnabled="{Binding IsExportCurrentEnabled}">
         <Image x:Name="ExportCurrentIcon"
                Width="20"
                Height="19"

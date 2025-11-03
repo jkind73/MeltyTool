@@ -47,12 +47,25 @@ public class FileSelectTopBarViewModel : BViewModel {
     }
   }
 
+  public IModelFileBundle? CurrentModelFileBundle {
+    get;
+    set {
+      this.RaiseAndSetIfChanged(ref field, value);
+      this.IsExportCurrentEnabled = value != null;
+    }
+  }
+
   public string ExportAllTip {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
   public bool IsExportAllEnabled {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public bool IsExportCurrentEnabled {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
@@ -81,7 +94,7 @@ public partial class FileSelectTopBar : UserControl {
 
     InitializeComponent();
 
-    MfsFileSystemService.OnFileSystemLoaded += (root) => {
+    MfsFileSystemService.OnFileSystemLoaded += root => {
       var fileBundles = new List<IModelFileBundle>();
 
       if (root != null) {
@@ -103,6 +116,14 @@ public partial class FileSelectTopBar : UserControl {
 
       dataContext.AllModelFileBundles = fileBundles;
     };
+
+    MfsFileSystemService.OnFileSelected += file
+        => dataContext.CurrentModelFileBundle
+            = file?.FileType.ToLower() switch {
+                ".ma3d1" => new Ma3d1ModelFileBundle(file),
+                ".tstlt" => new TstltModelFileBundle(file),
+                _        => null,
+            };
 
     AnimateButton_(this.DiskSwapButton,
                    this.DiskSwapIcon,
@@ -153,7 +174,7 @@ public partial class FileSelectTopBar : UserControl {
                        "file_select/top_bar/export_current/disabled.png"),
                    AssetLoaderUtil.LoadBitmap(
                        "file_select/top_bar/export_current/click_0.png"),
-                   async () => { });
+                   () => ExportFileBundles_([dataContext.CurrentModelFileBundle]));
   }
 
   private static async Task ExportFileBundles_(
