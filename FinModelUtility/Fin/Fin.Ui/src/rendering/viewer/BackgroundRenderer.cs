@@ -28,7 +28,14 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
 
   private bool textureDirty_ = false;
 
-  public void Dispose() => this.impl_?.Dispose();
+  ~BackgroundRenderer() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() => this.impl_?.Dispose();
 
   public IReadOnlyImage? BackgroundImage {
     get;

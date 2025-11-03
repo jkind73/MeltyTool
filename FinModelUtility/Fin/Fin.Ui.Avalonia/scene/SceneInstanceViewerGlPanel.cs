@@ -231,7 +231,7 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     }
 
     if (this.upcomingBackdrop_ != null) {
-      this.upcomingBackdrop_?.Dispose();
+      this.viewerImpl_.BackdropRenderer?.Dispose();
 
       this.viewerImpl_.BackdropRenderer = this.upcomingBackdrop_;
       this.upcomingBackdrop_ = null;
