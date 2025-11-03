@@ -14,8 +14,8 @@ namespace MarioArtistTool.view;
 
 public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
   private readonly BackgroundRenderer backgroundRenderer_;
+  private readonly FloorShadowRenderer floorShadowRenderer_ = new();
   private readonly IRenderable? sceneryRenderer_;
-
   public float ViewportWidth { get; set; }
   public float ViewportHeight { get; set; }
 
@@ -51,6 +51,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
 
   private void ReleaseUnmanagedResources_() {
     this.backgroundRenderer_.Dispose();
+    this.floorShadowRenderer_.Dispose();
     this.sceneryRenderer_?.Dispose();
   }
 
@@ -66,7 +67,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
     {
       GlTransform.MatrixMode(TransformMatrixMode.MODEL);
       GlTransform.LoadIdentity();
-      
+
       var width = this.ViewportWidth;
       var height = this.ViewportHeight;
 
@@ -81,6 +82,14 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
 
       this.backgroundRenderer_.AspectRatio = hWidth / hHeight;
       this.backgroundRenderer_.Render();
+
+      this.floorShadowRenderer_.ViewportWidth = width;
+      this.floorShadowRenderer_.ViewportHeight = height;
+
+      GlTransform.PushMatrix();
+      GlTransform.LoadIdentity();
+      this.floorShadowRenderer_.Render();
+      GlTransform.PopMatrix();
 
       GlTransform.PopMatrix();
       GlTransform.Translate(hWidth - 320, hHeight - 240, 0);
