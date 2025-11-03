@@ -12,6 +12,7 @@ using fin.scene.components;
 using fin.scene.instance;
 using fin.services;
 using fin.ui.rendering.gl.scene;
+using fin.ui.rendering.viewer;
 using fin.util.asserts;
 
 using marioartist.api;
@@ -61,7 +62,7 @@ public partial class MainView : UserControl {
             = this.ma3d1CameraTransform_.Value;
       }
 
-      this.ViewerGlPanel.BackdropRenderer = null;
+      IOrthoRenderable? newBackdropRenderer = null;
 
       switch (file?.FileType.ToLower()) {
         case ".ma3d1": {
@@ -133,8 +134,7 @@ public partial class MainView : UserControl {
             camera.PitchDegrees = 0;
             camera.YawDegrees = 90;
 
-            this.ViewerGlPanel.BackdropRenderer
-                = new TalentStudioBackdropRenderer(gender);
+            newBackdropRenderer = new TalentStudioBackdropRenderer(gender);
           } catch (Exception e) {
             ExceptionService.HandleException(e, new LoadFileException(file));
             this.ViewerGlPanel.Scene = null;
@@ -144,7 +144,8 @@ public partial class MainView : UserControl {
         }
       }
 
-      this.ViewerGlPanel.BackdropRenderer ??= new PolygonStudioSkyboxRenderer();
+      newBackdropRenderer ??= new PolygonStudioSkyboxRenderer();
+      this.ViewerGlPanel.BackdropRenderer = newBackdropRenderer;
 
       Dispatcher.UIThread.Invoke(() => {
         var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
