@@ -5,9 +5,7 @@ using fin.math.matrix.four;
 using fin.math.rotations;
 using fin.math.xyz;
 using fin.ui;
-using fin.util.asserts;
 
-using Microsoft.CodeAnalysis;
 
 namespace fin.model.util;
 

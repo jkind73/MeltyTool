@@ -4,7 +4,7 @@ using fin.log;
 using fin.util.asserts;
 
 using SharpGLTF.Schema2;
-using SharpGLTF.Validation;
+
 
 namespace fin.model.io.exporters.gltf.lowlevel;
 

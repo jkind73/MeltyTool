@@ -1,13 +1,9 @@
-﻿using System;
-
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.OpenGL;
 using Avalonia.ReactiveUI;
 using Avalonia.Win32;
 
 using fin.ui.rendering.gl;
-
-using OpenTK.Windowing.Common;
 
 
 namespace fin.ui.avalonia;

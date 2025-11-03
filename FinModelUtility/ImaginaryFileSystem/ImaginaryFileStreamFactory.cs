@@ -1,5 +1,3 @@
-using System.Security.AccessControl;
-
 using Microsoft.Win32.SafeHandles;
 
 namespace System.IO.Abstractions.TestingHelpers;

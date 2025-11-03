@@ -7,7 +7,6 @@ using fin.animation.types.quaternion;
 using fin.animation.types.vector3;
 using fin.model;
 
-using NoAlloq;
 
 namespace pikmin1.schema.anm {
   public static class DcxHelpers {

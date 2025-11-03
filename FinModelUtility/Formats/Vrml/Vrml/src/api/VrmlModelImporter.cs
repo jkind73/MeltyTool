@@ -24,7 +24,6 @@ using fin.ui.rendering.gl.texture;
 using fin.util.asserts;
 using fin.util.enumerables;
 using fin.image.util;
-using fin.util.linq;
 using fin.util.sets;
 using fin.util.strings;
 

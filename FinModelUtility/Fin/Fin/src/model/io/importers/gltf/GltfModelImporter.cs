@@ -7,7 +7,6 @@ using System.Numerics;
 using fin.animation.keyframes;
 using fin.data.dictionaries;
 using fin.data.lazy;
-using fin.data.nodes;
 using fin.data.queues;
 using fin.image;
 using fin.io;
@@ -15,7 +14,6 @@ using fin.math.matrix.four;
 using fin.math.transform;
 using fin.model.impl;
 using fin.model.util;
-using fin.util.linq;
 using fin.util.sets;
 
 using SharpGLTF.Memory;

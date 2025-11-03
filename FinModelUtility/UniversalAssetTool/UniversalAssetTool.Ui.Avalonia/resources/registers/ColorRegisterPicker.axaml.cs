@@ -3,7 +3,6 @@ using System.Numerics;
 using Avalonia.Controls;
 using Avalonia.Media;
 
-using fin.color;
 using fin.language.equations.fixedFunction;
 using fin.ui.avalonia;
 

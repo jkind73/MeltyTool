@@ -4,8 +4,7 @@ using System.Numerics;
 
 using fin.model.skeleton;
 using fin.scene;
-using fin.scene.components;
-using fin.util.linq;
+
 
 namespace fin.model.util;
 

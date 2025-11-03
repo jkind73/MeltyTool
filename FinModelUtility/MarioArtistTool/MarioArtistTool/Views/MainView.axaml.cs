@@ -11,21 +11,18 @@ using fin.scene;
 using fin.scene.components;
 using fin.scene.instance;
 using fin.services;
-using fin.ui.rendering;
 using fin.ui.rendering.gl.scene;
+using fin.util.asserts;
 
 using marioartist.api;
-using marioartist.schema.talent_studio;
 
 using marioartisttool.services;
-using marioartisttool.util;
 
 using MarioArtistTool.backgrounds;
 using MarioArtistTool.config;
 using MarioArtistTool.view;
 
 using marioartisttool.ViewModels;
-using fin.util.asserts;
 
 
 namespace marioartisttool.Views;

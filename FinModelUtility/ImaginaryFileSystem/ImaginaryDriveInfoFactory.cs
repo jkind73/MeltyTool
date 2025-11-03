@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace System.IO.Abstractions.TestingHelpers;
+﻿namespace System.IO.Abstractions.TestingHelpers;
 
 /// <inheritdoc />
 #if FEATURE_SERIALIZABLE

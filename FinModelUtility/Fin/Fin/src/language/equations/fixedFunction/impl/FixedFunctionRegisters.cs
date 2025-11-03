@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 
-using fin.color;
 
 namespace fin.language.equations.fixedFunction;
 

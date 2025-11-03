@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
-using fin.color;
 using fin.data.queues;
-using fin.model;
-using fin.model.util;
 using fin.scene.components;
-using fin.schema.vector;
-using fin.ui;
-using fin.ui.rendering;
 using fin.util.linq;
 
 

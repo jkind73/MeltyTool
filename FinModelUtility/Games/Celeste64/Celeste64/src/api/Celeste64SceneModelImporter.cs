@@ -17,7 +17,6 @@ using fin.util.time;
 
 using Sledge.Formats.Map.Objects;
 
-using static Assimp.Metadata;
 
 namespace Celeste64.api;
 

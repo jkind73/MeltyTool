@@ -15,8 +15,6 @@ using fin.util.asserts;
 using fin.util.gc;
 using fin.util.linq;
 
-using SharpGLTF.Schema2;
-using SharpGLTF.Validation;
 
 namespace fin.model.io.exporters.assimp.indirect;
 
