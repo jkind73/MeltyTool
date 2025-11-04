@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace fin.data;
 
@@ -14,29 +14,19 @@ public sealed class ReferenceCountCacheDictionary<TKey, TValue>(
     Action<TKey, TValue>? disposeHandler = null)
     : IReferenceCountCacheDictionary<TKey, TValue>
     where TKey : notnull {
-  private readonly Dictionary<TKey, (TValue value, int count)> impl_ = new();
+  private readonly ConcurrentDictionary<TKey, (TValue value, int count)> impl_
+      = new();
 
   public TValue GetAndIncrement(TKey key) {
-    ref var valueAndCount = ref CollectionsMarshal.GetValueRefOrAddDefault(
-        this.impl_,
-        key,
-        out var exists);
-
-    if (exists) {
-      valueAndCount.count++;
-      return valueAndCount.value;
-    }
-
-    var value = createHandler(key);
-    valueAndCount = (value, 1);
-
-    return value;
+    var valueAndCount = this.impl_.GetOrAdd(key, _ => (createHandler(key), 0));
+    valueAndCount.count++;
+    return valueAndCount.value;
   }
 
   public void DecrementAndMaybeDispose(TKey key) {
     if (this.impl_.TryGetValue(key, out var valueAndCount)) {
       if (--valueAndCount.count <= 0) {
-        this.impl_.Remove(key);
+        this.impl_.Remove(key, out _);
         disposeHandler?.Invoke(key, valueAndCount.value);
       }
     }

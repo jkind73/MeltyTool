@@ -100,8 +100,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
   private GlShaderProgram(string vertexShaderSrc,
                           string fragmentShaderSrc) {
     this.cachedShaderProgram_ =
-        programCache_.GetAndIncrement(
-            (vertexShaderSrc, fragmentShaderSrc));
+        programCache_.GetAndIncrement((vertexShaderSrc, fragmentShaderSrc));
   }
 
   ~GlShaderProgram() => this.ReleaseUnmanagedResources_();
