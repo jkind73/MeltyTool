@@ -16,7 +16,6 @@ using Avalonia.Rendering.Composition;
 using fin.ui.rendering.gl;
 
 using OpenTK.Graphics.Wgl;
-using OpenTK.Platform.Windows;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
@@ -24,19 +23,7 @@ using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
-using FramebufferAttachment = OpenTK.Graphics.OpenGL.FramebufferAttachment;
-using FramebufferErrorCode = OpenTK.Graphics.OpenGL.FramebufferErrorCode;
-using FramebufferTarget = OpenTK.Graphics.OpenGL.FramebufferTarget;
 using GL = OpenTK.Graphics.OpenGL.GL;
-using PixelFormat = OpenTK.Graphics.OpenGL.PixelFormat;
-using PixelInternalFormat = OpenTK.Graphics.OpenGL.PixelInternalFormat;
-using PixelType = OpenTK.Graphics.OpenGL.PixelType;
-using TextureMagFilter = OpenTK.Graphics.OpenGL.TextureMagFilter;
-using TextureMinFilter = OpenTK.Graphics.OpenGL.TextureMinFilter;
-using TextureParameterName = OpenTK.Graphics.OpenGL.TextureParameterName;
-using TextureTarget = OpenTK.Graphics.OpenGL.TextureTarget;
-using TextureTarget2d = OpenTK.Graphics.OpenGL.TextureTarget2d;
-using TextureWrapMode = OpenTK.Graphics.OpenGL.TextureWrapMode;
 
 namespace fin.ui.avalonia.gl;
 
@@ -52,11 +39,6 @@ public class SharpDxInteropControl : Control {
   private bool initialized_;
 
   private IntPtr hDevice_;
-  private nint[] hCfbs_ = new nint[1];
-  
-  private int fboId_;
-  private uint colorTextureId_;
-  private uint depthTextureId_;
 
   public event Action? OnInit;
 
@@ -164,10 +146,6 @@ public class SharpDxInteropControl : Control {
       throw new Exception("DXOpenDeviceNV failed");
     }
 
-    this.fboId_ = GL.GenFramebuffer();
-    this.colorTextureId_ = (uint) GL.GenTexture();
-    this.depthTextureId_ = (uint) GL.GenTexture();
-
     this.QueueNextFrame_();
   }
 
@@ -256,11 +234,6 @@ public class SharpDxInteropControl : Control {
     this.openTkWindow_?.Dispose();
     this.openTkWindow_ = null;
 
-    // TODO: Free these on destroy
-    GL.DeleteFramebuffers(1, [this.fboId_]);
-    GL.DeleteTextures(1, [this.colorTextureId_]);
-    GL.DeleteTextures(1, [this.depthTextureId_]);
-
     this.teardownGl_();
   }
 
@@ -270,25 +243,20 @@ public class SharpDxInteropControl : Control {
   protected void RenderFrame(PixelSize pixelSize) {
     if (pixelSize == default)
       return;
+
+    GlUtil.SwitchContext(this.openTkWindow_!.Context);
+
     if (pixelSize != this.lastSize_) {
       this.lastSize_ = pixelSize;
       this.Resize_(pixelSize);
     }
 
-    this.currentImage_.BeginDraw();
-    this.device_!.ImmediateContext.OutputMerger.SetTargets(
-        this.currentImage_.RenderTargetView);
-
-    GlUtil.SwitchContext(this.openTkWindow_!.Context);
-
-    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    this.renderGl_();
-
-    this.currentImage_.Present();
+    using (this.swapchain_!.BeginDraw(this.hDevice_,
+                                      pixelSize,
+                                      out this.currentImage_)) {
+      this.renderGl_();
+    }
   }
-
-  [DllImport("Kernel32.dll")]
-  public static extern int GetLastError();
 
   private void Resize_(PixelSize size) {
     if (this.device_ is null)
@@ -302,82 +270,6 @@ public class SharpDxInteropControl : Control {
         size.Height);
 
     this.openTkWindow_!.ClientSize = (size.Width, size.Height);
-    GlUtil.SwitchContext(this.openTkWindow_.Context);
     GlUtil.SetViewport(new Rectangle(0, 0, size.Width, size.Height));
-
-    this.currentImageDisposable_?.Dispose();
-    if (this.hCfbs_[0] != 0) {
-      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
-      if (!unlockResult) {
-        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
-      }
-
-      Wgl.DXUnregisterObjectNV(this.hDevice_, this.hCfbs_[0]);
-    }
-
-    this.currentImageDisposable_
-        = this.swapchain_!.BeginDraw(size, out this.currentImage_);
-
-    var hCfb = Wgl.DXRegisterObjectNV(
-        this.hDevice_,
-        this.currentImage_.Texture.NativePointer, // wrong?
-        this.colorTextureId_,
-        (int) TextureTarget2d.Texture2D,
-        WGL_NV_DX_interop.AccessReadWrite
-    );
-
-    if (hCfb == IntPtr.Zero) {
-      throw new Exception("DXRegisterObjectNV failed");
-    }
-
-    this.hCfbs_[0] = hCfb;
-
-    var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, this.hCfbs_);
-    if (!lockResult) {
-      throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
-    }
-
-    GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
-    GL.TexImage2D(TextureTarget.Texture2D,
-                  0,
-                  PixelInternalFormat.DepthComponent,
-                  size.Width,
-                  size.Height,
-                  0,
-                  PixelFormat.DepthComponent,
-                  PixelType.UnsignedInt,
-                  IntPtr.Zero);
-    // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
-    GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureMinFilter,
-                    (int) TextureMinFilter.Linear);
-    GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureMagFilter,
-                    (int) TextureMagFilter.Linear);
-    GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureWrapS,
-                    (int) TextureWrapMode.ClampToBorder);
-    GL.TexParameter(TextureTarget.Texture2D,
-                    TextureParameterName.TextureWrapT,
-                    (int) TextureWrapMode.ClampToBorder);
-    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
-    GL.FramebufferTexture2D(
-        FramebufferTarget.Framebuffer,
-        FramebufferAttachment.ColorAttachment0,
-        TextureTarget.Texture2D,
-        this.colorTextureId_,
-        0
-    );
-    GL.FramebufferTexture2D(
-        FramebufferTarget.Framebuffer,
-        FramebufferAttachment.DepthAttachment,
-        TextureTarget.Texture2D,
-        this.depthTextureId_,
-        0);
-
-    var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
-    if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
-      throw new Exception($"incomplete framebuffer: {fbStatus}");
-    }
   }
 }

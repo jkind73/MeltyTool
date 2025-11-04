@@ -2,12 +2,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.Composition;
+
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Graphics.Wgl;
+using OpenTK.Platform.Windows;
 
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -78,12 +83,18 @@ class D3d11Swapchain {
     }
   }
 
-  public IDisposable BeginDraw(PixelSize size, out D3D11SwapchainImage image) {
+  public IDisposable BeginDraw(IntPtr hDevice,
+                               PixelSize size,
+                               out D3D11SwapchainImage image) {
     var img = this.CleanupAndFindNextImage_(size) ??
-              new(this.device_, size, this.Interop, this.Target);
+              new(hDevice, this.device_, size, this.Interop, this.Target);
+
+    img.BeginDraw();
+    this.device_.ImmediateContext.OutputMerger.SetTargets(img.RenderTargetView);
 
     this.pendingImages_.Remove(img);
     var rv = new AnonymousDisposable(() => {
+      img.Present();
       this.pendingImages_.Add(img);
     });
     image = img;
@@ -104,7 +115,15 @@ public sealed class D3D11SwapchainImage {
   public Task? LastPresent { get; private set; }
   public RenderTargetView RenderTargetView { get; }
 
+  private nint[] hCfbs_ = new nint[1];
+
+  private readonly IntPtr hDevice_;
+  private readonly int fboId_;
+  private readonly uint colorTextureId_;
+  private readonly uint depthTextureId_;
+
   public D3D11SwapchainImage(
+      IntPtr hDevice,
       D3DDevice device,
       PixelSize size,
       ICompositionGpuInterop interop,
@@ -122,7 +141,7 @@ public sealed class D3D11SwapchainImage {
             ArraySize = 1,
             MipLevels = 1,
             SampleDescription
-                = new SampleDescription { Count = 1, Quality = 0 },
+                = new SampleDescription {Count = 1, Quality = 0},
             CpuAccessFlags = default,
             OptionFlags = ResourceOptionFlags.SharedKeyedmutex,
             BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
@@ -144,10 +163,78 @@ public sealed class D3D11SwapchainImage {
     };
 
     this.RenderTargetView = new RenderTargetView(device, this.texture_);
+
+    this.hDevice_ = hDevice;
+    this.fboId_ = GL.GenFramebuffer();
+    this.colorTextureId_ = (uint) GL.GenTexture();
+    this.depthTextureId_ = (uint) GL.GenTexture();
+
+    var hCfb = Wgl.DXRegisterObjectNV(
+        hDevice,
+        this.Texture.NativePointer, // wrong?
+        this.colorTextureId_,
+        (int) TextureTarget2d.Texture2D,
+        WGL_NV_DX_interop.AccessReadWrite
+    );
+
+    if (hCfb == IntPtr.Zero) {
+      throw new Exception("DXRegisterObjectNV failed");
+    }
+
+    this.hCfbs_[0] = hCfb;
+
+    var lockResult = Wgl.DXLockObjectsNV(hDevice, 1, this.hCfbs_);
+    if (!lockResult) {
+      throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
+    }
+
+    GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
+    GL.TexImage2D(TextureTarget.Texture2D,
+                  0,
+                  PixelInternalFormat.DepthComponent,
+                  size.Width,
+                  size.Height,
+                  0,
+                  OpenTK.Graphics.OpenGL4.PixelFormat.DepthComponent,
+                  PixelType.UnsignedInt,
+                  IntPtr.Zero);
+    // things go horribly wrong if DepthComponent's Bitcount does not match the main Framebuffer's Depth
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureMinFilter,
+                    (int) TextureMinFilter.Linear);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureMagFilter,
+                    (int) TextureMagFilter.Linear);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureWrapS,
+                    (int) TextureWrapMode.ClampToBorder);
+    GL.TexParameter(TextureTarget.Texture2D,
+                    TextureParameterName.TextureWrapT,
+                    (int) TextureWrapMode.ClampToBorder);
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    GL.FramebufferTexture2D(
+        FramebufferTarget.Framebuffer,
+        FramebufferAttachment.ColorAttachment0,
+        TextureTarget.Texture2D,
+        this.colorTextureId_,
+        0
+    );
+    GL.FramebufferTexture2D(
+        FramebufferTarget.Framebuffer,
+        FramebufferAttachment.DepthAttachment,
+        TextureTarget.Texture2D,
+        this.depthTextureId_,
+        0);
+
+    var fbStatus = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+    if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
+      throw new Exception($"incomplete framebuffer: {fbStatus}");
+    }
   }
 
   public void BeginDraw() {
     this.mutex_.Acquire(0, int.MaxValue);
+    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
   }
 
   public void Present() {
@@ -156,7 +243,8 @@ public sealed class D3D11SwapchainImage {
         this.platformHandle_,
         this.properties_
     );
-    this.LastPresent = this.target_.UpdateWithKeyedMutexAsync(this.imported_, 1, 0);
+    this.LastPresent =
+        this.target_.UpdateWithKeyedMutexAsync(this.imported_, 1, 0);
   }
 
   public async ValueTask DisposeAsync() {
@@ -170,5 +258,21 @@ public sealed class D3D11SwapchainImage {
     this.RenderTargetView.Dispose();
     this.mutex_.Dispose();
     this.texture_.Dispose();
+
+    if (this.hCfbs_[0] != 0) {
+      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+      if (!unlockResult) {
+        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
+      }
+
+      Wgl.DXUnregisterObjectNV(this.hDevice_, this.hCfbs_[0]);
+    }
+
+    GL.DeleteFramebuffers(1, [this.fboId_]);
+    GL.DeleteTextures(1, [this.colorTextureId_]);
+    GL.DeleteTextures(1, [this.depthTextureId_]);
   }
+
+  [DllImport("Kernel32.dll")]
+  public static extern int GetLastError();
 }
