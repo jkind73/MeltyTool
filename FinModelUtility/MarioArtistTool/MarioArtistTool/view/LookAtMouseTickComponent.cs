@@ -30,6 +30,14 @@ public class LookAtMouseTickComponent(
   public void Dispose() { }
 
   public void Tick(ISceneNodeInstance self) {
+    var deltaTime = FrameTime.DeltaTime;
+
+    // If delta time is greater than one, there was a lag spike. We won't
+    // do anything this frame, to prevent weird jerky movements.
+    if (deltaTime > 1) {
+      return;
+    }
+
     var lookAtMouse = !MainViewInputService.MouseDown &&
                       MainViewInputService.MouseInView;
 
@@ -99,7 +107,7 @@ public class LookAtMouseTickComponent(
 
         newTorsoRotation = fromRotationForTorso
             .SlerpTowards(toRotationForTorso,
-                          8 * FrameTime.DeltaTime,
+                          8 * deltaTime,
                           !slerpTheLongWay);
       }
     }
