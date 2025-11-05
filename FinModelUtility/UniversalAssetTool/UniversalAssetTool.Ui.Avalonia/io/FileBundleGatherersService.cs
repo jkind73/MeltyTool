@@ -7,6 +7,7 @@ using Avalonia;
 
 using fin.io.bundles;
 using fin.util.progress;
+using fin.util.tasks;
 
 using uni.games;
 using uni.ui.avalonia.common.progress;
@@ -28,7 +29,7 @@ public static class FileBundleGatherersService {
     var loadingProgress = splitProgress[0];
     var fileTreeProgress = splitProgress[1];
 
-    Task.Run(() => {
+    FinTask.Run(() => {
       var rootDirectory = new RootFileBundleGatherer()
           .GatherAllFiles(
               loadingProgress,

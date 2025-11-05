@@ -13,6 +13,7 @@ using fin.model.io;
 using fin.model.processing;
 using fin.util.sets;
 using fin.util.strings;
+using fin.util.tasks;
 
 using uni.api;
 using uni.config;
@@ -35,7 +36,7 @@ public partial class ExportAssetButton : UserControl {
 
   protected void Button_OnClick(object? sender, RoutedEventArgs e) {
     if (this.FileBundle is IModelFileBundle modelFileBundle) {
-      Task.Run(async () => await this.ExportModelFileBundle_(modelFileBundle));
+      FinTask.Run(async () => await this.ExportModelFileBundle_(modelFileBundle));
     }
   }
 

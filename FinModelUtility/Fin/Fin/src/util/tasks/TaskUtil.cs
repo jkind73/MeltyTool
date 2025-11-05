@@ -64,7 +64,7 @@ public static class TaskUtil {
       double frequency,
       Action handler,
       CancellationToken? cancellationToken = null)
-    => Task.Run(() => {
+    => FinTask.Run(() => {
       var stopwatch = new Stopwatch();
       var targetPeriod = 1 / frequency;
       var targetTicks = Stopwatch.Frequency * targetPeriod;

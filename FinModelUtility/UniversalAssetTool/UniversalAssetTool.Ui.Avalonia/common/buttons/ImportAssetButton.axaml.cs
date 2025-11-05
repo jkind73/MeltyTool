@@ -9,6 +9,7 @@ using Avalonia.Platform.Storage;
 using fin.common;
 using fin.io;
 using fin.model.processing;
+using fin.util.tasks;
 
 using uni.cli;
 
@@ -18,7 +19,7 @@ public partial class ImportAssetButton : UserControl {
   public ImportAssetButton() => this.InitializeComponent();
 
   private void Button_OnClick(object? sender, RoutedEventArgs e)
-    => Task.Run(() => OpenFileWindowAndTryToImportAsset(this));
+    => FinTask.Run(() => OpenFileWindowAndTryToImportAsset(this));
 
   public static async Task OpenFileWindowAndTryToImportAsset(Visual visual) {
     var plugins = PluginUtil.Plugins;

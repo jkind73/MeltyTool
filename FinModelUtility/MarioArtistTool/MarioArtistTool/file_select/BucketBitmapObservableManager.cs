@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 using Avalonia.Media.Imaging;
 
+using fin.util.tasks;
+
 using marioartisttool.util;
 
 namespace MarioArtistTool.file_select;
@@ -104,37 +106,38 @@ public sealed class BucketBitmapObservableManager {
       to = BucketBitmapState.OPEN;
     }
 
-    Task.Run(async () => {
-      await foreach (var next in BucketBitmapStateUtils.GetPath(
-                         from,
-                         to,
-                         newCancellationTokenSource.Token)) {
-        this.CurrentState = next;
-        var nextBucketImage = next switch {
-            BucketBitmapState.IDLE => IDLE_IMAGE_,
-            BucketBitmapState.WAVE_0_IN or BucketBitmapState.WAVE_0_OUT
-                => WAVE_0_IMAGE_,
-            BucketBitmapState.WAVE_1_IN or BucketBitmapState.WAVE_1_OUT
-                => WAVE_1_IMAGE_,
-            BucketBitmapState.WAVE_2_IN or BucketBitmapState.WAVE_2_OUT
-                => WAVE_2_IMAGE_,
-            BucketBitmapState.WAVE_3_IN or BucketBitmapState.WAVE_3_OUT
-                => WAVE_3_IMAGE_,
-            BucketBitmapState.OPEN_0 => OPEN_0_IMAGE_,
-            BucketBitmapState.OPEN_1 => OPEN_1_IMAGE_,
-            BucketBitmapState.OPEN_2 => OPEN_2_IMAGE_,
-            BucketBitmapState.OPEN_3 => OPEN_3_IMAGE_,
-            BucketBitmapState.OPEN_4 => OPEN_4_IMAGE_,
-            BucketBitmapState.OPEN_5 => OPEN_5_IMAGE_,
-            BucketBitmapState.OPEN_6 => OPEN_6_IMAGE_,
-        };
+    FinTask.Run(
+        async () => {
+          await foreach (var next in BucketBitmapStateUtils.GetPath(
+                             from,
+                             to,
+                             newCancellationTokenSource.Token)) {
+            this.CurrentState = next;
+            var nextBucketImage = next switch {
+                BucketBitmapState.IDLE => IDLE_IMAGE_,
+                BucketBitmapState.WAVE_0_IN or BucketBitmapState.WAVE_0_OUT
+                    => WAVE_0_IMAGE_,
+                BucketBitmapState.WAVE_1_IN or BucketBitmapState.WAVE_1_OUT
+                    => WAVE_1_IMAGE_,
+                BucketBitmapState.WAVE_2_IN or BucketBitmapState.WAVE_2_OUT
+                    => WAVE_2_IMAGE_,
+                BucketBitmapState.WAVE_3_IN or BucketBitmapState.WAVE_3_OUT
+                    => WAVE_3_IMAGE_,
+                BucketBitmapState.OPEN_0 => OPEN_0_IMAGE_,
+                BucketBitmapState.OPEN_1 => OPEN_1_IMAGE_,
+                BucketBitmapState.OPEN_2 => OPEN_2_IMAGE_,
+                BucketBitmapState.OPEN_3 => OPEN_3_IMAGE_,
+                BucketBitmapState.OPEN_4 => OPEN_4_IMAGE_,
+                BucketBitmapState.OPEN_5 => OPEN_5_IMAGE_,
+                BucketBitmapState.OPEN_6 => OPEN_6_IMAGE_,
+            };
 
-        this.BucketImage.OnNext(nextBucketImage);
+            this.BucketImage.OnNext(nextBucketImage);
 
-        var hasHat = !next.IsOpen();
-        this.HatImage.OnNext(hasHat ? HAT_IMAGE_ : null);
-      }
-    },
-    newCancellationTokenSource.Token);
+            var hasHat = !next.IsOpen();
+            this.HatImage.OnNext(hasHat ? HAT_IMAGE_ : null);
+          }
+        },
+        newCancellationTokenSource.Token);
   }
 }

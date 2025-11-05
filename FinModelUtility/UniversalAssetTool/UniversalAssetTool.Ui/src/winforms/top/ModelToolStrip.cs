@@ -10,6 +10,7 @@ using fin.math.floats;
 using fin.model;
 using fin.model.io;
 using fin.util.progress;
+using fin.util.tasks;
 
 using uni.api;
 using uni.config;
@@ -159,7 +160,7 @@ public partial class ModelToolStrip : UserControl {
     if (extractorPromptChoice != ExporterPromptChoice.CANCEL) {
       this.CancellationToken = new CancellationTokenSource();
 
-      Task.Run(() => {
+      FinTask.Run(() => {
         ExportAll(modelFileBundles,
                                new GlobalModelImporter(),
                                this.Progress,

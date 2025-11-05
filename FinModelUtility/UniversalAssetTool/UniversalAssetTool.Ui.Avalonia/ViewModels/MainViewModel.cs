@@ -6,6 +6,7 @@ using fin.model;
 using fin.scene;
 using fin.ui.avalonia;
 using fin.ui.avalonia.images;
+using fin.util.tasks;
 
 using ReactiveUI;
 
@@ -38,7 +39,7 @@ public sealed class MainViewModelForDesigner {
     var secondsToWait = 3;
     var start = DateTime.Now;
 
-    Task.Run(async () => {
+    FinTask.Run(async () => {
       DateTime current;
       double elapsedSeconds;
       do {

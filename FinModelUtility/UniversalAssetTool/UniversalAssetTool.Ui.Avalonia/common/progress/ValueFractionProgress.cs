@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using fin.ui.avalonia;
 using fin.util.progress;
+using fin.util.tasks;
 
 using ReactiveUI;
 
@@ -53,7 +54,7 @@ public sealed class ValueFractionProgress
 
     var start = DateTime.Now;
 
-    Task.Run(async () => {
+    FinTask.Run(async () => {
       DateTime current;
       double elapsedSeconds;
       do {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 using Avalonia;
 
@@ -13,6 +14,8 @@ class Program {
   // yet and stuff might break.
   [STAThread]
   public static void Main(string[] args) {
+    CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+
     try {
       BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
     } catch (Exception e) {

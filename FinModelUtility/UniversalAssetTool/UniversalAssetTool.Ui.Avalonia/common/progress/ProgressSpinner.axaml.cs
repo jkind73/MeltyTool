@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 
 using fin.ui.avalonia;
+using fin.util.tasks;
 
 using ReactiveUI;
 
@@ -17,7 +18,7 @@ public sealed class ProgressSpinnerViewModelForDesigner
     var secondsToWait = 3;
     var start = DateTime.Now;
 
-    Task.Run(
+    FinTask.Run(
         async () => {
           DateTime current;
           double elapsedSeconds;

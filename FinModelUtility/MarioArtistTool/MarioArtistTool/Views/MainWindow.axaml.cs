@@ -6,6 +6,7 @@ using Avalonia.Threading;
 using fin.config.avalonia.services;
 using fin.services;
 using fin.ui.avalonia.dialogs;
+using fin.util.tasks;
 
 using marioartisttool.services;
 
@@ -28,6 +29,6 @@ public partial class MainWindow : Window {
     };
 
     TopLevelService.Init(this);
-    Task.Run(MfsFileSystemService.LoadFromConfigOrPromptUserForDiskFile);
+    FinTask.Run(MfsFileSystemService.LoadFromConfigOrPromptUserForDiskFile);
   }
 }

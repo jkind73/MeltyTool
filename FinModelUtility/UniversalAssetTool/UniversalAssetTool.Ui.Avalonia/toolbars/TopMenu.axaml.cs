@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using fin.io.web;
 using fin.ui.avalonia;
 using fin.util.io;
+using fin.util.tasks;
 
 using ReactiveUI;
 
@@ -61,8 +62,8 @@ public partial class TopMenu : UserControl {
   private void OpenFileWindowAndTryToImportAsset_(
       object? sender,
       RoutedEventArgs e)
-    => Task.Run(() => ImportAssetButton
-                    .OpenFileWindowAndTryToImportAsset(this));
+    => FinTask.Run(() => ImportAssetButton
+                       .OpenFileWindowAndTryToImportAsset(this));
 
   private void OpenSettingsWindow_(object? sender, RoutedEventArgs e)
     => this.ShowNewWindow(() => new SettingsWindow());
