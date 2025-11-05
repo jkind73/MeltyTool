@@ -184,13 +184,16 @@ public static partial class GlUtil {
         FinBlendFactor.SRC_ALPHA => GlBlendFactorDst.SrcAlpha,
         FinBlendFactor.ONE_MINUS_SRC_ALPHA => GlBlendFactorDst
             .OneMinusSrcAlpha,
+        FinBlendFactor.DST_COLOR => GlBlendFactorDst.DstColor,
+        FinBlendFactor.ONE_MINUS_DST_COLOR => GlBlendFactorDst
+            .OneMinusDstColor,
         FinBlendFactor.DST_ALPHA => GlBlendFactorDst.DstAlpha,
         FinBlendFactor.ONE_MINUS_DST_ALPHA => GlBlendFactorDst
             .OneMinusDstAlpha,
         FinBlendFactor.CONST_COLOR => GlBlendFactorDst.ConstantColor,
         FinBlendFactor.ONE_MINUS_CONST_COLOR => GlBlendFactorDst
             .OneMinusConstantColor,
-        FinBlendFactor.CONST_ALPHA => GlBlendFactorDst.ConstantColor,
+        FinBlendFactor.CONST_ALPHA => GlBlendFactorDst.ConstantAlpha,
         FinBlendFactor.ONE_MINUS_CONST_ALPHA => GlBlendFactorDst
             .OneMinusConstantAlpha,
         _ => throw new ArgumentOutOfRangeException(
