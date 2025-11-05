@@ -191,7 +191,7 @@ public sealed class D3D11SwapchainImage {
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
     GL.TexImage2D(TextureTarget.Texture2D,
                   0,
-                  PixelInternalFormat.DepthComponent,
+                  PixelInternalFormat.DepthComponent32,
                   size.Width,
                   size.Height,
                   0,
