@@ -35,6 +35,8 @@ public partial class MainView : UserControl {
   public MainView() {
     InitializeComponent();
 
+    this.ViewerGlPanel.BackdropRenderer = new PolygonStudioSkyboxRenderer();
+
     this.DataContextChanged += (_, _) => {
       var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
       var com = mainViewModel.Com;
