@@ -32,7 +32,6 @@ using ReactiveUI;
 
 using schema.binary;
 
-using Brush = Avalonia.Media.Brush;
 using Color = Avalonia.Media.Color;
 using Image = Avalonia.Controls.Image;
 
@@ -65,6 +64,8 @@ public sealed class MainViewModelForDesigner : MainViewModel {
     rootSubdirs.AddLast(subdir2);
 
     MfsFileSystemService.LoadFileSystem(root);
+
+    this.FileLabel = "Foobar";
   }
 }
 
@@ -84,11 +85,26 @@ public class MainViewModel : BViewModel {
   }
 
   public Cursor ViewerCursor {
-    get; 
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public string? FileLabel {
+    get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
   public MainViewModel() {
+    MfsFileSystemService.OnFileSelected += file => {
+      if (file?.FileType.ToLower() is ".tstlt") {
+        using var br = file.OpenReadAsBinary(Endianness.BigEndian);
+        br.Position = 0x16680;
+        this.FileLabel = SjisUtil.ReadString(br, 21);
+      } else {
+        this.FileLabel = file?.NameWithoutExtension.ToString();
+      }
+    };
+
     MfsFileSystemService.OnFileSystemLoaded += root => {
       if (root == null) {
         this.FileSystemTreeSource = null;
@@ -291,7 +307,7 @@ public class MainViewModel : BViewModel {
                                 };
                               }
                             }
-                            
+
                             return border;
                           }),
                           null,

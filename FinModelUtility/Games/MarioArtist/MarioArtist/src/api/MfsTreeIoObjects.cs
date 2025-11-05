@@ -213,7 +213,7 @@ public sealed class MfsTreeFile(
     => FinFileStatic.GetNameWithoutExtension(this.FullPath).ToString();
 
   public ReadOnlySpan<char> NameWithoutExtension
-    => FinIoStatic.GetName(this.FullPath);
+    => FinFileStatic.GetNameWithoutExtension(this.Name);
 
   public Stream OpenRead() {
     byte[] filedata = new byte[impl.Size];

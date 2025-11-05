@@ -69,6 +69,10 @@ public partial class MainView : UserControl {
           var bundle = new Ma3d1ModelFileBundle(file);
           var model = new Ma3d1ModelLoader().Import(bundle);
 
+          var config = Config.INSTANCE;
+          config.MostRecentFileName = file.FullPath;
+          config.Save();
+
           var obj = area.AddRootNode();
           obj.AddSceneModel(model);
 

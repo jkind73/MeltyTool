@@ -98,14 +98,28 @@
       </Panel>
     </DockPanel>
 
-    <Panel>
+    <Grid>
       <scene:SceneInstanceViewerGlPanel
-        x:Name="ViewerGlPanel"
-        IsTabStop="True"
-        TabIndex="0"
-        Focusable="True"
-        ShowGrid="True"
-        Cursor="{Binding ViewerCursor}" />
-    </Panel>
+          x:Name="ViewerGlPanel"
+          IsTabStop="True"
+          TabIndex="0"
+          Focusable="True"
+          ShowGrid="True"
+          Cursor="{Binding ViewerCursor}" />
+      <TextBlock Text="{Binding FileLabel}"
+                 Foreground="White"
+                 HorizontalAlignment="Center"
+                 VerticalAlignment="Bottom"
+                 Margin="0 16"
+                 FontSize="24"
+                 FontWeight="Bold">
+		<TextBlock.Effect>
+          <DropShadowEffect OffsetX="1"
+                            OffsetY="1"
+                            BlurRadius="0"
+                            Color="{DynamicResource Black}" />
+        </TextBlock.Effect>
+	  </TextBlock>
+    </Grid>
   </DockPanel>
 </UserControl>

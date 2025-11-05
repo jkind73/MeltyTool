@@ -1,5 +1,7 @@
 ﻿using System.Text;
 
+using fin.util.strings;
+
 using schema.binary;
 
 namespace marioartist.schema;
@@ -38,7 +40,7 @@ public static class SjisUtil {
                         new EncoderReplacementFallback(),
                         new CustomDecoder())
            .GetString(bytes)
-           .TrimEnd('\x00');
+           .SubstringUpTo('\x00');
   }
 
   //Decoder
