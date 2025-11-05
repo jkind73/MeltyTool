@@ -60,8 +60,8 @@ public static partial class GlUtil {
       float opacity = .6f) {
     SetBlendColor(Color.FromArgb((byte) (255 * opacity), 0, 0, 0));
     SetBlending(BlendEquation.ADD,
-                BlendFactor.CONST_COLOR,
-                BlendFactor.DST_COLOR);
+                BlendFactor.ZERO,
+                BlendFactor.ONE_MINUS_CONST_ALPHA);
     SetDepth(DepthMode.READ_ONLY);
     GL.DepthRange(1, 1);
     DisableChangingBlending = true;
