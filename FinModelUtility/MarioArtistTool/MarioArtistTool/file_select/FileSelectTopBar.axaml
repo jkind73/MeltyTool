@@ -7,11 +7,35 @@
              Height="28"
              x:Class="MarioArtistTool.file_select.FileSelectTopBar"
              x:DataType="fileSelect:FileSelectTopBarViewModel">
+  <UserControl.Styles>
+    <Style Selector="Button#MeltyButton:focused,
+		             Button#MeltyButton:pointerover">
+      <Setter Property="Opacity" Value=".8" />
+    </Style>
+
+    <Style Selector="Button#MeltyButton:pressed">
+      <Setter Property="Opacity" Value=".6" />
+    </Style>
+  </UserControl.Styles>
+
   <Grid Background="Black">
-    <StackPanel>
-      <Button x:Name="DiskSwapButton"
+	<StackPanel VerticalAlignment="Center"
+                Orientation="Horizontal">
+      <Button x:Name="MeltyButton"
+              ToolTip.Tip="Visit MeltyTool GitHub page"
+              Margin="1 0 0 0"
+              Width="26"
+              Height="26"
+              VerticalAlignment="Center"
+              Click="MeltyButton_OnClick">
+        <Image Width="26"
+               Height="26"
+               Source="../Assets/file_select/top_bar/about/melty.jpg" />
+      </Button>
+
+	  <Button x:Name="DiskSwapButton"
               ToolTip.Tip="Swap 64DD disk file"
-              Margin="33 0 0 0"
+              Margin="6.5 0 0 0"
               Width="28"
               Height="28">
         <Image x:Name="DiskSwapIcon"
@@ -25,7 +49,7 @@
 	<StackPanel ZIndex="5"
                 VerticalAlignment="Center"
                 Orientation="Horizontal">
-      <Button x:Name="ExportAllButton"
+	  <Button x:Name="ExportAllButton"
               ToolTip.Tip="{Binding ExportAllTip}"
               ToolTip.ShowOnDisabled="True"
               Margin="71 0 0 0"

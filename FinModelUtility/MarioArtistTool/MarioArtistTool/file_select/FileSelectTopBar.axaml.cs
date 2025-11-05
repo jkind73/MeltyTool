@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
@@ -15,10 +16,12 @@ using Avalonia.Platform.Storage;
 using fin.config.avalonia.services;
 using fin.data.queues;
 using fin.io;
+using fin.io.web;
 using fin.model.io;
 using fin.ui.avalonia;
 using fin.ui.avalonia.observables;
 using fin.util.enumerables;
+using fin.util.io;
 
 using marioartist.api;
 
@@ -124,6 +127,8 @@ public partial class FileSelectTopBar : UserControl {
                 ".tstlt" => new TstltModelFileBundle(file),
                 _        => null,
             };
+
+    this.MeltyButton.Bind(Button.CursorProperty, GRAB_CURSOR_);
 
     AnimateButton_(this.DiskSwapButton,
                    this.DiskSwapIcon,
@@ -263,4 +268,7 @@ public partial class FileSelectTopBar : UserControl {
       isClickedSubject.OnNext(false);
     };
   }
+
+  private void MeltyButton_OnClick(object? sender, RoutedEventArgs e)
+    => WebBrowserUtil.OpenGithub();
 }

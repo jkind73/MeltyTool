@@ -2,16 +2,16 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
+using fin.io.web;
 using fin.util.asserts;
 
 namespace fin.util.io;
 
 public static class WebBrowserUtil {
-  public static void OpenGithub()
-    => OpenUrl("https://github.com/MeltyPlayer/FinModelUtility");
+  public static void OpenGithub() => OpenUrl(GitHubUtil.GITHUB_URL);
 
   public static void OpenGithubNewIssue()
-    => OpenUrl("https://github.com/MeltyPlayer/FinModelUtility/issues/new");
+    => OpenUrl(GitHubUtil.GITHUB_NEW_ISSUE_URL);
 
   public static void OpenUrl(string urlString) {
     Asserts.True(Uri.IsWellFormedUriString(urlString, UriKind.Absolute));

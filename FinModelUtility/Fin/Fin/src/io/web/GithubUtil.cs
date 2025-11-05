@@ -43,7 +43,7 @@ public sealed class RenderFileBundleExceptionContext(IFileBundle fb)
 
 public static class GitHubUtil {
   public const string GITHUB_URL
-      = "https://github.com/MeltyPlayer/FinModelUtility";
+      = "https://github.com/MeltyPlayer/MeltyTool";
 
   public const string GITHUB_NEW_ISSUE_URL = $"{GITHUB_URL}/issues/new";
 
