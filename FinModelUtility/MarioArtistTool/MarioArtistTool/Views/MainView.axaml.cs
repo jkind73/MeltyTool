@@ -3,7 +3,6 @@ using System.Linq;
 using System.Numerics;
 
 using Avalonia.Controls;
-using Avalonia.Threading;
 
 using fin.io.web;
 using fin.model.io;
@@ -25,7 +24,6 @@ using MarioArtistTool.view;
 
 using marioartisttool.ViewModels;
 
-
 namespace marioartisttool.Views;
 
 public partial class MainView : UserControl {
@@ -36,6 +34,18 @@ public partial class MainView : UserControl {
 
   public MainView() {
     InitializeComponent();
+
+    this.DataContextChanged += (_, _) => {
+      var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
+      var com = mainViewModel.Com;
+      this.ViewerGlPanel.PointerPressed += (_, _) => {
+        com.IsMouseDown = true;
+      };
+      this.ViewerGlPanel.PointerReleased += (_, _) => {
+        com.IsMouseDown = false;
+      };
+      this.ViewerGlPanel.Bind(Panel.CursorProperty, com.Cursor);
+    };
 
     MfsFileSystemService.OnFileSelected += file => {
       LoadingStatusService.IsLoading = true;
@@ -56,7 +66,6 @@ public partial class MainView : UserControl {
       var allowMovingCamera = true;
       var showGrid = true;
 
-      var viewerCursor = MainViewModel.ArrowCursor;
       if (this.ma3d1CameraTransform_ != null) {
         (camera.Position, camera.PitchDegrees, camera.YawDegrees)
             = this.ma3d1CameraTransform_.Value;
@@ -111,10 +120,10 @@ public partial class MainView : UserControl {
                                           $"{JointIndex.NECK}:") ??
                                       false),
                     model.Skeleton
-                        .Bones
-                        .Single(b => b.Name?.StartsWith(
-                                         $"{JointIndex.TORSO}:") ??
-                                     false)));
+                         .Bones
+                         .Single(b => b.Name?.StartsWith(
+                                          $"{JointIndex.TORSO}:") ??
+                                      false)));
 
             var modelObj = characterObj.AddChildNode();
             modelObj.AddComponent(modelRenderComponent);
@@ -128,11 +137,10 @@ public partial class MainView : UserControl {
             shadowModelObj.AddComponent(
                 new ShadowRenderComponent(
                     new LambdaSceneNodeRenderComponent(_ => modelRenderComponent
-                        .Render(false))));
+                          .Render(false))));
             shadowModelObj.AddComponent(new RotateTalentTickComponent());
 
             this.currentModelFileBundle_ = bundle;
-            viewerCursor = MainViewModel.ThumbOutCursor;
 
             camera.Position = new Vector3(0, -1.5f, .35f);
             camera.PitchDegrees = 0;
@@ -143,18 +151,13 @@ public partial class MainView : UserControl {
             ExceptionService.HandleException(e, new LoadFileException(file));
             this.ViewerGlPanel.Scene = null;
           }
-          
+
           break;
         }
       }
 
       newBackdropRenderer ??= new PolygonStudioSkyboxRenderer();
       this.ViewerGlPanel.BackdropRenderer = newBackdropRenderer;
-
-      Dispatcher.UIThread.Invoke(() => {
-        var mainViewModel = this.DataContext.AssertAsA<MainViewModel>();
-        mainViewModel.ViewerCursor = viewerCursor;
-      });
 
       var sceneInstance = new SceneInstanceImpl(scene);
       this.ViewerGlPanel.Scene = sceneInstance;

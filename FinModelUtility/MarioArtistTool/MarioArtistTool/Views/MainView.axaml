@@ -104,8 +104,7 @@
           IsTabStop="True"
           TabIndex="0"
           Focusable="True"
-          ShowGrid="True"
-          Cursor="{Binding ViewerCursor}" />
+          ShowGrid="True" />
       <TextBlock Text="{Binding FileLabel}"
                  Foreground="White"
                  HorizontalAlignment="Center"

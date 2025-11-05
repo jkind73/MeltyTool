@@ -28,6 +28,8 @@ using MarioArtistTool.file_select;
 using marioartisttool.services;
 using marioartisttool.util;
 
+using MarioArtistTool.view;
+
 using ReactiveUI;
 
 using schema.binary;
@@ -73,18 +75,7 @@ public class MainViewModel : BViewModel {
   public static Cursor ThumbInCursor { get; }
     = AssetLoaderUtil.LoadCursor("thumb_in.png", new PixelPoint(2, 2));
 
-  public static Cursor ThumbOutCursor { get; }
-    = AssetLoaderUtil.LoadCursor("thumb_out.png", new PixelPoint(2, 2));
-
-  public static Cursor ArrowCursor { get; }
-    = AssetLoaderUtil.LoadCursor("arrow.png", new PixelPoint(2, 2));
-
   public HierarchicalTreeDataGridSource<MfsTreeIoObject>? FileSystemTreeSource {
-    get;
-    set => this.RaiseAndSetIfChanged(ref field, value);
-  }
-
-  public Cursor ViewerCursor {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
@@ -94,14 +85,18 @@ public class MainViewModel : BViewModel {
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
+  public CursorObservableManager Com { get; } = new();
+
   public MainViewModel() {
     MfsFileSystemService.OnFileSelected += file => {
       if (file?.FileType.ToLower() is ".tstlt") {
         using var br = file.OpenReadAsBinary(Endianness.BigEndian);
         br.Position = 0x16680;
         this.FileLabel = SjisUtil.ReadString(br, 21);
+        this.Com.IsTstlt = true;
       } else {
         this.FileLabel = file?.NameWithoutExtension.ToString();
+        this.Com.IsTstlt = false;
       }
     };
 
