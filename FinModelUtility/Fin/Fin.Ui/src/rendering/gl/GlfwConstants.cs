@@ -11,7 +11,12 @@ public static class GlfwConstants {
         APIVersion = new Version(OpenGlVersionService.MajorVersion,
                                  OpenGlVersionService.MinorVersion),
         Vsync = VSyncMode.On,
-        StartVisible = false
+        StartVisible = false,
+        RedBits = 8,
+        BlueBits = 8,
+        GreenBits = 8,
+        AlphaBits = 8,
+        DepthBits = 32,
     };
 
     if (GlConstants.Compatibility) {

@@ -16,6 +16,11 @@ public static class HeadlessGl {
         GameWindowSettings.Default,
         new NativeWindowSettings {
             StartVisible = false,
+            RedBits = 8,
+            BlueBits = 8,
+            GreenBits = 8,
+            AlphaBits = 8,
+            DepthBits = 32,
         });
   }
 
