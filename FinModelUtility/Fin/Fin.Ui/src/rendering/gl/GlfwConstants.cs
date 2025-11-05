@@ -7,9 +7,9 @@ namespace fin.ui.rendering.gl;
 public static class GlfwConstants {
   public static NativeWindowSettings CreateNewNativeWindowSettings() {
     var nativeWindowSettings = new NativeWindowSettings {
-        API = GlConstants.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL,
-        APIVersion
-            = new Version(GlConstants.MajorVersion, GlConstants.MinorVersion),
+        API = OpenGlVersionService.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL,
+        APIVersion = new Version(OpenGlVersionService.MajorVersion,
+                                 OpenGlVersionService.MinorVersion),
         Vsync = VSyncMode.On,
         StartVisible = false
     };

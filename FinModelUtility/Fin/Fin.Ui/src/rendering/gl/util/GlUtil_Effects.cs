@@ -31,6 +31,10 @@ public static partial class GlUtil {
       Action render,
       Color? outlineColor = null,
       float lineWidth = 8) {
+    if (OpenGlVersionService.Es) {
+      return;
+    }
+
     SetBlendColor(outlineColor ?? Color.Black);
     SetBlending(BlendEquation.ADD,
                 BlendFactor.ZERO,

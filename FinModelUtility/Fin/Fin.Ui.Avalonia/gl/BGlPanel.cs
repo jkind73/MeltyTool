@@ -6,6 +6,7 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 
 using fin.config;
+using fin.ui.rendering.gl;
 
 namespace fin.ui.avalonia.gl;
 
@@ -22,11 +23,13 @@ public abstract class BGlPanel : Panel, ICustomHitTest {
       var teardownGl = this.TeardownGl;
 
       if (FinConfig.PreferGlNativeInterop) {
+        OpenGlVersionService.Init(false);
         if (await SharpDxInteropControl.TryToAddTo(this, initGl, renderGl, teardownGl)) {
           return;
         }
       }
 
+      OpenGlVersionService.Init(true);
       this.Children.Add(new OpenTkControl(initGl, renderGl, teardownGl));
     });
 

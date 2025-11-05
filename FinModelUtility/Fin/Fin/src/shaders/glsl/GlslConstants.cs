@@ -3,8 +3,9 @@
 namespace fin.shaders.glsl;
 
 public static class GlslConstants {
-  public static string SHADER_VERSION { get; }
-    = $"{GlConstants.MajorVersion}{GlConstants.MinorVersion}0{(GlConstants.Es ? " es" : "")}";
+  public static string SHADER_VERSION
+    => $"{OpenGlVersionService.MajorVersion}{OpenGlVersionService.MinorVersion}0{(
+        OpenGlVersionService.Es ? " es" : "")}";
 
   public static string VERTEX_SHADER_VERSION => SHADER_VERSION;
   public static string FRAGMENT_SHADER_VERSION => SHADER_VERSION;

@@ -41,9 +41,9 @@ namespace uni.ui.winforms.common {
       glControlSettings.BlueBits = 8;
       glControlSettings.AlphaBits = 8;
       glControlSettings.DepthBits = 32;
-      glControlSettings.APIVersion = new Version(GlConstants.MajorVersion, GlConstants.MinorVersion);
+      glControlSettings.APIVersion = new Version(OpenGlVersionService.MajorVersion, OpenGlVersionService.MinorVersion);
       glControlSettings.API
-          = GlConstants.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL;
+          = OpenGlVersionService.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL;
 
       if (GlConstants.Compatibility) {
         glControlSettings.Profile = ContextProfile.Compatability;
