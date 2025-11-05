@@ -36,13 +36,24 @@
       <Setter Property="BorderBrush" Value="#EC1417" />
     </Style>
 
-    <Style Selector=":focus Border.TreeDirectory,
+    <Style Selector=":selected Border.TreeFile">
+      <Setter Property="BorderBrush" Value="#F5B500" />
+    </Style>
+
+	<Style Selector=":focus Border.TreeDirectory,
 		             :focus Border.TreeFile">
       <Setter Property="BorderBrush" Value="#44433D" />
     </Style>
 
     <Style Selector=":selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
       <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector=":selected .TreeFile Image">
+      <Setter Property="Opacity" Value=".8" />
+    </Style>
+    <Style Selector=":selected .TreeFile TextBlock">
+      <Setter Property="Opacity" Value=".8" />
     </Style>
   </UserControl.Styles>
 
@@ -114,7 +125,7 @@
                  FontWeight="Bold">
 		<TextBlock.Effect>
           <DropShadowEffect OffsetX="1"
-                            OffsetY="1"
+                            OffsetY="2"
                             BlurRadius="0"
                             Color="{DynamicResource Black}" />
         </TextBlock.Effect>
