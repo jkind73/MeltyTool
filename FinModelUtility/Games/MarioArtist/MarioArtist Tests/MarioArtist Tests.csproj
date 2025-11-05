@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="goldens\NewFolder\**" />
-    <EmbeddedResource Remove="goldens\NewFolder\**" />
-    <None Remove="goldens\NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MarioArtist\MarioArtist.csproj" />
   </ItemGroup>
 

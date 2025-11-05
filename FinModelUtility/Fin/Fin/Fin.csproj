@@ -5,6 +5,7 @@
     <OutputType>Library</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="src\io\filesystem\ImaginaryFileSystem.cs" />
     <Compile Remove="src\io\filesystem\ImaginaryPathVerifier.cs" />
@@ -46,11 +47,6 @@
     <PackageReference Include="System.IO.Abstractions" Version="22.0.15" />
     <PackageReference Include="schema" Version="0.6.14" />
     <PackageReference Include="System.IO.Hashing" Version="9.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="src\io\filesystem\NewFolder\" />
-    <Folder Include="src\io\tree\" />
   </ItemGroup>
 
   <ItemGroup>
