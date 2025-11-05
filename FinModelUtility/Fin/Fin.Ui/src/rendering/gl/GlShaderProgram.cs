@@ -111,9 +111,15 @@ public sealed partial class GlShaderProgram : IShaderProgram {
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_()
-    => programCache_.DecrementAndMaybeDispose(
+  private void ReleaseUnmanagedResources_() {
+    // TODO: How on earth is this possible???
+    if (this.cachedShaderProgram_ == null) {
+      return;
+    }
+    
+    programCache_.DecrementAndMaybeDispose(
         (this.VertexShaderSource, this.FragmentShaderSource));
+  }
 
   private static int CreateAndCompileShader_(string src,
                                              ShaderType shaderType) {
