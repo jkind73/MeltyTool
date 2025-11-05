@@ -15,7 +15,7 @@ namespace MarioArtistTool.view;
 public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
   private readonly BackgroundRenderer backgroundRenderer_;
   private readonly FloorShadowRenderer floorShadowRenderer_ = new();
-  private readonly IRenderable? sceneryRenderer_;
+  private readonly IRenderable sceneryRenderer_;
   public float ViewportWidth { get; set; }
   public float ViewportHeight { get; set; }
 
@@ -36,7 +36,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
     };
 
     this.sceneryRenderer_ = gender switch {
-        Gender.BOY => null,
+        Gender.BOY => new BoySceneryRenderer(),
         Gender.GIRL => new GirlSceneryRenderer(),
         Gender.OTHER => new OtherSceneryRenderer(),
     };
@@ -52,7 +52,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
   private void ReleaseUnmanagedResources_() {
     this.backgroundRenderer_.Dispose();
     this.floorShadowRenderer_.Dispose();
-    this.sceneryRenderer_?.Dispose();
+    this.sceneryRenderer_.Dispose();
   }
 
   public void Render() {

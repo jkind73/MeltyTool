@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 
-using fin.image.util;
 using fin.language.equations.fixedFunction;
 using fin.model;
 using fin.model.impl;
@@ -12,9 +11,12 @@ using marioartisttool.util;
 namespace MarioArtistTool.backgrounds;
 
 public static class SceneryRendererUtils {
-  public const byte MAX_ALPHA = 170;
+  public const byte GIRL_ALPHA = 70;
+  public const byte MAX_ALPHA = 50;
 
-  public static IModelRenderer CreateModelRendererForImage(string imageAsset) {
+  public static IModelRenderer CreateModelRendererForImage(
+      string imageAsset,
+      bool mixed = true) {
     var model = ModelImpl.CreateForViewer(4);
 
     var image = AssetLoaderUtil.LoadImage(imageAsset);
@@ -22,13 +24,23 @@ public static class SceneryRendererUtils {
 
     var material = model.MaterialManager.AddFixedFunctionMaterial();
     var equations = material.Equations;
-    equations.SetOutputColorAlpha(
-        material.GenerateDiffuseMixed(
-            (equations.CreateOrGetColorInput(FixedFunctionSource.BLEND_COLOR),
-             equations.CreateOrGetScalarInput(FixedFunctionSource.BLEND_ALPHA)),
-            texture,
-            0xc8 / 255f,
-            (false, false)));
+
+    if (mixed) {
+      equations.SetOutputColorAlpha(
+          material.GenerateDiffuseColorized(
+              (equations.CreateOrGetColorInput(FixedFunctionSource.BLEND_COLOR),
+               equations.CreateOrGetScalarInput(FixedFunctionSource.BLEND_ALPHA)),
+              texture,
+              (false, false)));
+    } else {
+      equations.SetOutputColorAlpha(
+          material.GenerateDiffuse(
+              (equations.CreateOrGetColorInput(FixedFunctionSource.BLEND_COLOR),
+               equations.CreateOrGetScalarInput(FixedFunctionSource.BLEND_ALPHA)),
+              texture,
+              (false, false)));
+    }
+
     material.CullingMode = CullingMode.SHOW_BOTH;
     material.DepthCompareType = DepthCompareType.Always;
     material.DepthMode = DepthMode.NONE;

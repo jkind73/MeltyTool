@@ -10,7 +10,7 @@ using fin.util.time;
 
 namespace MarioArtistTool.backgrounds;
 
-public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
+public sealed class GirlSceneryRenderer : IRenderable {
   private readonly IModelRenderer flowerRenderer_
       = SceneryRendererUtils.CreateModelRendererForImage(
           "backgrounds/girl/flower.png");
@@ -66,7 +66,7 @@ public sealed class GirlSceneryRenderer : IRenderable, IDisposable {
       };
 
       GlUtil.SetBlendColor(
-          Color.FromArgb((byte) (SceneryRendererUtils.MAX_ALPHA * alpha),
+          Color.FromArgb((byte) (SceneryRendererUtils.GIRL_ALPHA * alpha),
                          color.R,
                          color.G,
                          color.B));

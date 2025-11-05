@@ -42,11 +42,10 @@ public static partial class FixedFunctionEquationsExtensions {
     return (diffuseSurfaceColor, diffuseSurfaceAlpha);
   }
 
-  public static (IColorValue, IScalarValue) GenerateDiffuseMixed(
+  public static (IColorValue, IScalarValue) GenerateDiffuseColorized(
       this IFixedFunctionMaterial material,
       (IColorValue color, IScalarValue alpha) diffuse,
       IReadOnlyTexture? finTexture,
-      float mixFraction,
       (bool color, bool alpha) hasVertexColorAlpha0) {
     var equations = material.Equations;
     var colorOps = equations.ColorOps;
@@ -60,9 +59,9 @@ public static partial class FixedFunctionEquationsExtensions {
           = material.AddTextureSourceColorAlpha(finTexture);
 
       diffuseSurfaceColor
-          = colorOps.MixWithConstant(diffuseSurfaceColor,
-                                     textureColor,
-                                     mixFraction);
+          = colorOps.MixWithScalar(diffuseSurfaceColor,
+                                   ColorConstant.ONE,
+                                   textureColor.R);
       diffuseSurfaceAlpha
           = scalarOps.Multiply(diffuseSurfaceAlpha, textureAlpha);
     }

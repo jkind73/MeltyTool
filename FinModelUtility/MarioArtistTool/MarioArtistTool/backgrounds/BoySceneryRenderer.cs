@@ -10,45 +10,57 @@ using fin.util.time;
 
 namespace MarioArtistTool.backgrounds;
 
-public sealed class OtherSceneryRenderer : IRenderable {
-  private readonly IModelRenderer fossilRenderer0_
+public sealed class BoySceneryRenderer : IRenderable {
+  private readonly IModelRenderer twoThousandRenderer_
       = SceneryRendererUtils.CreateModelRendererForImage(
-          "backgrounds/other/fossil_0.png", false);
-  private readonly IModelRenderer fossilRenderer1_
+          "backgrounds/boy/2000.png", false);
+  private readonly IModelRenderer deedeeRenderer_
       = SceneryRendererUtils.CreateModelRendererForImage(
-          "backgrounds/other/fossil_1.png", false);
-  private readonly IModelRenderer fossilRenderer2_
+          "backgrounds/boy/deedee.png", false);
+  private readonly IModelRenderer elPeeRenderer_
       = SceneryRendererUtils.CreateModelRendererForImage(
-          "backgrounds/other/fossil_2.png", false);
+          "backgrounds/boy/el-pee.png", false);
+  private readonly IModelRenderer ntdRenderer_
+      = SceneryRendererUtils.CreateModelRendererForImage(
+          "backgrounds/boy/ntd.png", false);
+  private readonly IModelRenderer phaceRenderer_
+      = SceneryRendererUtils.CreateModelRendererForImage(
+          "backgrounds/boy/phace.png", false);
+  private readonly IModelRenderer traxRenderer_
+      = SceneryRendererUtils.CreateModelRendererForImage(
+          "backgrounds/boy/trax.png", false);
 
   private readonly Matrix4x4 topLeftMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(109, -2), new Vector2(221, 96)));
+          GetCenterAndSize_(new Vector2(0, 0), new Vector2(269, 112)));
 
   private readonly Matrix4x4 middleLeftMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(171, 103), new Vector2(302, 234)));
+          GetCenterAndSize_(new Vector2(85, 154), new Vector2(256, 231)));
 
   private readonly Matrix4x4 bottomLeftMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(69, 280), new Vector2(240, 445)));
+          GetCenterAndSize_(new Vector2(112, 301), new Vector2(341, 368)));
 
   private readonly Matrix4x4 topRightMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(393, -4), new Vector2(563, 153)));
+          GetCenterAndSize_(new Vector2(387, 13), new Vector2(630, 119)));
 
   private readonly Matrix4x4 middleRightMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(545, 147), new Vector2(646, 253)));
+          GetCenterAndSize_(new Vector2(385, 143), new Vector2(635, 260)));
 
   private readonly Matrix4x4 bottomRightMatrix_
       = GetMergedMatrix_(
-          GetCenterAndSize_(new Vector2(365, 236), new Vector2(519, 387)));
+          GetCenterAndSize_(new Vector2(379, 285), new Vector2(640, 427)));
 
   public void Dispose() {
-    this.fossilRenderer0_.Dispose();
-    this.fossilRenderer1_.Dispose();
-    this.fossilRenderer2_.Dispose();
+    this.twoThousandRenderer_.Dispose();
+    this.deedeeRenderer_.Dispose();
+    this.elPeeRenderer_.Dispose();
+    this.ntdRenderer_.Dispose();
+    this.phaceRenderer_.Dispose();
+    this.traxRenderer_.Dispose();
   }
 
   public void Render() {
@@ -58,13 +70,13 @@ public sealed class OtherSceneryRenderer : IRenderable {
 
     Span<(float cycleSeconds, IModelRenderer modelRenderer, Matrix4x4 matrix, Color color)>
         cycleSecondsAndMatrices = [
-            ((timeSeconds - 0) % 6, this.fossilRenderer2_, this.topLeftMatrix_, Color.Yellow),
-            ((timeSeconds - 1) % 6, this.fossilRenderer1_, this.middleLeftMatrix_, Color.Green),
-            ((timeSeconds - 2) % 6, this.fossilRenderer2_, this.bottomLeftMatrix_, Color.Cyan),
+            ((timeSeconds - 0) % 6, this.phaceRenderer_, this.topLeftMatrix_, Color.Yellow),
+            ((timeSeconds - 1) % 6, this.ntdRenderer_, this.middleLeftMatrix_, Color.Green),
+            ((timeSeconds - 2) % 6, this.traxRenderer_, this.bottomLeftMatrix_, Color.Cyan),
 
-            ((timeSeconds - 3) % 6, this.fossilRenderer1_, this.topRightMatrix_, Color.DarkBlue),
-            ((timeSeconds - 4) % 6, this.fossilRenderer0_, this.middleRightMatrix_, Color.Blue),
-            ((timeSeconds - 5) % 6, this.fossilRenderer0_, this.bottomRightMatrix_, Color.HotPink),
+            ((timeSeconds - 3) % 6, this.twoThousandRenderer_, this.topRightMatrix_, Color.DarkBlue),
+            ((timeSeconds - 4) % 6, this.elPeeRenderer_, this.middleRightMatrix_, Color.Blue),
+            ((timeSeconds - 5) % 6, this.deedeeRenderer_, this.bottomRightMatrix_, Color.HotPink),
         ];
 
     foreach (var (cycleSeconds, renderer, matrix, color) in cycleSecondsAndMatrices) {
