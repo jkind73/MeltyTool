@@ -5,6 +5,8 @@ using fin.math.rotations;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.processing;
+using fin.ui.rendering.gl;
+
 
 namespace fin.testing.model;
 
@@ -18,6 +20,8 @@ public static class ModelGoldenAssert {
           gatherModelBundleFromInputDirectory)
       where TModelBundle : IModelFileBundle {
     QuaternionUtil.UseSlowButConsistentSlerp();
+    OpenGlVersionService.Init(false);
+
     await GoldenAssert.AssertGoldenFiles(
         goldenSubdir,
         (inputDirectory, targetDirectory) => {

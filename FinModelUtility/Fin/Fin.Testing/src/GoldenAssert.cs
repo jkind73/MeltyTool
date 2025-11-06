@@ -140,6 +140,8 @@ public static partial class GoldenAssert {
       } else if (lhs.FileType.ToLower() is ".glb" or ".gltf") {
         AssertModelFilesAreIdentical_(lhs, rhs);
         Asserts.SpansEqual(lhsBytes, rhsBytes);
+      } else if (lhs.FileType.ToLower() is ".glsl") {
+        Assert.AreEqual(lhs.ReadAllText(), rhs.ReadAllText());
       } else {
         Asserts.SpansEqual(lhsBytes, rhsBytes);
       }
