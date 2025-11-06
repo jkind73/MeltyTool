@@ -10,10 +10,14 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.Composition;
 
+using fin.util.asserts;
+
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
+using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 
@@ -142,7 +146,7 @@ public sealed class D3D11SwapchainImage {
             MipLevels = 1,
             SampleDescription
                 = new SampleDescription {Count = 1, Quality = 0},
-            CpuAccessFlags = default,
+            CpuAccessFlags = CpuAccessFlags.None,
             OptionFlags = ResourceOptionFlags.SharedKeyedmutex,
             BindFlags = BindFlags.RenderTarget | BindFlags.ShaderResource,
         }
@@ -230,41 +234,63 @@ public sealed class D3D11SwapchainImage {
     if (fbStatus != FramebufferErrorCode.FramebufferComplete) {
       throw new Exception($"incomplete framebuffer: {fbStatus}");
     }
+
+    var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+    if (!unlockResult) {
+      throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
+    }
   }
 
+  private readonly object lock_ = new();
+
   public void BeginDraw() {
-    this.mutex_.Acquire(0, int.MaxValue);
-    GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    lock (lock_) {
+      this.mutex_.Acquire(0, int.MaxValue);
+
+      // Needs to lock here to prevent flickering.
+      var lockResult = Wgl.DXLockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+      if (!lockResult) {
+        throw new Exception($"DXLockObjectsNV failed {GetLastError()}");
+      }
+
+      GL.BindFramebuffer(FramebufferTarget.Framebuffer, this.fboId_);
+    }
   }
 
   public void Present() {
-    this.mutex_.Release(1);
-    this.imported_ ??= this.interop_.ImportImage(
-        this.platformHandle_,
-        this.properties_
-    );
-    this.LastPresent =
-        this.target_.UpdateWithKeyedMutexAsync(this.imported_, 1, 0);
+    lock (lock_) {
+      // Needs to unlock here to prevent flickering.
+      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
+      if (!unlockResult) {
+        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
+      }
+
+      GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+      this.mutex_.Release(1);
+      this.imported_ ??= this.interop_.ImportImage(
+          this.platformHandle_,
+          this.properties_
+      );
+      this.LastPresent =
+          this.target_.UpdateWithKeyedMutexAsync(this.imported_, 1, 0);
+    }
   }
 
   public async ValueTask DisposeAsync() {
-    if (this.LastPresent != null)
+    if (this.LastPresent != null) {
       try {
         await this.LastPresent;
       } catch {
         // Ignore
       }
+    }
 
     this.RenderTargetView.Dispose();
     this.mutex_.Dispose();
     this.texture_.Dispose();
 
     if (this.hCfbs_[0] != 0) {
-      var unlockResult = Wgl.DXUnlockObjectsNV(this.hDevice_, 1, this.hCfbs_);
-      if (!unlockResult) {
-        throw new Exception($"DXUnlockObjectsNV failed {GetLastError()}");
-      }
-
       Wgl.DXUnregisterObjectNV(this.hDevice_, this.hCfbs_[0]);
     }
 
