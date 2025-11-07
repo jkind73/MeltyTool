@@ -51,8 +51,10 @@ public class BracketStringBuilder {
         this.AppendNewline_();
       }
 
-      this.IndentIfNeeded_();
-      this.impl_.Append(line);
+      if (line.Length > 0) {
+        this.IndentIfNeeded_();
+        this.impl_.Append(line);
+      }
     }
 
     return this;

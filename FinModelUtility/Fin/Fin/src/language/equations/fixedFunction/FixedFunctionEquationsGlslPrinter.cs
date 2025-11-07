@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using fin.image.util;
 using fin.model;
@@ -203,196 +202,203 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     }
 
     sb.AppendLine();
-    sb.AppendLine("void main() {");
+    sb.AppendBlock(
+        "void main()",
+        () => {
+          // Calculate lighting
+          if (dependsOnNormals) {
+            if (!hasNormalTexture) {
+              sb.AppendLine(
+                  """
+                  // Have to renormalize because the vertex normals can become distorted when interpolated.
+                  vec3 fragNormal = normalize(vertexNormal);
 
-    // Calculate lighting
-    if (dependsOnNormals) {
-      if (!hasNormalTexture) {
-        sb.AppendLine(
-            """
-              // Have to renormalize because the vertex normals can become distorted when interpolated.
-              vec3 fragNormal = normalize(vertexNormal);
+                  """);
+            } else {
+              sb.AppendLine(
+                  """
+                  // Have to renormalize because the vertex normals can become distorted when interpolated.
+                  vec3 fragNormal = normalize(vertexNormal);
 
-            """);
-      } else {
-        sb.AppendLine(
-            """
-              // Have to renormalize because the vertex normals can become distorted when interpolated.
-              vec3 fragNormal = normalize(vertexNormal);
+                  """);
 
-            """);
+              if (shaderRequirements.TangentType is TangentType.CALCULATED) {
+                // Shamelessly stolen from:
+                // https://community.khronos.org/t/computing-the-tangent-space-in-the-fragment-shader/52861
+                var texCoordName
+                    = $"{GlslConstants.IN_UV_NAME}{normalTexture.UvIndex}";
+                sb.AppendLine(
+                    $"""
+                     vec3 Q1 = dFdx(vertexPosition);
+                     vec3 Q2 = dFdy(vertexPosition);
+                     vec2 st1 = dFdx({texCoordName});
+                     vec2 st2 = dFdy({texCoordName});
+                     vec3 tangent = normalize(Q1*st2.t - Q2*st1.t);
+                     vec3 binormal = normalize(-Q1*st2.s + Q2*st1.s);
 
-        if (shaderRequirements.TangentType is TangentType.CALCULATED) {
-          // Shamelessly stolen from:
-          // https://community.khronos.org/t/computing-the-tangent-space-in-the-fragment-shader/52861
-          var texCoordName
-              = $"{GlslConstants.IN_UV_NAME}{normalTexture.UvIndex}";
-          sb.AppendLine(
-              $"""
-                 vec3 Q1 = dFdx(vertexPosition);
-                 vec3 Q2 = dFdy(vertexPosition);
-                 vec2 st1 = dFdx({texCoordName});
-                 vec2 st2 = dFdy({texCoordName});
-                 vec3 tangent = normalize(Q1*st2.t - Q2*st1.t);
-                 vec3 binormal = normalize(-Q1*st2.s + Q2*st1.s);
+                     """);
+              }
 
-               """);
-        }
+              sb.AppendLine(
+                  $"""
+                   vec3 textureNormal = {GlslUtil.ReadColorFromTexture("normalTexture", $"{GlslConstants.IN_UV_NAME}{normalTexture?.UvIndex ?? 0}", normalTexture, this.animations_)}.xyz * 2.0 - 1.0;
+                   fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
 
-        sb.AppendLine(
-            $"""
-               vec3 textureNormal = {GlslUtil.ReadColorFromTexture("normalTexture", $"{GlslConstants.IN_UV_NAME}{normalTexture?.UvIndex ?? 0}", normalTexture, this.animations_)}.xyz * 2.0 - 1.0;
-               fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
-
-             """);
-      }
-
-      if (usesSphericalReflectionMapping) {
-        sb.AppendLine($"""
-                         vec2 {GlslConstants.IN_SPHERICAL_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
-
-                       """);
-      }
-
-      if (usesLinearReflectionMapping) {
-        sb.AppendLine($"""
-                         vec2 {GlslConstants.IN_LINEAR_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
-
-                       """);
-      }
-
-      // TODO: Optimize this if the shader depends on merged lighting as well as individual lights for some reason.
-      if (dependsOnAnIndividualLight) {
-        sb.AppendLine(
-            $$"""
-                vec4 individualLightDiffuseColors[{{MaterialConstants.MAX_LIGHTS}}];
-                vec4 individualLightSpecularColors[{{MaterialConstants.MAX_LIGHTS}}];
-                
-                for (int i = 0; i < {{MaterialConstants.MAX_LIGHTS}}; ++i) {
-                  vec4 diffuseLightColor = vec4(0);
-                  vec4 specularLightColor = vec4(0);
-                  
-                  getIndividualLightColors(lights[i], vertexPosition, fragNormal, {{GlslConstants.UNIFORM_SHININESS_NAME}}, diffuseLightColor, specularLightColor);
-                  
-                  individualLightDiffuseColors[i] = diffuseLightColor;
-                  individualLightSpecularColors[i] = specularLightColor;
-                }
-                
-              """);
-      }
-
-      if (dependsOnMergedLights) {
-        sb.AppendLine(
-            $"""
-               vec4 mergedLightDiffuseColor = vec4(0);
-               vec4 mergedLightSpecularColor = vec4(0);
-               getMergedLightColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, mergedLightDiffuseColor, mergedLightSpecularColor);
-
-             """);
-      }
-    }
-
-    // TODO: Get tree of all values that this depends on, in case there needs to be other variables defined before.
-    var outputColor =
-        equations.ColorOutputs[FixedFunctionSource.OUTPUT_COLOR];
-
-    sb.Append("  vec3 colorComponent = ");
-    this.PrintColorValue_(sb, outputColor.ColorValue, textures);
-    sb.AppendLine(";");
-    sb.AppendLine();
-
-    var outputAlpha =
-        equations.ScalarOutputs[FixedFunctionSource.OUTPUT_ALPHA];
-
-    sb.Append("  float alphaComponent = ");
-    this.PrintScalarValue_(sb, outputAlpha.ScalarValue, textures);
-    sb.AppendLine(";");
-    sb.AppendLine();
-
-    if (material.TransparencyType == TransparencyType.TRANSPARENT) {
-      sb.AppendLine("  fragColor = vec4(colorComponent, alphaComponent);");
-    } else {
-      sb.AppendLine("  fragColor = vec4(colorComponent, 1);");
-    }
-
-    var alphaOpValue =
-        this.DetermineAlphaOpValue_(
-            material.AlphaOp,
-            this.DetermineAlphaCompareType_(
-                material.AlphaCompareType0,
-                material.AlphaReference0),
-            this.DetermineAlphaCompareType_(
-                material.AlphaCompareType1,
-                material.AlphaReference1));
-
-    if (alphaOpValue != AlphaOpValue.ALWAYS_TRUE) {
-      sb.AppendLine();
-
-      var alphaCompareText0 =
-          this.GetAlphaCompareText_(material.AlphaCompareType0,
-                                    "alphaComponent",
-                                    material.AlphaReference0);
-      var alphaCompareText1 =
-          this.GetAlphaCompareText_(material.AlphaCompareType1,
-                                    "alphaComponent",
-                                    material.AlphaReference1);
-
-      switch (alphaOpValue) {
-        case AlphaOpValue.ONLY_0_REQUIRED: {
-          sb.AppendLine($@"  if (!({alphaCompareText0})) {{
-    discard;
-  }}");
-          break;
-        }
-        case AlphaOpValue.ONLY_1_REQUIRED: {
-          sb.AppendLine($@"  if (!({alphaCompareText1})) {{
-    discard;
-  }}");
-          break;
-        }
-        case AlphaOpValue.BOTH_REQUIRED: {
-          switch (material.AlphaOp) {
-            case AlphaOp.And: {
-              sb.Append(
-                  $"  if (!({alphaCompareText0} && {alphaCompareText1})");
-              break;
+                   """);
             }
-            case AlphaOp.Or: {
-              sb.Append(
-                  $"  if (!({alphaCompareText0} || {alphaCompareText1})");
-              break;
+
+            if (usesSphericalReflectionMapping) {
+              sb.AppendLine($"""
+                              vec2 {GlslConstants.IN_SPHERICAL_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
+
+                             """);
             }
-            case AlphaOp.XOR: {
-              sb.AppendLine($"  bool a = {alphaCompareText0};");
-              sb.AppendLine($"  bool b = {alphaCompareText1};");
-              sb.Append(
-                  $"  if (!(any(bvec2(all(bvec2(!a, b)), all(bvec2(a, !b)))))");
-              break;
+
+            if (usesLinearReflectionMapping) {
+              sb.AppendLine($"""
+                              vec2 {GlslConstants.IN_LINEAR_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
+
+                             """);
             }
-            case AlphaOp.XNOR: {
-              sb.AppendLine($"  bool a = {alphaCompareText0};");
-              sb.AppendLine($"  bool b = {alphaCompareText1};");
-              sb.Append(
-                  "  if (!(any(bvec2(all(bvec2(!a, !b)), all(bvec2(a, b)))))");
-              break;
+
+            // TODO: Optimize this if the shader depends on merged lighting as well as individual lights for some reason.
+            if (dependsOnAnIndividualLight) {
+              sb.AppendLine(
+                  $$"""
+                    vec4 individualLightDiffuseColors[{{MaterialConstants.MAX_LIGHTS}}];
+                    vec4 individualLightSpecularColors[{{MaterialConstants.MAX_LIGHTS}}];
+                    
+                    for (int i = 0; i < {{MaterialConstants.MAX_LIGHTS}}; ++i) {
+                      vec4 diffuseLightColor = vec4(0);
+                      vec4 specularLightColor = vec4(0);
+                      
+                      getIndividualLightColors(lights[i], vertexPosition, fragNormal, {{GlslConstants.UNIFORM_SHININESS_NAME}}, diffuseLightColor, specularLightColor);
+                      
+                      individualLightDiffuseColors[i] = diffuseLightColor;
+                      individualLightSpecularColors[i] = specularLightColor;
+                    }
+                      
+                    """);
             }
-            default: throw new ArgumentOutOfRangeException();
+
+            if (dependsOnMergedLights) {
+              sb.AppendLine(
+                  $"""
+                   vec4 mergedLightDiffuseColor = vec4(0);
+                   vec4 mergedLightSpecularColor = vec4(0);
+                   getMergedLightColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, mergedLightDiffuseColor, mergedLightSpecularColor);
+
+                   """);
+            }
           }
 
-          sb.AppendLine(@") {
-    discard;
-  }");
-          break;
-        }
-        case AlphaOpValue.ALWAYS_FALSE: {
-          sb.AppendLine("  discard;");
-          break;
-        }
-        default: throw new ArgumentOutOfRangeException();
-      }
-    }
+          // TODO: Get tree of all values that this depends on, in case there needs to be other variables defined before.
+          var outputColor =
+              equations.ColorOutputs[FixedFunctionSource.OUTPUT_COLOR];
 
-    sb.Append("}");
+          sb.Append("vec3 colorComponent = ");
+          this.PrintColorValue_(sb, outputColor.ColorValue, textures);
+          sb.AppendLine(";");
+          sb.AppendLine();
+
+          var outputAlpha =
+              equations.ScalarOutputs[FixedFunctionSource.OUTPUT_ALPHA];
+
+          sb.Append("float alphaComponent = ");
+          this.PrintScalarValue_(sb, outputAlpha.ScalarValue, textures);
+          sb.AppendLine(";");
+          sb.AppendLine();
+
+          if (material.TransparencyType == TransparencyType.TRANSPARENT) {
+            sb.AppendLine(
+                "fragColor = vec4(colorComponent, alphaComponent);");
+          } else {
+            sb.AppendLine("fragColor = vec4(colorComponent, 1);");
+          }
+
+          var alphaOpValue =
+              this.DetermineAlphaOpValue_(
+                  material.AlphaOp,
+                  this.DetermineAlphaCompareType_(
+                      material.AlphaCompareType0,
+                      material.AlphaReference0),
+                  this.DetermineAlphaCompareType_(
+                      material.AlphaCompareType1,
+                      material.AlphaReference1));
+
+          if (alphaOpValue != AlphaOpValue.ALWAYS_TRUE) {
+            sb.AppendLine();
+
+            var alphaCompareText0 =
+                this.GetAlphaCompareText_(material.AlphaCompareType0,
+                                          "alphaComponent",
+                                          material.AlphaReference0);
+            var alphaCompareText1 =
+                this.GetAlphaCompareText_(material.AlphaCompareType1,
+                                          "alphaComponent",
+                                          material.AlphaReference1);
+
+            switch (alphaOpValue) {
+              case AlphaOpValue.ONLY_0_REQUIRED: {
+                sb.AppendLine($$"""
+                                if (!({{alphaCompareText0}})) {
+                                  discard;
+                                }
+                                """);
+                break;
+              }
+              case AlphaOpValue.ONLY_1_REQUIRED: {
+                sb.AppendLine($$"""
+                                if (!({{alphaCompareText1}})) {
+                                  discard;
+                                }
+                                """);
+                break;
+              }
+              case AlphaOpValue.BOTH_REQUIRED: {
+                switch (material.AlphaOp) {
+                  case AlphaOp.And: {
+                    sb.Append(
+                        $"if (!({alphaCompareText0} && {alphaCompareText1})");
+                    break;
+                  }
+                  case AlphaOp.Or: {
+                    sb.Append(
+                        $"if (!({alphaCompareText0} || {alphaCompareText1})");
+                    break;
+                  }
+                  case AlphaOp.XOR: {
+                    sb.AppendLine($"bool a = {alphaCompareText0};");
+                    sb.AppendLine($"bool b = {alphaCompareText1};");
+                    sb.Append(
+                        "if (!(any(bvec2(all(bvec2(!a, b)), all(bvec2(a, !b)))))");
+                    break;
+                  }
+                  case AlphaOp.XNOR: {
+                    sb.AppendLine($"bool a = {alphaCompareText0};");
+                    sb.AppendLine($"bool b = {alphaCompareText1};");
+                    sb.Append(
+                        "if (!(any(bvec2(all(bvec2(!a, !b)), all(bvec2(a, b)))))");
+                    break;
+                  }
+                  default: throw new ArgumentOutOfRangeException();
+                }
+
+                sb.AppendLine("""
+                              ) {
+                                discard;
+                              }
+                              """);
+                break;
+              }
+              case AlphaOpValue.ALWAYS_FALSE: {
+                sb.AppendLine("discard;");
+                break;
+              }
+              default: throw new ArgumentOutOfRangeException();
+            }
+          }
+        });
   }
 
   private string GetAlphaCompareText_(
@@ -664,7 +670,8 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     };
   }
 
-  private void PrintScalarConstant_(BracketStringBuilder sb, IScalarConstant constant)
+  private void PrintScalarConstant_(BracketStringBuilder sb,
+                                    IScalarConstant constant)
     => PrintFloat_(sb, constant.Value);
 
   private static void PrintFloat_(BracketStringBuilder sb, float value)

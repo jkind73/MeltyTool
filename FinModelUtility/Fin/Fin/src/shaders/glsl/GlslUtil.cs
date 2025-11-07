@@ -781,9 +781,9 @@ public static class GlslUtil {
         src.AppendLine(
             $$"""
 
-                if (fragColor.a < {{GlslConstants.MIN_ALPHA_BEFORE_DISCARD_MASK_TEXT}}) {
-                  discard;
-                }
+              if (fragColor.a < {{GlslConstants.MIN_ALPHA_BEFORE_DISCARD_MASK_TEXT}}) {
+                discard;
+              }
               """);
         break;
       }
@@ -791,9 +791,9 @@ public static class GlslUtil {
         src.AppendLine(
             $$"""
 
-                if (fragColor.a < {{GlslConstants.MIN_ALPHA_BEFORE_DISCARD_TRANSPARENT_TEXT}}) {
-                  discard;
-                }
+              if (fragColor.a < {{GlslConstants.MIN_ALPHA_BEFORE_DISCARD_TRANSPARENT_TEXT}}) {
+                discard;
+              }
               """);
         break;
       }
