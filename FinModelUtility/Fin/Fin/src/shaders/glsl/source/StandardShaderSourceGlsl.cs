@@ -9,6 +9,8 @@ namespace fin.shaders.glsl.source;
 
 public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   private readonly IReadOnlyMaterial material_;
+  private readonly IReadOnlyList<IReadOnlyModelAnimation> animations_;
+  
   private readonly bool hasLighting_;
   private readonly bool hasColor_;
 
@@ -17,7 +19,6 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   private readonly IReadOnlyTexture? ambientOcclusionTexture_;
   private readonly IReadOnlyTexture? emissiveTexture_;
   private readonly IReadOnlyTexture? specularTexture_;
-  private readonly IReadOnlyList<IReadOnlyModelAnimation> animations_;
 
   public StandardShaderSourceGlsl(
       IReadOnlyModel model,
