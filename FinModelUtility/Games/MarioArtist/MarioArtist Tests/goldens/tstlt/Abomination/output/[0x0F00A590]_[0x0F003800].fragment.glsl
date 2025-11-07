@@ -251,4 +251,8 @@ void main() {
   float alphaComponent = texture_3point(texture0, sphericalReflectionUv).a;
 
   fragColor = vec4(colorComponent, alphaComponent);
+
+  if (!(alphaComponent > 0.01)) {
+    discard;
+  }
 }
