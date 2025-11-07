@@ -1,10 +1,9 @@
-﻿using System.Text;
-
-using fin.model;
+﻿using fin.model;
 using fin.util.enumerables;
+using fin.util.strings;
 
 namespace fin.shaders.glsl.source;
-    
+
 public sealed class NullShaderSourceGlsl(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
@@ -15,7 +14,7 @@ public sealed class NullShaderSourceGlsl(
 
   public string FragmentShaderSource {
     get {
-      var sb = new StringBuilder();
+      var sb = new BracketStringBuilder();
       sb.AppendLine(
           $"""
            #version {GlslConstants.FRAGMENT_SHADER_VERSION}
@@ -33,12 +32,12 @@ public sealed class NullShaderSourceGlsl(
              """);
       }
 
-      sb.Append($$"""
-
-                  void main() {
-                    fragColor = {{(hasColors ? $"{GlslConstants.IN_VERTEX_COLOR_NAME}0" : "vec4(1)")}};
-                  }
-                  """);
+      sb.AppendLine();
+      sb.AppendBlock(
+          "void main()",
+          () => {
+            sb.AppendLine($"fragColor = {(hasColors ? $"{GlslConstants.IN_VERTEX_COLOR_NAME}0" : "vec4(1)")};");
+          });
 
       return sb.ToString();
     }

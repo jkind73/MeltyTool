@@ -9,6 +9,9 @@ public class BracketStringBuilder {
 
   private int currentIndentAmount_;
   private bool hasIndentedLine_;
+  private bool lastWasBlock_;
+
+  public override string ToString() => this.impl_.ToString();
 
   public BracketStringBuilder AppendBlock(ReadOnlySpan<char> prefix,
                                           Action handler) {
@@ -21,15 +24,9 @@ public class BracketStringBuilder {
 
     --this.currentIndentAmount_;
 
-    this.AppendLine('}');
-
-    return this;
-  }
-
-  public BracketStringBuilder ExitBlock() {
-    this.currentIndentAmount_--;
     this.Append('}');
-    this.AppendNewline_();
+    this.lastWasBlock_ = true;
+
     return this;
   }
 
@@ -44,19 +41,25 @@ public class BracketStringBuilder {
     return this;
   }
 
+  public BracketStringBuilder Append(string s)
+    => this.Append(s.AsSpan());
+
   public BracketStringBuilder Append(ReadOnlySpan<char> chars) {
     var l = 0;
-    foreach (var lineRange in chars.Split('\n')) {
+    foreach (var line in chars.EnumerateLines()) {
       if (l++ > 0) {
         this.AppendNewline_();
       }
 
       this.IndentIfNeeded_();
-      this.impl_.Append(chars[lineRange]);
+      this.impl_.Append(line);
     }
 
     return this;
   }
+
+  public BracketStringBuilder Append<T>(T value)
+    => this.Append(value?.ToString() ?? "");
 
   public BracketStringBuilder AppendLine() {
     this.AppendNewline_();
@@ -69,8 +72,20 @@ public class BracketStringBuilder {
     return this;
   }
 
+  public BracketStringBuilder AppendLine(string s) {
+    this.Append(s);
+    this.AppendNewline_();
+    return this;
+  }
+
   public BracketStringBuilder AppendLine(ReadOnlySpan<char> chars) {
     this.Append(chars);
+    this.AppendNewline_();
+    return this;
+  }
+
+  public BracketStringBuilder AppendLine<T>(T value) {
+    this.Append(value);
     this.AppendNewline_();
     return this;
   }
@@ -78,11 +93,17 @@ public class BracketStringBuilder {
   private void AppendNewline_() {
     this.impl_.AppendLine();
     this.hasIndentedLine_ = false;
+    this.lastWasBlock_ = false;
   }
 
   private void IndentIfNeeded_() {
     if (this.hasIndentedLine_) {
       return;
+    }
+
+    if (this.lastWasBlock_) {
+      this.lastWasBlock_ = false;
+      this.AppendNewline_();
     }
 
     this.hasIndentedLine_ = true;

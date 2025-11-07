@@ -2,6 +2,7 @@
 
 using fin.model;
 using fin.util.enumerables;
+using fin.util.strings;
 
 namespace fin.shaders.glsl.source;
 
@@ -16,7 +17,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     var animations = model.AnimationManager.Animations;
 
-    var fragmentShaderSrc = new StringBuilder();
+    var fragmentShaderSrc = new BracketStringBuilder();
     fragmentShaderSrc.AppendLine(
         $"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     fragmentShaderSrc.AppendLine(GlslConstants.FLOAT_PRECISION);

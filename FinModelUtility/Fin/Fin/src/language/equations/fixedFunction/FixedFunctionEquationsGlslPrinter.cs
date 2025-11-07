@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using fin.image.util;
 using fin.model;
 using fin.shaders.glsl;
 using fin.util.asserts;
 using fin.util.enumerables;
-using fin.image.util;
+using fin.util.strings;
 
 namespace fin.language.equations.fixedFunction;
 
@@ -17,13 +18,13 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
 
   public string Print(IReadOnlyFixedFunctionMaterial material,
                       IShaderRequirements shaderRequirements) {
-    var sb = new StringBuilder();
+    var sb = new BracketStringBuilder();
     this.Print(sb, material, shaderRequirements);
     return sb.ToString();
   }
 
   public void Print(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IReadOnlyFixedFunctionMaterial material,
       IShaderRequirements shaderRequirements) {
     var equations = material.Equations;
@@ -507,7 +508,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintScalarValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarValue value,
       IReadOnlyList<IReadOnlyTexture> textures,
       bool wrapExpressions = false) {
@@ -530,7 +531,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintScalarExpression_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarExpression expression,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var terms = expression.Terms;
@@ -547,7 +548,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintScalarTerm_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarTerm scalarTerm,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var numerators = scalarTerm.NumeratorFactors;
@@ -579,7 +580,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintScalarFactor_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarFactor factor,
       IReadOnlyList<IReadOnlyTexture> textures) {
     if (factor is IScalarIdentifiedValue<FixedFunctionSource>
@@ -601,12 +602,12 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintScalarNamedValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarNamedValue namedValue)
     => sb.Append($"scalar_{namedValue.Name}");
 
   private void PrintScalarIdentifiedValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IScalarIdentifiedValue<FixedFunctionSource> identifiedValue,
       IReadOnlyList<IReadOnlyTexture> textures)
     => sb.Append(this.GetScalarIdentifiedValue_(identifiedValue, textures));
@@ -622,7 +623,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       var textureIndex =
           (int) id - (int) FixedFunctionSource.TEXTURE_ALPHA_0;
 
-      var sb = new StringBuilder();
+      var sb = new BracketStringBuilder();
       this.AppendTextureValue_(sb, textureIndex, textures);
       sb.Append(".a");
 
@@ -663,10 +664,10 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     };
   }
 
-  private void PrintScalarConstant_(StringBuilder sb, IScalarConstant constant)
+  private void PrintScalarConstant_(BracketStringBuilder sb, IScalarConstant constant)
     => PrintFloat_(sb, constant.Value);
 
-  private static void PrintFloat_(StringBuilder sb, float value)
+  private static void PrintFloat_(BracketStringBuilder sb, float value)
     => sb.Append($"{value:0.0######}");
 
   private enum WrapType {
@@ -676,7 +677,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorValue value,
       IReadOnlyList<IReadOnlyTexture> textures,
       WrapType wrapType = WrapType.NEVER) {
@@ -729,7 +730,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorExpression_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorExpression expression,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var terms = expression.Terms;
@@ -746,7 +747,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorTerm_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorTerm scalarTerm,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var numerators = scalarTerm.NumeratorFactors;
@@ -781,7 +782,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorFactor_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorFactor factor,
       IReadOnlyList<IReadOnlyTexture> textures) {
     if (factor is IColorIdentifiedValue<FixedFunctionSource>
@@ -813,18 +814,18 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorIdentifiedValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorIdentifiedValue<FixedFunctionSource> identifiedValue,
       IReadOnlyList<IReadOnlyTexture> textures)
     => this.GetColorNamedValue_(sb, identifiedValue, textures);
 
   private void PrintColorNamedValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorNamedValue namedValue)
     => sb.Append($"color_{namedValue.Name}");
 
   private void GetColorNamedValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorIdentifiedValue<FixedFunctionSource> identifiedValue,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var id = identifiedValue.Identifier;
@@ -938,7 +939,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void AppendTextureValue_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       int textureIndex,
       IReadOnlyList<IReadOnlyTexture> textures) {
     var texture = textures[textureIndex];
@@ -974,7 +975,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorTernaryOperator_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorValueTernaryOperator ternaryOperator,
       IReadOnlyList<IReadOnlyTexture> textures) {
     sb.Append('(');
@@ -1008,11 +1009,11 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorNamedValueSwizzle_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorNamedValueSwizzle<FixedFunctionSource> swizzle,
       IReadOnlyList<IReadOnlyTexture> textures) {
     this.PrintColorIdentifiedValue_(sb, swizzle.Source, textures);
-    sb.Append(".");
+    sb.Append('.');
     sb.Append(swizzle.SwizzleType switch {
         ColorSwizzle.R => 'r',
         ColorSwizzle.G => 'g',
@@ -1022,11 +1023,11 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
   }
 
   private void PrintColorValueSwizzle_(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       IColorValueSwizzle swizzle,
       IReadOnlyList<IReadOnlyTexture> textures) {
     this.PrintColorValue_(sb, swizzle.Source, textures, WrapType.ALWAYS);
-    sb.Append(".");
+    sb.Append('.');
     sb.Append(swizzle.SwizzleType);
   }
 }

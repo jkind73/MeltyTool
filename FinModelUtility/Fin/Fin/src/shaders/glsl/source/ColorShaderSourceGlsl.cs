@@ -2,6 +2,7 @@
 
 using fin.model;
 using fin.util.enumerables;
+using fin.util.strings;
 
 namespace fin.shaders.glsl.source;
 
@@ -17,7 +18,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     var hasNormals = shaderRequirements.HasNormals;
     var hasLighting = !material.IgnoreLights && hasNormals;
 
-    var fragmentSrc = new StringBuilder();
+    var fragmentSrc = new BracketStringBuilder();
     fragmentSrc.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     fragmentSrc.AppendLine(GlslConstants.FLOAT_PRECISION);
     fragmentSrc.AppendLine();

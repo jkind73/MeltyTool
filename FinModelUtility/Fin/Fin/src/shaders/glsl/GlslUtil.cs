@@ -9,6 +9,7 @@ using fin.math;
 using fin.model;
 using fin.util.enums;
 using fin.image.util;
+using fin.util.strings;
 
 namespace fin.shaders.glsl;
 
@@ -67,7 +68,7 @@ public static class GlslUtil {
 
     var location = 0;
 
-    var vertexSrc = new StringBuilder();
+    var vertexSrc = new BracketStringBuilder();
 
     var hasNormals = modelRequirements.HasNormals;
 
@@ -435,7 +436,7 @@ public static class GlslUtil {
   }
 
   public static void AppendTextureHeadersIfNeeded(
-      this StringBuilder sb,
+      this BracketStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures,
       IReadOnlyList<IReadOnlyModelAnimation> animations
   ) {
@@ -444,7 +445,7 @@ public static class GlslUtil {
   }
 
   public static void AppendTextureStructIfNeeded(
-      this StringBuilder sb,
+      this BracketStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures,
       IReadOnlyList<IReadOnlyModelAnimation> animations
   ) {
@@ -517,7 +518,7 @@ public static class GlslUtil {
   }
 
   public static void AppendThreePointFilteringMethodsIfNeeded(
-      this StringBuilder sb,
+      this BracketStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures) {
     if (!textures.Any(t => t?.ThreePointFiltering ?? false)) {
       return;
@@ -650,13 +651,13 @@ public static class GlslUtil {
       string uvName,
       IReadOnlyTexture? finTexture,
       IReadOnlyList<IReadOnlyModelAnimation> animations) {
-    var sb = new StringBuilder();
+    var sb = new BracketStringBuilder();
     AppendReadColorFromTexture(sb, textureName, uvName, finTexture, animations);
     return sb.ToString();
   }
 
   public static void AppendReadColorFromTexture(
-      StringBuilder sb,
+      BracketStringBuilder sb,
       string textureName,
       string uvName,
       IReadOnlyTexture? finTexture,
@@ -773,7 +774,7 @@ public static class GlslUtil {
         : TextureTransformType.NONE;
   }
 
-  public static void AppendAlphaDiscard(StringBuilder src,
+  public static void AppendAlphaDiscard(BracketStringBuilder src,
                                         IReadOnlyMaterial material) {
     switch (material.TransparencyType) {
       case TransparencyType.MASK: {
