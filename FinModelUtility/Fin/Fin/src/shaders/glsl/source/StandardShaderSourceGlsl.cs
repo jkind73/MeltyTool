@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 using fin.model;
 using fin.util.enumerables;
@@ -7,6 +8,17 @@ using fin.util.strings;
 namespace fin.shaders.glsl.source;
 
 public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
+  private readonly IReadOnlyMaterial material_;
+  private readonly bool hasLighting_;
+  private readonly bool hasColor_;
+
+  private readonly IReadOnlyTexture? diffuseTexture_;
+  private readonly IReadOnlyTexture? normalTexture_;
+  private readonly IReadOnlyTexture? ambientOcclusionTexture_;
+  private readonly IReadOnlyTexture? emissiveTexture_;
+  private readonly IReadOnlyTexture? specularTexture_;
+  private readonly IReadOnlyList<IReadOnlyModelAnimation> animations_;
+
   public StandardShaderSourceGlsl(
       IReadOnlyModel model,
       IModelRequirements modelRequirements,
@@ -15,7 +27,9 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     this.VertexShaderSource
         = GlslUtil.GetVertexSrc(model, modelRequirements, shaderRequirements);
 
-    var animations = model.AnimationManager.Animations;
+    this.material_ = material;
+
+    this.animations_ = model.AnimationManager.Animations;
 
     var sb = new BracketStringBuilder();
     sb.AppendLine(
@@ -23,28 +37,21 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
 
-    var hasColor = shaderRequirements.UsedColors.AnyTrue();
+    this.hasColor_ = shaderRequirements.UsedColors.AnyTrue();
 
-    var diffuseTexture = material.DiffuseTexture;
-    var hasDiffuseTexture = diffuseTexture != null;
+    this.diffuseTexture_ = material.DiffuseTexture;
 
-    var normalTexture = material.NormalTexture;
-    var hasNormalTexture = normalTexture != null;
+    this.normalTexture_ = material.NormalTexture;
     var hasNormals = shaderRequirements.HasNormals;
-    var hasLighting = !material.IgnoreLights && hasNormals;
+    this.hasLighting_ = !material.IgnoreLights && hasNormals;
     var hasTangents = shaderRequirements.TangentType != TangentType.NOT_PRESENT;
     var hasBinormals = hasNormals && hasTangents;
 
-    var ambientOcclusionTexture = material.AmbientOcclusionTexture;
-    var hasAmbientOcclusionTexture = ambientOcclusionTexture != null;
+    this.ambientOcclusionTexture_ = material.AmbientOcclusionTexture;
+    this.emissiveTexture_ = material.EmissiveTexture;
+    this.specularTexture_ = material.SpecularTexture;
 
-    var emissiveTexture = material.EmissiveTexture;
-    var hasEmissiveTexture = emissiveTexture != null;
-
-    var specularTexture = material.SpecularTexture;
-    var hasSpecularTexture = specularTexture != null;
-
-    if (hasLighting) {
+    if (this.hasLighting_) {
       sb.AppendLine(
           $"""
            {GlslUtil.LIGHT_HEADER}
@@ -54,42 +61,42 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     sb.AppendTextureHeadersIfNeeded(
         material.Textures,
-        animations);
+        this.animations_);
 
     var needsNewline = false;
-    if (hasDiffuseTexture) {
+    if (this.diffuseTexture_ != null) {
       sb.AppendLine(
-          $"uniform {GlslUtil.GetTypeOfTexture(diffuseTexture, animations)} diffuseTexture;");
+          $"uniform {GlslUtil.GetTypeOfTexture(this.diffuseTexture_, this.animations_)} diffuseTexture;");
       needsNewline = true;
     }
 
-    if (hasLighting) {
-      if (hasNormalTexture) {
+    if (this.hasLighting_) {
+      if (this.normalTexture_ != null) {
         sb.AppendLine(
-            $"uniform {GlslUtil.GetTypeOfTexture(normalTexture, animations)} normalTexture;");
+            $"uniform {GlslUtil.GetTypeOfTexture(this.normalTexture_, this.animations_)} normalTexture;");
         needsNewline = true;
       }
 
-      if (hasSpecularTexture) {
+      if (this.specularTexture_ != null) {
         sb.AppendLine(
-            $"uniform {GlslUtil.GetTypeOfTexture(specularTexture, animations)} specularTexture;");
+            $"uniform {GlslUtil.GetTypeOfTexture(this.specularTexture_, this.animations_)} specularTexture;");
         needsNewline = true;
       }
 
-      if (hasAmbientOcclusionTexture) {
+      if (this.ambientOcclusionTexture_ != null) {
         sb.AppendLine(
-            $"uniform {GlslUtil.GetTypeOfTexture(ambientOcclusionTexture, animations)} ambientOcclusionTexture;");
+            $"uniform {GlslUtil.GetTypeOfTexture(this.ambientOcclusionTexture_, this.animations_)} ambientOcclusionTexture;");
         needsNewline = true;
       }
     }
 
-    if (hasEmissiveTexture) {
+    if (this.emissiveTexture_ != null) {
       sb.AppendLine(
-          $"uniform {GlslUtil.GetTypeOfTexture(emissiveTexture, animations)} emissiveTexture;");
+          $"uniform {GlslUtil.GetTypeOfTexture(this.emissiveTexture_, this.animations_)} emissiveTexture;");
       needsNewline = true;
     }
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       sb.AppendLine(
           $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
       needsNewline = true;
@@ -107,13 +114,13 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     var needsLineAboveMain = false;
 
-    if (hasColor) {
+    if (this.hasColor_) {
       needsLineAboveMain = true;
       sb.AppendLine(
           $"in vec4 {GlslConstants.IN_VERTEX_COLOR_NAME}0;");
     }
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       needsLineAboveMain = true;
       sb.AppendLine(
           """
@@ -146,7 +153,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
       }
     }
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       if (needsLineAboveMain) {
         sb.AppendLine();
       }
@@ -157,7 +164,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
            {GlslUtil.GetGetMergedLightColorsFunction()}
 
-           {GlslUtil.GetApplyMergedLightColorsFunction(hasAmbientOcclusionTexture)}
+           {GlslUtil.GetApplyMergedLightColorsFunction(this.ambientOcclusionTexture_ != null)}
            """);
     }
 
@@ -167,61 +174,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     sb.AppendBlock(
         "void main()",
-        () => {
-          var getDiffuseTextureColor = GlslUtil.ReadColorFromTexture(
-              "diffuseTexture",
-              $"{GlslConstants.IN_UV_NAME}{diffuseTexture?.UvIndex ?? 0}",
-              diffuseTexture,
-              animations);
-          sb.AppendLine(
-              $"fragColor = {(hasDiffuseTexture, hasColor) switch {
-                  (false, false) => "vec4(1)",
-                  (false, true) => $"{GlslConstants.IN_VERTEX_COLOR_NAME}0",
-                  (true, false) => getDiffuseTextureColor,
-                  (true, true) => $"{getDiffuseTextureColor} * {GlslConstants.IN_VERTEX_COLOR_NAME}0"
-              }};");
-
-          if (hasLighting) {
-            sb.AppendLine();
-            if (hasAmbientOcclusionTexture) {
-              sb.AppendLine(
-                  $"vec4 ambientOcclusionColor = {GlslUtil.ReadColorFromTexture("ambientOcclusionTexture", $"{GlslConstants.IN_UV_NAME}{ambientOcclusionTexture?.UvIndex ?? 0}", ambientOcclusionTexture, animations)};");
-            }
-
-            if (!hasNormalTexture) {
-              sb.AppendLine(
-                  """
-                  // Have to renormalize because the vertex normals can become distorted when interpolated.
-                  vec3 fragNormal = normalize(vertexNormal);
-                  """);
-            } else {
-              sb.AppendLine(
-                  $"""
-                   // Have to renormalize because the vertex normals can become distorted when interpolated.
-                   vec3 fragNormal = normalize(vertexNormal);
-                   vec3 textureNormal = {GlslUtil.ReadColorFromTexture("normalTexture", $"{GlslConstants.IN_UV_NAME}{normalTexture?.UvIndex ?? 0}", normalTexture, animations)}.xyz * 2.0 - 1.0;
-                   fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
-                   """);
-            }
-
-            // TODO: Is this right?
-            sb.AppendLine(
-                $"fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, fragColor, {(hasSpecularTexture ? $"{GlslUtil.ReadColorFromTexture("specularTexture", "uv0", specularTexture, animations)}" : "vec4(1)")}{(hasAmbientOcclusionTexture ? ", ambientOcclusionColor.r" : "")}).rgb, {GlslConstants.UNIFORM_USE_LIGHTING_NAME});");
-          }
-
-          if (hasEmissiveTexture) {
-            sb.AppendLine();
-            sb.AppendLine(
-                $"vec4 emissiveColor = {GlslUtil.ReadColorFromTexture("emissiveTexture", $"{GlslConstants.IN_UV_NAME}{emissiveTexture?.UvIndex ?? 0}", emissiveTexture, animations)};");
-            sb.AppendLine(
-                """
-                fragColor.rgb += emissiveColor.rgb;
-                fragColor.rgb = min(fragColor.rgb, 1.0);
-                """);
-          }
-
-          GlslUtil.AppendAlphaDiscard(sb, material);
-        });
+        () => this.AppendFragmentMain(sb));
 
     this.FragmentShaderSource = sb.ToString();
   }
@@ -229,4 +182,60 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource { get; }
 
   public string FragmentShaderSource { get; set; }
+
+  public void AppendFragmentMain(BracketStringBuilder sb) {
+    var getDiffuseTextureColor = GlslUtil.ReadColorFromTexture(
+        "diffuseTexture",
+        $"{GlslConstants.IN_UV_NAME}{this.diffuseTexture_?.UvIndex ?? 0}",
+        this.diffuseTexture_,
+        this.animations_);
+    sb.AppendLine(
+        $"fragColor = {(this.diffuseTexture_ != null, this.hasColor_) switch {
+            (false, false) => "vec4(1)",
+            (false, true) => $"{GlslConstants.IN_VERTEX_COLOR_NAME}0",
+            (true, false) => getDiffuseTextureColor,
+            (true, true) => $"{getDiffuseTextureColor} * {GlslConstants.IN_VERTEX_COLOR_NAME}0"
+        }};");
+
+    if (this.hasLighting_) {
+      sb.AppendLine();
+      if (this.ambientOcclusionTexture_ != null) {
+        sb.AppendLine(
+            $"vec4 ambientOcclusionColor = {GlslUtil.ReadColorFromTexture("ambientOcclusionTexture", $"{GlslConstants.IN_UV_NAME}{this.ambientOcclusionTexture_?.UvIndex ?? 0}", this.ambientOcclusionTexture_, this.animations_)};");
+      }
+
+      if (this.normalTexture_ == null) {
+        sb.AppendLine(
+            """
+            // Have to renormalize because the vertex normals can become distorted when interpolated.
+            vec3 fragNormal = normalize(vertexNormal);
+            """);
+      } else {
+        sb.AppendLine(
+            $"""
+             // Have to renormalize because the vertex normals can become distorted when interpolated.
+             vec3 fragNormal = normalize(vertexNormal);
+             vec3 textureNormal = {GlslUtil.ReadColorFromTexture("normalTexture", $"{GlslConstants.IN_UV_NAME}{this.normalTexture_?.UvIndex ?? 0}", this.normalTexture_, this.animations_)}.xyz * 2.0 - 1.0;
+             fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
+             """);
+      }
+
+      // TODO: Is this right?
+      sb.AppendLine(
+          $"fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, fragColor, {(this.specularTexture_ != null ? $"{GlslUtil.ReadColorFromTexture("specularTexture", "uv0", this.specularTexture_, this.animations_)}" : "vec4(1)")}{(this.ambientOcclusionTexture_ != null ? ", ambientOcclusionColor.r" : "")}).rgb, {GlslConstants.UNIFORM_USE_LIGHTING_NAME});");
+    }
+
+    if (this.emissiveTexture_ != null) {
+      sb.AppendLine();
+      sb.AppendLine(
+          $"vec4 emissiveColor = {GlslUtil.ReadColorFromTexture("emissiveTexture", $"{GlslConstants.IN_UV_NAME}{this.emissiveTexture_?.UvIndex ?? 0}", this.emissiveTexture_, this.animations_)};");
+      sb.AppendLine(
+          """
+          fragColor.rgb += emissiveColor.rgb;
+          fragColor.rgb = min(fragColor.rgb, 1.0);
+          """);
+    }
+
+    GlslUtil.AppendAlphaDiscard(sb, this.material_);
+  }
 }

@@ -1,4 +1,6 @@
-﻿namespace fin.shaders.glsl.source;
+﻿using fin.util.strings;
+
+namespace fin.shaders.glsl.source;
 
 public sealed class HiddenShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource
@@ -18,4 +20,8 @@ public sealed class HiddenShaderSourceGlsl : IShaderSourceGlsl {
            discard;
          }
          """;
+
+  public void AppendFragmentMain(BracketStringBuilder sb) {
+    sb.AppendLine("discard;");
+  }
 }

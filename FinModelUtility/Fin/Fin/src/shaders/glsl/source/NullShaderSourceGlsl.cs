@@ -35,11 +35,14 @@ public sealed class NullShaderSourceGlsl(
       sb.AppendLine();
       sb.AppendBlock(
           "void main()",
-          () => {
-            sb.AppendLine($"fragColor = {(hasColors ? $"{GlslConstants.IN_VERTEX_COLOR_NAME}0" : "vec4(1)")};");
-          });
+          () => this.AppendFragmentMain(sb));
 
       return sb.ToString();
     }
+  }
+
+  public void AppendFragmentMain(BracketStringBuilder sb) {
+    sb.AppendLine(
+        $"fragColor = {(shaderRequirements.UsedColors.AnyTrue() ? $"{GlslConstants.IN_VERTEX_COLOR_NAME}0" : "vec4(1)")};");
   }
 }

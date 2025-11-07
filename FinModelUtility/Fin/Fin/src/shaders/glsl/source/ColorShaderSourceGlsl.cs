@@ -1,12 +1,14 @@
-﻿using System.Text;
-
-using fin.model;
+﻿using fin.model;
 using fin.util.enumerables;
 using fin.util.strings;
 
 namespace fin.shaders.glsl.source;
 
 public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
+  private readonly IReadOnlyMaterial material_;
+  private readonly bool hasColors_;
+  private readonly bool hasLighting_;
+
   public ColorShaderSourceGlsl(IReadOnlyModel model,
                                IModelRequirements modelRequirements,
                                IReadOnlyMaterial material,
@@ -14,16 +16,17 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     this.VertexShaderSource
         = GlslUtil.GetVertexSrc(model, modelRequirements, shaderRequirements);
 
-    var hasColors = shaderRequirements.UsedColors.AnyTrue();
+    this.material_ = material;
+    this.hasColors_ = shaderRequirements.UsedColors.AnyTrue();
     var hasNormals = shaderRequirements.HasNormals;
-    var hasLighting = !material.IgnoreLights && hasNormals;
+    this.hasLighting_ = !material.IgnoreLights && hasNormals;
 
     var sb = new BracketStringBuilder();
     sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       sb.AppendLine(
           $"""
            {GlslUtil.LIGHT_HEADER}
@@ -33,7 +36,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
 
     sb.AppendLine("uniform vec4 diffuseColor;");
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       sb.AppendLine(
           $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
@@ -46,12 +49,12 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
         """);
 
     var hadAnyIns = false;
-    if (hasColors) {
+    if (this.hasColors_) {
       hadAnyIns = true;
       sb.AppendLine($"in vec4 {GlslConstants.IN_VERTEX_COLOR_NAME}0;");
     }
 
-    if (hasLighting) {
+    if (this.hasLighting_) {
       hadAnyIns = true;
       sb.AppendLine(
           """
@@ -74,31 +77,31 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
       sb.AppendLine();
     }
 
-    sb.AppendBlock(
-        "void main()",
-        () => {
-          sb.AppendLine(
-              $"fragColor = diffuseColor{hasColors switch {
-                  false => "",
-                  true  => $" * {GlslConstants.IN_VERTEX_COLOR_NAME}0",
-              }};");
-
-          if (hasLighting) {
-            sb.AppendLine(
-                $"""
-
-                 // Have to renormalize because the vertex normals can become distorted when interpolated.
-                 vec3 fragNormal = normalize(vertexNormal);
-                 fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, fragColor, vec4(1)).rgb,  {GlslConstants.UNIFORM_USE_LIGHTING_NAME});
-                 """);
-          }
-
-          GlslUtil.AppendAlphaDiscard(sb, material);
-        });
+    sb.AppendBlock("void main()", () => this.AppendFragmentMain(sb));
 
     this.FragmentShaderSource = sb.ToString();
   }
 
   public string VertexShaderSource { get; }
   public string FragmentShaderSource { get; }
+
+  public void AppendFragmentMain(BracketStringBuilder sb) {
+    sb.AppendLine(
+        $"fragColor = diffuseColor{this.hasColors_ switch {
+            false => "",
+            true  => $" * {GlslConstants.IN_VERTEX_COLOR_NAME}0",
+        }};");
+
+    if (this.hasLighting_) {
+      sb.AppendLine(
+          $"""
+
+           // Have to renormalize because the vertex normals can become distorted when interpolated.
+           vec3 fragNormal = normalize(vertexNormal);
+           fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, {GlslConstants.UNIFORM_SHININESS_NAME}, fragColor, vec4(1)).rgb,  {GlslConstants.UNIFORM_USE_LIGHTING_NAME});
+           """);
+    }
+
+    GlslUtil.AppendAlphaDiscard(sb, this.material_);
+  }
 }
