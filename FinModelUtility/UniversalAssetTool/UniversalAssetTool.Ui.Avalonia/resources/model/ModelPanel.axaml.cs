@@ -35,7 +35,7 @@ namespace uni.ui.avalonia.resources.model {
         this.MaterialsPanel = new MaterialsPanelViewModel {
             ModelAndMaterials = (value, value.MaterialManager.All)
         };
-        this.MeshTree = new MeshTreeViewModel { Meshes = value.Skin.Meshes };
+        this.MeshTree = new MeshTreeViewModel { Meshes = value.Skin.RootMeshes };
         this.FilesPanel = new FilesPanelViewModel(value);
         this.RegistersPanel = new RegistersPanelViewModel() {
             Registers = value.MaterialManager.Registers,

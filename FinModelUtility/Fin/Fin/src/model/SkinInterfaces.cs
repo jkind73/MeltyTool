@@ -14,6 +14,7 @@ namespace fin.model;
 public partial interface ISkin {
   new IReadOnlyList<IVertex> Vertices { get; }
 
+  new IReadOnlyList<IMesh> RootMeshes { get; }
   new IReadOnlyList<IMesh> Meshes { get; }
   IMesh AddMesh();
 

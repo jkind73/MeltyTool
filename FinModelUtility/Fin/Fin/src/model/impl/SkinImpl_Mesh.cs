@@ -6,12 +6,16 @@ namespace fin.model.impl;
 public partial class ModelImpl<TVertex> {
   private partial class SkinImpl {
     public IReadOnlyList<IMesh> Meshes => this.meshes_;
+    public IReadOnlyList<IMesh> RootMeshes => this.rootMeshes_;
 
     public IMesh AddMesh() => this.AddMeshImpl_(false);
 
     private IMesh AddMeshImpl_(bool isSubMesh) {
       var mesh = new MeshImpl(this, this.meshes_.Count, isSubMesh);
       this.meshes_.Add(mesh);
+      if (!isSubMesh) {
+        this.rootMeshes_.Add(mesh);
+      }
       return mesh;
     }
 
