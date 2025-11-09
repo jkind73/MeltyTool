@@ -235,6 +235,7 @@ public sealed class TtydModelImporter : IModelImporter<TtydModelFileBundle> {
       }
 
       var finMesh = parentFinMesh?.AddSubMesh() ?? finModel.Skin.AddMesh();
+      finMesh.Name = ttydGroup.Name;
 
       groupBoneMeshTuples[ttydGroupIndex] = (ttydGroup, finBone, finMesh);
       if (ttydGroup.NextGroupIndex != -1) {
