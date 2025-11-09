@@ -49,11 +49,7 @@ public sealed class SceneNodeRenderer : IRenderable, IDisposable {
 
   public void Render() {
     GlTransform.PushMatrix();
-
-    GlTransform.MultMatrix(
-        SystemMatrix4x4Util.FromTrs(this.sceneNode_.Position,
-                                    this.sceneNode_.Rotation,
-                                    this.sceneNode_.Scale));
+    GlTransform.MultMatrix(this.sceneNode_.Transform.LocalMatrix);
 
     foreach (var model in this.modelRenderers_) {
       model.Render();

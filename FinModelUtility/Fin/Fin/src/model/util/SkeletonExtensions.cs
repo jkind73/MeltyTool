@@ -32,16 +32,6 @@ public static class SkeletonExtensions {
     return child;
   }
 
-  public static Matrix4x4 GetWorldMatrix(this IBone bone) {
-    var currentMatrix = Matrix4x4.Identity;
-    while (bone != null) {
-      currentMatrix = bone.LocalTransform.Matrix * currentMatrix;
-      bone = bone.Parent;
-    }
-
-    return currentMatrix;
-  }
-
   public static bool TryGetFaceCameraQuaternion(
       this IReadOnlyBone? bone,
       out Quaternion rotation) {

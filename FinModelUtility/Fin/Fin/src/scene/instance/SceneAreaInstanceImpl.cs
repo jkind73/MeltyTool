@@ -26,7 +26,7 @@ public partial class SceneInstanceImpl {
 
     public IReadOnlyList<ISceneNodeInstance> RootNodes { get; } = sceneArea
         .RootNodes
-        .Select(o => new SceneNodeInstanceImpl(o))
+        .Select(o => new SceneNodeInstanceImpl(null, o))
         .ToArray();
 
     public void Tick() {
@@ -51,7 +51,7 @@ public partial class SceneInstanceImpl {
 
     public ISceneNodeInstance? CustomSkyboxObject { get; }
       = sceneArea.CustomSkyboxNode != null
-          ? new SceneNodeInstanceImpl(sceneArea.CustomSkyboxNode)
+          ? new SceneNodeInstanceImpl(null, sceneArea.CustomSkyboxNode)
           : null;
   }
 }

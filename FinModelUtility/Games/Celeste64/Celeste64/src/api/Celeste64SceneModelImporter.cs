@@ -6,6 +6,7 @@ using Celeste64.map;
 using fin.data.lazy;
 using fin.io;
 using fin.math.rotations;
+using fin.math.transform;
 using fin.model;
 using fin.model.impl;
 using fin.model.io.importers.gltf;
@@ -212,11 +213,12 @@ public sealed class Celeste64MapSceneImporter
           var totalSeconds
               = (float) FrameTime.ElapsedTimeSinceApplicationOpened
                                  .TotalSeconds;
-          instance.SetPosition(origin +
-                               Vector3.UnitY *
-                               MathF.Sin(totalSeconds * 2) *
-                               2);
-          instance.SetRotationRadians(0, totalSeconds * 3, 0);
+          var transform = instance.Transform;
+          transform.Translation = origin +
+                                  Vector3.UnitY *
+                                  MathF.Sin(totalSeconds * 2) *
+                                  2;
+          transform.SetRotationRadians(0, totalSeconds * 3, 0);
         });
       }
     }

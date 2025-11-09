@@ -5,6 +5,7 @@ using System.Numerics;
 using fin.animation;
 using fin.data.dictionaries;
 using fin.math;
+using fin.math.transform;
 using fin.model;
 using fin.model.skeleton;
 using fin.model.util;
@@ -57,22 +58,7 @@ public partial interface ISceneNodeInstance : ITickable, IDisposable {
 
   new IReadOnlyList<ISceneNodeInstance> ChildNodes { get; }
 
-  new Vector3 Position { get; }
-  new IRotation Rotation { get; }
-  new Vector3 Scale { get; }
-
-  ISceneNodeInstance SetPosition(float x, float y, float z);
-
-  ISceneNodeInstance SetPosition(Vector3 position)
-    => this.SetPosition(position.X, position.Y, position.Z);
-
-  ISceneNodeInstance SetRotationRadians(float xRadians,
-                                        float yRadians,
-                                        float zRadians);
-
-  ISceneNodeInstance SetRotationDegrees(float xDegrees,
-                                        float yDegrees,
-                                        float zDegrees);
+  new Transform3d Transform { get; }
 
   new IReadOnlyList<ISceneModelInstance> Models { get; }
 

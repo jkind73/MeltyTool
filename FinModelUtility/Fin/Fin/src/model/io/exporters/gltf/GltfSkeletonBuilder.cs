@@ -52,7 +52,7 @@ public sealed class GltfSkeletonBuilder {
   private void ApplyBoneOrientationToNode_(GltfNode node,
                                            IReadOnlyBone bone,
                                            float scale) {
-    var matrix = bone.LocalTransform.Matrix;
+    var matrix = bone.LocalTransform.LocalMatrix;
     matrix.Translation *= scale;
     node.LocalMatrix = matrix;
   }
