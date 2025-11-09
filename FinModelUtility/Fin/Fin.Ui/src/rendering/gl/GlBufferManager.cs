@@ -3,7 +3,7 @@
 using fin.data;
 using fin.model;
 using fin.model.accessor;
-using fin.model.util;
+using fin.model.skeleton;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.model;
 using fin.util.enumerables;
@@ -178,7 +178,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
     public int VaoId => this.vaoId_;
 
     public void UpdateBuffer() {
-      var boneTransformManager = new BoneTransformManager();
+      var boneTransformManager = new BoneTransformManager2();
       boneTransformManager.CalculateStaticMatricesForRendering(model);
 
       var usedBoneIndexMap = model.Skin.BonesUsedByVertices

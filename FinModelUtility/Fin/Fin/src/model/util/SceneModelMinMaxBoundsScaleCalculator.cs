@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
+using fin.model.skeleton;
 using fin.scene;
 
 
@@ -9,7 +10,7 @@ namespace fin.model.util;
 
 public sealed class SceneModelMinMaxBoundsScaleCalculator
     : BMinMaxBoundsScaleCalculator<ISceneModel> {
-  private readonly BoneTransformManager boneTransformManager_ = new();
+  private readonly BoneTransformManager2 boneTransformManager_ = new();
 
   public override Bounds CalculateBounds(ISceneModel sceneModel) {
     var minX = float.MaxValue;

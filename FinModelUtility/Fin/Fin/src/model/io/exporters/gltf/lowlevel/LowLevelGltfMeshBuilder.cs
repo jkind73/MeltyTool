@@ -8,6 +8,7 @@ using CommunityToolkit.HighPerformance;
 using fin.color;
 using fin.math.matrix.four;
 using fin.model.accessor;
+using fin.model.skeleton;
 using fin.model.util;
 using fin.shaders.glsl;
 
@@ -30,7 +31,7 @@ public sealed class LowLevelGltfMeshBuilder {
     var skin = model.Skin;
     var vertexAccessor = ConsistentVertexAccessor.GetAccessorForModel(model);
 
-    var boneTransformManager = new BoneTransformManager();
+    var boneTransformManager = new BoneTransformManager2();
     boneTransformManager.CalculateStaticMatricesForManualProjection(model);
 
     var nullMaterial = gltfModel.CreateMaterial("null");

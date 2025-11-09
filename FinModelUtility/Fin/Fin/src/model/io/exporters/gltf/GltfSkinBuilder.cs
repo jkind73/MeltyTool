@@ -4,6 +4,7 @@ using System.Linq;
 
 using fin.data.indexable;
 using fin.model.accessor;
+using fin.model.skeleton;
 using fin.model.util;
 using fin.util.enumerables;
 
@@ -27,7 +28,7 @@ public sealed class GltfSkinBuilder {
           finToTexCoordAndGltfMaterial) {
     var skin = model.Skin;
 
-    var boneTransformManager = new BoneTransformManager();
+    var boneTransformManager = new BoneTransformManager2();
     boneTransformManager.CalculateStaticMatricesForManualProjection(model);
 
     var boneToIndex

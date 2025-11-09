@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Numerics;
 
+using fin.model.skeleton;
+
 
 namespace fin.model.util;
 
 public sealed class ModelMinMaxBoundsScaleCalculator
     : BMinMaxBoundsScaleCalculator<IReadOnlyModel> {
-  private readonly BoneTransformManager boneTransformManager_ = new();
+  private readonly BoneTransformManager2 boneTransformManager_ = new();
 
   public override Bounds CalculateBounds(IReadOnlyModel model) {
     var minX = float.MaxValue;

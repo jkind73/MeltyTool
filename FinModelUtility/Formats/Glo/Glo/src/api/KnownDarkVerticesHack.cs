@@ -2,7 +2,7 @@
 
 using fin.math;
 using fin.model;
-using fin.model.util;
+using fin.model.skeleton;
 
 using glo.schema;
 
@@ -56,7 +56,7 @@ public sealed class KnownDarkVerticesHack {
   public void IdentifyDarkVertices(
       IModel model,
       IReadOnlyList<(GloMesh, IBone)> gloMeshesAndFinBones) {
-      var boneTransformManager = new BoneTransformManager();
+      var boneTransformManager = new BoneTransformManager2();
       boneTransformManager.CalculateStaticMatricesForManualProjection(
           model,
           true);

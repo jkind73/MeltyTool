@@ -4,7 +4,7 @@ using System.Numerics;
 
 using fin.data.indexable;
 using fin.model.accessor;
-using fin.model.util;
+using fin.model.skeleton;
 
 using SharpGLTF.Geometry;
 using SharpGLTF.Geometry.VertexTypes;
@@ -32,7 +32,7 @@ public sealed class GltfVertexBuilder {
   }
 
   public IVertexBuilder CreateVertexBuilder(
-      IReadOnlyBoneTransformManager boneTransformManager,
+      IReadOnlyBoneTransformManager2 boneTransformManager,
       IVertexAccessor vertexAccessor,
       float scale,
       bool hasNormals,
