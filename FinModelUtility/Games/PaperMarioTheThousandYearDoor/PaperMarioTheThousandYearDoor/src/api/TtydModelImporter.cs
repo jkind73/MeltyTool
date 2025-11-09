@@ -35,7 +35,6 @@ public sealed class TtydModelImporter : IModelImporter<TtydModelFileBundle> {
     var modelFile = fileBundle.ModelFile;
     var ttydModel = modelFile.ReadNew<Model>(Endianness.BigEndian);
 
-
     Tpl? tpl = null;
     if (modelFile.AssertGetParent()
                  .TryToGetExistingFile($"{ttydModel.Header.TextureFileName}-",
@@ -49,7 +48,8 @@ public sealed class TtydModelImporter : IModelImporter<TtydModelFileBundle> {
 
     var finModel = new ModelImpl {
         FileBundle = fileBundle,
-        Files = new HashSet<IReadOnlyGenericFile>([modelFile, textureFile])
+        Files = new HashSet<IReadOnlyGenericFile>(
+            textureFile != null ? [modelFile, textureFile] : [modelFile])
     };
 
     // Sets up materials

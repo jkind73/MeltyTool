@@ -20,8 +20,9 @@ public sealed partial class Header : IBinaryDeserializable {
   [StringLengthSource(64)]
   public string CreationDate { get; set; }
 
-  [SequenceLengthSource(3)]
-  public uint[] Unk1 { get; set; }
+  public uint DisplayModeMask { get; set; }
+  public uint Radius { get; set; }
+  public uint Height { get; set; }
 
   public Vector3 BoundingBoxMin { get; set; }
   public Vector3 BoundingBoxMax { get; set;}
@@ -31,7 +32,6 @@ public sealed partial class Header : IBinaryDeserializable {
 
   [SequenceLengthSource(25)]
   public uint[] BlockTypeOffsets { get; set; }
-
 
   public int GetCount(BlockType blockType)
     => this.BlockTypeCounts[(int) blockType];
