@@ -1,33 +1,22 @@
-﻿using fin.common;
-using fin.io;
+﻿using fin.io;
 using fin.io.bundles;
 using fin.util.progress;
 
 using modl.api;
 
 using uni.games.battalion_wars_1;
-using uni.platforms.wii;
 using uni.util.io;
 
 namespace uni.games.battalion_wars_2;
 
 public sealed class BattalionWars2FileBundleGatherer
-    : INamedAnnotatedFileBundleGatherer {
-  public string Name => "battalion_wars_2";
+    : BWiiFileBundleGatherer {
+  public override string Name => "battalion_wars_2";
 
-  public void GatherFileBundles(
+  protected override void GatherFileBundlesFromHierarchy(
       IFileBundleOrganizer organizer,
-      IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingFile(
-            "battalion_wars_2.iso",
-            out var battalionWarsRom)) {
-      return;
-    }
-
-    var fileHierarchy =
-        new WiiFileHierarchyExtractor().ExtractFromRom(
-            battalionWarsRom);
-
+      IMutablePercentageProgress mutablePercentageProgress,
+      IFileHierarchy fileHierarchy) {
     var didUpdateAny = false;
     foreach (var directory in fileHierarchy) {
       var didUpdate = false;
