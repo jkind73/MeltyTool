@@ -1,6 +1,7 @@
 ﻿using fin.config;
 using fin.data.dictionaries;
 using fin.model;
+using fin.model.skeleton;
 using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.model;

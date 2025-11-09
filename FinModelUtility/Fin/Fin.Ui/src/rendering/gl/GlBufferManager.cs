@@ -178,7 +178,7 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
     public int VaoId => this.vaoId_;
 
     public void UpdateBuffer() {
-      var boneTransformManager = new BoneTransformManager2();
+      var boneTransformManager = new BoneTransformManager();
       boneTransformManager.CalculateStaticMatricesForRendering(model);
 
       var usedBoneIndexMap = model.Skin.BonesUsedByVertices

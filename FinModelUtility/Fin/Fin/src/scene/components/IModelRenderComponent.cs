@@ -6,7 +6,7 @@ namespace fin.scene.components;
 
 public interface IAnimatableModel {
   IReadOnlyModel Model { get; }
-  IBoneTransformManager2 BoneTransformManager { get; }
+  IBoneTransformManager BoneTransformManager { get; }
   IAnimationPlaybackManager? AnimationPlaybackManager { get; }
   IReadOnlyModelAnimation? Animation { get; set; }
 }

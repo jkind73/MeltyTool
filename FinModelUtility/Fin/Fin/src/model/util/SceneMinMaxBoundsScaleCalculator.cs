@@ -34,7 +34,7 @@ public sealed class SceneMinMaxBoundsScaleCalculator
 
   private static void FactorInModel_(
       IReadOnlyModel model,
-      IReadOnlyBoneTransformManager2 boneTransformManager,
+      IReadOnlyBoneTransformManager boneTransformManager,
       ref float minX,
       ref float minY,
       ref float minZ,

@@ -10,7 +10,7 @@ namespace fin.model.util;
 
 public sealed class SceneModelMinMaxBoundsScaleCalculator
     : BMinMaxBoundsScaleCalculator<ISceneModel> {
-  private readonly BoneTransformManager2 boneTransformManager_ = new();
+  private readonly BoneTransformManager boneTransformManager_ = new();
 
   public override Bounds CalculateBounds(ISceneModel sceneModel) {
     var minX = float.MaxValue;

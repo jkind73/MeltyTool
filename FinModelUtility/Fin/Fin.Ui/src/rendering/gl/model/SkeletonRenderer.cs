@@ -94,13 +94,13 @@ public sealed class SkeletonRenderer
   }
 
   private readonly IndexableSet<IReadOnlyBone> selectedChildren_ = [];
-  private readonly IReadOnlyBoneTransformManager2 boneTransformManager_;
+  private readonly IReadOnlyBoneTransformManager boneTransformManager_;
 
   private readonly IReadOnlyIndexableDictionary<IReadOnlyBone, Vector3>
       scaleByBone_;
 
   public SkeletonRenderer(IReadOnlyModel model,
-                          IReadOnlyBoneTransformManager2 boneTransformManager) {
+                          IReadOnlyBoneTransformManager boneTransformManager) {
     var skeleton = model.Skeleton;
 
     this.boneTransformManager_ = boneTransformManager;

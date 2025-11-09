@@ -32,7 +32,7 @@ public sealed class GltfVertexBuilder {
   }
 
   public IVertexBuilder CreateVertexBuilder(
-      IReadOnlyBoneTransformManager2 boneTransformManager,
+      IReadOnlyBoneTransformManager boneTransformManager,
       IVertexAccessor vertexAccessor,
       float scale,
       bool hasNormals,

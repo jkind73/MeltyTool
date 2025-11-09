@@ -26,7 +26,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
     this.SimpleBoneTransformView = new();
 
-    this.BoneTransformManager = new BoneTransformManager2();
+    this.BoneTransformManager = new BoneTransformManager();
     this.BoneTransformManager.CalculateStaticMatricesForManualProjection(
         this.Model,
         true);
@@ -155,7 +155,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
   public IReadOnlyModel Model { get; }
 
-  public IBoneTransformManager2 BoneTransformManager { get; }
+  public IBoneTransformManager BoneTransformManager { get; }
   public SimpleBoneTransformView SimpleBoneTransformView { get; }
   public ITextureTransformManager TextureTransformManager { get; }
 

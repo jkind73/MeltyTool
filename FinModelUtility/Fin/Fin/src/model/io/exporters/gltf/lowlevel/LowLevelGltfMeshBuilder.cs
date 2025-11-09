@@ -31,7 +31,7 @@ public sealed class LowLevelGltfMeshBuilder {
     var skin = model.Skin;
     var vertexAccessor = ConsistentVertexAccessor.GetAccessorForModel(model);
 
-    var boneTransformManager = new BoneTransformManager2();
+    var boneTransformManager = new BoneTransformManager();
     boneTransformManager.CalculateStaticMatricesForManualProjection(model);
 
     var nullMaterial = gltfModel.CreateMaterial("null");

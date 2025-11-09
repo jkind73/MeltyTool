@@ -25,7 +25,7 @@ public sealed partial class ModelRenderer
   public static IModelRenderer CreateStatic(
       IReadOnlyModel model,
       IReadOnlyLighting? lighting = null,
-      IReadOnlyBoneTransformManager2? boneTransformManager = null,
+      IReadOnlyBoneTransformManager? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
                          lighting,
@@ -35,7 +35,7 @@ public sealed partial class ModelRenderer
   public static IDynamicModelRenderer CreateDynamic(
       IReadOnlyModel model,
       IReadOnlyLighting? lighting = null,
-      IReadOnlyBoneTransformManager2? boneTransformManager = null,
+      IReadOnlyBoneTransformManager? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
                          lighting,
@@ -48,7 +48,7 @@ public sealed partial class ModelRenderer
   private LightsUbo? lightsUbo_;
   private readonly IReadOnlyModel model_;
   private readonly IReadOnlyLighting? lighting_;
-  private readonly IReadOnlyBoneTransformManager2? boneTransformManager_;
+  private readonly IReadOnlyBoneTransformManager? boneTransformManager_;
 
   /// <summary>
   ///   A renderer for a Fin model.
@@ -57,7 +57,7 @@ public sealed partial class ModelRenderer
   /// </summary>
   public ModelRenderer(IReadOnlyModel model,
                        IReadOnlyLighting? lighting = null,
-                       IReadOnlyBoneTransformManager2? boneTransformManager
+                       IReadOnlyBoneTransformManager? boneTransformManager
                            = null,
                        IReadOnlyTextureTransformManager? textureTransformManager
                            = null,

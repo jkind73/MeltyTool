@@ -28,7 +28,7 @@ public sealed class GltfSkinBuilder {
           finToTexCoordAndGltfMaterial) {
     var skin = model.Skin;
 
-    var boneTransformManager = new BoneTransformManager2();
+    var boneTransformManager = new BoneTransformManager();
     boneTransformManager.CalculateStaticMatricesForManualProjection(model);
 
     var boneToIndex

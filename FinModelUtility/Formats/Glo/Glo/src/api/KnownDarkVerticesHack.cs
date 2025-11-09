@@ -56,7 +56,7 @@ public sealed class KnownDarkVerticesHack {
   public void IdentifyDarkVertices(
       IModel model,
       IReadOnlyList<(GloMesh, IBone)> gloMeshesAndFinBones) {
-      var boneTransformManager = new BoneTransformManager2();
+      var boneTransformManager = new BoneTransformManager();
       boneTransformManager.CalculateStaticMatricesForManualProjection(
           model,
           true);

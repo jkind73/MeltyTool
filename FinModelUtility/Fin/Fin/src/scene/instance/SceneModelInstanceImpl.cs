@@ -17,7 +17,7 @@ public partial class SceneInstanceImpl {
     public SceneModelInstanceImpl(IReadOnlySceneModel model) {
       this.Definition = model;
       this.SimpleBoneTransformView = new();
-      this.BoneTransformManager = new BoneTransformManager2();
+      this.BoneTransformManager = new BoneTransformManager();
       this.TextureTransformManager = new TextureTransformManager();
 
       this.Init_(model);
@@ -28,7 +28,7 @@ public partial class SceneInstanceImpl {
                                    IReadOnlyBone bone) {
       this.Definition = model;
       this.SimpleBoneTransformView = new();
-      this.BoneTransformManager = new BoneTransformManager2(
+      this.BoneTransformManager = new BoneTransformManager(
           (parent.BoneTransformManager, bone));
       this.TextureTransformManager = new TextureTransformManager();
 
@@ -81,7 +81,7 @@ public partial class SceneInstanceImpl {
 
     public IReadOnlyModel Model => this.Definition.Model;
 
-    public IBoneTransformManager2 BoneTransformManager { get; }
+    public IBoneTransformManager BoneTransformManager { get; }
     public SimpleBoneTransformView SimpleBoneTransformView { get; }
     public ITextureTransformManager TextureTransformManager { get; }
 

@@ -2,14 +2,12 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
-using fin.animation;
-using fin.animation.interpolation;
 using fin.data.indexable;
-using fin.math.interpolation;
 using fin.math.matrix.four;
 using fin.model.accessor;
+using fin.model.util;
 
-namespace fin.model.util;
+namespace fin.model.skeleton;
 
 public enum BoneWeightTransformType {
   FOR_EXPORT_OR_CPU_PROJECTION,
@@ -63,9 +61,9 @@ public interface IBoneTransformManager : IReadOnlyBoneTransformManager {
   void CalculateMatrices(
       IReadOnlyBone rootBone,
       IReadOnlyList<IReadOnlyBoneWeights> boneWeightsList,
-      (IReadOnlyModelAnimation, float)? animationAndFrame,
-      BoneWeightTransformType boneWeightTransformType
-  );
+      IBoneTransformView? boneTransformView,
+      BoneWeightTransformType boneWeightTransformType,
+      in Matrix4x4 modelMatrix);
 }
 
 public sealed class BoneTransformManager : IBoneTransformManager {
@@ -107,8 +105,8 @@ public sealed class BoneTransformManager : IBoneTransformManager {
     this.verticesToWorldMatrices_.Clear();
   }
 
-  private void
-      InitModelVertices_(IReadOnlyModel model, bool forcePreproject = false) {
+  private void InitModelVertices_(IReadOnlyModel model,
+                                  bool forcePreproject = false) {
     var vertices = model.Skin.Vertices;
     this.verticesToWorldMatrices_ =
         new IndexableDictionary<IReadOnlyVertex, IReadOnlyFinMatrix4x4?>(
@@ -119,25 +117,6 @@ public sealed class BoneTransformManager : IBoneTransformManager {
     }
   }
 
-  private readonly MagFilterInterpolatable<Vector3>
-      translationMagFilterInterpolationTrack_ = new(new Vector3Interpolator()) {
-          AnimationInterpolationMagFilter
-              = AnimationInterpolationMagFilter.ORIGINAL_FRAME_RATE_LINEAR
-      };
-
-  private readonly MagFilterInterpolatable<Quaternion>
-      rotationMagFilterInterpolationTrack_ =
-          new(new SimpleQuaternionInterpolator()) {
-              AnimationInterpolationMagFilter
-                  = AnimationInterpolationMagFilter.ORIGINAL_FRAME_RATE_LINEAR
-          };
-
-  private readonly MagFilterInterpolatable<Vector3>
-      scaleMagFilterInterpolationTrack_ = new(new Vector3Interpolator()) {
-          AnimationInterpolationMagFilter
-              = AnimationInterpolationMagFilter.ORIGINAL_FRAME_RATE_LINEAR
-      };
-
   public void CalculateStaticMatricesForManualProjection(
       IReadOnlyModel model,
       bool forcePreproject = false) {
@@ -145,7 +124,8 @@ public sealed class BoneTransformManager : IBoneTransformManager {
         model.Skeleton.Root,
         model.Skin.BoneWeights,
         null,
-        BoneWeightTransformType.FOR_EXPORT_OR_CPU_PROJECTION);
+        BoneWeightTransformType.FOR_EXPORT_OR_CPU_PROJECTION,
+        Matrix4x4.Identity);
     this.InitModelVertices_(model, forcePreproject);
   }
 
@@ -154,7 +134,8 @@ public sealed class BoneTransformManager : IBoneTransformManager {
         model.Skeleton.Root,
         model.Skin.BoneWeights,
         null,
-        BoneWeightTransformType.FOR_RENDERING);
+        BoneWeightTransformType.FOR_RENDERING,
+        Matrix4x4.Identity);
     this.InitModelVertices_(model);
   }
 
@@ -164,13 +145,10 @@ public sealed class BoneTransformManager : IBoneTransformManager {
   public void CalculateMatrices(
       IReadOnlyBone rootBone,
       IReadOnlyList<IReadOnlyBoneWeights> boneWeightsList,
-      (IReadOnlyModelAnimation, float)? animationAndFrame,
-      BoneWeightTransformType boneWeightTransformType
-  ) {
-    var isFirstPass = animationAndFrame == null;
-
-    var animation = animationAndFrame?.Item1;
-    var frame = animationAndFrame?.Item2;
+      IBoneTransformView? boneTransformView,
+      BoneWeightTransformType boneWeightTransformType,
+      in Matrix4x4 modelMatrix) {
+    var isFirstPass = boneTransformView == null;
 
     if (isFirstPass) {
       this.boneList_.Clear();
@@ -193,73 +171,41 @@ public sealed class BoneTransformManager : IBoneTransformManager {
 
     foreach (var (bone, boneToWorldMatrix, parentBoneToWorldMatrix) in this
                  .boneList_) {
-      boneToWorldMatrix.CopyFrom(parentBoneToWorldMatrix);
-
-      Vector3? animationLocalTranslation = null;
-      Quaternion? animationLocalRotation = null;
-      Vector3? animationLocalScale = null;
-
-      // The pose of the animation, if available.
-      IReadOnlyBoneTracks? boneTracks = null;
-      animation?.BoneTracks.TryGetValue(bone, out boneTracks);
-      if (boneTracks != null) {
-        // Only gets the values from the animation if the frame is at least partially defined.
-        if (boneTracks.Translations?.HasAnyData ?? false) {
-          this.translationMagFilterInterpolationTrack_.Impl
-              = boneTracks.Translations;
-          if (this.translationMagFilterInterpolationTrack_
-                  .TryGetAtFrame(
-                      frame.Value,
-                      out var outAnimationLocalTranslation)) {
-            animationLocalTranslation = outAnimationLocalTranslation;
-          }
+      if (!isFirstPass) {
+        var parentMatrix = parentBoneToWorldMatrix.Impl;
+        if (bone.IgnoreParentScale) {
+          parentMatrix = parentMatrix.FilterTrs(true, true, false);
         }
-
-        if (boneTracks.Rotations?.HasAnyData ?? false) {
-          this.rotationMagFilterInterpolationTrack_.Impl
-              = boneTracks.Rotations;
-          if (this.rotationMagFilterInterpolationTrack_
-                  .TryGetAtFrame(
-                      frame.Value,
-                      out var outAnimationLocalRotation)) {
-            animationLocalRotation = outAnimationLocalRotation;
-          }
-        }
-
-        if (boneTracks.Scales?.HasAnyData ?? false) {
-          this.scaleMagFilterInterpolationTrack_.Impl = boneTracks.Scales;
-          if (this.scaleMagFilterInterpolationTrack_.TryGetAtFrame(
-                  frame.Value,
-                  out var outAnimationLocalScale)) {
-            animationLocalScale = outAnimationLocalScale;
-          }
-        }
-      }
-
-      // Uses the animation pose instead of the root pose when available.
-      var localTransform = bone.LocalTransform;
-      var localTranslation
-          = animationLocalTranslation ?? localTransform.Translation;
-      var localRotation = animationLocalRotation ?? localTransform.Rotation;
-      var localScale = animationLocalScale ?? localTransform.Scale;
-
-      if (bone is {
-              IgnoreParentScale: false,
-              FaceTowardsCameraType: FaceTowardsCameraType.NONE
-          }) {
-        var localMatrix = SystemMatrix4x4Util.FromTrs(localTranslation,
-          localRotation,
-          localScale);
-        boneToWorldMatrix.MultiplyInPlace(localMatrix);
+        
+        boneTransformView.TargetBone(bone);
+        boneToWorldMatrix.Impl = BoneTransformUtils.CalculateBoneToWorldMatrix(
+            boneTransformView,
+            parentMatrix,
+            modelMatrix);
       } else {
-        boneToWorldMatrix.ApplyTrsWithFancyBoneEffects(bone,
-          localTranslation,
-          localRotation,
-          localScale,
-          isFirstPass);
-      }
+        boneToWorldMatrix.CopyFrom(parentBoneToWorldMatrix);
 
-      if (isFirstPass) {
+        var localTransform = bone.LocalTransform;
+        var localTranslation = localTransform.Translation;
+        var localRotation = localTransform.Rotation;
+        var localScale = localTransform.Scale;
+
+        if (bone is {
+                IgnoreParentScale: false,
+                FaceTowardsCameraType: FaceTowardsCameraType.NONE
+            }) {
+          var localMatrix = SystemMatrix4x4Util.FromTrs(localTranslation,
+            localRotation,
+            localScale);
+          boneToWorldMatrix.MultiplyInPlace(localMatrix);
+        } else {
+          boneToWorldMatrix.ApplyTrsWithFancyBoneEffects(bone,
+            localTranslation,
+            localRotation,
+            localScale,
+            true);
+        }
+
         this.bonesToInverseWorldMatrices_[bone]
             = boneToWorldMatrix.CloneAndInvert();
       }
