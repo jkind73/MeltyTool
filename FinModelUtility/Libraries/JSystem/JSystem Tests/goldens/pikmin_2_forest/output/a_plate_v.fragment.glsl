@@ -135,7 +135,7 @@ void main() {
 
   vec4 individualLightDiffuseColors[8];
   vec4 individualLightSpecularColors[8];
-  
+
   for (int i = 0; i < 8; ++i) {
     vec4 diffuseLightColor = vec4(0);
     vec4 specularLightColor = vec4(0);
@@ -145,7 +145,7 @@ void main() {
     individualLightDiffuseColors[i] = diffuseLightColor;
     individualLightSpecularColors[i] = specularLightColor;
   }
-  
+
   vec3 colorComponent = clamp(vertexColor0.rgb*clamp((individualLightDiffuseColors[0].rgb + color_GxAmbientColor0), 0.0, 1.0)*clamp((texture(texture2, uv1).rgb + texture(texture1.sampler, texture1.transform2d * vec3((sphericalReflectionUv).x, (sphericalReflectionUv).y, 1)).rgb*texture(texture0, uv0).rgb*vertexColor0.rgb*clamp((individualLightDiffuseColors[0].rgb + color_GxAmbientColor0), 0.0, 1.0)*vec3(0.5)*vec3(2.0)), 0.0, 1.0)*vec3(2.0), 0.0, 1.0);
 
   float alphaComponent = vertexColor0.a;
