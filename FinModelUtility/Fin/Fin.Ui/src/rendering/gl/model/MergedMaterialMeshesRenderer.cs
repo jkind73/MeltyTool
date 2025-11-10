@@ -99,6 +99,9 @@ public partial class ModelRenderer {
 
     public IReadOnlySet<IReadOnlyMesh>? HiddenMeshes { get; set; }
 
+    public IReadOnlyList<MergedMaterialMeshRenderer> MeshRenderers
+      => this.materialMeshRenderers_;
+
     public void UpdateBuffer() => this.dynamicBufferManager_?.UpdateBuffer();
 
     public void Render() {

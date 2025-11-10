@@ -85,12 +85,15 @@ public partial class ModelRenderer {
       }
     }
 
+    public IReadOnlyList<PrimitivesWithCommonMaterialRenderer>?
+        MaterialRenderers => this.materialMeshRenderers_;
+
     public void Render(IReadOnlyMesh? selectedMesh,
                        IReadOnlySet<IReadOnlyMesh>? hiddenMeshes) {
       if (hiddenMeshes?.Contains(mesh) ?? false) {
         return;
       }
-      
+
       this.GenerateModelIfNull();
 
       var isSelected = selectedMesh == mesh;

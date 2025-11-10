@@ -10,6 +10,7 @@ public partial class ModelRenderer {
     private readonly IGlBufferRenderer bufferRenderer_;
     private bool isSelected_;
 
+    public IReadOnlyMesh Mesh { get; }
     public IReadOnlyMaterial? Material { get; }
     public IGlMaterialShader MaterialShader { get; }
 
@@ -18,8 +19,10 @@ public partial class ModelRenderer {
         IGlBufferManager bufferManager,
         IReadOnlyModel model,
         IModelRequirements modelRequirements,
+        IReadOnlyMesh mesh,
         IReadOnlyMaterial? material,
         in MergedPrimitive mergedPrimitive) {
+      this.Mesh = mesh;
       this.Material = material;
 
       this.MaterialShader = GlMaterialShader.FromMaterial(model,
