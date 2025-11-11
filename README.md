@@ -103,6 +103,7 @@ If you'd like to vote on new games or features that should be supported, please 
 
 - /a (Animated group models) (GCN)
   - Paper Mario: The Thousand Year Door (`paper_mario_the_thousand_year_door.[ciso/gcm/iso/nkit.iso]`)
+  - Super Paper Mario (`super_paper_mario.[ciso/iso]`)
 - .ase.mesh (PC)
   - [Rolling Madness 3D](http://www.lucaelia.com/games.php)
 - J3dGraph (.bdl/.bmd) (GCN)
@@ -130,7 +131,7 @@ If you'd like to vote on new games or features that should be supported, please 
   - Pikmin (`pikmin_1.[ciso/gcm/iso/nkit.iso]`)
 - .modl/.out (GCN/WII)
   - Battalion Wars (`battalion_wars_1.[ciso/gcm/iso/nkit.iso]`)
-  - Battalion Wars 2 (`battalion_wars_2.iso`)
+  - Battalion Wars 2 (`battalion_wars_2.[ciso/iso]`)
 - (Picross puzzles)
   - Mario's Picross (`marios_picross_1.gb`)
   - Picross 2 (AKA Mario's Picross 2) (`marios_picross_2.gb`)
