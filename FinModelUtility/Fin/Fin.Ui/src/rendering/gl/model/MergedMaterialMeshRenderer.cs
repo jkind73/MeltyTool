@@ -65,6 +65,7 @@ public partial class ModelRenderer {
                                       bufferManager,
                                       model,
                                       modelRequirements,
+                                      mesh,
                                       material,
                                       mergedPrimitives));
       }

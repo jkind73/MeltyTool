@@ -43,8 +43,9 @@ public class LookAtMouseTickComponent(
 
     var bodyNode = self.ChildNodes[0];
 
-    var bodyYRadiansForNeck = bodyNode.Rotation.YRadians + MathF.PI / 2;
-    var bodyYRadiansForTorso = bodyNode.Rotation.YRadians;
+    var bodyRotation = bodyNode.Transform.EulerRadians.Value;
+    var bodyYRadiansForNeck = bodyRotation.Y + MathF.PI / 2;
+    var bodyYRadiansForTorso = bodyRotation.Y;
 
     Quaternion newNeckRotation;
     Quaternion newTorsoRotation;
