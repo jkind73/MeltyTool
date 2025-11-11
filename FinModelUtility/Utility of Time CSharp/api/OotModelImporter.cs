@@ -16,6 +16,7 @@ using fin.data.queues;
 using fin.model;
 using fin.model.io.importers;
 using fin.util.enumerables;
+using fin.util.hex;
 
 using UoT.hacks;
 using UoT.memory;
@@ -142,21 +143,9 @@ namespace UoT.api {
             gameplayKeep,
             ootLimbs.Count);
         } else {
-          var animationFiles
-              = zSegments
-                .Objects
-                .Where(s => s.FileName.EndsWith("_anime") ||
-                            s.FileName.EndsWith("_keep") ||
-                            s.FileName.EndsWith("_animetion") ||
-                            s.FileName.EndsWith("_anime1") ||
-                            s.FileName.EndsWith("_anime2") ||
-                            s.FileName.EndsWith("_anime3"))
-                .Concat(zFile.Yield())
-                .ToArray();
-
           ootAnimations = animationReader.GetCommonAnimations(
               n64Memory,
-              animationFiles,
+              AnimationOffsets.GetFor(zFile, zSegments),
               ootLimbs.Count);
         }
 
@@ -166,6 +155,7 @@ namespace UoT.api {
 
           foreach (var ootAnimation in ootAnimations) {
             var finAnimation = finModel.AnimationManager.AddAnimation();
+            finAnimation.Name = ootAnimation.Offset.ToHex();
             finAnimation.FrameRate = 20;
             var frameCount = finAnimation.FrameCount = ootAnimation.FrameCount;
 

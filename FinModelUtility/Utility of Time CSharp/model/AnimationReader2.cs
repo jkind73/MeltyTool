@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using CommunityToolkit.HighPerformance;
 
@@ -22,17 +23,25 @@ namespace UoT.model {
     // addresses somewhere in the file?
     public IList<IAnimation>? GetCommonAnimations(
         IN64Memory n64Memory,
-        IReadOnlyList<IZFile> animationFiles,
+        (IEnumerable<IZFile>, int[]?) animationFilesAndExpectedOffsets,
         int limbCount) {
       uint trackCount = (uint) (limbCount * 3);
       var animations = new List<IAnimation>();
 
+      var existingSegment6 = n64Memory.GetSegment(6);
+
+      var (animationFiles, expectedOffsets) = animationFilesAndExpectedOffsets;
       foreach (var animationFile in animationFiles) {
+        n64Memory.SetSegment(6, animationFile.Segment);
         using var entryEr = n64Memory.OpenSegment(animationFile.Segment);
 
-        // Guesstimating the index by looking for an spot where the header's angle
-        // address and track address have the same bank as the param at the top.
-        for (var i = 0; i < entryEr.Length - 16; ++i) {
+        var offsets = expectedOffsets ??
+                      Enumerable.Range(0, (int) (entryEr.Length - 16));
+
+        // Guesstimating the index by looking for a spot where the header's
+        // angle address and track address have the same bank as the param at
+        // the top.
+        foreach (var i in offsets) {
           entryEr.Position = i;
 
           var frameCount = entryEr.ReadUInt16();
@@ -42,25 +51,16 @@ namespace UoT.model {
           var limit = entryEr.ReadUInt16();
           var pad1 = entryEr.ReadUInt16();
 
-
           IoUtils.SplitSegmentedAddress(rotationValuesAddress, out var rotationValueSegment, out var rotationValueOffset);
           IoUtils.SplitSegmentedAddress(rotationIndicesAddress, out var rotationIndicesSegment, out var rotationIndicesOffset);
 
           if (pad0 != 0 || pad1 != 0) {
             continue;
           }
-
-          if (rotationValueSegment == 6 && rotationIndicesSegment == 6) {
-            ;
-          }
           
           // Verifies the frame count is positive.
           if (frameCount == 0) {
             continue;
-          }
-
-          if (frameCount < 100) {
-           ;
           }
 
           if (!n64Memory.IsValidSegmentedAddress(rotationValuesAddress)) {
@@ -107,6 +107,7 @@ namespace UoT.model {
           }
 
           var animation = new NormalAnimation {
+              Offset = (uint) i,
               FrameCount = frameCount,
               TrackOffset = (uint) originalRotationIndicesOffset,
               AngleCount = (uint) angleCount
@@ -152,6 +153,8 @@ namespace UoT.model {
           animations.Add(animation);
         }
       }
+
+      n64Memory.SetSegment(6, existingSegment6);
 
       return animations.Count > 0 ? animations : null;
     }
@@ -264,7 +267,9 @@ namespace UoT.model {
         }
 
         var animation =
-            new LinkAnimetion(frameCount, tracks, positions, facialStates);
+            new LinkAnimetion(frameCount, tracks, positions, facialStates) {
+                Offset = i,
+            };
         animations.Add(animation);
       }
 

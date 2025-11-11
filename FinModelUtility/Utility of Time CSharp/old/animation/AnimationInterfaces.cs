@@ -2,6 +2,8 @@
 
 namespace UoT {
   public interface IAnimation {
+    uint Offset { get; }
+
     ushort FrameCount { get; }
 
     int PositionCount { get; }

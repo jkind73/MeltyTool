@@ -12,6 +12,8 @@ namespace UoT {
       IList<Vec3s> positions,
       IList<FacialState> facialStates)
       : IAnimation {
+    public required uint Offset { get; init; }
+
     public ushort FrameCount { get; set; } = frameCount;
 
     public int PositionCount => positions.Count;

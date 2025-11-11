@@ -11,6 +11,8 @@ namespace UoT {
     public uint TrackOffset;
     public uint AngleCount;
 
+    public required uint Offset { get; init; }
+
     public ushort FrameCount { get; set; }
 
     public int PositionCount => this.Positions.Count;
