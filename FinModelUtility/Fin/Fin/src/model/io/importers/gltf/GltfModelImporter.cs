@@ -23,6 +23,7 @@ using SharpGLTF.Validation;
 using GltfPrimitiveType = SharpGLTF.Schema2.PrimitiveType;
 using Material = SharpGLTF.Schema2.Material;
 using Node = SharpGLTF.Schema2.Node;
+using TextureTransform = SharpGLTF.Schema2.TextureTransform;
 using TextureWrapMode = SharpGLTF.Schema2.TextureWrapMode;
 
 namespace fin.model.io.importers.gltf;
@@ -30,7 +31,7 @@ namespace fin.model.io.importers.gltf;
 public record GltfModelFileBundle(IReadOnlyTreeFile GltfFile)
     : IModelFileBundle {
   public IReadOnlyTreeFile MainFile => this.GltfFile;
-  public TextureSampler? DefaultSampler { get; init; }
+  public Action<IModel>? AdditionalProcessing { get; init; }
 }
 
 public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
@@ -56,92 +57,102 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
       return FinImage.FromStream(
           new MemoryStream(gltfImage.Content.ToArray()));
     });
-    var lazyFinTextures = new LazyDictionary<Texture?, ITexture?>(gltfTexture
-          => {
-        if (gltfTexture == null) {
-          return null;
-        }
+    var lazyFinTextures
+        = new LazyDictionary<(Texture?, TextureTransform?), ITexture?>(tuple
+            => {
+          var (gltfTexture, gltfTextureTransform) = tuple;
+          if (gltfTexture == null) {
+            return null;
+          }
 
-        var finImage = lazyFinImages[gltfTexture.PrimaryImage.Content];
+          var finImage = lazyFinImages[gltfTexture.PrimaryImage.Content];
 
-        var finTexture = finModel.MaterialManager.CreateTexture(finImage);
-        finTexture.Name = gltfTexture.Name;
+          var finTexture = finModel.MaterialManager.CreateTexture(finImage);
+          finTexture.Name = gltfTexture.Name;
 
-        var gltfSampler
-            = gltfTexture.Sampler ?? modelFileBundle.DefaultSampler;
-        finTexture.WrapModeU = ConvertWrapMode_(gltfSampler.WrapS);
-        finTexture.WrapModeV = ConvertWrapMode_(gltfSampler.WrapT);
+          var gltfSampler = gltfTexture.Sampler;
+          if (gltfSampler != null) {
+            finTexture.WrapModeU = ConvertWrapMode_(gltfSampler.WrapS);
+            finTexture.WrapModeV = ConvertWrapMode_(gltfSampler.WrapT);
 
-        finTexture.MinFilter = gltfSampler.MinFilter switch {
-            TextureMipMapFilter.NEAREST => TextureMinFilter.NEAR,
-            TextureMipMapFilter.LINEAR  => TextureMinFilter.LINEAR,
-            TextureMipMapFilter.NEAREST_MIPMAP_NEAREST => TextureMinFilter
-                .NEAR_MIPMAP_NEAR,
-            TextureMipMapFilter.LINEAR_MIPMAP_NEAREST => TextureMinFilter
-                .LINEAR_MIPMAP_NEAR,
-            TextureMipMapFilter.NEAREST_MIPMAP_LINEAR => TextureMinFilter
-                .NEAR_MIPMAP_LINEAR,
-            TextureMipMapFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
-                .LINEAR_MIPMAP_LINEAR,
-            TextureMipMapFilter.DEFAULT => TextureMinFilter
-                .LINEAR_MIPMAP_LINEAR,
-            _ => throw new ArgumentOutOfRangeException()
-        };
-        finTexture.MagFilter = gltfSampler.MagFilter switch {
-            TextureInterpolationFilter.NEAREST => TextureMagFilter.NEAR,
-            TextureInterpolationFilter.LINEAR => TextureMagFilter.LINEAR,
-            TextureInterpolationFilter.DEFAULT => TextureMagFilter.LINEAR,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+            finTexture.MinFilter = gltfSampler.MinFilter switch {
+                TextureMipMapFilter.NEAREST => TextureMinFilter.NEAR,
+                TextureMipMapFilter.LINEAR  => TextureMinFilter.LINEAR,
+                TextureMipMapFilter.NEAREST_MIPMAP_NEAREST => TextureMinFilter
+                    .NEAR_MIPMAP_NEAR,
+                TextureMipMapFilter.LINEAR_MIPMAP_NEAREST => TextureMinFilter
+                    .LINEAR_MIPMAP_NEAR,
+                TextureMipMapFilter.NEAREST_MIPMAP_LINEAR => TextureMinFilter
+                    .NEAR_MIPMAP_LINEAR,
+                TextureMipMapFilter.LINEAR_MIPMAP_LINEAR => TextureMinFilter
+                    .LINEAR_MIPMAP_LINEAR,
+                TextureMipMapFilter.DEFAULT => TextureMinFilter
+                    .LINEAR_MIPMAP_LINEAR,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+            finTexture.MagFilter = gltfSampler.MagFilter switch {
+                TextureInterpolationFilter.NEAREST => TextureMagFilter.NEAR,
+                TextureInterpolationFilter.LINEAR => TextureMagFilter.LINEAR,
+                TextureInterpolationFilter.DEFAULT => TextureMagFilter.LINEAR,
+                _ => throw new ArgumentOutOfRangeException()
+            };
+          }
 
-        return finTexture;
-      });
+          if (gltfTextureTransform != null) {
+            var finTextureTransform = finTexture.TextureTransform;
+            finTextureTransform.SetTranslation2d(gltfTextureTransform.Offset);
+            finTextureTransform.SetRotationRadians2d(gltfTextureTransform.Rotation);
+            finTextureTransform.SetScale2d(gltfTextureTransform.Scale);
+          }
+
+          return finTexture;
+        });
     var lazyFinMaterials = new LazyDictionary<Material, IMaterial>(gltfMaterial
-          => {
-        // TODO: Handle all properties within gltfMaterial
+        => {
+      // TODO: Handle all properties within gltfMaterial
 
-        if (gltfMaterial is null) {
-          return finModel.MaterialManager.AddNullMaterial();
+      if (gltfMaterial is null) {
+        return finModel.MaterialManager.AddNullMaterial();
+      }
+
+      var finMaterial = finModel.MaterialManager.AddStandardMaterial();
+      finMaterial.Name = gltfMaterial.Name;
+
+      finMaterial.DiffuseTexture
+          = lazyFinTextures[(gltfMaterial.GetDiffuseTexture(), gltfMaterial.GetDiffuseTextureTransform())];
+      finMaterial.NormalTexture
+          = lazyFinTextures[(gltfMaterial.FindChannel("Normal")?.Texture, null)];
+      finMaterial.EmissiveTexture
+          = lazyFinTextures[(gltfMaterial.FindChannel("Emissive")?.Texture, null)];
+      finMaterial.AmbientOcclusionTexture
+          = lazyFinTextures[(gltfMaterial.FindChannel("Occlusion")?.Texture, null)];
+
+      finMaterial.IgnoreLights = gltfMaterial.Unlit;
+      finMaterial.CullingMode = gltfMaterial.DoubleSided
+          ? CullingMode.SHOW_BOTH
+          : CullingMode.SHOW_FRONT_ONLY;
+
+      var metallicRoughness = gltfMaterial.FindChannel("MetallicRoughness");
+
+      var specularGlossiness = gltfMaterial.FindChannel("SpecularGlossiness");
+      if (specularGlossiness != null) {
+        if (specularGlossiness
+            ?.Parameters.FirstOrDefault(p => p.Name ==
+                                             "SpecularFactor")
+            ?.Value is Vector3 specularColor) {
+          // TODO: Pass this color into the material
         }
 
-        var finMaterial = finModel.MaterialManager.AddStandardMaterial();
-        finMaterial.Name = gltfMaterial.Name;
-
-        finMaterial.DiffuseTexture
-            = lazyFinTextures[gltfMaterial.GetDiffuseTexture()];
-        finMaterial.NormalTexture
-            = lazyFinTextures[gltfMaterial.FindChannel("Normal")?.Texture];
-        finMaterial.EmissiveTexture
-            = lazyFinTextures[gltfMaterial.FindChannel("Emissive")?.Texture];
-        finMaterial.AmbientOcclusionTexture
-            = lazyFinTextures[gltfMaterial.FindChannel("Occlusion")?.Texture];
-
-        finMaterial.IgnoreLights = gltfMaterial.Unlit;
-        finMaterial.CullingMode = gltfMaterial.DoubleSided
-            ? CullingMode.SHOW_BOTH
-            : CullingMode.SHOW_FRONT_ONLY;
-
-        var metallicRoughness = gltfMaterial.FindChannel("MetallicRoughness");
-
-        var specularGlossiness = gltfMaterial.FindChannel("SpecularGlossiness");
-        if (specularGlossiness != null) {
-          if (specularGlossiness
-              ?.Parameters.FirstOrDefault(p => p.Name ==
-                                               "SpecularFactor")
-              ?.Value is Vector3 specularColor) {
-            // TODO: Pass this color into the material
-          }
-
-          if (specularGlossiness
-              ?.Parameters.FirstOrDefault(p => p.Name ==
-                                               "GlossinessFactor")
-              ?.Value is float glossiness) {
-            finMaterial.Shininess = 100 * glossiness;
-          }
+        if (specularGlossiness
+            ?.Parameters.FirstOrDefault(p => p.Name ==
+                                             "GlossinessFactor")
+            ?.Value is float glossiness) {
+          finMaterial.Shininess = 100 * glossiness;
         }
-        
-        return finMaterial;
-      });
+      }
+
+      return finMaterial;
+    });
 
     // Adds rig
     var finSkeleton = finModel.Skeleton;
@@ -338,6 +349,8 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
                                         : VertexOrder.COUNTER_CLOCKWISE);
       }
     }
+
+    modelFileBundle.AdditionalProcessing?.Invoke(finModel);
 
     return finModel;
   }

@@ -2,6 +2,7 @@
 
 using fin.io;
 using fin.io.bundles;
+using fin.model;
 using fin.model.io.importers.gltf;
 using fin.util.asserts;
 using fin.util.progress;
@@ -30,17 +31,31 @@ public sealed class Earthbound3dFileBundleGatherer
             typeof(TextureWrapMode)
         ]);
 
-    var defaultSampler = constructor.Invoke([
-        TextureMipMapFilter.NEAREST,
-        TextureInterpolationFilter.NEAREST,
-        TextureWrapMode.REPEAT,
-        TextureWrapMode.REPEAT
-    ]).AssertAsA<TextureSampler>();
-
     foreach (var glbFile in root.FilesWithExtensionRecursive(".glb")) {
       organizer.Add(new GltfModelFileBundle(glbFile) {
-          DefaultSampler = defaultSampler,
+          AdditionalProcessing = ProcessModel_,
       }.Annotate(glbFile));
+    }
+  }
+
+  private static void ProcessModel_(IModel model) {
+    foreach (var texture in model.MaterialManager.Textures) {
+      texture.MinFilter = TextureMinFilter.NEAR;
+      texture.MagFilter = TextureMagFilter.NEAR;
+      texture.WrapModeU = texture.WrapModeV = WrapMode.REPEAT;
+    }
+
+    foreach (var waterShoreMaterial in
+             model.MaterialManager.All.Where(m => m.Name is "water_shore")) {
+      waterShoreMaterial.DepthCompareType = DepthCompareType.LEqual;
+    }
+
+    foreach (var mesh in model.Skin.Meshes) {
+      foreach (var primitive in mesh.Primitives) {
+        if (primitive.Material?.Name is "water_shore") {
+          primitive.SetInversePriority(3);
+        }
+      }
     }
   }
 }
