@@ -7,16 +7,30 @@ using UoT.util;
 
 namespace UoT.model;
 
-public sealed class AnimationOffsets {
-  public (IEnumerable<IZFile> animationFiles, int[]? offsets) GetFor(
+public static class AnimationOffsets {
+  /// <summary>
+  ///   Derived from the logic in the decomp: https://github.com/zeldaret/oot
+  /// </summary>
+  public static (IEnumerable<IZFile> animationFiles, int[]? offsets) GetFor(
       IZFile zFile,
       ZSegments zSegments)
     => zFile.FileName switch {
         "object_ane" => (
-            zSegments
-                .Objects
-                .ByName("object_os_anime"),
-            [0x718, 0x7d0, 0xa630, 0x9f94]),
+            zSegments.Objects.ByName("object_os_anime"),
+            [0x718, 0x7d0, 0xa630, 0x9f94]
+        ),
+        "object_aob" => (
+            zSegments.Objects.ByName("object_os_anime"),
+            [0x92c]
+        ),
+        "object_bba" => (
+            zSegments.Objects.ByName("object_os_anime"),
+            [0x1e7c]
+        ),
+        "object_bji" => (
+            zSegments.Objects.ByName("object_os_anime"),
+            [0x1f18]
+        ),
         _ => (
             zFile.Yield(),
             /*zSegments
