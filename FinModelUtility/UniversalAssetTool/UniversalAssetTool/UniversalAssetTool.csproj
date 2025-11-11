@@ -133,9 +133,6 @@
     <ProjectReference Include="..\..\Formats\Glo\Glo\Glo.csproj" />
     <ProjectReference Include="..\..\Formats\Ssm\Ssm\Ssm.csproj" />
     <ProjectReference Include="..\..\Formats\Vrml\Vrml\Vrml.csproj" />
-    <ProjectReference Include="..\..\Games\MarioArtist\MarioArtist\MarioArtist.csproj" />
-    <ProjectReference Include="..\..\Games\MariosPicross\MariosPicross\MariosPicross.csproj" />
-    <ProjectReference Include="..\..\Games\VictoryHeatRally\VictoryHeatRally\VictoryHeatRally.csproj" />
 
     <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios.csproj" />
     <ProjectReference Include="..\..\Libraries\F3dzex2\F3dzex2\F3dzex2.csproj" />
@@ -149,8 +146,11 @@
 
     <ProjectReference Include="..\..\Games\BattalionWars\BattalionWars\BattalionWars.csproj" />
     <ProjectReference Include="..\..\Games\Celeste64\Celeste64\Celeste64.csproj" />
+    <ProjectReference Include="..\..\Games\GauntletDarkLegacy\GauntletDarkLegacy\GauntletDarkLegacy.csproj" />
     <ProjectReference Include="..\..\Games\HaloWars\HaloWars\HaloWars.csproj" />
-    <ProjectReference Include="..\..\Games\MarioKartDoubleDash\MarioKartDoubleDash\MarioKartDoubleDash.csproj" />
+    <ProjectReference Include="..\..\Games\MarioArtist\MarioArtist\MarioArtist.csproj" />
+	<ProjectReference Include="..\..\Games\MarioKartDoubleDash\MarioKartDoubleDash\MarioKartDoubleDash.csproj" />
+	<ProjectReference Include="..\..\Games\MariosPicross\MariosPicross\MariosPicross.csproj" />
     <ProjectReference Include="..\..\Games\PaperMarioDirectorsCut\PaperMarioDirectorsCut\PaperMarioDirectorsCut.csproj" />
     <ProjectReference Include="..\..\Games\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor.csproj" />
     <ProjectReference Include="..\..\Games\Pikmin1\Pikmin1\Pikmin1.csproj" />
@@ -159,6 +159,7 @@
     <ProjectReference Include="..\..\Games\SonicAdventure\SonicAdventure\SonicAdventure.csproj" />
     <ProjectReference Include="..\..\Games\SuperMario64Ds\SuperMario64Ds\SuperMario64Ds.csproj" />
     <ProjectReference Include="..\..\Games\SuperMario64\SuperMario64\SuperMario64.csproj" />
+    <ProjectReference Include="..\..\Games\VictoryHeatRally\VictoryHeatRally\VictoryHeatRally.csproj" />
     <ProjectReference Include="..\..\Utility of Time CSharp\Utility of Time CSharp.csproj" />
   </ItemGroup>
 </Project>

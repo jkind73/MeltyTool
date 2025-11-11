@@ -39,6 +39,8 @@ using xmod.api;
 using fin.model.io.importers.assimp;
 using fin.model.io.importers.gltf;
 
+using gdl.api;
+
 using marioartist.api;
 
 using rollingMadness.api;
@@ -51,6 +53,8 @@ namespace uni.api;
 public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
   public IModel Import(IModelFileBundle modelFileBundle)
     => modelFileBundle switch {
+        AnimModelFileBundle animModelFileBundle
+            => new AnimModelImporter().Import(animModelFileBundle),
         AseMeshModelFileBundle aseMeshModelFileBundle
             => new AseMeshModelImporter().Import(aseMeshModelFileBundle),
         AssimpModelFileBundle assimpModelFileBundle
