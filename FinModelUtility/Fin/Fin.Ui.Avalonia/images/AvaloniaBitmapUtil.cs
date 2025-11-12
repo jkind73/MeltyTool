@@ -53,7 +53,7 @@ public static class AvaloniaBitmapUtil {
 
         fixed (Rgba32* ptr = data) {
           bitmap = new Bitmap(PixelFormat.Rgba8888,
-                              AlphaFormat.Premul,
+                              AlphaFormat.Unpremul,
                               new IntPtr(ptr),
                               pixelSize,
                               dpi,
