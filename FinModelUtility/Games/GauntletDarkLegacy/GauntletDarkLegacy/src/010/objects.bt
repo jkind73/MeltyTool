@@ -1,0 +1,71 @@
+//------------------------------------------------
+//--- 010 Editor v16.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+// Shamelessly stolen from:
+// https://github.com/haekb/io_scene_gdl/blob/master/research/research.bt
+
+local uint COLOR_IMAGE = 0x0000ff;
+local uint COLOR_COUNT = 0x00ff00;
+local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_ORIENTATION = 0x888800;
+local uint COLOR_HEADER = 0xffffff;
+local uint COLOR_INDEX = 0x00ffff;
+
+struct Objects {
+    char dirName[32];
+    char modelName[32];
+    uint pVersion;
+    uint romobj_cnt;
+    uint textureCount;
+    uint objdef_cnt;
+    uint texdef_cnt;
+    uint romobjs;
+    uint texturePointer;
+    uint objdefs;
+    uint texdefs;
+    uint subobjs;
+    uint geom;
+    uint obj_end;
+    uint tex_start;
+    uint tex_end;
+    uint texbits;
+    ushort lmtex_first;
+    ushort lmtex_num;
+    uint texinfo;
+    int Unused;
+} objects <bgcolor=COLOR_HEADER>;
+
+FSeek(objects.texturePointer);
+struct Texture {
+    uchar Format;
+    uchar LodK;
+    uchar MipMaps;
+    uchar Width64;
+    ushort WidthLog2;
+    ushort HeightLog2;
+    ushort Flags;
+    ushort TexPalIndex;
+    uint TexBase;
+    ushort TexPalCnt;
+    ushort TexShiftIdx;
+    ushort NumFrames;
+    ushort Width;
+    ushort Height;
+    ushort Size;
+    int TexDef;
+    uint TEX0[2];
+    uint64 MIPTBP1;
+    uint64 MIPTBP2;
+    int vram_addr;
+    int clut_addr;
+} textures[objects.textureCount] <bgcolor=COLOR_HEADER, optimize=false>;

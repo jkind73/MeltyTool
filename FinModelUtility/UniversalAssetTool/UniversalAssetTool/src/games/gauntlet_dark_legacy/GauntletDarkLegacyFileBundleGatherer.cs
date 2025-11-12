@@ -23,10 +23,15 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
         continue;
       }
 
+      if (!directory.TryToGetExistingFile("textures.ngc", out var texturesFile)) {
+        continue;
+      }
+
       organizer.Add(
           new GauntletDarkLegacyModelFileBundle {
               ObjectsFile = objectsFile,
-              AnimFile = animFile
+              AnimFile = animFile,
+              TexturesFile = texturesFile,
           }.Annotate(objectsFile));
     }
   }

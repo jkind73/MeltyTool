@@ -18,6 +18,7 @@ public enum PixelFormat {
 
   RGBA5551,
   ARGB1555,
+  RGB555,
   RGBA4444,
   RGBA5553,
   RGBA8888,
