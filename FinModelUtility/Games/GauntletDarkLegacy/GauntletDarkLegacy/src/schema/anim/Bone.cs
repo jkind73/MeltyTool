@@ -3,7 +3,7 @@
 using schema.binary;
 using schema.binary.attributes;
 
-namespace gdl.schema;
+namespace gdl.schema.anim;
 
 public enum BoneType : ushort {
   NULL = 0,

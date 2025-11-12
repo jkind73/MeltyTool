@@ -1,11 +1,9 @@
 ﻿using schema.binary;
 using schema.binary.attributes;
 
-namespace gdl.schema;
+namespace gdl.schema.anim;
 
 /// <summary>
-///   An animated model.
-///
 ///   Shamelessly stolen from:
 ///   https://github.com/haekb/io_scene_gdl/blob/master/src/anim_model.py#L5
 /// </summary>

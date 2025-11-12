@@ -1,7 +1,7 @@
 ﻿using schema.binary;
 using schema.binary.attributes;
 
-namespace gdl.schema;
+namespace gdl.schema.anim;
 
 /// <summary>
 ///   Shamelessly stolen from:
@@ -25,17 +25,25 @@ public sealed partial class Skeleton : IBinaryDeserializable {
 [BinarySchema]
 [LocalPositions]
 public sealed partial class SkeletonData : IBinaryDeserializable {
-  public uint AnimationHeaderPointer { get; set; }
-  public uint AnimationDataPointer { get; set; }
+  private uint animationHeaderPointer_;
+  private uint animationDataPointer_;
   public uint UnkPointer { get; set; }
-  public uint BonePointer { get; set; }
-  public uint BoneCount { get; set; }
-  public uint AnimationCount { get; set; }
+  private uint bonePointer_;
+  private uint boneCount_;
+  private uint animationCount_;
 
   [StringLengthSource(32)]
   public string Name { get; set; }
 
-  [RAtPosition(nameof(BonePointer))]
-  [RSequenceLengthSource(nameof(BoneCount))]
+  [RAtPosition(nameof(bonePointer_))]
+  [RSequenceLengthSource(nameof(boneCount_))]
   public Bone[] Bones { get; set; }
+
+  [RAtPosition(nameof(animationHeaderPointer_))]
+  [RSequenceLengthSource(nameof(animationCount_))]
+  public AnimationHeader[] AnimationHeaders { get; set; }
+
+  [RAtPosition(nameof(animationDataPointer_))]
+  [RSequenceLengthSource(nameof(animationCount_))]
+  public AnimationData[] AnimationDatas { get; set; }
 }

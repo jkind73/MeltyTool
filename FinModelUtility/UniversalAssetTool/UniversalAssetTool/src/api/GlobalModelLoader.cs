@@ -53,8 +53,6 @@ namespace uni.api;
 public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
   public IModel Import(IModelFileBundle modelFileBundle)
     => modelFileBundle switch {
-        AnimModelFileBundle animModelFileBundle
-            => new AnimModelImporter().Import(animModelFileBundle),
         AseMeshModelFileBundle aseMeshModelFileBundle
             => new AseMeshModelImporter().Import(aseMeshModelFileBundle),
         AssimpModelFileBundle assimpModelFileBundle
@@ -73,6 +71,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new DatModelImporter().Import(datModelFileBundle),
         D3dModelFileBundle modModelFileBundle
             => new D3dModelImporter().Import(modModelFileBundle),
+        GauntletDarkLegacyModelFileBundle animModelFileBundle
+            => new GauntletDarkLegacyModelImporter().Import(animModelFileBundle),
         GeoModelFileBundle geoModelFileBundle
             => new GeoModelImporter().Import(geoModelFileBundle),
         GloModelFileBundle gloModelFileBundle
