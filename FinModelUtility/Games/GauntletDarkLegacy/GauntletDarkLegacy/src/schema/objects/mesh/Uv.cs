@@ -15,6 +15,12 @@ public sealed class Uv(SignalMode mode) : IBinaryDeserializable {
   public void Read(IBinaryReader br) {
     this.LightmapUv = null;
     switch (mode) {
+      case SignalMode.CHAR_2: {
+        var u = br.ReadSByte() / 128f;
+        var v = br.ReadSByte() / 128f;
+        this.Value = new Vector2(u, v);
+        break;
+      }
       case SignalMode.SHORT_2: {
         var u = br.ReadInt16() / 128f;
         var v = br.ReadInt16() / 128f;
@@ -31,7 +37,6 @@ public sealed class Uv(SignalMode mode) : IBinaryDeserializable {
         this.LightmapUv = new Vector2(u2, v2);
         break;
       }
-      case SignalMode.CHAR_2:
       default: {
         var u = br.ReadSByte() / 128f;
         var v = br.ReadSByte() / 128f;

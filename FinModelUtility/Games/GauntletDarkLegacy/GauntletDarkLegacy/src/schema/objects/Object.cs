@@ -29,8 +29,24 @@ public sealed partial class Object : IBinaryDeserializable {
   [SequenceLengthSource(4)]
   public uint[] Unk0 { get; set; }
 
-  [RAtPosition(nameof(DataPointer))]
-  public Mesh Mesh { get; } = new();
+  [Skip]
+  public Mesh? Mesh { get; set; }
+
+  [ReadLogic]
+  private void ReadMesh_(IBinaryReader br) {
+    if (this.DataPointer == 0) {
+      this.Mesh = null;
+      return;
+    }
+
+    br.SubreadAt(this.DataPointer,
+                 () => {
+                   this.Mesh ??= new Mesh {
+                       Parent = this,
+                   };
+                   this.Mesh.Read(br);
+                 });
+  }
 
   [RAtPosition(nameof(SubObjectPointer))]
   [RSequenceLengthSource(nameof(SubObjectCount))]

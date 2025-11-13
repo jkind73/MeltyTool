@@ -22,6 +22,7 @@ public enum SignalMode : byte {
   SHORT_2 = 0x65,
 
   INT_3 = 0x68,
+  INT_4 = 0x6f,
 }
 
 [BinarySchema]
@@ -30,4 +31,7 @@ public sealed partial class Signal : IBinaryDeserializable {
   public byte Constant { get; set; }
   public byte DataCount { get; set; }
   public SignalMode Mode { get; set; }
+
+  public string ToString()
+    => $"Signal[{Index}]: {Mode}, {DataCount}, {Constant}";
 }

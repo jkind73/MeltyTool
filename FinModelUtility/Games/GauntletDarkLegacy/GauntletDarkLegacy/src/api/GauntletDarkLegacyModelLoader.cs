@@ -4,6 +4,7 @@ using System.Numerics;
 using fin.animation.keyframes;
 using fin.color;
 using fin.data.dictionaries;
+using fin.data.lazy;
 using fin.data.queues;
 using fin.image;
 using fin.image.formats;
@@ -54,7 +55,7 @@ public sealed class GauntletDarkLegacyModelImporter
         ])
     };
 
-    var finMaterials = new List<IReadOnlyMaterial>();
+    var finTextures = new List<IReadOnlyTexture>();
     {
       using var textureBr
           = fileBundle.TexturesFile.OpenReadAsBinary(Endianness.BigEndian);
@@ -148,15 +149,20 @@ public sealed class GauntletDarkLegacyModelImporter
                                               gdlTexture.Width,
                                               gdlTexture.Height);
 
-        var (finMaterial, _)
-            = finModel.MaterialManager.AddSimpleTextureMaterialFromImage(
-                finImage,
-                $"{finMaterials.Count}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}");
+        var finTexture = finModel.MaterialManager.CreateTexture(finImage);
+        finTexture.Name
+            = $"texture{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
 
-        finMaterials.Add(finMaterial);
+        finTextures.Add(finTexture);
       }
     }
+    var lazyFinMaterials
+        = new LazyDictionary<int, IReadOnlyMaterial>(index => {
+          var finTexture = finTextures[index];
+          return finModel.MaterialManager.AddTextureMaterial(finTexture);
+        });
 
+    var finBones = new List<IReadOnlyBone>();
     foreach (var gdlSkeleton in anim.Skeletons) {
       var gdlBones = gdlSkeleton.Data.Bones;
 
@@ -184,6 +190,7 @@ public sealed class GauntletDarkLegacyModelImporter
         var finBone = finParentBone.AddChild(localMatrix);
         finBone.Name = gdlBone.Name;
 
+        finBones.Add(finBone);
         finBoneByGdlBone[gdlBone] = finBone;
 
         if (gdlBonesByParent.TryGetList(gdlBone, out var childGdlBones)) {
@@ -274,8 +281,18 @@ public sealed class GauntletDarkLegacyModelImporter
       var finMesh = finSkin.AddMesh();
       finMesh.Name = definition.Name;
 
-      for (var m = 0; m < obj.Mesh.Primitives.Count; ++m) {
+      var finBone
+          = finBones.SingleOrDefault(b => finMesh.Name.Contains(b.Name!));
+      var finBoneWeights
+          = finBone != null
+              ? finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE, finBone)
+              : null;
+
+      for (var m = 0; m < (obj.Mesh?.Primitives.Count ?? 0); ++m) {
         var gdlMesh = obj.Mesh.Primitives[m];
+        if (gdlMesh.Positions.Count < 3) {
+          continue;
+        }
 
         var textureIndex = m == 0
             ? obj.SubObject0TextureIndex
@@ -283,15 +300,29 @@ public sealed class GauntletDarkLegacyModelImporter
 
         var finVertices = gdlMesh.Positions
                                  .Select((p, i) => {
-                                   var finVertex = finSkin.AddVertex(p);
-                                   finVertex.SetLocalNormal(gdlMesh.Normals[i]);
-                                   finVertex.SetUv(gdlMesh.Uvs[i].Value);
+                                   var finVertex = finSkin.AddVertex(p / 128f);
+
+                                   /*if (gdlMesh.Normals.Count > 0) {
+                                     finVertex.SetLocalNormal(gdlMesh.Normals[i]);
+                                   }*/
+
+                                   if (gdlMesh.Uvs.Count ==
+                                       gdlMesh.Positions.Count) {
+                                     finVertex.SetUv(gdlMesh.Uvs[i].Value);
+                                   } else {
+                                     finVertex.SetUv(0, 0);
+                                   }
+
+                                   if (finBoneWeights != null) {
+                                     finVertex.SetBoneWeights(finBoneWeights);
+                                   }
+
                                    return finVertex;
                                  })
                                  .ToArray();
 
         var finPrimitive = finMesh.AddTriangleStrip(finVertices);
-        finPrimitive.SetMaterial(finMaterials[textureIndex]);
+        finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
       }
     }
 
