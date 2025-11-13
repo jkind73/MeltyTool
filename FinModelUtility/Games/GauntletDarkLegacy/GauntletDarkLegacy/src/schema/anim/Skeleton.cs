@@ -44,6 +44,5 @@ public sealed partial class SkeletonData : IBinaryDeserializable {
   public AnimationHeader[] AnimationHeaders { get; set; }
 
   [RAtPosition(nameof(animationDataPointer_))]
-  [RSequenceLengthSource(nameof(animationCount_))]
-  public AnimationData[] AnimationDatas { get; set; }
+  public AnimationData AnimationData { get; } = new();
 }

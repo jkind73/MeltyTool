@@ -19,11 +19,13 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
         continue;
       }
 
-      if (!directory.TryToGetExistingFile("anim.ps2", out var animFile)) {
+      if (!directory.TryToGetExistingFile("textures.ngc", out var texturesFile)) {
         continue;
       }
 
-      if (!directory.TryToGetExistingFile("textures.ngc", out var texturesFile)) {
+      if (!directory.TryToGetExistingFile("../anim/anim.ps2",
+                                          out var animFile) &&
+          !directory.TryToGetExistingFile("anim.ps2", out animFile)) {
         continue;
       }
 

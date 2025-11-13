@@ -25,6 +25,14 @@ public sealed partial class AnimationData
   private uint sequenceCount_;
   public uint ObjectCount { get; set; }
 
+  [RAtPositionOrNull(nameof(CompressAngPointer))]
+  [SequenceLengthSource(256)]
+  public float[] CompressAng { get; set; }
+
+  [RAtPositionOrNull(nameof(CompressPosPointer))]
+  [SequenceLengthSource(256)]
+  public float[] CompressPos { get; set; }
+
   [Skip]
   public ListDictionary<Bone, AnimationSequence> SequencesByBone { get; }
     = new();
@@ -33,15 +41,20 @@ public sealed partial class AnimationData
   private void ReadSequences_(IBinaryReader br) {
     this.SequencesByBone.Clear();
     foreach (var bone in this.Parent.Bones) {
-      br.SubreadAt(
-          bone.SequencePointer,
-          () => {
-            for (var i = 0; i < this.sequenceCount_; ++i) {
-              var animationSequence = new AnimationSequence { Parent = this };
-              animationSequence.Read(br);
-              this.SequencesByBone.Add(bone, animationSequence);
-            }
-          });
+      if (bone.Type is BoneType.SKEL_ANIM) {
+        br.SubreadAt(
+            bone.SequencePointer,
+            () => {
+              for (var i = 0; i < this.sequenceCount_; ++i) {
+                var animationSequence = new AnimationSequence {
+                    Parent = this,
+                    Header = this.Parent.AnimationHeaders[i],
+                };
+                animationSequence.Read(br);
+                this.SequencesByBone.Add(bone, animationSequence);
+              }
+            });
+      }
     }
   }
 }

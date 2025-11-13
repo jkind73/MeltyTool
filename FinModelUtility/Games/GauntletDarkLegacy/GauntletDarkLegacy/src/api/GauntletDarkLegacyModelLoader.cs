@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
+using fin.animation.keyframes;
 using fin.color;
 using fin.data.dictionaries;
 using fin.data.queues;
@@ -10,11 +11,13 @@ using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
 using fin.math.matrix.four;
+using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enums;
 using fin.util.hex;
 
 using gdl.schema.anim;
@@ -23,6 +26,8 @@ using gdl.schema.objects;
 using schema.binary;
 
 using SixLabors.ImageSharp.PixelFormats;
+
+using SequenceType = gdl.schema.anim.SequenceType;
 
 namespace gdl.api;
 
@@ -42,7 +47,11 @@ public sealed class GauntletDarkLegacyModelImporter
 
     var finModel = new ModelImpl {
         FileBundle = fileBundle,
-        Files = new HashSet<IReadOnlyGenericFile>([fileBundle.MainFile])
+        Files = new HashSet<IReadOnlyGenericFile>([
+            fileBundle.ObjectsFile,
+            fileBundle.AnimFile,
+            fileBundle.TexturesFile,
+        ])
     };
 
     {
@@ -181,20 +190,75 @@ public sealed class GauntletDarkLegacyModelImporter
         }
       }
 
-      foreach (var (gdlAnimationHeader, gdlAnimationData) in gdlSkeleton.Data
-                   .AnimationHeaders.Zip(gdlSkeleton.Data.AnimationDatas)) {
+      var gdlAnimationData = gdlSkeleton.Data.AnimationData;
+      var gdlAnimationHeaders = gdlSkeleton.Data.AnimationHeaders;
+      for (var i = 0; i < gdlAnimationHeaders.Length; ++i) {
+        var gdlAnimationHeader = gdlAnimationHeaders[i];
+
         var finAnimation = finModel.AnimationManager.AddAnimation();
         finAnimation.Name = gdlAnimationHeader.Name;
         finAnimation.FrameCount = gdlAnimationHeader.FrameCount;
         finAnimation.FrameRate = gdlAnimationHeader.FrameRate;
+        finAnimation.UseLoopingInterpolation = gdlAnimationHeader.Loop;
 
         foreach (var gdlBone in gdlAnimationData.SequencesByBone.Keys) {
-          var gdlSequences = gdlAnimationData.SequencesByBone[gdlBone];
+          var gdlSequence = gdlAnimationData.SequencesByBone[gdlBone][i];
+          if (gdlSequence.Size == 0) {
+            continue;
+          }
 
           var finBoneTracks
               = finAnimation.GetOrCreateBoneTracks(finBoneByGdlBone[gdlBone]);
 
-          // TODO: Add tracks
+          var rotationKeyframes
+              = finBoneTracks.UseSeparateEulerRadiansKeyframes();
+          rotationKeyframes.ConvertRadiansToQuaternionImpl
+              = QuaternionUtil.CreateZxy;
+
+          var positionKeyframes
+              = finBoneTracks.UseSeparateTranslationKeyframes();
+          var scaleKeyframes = finBoneTracks.UseSeparateScaleKeyframes();
+
+          for (var f = 0; f < finAnimation.FrameCount; ++f) {
+            var rotation = gdlSequence.Rotations[f];
+            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_X)) {
+              rotationKeyframes.SetKeyframe(0, f, rotation.X);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_Y)) {
+              rotationKeyframes.SetKeyframe(1, f, rotation.Y);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_Z)) {
+              rotationKeyframes.SetKeyframe(2, f, rotation.Z);
+            }
+
+            var position = gdlSequence.Positions[f];
+            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_X)) {
+              positionKeyframes.SetKeyframe(0, f, position.X);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_Y)) {
+              positionKeyframes.SetKeyframe(1, f, position.Y);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_Z)) {
+              positionKeyframes.SetKeyframe(2, f, position.Z);
+            }
+
+            var scale = gdlSequence.Scales[f];
+            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_X)) {
+              scaleKeyframes.SetKeyframe(0, f, scale.X);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_Y)) {
+              scaleKeyframes.SetKeyframe(1, f, scale.Y);
+            }
+
+            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_Z)) {
+              scaleKeyframes.SetKeyframe(2, f, scale.Z);
+            }
+          }
         }
       }
     }

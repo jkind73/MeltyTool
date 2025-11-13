@@ -27,6 +27,16 @@ public static class QuaternionUtil {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Quaternion CreateZxy(
+      float xRadians,
+      float yRadians,
+      float zRadians) {
+    return Quaternion.CreateFromAxisAngle(Vector3.UnitZ, zRadians) *
+           Quaternion.CreateFromAxisAngle(Vector3.UnitX, xRadians) *
+           Quaternion.CreateFromAxisAngle(Vector3.UnitY, yRadians);
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Quaternion CreateZyxRadians(
       float xRadians,
       float yRadians,
