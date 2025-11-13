@@ -54,9 +54,11 @@ public sealed class GauntletDarkLegacyModelImporter
         ])
     };
 
+    var finMaterials = new List<IReadOnlyMaterial>();
     {
       using var textureBr
           = fileBundle.TexturesFile.OpenReadAsBinary(Endianness.BigEndian);
+
       foreach (var gdlTexture in objects.Textures) {
         textureBr.Position = gdlTexture.TextureDataPointer;
 
@@ -146,9 +148,12 @@ public sealed class GauntletDarkLegacyModelImporter
                                               gdlTexture.Width,
                                               gdlTexture.Height);
 
-        var finTexture = finModel.MaterialManager.CreateTexture(finImage);
-        finTexture.Name
-            = $"texture{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
+        var (finMaterial, _)
+            = finModel.MaterialManager.AddSimpleTextureMaterialFromImage(
+                finImage,
+                $"{finMaterials.Count}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}");
+
+        finMaterials.Add(finMaterial);
       }
     }
 
@@ -260,6 +265,33 @@ public sealed class GauntletDarkLegacyModelImporter
             }
           }
         }
+      }
+    }
+
+    var finSkin = finModel.Skin;
+    foreach (var (definition, obj) in objects.ObjectDefinitions.Zip(
+                 objects.RootObjects)) {
+      var finMesh = finSkin.AddMesh();
+      finMesh.Name = definition.Name;
+
+      for (var m = 0; m < obj.Mesh.Primitives.Count; ++m) {
+        var gdlMesh = obj.Mesh.Primitives[m];
+
+        var textureIndex = m == 0
+            ? obj.SubObject0TextureIndex
+            : obj.SubObjects[m - 1].TextureIndex;
+
+        var finVertices = gdlMesh.Positions
+                                 .Select((p, i) => {
+                                   var finVertex = finSkin.AddVertex(p);
+                                   finVertex.SetLocalNormal(gdlMesh.Normals[i]);
+                                   finVertex.SetUv(gdlMesh.Uvs[i].Value);
+                                   return finVertex;
+                                 })
+                                 .ToArray();
+
+        var finPrimitive = finMesh.AddTriangleStrip(finVertices);
+        finPrimitive.SetMaterial(finMaterials[textureIndex]);
       }
     }
 

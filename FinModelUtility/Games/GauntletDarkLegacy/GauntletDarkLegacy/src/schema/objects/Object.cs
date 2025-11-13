@@ -1,4 +1,6 @@
-﻿using schema.binary;
+﻿using gdl.schema.objects.mesh;
+
+using schema.binary;
 using schema.binary.attributes;
 
 namespace gdl.schema.objects;
@@ -26,4 +28,11 @@ public sealed partial class Object : IBinaryDeserializable {
 
   [SequenceLengthSource(4)]
   public uint[] Unk0 { get; set; }
+
+  [RAtPosition(nameof(DataPointer))]
+  public Mesh Mesh { get; } = new();
+
+  [RAtPosition(nameof(SubObjectPointer))]
+  [RSequenceLengthSource(nameof(SubObjectCount))]
+  public SubObject[] SubObjects { get; set; }
 }
