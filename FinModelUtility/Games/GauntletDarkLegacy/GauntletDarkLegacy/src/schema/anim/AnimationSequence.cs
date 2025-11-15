@@ -87,7 +87,7 @@ public sealed partial class AnimationSequence
     this.ScaleYs = new float?[frameCount];
     this.ScaleZs = new float?[frameCount];
 
-    if (frameCount == 0) {
+    if (frameCount == 0 || this.Size == 0) {
       return;
     }
 
@@ -152,17 +152,6 @@ public sealed partial class AnimationSequence
                                         out scaleX,
                                         out scaleY,
                                         out scaleZ);
-              rotationX = rotationX0 + rotationX;
-              rotationY = rotationY0 + rotationY;
-              rotationZ = rotationZ0 + rotationZ;
-
-              positionX = positionX0 + positionX;
-              positionY = positionY0 + positionY;
-              positionZ = positionZ0 + positionZ;
-
-              scaleX = scaleX0 + scaleX;
-              scaleY = scaleY0 + scaleY;
-              scaleZ = scaleZ0 + scaleZ;
             }
 
             this.RotationXs[f] = rotationX;

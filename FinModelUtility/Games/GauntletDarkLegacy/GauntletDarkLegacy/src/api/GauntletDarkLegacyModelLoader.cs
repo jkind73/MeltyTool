@@ -169,19 +169,13 @@ public sealed class GauntletDarkLegacyModelImporter
             gdlBone);
       }
 
-      var boneQueue = new FinTuple3Queue<Bone, IBone, Matrix4x4>(
+      var boneQueue = new FinTuple2Queue<Bone, IBone>(
           gdlBonesByParent[null]
-              .Select(rootGdlBone => (
-                          rootGdlBone,
-                          finModel.Skeleton.Root,
-                          Matrix4x4.Identity)));
+              .Select(rootGdlBone => (rootGdlBone, finModel.Skeleton.Root)));
       var finBoneByGdlBone = new Dictionary<Bone, IReadOnlyBone>();
 
-      while (boneQueue.TryDequeue(out var gdlBone,
-                                  out var finParentBone,
-                                  out var invertedParentWorldMatrix)) {
+      while (boneQueue.TryDequeue(out var gdlBone, out var finParentBone)) {
         var worldMatrix = Matrix4x4.CreateTranslation(gdlBone.Position);
-        var localMatrix = worldMatrix * invertedParentWorldMatrix;
 
         var finBone = finParentBone.AddChild(worldMatrix);
         finBone.Name = gdlBone.Name;
@@ -191,10 +185,7 @@ public sealed class GauntletDarkLegacyModelImporter
 
         if (gdlBonesByParent.TryGetList(gdlBone, out var childGdlBones)) {
           boneQueue.Enqueue(
-              childGdlBones.Select(childGdlBone => (
-                                       childGdlBone,
-                                       finBone,
-                                       worldMatrix.AssertInvert())));
+              childGdlBones.Select(childGdlBone => (childGdlBone, finBone)));
         }
       }
 

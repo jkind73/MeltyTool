@@ -65,7 +65,7 @@ struct Skeleton {
         struct AnimationData {
             uint compressAngPointer <bgcolor=COLOR_OFFSET>;
             uint compressPosPointer <bgcolor=COLOR_OFFSET>;
-            uint compressUnitPointer <bgcolor=COLOR_OFFSET>;
+            uint compressScalePointer <bgcolor=COLOR_OFFSET>;
 
             uint blockPointer <bgcolor=COLOR_OFFSET>;
             
@@ -80,9 +80,9 @@ struct Skeleton {
             FSeek(skeletonDataPointer + animationDataPointer + compressPosPointer);
             float compressPos[256] <bgcolor=COLOR_ORIENTATION>;
 
-            if (compressUnitPointer != 0) {
-                FSeek(skeletonDataPointer + animationDataPointer + compressUnitPointer);
-                float compressUnit[256] <bgcolor=COLOR_ORIENTATION>;             
+            if (compressScalePointer != 0) {
+                FSeek(skeletonDataPointer + animationDataPointer + compressScalePointer);
+                float compressScale[256] <bgcolor=COLOR_ORIENTATION>;             
             }
         } animationData <bgcolor=COLOR_HEADER>;
         
@@ -136,57 +136,101 @@ struct Skeleton {
                                 
                 local uint frameCount = animationHeaders[sequenceI].frameCount;
 
-                if (frameCount > 0) {                    
+                if (size > 0 && (frameCount > 0 || (sequenceType & FIRST_FRAME_ONLY))) {  
                     FSeek(skeletonDataPointer + animationDataPointer + animationData.blockPointer + dataPointer);
-                    byte frameEnabledBits[((frameCount + 0x1f) >> 5) * 4];
-
-                    local float rotationX[frameCount];
-                    local float rotationY[frameCount]; 
-                    local float rotationZ[frameCount];
-    
-                    local float positionX[frameCount];
-                    local float positionY[frameCount]; 
-                    local float positionZ[frameCount];
                     
-                    if (sequenceType & IS_COMPRESSED) {
-                        for (local uint f = 0; f < frameCount; ++f) {
-                            frameEnabled = ((frameEnabledBits[f / 8] >> (f % 8)) & 1) == 1;
-                            
-                            if (!frameEnabled) {
-                                continue;
-                            }
-    
-                            if (sequenceType & ROTATION_X) {
-                                ubyte rotationXIndex <bgcolor=COLOR_INDEX>;
-                                rotationX[f] = animationData.compressAng[rotationXIndex];
-                            }
-                            
-                            if (sequenceType & ROTATION_Y) {
-                                ubyte rotationYIndex <bgcolor=COLOR_INDEX>;
-                                rotationY[f] = animationData.compressAng[rotationYIndex];
-                            }
-        
-                            if (sequenceType & ROTATION_Z) {
-                                ubyte rotationZIndex <bgcolor=COLOR_INDEX>;
-                                rotationZ[f] = animationData.compressAng[rotationZIndex];
-                            }
-                            
-                            if (sequenceType & POSITION_X) {
-                                ubyte positionXIndex <bgcolor=COLOR_INDEX>;
-                                positionX[f] = animationData.compressPos[positionXIndex];
-                            }
-                            
-                            if (sequenceType & POSITION_Y) {
-                                ubyte positionYIndex <bgcolor=COLOR_INDEX>;
-                                positionY[f] = animationData.compressPos[positionYIndex];
-                            }
-        
-                            if (sequenceType & POSITION_Z) {
-                                ubyte positionZIndex <bgcolor=COLOR_INDEX>;
-                                positionZ[f] = animationData.compressPos[positionZIndex];
-                            }
+                    struct UncompressedFrame {
+                        if (sequenceType & ROTATION_X) {
+                            float rotationX <bgcolor=COLOR_ORIENTATION>;
                         }
-                    }           
+                        
+                        if (sequenceType & ROTATION_Y) {
+                            float rotationY <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & ROTATION_Z) {
+                            float rotationZ <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & POSITION_X) {
+                            float positionX <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & POSITION_Y) {
+                            float positionY <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & POSITION_Z) {
+                            float positionZ <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & SCALE_X) {
+                            float scaleX <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & SCALE_Y) {
+                            float scaleY <bgcolor=COLOR_ORIENTATION>;
+                        }
+                        
+                        if (sequenceType & SCALE_Z) {
+                            float scaleZ <bgcolor=COLOR_ORIENTATION>;
+                        }
+                    };
+                    
+                    struct CompressedFrame {
+                        if (sequenceType & ROTATION_X) {
+                            ubyte rotationXIndex <bgcolor=COLOR_INDEX>;
+                        }
+                        
+                        if (sequenceType & ROTATION_Y) {
+                            ubyte rotationYIndex <bgcolor=COLOR_INDEX>;
+                        }
+    
+                        if (sequenceType & ROTATION_Z) {
+                            ubyte rotationZIndex <bgcolor=COLOR_INDEX>;
+                        }
+                        
+                        if (sequenceType & POSITION_X) {
+                            ubyte positionXIndex <bgcolor=COLOR_INDEX>;
+                        }
+                        
+                        if (sequenceType & POSITION_Y) {
+                            ubyte positionYIndex <bgcolor=COLOR_INDEX>;
+                        }
+    
+                        if (sequenceType & POSITION_Z) {
+                            ubyte positionZIndex <bgcolor=COLOR_INDEX>;
+                        }
+                        
+                        if (sequenceType & SCALE_X) {
+                            ubyte scaleXIndex <bgcolor=COLOR_INDEX>;
+                        }
+                        
+                        if (sequenceType & SCALE_Y) {
+                            ubyte scaleYIndex <bgcolor=COLOR_INDEX>;
+                        }
+    
+                        if (sequenceType & SCALE_Z) {
+                            ubyte scaleZIndex <bgcolor=COLOR_INDEX>;
+                        }
+                    };
+                    
+                    byte frameEnabledBits[((frameCount + 0x1f) >> 5) * 4];
+                    UncompressedFrame frame0;
+    
+                    for (local uint f = 1; f < frameCount; ++f) {
+                        frameEnabled = ((frameEnabledBits[f / 8] >> (f % 8)) & 1) == 1;
+                        
+                        if (!frameEnabled) {
+                            continue;
+                        }
+
+                        if (sequenceType & IS_COMPRESSED) {
+                            CompressedFrame frame;
+                        } else {
+                            UncompressedFrame frame;
+                        }
+                    }
                 }
                 
                 FSeek(tmpSequence);
