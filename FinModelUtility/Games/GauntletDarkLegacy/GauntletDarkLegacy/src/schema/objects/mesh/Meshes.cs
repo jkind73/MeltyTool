@@ -3,6 +3,7 @@
 using CommunityToolkit.Diagnostics;
 
 using fin.color;
+using fin.model;
 using fin.util.asserts;
 
 using schema.binary;
@@ -19,6 +20,7 @@ public class Primitive {
   public required IReadOnlyList<Uv> Uvs { get; init; }
   public required IReadOnlyList<Vector3> Normals { get; init; }
   public required IReadOnlyList<IColor> VertexColors { get; init; }
+  public required VertexOrder VertexOrder { get; init; }
 }
 
 /// <summary>
@@ -47,6 +49,7 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
       var uvs = new List<Uv>();
       var normals = new List<Vector3>();
       var vertexColors = new List<IColor>();
+      var vertexOrder = VertexOrder.CLOCKWISE;
 
       var mesh = new Mesh { Primitives = primitives };
       this.All.Add(mesh);
@@ -57,8 +60,11 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
         }
 
         primitives.Add(new Primitive {
-            Positions = positions, Normals = normals, Uvs = uvs,
-            VertexColors = vertexColors
+            Positions = positions, 
+            Normals = normals, 
+            Uvs = uvs,
+            VertexColors = vertexColors,
+            VertexOrder = vertexOrder,
         });
 
         positions = [];
@@ -91,6 +97,10 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
               var unk1 = br.ReadUInt32();
               var unk2 = br.ReadSingle();
               var unk3 = br.ReadSingle();
+
+              vertexOrder = Math.Abs(unk2 - (-1)) < .0001f
+                  ? VertexOrder.CLOCKWISE
+                  : VertexOrder.COUNTER_CLOCKWISE;
               break;
             }
             case SignalIndex.VERTEX: {
@@ -135,6 +145,8 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
                         null);
                 }
               }
+
+              positions.RemoveAt(positions.Count - 1);
 
               break;
             }

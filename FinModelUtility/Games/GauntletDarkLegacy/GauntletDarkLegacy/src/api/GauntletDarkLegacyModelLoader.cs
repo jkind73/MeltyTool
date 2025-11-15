@@ -12,13 +12,11 @@ using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
 using fin.math.matrix.four;
-using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
-using fin.util.enums;
 using fin.util.hex;
 
 using gdl.schema.anim;
@@ -27,8 +25,6 @@ using gdl.schema.objects;
 using schema.binary;
 
 using SixLabors.ImageSharp.PixelFormats;
-
-using SequenceType = gdl.schema.anim.SequenceType;
 
 namespace gdl.api;
 
@@ -187,7 +183,7 @@ public sealed class GauntletDarkLegacyModelImporter
         var worldMatrix = Matrix4x4.CreateTranslation(gdlBone.Position);
         var localMatrix = worldMatrix * invertedParentWorldMatrix;
 
-        var finBone = finParentBone.AddChild(localMatrix);
+        var finBone = finParentBone.AddChild(worldMatrix);
         finBone.Name = gdlBone.Name;
 
         finBones.Add(finBone);
@@ -334,6 +330,7 @@ public sealed class GauntletDarkLegacyModelImporter
 
           var finPrimitive = finMesh.AddTriangleStrip(finVertices);
           finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
+          finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder);
         }
       }
     }
