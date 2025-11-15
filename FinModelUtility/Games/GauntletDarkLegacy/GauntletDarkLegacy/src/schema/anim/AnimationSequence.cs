@@ -97,8 +97,6 @@ public sealed partial class AnimationSequence
           var hasFrames
               = new BitArray(br.ReadBytes(((frameCount + 0x1f) >> 5) * 4));
 
-          var flip = (this.Header.Flags & 1) != 0;
-
           this.ReadUncompressedFrame_(br,
                                       out var rotationX0,
                                       out var rotationY0,
@@ -154,6 +152,17 @@ public sealed partial class AnimationSequence
                                         out scaleX,
                                         out scaleY,
                                         out scaleZ);
+              rotationX = rotationX0 + rotationX;
+              rotationY = rotationY0 + rotationY;
+              rotationZ = rotationZ0 + rotationZ;
+
+              positionX = positionX0 + positionX;
+              positionY = positionY0 + positionY;
+              positionZ = positionZ0 + positionZ;
+
+              scaleX = scaleX0 + scaleX;
+              scaleY = scaleY0 + scaleY;
+              scaleZ = scaleZ0 + scaleZ;
             }
 
             this.RotationXs[f] = rotationX;

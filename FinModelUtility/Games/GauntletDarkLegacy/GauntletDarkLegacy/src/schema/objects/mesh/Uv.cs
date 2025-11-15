@@ -15,19 +15,25 @@ public sealed class Uv(SignalMode mode) : IBinaryDeserializable {
   public void Read(IBinaryReader br) {
     this.LightmapUv = null;
     switch (mode) {
-      case SignalMode.CHAR_2: {
+      case SignalMode.UINT8_UV: {
         var u = br.ReadSByte() / 128f;
         var v = br.ReadSByte() / 128f;
         this.Value = new Vector2(u, v);
         break;
       }
-      case SignalMode.SHORT_2: {
+      case SignalMode.UINT16_UV: {
         var u = br.ReadInt16() / 128f;
         var v = br.ReadInt16() / 128f;
         this.Value = new Vector2(u, v);
         break;
       }
-      case SignalMode.SHORT_VEC2: {
+      case SignalMode.UINT32_UV: {
+        var u = br.ReadInt32() / 128f;
+        var v = br.ReadInt32() / 128f;
+        this.Value = new Vector2(u, v);
+        break;
+      }
+      case SignalMode.UINT16_LMUV: {
         var u = br.ReadInt16() / 128f;
         var v = br.ReadInt16() / 128f;
         this.Value = new Vector2(u, v);
@@ -37,12 +43,7 @@ public sealed class Uv(SignalMode mode) : IBinaryDeserializable {
         this.LightmapUv = new Vector2(u2, v2);
         break;
       }
-      default: {
-        var u = br.ReadSByte() / 128f;
-        var v = br.ReadSByte() / 128f;
-        this.Value = new Vector2(u, v);
-        break;
-      }
+      default: throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
     }
   }
 }

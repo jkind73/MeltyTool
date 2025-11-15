@@ -229,6 +229,7 @@ public sealed class GauntletDarkLegacyModelImporter
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
                   gdlSequenceFrameCount);
+
           var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
               gdlSequenceFrameCount);
           var scaleKeyframes
@@ -291,48 +292,49 @@ public sealed class GauntletDarkLegacyModelImporter
       finMesh.Name = definition.Name;
 
       var finBone
-          = finBones.SingleOrDefault(b => finMesh.Name.Contains(b.Name!));
+          = finBones.FirstOrDefault(b => finMesh.Name.Contains(b.Name!));
       var finBoneWeights
           = finBone != null
               ? finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                                finBone)
               : null;
 
-      for (var m = 0; m < (obj.Mesh?.Primitives.Count ?? 0); ++m) {
-        var gdlMesh = obj.Mesh.Primitives[m];
-        if (gdlMesh.Positions.Count < 3) {
-          continue;
-        }
+      for (var m = 0; m < (obj.Mesh?.All.Count ?? 0); ++m) {
+        var gdlMesh = obj.Mesh.All[m];
 
         var textureIndex = m == 0
             ? obj.SubObject0TextureIndex
             : obj.SubObjects[m - 1].TextureIndex;
 
-        var finVertices = gdlMesh.Positions
-                                 .Select((p, i) => {
-                                   var finVertex = finSkin.AddVertex(p / 128f);
+        foreach (var gdlPrimitive in gdlMesh.Primitives) {
+          if (gdlPrimitive.Positions.Count < 3) {
+            continue;
+          }
 
-                                   /*if (gdlMesh.Normals.Count > 0) {
-                                     finVertex.SetLocalNormal(gdlMesh.Normals[i]);
-                                   }*/
+          var finVertices
+              = gdlPrimitive
+                .Positions
+                .Select((p, i) => {
+                  var finVertex = finSkin.AddVertex(p / 128f);
 
-                                   if (gdlMesh.Uvs.Count ==
-                                       gdlMesh.Positions.Count) {
-                                     finVertex.SetUv(gdlMesh.Uvs[i].Value);
-                                   } else {
-                                     finVertex.SetUv(0, 0);
-                                   }
+                  if (gdlPrimitive.Uvs.Count >=
+                      gdlPrimitive.Positions.Count) {
+                    finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
+                  } else {
+                    finVertex.SetUv(0, 0);
+                  }
 
-                                   if (finBoneWeights != null) {
-                                     finVertex.SetBoneWeights(finBoneWeights);
-                                   }
+                  if (finBoneWeights != null) {
+                    finVertex.SetBoneWeights(finBoneWeights);
+                  }
 
-                                   return finVertex;
-                                 })
-                                 .ToArray();
+                  return finVertex;
+                })
+                .ToArray();
 
-        var finPrimitive = finMesh.AddTriangleStrip(finVertices);
-        finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
+          var finPrimitive = finMesh.AddTriangleStrip(finVertices);
+          finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
+        }
       }
     }
 
