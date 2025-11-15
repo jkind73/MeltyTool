@@ -52,6 +52,12 @@ public static class ImageFormatExtensions {
   }
 }
 
+public enum TextureFlags : ushort {
+  HALF_RES = 1 << 0,
+  CLAMP_U = 1 << 2,
+  CLAMP_V = 1 << 3,
+}
+
 /// <summary>
 ///   Shamelessly stolen from:
 ///   https://github.com/haekb/io_scene_gdl/blob/master/src/model.py#L374
@@ -64,7 +70,7 @@ public sealed partial class Texture : IBinaryDeserializable {
   public byte Width64 { get; set; }
   public ushort WidthLog2 { get; set; }
   public ushort HeightLog2 { get; set; }
-  public ushort Flags { get; set; }
+  public TextureFlags Flags { get; set; }
   public ushort TexturePaletteIndex { get; set; }
   public uint TextureDataPointer { get; set; }
   public ushort TexturePaletteCount { get; set; }

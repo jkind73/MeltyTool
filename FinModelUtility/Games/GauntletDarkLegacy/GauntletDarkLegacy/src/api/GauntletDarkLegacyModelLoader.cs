@@ -17,6 +17,7 @@ using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enums;
 using fin.util.hex;
 
 using gdl.schema.anim;
@@ -148,6 +149,13 @@ public sealed class GauntletDarkLegacyModelImporter
         var finTexture = finModel.MaterialManager.CreateTexture(finImage);
         finTexture.Name
             = $"texture{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
+
+        finTexture.WrapModeU = gdlTexture.Flags.CheckFlag(TextureFlags.CLAMP_U)
+            ? WrapMode.CLAMP
+            : WrapMode.REPEAT;
+        finTexture.WrapModeV = gdlTexture.Flags.CheckFlag(TextureFlags.CLAMP_V)
+            ? WrapMode.CLAMP
+            : WrapMode.REPEAT;
 
         finTextures.Add(finTexture);
       }
@@ -304,11 +312,21 @@ public sealed class GauntletDarkLegacyModelImporter
                 .Select((p, i) => {
                   var finVertex = finSkin.AddVertex(p / 128f);
 
+                  /*if (gdlPrimitive.Normals.Count >=
+                      gdlPrimitive.Positions.Count) {
+                    finVertex.SetLocalNormal(gdlPrimitive.Normals[i]);
+                  }*/
+
                   if (gdlPrimitive.Uvs.Count >=
                       gdlPrimitive.Positions.Count) {
                     finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
                   } else {
                     finVertex.SetUv(0, 0);
+                  }
+
+                  if (gdlPrimitive.VertexColors.Count >=
+                      gdlPrimitive.Positions.Count) {
+                    finVertex.SetColor(gdlPrimitive.VertexColors[i]);
                   }
 
                   if (finBoneWeights != null) {

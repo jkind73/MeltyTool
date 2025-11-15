@@ -173,6 +173,8 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
                     var z = (((packedNormal >> 10) & 0xf) - 0xf) *
                             normalScale;
 
+                    // TODO: Handle skipped faces
+
                     normals.Add(new Vector3(x, y, z));
                     break;
                   }
