@@ -222,53 +222,62 @@ public sealed class GauntletDarkLegacyModelImporter
           var finBoneTracks
               = finAnimation.GetOrCreateBoneTracks(finBoneByGdlBone[gdlBone]);
 
+          var gdlSequenceFrameCount = gdlSequence.FrameCount;
+          finAnimation.FrameCount
+              = Math.Max(finAnimation.FrameCount, gdlSequenceFrameCount);
+
           var rotationKeyframes
-              = finBoneTracks.UseSeparateEulerRadiansKeyframes();
-          rotationKeyframes.ConvertRadiansToQuaternionImpl
-              = QuaternionUtil.CreateZxy;
+              = finBoneTracks.UseSeparateEulerRadiansKeyframes(
+                  gdlSequenceFrameCount);
+          var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
+              gdlSequenceFrameCount);
+          var scaleKeyframes
+              = finBoneTracks.UseSeparateScaleKeyframes(gdlSequenceFrameCount);
 
-          var positionKeyframes
-              = finBoneTracks.UseSeparateTranslationKeyframes();
-          var scaleKeyframes = finBoneTracks.UseSeparateScaleKeyframes();
-
-          for (var f = 0; f < finAnimation.FrameCount; ++f) {
-            var rotation = gdlSequence.Rotations[f];
-            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_X)) {
-              rotationKeyframes.SetKeyframe(0, f, rotation.X);
+          for (var f = 0; f < gdlSequenceFrameCount; ++f) {
+            var rotationX = gdlSequence.RotationXs[f];
+            if (rotationX != null) {
+              rotationKeyframes.SetKeyframe(0, f, rotationX.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_Y)) {
-              rotationKeyframes.SetKeyframe(1, f, rotation.Y);
+            var rotationY = gdlSequence.RotationYs[f];
+            if (rotationY != null) {
+              rotationKeyframes.SetKeyframe(1, f, rotationY.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.ROTATION_Z)) {
-              rotationKeyframes.SetKeyframe(2, f, rotation.Z);
+            var rotationZ = gdlSequence.RotationZs[f];
+            if (rotationZ != null) {
+              rotationKeyframes.SetKeyframe(2, f, rotationZ.Value);
             }
 
-            var position = gdlSequence.Positions[f];
-            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_X)) {
-              positionKeyframes.SetKeyframe(0, f, position.X);
+            var positionX = gdlSequence.PositionXs[f];
+            if (positionX != null) {
+              positionKeyframes.SetKeyframe(0, f, positionX.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_Y)) {
-              positionKeyframes.SetKeyframe(1, f, position.Y);
+            var positionY = gdlSequence.PositionYs[f];
+            if (positionY != null) {
+              positionKeyframes.SetKeyframe(1, f, positionY.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.POSITION_Z)) {
-              positionKeyframes.SetKeyframe(2, f, position.Z);
+            var positionZ = gdlSequence.PositionZs[f];
+            if (positionZ != null) {
+              positionKeyframes.SetKeyframe(2, f, positionZ.Value);
             }
 
-            var scale = gdlSequence.Scales[f];
-            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_X)) {
-              scaleKeyframes.SetKeyframe(0, f, scale.X);
+            var scaleX = gdlSequence.ScaleXs[f];
+            if (scaleX != null) {
+              scaleKeyframes.SetKeyframe(0, f, scaleX.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_Y)) {
-              scaleKeyframes.SetKeyframe(1, f, scale.Y);
+            var scaleY = gdlSequence.ScaleYs[f];
+            if (scaleY != null) {
+              scaleKeyframes.SetKeyframe(1, f, scaleY.Value);
             }
 
-            if (gdlSequence.Type.CheckFlag(SequenceType.SCALE_Z)) {
-              scaleKeyframes.SetKeyframe(2, f, scale.Z);
+            var scaleZ = gdlSequence.ScaleZs[f];
+            if (scaleZ != null) {
+              scaleKeyframes.SetKeyframe(2, f, scaleZ.Value);
             }
           }
         }
@@ -285,7 +294,8 @@ public sealed class GauntletDarkLegacyModelImporter
           = finBones.SingleOrDefault(b => finMesh.Name.Contains(b.Name!));
       var finBoneWeights
           = finBone != null
-              ? finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE, finBone)
+              ? finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
+                                               finBone)
               : null;
 
       for (var m = 0; m < (obj.Mesh?.Primitives.Count ?? 0); ++m) {

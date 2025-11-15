@@ -17,7 +17,7 @@ public sealed partial class AnimationData
 
   public uint CompressAngPointer { get; set; }
   public uint CompressPosPointer { get; set; }
-  public uint CompressUnitPointer { get; set; }
+  public uint CompressScalePointer { get; set; }
 
   public uint BlockPointer { get; set; }
 
@@ -32,6 +32,10 @@ public sealed partial class AnimationData
   [RAtPositionOrNull(nameof(CompressPosPointer))]
   [SequenceLengthSource(256)]
   public float[] CompressPos { get; set; }
+
+  [RAtPositionOrNull(nameof(CompressScalePointer))]
+  [SequenceLengthSource(256)]
+  public float[] CompressScale { get; set; }
 
   [Skip]
   public ListDictionary<Bone, AnimationSequence> SequencesByBone { get; }

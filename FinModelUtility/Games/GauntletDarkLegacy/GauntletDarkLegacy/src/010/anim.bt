@@ -1,0 +1,205 @@
+//------------------------------------------------
+//--- 010 Editor v16.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+local uint COLOR_COUNT = 0x00ff00;
+local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_ORIENTATION = 0x888800;
+local uint COLOR_HEADER = 0xffffff;
+local uint COLOR_INDEX = 0xffff00;
+local uint COLOR_NAME = 0x00ffff;
+
+local ubyte frameEnabled;
+
+struct Anim {
+    ushort skeletonCount <bgcolor=COLOR_COUNT>;
+    ushort version;
+    uint skeletonPointer <bgcolor=COLOR_OFFSET>;
+    uint effectCount <bgcolor=COLOR_COUNT>;
+    uint effectPointer <bgcolor=COLOR_OFFSET>;
+} anim <bgcolor=COLOR_HEADER>;
+
+FSeek(anim.skeletonPointer);
+struct Skeleton {
+    char name[32] <bgcolor=COLOR_NAME>;
+    uint skeletonDataPointer;
+
+    local uint tmpSkeleton = FTell();
+    
+    FSeek(skeletonDataPointer);
+    struct SkeletonData {
+        uint animationHeaderPointer <bgcolor=COLOR_OFFSET>;
+        uint animationDataPointer <bgcolor=COLOR_OFFSET>;
+        uint unkPointer <bgcolor=COLOR_OFFSET>;
+        uint bonePointer <bgcolor=COLOR_OFFSET>;
+        uint boneCount <bgcolor=COLOR_COUNT>;
+        uint animationCount <bgcolor=COLOR_COUNT>;
+        
+        char name[32] <bgcolor=COLOR_NAME>;
+                           
+        FSeek(skeletonDataPointer + animationHeaderPointer);
+        struct AnimationHeader {                   
+            char name[32] <bgcolor=COLOR_NAME>;
+
+            ushort frameCount <bgcolor=COLOR_COUNT>;
+            ushort frameRate;
+            
+            ushort loop;
+            
+            ushort fixPos;
+            ushort effectCount <bgcolor=COLOR_COUNT>;
+            ushort flags;
+            int effectPointer;
+        } animationHeaders[animationCount] <bgcolor=COLOR_HEADER, optimize=false>;
+
+        FSeek(skeletonDataPointer + animationDataPointer);
+        struct AnimationData {
+            uint compressAngPointer <bgcolor=COLOR_OFFSET>;
+            uint compressPosPointer <bgcolor=COLOR_OFFSET>;
+            uint compressUnitPointer <bgcolor=COLOR_OFFSET>;
+
+            uint blockPointer <bgcolor=COLOR_OFFSET>;
+            
+            uint sequencePointer <bgcolor=COLOR_OFFSET>;               
+            uint sequenceCount <bgcolor=COLOR_COUNT>;
+            
+            uint objectCount <bgcolor=COLOR_COUNT>;
+            
+            FSeek(skeletonDataPointer + animationDataPointer + compressAngPointer);
+            float compressAng[256] <bgcolor=COLOR_ORIENTATION>;
+
+            FSeek(skeletonDataPointer + animationDataPointer + compressPosPointer);
+            float compressPos[256] <bgcolor=COLOR_ORIENTATION>;
+
+            if (compressUnitPointer != 0) {
+                FSeek(skeletonDataPointer + animationDataPointer + compressUnitPointer);
+                float compressUnit[256] <bgcolor=COLOR_ORIENTATION>;             
+            }
+        } animationData <bgcolor=COLOR_HEADER>;
+        
+        FSeek(skeletonDataPointer + bonePointer);
+        struct Bone {
+            char name[32] <bgcolor=COLOR_NAME>;
+
+            struct Vector3 {
+                float x;
+                float y;
+                float z;
+            } position <bgcolor=COLOR_ORIENTATION>;
+
+            enum <ushort> BoneType {
+                NULL = 0,
+                SKEL_ANIM = 1,
+                OBJ_ANIM = 2, //  Vertex Animation
+                TEX_ANIM = 3,
+                PSYS_ANIM = 4,
+                EMPTY = 0xFFFF,
+            } type;
+
+            ushort flags;
+            uint mbFlags;
+            
+            uint sequencePointer <bgcolor=COLOR_OFFSET>;
+            int parentId <bgcolor=COLOR_INDEX>;
+            
+            local uint tmpBone = FTell();
+            
+            FSeek(skeletonDataPointer + animationDataPointer + sequencePointer);
+            struct Sequence(int sequenceI) {
+                enum <ushort> SequenceType {
+                    ROTATION_X = 0x1,
+                    ROTATION_Y = 0x2,
+                    ROTATION_Z = 0x4,
+                    POSITION_X = 0x10,
+                    POSITION_Y = 0x20,
+                    POSITION_Z = 0x40,
+                    SCALE_X = 0x100,
+                    SCALE_Y = 0x200,
+                    SCALE_Z = 0x400,             
+                    IS_COMPRESSED = 0x2000,
+                    FIRST_FRAME_ONLY = 1 << 14,
+                } sequenceType <edit=flags, format=hex>;
+                
+                ushort size;
+                uint dataPointer <bgcolor=COLOR_OFFSET>;   
+                
+                local uint tmpSequence = FTell();
+                                
+                local uint frameCount = animationHeaders[sequenceI].frameCount;
+
+                if (frameCount > 0) {                    
+                    FSeek(skeletonDataPointer + animationDataPointer + animationData.blockPointer + dataPointer);
+                    byte frameEnabledBits[((frameCount + 0x1f) >> 5) * 4];
+
+                    local float rotationX[frameCount];
+                    local float rotationY[frameCount]; 
+                    local float rotationZ[frameCount];
+    
+                    local float positionX[frameCount];
+                    local float positionY[frameCount]; 
+                    local float positionZ[frameCount];
+                    
+                    if (sequenceType & IS_COMPRESSED) {
+                        for (local uint f = 0; f < frameCount; ++f) {
+                            frameEnabled = ((frameEnabledBits[f / 8] >> (f % 8)) & 1) == 1;
+                            
+                            if (!frameEnabled) {
+                                continue;
+                            }
+    
+                            if (sequenceType & ROTATION_X) {
+                                ubyte rotationXIndex <bgcolor=COLOR_INDEX>;
+                                rotationX[f] = animationData.compressAng[rotationXIndex];
+                            }
+                            
+                            if (sequenceType & ROTATION_Y) {
+                                ubyte rotationYIndex <bgcolor=COLOR_INDEX>;
+                                rotationY[f] = animationData.compressAng[rotationYIndex];
+                            }
+        
+                            if (sequenceType & ROTATION_Z) {
+                                ubyte rotationZIndex <bgcolor=COLOR_INDEX>;
+                                rotationZ[f] = animationData.compressAng[rotationZIndex];
+                            }
+                            
+                            if (sequenceType & POSITION_X) {
+                                ubyte positionXIndex <bgcolor=COLOR_INDEX>;
+                                positionX[f] = animationData.compressPos[positionXIndex];
+                            }
+                            
+                            if (sequenceType & POSITION_Y) {
+                                ubyte positionYIndex <bgcolor=COLOR_INDEX>;
+                                positionY[f] = animationData.compressPos[positionYIndex];
+                            }
+        
+                            if (sequenceType & POSITION_Z) {
+                                ubyte positionZIndex <bgcolor=COLOR_INDEX>;
+                                positionZ[f] = animationData.compressPos[positionZIndex];
+                            }
+                        }
+                    }           
+                }
+                
+                FSeek(tmpSequence);
+            };
+            
+            local uint sequenceI;
+            for (local uint sequenceI = 0; sequenceI < animationData.sequenceCount; ++sequenceI) {
+                Sequence sequences(sequenceI) <bgcolor=COLOR_HEADER>;
+            }
+            
+            FSeek(tmpBone);
+        } bone[boneCount] <bgcolor=COLOR_HEADER, optimize=false>;
+    } data;
+
+    FSeek(tmpSkeleton);
+} skeletons[anim.skeletonCount] <bgcolor=COLOR_HEADER, optimize=false>;

@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+﻿using System.Collections;
 
 using fin.util.enums;
 
@@ -21,7 +21,8 @@ public enum SequenceType : ushort {
   SCALE_Y = 1 << 9,
   SCALE_Z = 1 << 10,
 
-  IS_COMPRESSED = 0x2000,
+  IS_COMPRESSED = 1 << 13,
+  FIRST_FRAME_ONLY = 1 << 14,
 }
 
 /// <summary>
@@ -41,89 +42,266 @@ public sealed partial class AnimationSequence
   public uint DataPointer { get; set; }
 
   [Skip]
-  public Vector3[] Rotations { get; set; }
+  public int FrameCount => this.Type.CheckFlag(SequenceType.FIRST_FRAME_ONLY)
+      ? 1
+      : this.Header.FrameCount;
 
   [Skip]
-  public Vector3[] Positions { get; set; }
+  public float?[] RotationXs { get; set; }
 
   [Skip]
-  public Vector3[] Scales { get; set; }
+  public float?[] RotationYs { get; set; }
+
+  [Skip]
+  public float?[] RotationZs { get; set; }
+
+  [Skip]
+  public float?[] PositionXs { get; set; }
+
+  [Skip]
+  public float?[] PositionYs { get; set; }
+
+  [Skip]
+  public float?[] PositionZs { get; set; }
+
+  [Skip]
+  public float?[] ScaleXs { get; set; }
+
+  [Skip]
+  public float?[] ScaleYs { get; set; }
+
+  [Skip]
+  public float?[] ScaleZs { get; set; }
 
   [ReadLogic]
   private void ReadTransforms_(IBinaryReader br) {
-    var frameCount = this.Header.FrameCount;
+    var frameCount = this.FrameCount;
 
-    this.Rotations = new Vector3[frameCount];
-    this.Positions = new Vector3[frameCount];
-    this.Scales = new Vector3[frameCount];
+    this.RotationXs = new float?[frameCount];
+    this.RotationYs = new float?[frameCount];
+    this.RotationZs = new float?[frameCount];
+    this.PositionXs = new float?[frameCount];
+    this.PositionYs = new float?[frameCount];
+    this.PositionZs = new float?[frameCount];
+    this.ScaleXs = new float?[frameCount];
+    this.ScaleYs = new float?[frameCount];
+    this.ScaleZs = new float?[frameCount];
+
+    if (frameCount == 0) {
+      return;
+    }
 
     br.SubreadAt(
         this.Parent.BlockPointer + this.DataPointer,
         () => {
-          // Decompiled code, this will skip past the useless header in the block data
-          br.Position += ((frameCount + 0x1f) >> 5) * 4;
+          var hasFrames
+              = new BitArray(br.ReadBytes(((frameCount + 0x1f) >> 5) * 4));
 
-          var isCompressed = this.Type.CheckFlag(SequenceType.IS_COMPRESSED);
           var flip = (this.Header.Flags & 1) != 0;
 
-          for (var f = 0; f < frameCount; ++f) {
-            var rotation = Vector3.Zero;
-            var position = Vector3.Zero;
-            var scale = Vector3.One;
+          this.ReadUncompressedFrame_(br,
+                                      out var rotationX0,
+                                      out var rotationY0,
+                                      out var rotationZ0,
+                                      out var positionX0,
+                                      out var positionY0,
+                                      out var positionZ0,
+                                      out var scaleX0,
+                                      out var scaleY0,
+                                      out var scaleZ0);
 
-            if (isCompressed) {
-              if (this.Type.CheckFlag(SequenceType.ROTATION_X)) {
-                rotation.X = this.Parent.CompressAng[ReadWeirdByte_(br)];
-              }
+          this.RotationXs[0] = rotationX0;
+          this.RotationYs[0] = rotationY0;
+          this.RotationZs[0] = rotationZ0;
 
-              if (this.Type.CheckFlag(SequenceType.ROTATION_Y)) {
-                rotation.Y = this.Parent.CompressAng[ReadWeirdByte_(br)];
-                if (flip) {
-                  rotation.Y *= -1;
-                }
-              }
+          this.PositionXs[0] = positionX0;
+          this.PositionYs[0] = positionY0;
+          this.PositionZs[0] = positionZ0;
 
-              if (this.Type.CheckFlag(SequenceType.ROTATION_Z)) {
-                rotation.Z = this.Parent.CompressAng[ReadWeirdByte_(br)];
-                if (flip) {
-                  rotation.Z *= -1;
-                }
-              }
+          this.ScaleXs[0] = scaleX0;
+          this.ScaleYs[0] = scaleY0;
+          this.ScaleZs[0] = scaleZ0;
 
-              if (this.Type.CheckFlag(SequenceType.POSITION_X)) {
-                position.X = this.Parent.CompressPos[ReadWeirdByte_(br)];
-              }
+          var isCompressed = this.Type.CheckFlag(SequenceType.IS_COMPRESSED);
 
-              if (this.Type.CheckFlag(SequenceType.POSITION_Y)) {
-                position.Y = this.Parent.CompressPos[ReadWeirdByte_(br)];
-              }
-
-              if (this.Type.CheckFlag(SequenceType.POSITION_Z)) {
-                position.Z = this.Parent.CompressPos[ReadWeirdByte_(br)];
-              }
-
-              if (this.Type.CheckFlag(SequenceType.SCALE_X)) {
-                scale.X = ReadWeirdByte_(br) / 256f;
-              }
-
-              if (this.Type.CheckFlag(SequenceType.SCALE_Y)) {
-                scale.Y = ReadWeirdByte_(br) / 256f;
-              }
-
-              if (this.Type.CheckFlag(SequenceType.SCALE_Z)) {
-                scale.Z = ReadWeirdByte_(br) / 256f;
-              }
+          for (var f = 1; f < frameCount; ++f) {
+            if (!hasFrames[f]) {
+              continue;
             }
 
-            this.Rotations[f] = rotation;
-            this.Positions[f] = position;
-            this.Scales[f] = scale;
+            float? rotationX, rotationY, rotationZ;
+            float? positionX, positionY, positionZ;
+            float? scaleX, scaleY, scaleZ;
+            if (!isCompressed) {
+              this.ReadUncompressedFrame_(br,
+                                          out rotationX,
+                                          out rotationY,
+                                          out rotationZ,
+                                          out positionX,
+                                          out positionY,
+                                          out positionZ,
+                                          out scaleX,
+                                          out scaleY,
+                                          out scaleZ);
+            } else {
+              this.ReadCompressedFrame_(br,
+                                        out rotationX,
+                                        out rotationY,
+                                        out rotationZ,
+                                        out positionX,
+                                        out positionY,
+                                        out positionZ,
+                                        out scaleX,
+                                        out scaleY,
+                                        out scaleZ);
+            }
+
+            this.RotationXs[f] = rotationX;
+            this.RotationYs[f] = rotationY;
+            this.RotationZs[f] = rotationZ;
+
+            this.PositionXs[f] = positionX;
+            this.PositionYs[f] = positionY;
+            this.PositionZs[f] = positionZ;
+
+            this.ScaleXs[f] = scaleX;
+            this.ScaleYs[f] = scaleY;
+            this.ScaleZs[f] = scaleZ;
           }
         });
   }
 
-  private static byte ReadWeirdByte_(IBinaryReader br) {
-    var b = br.ReadByte();
-    return (byte) (b > 127 ? b - 256 : b);
+  private void ReadUncompressedFrame_(IBinaryReader br,
+                                      out float? rotationX,
+                                      out float? rotationY,
+                                      out float? rotationZ,
+                                      out float? positionX,
+                                      out float? positionY,
+                                      out float? positionZ,
+                                      out float? scaleX,
+                                      out float? scaleY,
+                                      out float? scaleZ) {
+    if (this.Type.CheckFlag(SequenceType.ROTATION_X)) {
+      rotationX = br.ReadSingle();
+    } else {
+      rotationX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.ROTATION_Y)) {
+      rotationY = br.ReadSingle();
+    } else {
+      rotationY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.ROTATION_Z)) {
+      rotationZ = br.ReadSingle();
+    } else {
+      rotationZ = null;
+    }
+
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_X)) {
+      positionX = br.ReadSingle();
+    } else {
+      positionX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_Y)) {
+      positionY = br.ReadSingle();
+    } else {
+      positionY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_Z)) {
+      positionZ = br.ReadSingle();
+    } else {
+      positionZ = null;
+    }
+
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_X)) {
+      scaleX = br.ReadSingle();
+    } else {
+      scaleX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_Y)) {
+      scaleY = br.ReadSingle();
+    } else {
+      scaleY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_Z)) {
+      scaleZ = br.ReadSingle();
+    } else {
+      scaleZ = null;
+    }
+  }
+
+  private void ReadCompressedFrame_(IBinaryReader br,
+                                    out float? rotationX,
+                                    out float? rotationY,
+                                    out float? rotationZ,
+                                    out float? positionX,
+                                    out float? positionY,
+                                    out float? positionZ,
+                                    out float? scaleX,
+                                    out float? scaleY,
+                                    out float? scaleZ) {
+    if (this.Type.CheckFlag(SequenceType.ROTATION_X)) {
+      rotationX = this.Parent.CompressAng[br.ReadByte()];
+    } else {
+      rotationX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.ROTATION_Y)) {
+      rotationY = this.Parent.CompressAng[br.ReadByte()];
+    } else {
+      rotationY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.ROTATION_Z)) {
+      rotationZ = this.Parent.CompressAng[br.ReadByte()];
+    } else {
+      rotationZ = null;
+    }
+
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_X)) {
+      positionX = this.Parent.CompressPos[br.ReadByte()];
+    } else {
+      positionX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_Y)) {
+      positionY = this.Parent.CompressPos[br.ReadByte()];
+    } else {
+      positionY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.POSITION_Z)) {
+      positionZ = this.Parent.CompressPos[br.ReadByte()];
+    } else {
+      positionZ = null;
+    }
+
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_X)) {
+      scaleX = this.Parent.CompressScale[br.ReadByte()];
+    } else {
+      scaleX = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_Y)) {
+      scaleY = this.Parent.CompressScale[br.ReadByte()];
+    } else {
+      scaleY = null;
+    }
+
+    if (this.Type.CheckFlag(SequenceType.SCALE_Z)) {
+      scaleZ = this.Parent.CompressScale[br.ReadByte()];
+    } else {
+      scaleZ = null;
+    }
   }
 }

@@ -68,6 +68,15 @@ public sealed class Mesh : IBinaryDeserializable, IChildOf<Object> {
             var signal = br.ReadNew<Signal>();
             signals.AddFirst(signal);
 
+            var dataCount = (int) signal.DataCount;
+            
+            // For some reason this only a problem with UVs..
+            // Datacount needs to be a multiple of 4..
+            // Round to the nearest 4 bytes.
+            if (signal.Index == SignalIndex.UV && dataCount % 2 != 0) {
+              dataCount += 2 - (dataCount % 2);
+            }
+
             switch (signal.Index) {
               case SignalIndex.HEADER: {
                 var unk2 = br.ReadVector2();
@@ -75,7 +84,7 @@ public sealed class Mesh : IBinaryDeserializable, IChildOf<Object> {
                 break;
               }
               case SignalIndex.VERTEX: {
-                for (var i = 0; i < signal.DataCount; ++i) {
+                for (var i = 0; i < dataCount; ++i) {
                   // Shamelessly stolen from:
                   // https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L305
                   switch (signal.Mode) {
@@ -129,7 +138,7 @@ public sealed class Mesh : IBinaryDeserializable, IChildOf<Object> {
                 break;
               }
               case SignalIndex.UV: {
-                for (var i = 0; i < signal.DataCount; ++i) {
+                for (var i = 0; i < dataCount; ++i) {
                   var uv = new Uv(signal.Mode);
                   uv.Read(br);
                   uvs.Add(uv);
@@ -138,7 +147,7 @@ public sealed class Mesh : IBinaryDeserializable, IChildOf<Object> {
                 break;
               }
               case SignalIndex.NORMAL: {
-                for (var i = 0; i < signal.DataCount; ++i) {
+                for (var i = 0; i < dataCount; ++i) {
                   // Shamelessly stolen from:
                   // https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L367
                   switch (signal.Mode) {
@@ -179,7 +188,7 @@ public sealed class Mesh : IBinaryDeserializable, IChildOf<Object> {
                 break;
               }
               case SignalIndex.VERTEX_COLOR: {
-                for (var i = 0; i < signal.DataCount; ++i) {
+                for (var i = 0; i < dataCount; ++i) {
                   // Shamelessly stolen from:
                   // https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L410
                   var value = br.ReadUInt16();
