@@ -38,6 +38,7 @@ If you'd like to vote on new games or features that should be supported, please 
 - [@EstevanBR](https://github.com/EstevanBR), whose [DATReaderC](https://github.com/EstevanBR/DATReaderC) was referenced as the starting point for the .dat importer.
 - [@EXOK](https://github.com/EXOK), whose [Celeste64](https://github.com/EXOK/Celeste64) source was heavily referenced to add support for Celeste 64 maps.
 - [@follyfoxe](https://github.com/follyfoxe), whose [SpmViewer](https://github.com/follyfoxe/SpmViewer) was referenced to add support for importing Paper Mario: The Thousand Year Door's animated group models.
+- [@gamemasterplc](https://github.com/gamemasterplc), whose [pokemon_fsys_tool](https://github.com/gamemasterplc/pokemon_fsys_tool) was ported to C# to add support for extracting Pokemon Colosseum .fsys archives.
 - [@Gericom](https://github.com/Gericom), whose [MKDS Course Modifier](https://www.romhacking.net/utilities/1285/) program was used as the basis for the J3dGraph .bmd importer.
 - [@gibbed](https://github.com/gibbed), whose [Gibbed.Visceral](https://github.com/gibbed/Gibbed.Visceral) library was used as the base of the .str extractor.
 - [@Gota7](https://github.com/Gota7), whose [SM64DSe-Ultimate](https://github.com/Gota7/SM64DSe-Ultimate) tool was heavily referenced to add support for extracting Super Mario 64 DS .bmd files.
