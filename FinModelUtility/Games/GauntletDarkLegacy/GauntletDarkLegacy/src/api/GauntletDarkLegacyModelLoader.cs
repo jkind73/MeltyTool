@@ -96,6 +96,23 @@ public sealed class GauntletDarkLegacyModelImporter
                                  .ToArray();
               break;
             }
+            case PixelFormat.RGBA5553: {
+              palette = textureBr.ReadUInt16s(paletteCount)
+                                 .Select(v => {
+                                   ColorUtil.SplitRgb5A3(v,
+                                     out var r,
+                                     out var g,
+                                     out var b,
+                                     out var a);
+                                   return FinColor.FromRgbaBytes(
+                                       r,
+                                       g,
+                                       b,
+                                       a);
+                                 })
+                                 .ToArray();
+              break;
+            }
             case PixelFormat.RGB555: {
               palette = textureBr.ReadUInt16s(paletteCount)
                                  .Select(v => {

@@ -5,6 +5,10 @@ using schema.binary.attributes;
 
 namespace gdl.schema.objects;
 
+/// <summary>
+///   Shamelessly stolen from:
+///   https://github.com/MosesofEgypt/gdl_tools/blob/main/gdl/defs/texdef.py#L23
+/// </summary>
 public enum ImageFormat : byte {
   RGBA_5551 = 0,
   IDX_4_RGBA_5551 = 18,
@@ -12,8 +16,8 @@ public enum ImageFormat : byte {
   //IDX_4_BGR_555 = 1,
   //IDX_4_ABGR_8888 = 18,
   //IDX_4_BGR_888 = 19,
-  IDX_8_RGB_555 = 48,
-  IDX_8_RGBA_5551 = 50,
+  IDX_8_RGB_5551 = 48,
+  IDX_8_RGBA_5553 = 50,
   //IDXA_88 = 40,
   //IDX_8_ABGR_8888 = 52,
   //IDX_8_BGR_888 = 51,
@@ -33,14 +37,14 @@ public static class ImageFormatExtensions {
         pixelFormat = PixelFormat.RGBA5551;
         return true;
       }
-      case ImageFormat.IDX_8_RGB_555: {
-        paletteCount = 256;
-        pixelFormat = PixelFormat.RGB555;
-        return true;
-      }
-      case ImageFormat.IDX_8_RGBA_5551: {
+      case ImageFormat.IDX_8_RGB_5551: {
         paletteCount = 256;
         pixelFormat = PixelFormat.RGBA5551;
+        return true;
+      }
+      case ImageFormat.IDX_8_RGBA_5553: {
+        paletteCount = 256;
+        pixelFormat = PixelFormat.RGBA5553;
         return true;
       }
       default: {
