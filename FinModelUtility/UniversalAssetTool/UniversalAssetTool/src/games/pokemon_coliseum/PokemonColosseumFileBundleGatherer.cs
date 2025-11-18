@@ -2,6 +2,8 @@
 using fin.io.bundles;
 using fin.util.progress;
 
+using pc;
+
 namespace uni.games.pokemon_colosseum;
 
 public sealed class PokemonColosseumFileBundleGatherer
@@ -12,5 +14,14 @@ public sealed class PokemonColosseumFileBundleGatherer
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
+    var didAnyUpdate = false;
+
+    foreach (var fsysFile in fileHierarchy.Root.GetFilesWithFileType(".fsys", true)) {
+      didAnyUpdate |= new FsysExtractor().TryToExtractFilesFrom(fsysFile.Impl);
+    }
+
+    if (didAnyUpdate) {
+      fileHierarchy.Root.Refresh();
+    }
   }
 }
