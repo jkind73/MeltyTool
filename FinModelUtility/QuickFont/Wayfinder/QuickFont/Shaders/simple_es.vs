@@ -1,5 +1,5 @@
 #version 310 es
-precision mediump float;
+precision highp float;
 
 uniform mat4 proj_matrix;
 uniform mat4 modelview_matrix;
