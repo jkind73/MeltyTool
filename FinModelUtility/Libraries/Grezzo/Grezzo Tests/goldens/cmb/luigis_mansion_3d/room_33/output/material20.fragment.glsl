@@ -1,5 +1,5 @@
 #version 460
-precision highp float;
+precision mediump float;
 
 uniform float scalar_3dsAlpha5;
 

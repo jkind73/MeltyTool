@@ -1,5 +1,5 @@
 #version 460
-precision highp float;
+precision mediump float;
 
 in vec4 vertexColor0;
 

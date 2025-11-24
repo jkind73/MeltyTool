@@ -1,5 +1,5 @@
 #version 460
-precision highp float;
+precision mediump float;
 
 uniform vec3 color_GxColorRegister7;
 out vec4 fragColor;

@@ -1,5 +1,5 @@
 #version 460
-precision highp float;
+precision mediump float;
 
 uniform sampler2D texture0;
 uniform sampler2D texture1;

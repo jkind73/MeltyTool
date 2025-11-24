@@ -10,7 +10,7 @@ public static class GlslConstants {
   public static string VERTEX_SHADER_VERSION => SHADER_VERSION;
   public static string FRAGMENT_SHADER_VERSION => SHADER_VERSION;
 
-  public const string FLOAT_PRECISION = "precision highp float;";
+  public const string FLOAT_PRECISION = "precision mediump float;";
 
   public const int UBO_MATRICES_BINDING_INDEX = 1;
   public const string UBO_MATRICES_NAME = "Matrices";

@@ -1,5 +1,5 @@
 #version 460
-precision highp float;
+precision mediump float;
 
 struct Light {
   // 0x00 (vec3 needs to be 16-byte aligned)
