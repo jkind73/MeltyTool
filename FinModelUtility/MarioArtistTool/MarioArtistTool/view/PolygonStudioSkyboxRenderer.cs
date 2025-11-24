@@ -97,6 +97,7 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
 
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
           
+          uniform mat4 inverseProjectionViewMatrix;
           uniform float nearPlane;
           uniform float farPlane;
           uniform float iTime;
