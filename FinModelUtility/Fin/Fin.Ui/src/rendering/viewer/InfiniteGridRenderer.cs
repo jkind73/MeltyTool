@@ -1,4 +1,7 @@
-﻿using fin.model;
+﻿using System.Numerics;
+
+using fin.math.matrix.four;
+using fin.model;
 using fin.model.impl;
 using fin.model.util;
 using fin.shaders.glsl;
@@ -17,6 +20,7 @@ namespace fin.ui.rendering.viewer;
 public sealed class InfiniteGridRenderer : IRenderable {
   private IModelRenderer? impl_;
 
+  private IShaderUniform<Matrix4x4> inverseProjectionViewMatrixUniform_;
   private IShaderUniform<float> nearPlaneUniform_;
   private IShaderUniform<float> farPlaneUniform_;
 
@@ -34,6 +38,11 @@ public sealed class InfiniteGridRenderer : IRenderable {
 
   public void Render() {
     this.impl_ ??= this.GenerateModel_();
+
+    this.inverseProjectionViewMatrixUniform_
+        .SetAndMaybeMarkDirty(
+            (GlTransform.ViewMatrix * GlTransform.ProjectionMatrix)
+            .AssertInvert());
 
     this.nearPlaneUniform_.SetAndMaybeMarkDirty(this.NearPlane);
     this.farPlaneUniform_.SetAndMaybeMarkDirty(this.FarPlane);
@@ -66,12 +75,13 @@ public sealed class InfiniteGridRenderer : IRenderable {
           {{GlslConstants.FLOAT_PRECISION}}
 
           {{GlslUtil.GetMatricesHeader(model)}}
-
+          
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
 
+          uniform mat4 inverseProjectionViewMatrix;
           uniform float nearPlane;
           uniform float farPlane;
-          
+
           in vec2 screenPosition;
 
           out vec4 fragColor;
@@ -83,17 +93,16 @@ public sealed class InfiniteGridRenderer : IRenderable {
             value = 1.0 - value;
             
             value = clamp(value, 0.0, 1.0);
-          
+
             // Apply gamma correction
             value = vec2(pow(value.x, 1.0 / 2.2), pow(value.y, 1.0 / 2.2));
-          
+
             return value;         
           }
 
           void main() {
             // ray from camera to fragment in world space
-            mat4 invProjectionViewMatrix = inverse({{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}} * {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}});
-            vec3 rayWorld = (invProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
+            vec3 rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
             rayWorld = -normalize(rayWorld);
             
             // calculate fragment position in world space
@@ -122,7 +131,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
             int subdivisions = 8;
             float minorLineAlpha = .3;
             vec4 gridColor = vec4(1.0, 1.0, 1.0, 1.0);
-          
+
             // grid
             vec2 line = grid(vertexPosition, unitSize, majorLineThickness);
             line += grid(vertexPosition, unitSize / float(subdivisions), minorLineThickness) * minorLineAlpha;
@@ -141,13 +150,13 @@ public sealed class InfiniteGridRenderer : IRenderable {
             
             float lineStrength = max(line.x, line.y);
             lineStrength = clamp(lineStrength, 0.0, 1.0);
-          
+
             // final alpha
             float alphaGrid = lineStrength * lineColor.a;
             float alpha = clamp(alphaGrid, 0.0, 1.0) * fadeFactor;
             // eliminate grid above the horizon
             alpha *= step(t, 0.0);
-          
+
             // final color (premultiplied alpha blend)
             vec3 color = (1.0 - alphaGrid) + (lineColor.rgb * alphaGrid);
             
@@ -176,6 +185,9 @@ public sealed class InfiniteGridRenderer : IRenderable {
     var shader = shaders.WhereIs<IGlMaterialShader, GlShaderMaterialShader>()
                         .Single();
     var shaderProgram = shader.ShaderProgram;
+
+    this.inverseProjectionViewMatrixUniform_
+        = shaderProgram.GetUniformMat4("inverseProjectionViewMatrix");
     this.nearPlaneUniform_ = shaderProgram.GetUniformFloat("nearPlane");
     this.farPlaneUniform_ = shaderProgram.GetUniformFloat("farPlane");
 

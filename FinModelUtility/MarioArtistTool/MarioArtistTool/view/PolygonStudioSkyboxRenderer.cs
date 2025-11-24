@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Numerics;
 
 using fin.color;
+using fin.math.matrix.four;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
@@ -19,6 +21,7 @@ namespace MarioArtistTool.view;
 public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
   private IModelRenderer? impl_;
 
+  private IShaderUniform<Matrix4x4> inverseProjectionViewMatrixUniform_;
   private IShaderUniform<float> nearPlaneUniform_;
   private IShaderUniform<float> farPlaneUniform_;
   private IShaderUniform<float> iTimeUniform_;
@@ -41,6 +44,10 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
   public void Render() {
     this.impl_ ??= this.GenerateModelIfNull_();
 
+    this.inverseProjectionViewMatrixUniform_
+        .SetAndMaybeMarkDirty(
+            (GlTransform.ViewMatrix * GlTransform.ProjectionMatrix)
+            .AssertInvert());
     this.nearPlaneUniform_.SetAndMaybeMarkDirty(this.NearPlane);
     this.farPlaneUniform_.SetAndMaybeMarkDirty(this.FarPlane);
     this.iTimeUniform_.SetAndMarkDirty(
@@ -170,8 +177,7 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
 
           void main() {
             // ray from camera to fragment in world space
-            mat4 invProjectionViewMatrix = inverse({{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}} * {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}});
-            vec3 rayWorld = (invProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
+            vec3 rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
             rayWorld = -normalize(rayWorld);
             
             vec3 skyColor1 = {{FinColor.FromSystemColor(Color.FromArgb(0, 1, 12)).ToGlslVec3()}};
@@ -201,6 +207,8 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
     var shader = shaders.WhereIs<IGlMaterialShader, GlShaderMaterialShader>()
                         .Single();
     var shaderProgram = shader.ShaderProgram;
+    this.inverseProjectionViewMatrixUniform_
+        = shaderProgram.GetUniformMat4("inverseProjectionViewMatrix");
     this.nearPlaneUniform_ = shaderProgram.GetUniformFloat("nearPlane");
     this.farPlaneUniform_ = shaderProgram.GetUniformFloat("farPlane");
     this.iTimeUniform_ = shaderProgram.GetUniformFloat("iTime");

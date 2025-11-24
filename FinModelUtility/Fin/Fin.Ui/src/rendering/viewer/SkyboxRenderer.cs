@@ -1,7 +1,9 @@
 ﻿
 using System.Drawing;
+using System.Numerics;
 
 using fin.color;
+using fin.math.matrix.four;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
@@ -21,6 +23,7 @@ public interface ISkyboxRenderer : IOrthoRenderable {
 public sealed class SkyboxRenderer : ISkyboxRenderer {
   private IModelRenderer? impl_;
 
+  private IShaderUniform<Matrix4x4> inverseProjectionViewMatrixUniform_;
   private IShaderUniform<float> nearPlaneUniform_;
   private IShaderUniform<float> farPlaneUniform_;
 
@@ -42,6 +45,11 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
   public void Render() {
     this.impl_ ??= this.GenerateModelIfNull_();
+
+    this.inverseProjectionViewMatrixUniform_
+        .SetAndMaybeMarkDirty(
+            (GlTransform.ViewMatrix * GlTransform.ProjectionMatrix)
+            .AssertInvert());
 
     this.nearPlaneUniform_.SetAndMaybeMarkDirty(this.NearPlane);
     this.farPlaneUniform_.SetAndMaybeMarkDirty(this.FarPlane);
@@ -89,7 +97,8 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
           {{GlslUtil.GetMatricesHeader(model)}}
 
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
-
+          
+          uniform mat4 inverseProjectionViewMatrix;
           uniform float nearPlane;
           uniform float farPlane;
           
@@ -99,8 +108,7 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
           void main() {
             // ray from camera to fragment in world space
-            mat4 invProjectionViewMatrix = inverse({{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}} * {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}});
-            vec3 rayWorld = (invProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
+            vec3 rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
             rayWorld = -normalize(rayWorld);
             
             vec4 groundColor = {{FinColor.FromHexString("#423431").ToGlslVec4()}};
@@ -144,6 +152,8 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
     var shader = shaders.WhereIs<IGlMaterialShader, GlShaderMaterialShader>()
                         .Single();
     var shaderProgram = shader.ShaderProgram;
+    this.inverseProjectionViewMatrixUniform_
+        = shaderProgram.GetUniformMat4("inverseProjectionViewMatrix");
     this.nearPlaneUniform_ = shaderProgram.GetUniformFloat("nearPlane");
     this.farPlaneUniform_ = shaderProgram.GetUniformFloat("farPlane");
 
