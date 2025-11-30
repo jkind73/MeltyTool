@@ -11,7 +11,9 @@ using fin.image.formats;
 using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
+using fin.math;
 using fin.math.matrix.four;
+using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -288,26 +290,30 @@ public sealed class GauntletDarkLegacyModelImporter
           var startFrame = 0;
 
           foreach (var gdlSequence in gdlBoneSequencesForAnimation) {
+            // This is from Haekb's tool, might not be right?
+            var flipAxes = !gdlSequence.Header.Flags.GetBit(0);
+            var flipSign = flipAxes ? -1 : 1;
+
             for (var f = 0; f < gdlSequence.FrameCount; ++f) {
               var rotationX = gdlSequence.RotationXs[f];
               if (rotationX != null) {
                 rotationKeyframes.SetKeyframe(0,
                                               startFrame + f,
-                                              rotationX.Value);
+                                              flipSign * rotationX.Value);
               }
 
               var rotationY = gdlSequence.RotationYs[f];
               if (rotationY != null) {
                 rotationKeyframes.SetKeyframe(1,
                                               startFrame + f,
-                                              rotationY.Value);
+                                              flipSign * rotationY.Value);
               }
 
               var rotationZ = gdlSequence.RotationZs[f];
               if (rotationZ != null) {
                 rotationKeyframes.SetKeyframe(2,
                                               startFrame + f,
-                                              rotationZ.Value);
+                                              flipSign * rotationZ.Value);
               }
 
               var positionX = gdlSequence.PositionXs[f];
