@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 
+using CommunityToolkit.HighPerformance;
+
 using fin.util.enums;
 
 using schema.binary;
@@ -94,8 +96,9 @@ public sealed partial class AnimationSequence
     br.SubreadAt(
         this.Parent.BlockPointer + this.DataPointer,
         () => {
-          var hasFrames
-              = new BitArray(br.ReadBytes(((frameCount + 0x1f) >> 5) * 4));
+          var hasFrames = new BitArray(br.ReadUInt32s((frameCount + 0x1f) >> 5)
+                                         .AsBytes()
+                                         .ToArray());
 
           this.ReadUncompressedFrame_(br,
                                       out var rotationX0,
@@ -122,14 +125,21 @@ public sealed partial class AnimationSequence
 
           var isCompressed = this.Type.CheckFlag(SequenceType.IS_COMPRESSED);
 
+          var rotationX = rotationX0;
+          var rotationY = rotationY0;
+          var rotationZ = rotationZ0;
+          var positionX = positionX0;
+          var positionY = positionY0;
+          var positionZ = positionZ0;
+          var scaleX = scaleX0;
+          var scaleY = scaleY0;
+          var scaleZ = scaleZ0;
+
           for (var f = 1; f < frameCount; ++f) {
             if (!hasFrames[f]) {
               continue;
             }
 
-            float? rotationX, rotationY, rotationZ;
-            float? positionX, positionY, positionZ;
-            float? scaleX, scaleY, scaleZ;
             if (!isCompressed) {
               this.ReadUncompressedFrame_(br,
                                           out rotationX,
@@ -143,15 +153,24 @@ public sealed partial class AnimationSequence
                                           out scaleZ);
             } else {
               this.ReadCompressedFrame_(br,
-                                        out rotationX,
-                                        out rotationY,
-                                        out rotationZ,
-                                        out positionX,
-                                        out positionY,
-                                        out positionZ,
-                                        out scaleX,
-                                        out scaleY,
-                                        out scaleZ);
+                                        out var deltaRotationX,
+                                        out var deltaRotationY,
+                                        out var deltaRotationZ,
+                                        out var deltaPositionX,
+                                        out var deltaPositionY,
+                                        out var deltaPositionZ,
+                                        out var deltaScaleX,
+                                        out var deltaScaleY,
+                                        out var deltaScaleZ);
+              rotationX = Add_(rotationX, deltaRotationX);
+              rotationY = Add_(rotationY, deltaRotationY);
+              rotationZ = Add_(rotationZ, deltaRotationZ);
+              positionX = Add_(positionX, deltaPositionX);
+              positionY = Add_(positionY, deltaPositionY);
+              positionZ = Add_(positionZ, deltaPositionZ);
+              scaleX = Add_(scaleX, deltaScaleX);
+              scaleY = Add_(scaleY, deltaScaleY);
+              scaleZ = Add_(scaleZ, deltaScaleZ);
             }
 
             this.RotationXs[f] = rotationX;
@@ -301,5 +320,13 @@ public sealed partial class AnimationSequence
     } else {
       scaleZ = null;
     }
+  }
+
+  private static float? Add_(float? lhs, float? rhs) {
+    if (lhs != null && rhs != null) {
+      return lhs + rhs;
+    }
+
+    return null;
   }
 }
