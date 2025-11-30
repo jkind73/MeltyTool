@@ -216,82 +216,138 @@ public sealed class GauntletDarkLegacyModelImporter
 
       var gdlAnimationData = gdlSkeleton.Data.AnimationData;
       var gdlAnimationHeaders = gdlSkeleton.Data.AnimationHeaders;
-      for (var i = 0; i < gdlAnimationHeaders.Length; ++i) {
-        var gdlAnimationHeader = gdlAnimationHeaders[i];
 
+      var logicalAnimations = new List<(string name, IEnumerable<int>)>();
+      var gdlAnimationHeaderIndicesByName = new Dictionary<string, int>();
+      for (var i = 0; i < gdlAnimationHeaders.Length; ++i) {
+        gdlAnimationHeaderIndicesByName[gdlAnimationHeaders[i].Name] = i;
+
+        logicalAnimations.Add((gdlAnimationHeaders[i].Name, [i]));
+      }
+
+      // HACK: Combine animations that swap back and forth
+      {
+        if (gdlAnimationHeaderIndicesByName.TryGetValue(
+                "WALK1",
+                out var walk1I) &&
+            gdlAnimationHeaderIndicesByName.TryGetValue(
+                "WALK2",
+                out var walk2I)) {
+          logicalAnimations.Add(("WALK", [walk1I, walk2I]));
+        }
+
+        if (gdlAnimationHeaderIndicesByName
+                .TryGetValue("RUN1", out var run1I) &&
+            gdlAnimationHeaderIndicesByName
+                .TryGetValue("RUN2", out var run2I)) {
+          logicalAnimations.Add(("RUN", [run1I, run2I]));
+        }
+      }
+
+      foreach (var (animationName, headerIs) in logicalAnimations) {
         var finAnimation = finModel.AnimationManager.AddAnimation();
-        finAnimation.Name = gdlAnimationHeader.Name;
-        finAnimation.FrameCount = gdlAnimationHeader.FrameCount;
-        finAnimation.FrameRate = gdlAnimationHeader.FrameRate;
-        finAnimation.UseLoopingInterpolation = gdlAnimationHeader.Loop;
+        finAnimation.Name = animationName;
+
+        var gdlHeaders = headerIs.Select(i => gdlAnimationHeaders[i]).ToArray();
+        finAnimation.FrameCount = gdlHeaders.Sum(h => h.FrameCount);
+
+        var header0 = gdlAnimationHeaders[headerIs.First()];
+        finAnimation.FrameRate = header0.FrameRate;
+        finAnimation.UseLoopingInterpolation
+            = header0.Loop || gdlHeaders.Length > 1;
 
         foreach (var gdlBone in gdlAnimationData.SequencesByBone.Keys) {
-          var gdlSequence = gdlAnimationData.SequencesByBone[gdlBone][i];
-          if (gdlSequence.Size == 0) {
+          var allGdlSequencesForBone
+              = gdlAnimationData.SequencesByBone[gdlBone];
+          var gdlBoneSequencesForAnimation
+              = headerIs.Select(i => allGdlSequencesForBone[i]).ToArray();
+
+          if (gdlBoneSequencesForAnimation.All(s => s.Size == 0)) {
             continue;
           }
+
+          var totalSequnceFrameCount
+              = gdlBoneSequencesForAnimation.Sum(s => s.FrameCount);
 
           var finBoneTracks
               = finAnimation.GetOrCreateBoneTracks(finBoneByGdlBone[gdlBone]);
 
-          var gdlSequenceFrameCount = gdlSequence.FrameCount;
           finAnimation.FrameCount
-              = Math.Max(finAnimation.FrameCount, gdlSequenceFrameCount);
+              = Math.Max(finAnimation.FrameCount, totalSequnceFrameCount);
 
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
-                  gdlSequenceFrameCount);
-
-          var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
-              gdlSequenceFrameCount);
+                  totalSequnceFrameCount);
+          var positionKeyframes
+              = finBoneTracks.UseSeparateTranslationKeyframes(
+                  totalSequnceFrameCount);
           var scaleKeyframes
-              = finBoneTracks.UseSeparateScaleKeyframes(gdlSequenceFrameCount);
+              = finBoneTracks.UseSeparateScaleKeyframes(
+                  totalSequnceFrameCount);
 
-          for (var f = 0; f < gdlSequenceFrameCount; ++f) {
-            var rotationX = gdlSequence.RotationXs[f];
-            if (rotationX != null) {
-              rotationKeyframes.SetKeyframe(0, f, rotationX.Value);
+          var startFrame = 0;
+
+          foreach (var gdlSequence in gdlBoneSequencesForAnimation) {
+            for (var f = 0; f < gdlSequence.FrameCount; ++f) {
+              var rotationX = gdlSequence.RotationXs[f];
+              if (rotationX != null) {
+                rotationKeyframes.SetKeyframe(0,
+                                              startFrame + f,
+                                              rotationX.Value);
+              }
+
+              var rotationY = gdlSequence.RotationYs[f];
+              if (rotationY != null) {
+                rotationKeyframes.SetKeyframe(1,
+                                              startFrame + f,
+                                              rotationY.Value);
+              }
+
+              var rotationZ = gdlSequence.RotationZs[f];
+              if (rotationZ != null) {
+                rotationKeyframes.SetKeyframe(2,
+                                              startFrame + f,
+                                              rotationZ.Value);
+              }
+
+              var positionX = gdlSequence.PositionXs[f];
+              if (positionX != null) {
+                positionKeyframes.SetKeyframe(0,
+                                              startFrame + f,
+                                              positionX.Value);
+              }
+
+              var positionY = gdlSequence.PositionYs[f];
+              if (positionY != null) {
+                positionKeyframes.SetKeyframe(1,
+                                              startFrame + f,
+                                              positionY.Value);
+              }
+
+              var positionZ = gdlSequence.PositionZs[f];
+              if (positionZ != null) {
+                positionKeyframes.SetKeyframe(2,
+                                              startFrame + f,
+                                              positionZ.Value);
+              }
+
+              var scaleX = gdlSequence.ScaleXs[f];
+              if (scaleX != null) {
+                scaleKeyframes.SetKeyframe(0, startFrame + f, scaleX.Value);
+              }
+
+              var scaleY = gdlSequence.ScaleYs[f];
+              if (scaleY != null) {
+                scaleKeyframes.SetKeyframe(1, startFrame + f, scaleY.Value);
+              }
+
+              var scaleZ = gdlSequence.ScaleZs[f];
+              if (scaleZ != null) {
+                scaleKeyframes.SetKeyframe(2, startFrame + f, scaleZ.Value);
+              }
             }
 
-            var rotationY = gdlSequence.RotationYs[f];
-            if (rotationY != null) {
-              rotationKeyframes.SetKeyframe(1, f, rotationY.Value);
-            }
-
-            var rotationZ = gdlSequence.RotationZs[f];
-            if (rotationZ != null) {
-              rotationKeyframes.SetKeyframe(2, f, rotationZ.Value);
-            }
-
-            var positionX = gdlSequence.PositionXs[f];
-            if (positionX != null) {
-              positionKeyframes.SetKeyframe(0, f, positionX.Value);
-            }
-
-            var positionY = gdlSequence.PositionYs[f];
-            if (positionY != null) {
-              positionKeyframes.SetKeyframe(1, f, positionY.Value);
-            }
-
-            var positionZ = gdlSequence.PositionZs[f];
-            if (positionZ != null) {
-              positionKeyframes.SetKeyframe(2, f, positionZ.Value);
-            }
-
-            var scaleX = gdlSequence.ScaleXs[f];
-            if (scaleX != null) {
-              scaleKeyframes.SetKeyframe(0, f, scaleX.Value);
-            }
-
-            var scaleY = gdlSequence.ScaleYs[f];
-            if (scaleY != null) {
-              scaleKeyframes.SetKeyframe(1, f, scaleY.Value);
-            }
-
-            var scaleZ = gdlSequence.ScaleZs[f];
-            if (scaleZ != null) {
-              scaleKeyframes.SetKeyframe(2, f, scaleZ.Value);
-            }
+            startFrame += gdlSequence.FrameCount;
           }
         }
       }
