@@ -290,66 +290,69 @@ public sealed class GauntletDarkLegacyModelImporter
           var startFrame = 0;
 
           foreach (var gdlSequence in gdlBoneSequencesForAnimation) {
-            // This is from Haekb's tool, might not be right?
-            var flipAxes = !gdlSequence.Header.Flags.GetBit(0);
-            var flipSign = flipAxes ? -1 : 1;
+            var header = gdlSequence.Header;
+
+            var isReversed = header.Flags.GetBit(0);
 
             for (var f = 0; f < gdlSequence.FrameCount; ++f) {
+              var frame = startFrame +
+                          (!isReversed ? f : (gdlSequence.FrameCount - 1 - f));
+
               var rotationX = gdlSequence.RotationXs[f];
               if (rotationX != null) {
                 rotationKeyframes.SetKeyframe(0,
-                                              startFrame + f,
-                                              flipSign * rotationX.Value);
+                                              frame,
+                                              -rotationX.Value);
               }
 
               var rotationY = gdlSequence.RotationYs[f];
               if (rotationY != null) {
                 rotationKeyframes.SetKeyframe(1,
-                                              startFrame + f,
-                                              flipSign * rotationY.Value);
+                                              frame,
+                                              -rotationY.Value);
               }
 
               var rotationZ = gdlSequence.RotationZs[f];
               if (rotationZ != null) {
                 rotationKeyframes.SetKeyframe(2,
-                                              startFrame + f,
-                                              flipSign * rotationZ.Value);
+                                              frame,
+                                              -rotationZ.Value);
               }
 
               var positionX = gdlSequence.PositionXs[f];
               if (positionX != null) {
                 positionKeyframes.SetKeyframe(0,
-                                              startFrame + f,
+                                              frame,
                                               positionX.Value);
               }
 
               var positionY = gdlSequence.PositionYs[f];
               if (positionY != null) {
                 positionKeyframes.SetKeyframe(1,
-                                              startFrame + f,
+                                              frame,
                                               positionY.Value);
               }
 
               var positionZ = gdlSequence.PositionZs[f];
               if (positionZ != null) {
                 positionKeyframes.SetKeyframe(2,
-                                              startFrame + f,
+                                              frame,
                                               positionZ.Value);
               }
 
               var scaleX = gdlSequence.ScaleXs[f];
               if (scaleX != null) {
-                scaleKeyframes.SetKeyframe(0, startFrame + f, scaleX.Value);
+                scaleKeyframes.SetKeyframe(0, frame, scaleX.Value);
               }
 
               var scaleY = gdlSequence.ScaleYs[f];
               if (scaleY != null) {
-                scaleKeyframes.SetKeyframe(1, startFrame + f, scaleY.Value);
+                scaleKeyframes.SetKeyframe(1, frame, scaleY.Value);
               }
 
               var scaleZ = gdlSequence.ScaleZs[f];
               if (scaleZ != null) {
-                scaleKeyframes.SetKeyframe(2, startFrame + f, scaleZ.Value);
+                scaleKeyframes.SetKeyframe(2, frame, scaleZ.Value);
               }
             }
 
