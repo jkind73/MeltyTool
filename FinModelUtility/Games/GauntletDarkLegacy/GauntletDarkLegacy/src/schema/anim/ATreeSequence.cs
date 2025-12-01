@@ -8,7 +8,7 @@ namespace gdl.schema.anim;
 ///   https://github.com/haekb/io_scene_gdl/blob/master/src/anim_model.py#L243
 /// </summary>
 [BinarySchema]
-public sealed partial class AnimationHeader : IBinaryDeserializable {
+public sealed partial class ATreeSequence : IBinaryDeserializable {
   [StringLengthSource(32)]
   public string Name { get; set; }
 

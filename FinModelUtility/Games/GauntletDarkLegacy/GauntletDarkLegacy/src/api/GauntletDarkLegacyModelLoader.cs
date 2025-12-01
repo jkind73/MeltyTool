@@ -186,38 +186,44 @@ public sealed class GauntletDarkLegacyModelImporter
         });
 
     var finBones = new List<IReadOnlyBone>();
-    foreach (var gdlSkeleton in anim.Skeletons) {
-      var gdlBones = gdlSkeleton.Data.Bones;
+    foreach (var gdlSkeleton in anim.Atrees) {
+      var gdlBones = gdlSkeleton.Data.ANodeInfos;
 
-      var gdlBonesByParent = new ListDictionary<Bone?, Bone>();
+      var gdlBonesByParent = new ListDictionary<ANodeInfo?, ANodeInfo>();
       foreach (var gdlBone in gdlBones) {
         gdlBonesByParent.Add(
             gdlBone.ParentId == -1 ? null : gdlBones[gdlBone.ParentId],
             gdlBone);
       }
 
-      var boneQueue = new FinTuple2Queue<Bone, IBone>(
+      var boneQueue = new FinTuple2Queue<ANodeInfo, IBone>(
           gdlBonesByParent[null]
               .Select(rootGdlBone => (rootGdlBone, finModel.Skeleton.Root)));
-      var finBoneByGdlBone = new Dictionary<Bone, IReadOnlyBone>();
+      var finBoneByGdlBone = new Dictionary<ANodeInfo, IReadOnlyBone>();
 
-      while (boneQueue.TryDequeue(out var gdlBone, out var finParentBone)) {
-        var worldMatrix = Matrix4x4.CreateTranslation(gdlBone.Position);
+      while (boneQueue.TryDequeue(out var gdlANodeInfo, out var finParentBone)) {
+        var worldMatrix = Matrix4x4.CreateTranslation(gdlANodeInfo.InitialPosition);
 
         var finBone = finParentBone.AddChild(worldMatrix);
-        finBone.Name = gdlBone.Name;
+        finBone.Name = gdlANodeInfo.MbDesc;
 
         finBones.Add(finBone);
-        finBoneByGdlBone[gdlBone] = finBone;
+        finBoneByGdlBone[gdlANodeInfo] = finBone;
 
-        if (gdlBonesByParent.TryGetList(gdlBone, out var childGdlBones)) {
+        if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
+          finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
+        } else if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
+          finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
+        }
+
+        if (gdlBonesByParent.TryGetList(gdlANodeInfo, out var childGdlBones)) {
           boneQueue.Enqueue(
               childGdlBones.Select(childGdlBone => (childGdlBone, finBone)));
         }
       }
 
-      var gdlAnimationData = gdlSkeleton.Data.AnimationData;
-      var gdlAnimationHeaders = gdlSkeleton.Data.AnimationHeaders;
+      var gdlAnimationData = gdlSkeleton.Data.AnimHeader;
+      var gdlAnimationHeaders = gdlSkeleton.Data.ATreeSequences;
 
       var logicalAnimations = new List<(string name, IEnumerable<int>)>();
       var gdlAnimationHeaderIndicesByName = new Dictionary<string, int>();

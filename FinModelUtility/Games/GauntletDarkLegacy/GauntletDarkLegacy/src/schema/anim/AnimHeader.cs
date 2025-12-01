@@ -11,9 +11,9 @@ namespace gdl.schema.anim;
 /// </summary>
 [BinarySchema]
 [LocalPositions]
-public sealed partial class AnimationData
-    : IBinaryDeserializable, IChildOf<SkeletonData> {
-  public SkeletonData Parent { get; set; }
+public sealed partial class AnimHeader
+    : IBinaryDeserializable, IChildOf<ATreeHeader> {
+  public ATreeHeader Parent { get; set; }
 
   public uint CompressAngPointer { get; set; }
   public uint CompressPosPointer { get; set; }
@@ -27,32 +27,32 @@ public sealed partial class AnimationData
 
   [RAtPositionOrNull(nameof(CompressAngPointer))]
   [SequenceLengthSource(256)]
-  public float[] CompressAng { get; set; }
+  public float[] CompressedAngles { get; set; }
 
   [RAtPositionOrNull(nameof(CompressPosPointer))]
   [SequenceLengthSource(256)]
-  public float[] CompressPos { get; set; }
+  public float[] CompressedPositions { get; set; }
 
   [RAtPositionOrNull(nameof(CompressScalePointer))]
   [SequenceLengthSource(256)]
-  public float[] CompressScale { get; set; }
+  public float[] CompressedScales { get; set; }
 
   [Skip]
-  public ListDictionary<Bone, AnimationSequence> SequencesByBone { get; }
+  public ListDictionary<ANodeInfo, AnimationSequence> SequencesByBone { get; }
     = new();
 
   [ReadLogic]
   private void ReadSequences_(IBinaryReader br) {
     this.SequencesByBone.Clear();
-    foreach (var bone in this.Parent.Bones) {
-      if (bone.Type is BoneType.SKEL_ANIM) {
+    foreach (var bone in this.Parent.ANodeInfos) {
+      if (bone.Type is AnimType.SKEL_ANIM) {
         br.SubreadAt(
-            bone.SequencePointer,
+            bone.AnimSeqInfoOffset,
             () => {
               for (var i = 0; i < this.sequenceCount_; ++i) {
                 var animationSequence = new AnimationSequence {
                     Parent = this,
-                    Header = this.Parent.AnimationHeaders[i],
+                    Header = this.Parent.ATreeSequences[i],
                 };
                 animationSequence.Read(br);
                 this.SequencesByBone.Add(bone, animationSequence);

@@ -10,9 +10,9 @@ namespace gdl.schema.anim;
 [BinarySchema]
 [Endianness(Endianness.LittleEndian)]
 public sealed partial class Anim : IBinaryDeserializable {
-  public ushort SkeletonCount { get; set; }
+  public ushort ATreeCount { get; set; }
   public ushort Version { get; set; }
-  public uint SkeletonDataPointer { get; set; }
+  public uint ATreeInfoPointer { get; set; }
   public uint EffectCount { get; set; }
   public uint EffectPointer { get; set; }
 
@@ -25,6 +25,6 @@ public sealed partial class Anim : IBinaryDeserializable {
   [RIfBoolean(nameof(HasPsys_))]
   public int? PsysPointer { get; set; }
 
-  [RSequenceLengthSource(nameof(SkeletonCount))]
-  public Skeleton[] Skeletons { get; set; }
+  [RSequenceLengthSource(nameof(ATreeCount))]
+  public ATreeInfo[] Atrees { get; set; }
 }

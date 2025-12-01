@@ -33,11 +33,11 @@ public enum SequenceType : ushort {
 /// </summary>
 [BinarySchema]
 public sealed partial class AnimationSequence
-    : IBinaryDeserializable, IChildOf<AnimationData> {
-  public AnimationData Parent { get; set; }
+    : IBinaryDeserializable, IChildOf<AnimHeader> {
+  public AnimHeader Parent { get; set; }
 
   [Skip]
-  public AnimationHeader Header { get; set; }
+  public ATreeSequence Header { get; set; }
 
   public SequenceType Type { get; set; }
   public ushort Size { get; set; }
@@ -279,57 +279,57 @@ public sealed partial class AnimationSequence
                                     out float? scaleY,
                                     out float? scaleZ) {
     if (this.Type.CheckFlag(SequenceType.ROTATION_X)) {
-      rotationX = this.Parent.CompressAng[br.ReadByte()];
+      rotationX = this.Parent.CompressedAngles[br.ReadByte()];
     } else {
       rotationX = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.ROTATION_Y)) {
-      rotationY = this.Parent.CompressAng[br.ReadByte()];
+      rotationY = this.Parent.CompressedAngles[br.ReadByte()];
     } else {
       rotationY = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.ROTATION_Z)) {
-      rotationZ = this.Parent.CompressAng[br.ReadByte()];
+      rotationZ = this.Parent.CompressedAngles[br.ReadByte()];
     } else {
       rotationZ = null;
     }
 
 
     if (this.Type.CheckFlag(SequenceType.POSITION_X)) {
-      positionX = this.Parent.CompressPos[br.ReadByte()];
+      positionX = this.Parent.CompressedPositions[br.ReadByte()];
     } else {
       positionX = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.POSITION_Y)) {
-      positionY = this.Parent.CompressPos[br.ReadByte()];
+      positionY = this.Parent.CompressedPositions[br.ReadByte()];
     } else {
       positionY = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.POSITION_Z)) {
-      positionZ = this.Parent.CompressPos[br.ReadByte()];
+      positionZ = this.Parent.CompressedPositions[br.ReadByte()];
     } else {
       positionZ = null;
     }
 
 
     if (this.Type.CheckFlag(SequenceType.SCALE_X)) {
-      scaleX = this.Parent.CompressScale[br.ReadByte()];
+      scaleX = this.Parent.CompressedScales[br.ReadByte()];
     } else {
       scaleX = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.SCALE_Y)) {
-      scaleY = this.Parent.CompressScale[br.ReadByte()];
+      scaleY = this.Parent.CompressedScales[br.ReadByte()];
     } else {
       scaleY = null;
     }
 
     if (this.Type.CheckFlag(SequenceType.SCALE_Z)) {
-      scaleZ = this.Parent.CompressScale[br.ReadByte()];
+      scaleZ = this.Parent.CompressedScales[br.ReadByte()];
     } else {
       scaleZ = null;
     }
