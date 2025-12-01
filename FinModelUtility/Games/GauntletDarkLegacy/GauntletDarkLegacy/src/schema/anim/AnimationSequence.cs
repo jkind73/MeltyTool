@@ -142,15 +142,24 @@ public sealed partial class AnimationSequence
 
             if (!isCompressed) {
               this.ReadUncompressedFrame_(br,
-                                          out rotationX,
-                                          out rotationY,
-                                          out rotationZ,
-                                          out positionX,
-                                          out positionY,
-                                          out positionZ,
-                                          out scaleX,
-                                          out scaleY,
-                                          out scaleZ);
+                                          out var deltaRotationX,
+                                          out var deltaRotationY,
+                                          out var deltaRotationZ,
+                                          out var deltaPositionX,
+                                          out var deltaPositionY,
+                                          out var deltaPositionZ,
+                                          out var deltaScaleX,
+                                          out var deltaScaleY,
+                                          out var deltaScaleZ);
+              rotationX = Add_(rotationX, deltaRotationX);
+              rotationY = Add_(rotationY, deltaRotationY);
+              rotationZ = Add_(rotationZ, deltaRotationZ);
+              positionX = Add_(positionX, deltaPositionX);
+              positionY = Add_(positionY, deltaPositionY);
+              positionZ = Add_(positionZ, deltaPositionZ);
+              scaleX = Add_(scaleX, deltaScaleX);
+              scaleY = Add_(scaleY, deltaScaleY);
+              scaleZ = Add_(scaleZ, deltaScaleZ);
             } else {
               this.ReadCompressedFrame_(br,
                                         out var deltaRotationX,
@@ -172,6 +181,10 @@ public sealed partial class AnimationSequence
               scaleY = Add_(scaleY, deltaScaleY);
               scaleZ = Add_(scaleZ, deltaScaleZ);
             }
+
+            rotationX = FixRotation_(rotationX);
+            rotationY = FixRotation_(rotationY);
+            rotationZ = FixRotation_(rotationZ);
 
             this.RotationXs[f] = rotationX;
             this.RotationYs[f] = rotationY;
@@ -328,5 +341,22 @@ public sealed partial class AnimationSequence
     }
 
     return null;
+  }
+
+  private static float? FixRotation_(float? radians) {
+    if (radians == null) {
+      return null;
+    }
+
+    // From the decomp
+    if (radians <= MathF.PI) {
+      if (radians <= -MathF.PI) {
+        radians += MathF.Tau;
+      }
+    } else {
+      radians -= MathF.Tau;
+    }
+
+    return radians;
   }
 }

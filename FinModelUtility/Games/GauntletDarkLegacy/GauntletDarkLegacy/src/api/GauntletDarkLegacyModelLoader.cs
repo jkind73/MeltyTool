@@ -280,6 +280,7 @@ public sealed class GauntletDarkLegacyModelImporter
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
                   totalSequnceFrameCount);
+          // TODO: Definitely need a custom quaternion interpolator here
           var positionKeyframes
               = finBoneTracks.UseSeparateTranslationKeyframes(
                   totalSequnceFrameCount);
