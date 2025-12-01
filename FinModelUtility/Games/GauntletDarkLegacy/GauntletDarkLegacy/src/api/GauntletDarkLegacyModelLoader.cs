@@ -185,6 +185,7 @@ public sealed class GauntletDarkLegacyModelImporter
           return finModel.MaterialManager.AddTextureMaterial(finTexture);
         });
 
+    IBone? weaponBone = null;
     var finBones = new List<IReadOnlyBone>();
     foreach (var gdlSkeleton in anim.Atrees) {
       var gdlBones = gdlSkeleton.Data.ANodeInfos;
@@ -214,6 +215,11 @@ public sealed class GauntletDarkLegacyModelImporter
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
         } else if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
+        }
+
+        if (finBone.Name is "R_WRIST") {
+          weaponBone = finBone.AddChild(Vector3.Zero);
+          weaponBone.Name = "WEAPON";
         }
 
         if (gdlBonesByParent.TryGetList(gdlANodeInfo, out var childGdlBones)) {
@@ -372,19 +378,27 @@ public sealed class GauntletDarkLegacyModelImporter
     var finSkin = finModel.Skin;
     foreach (var (definition, obj) in objects.ObjectDefinitions.Zip(
                  objects.RootObjects)) {
-      var finMesh = finSkin.AddMesh();
-      finMesh.Name = definition.Name;
+      var finRootMesh = finSkin.AddMesh();
+      finRootMesh.Name = definition.Name;
 
       var finBone
-          = finBones.FirstOrDefault(b => finMesh.Name.Contains(b.Name!));
+          = finBones.FirstOrDefault(b => finRootMesh.Name.Contains(b.Name!));
+
+      // HACK: Weapon isn't attached to the hand otherwise
+      if (finBone == null && definition.Name.StartsWith("WEAP_")) {
+        finBone = weaponBone;
+      }
+
       var finBoneWeights
           = finBone != null
               ? finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                                finBone)
               : null;
 
-      for (var m = 0; m < (obj.Mesh?.All.Count ?? 0); ++m) {
-        var gdlMesh = obj.Mesh.All[m];
+      for (var m = 0; m < (obj.SubObjectModels?.All.Count ?? 0); ++m) {
+        var finSubMesh = finRootMesh.AddSubMesh();
+
+        var gdlMesh = obj.SubObjectModels.All[m];
 
         var textureIndex = m == 0
             ? obj.SubObject0TextureIndex
@@ -426,7 +440,7 @@ public sealed class GauntletDarkLegacyModelImporter
                 })
                 .ToArray();
 
-          var finPrimitive = finMesh.AddTriangleStrip(finVertices);
+          var finPrimitive = finSubMesh.AddTriangleStrip(finVertices);
           finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
           finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder);
         }

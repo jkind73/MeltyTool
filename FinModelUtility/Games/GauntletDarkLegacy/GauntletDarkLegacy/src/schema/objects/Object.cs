@@ -12,7 +12,7 @@ namespace gdl.schema.objects;
 [BinarySchema]
 public sealed partial class Object : IBinaryDeserializable {
   public float InvRad { get; set; }
-  public float BndRad { get; set; }
+  public float BoundingRadius { get; set; }
   public uint Flags { get; set; }
   public uint SubObjectCount { get; set; }
   public ushort SubObject0Qwc { get; set; }
@@ -20,7 +20,7 @@ public sealed partial class Object : IBinaryDeserializable {
   public ushort SubObject0LmIndex { get; set; }
   public short SubObject0Lodk { get; set; }
   public uint SubObjectPointer { get; set; }
-  public uint DataPointer { get; set; }
+  public uint SubObjectModelsPointer { get; set; }
   public uint VertexCount { get; set; }
   public uint TriangleCount { get; set; }
   public uint Index { get; set; }
@@ -30,7 +30,7 @@ public sealed partial class Object : IBinaryDeserializable {
   public uint[] Unk0 { get; set; }
 
   [Skip]
-  public Meshes? Mesh { get; set; }
+  public SubObjectModels? SubObjectModels { get; set; }
 
   [RAtPosition(nameof(SubObjectPointer))]
   [RSequenceLengthSource(nameof(SubObjectCount))]
@@ -39,17 +39,17 @@ public sealed partial class Object : IBinaryDeserializable {
   
   [ReadLogic]
   private void ReadMesh_(IBinaryReader br) {
-    if (this.DataPointer == 0) {
-      this.Mesh = null;
+    if (this.SubObjectModelsPointer == 0) {
+      this.SubObjectModels = null;
       return;
     }
 
-    br.SubreadAt(this.DataPointer,
+    br.SubreadAt(this.SubObjectModelsPointer,
                  () => {
-                   this.Mesh ??= new Meshes {
+                   this.SubObjectModels ??= new SubObjectModels {
                        Parent = this,
                    };
-                   this.Mesh.Read(br);
+                   this.SubObjectModels.Read(br);
                  });
   }
 }

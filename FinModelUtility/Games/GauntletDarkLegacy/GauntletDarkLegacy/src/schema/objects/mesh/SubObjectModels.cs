@@ -28,7 +28,7 @@ public class Primitive {
 ///   https://github.com/MosesofEgypt/gdl_tools/blob/main/gdl/compilation/g3d/serialization/model_vif.py#L92
 ///   https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L527
 /// </summary>
-public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
+public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
   public Object Parent { get; set; }
 
   public List<Mesh> All { get; set; } = new();
@@ -38,7 +38,7 @@ public sealed class Meshes : IBinaryDeserializable, IChildOf<Object> {
 
     var signals = new LinkedList<Signal?>();
 
-    foreach (var subObject in this.Parent.SubObjects) {
+    for (var subObjI = 0; subObjI < this.Parent.SubObjectCount; ++subObjI) {
       var unpackCommand = br.ReadUInt32();
       var unpackSize = (unpackCommand << 4) & 0xFFFFFFFF;
 
