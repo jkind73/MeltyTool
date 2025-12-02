@@ -113,6 +113,9 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
 
           switch (signal.Index) {
             case SignalIndex.VERTEX: {
+              // TODO: Still not quite right, positions are messed up (e.g.
+              // the warrior's face)
+
               for (var i = 0; i < dataCount; ++i) {
                 // Shamelessly stolen from:
                 // https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L305
@@ -151,6 +154,8 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
               break;
             }
             case SignalIndex.UV: {
+              // TODO: Still not quite right, UVs are still broken (e.g.
+              // warrior's chest is messed up)
               for (var i = 0; i < dataCount; ++i) {
                 var uv = new Uv(signal.Mode);
                 uv.Read(br);

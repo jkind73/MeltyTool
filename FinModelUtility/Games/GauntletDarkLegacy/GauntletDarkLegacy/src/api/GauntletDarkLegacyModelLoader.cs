@@ -475,6 +475,9 @@ public sealed class GauntletDarkLegacyModelImporter
     var pitchQuaternion = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -x);
     var rollQuaternion = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, z);
 
+    // TODO: Still not quite right, e.g. the warrior model's SHOVE animation
+    // has his arms broken
+
     return yawQuaternion * pitchQuaternion * rollQuaternion;
   }
 }
