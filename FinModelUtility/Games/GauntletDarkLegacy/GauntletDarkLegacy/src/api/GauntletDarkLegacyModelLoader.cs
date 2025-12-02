@@ -202,8 +202,14 @@ public sealed class GauntletDarkLegacyModelImporter
               .Select(rootGdlBone => (rootGdlBone, finModel.Skeleton.Root)));
       var finBoneByGdlBone = new Dictionary<ANodeInfo, IReadOnlyBone>();
 
-      while (boneQueue.TryDequeue(out var gdlANodeInfo, out var finParentBone)) {
-        var worldMatrix = Matrix4x4.CreateTranslation(gdlANodeInfo.InitialPosition);
+      while (boneQueue.TryDequeue(out var gdlANodeInfo,
+                                  out var finParentBone)) {
+        var initialPosition = gdlANodeInfo.InitialPosition;
+
+        // For some inexplicable reason, the meshes are mirrored.
+        initialPosition.X *= -1;
+        
+        var worldMatrix = Matrix4x4.CreateTranslation(initialPosition);
 
         var finBone = finParentBone.AddChild(worldMatrix);
         finBone.Name = gdlANodeInfo.MbDesc;
@@ -213,7 +219,8 @@ public sealed class GauntletDarkLegacyModelImporter
 
         if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
-        } else if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
+        } else if (gdlANodeInfo.MbFlags.CheckFlag(
+                       MbFlags.YAW_AND_PITCH_BILLBOARD)) {
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
         }
 
@@ -292,10 +299,10 @@ public sealed class GauntletDarkLegacyModelImporter
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
                   totalSequnceFrameCount);
-          // TODO: Definitely need a custom quaternion interpolator here
-          var positionKeyframes
-              = finBoneTracks.UseSeparateTranslationKeyframes(
-                  totalSequnceFrameCount);
+          rotationKeyframes.ConvertRadiansToQuaternionImpl
+              = this.ConvertGdlRadiansToQuaternion_;
+          var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
+              totalSequnceFrameCount);
           var scaleKeyframes
               = finBoneTracks.UseSeparateScaleKeyframes(
                   totalSequnceFrameCount);
@@ -315,28 +322,29 @@ public sealed class GauntletDarkLegacyModelImporter
               if (rotationX != null) {
                 rotationKeyframes.SetKeyframe(0,
                                               frame,
-                                              -rotationX.Value);
+                                              rotationX.Value);
               }
 
               var rotationY = gdlSequence.RotationYs[f];
               if (rotationY != null) {
                 rotationKeyframes.SetKeyframe(1,
                                               frame,
-                                              -rotationY.Value);
+                                              rotationY.Value);
               }
 
               var rotationZ = gdlSequence.RotationZs[f];
               if (rotationZ != null) {
                 rotationKeyframes.SetKeyframe(2,
                                               frame,
-                                              -rotationZ.Value);
+                                              rotationZ.Value);
               }
 
               var positionX = gdlSequence.PositionXs[f];
               if (positionX != null) {
+                // For some inexplicable reason, the meshes are mirrored.
                 positionKeyframes.SetKeyframe(0,
                                               frame,
-                                              positionX.Value);
+                                              -positionX.Value);
               }
 
               var positionY = gdlSequence.PositionYs[f];
@@ -413,7 +421,12 @@ public sealed class GauntletDarkLegacyModelImporter
               = gdlPrimitive
                 .Positions
                 .Select((p, i) => {
-                  var finVertex = finSkin.AddVertex(p / 128f);
+                  p /= 128f;
+
+                  // For some inexplicable reason, the meshes are mirrored.
+                  p.X *= -1;
+
+                  var finVertex = finSkin.AddVertex(p);
 
                   /*if (gdlPrimitive.Normals.Count >=
                       gdlPrimitive.Positions.Count) {
@@ -442,11 +455,26 @@ public sealed class GauntletDarkLegacyModelImporter
 
           var finPrimitive = finSubMesh.AddTriangleStrip(finVertices);
           finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
-          finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder);
+          finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder switch {
+              VertexOrder.CLOCKWISE => VertexOrder.COUNTER_CLOCKWISE,
+              VertexOrder.COUNTER_CLOCKWISE => VertexOrder.CLOCKWISE,
+          });
         }
       }
     }
 
     return finModel;
+  }
+
+  private Quaternion ConvertGdlRadiansToQuaternion_(float x, float y, float z) {
+    // y is definitely yaw, needs to be negative (e.g. turning side-to-side in idle)
+    // x is definitely pitch, needs to be negative (e.g. legs running)
+    // z must be roll, needs to be negative (e.g. archer bobbing back and forth in idle)
+
+    var yawQuaternion = Quaternion.CreateFromAxisAngle(Vector3.UnitY, -y);
+    var pitchQuaternion = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -x);
+    var rollQuaternion = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, z);
+
+    return yawQuaternion * pitchQuaternion * rollQuaternion;
   }
 }
