@@ -59,8 +59,8 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
         $"uniform {GlslUtil.GetTypeOfTexture(this.diffuseTexture_, this.animations_)} diffuseTexture;");
 
     if (this.hasLighting_) {
-      sb.AppendLine(
-          $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
+      sb.AppendLine($"uniform bool {GlslConstants.UNIFORM_HAS_SPECULAR_NAME};");
+      sb.AppendLine($"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
 
     sb.AppendLine(

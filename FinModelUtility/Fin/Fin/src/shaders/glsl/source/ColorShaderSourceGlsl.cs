@@ -37,8 +37,8 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     sb.AppendLine("uniform vec4 diffuseColor;");
 
     if (this.hasLighting_) {
-      sb.AppendLine(
-          $"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
+      sb.AppendLine($"uniform bool {GlslConstants.UNIFORM_HAS_SPECULAR_NAME};");
+      sb.AppendLine($"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
 
     sb.AppendLine(

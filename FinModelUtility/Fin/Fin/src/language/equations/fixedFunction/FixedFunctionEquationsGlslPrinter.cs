@@ -84,6 +84,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     // TODO: Optimize this if we only need ambient
     if (dependsOnLights || dependsOnAmbientLight) {
       sb.AppendLine(GlslUtil.LIGHT_HEADER);
+      sb.AppendLine($"uniform bool {GlslConstants.UNIFORM_HAS_SPECULAR_NAME};");
       sb.AppendLine($"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
 

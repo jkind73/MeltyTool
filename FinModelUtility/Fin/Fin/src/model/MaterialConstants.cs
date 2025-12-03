@@ -7,6 +7,7 @@ public static class MaterialConstants {
   public const int MAX_UVS = 4;
 
   public const float DEFAULT_SHININESS = 30;
+  public const float DISABLED_SHININESS = 0;
 
   public const string LIGHTS_NAME = "lights";
 }

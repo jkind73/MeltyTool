@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 
 using fin.math;
+using fin.math.floats;
 using fin.model;
 using fin.shaders.glsl;
 using fin.shaders.glsl.source;
@@ -19,6 +20,8 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
   private readonly GlShaderProgram impl_;
 
   private readonly IShaderUniform<Vector3> cameraPositionUniform_;
+
+  private readonly IShaderUniform<bool> hasSpecularUniform_;
   private readonly IShaderUniform<float> shininessUniform_;
 
   protected BGlMaterialShader(
@@ -36,6 +39,8 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
         shaderSource.VertexShaderSource,
         shaderSource.FragmentShaderSource);
 
+    this.hasSpecularUniform_ = this.impl_.GetUniformBool(
+        GlslConstants.UNIFORM_HAS_SPECULAR_NAME);
     this.shininessUniform_ = this.impl_.GetUniformFloat(
         GlslConstants.UNIFORM_SHININESS_NAME);
 
@@ -80,8 +85,9 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
   public void Use() {
     this.cameraPositionUniform_.SetAndMaybeMarkDirty(Camera.Instance.Position);
 
-    this.shininessUniform_.SetAndMaybeMarkDirty(
-        this.Material?.Shininess ?? 0);
+    var shininess = this.Material?.Shininess ?? 0;
+    this.hasSpecularUniform_.SetAndMaybeMarkDirty(!shininess.IsRoughly0());
+    this.shininessUniform_.SetAndMaybeMarkDirty(shininess);
 
     foreach (var cachedTextureUniformData in
              this.cachedTextureUniformDatas_) {

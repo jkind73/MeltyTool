@@ -429,8 +429,12 @@ public static class GlslUtil {
 
             vec4 diffuseComponent = diffuseSurfaceColor * ({{(withAmbientOcclusion ? "ambientOcclusionAmount * " : "")}}ambientLightColor + mergedDiffuseLightColor);
             vec4 specularComponent = specularSurfaceColor * mergedSpecularLightColor;
-            
-            return clamp(diffuseComponent + specularComponent, 0.0, 1.0);
+
+            if ({{GlslConstants.UNIFORM_HAS_SPECULAR_NAME}}) {
+              return clamp(diffuseComponent + specularComponent, 0.0, 1.0);
+            } else {
+              return clamp(diffuseComponent, 0.0, 1.0);
+            }
           }
           """;
   }

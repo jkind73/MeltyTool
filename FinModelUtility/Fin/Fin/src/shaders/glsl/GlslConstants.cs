@@ -25,6 +25,8 @@ public static class GlslConstants {
 
   public const string UNIFORM_BONE_MATRICES_NAME = "boneMatrices";
   public const string UNIFORM_USE_LIGHTING_NAME = "useLighting";
+
+  public const string UNIFORM_HAS_SPECULAR_NAME = "hasSpecular";
   public const string UNIFORM_SHININESS_NAME = "shininess";
 
   public const string IN_UV_NAME = "uv";

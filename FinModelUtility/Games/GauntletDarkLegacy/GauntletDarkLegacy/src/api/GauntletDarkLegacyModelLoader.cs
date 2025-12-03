@@ -182,7 +182,12 @@ public sealed class GauntletDarkLegacyModelImporter
     var lazyFinMaterials
         = new LazyDictionary<int, IReadOnlyMaterial>(index => {
           var finTexture = finTextures[index];
-          return finModel.MaterialManager.AddTextureMaterial(finTexture);
+          var finMaterial
+              = finModel.MaterialManager.AddTextureMaterial(finTexture);
+
+          finMaterial.Shininess = MaterialConstants.DISABLED_SHININESS;
+
+          return finMaterial;
         });
 
     IBone? weaponBone = null;
