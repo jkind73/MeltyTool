@@ -208,7 +208,7 @@ public sealed class GauntletDarkLegacyModelImporter
 
         // For some inexplicable reason, the meshes are mirrored.
         initialPosition.X *= -1;
-        
+
         var worldMatrix = Matrix4x4.CreateTranslation(initialPosition);
 
         var finBone = finParentBone.AddChild(worldMatrix);
@@ -428,17 +428,12 @@ public sealed class GauntletDarkLegacyModelImporter
 
                   var finVertex = finSkin.AddVertex(p);
 
-                  /*if (gdlPrimitive.Normals.Count >=
-                      gdlPrimitive.Positions.Count) {
-                    finVertex.SetLocalNormal(gdlPrimitive.Normals[i]);
-                  }*/
+                  var normal = gdlPrimitive.Normals[i];
+                  normal.X *= -1;
 
-                  if (gdlPrimitive.Uvs.Count >=
-                      gdlPrimitive.Positions.Count) {
-                    finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
-                  } else {
-                    finVertex.SetUv(0, 0);
-                  }
+                  finVertex.SetLocalNormal(normal);
+
+                  finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
 
                   if (gdlPrimitive.VertexColors.Count >=
                       gdlPrimitive.Positions.Count) {
@@ -456,7 +451,7 @@ public sealed class GauntletDarkLegacyModelImporter
           var finPrimitive = finSubMesh.AddTriangleStrip(finVertices);
           finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
           finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder switch {
-              VertexOrder.CLOCKWISE => VertexOrder.COUNTER_CLOCKWISE,
+              VertexOrder.CLOCKWISE         => VertexOrder.COUNTER_CLOCKWISE,
               VertexOrder.COUNTER_CLOCKWISE => VertexOrder.CLOCKWISE,
           });
         }

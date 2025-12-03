@@ -173,14 +173,13 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
                     var packedNormal = br.ReadUInt16();
 
                     var normalScale = 0.06666667f;
-                    var x = ((packedNormal & 0x1f) - 0xf) * normalScale;
-                    var y = (((packedNormal >> 5) & 0xf) - 0xf) * normalScale;
-                    var z = (((packedNormal >> 10) & 0xf) - 0xf) *
-                            normalScale;
+                    var x = (packedNormal & 0x1f) * normalScale - 1;
+                    var y = ((packedNormal >> 5) & 0x1f) * normalScale - 1;
+                    var z = ((packedNormal >> 10) & 0x1f) * normalScale - 1;
 
                     // TODO: Handle skipped faces
 
-                    normals.Add(new Vector3(x, y, z));
+                    normals.Add(Vector3.Normalize(new Vector3(x, y, z)));
                     break;
                   }
                   default:
