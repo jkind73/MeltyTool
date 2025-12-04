@@ -15,11 +15,11 @@ public sealed partial class GawgEventManager {
   }
 
   public IGawgEvent AddEvent(ulong ticksFromCurrent, ulong durationInTicks) {
-    var inclusiveStart = this.CurrentTick + ticksFromCurrent;
+    var inclusiveStart = this.CurrentTick.GetTickAfter(ticksFromCurrent);
 
     var newEvent = new GawgEvent(this) {
         InclusiveStart = inclusiveStart,
-        InclusiveEnd = inclusiveStart + durationInTicks,
+        InclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks),
         IsExclusive = false,
     };
 
@@ -32,12 +32,12 @@ public sealed partial class GawgEventManager {
       ulong ticksFromCurrent,
       ulong durationInTicks,
       out IGawgEvent outEvent) {
-    var inclusiveStart = this.CurrentTick + ticksFromCurrent;
-    var inclusiveEnd = inclusiveStart + durationInTicks;
+    var inclusiveStart = this.CurrentTick.GetTickAfter(ticksFromCurrent);
+    var inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
     foreach (var gawgEvent in this.allIncompleteEvents_) {
       if (gawgEvent.IsExclusive &&
-          gawgEvent.InclusiveStart <= inclusiveEnd &&
-          inclusiveStart <= gawgEvent.InclusiveEnd) {
+          gawgEvent.InclusiveStart.AtSameTimeAsOrBefore(inclusiveEnd) &&
+          inclusiveStart.AtSameTimeAsOrBefore(gawgEvent.InclusiveEnd)) {
         outEvent = null!;
         return false;
       }
@@ -57,16 +57,16 @@ public sealed partial class GawgEventManager {
   public IGawgEvent AddSoonestExclusiveEventAfter(
       ulong earliestTicksFromCurrent,
       ulong durationInTicks) {
-    var inclusiveStart = this.CurrentTick + earliestTicksFromCurrent;
-    var inclusiveEnd = inclusiveStart + durationInTicks;
+    var inclusiveStart = this.CurrentTick.GetTickAfter(earliestTicksFromCurrent);
+    var inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
 
     TryAgain:
     foreach (var gawgEvent in this.allIncompleteEvents_) {
       if (gawgEvent.IsExclusive &&
-          gawgEvent.InclusiveStart <= inclusiveEnd &&
-          inclusiveStart <= gawgEvent.InclusiveEnd) {
-        inclusiveStart = gawgEvent.InclusiveEnd + 1;
-        inclusiveEnd = inclusiveStart + durationInTicks;
+          gawgEvent.InclusiveStart.AtSameTimeAsOrBefore(inclusiveEnd) &&
+          inclusiveStart.AtSameTimeAsOrBefore(gawgEvent.InclusiveEnd)) {
+        inclusiveStart = gawgEvent.InclusiveEnd.GetTickAfter(1);
+        inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
 
         goto TryAgain;
       }
@@ -100,9 +100,9 @@ public sealed partial class GawgEventManager {
         var currentState = this.State;
 
         GawgEventState newState;
-        if (eventManager.CurrentTick < this.InclusiveStart) {
+        if (eventManager.CurrentTick.IsBefore(this.InclusiveStart)) {
           newState = GawgEventState.WAITING;
-        } else if (this.InclusiveEnd < eventManager.CurrentTick) {
+        } else if (eventManager.CurrentTick.IsAfter(this.InclusiveEnd)) {
           newState = GawgEventState.COMPLETE;
         } else {
           newState = GawgEventState.ACTIVE;
@@ -127,8 +127,10 @@ public sealed partial class GawgEventManager {
         } else if (state == GawgEventState.COMPLETE) {
           this.Progress = 1;
         } else {
-          var durationInTicks = 1 + (this.InclusiveEnd - this.InclusiveStart);
-          var completedTicks = eventManager.CurrentTick - this.InclusiveStart;
+          var durationInTicks
+              = 1 + this.InclusiveEnd.GetDurationSince(this.InclusiveStart);
+          var completedTicks
+              = eventManager.CurrentTick.GetDurationSince(this.InclusiveStart);
 
           var singleTickSize = 1f / durationInTicks;
           var progressInCurrentTick = eventManager.CurrentTickProgress;

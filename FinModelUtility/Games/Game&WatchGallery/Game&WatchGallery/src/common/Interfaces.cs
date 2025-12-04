@@ -41,36 +41,16 @@ public enum GawgEventState {
 public partial interface IGawgTick {
   ulong Id { get; }
 
-  public static virtual bool operator==(IGawgTick lhs, IGawgTick rhs)
-    => lhs.Id == rhs.Id;
+  bool AtSameTimeAs(IGawgTick other);
 
-  public static virtual bool operator!=(IGawgTick lhs, IGawgTick rhs)
-    => !(lhs == rhs);
+  bool IsAfter(IGawgTick other);
+  bool AtSameTimeAsOrAfter(IGawgTick other);
 
-  public static virtual bool operator>(IGawgTick lhs, IGawgTick rhs)
-    => (lhs - rhs) < (rhs - lhs);
+  bool IsBefore(IGawgTick other);
+  bool AtSameTimeAsOrBefore(IGawgTick other);
 
-  public static virtual bool operator>=(IGawgTick lhs, IGawgTick rhs)
-    => lhs == rhs || lhs > rhs;
-
-  public static virtual bool operator<=(IGawgTick lhs, IGawgTick rhs)
-    => !(lhs > rhs);
-
-  public static virtual bool operator<(IGawgTick lhs, IGawgTick rhs)
-    => !(lhs >= rhs);
-
-  public static abstract IGawgTick operator+(IGawgTick lhs, ulong rhs);
-
-  public static ulong operator-(IGawgTick lhs, IGawgTick rhs) {
-    var lhsId = lhs.Id;
-    var rhsId = rhs.Id;
-
-    if (lhsId > rhsId) {
-      return lhsId - rhsId;
-    }
-
-    return lhsId + (ulong.MaxValue - rhsId);
-  }
+  IGawgTick GetTickAfter(ulong delta);
+  ulong GetDurationSince(IGawgTick other);
 }
 
 [GenerateReadOnly]
