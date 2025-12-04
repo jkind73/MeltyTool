@@ -119,10 +119,6 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         KeyDownEvent,
         (_, args) => {
-          if (!this.AllowMovingCamera) {
-            return;
-          }
-
           switch (args.Key) {
             case Key.W: {
               this.isForwardDown_ = true;
@@ -165,10 +161,6 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     this.AddHandler(
         KeyUpEvent,
         (_, args) => {
-          if (!this.AllowMovingCamera) {
-            return;
-          }
-
           switch (args.Key) {
             case Key.W: {
               this.isForwardDown_ = false;
@@ -270,6 +262,11 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     MainViewInputService.NormalizedMousePosition
         = new Vector2((float) (this.mousePosition_.X / this.Bounds.Width),
                       (float) (this.mousePosition_.Y / this.Bounds.Height));
+
+    MainViewInputService.WKeyDown = this.isForwardDown_;
+    MainViewInputService.AKeyDown = this.isLeftwardDown_;
+    MainViewInputService.SKeyDown = this.isBackwardDown_;
+    MainViewInputService.DKeyDown = this.isRightwardDown_;
 
     this.viewerImpl_.GlobalScale = UiConstants.GLOBAL_SCALE;
     this.viewerImpl_.NearPlane = UiConstants.NEAR_PLANE;

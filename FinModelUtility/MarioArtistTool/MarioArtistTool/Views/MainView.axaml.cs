@@ -113,23 +113,9 @@ public partial class MainView : UserControl {
                 = new SimpleModelRenderComponent(model, lighting);
 
             var characterObj = area.AddRootNode();
-            characterObj.AddComponent(
-                new LookAtMouseTickComponent(
-                    modelRenderComponent.SimpleBoneTransformView,
-                    model.Skeleton
-                         .Bones
-                         .Single(b => b.Name?.StartsWith(
-                                          $"{JointIndex.NECK}:") ??
-                                      false),
-                    model.Skeleton
-                         .Bones
-                         .Single(b => b.Name?.StartsWith(
-                                          $"{JointIndex.TORSO}:") ??
-                                      false)));
 
             var modelObj = characterObj.AddChildNode();
             modelObj.AddComponent(modelRenderComponent);
-            modelObj.AddComponent(new RotateTalentTickComponent());
 
             var shadowPlacementObj = characterObj.AddChildNode();
             shadowPlacementObj.SetPosition(20, -20, -100);
@@ -139,8 +125,39 @@ public partial class MainView : UserControl {
             shadowModelObj.AddComponent(
                 new ShadowRenderComponent(
                     new LambdaSceneNodeRenderComponent(_ => modelRenderComponent
-                          .Render(false))));
-            shadowModelObj.AddComponent(new RotateTalentTickComponent());
+                        .Render(false))));
+
+            if (true) {
+              characterObj.AddComponent(
+                  new LookAtMouseTickComponent(
+                      modelRenderComponent.SimpleBoneTransformView,
+                      model.Skeleton
+                           .Bones
+                           .Single(b => b.Name?.StartsWith(
+                                            $"{JointIndex.NECK}:") ??
+                                        false),
+                      model.Skeleton
+                           .Bones
+                           .Single(b => b.Name?.StartsWith(
+                                            $"{JointIndex.TORSO}:") ??
+                                        false)));
+              modelObj.AddComponent(new RotateTalentTickComponent());
+              shadowModelObj.AddComponent(new RotateTalentTickComponent());
+            } else {
+              characterObj.AddComponent(
+                  new LookAtMouseTickComponent(
+                      modelRenderComponent.SimpleBoneTransformView,
+                      model.Skeleton
+                           .Bones
+                           .Single(b => b.Name?.StartsWith(
+                                            $"{JointIndex.NECK}:") ??
+                                        false),
+                      null));
+              characterObj.AddComponent(
+                  new BallTickComponent(
+                      modelRenderComponent.SimpleBoneTransformView,
+                      model.Skeleton));
+            }
 
             this.currentModelFileBundle_ = bundle;
 

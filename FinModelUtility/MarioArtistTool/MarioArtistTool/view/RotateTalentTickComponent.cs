@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
 using fin.config.avalonia.services;
-using fin.math.transform;
 using fin.scene;
 
 namespace MarioArtistTool.view;

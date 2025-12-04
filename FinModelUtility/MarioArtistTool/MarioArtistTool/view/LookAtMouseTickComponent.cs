@@ -18,7 +18,7 @@ namespace MarioArtistTool.view;
 public class LookAtMouseTickComponent(
     SimpleBoneTransformView boneTransformView,
     IReadOnlyBone neckBone,
-    IReadOnlyBone torsoBone)
+    IReadOnlyBone? torsoBone)
     : ISceneNodeTickComponent {
   private Quaternion currentNeckRotation_
       = new Vector3(MathF.PI / 2, -MathF.PI / 2, MathF.PI / 2)
@@ -92,9 +92,14 @@ public class LookAtMouseTickComponent(
         newNeckRotation = fromRotationForNeck.SlerpTowards(toRotationForNeck,
           5 * FrameTime.DeltaTime,
           !slerpTheLongWay);
+
+        this.currentNeckRotation_ = newNeckRotation;
+        boneTransformView.OverrideWorldRotation(
+            neckBone,
+            newNeckRotation);
       }
 
-      {
+      if (torsoBone != null) {
         var fromRotationForTorso = this.currentTorsoRotation_;
         var toRotationForTorso = toRadiansForTorso.CreateZyxRadians();
 
@@ -110,18 +115,13 @@ public class LookAtMouseTickComponent(
             .SlerpTowards(toRotationForTorso,
                           8 * deltaTime,
                           !slerpTheLongWay);
+
+        this.currentTorsoRotation_ = newTorsoRotation;
+        boneTransformView.OverrideWorldRotation(
+            torsoBone,
+            newTorsoRotation);
       }
     }
-
-    this.currentNeckRotation_ = newNeckRotation;
-    this.currentTorsoRotation_ = newTorsoRotation;
-
-    boneTransformView.OverrideWorldRotation(
-        neckBone,
-        newNeckRotation);
-    boneTransformView.OverrideWorldRotation(
-        torsoBone,
-        newTorsoRotation);
   }
 
   private static Vector3 CalculateEulerRadiansForMousePosition_(
