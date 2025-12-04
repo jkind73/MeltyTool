@@ -29,6 +29,7 @@ layout (std140, binding = 2) uniform Lights {
 };
 
 uniform vec3 cameraPosition;
+uniform bool hasSpecular;
 uniform float shininess;
 uniform vec3 color_GxMaterialColor1;
 uniform vec3 color_GxAmbientColor1;

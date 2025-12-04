@@ -150,6 +150,7 @@ public sealed class StandardShaderSourceGlslTests {
 
           {{GlslUtil.LIGHT_HEADER}}
 
+          uniform bool hasSpecular;
           uniform float shininess;
 
           out vec4 fragColor;
@@ -192,6 +193,7 @@ public sealed class StandardShaderSourceGlslTests {
           {{GlslUtil.LIGHT_HEADER}}
 
           uniform sampler2D diffuseTexture;
+          uniform bool hasSpecular;
           uniform float shininess;
 
           out vec4 fragColor;
@@ -235,6 +237,7 @@ public sealed class StandardShaderSourceGlslTests {
           {{GlslUtil.LIGHT_HEADER}}
 
           uniform sampler2D emissiveTexture;
+          uniform bool hasSpecular;
           uniform float shininess;
 
           out vec4 fragColor;

@@ -31,6 +31,7 @@ layout (std140, binding = 2) uniform Lights {
 uniform vec3 cameraPosition;
 
 uniform sampler2D diffuseTexture;
+uniform bool hasSpecular;
 uniform float shininess;
 
 out vec4 fragColor;
@@ -129,8 +130,12 @@ vec4 applyMergedLightingColors(vec3 position, vec3 normal, float shininess, vec4
 
   vec4 diffuseComponent = diffuseSurfaceColor * (ambientLightColor + mergedDiffuseLightColor);
   vec4 specularComponent = specularSurfaceColor * mergedSpecularLightColor;
-  
-  return clamp(diffuseComponent + specularComponent, 0.0, 1.0);
+
+  if (hasSpecular) {
+    return clamp(diffuseComponent + specularComponent, 0.0, 1.0);
+  } else {
+    return clamp(diffuseComponent, 0.0, 1.0);
+  }
 }
 
 void main() {

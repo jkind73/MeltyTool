@@ -76,6 +76,7 @@ public sealed class TextureShaderSourceGlslTests {
           {{GlslUtil.LIGHT_HEADER}}
 
           uniform sampler2D diffuseTexture;
+          uniform bool hasSpecular;
           uniform float shininess;
 
           out vec4 fragColor;

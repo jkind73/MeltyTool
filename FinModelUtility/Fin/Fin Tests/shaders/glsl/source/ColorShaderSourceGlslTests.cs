@@ -70,6 +70,7 @@ public sealed class ColorShaderSourceGlslTests {
           {{GlslUtil.LIGHT_HEADER}}
 
           uniform vec4 diffuseColor;
+          uniform bool hasSpecular;
           uniform float shininess;
 
           out vec4 fragColor;

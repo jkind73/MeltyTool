@@ -103,6 +103,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
           {{GlslConstants.FLOAT_PRECISION}}
 
           {{GlslUtil.LIGHT_HEADER}}
+          uniform bool hasSpecular;
           uniform float shininess;
           uniform sampler2D texture0;
 
