@@ -302,6 +302,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PokemonColosseum", "Pokemon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PokemonColosseum", "Games\PokemonColosseum\PokemonColosseum\PokemonColosseum.csproj", "{65BE8F92-3706-4C0A-B479-230542A50269}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game&WatchGallery", "Game&WatchGallery", "{E58E8142-49D5-4AD9-AF3D-9A6CC0225381}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game&WatchGallery", "Games\Game&WatchGallery\Game&WatchGallery\Game&WatchGallery.csproj", "{10251995-C2CB-4B6A-A0FA-6031F5D229CB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -1030,6 +1034,14 @@ Global
 		{65BE8F92-3706-4C0A-B479-230542A50269}.Release|x64.Build.0 = Release|x64
 		{65BE8F92-3706-4C0A-B479-230542A50269}.Release|x86.ActiveCfg = Release|x86
 		{65BE8F92-3706-4C0A-B479-230542A50269}.Release|x86.Build.0 = Release|x86
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Debug|x64.ActiveCfg = Debug|x64
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Debug|x64.Build.0 = Debug|x64
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Debug|x86.ActiveCfg = Debug|x86
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Debug|x86.Build.0 = Debug|x86
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Release|x64.ActiveCfg = Release|x64
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Release|x64.Build.0 = Release|x64
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Release|x86.ActiveCfg = Release|x86
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1162,6 +1174,8 @@ Global
 		{430F2E36-56A6-4762-B137-95080A43F055} = {9E7325A7-F207-48AC-B382-7DF1162D105A}
 		{2879C022-422F-4F50-97EC-37466D864CE5} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
 		{65BE8F92-3706-4C0A-B479-230542A50269} = {2879C022-422F-4F50-97EC-37466D864CE5}
+		{E58E8142-49D5-4AD9-AF3D-9A6CC0225381} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
+		{10251995-C2CB-4B6A-A0FA-6031F5D229CB} = {E58E8142-49D5-4AD9-AF3D-9A6CC0225381}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CFECBD7-FE88-4CC9-8E1B-6F7805F4F45A}

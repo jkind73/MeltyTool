@@ -8,7 +8,6 @@ using fin.math;
 using fin.math.transform;
 using fin.model;
 using fin.model.skeleton;
-using fin.model.util;
 using fin.scene.components;
 
 using readOnly;
