@@ -3,9 +3,10 @@
 namespace gawg.common;
 
 public sealed partial class GawgEventManager : IGawgEventManager {
-  public GawgEventManager() {
+  public GawgEventManager(float tickPeriod = 1) {
     this.currentTickStart_ = FrameTime.StartOfFrame;
-    this.currentTickTimeSpan_ = TimeSpan.FromSeconds(this.TickPeriod);
+    this.currentTickTimeSpan_
+        = TimeSpan.FromSeconds(this.TickPeriod = tickPeriod);
     this.CurrentTick = new GawgTick {Id = this.currentTickId_};
   }
 

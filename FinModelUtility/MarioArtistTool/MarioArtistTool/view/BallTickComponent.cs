@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using fin.config.avalonia.services;
 using fin.math;
@@ -8,11 +9,15 @@ using fin.model;
 using fin.model.skeleton;
 using fin.scene;
 
+using gawg.games.ball;
+
 using marioartist.api;
 
 namespace MarioArtistTool.view;
 
 public class BallTickComponent : ISceneNodeTickComponent {
+  private readonly BallGameManager gameManager_;
+
   private readonly SimpleBoneTransformView boneTransformView_;
 
   private readonly IReadOnlyBone leftUpperArmBone_;
@@ -22,12 +27,8 @@ public class BallTickComponent : ISceneNodeTickComponent {
   private readonly IReadOnlyBone rightForearmBone_;
   private readonly IReadOnlyBone rightHandBone_;
 
-  private readonly float[] ballDistances_ = new float[3];
-
-  private readonly (float upperArmRadians, float forearmRadians)[]
-      armAngles_ = new (float, float)[3];
-
-  private uint leftArmDistance_;
+  private readonly float[] ballDistances_;
+  private readonly (float upperArmRadians, float forearmRadians)[] armAngles_;
 
   private bool previousLeftDown_;
   private bool previousRightDown_;
@@ -35,7 +36,8 @@ public class BallTickComponent : ISceneNodeTickComponent {
   public void Dispose() { }
 
   public BallTickComponent(SimpleBoneTransformView boneTransformView,
-                           IReadOnlySkeleton skeleton) {
+                           IReadOnlySkeleton skeleton,
+                           uint ballCount) {
     this.boneTransformView_ = boneTransformView;
 
     var bonesByJointIndex = new Dictionary<JointIndex, IReadOnlyBone>();
@@ -66,51 +68,66 @@ public class BallTickComponent : ISceneNodeTickComponent {
 
       var totalArmLength = upperArmLength + forearmLength;
 
-      this.ballDistances_[0] = totalArmLength * .32f;
-      this.ballDistances_[1] = totalArmLength * .54f;
-      this.ballDistances_[2] = totalArmLength * .76f;
+      this.gameManager_ = new BallGameManager(ballCount, 1);
 
-      this.armAngles_[0] = GetAnglesFromLegsOfTriangle_(this.ballDistances_[0],
-        upperArmLength,
-        forearmLength);
-      this.armAngles_[1] = GetAnglesFromLegsOfTriangle_(this.ballDistances_[1],
-        upperArmLength,
-        forearmLength);
-      this.armAngles_[2] = GetAnglesFromLegsOfTriangle_(this.ballDistances_[2],
-        upperArmLength,
-        forearmLength);
+      var minBallDistance = totalArmLength * .32f;
+      var maxBallDistance = totalArmLength * .76f;
+
+      this.ballDistances_
+          = Enumerable.Range(0, (int) ballCount)
+                      .Select(i => FinMath.MapRange(i,
+                                                    0,
+                                                    ballCount - 1,
+                                                    minBallDistance,
+                                                    maxBallDistance))
+                      .ToArray();
+      this.armAngles_
+          = this.ballDistances_
+                .Select(ballDistance => GetAnglesFromLegsOfTriangle_(
+                            ballDistance,
+                            upperArmLength,
+                            forearmLength))
+                .ToArray();
     }
   }
 
   public void Tick(ISceneNodeInstance self) {
+    var gameState = this.gameManager_.GameState;
+
     {
       var currentLeftDown = MainViewInputService.AKeyDown;
       var currentRightDown = MainViewInputService.DKeyDown;
 
       var leftPressed = !this.previousLeftDown_ && currentLeftDown;
-      var rightPressed = !this.previousRightDown_ && currentRightDown;
+      if (leftPressed) {
+        gameState.MoveLeft();
+      }
 
-      var leftwardChange = (leftPressed ? 1 : 0) + (rightPressed ? -1 : 0);
-      this.leftArmDistance_
-          = (uint) (this.leftArmDistance_ + leftwardChange).Clamp(0, 2);
+      var rightPressed = !this.previousRightDown_ && currentRightDown;
+      if (rightPressed) {
+        gameState.MoveRight();
+      }
 
       this.previousLeftDown_ = currentLeftDown;
       this.previousRightDown_ = currentRightDown;
     }
 
-    var leftArmAngles = this.armAngles_[this.leftArmDistance_];
+    var leftArmAngles = this.armAngles_[gameState.LeftHandPosition];
     this.boneTransformView_.OverrideWorldRotation(
         this.leftUpperArmBone_,
-        QuaternionUtil.CreateZyxRadians(0, leftArmAngles.upperArmRadians, MathF.PI));
+        QuaternionUtil.CreateZyxRadians(0,
+                                        leftArmAngles.upperArmRadians,
+                                        MathF.PI));
     this.boneTransformView_.OverrideWorldRotation(
         this.leftForearmBone_,
-        QuaternionUtil.CreateZyxRadians(0, -leftArmAngles.forearmRadians, MathF.PI));
+        QuaternionUtil.CreateZyxRadians(0,
+                                        -leftArmAngles.forearmRadians,
+                                        MathF.PI));
     this.boneTransformView_.OverrideWorldRotation(
         this.leftHandBone_,
         QuaternionUtil.CreateZyxRadians(-MathF.PI / 2, 0, MathF.PI));
 
-    var rightArmDistance = 2 - this.leftArmDistance_;
-    var rightArmAngles = this.armAngles_[rightArmDistance];
+    var rightArmAngles = this.armAngles_[gameState.RightHandPosition];
     this.boneTransformView_.OverrideWorldRotation(
         this.rightUpperArmBone_,
         QuaternionUtil.CreateZyxRadians(0, rightArmAngles.upperArmRadians, 0));

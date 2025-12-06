@@ -19,6 +19,7 @@
     <ProjectReference Include="..\..\Fin\Fin.Ui\Fin.Ui.csproj" />
     <ProjectReference Include="..\..\Fin\Fin.Ui.Avalonia\Fin.Ui.Avalonia.csproj" />
     <ProjectReference Include="..\..\Fin\Fin\Fin.csproj" />
+    <ProjectReference Include="..\..\Games\Game&amp;WatchGallery\Game&amp;WatchGallery\Game&amp;WatchGallery.csproj" />
     <ProjectReference Include="..\..\Games\MarioArtist\MarioArtist\MarioArtist.csproj" />
   </ItemGroup>
 

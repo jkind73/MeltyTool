@@ -156,7 +156,8 @@ public partial class MainView : UserControl {
               characterObj.AddComponent(
                   new BallTickComponent(
                       modelRenderComponent.SimpleBoneTransformView,
-                      model.Skeleton));
+                      model.Skeleton,
+                      3));
             }
 
             this.currentModelFileBundle_ = bundle;
