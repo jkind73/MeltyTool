@@ -17,6 +17,8 @@ public static class FrameTime {
   private static readonly float[] frameTimesForSmoothedTheoreticalFps_
       = new float[SMOOTH_COUNT];
 
+  public static void Initialize() => MarkStartOfFrame();
+
   public static void MarkStartOfFrame() {
     previousFrameStart_ = StartOfFrame;
     StartOfFrame = DateTime.Now;

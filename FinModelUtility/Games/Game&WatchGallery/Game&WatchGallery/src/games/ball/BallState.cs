@@ -12,8 +12,9 @@ public enum BallDirection {
 public sealed class BallState : ITickable {
   private readonly IGawgEventManager eventManager_;
   private readonly BallGameState gameState_;
-  private readonly uint distance_;
   private readonly uint tickDurationInAir_;
+
+  public uint Distance { get; }
 
   public IReadOnlyGawgEvent InAirEvent { get; private set; }
   private IGawgEvent catchEvent_;
@@ -28,7 +29,7 @@ public sealed class BallState : ITickable {
       BallDirection initialDirection) {
     this.eventManager_ = eventManager;
     this.gameState_ = gameState;
-    this.distance_ = distance;
+    this.Distance = distance;
     this.tickDurationInAir_ = tickDurationInAir;
     this.Direction = initialDirection;
 
@@ -40,9 +41,9 @@ public sealed class BallState : ITickable {
       case GawgEventState.ACTIVE: {
         var caughtBall = this.Direction switch {
             BallDirection.LEFT
-                => this.distance_ == this.gameState_.LeftHandPosition,
+                => this.Distance == this.gameState_.LeftHandPosition,
             BallDirection.RIGHT
-                => this.distance_ == this.gameState_.RightHandPosition,
+                => this.Distance == this.gameState_.RightHandPosition,
             _ => throw new ArgumentOutOfRangeException()
         };
 

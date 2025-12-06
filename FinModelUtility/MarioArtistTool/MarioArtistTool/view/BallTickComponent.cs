@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 using fin.config.avalonia.services;
 using fin.math;
@@ -8,6 +9,7 @@ using fin.math.rotations;
 using fin.model;
 using fin.model.skeleton;
 using fin.scene;
+using fin.ui.rendering.gl;
 
 using gawg.games.ball;
 
@@ -15,8 +17,10 @@ using marioartist.api;
 
 namespace MarioArtistTool.view;
 
-public class BallTickComponent : ISceneNodeTickComponent {
+public class BallTickComponent
+    : ISceneNodeTickComponent, ISceneNodeRenderComponent {
   private readonly BallGameManager gameManager_;
+  private readonly BallRenderer ballRenderer_ = new(32);
 
   private readonly SimpleBoneTransformView boneTransformView_;
 
@@ -28,12 +32,11 @@ public class BallTickComponent : ISceneNodeTickComponent {
   private readonly IReadOnlyBone rightHandBone_;
 
   private readonly float[] ballDistances_;
+  private readonly float[] ballHeights_;
   private readonly (float upperArmRadians, float forearmRadians)[] armAngles_;
 
   private bool previousLeftDown_;
   private bool previousRightDown_;
-
-  public void Dispose() { }
 
   public BallTickComponent(SimpleBoneTransformView boneTransformView,
                            IReadOnlySkeleton skeleton,
@@ -81,6 +84,9 @@ public class BallTickComponent : ISceneNodeTickComponent {
                                                     minBallDistance,
                                                     maxBallDistance))
                       .ToArray();
+      this.ballHeights_ = Enumerable.Range(0, (int) ballCount)
+                                    .Select(i => 50f + 32f * i)
+                                    .ToArray();
       this.armAngles_
           = this.ballDistances_
                 .Select(ballDistance => GetAnglesFromLegsOfTriangle_(
@@ -91,7 +97,42 @@ public class BallTickComponent : ISceneNodeTickComponent {
     }
   }
 
+  private static (float upperArmRadians, float forearmRadians)
+      GetAnglesFromLegsOfTriangle_(float ballDistance,
+                                   float upperArmLength,
+                                   float forearmLength)
+    => (CalculateLawOfSignsRadians_(forearmLength,
+                                    ballDistance,
+                                    upperArmLength),
+        CalculateLawOfSignsRadians_(upperArmLength,
+                                    ballDistance,
+                                    forearmLength));
+
+  private static float CalculateLawOfSignsRadians_(
+      float oppositeSideLength,
+      float otherSideLength0,
+      float otherSideLength1) {
+    var numerator = otherSideLength0 * otherSideLength0 +
+                    otherSideLength1 * otherSideLength1 -
+                    oppositeSideLength * oppositeSideLength;
+    var denominator = 2 * otherSideLength0 * otherSideLength1;
+
+    var angle = MathF.Acos(numerator / denominator);
+
+    return angle;
+  }
+
+  ~BallTickComponent() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() => this.ballRenderer_?.Dispose();
+
   public void Tick(ISceneNodeInstance self) {
+    this.gameManager_.Tick();
     var gameState = this.gameManager_.GameState;
 
     {
@@ -139,28 +180,31 @@ public class BallTickComponent : ISceneNodeTickComponent {
         QuaternionUtil.CreateZyxRadians(-MathF.PI / 2, 0, 0));
   }
 
-  private static (float upperArmRadians, float forearmRadians)
-      GetAnglesFromLegsOfTriangle_(float ballDistance,
-                                   float upperArmLength,
-                                   float forearmLength)
-    => (CalculateLawOfSignsRadians_(forearmLength,
-                                    ballDistance,
-                                    upperArmLength),
-        CalculateLawOfSignsRadians_(upperArmLength,
-                                    ballDistance,
-                                    forearmLength));
+  public void Render(ISceneNodeInstance self) {
+    foreach (var ballState in this.gameManager_.BallStates) {
+      GlTransform.PushMatrix();
 
-  private static float CalculateLawOfSignsRadians_(
-      float oppositeSideLength,
-      float otherSideLength0,
-      float otherSideLength1) {
-    var numerator = otherSideLength0 * otherSideLength0 +
-                    otherSideLength1 * otherSideLength1 -
-                    oppositeSideLength * oppositeSideLength;
-    var denominator = 2 * otherSideLength0 * otherSideLength1;
+      var ballDistance = this.ballDistances_[ballState.Distance];
 
-    var angle = MathF.Acos(numerator / denominator);
+      var progress0To1 = ballState.InAirEvent.Progress;
+      var progressMinus1To1 = 2 * (progress0To1 - .5f);
 
-    return angle;
+      var xPosition = ballDistance *
+                      progressMinus1To1 *
+                      ballState.Direction switch {
+                          BallDirection.LEFT  => -1,
+                          BallDirection.RIGHT => 1,
+                      };
+
+      var yPosition = (1 - progressMinus1To1 * progressMinus1To1) *
+                      this.ballHeights_[ballState.Distance];
+      
+      var position = new Vector3(xPosition, yPosition, 0);
+
+      GlTransform.Translate(position);
+      this.ballRenderer_.Render();
+
+      GlTransform.PopMatrix();
+    }
   }
 }
