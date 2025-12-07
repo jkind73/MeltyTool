@@ -73,16 +73,21 @@ public sealed class BallState : ITickable {
   }
 
   private void UpdateEvents_(bool factorInIndexIntoOffset) {
-    var startOffset = factorInIndexIntoOffset ? this.Index : 0;
+    var ballCount = this.gameState_.BallCount;
+
+    var startOffset = factorInIndexIntoOffset
+        ? this.Index
+        : this.inAirEvent_.InclusiveEnd.GetDurationSince(
+            this.eventManager_.CurrentTick);
     var adjustedTickDurationInAir
         = BallTimeUtil.GetAdjustedTickDuration(this.tickDurationInAir_,
-                                               this.gameState_.BallCount);
+                                               ballCount);
 
     this.inAirEvent_
         = this.eventManager_.AddEvent(startOffset, adjustedTickDurationInAir);
     this.catchEvent_
         = this.eventManager_.AddEvent(
-            startOffset + adjustedTickDurationInAir - 1,
-            1);
+            startOffset + adjustedTickDurationInAir - ballCount,
+            ballCount);
   }
 }

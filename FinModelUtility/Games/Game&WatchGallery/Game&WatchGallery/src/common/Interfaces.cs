@@ -41,16 +41,26 @@ public enum GawgEventState {
 public partial interface IGawgTick {
   ulong Id { get; }
 
-  bool AtSameTimeAs(IGawgTick other);
+  [Const]
+  bool AtSameTimeAs(IReadOnlyGawgTick other);
 
-  bool IsAfter(IGawgTick other);
-  bool AtSameTimeAsOrAfter(IGawgTick other);
+  [Const]
+  bool IsAfter(IReadOnlyGawgTick other);
 
-  bool IsBefore(IGawgTick other);
-  bool AtSameTimeAsOrBefore(IGawgTick other);
+  [Const]
+  bool AtSameTimeAsOrAfter(IReadOnlyGawgTick other);
 
+  [Const]
+  bool IsBefore(IReadOnlyGawgTick other);
+
+  [Const]
+  bool AtSameTimeAsOrBefore(IReadOnlyGawgTick other);
+
+  [Const]
   IGawgTick GetTickAfter(ulong delta);
-  ulong GetDurationSince(IGawgTick other);
+
+  [Const]
+  ulong GetDurationSince(IReadOnlyGawgTick other);
 }
 
 [GenerateReadOnly]
@@ -59,7 +69,7 @@ public partial interface IGawgEvent {
 
   ulong DurationInTicks { get; }
   ulong ElapsedTicks { get; }
-  
+
   float SteppedProgress { get; }
   float Progress { get; }
 
