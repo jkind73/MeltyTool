@@ -8,6 +8,7 @@ using fin.math;
 using fin.math.rotations;
 using fin.model;
 using fin.model.skeleton;
+using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl;
 
@@ -17,10 +18,10 @@ using marioartist.api;
 
 namespace MarioArtistTool.view;
 
-public class BallTickComponent
+public class BallGameComponent
     : ISceneNodeTickComponent, ISceneNodeRenderComponent {
   private readonly BallGameManager gameManager_;
-  private readonly BallRenderer ballRenderer_ = new(32);
+  private readonly BallRenderer ballRenderer_ = new(12);
 
   private readonly SimpleBoneTransformView boneTransformView_;
 
@@ -31,17 +32,24 @@ public class BallTickComponent
   private readonly IReadOnlyBone rightForearmBone_;
   private readonly IReadOnlyBone rightHandBone_;
 
+  private readonly float baseBallDistance_;
   private readonly float[] ballDistances_;
-  private readonly float[] ballHeights_;
+
+  private readonly float ballBaseY_;
+  private readonly float minBallArcY_;
+  private readonly float maxBallArcY_;
+
   private readonly (float upperArmRadians, float forearmRadians)[] armAngles_;
 
   private bool previousLeftDown_;
   private bool previousRightDown_;
 
-  public BallTickComponent(SimpleBoneTransformView boneTransformView,
-                           IReadOnlySkeleton skeleton,
+  public BallGameComponent(SimpleBoneTransformView boneTransformView,
+                           IReadOnlyModel model,
                            uint ballCount) {
     this.boneTransformView_ = boneTransformView;
+
+    var skeleton = model.Skeleton;
 
     var bonesByJointIndex = new Dictionary<JointIndex, IReadOnlyBone>();
     foreach (var bone in skeleton.Bones) {
@@ -73,6 +81,9 @@ public class BallTickComponent
 
       this.gameManager_ = new BallGameManager(ballCount, 1);
 
+      this.baseBallDistance_
+          = this.leftUpperArmBone_.LocalTransform.Translation.X;
+
       var minBallDistance = totalArmLength * .32f;
       var maxBallDistance = totalArmLength * .76f;
 
@@ -84,9 +95,6 @@ public class BallTickComponent
                                                     minBallDistance,
                                                     maxBallDistance))
                       .ToArray();
-      this.ballHeights_ = Enumerable.Range(0, (int) ballCount)
-                                    .Select(i => 50f + 32f * i)
-                                    .ToArray();
       this.armAngles_
           = this.ballDistances_
                 .Select(ballDistance => GetAnglesFromLegsOfTriangle_(
@@ -94,6 +102,18 @@ public class BallTickComponent
                             upperArmLength,
                             forearmLength))
                 .ToArray();
+    }
+
+    {
+      var minMaxBoundsCalculator = new ModelMinMaxBoundsScaleCalculator();
+      var bounds = minMaxBoundsCalculator.CalculateBounds(model);
+
+      this.minBallArcY_ = bounds.MaxY;
+      this.maxBallArcY_ = this.minBallArcY_ +
+                          this.ballDistances_.Last() -
+                          this.ballDistances_.First();
+
+      this.ballBaseY_ = this.minBallArcY_ / 2;
     }
   }
 
@@ -122,7 +142,7 @@ public class BallTickComponent
     return angle;
   }
 
-  ~BallTickComponent() => this.ReleaseUnmanagedResources_();
+  ~BallGameComponent() => this.ReleaseUnmanagedResources_();
 
   public void Dispose() {
     this.ReleaseUnmanagedResources_();
@@ -181,27 +201,29 @@ public class BallTickComponent
   }
 
   public void Render(ISceneNodeInstance self) {
-    foreach (var ballState in this.gameManager_.BallStates) {
+    var ballStates = this.gameManager_.BallStates;
+    foreach (var ballState in ballStates) {
       GlTransform.PushMatrix();
 
-      var ballDistance = this.ballDistances_[ballState.Distance];
+      var ballDistanceX = this.baseBallDistance_ +
+                          this.ballDistances_[ballState.Index];
+      var ballDistanceY = float.Lerp(this.minBallArcY_,
+                                     this.maxBallArcY_,
+                                     1f * ballState.Index / ballStates.Count) -
+                          this.ballBaseY_;
 
-      var progress0To1 = ballState.InAirEvent.Progress;
-      var progressMinus1To1 = 2 * (progress0To1 - .5f);
+      var progress0To1 = ballState.AirSteppedProgress;
 
-      var xPosition = ballDistance *
-                      progressMinus1To1 *
-                      ballState.Direction switch {
-                          BallDirection.LEFT  => -1,
-                          BallDirection.RIGHT => 1,
-                      };
+      var radians = MathF.PI * progress0To1;
+      var x = ballDistanceX *
+                    MathF.Cos(radians) *
+                    ballState.Direction switch {
+                        BallDirection.LEFT  => -1,
+                        BallDirection.RIGHT => 1,
+                    };
+      var y = this.ballBaseY_ + ballDistanceY * MathF.Sin(radians);
 
-      var yPosition = (1 - progressMinus1To1 * progressMinus1To1) *
-                      this.ballHeights_[ballState.Distance];
-      
-      var position = new Vector3(xPosition, yPosition, 0);
-
-      GlTransform.Translate(position);
+      GlTransform.Translate(x, y, 0);
       this.ballRenderer_.Render();
 
       GlTransform.PopMatrix();

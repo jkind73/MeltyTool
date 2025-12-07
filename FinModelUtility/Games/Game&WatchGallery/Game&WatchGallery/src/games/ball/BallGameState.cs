@@ -1,8 +1,10 @@
 ﻿namespace gawg.games.ball;
 
 public sealed class BallGameState(uint ballCount, uint initialRightHandPosition) {
+  public uint BallCount => ballCount;
+
   // TODO: Vary this based on the score
-  public int TickPeriod => 2;
+  public float TickPeriod => .5f;
 
   public int CurrentScore { get; private set; }
   public int AddPoint() => ++this.CurrentScore;

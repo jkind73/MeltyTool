@@ -154,9 +154,9 @@ public partial class MainView : UserControl {
                                         false),
                       null));
               characterObj.AddComponent(
-                  new BallTickComponent(
+                  new BallGameComponent(
                       modelRenderComponent.SimpleBoneTransformView,
-                      model.Skeleton,
+                      model,
                       3));
             }
 

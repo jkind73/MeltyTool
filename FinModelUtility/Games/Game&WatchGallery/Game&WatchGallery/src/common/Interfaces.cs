@@ -57,7 +57,12 @@ public partial interface IGawgTick {
 public partial interface IGawgEvent {
   GawgEventState State { get; }
 
+  ulong DurationInTicks { get; }
+  ulong ElapsedTicks { get; }
+  
+  float SteppedProgress { get; }
   float Progress { get; }
+
   bool IsExclusive { get; }
   IGawgTick InclusiveStart { get; }
   IGawgTick InclusiveEnd { get; }

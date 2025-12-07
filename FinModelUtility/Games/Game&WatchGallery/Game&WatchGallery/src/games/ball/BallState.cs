@@ -14,26 +14,31 @@ public sealed class BallState : ITickable {
   private readonly BallGameState gameState_;
   private readonly uint tickDurationInAir_;
 
-  public uint Distance { get; }
+  public uint Index { get; }
 
-  public IReadOnlyGawgEvent InAirEvent { get; private set; }
-  private IGawgEvent catchEvent_;
+  public float AirSteppedProgress => BallTimeUtil.GetAdjustedSteppedProgress(
+      this.inAirEvent_.ElapsedTicks,
+      this.inAirEvent_.DurationInTicks - 1,
+      this.gameState_.BallCount);
 
   public BallDirection Direction { get; private set; }
+
+  private IReadOnlyGawgEvent inAirEvent_;
+  private IGawgEvent catchEvent_;
 
   public BallState(
       IGawgEventManager eventManager,
       BallGameState gameState,
-      uint distance,
+      uint index,
       uint tickDurationInAir,
       BallDirection initialDirection) {
     this.eventManager_ = eventManager;
     this.gameState_ = gameState;
-    this.Distance = distance;
+    this.Index = index;
     this.tickDurationInAir_ = tickDurationInAir;
     this.Direction = initialDirection;
 
-    this.UpdateEvents_();
+    this.UpdateEvents_(true);
   }
 
   public void Tick() {
@@ -41,15 +46,19 @@ public sealed class BallState : ITickable {
       case GawgEventState.ACTIVE: {
         var caughtBall = this.Direction switch {
             BallDirection.LEFT
-                => this.Distance == this.gameState_.LeftHandPosition,
+                => this.Index == this.gameState_.LeftHandPosition,
             BallDirection.RIGHT
-                => this.Distance == this.gameState_.RightHandPosition,
+                => this.Index == this.gameState_.RightHandPosition,
             _ => throw new ArgumentOutOfRangeException()
         };
 
         if (caughtBall) {
           this.gameState_.AddPoint();
-          this.UpdateEvents_();
+          this.Direction = this.Direction switch {
+              BallDirection.LEFT  => BallDirection.RIGHT,
+              BallDirection.RIGHT => BallDirection.LEFT,
+          };
+          this.UpdateEvents_(false);
         }
 
         break;
@@ -63,9 +72,17 @@ public sealed class BallState : ITickable {
     }
   }
 
-  private void UpdateEvents_() {
-    this.InAirEvent = this.eventManager_.AddEvent(0, this.tickDurationInAir_);
+  private void UpdateEvents_(bool factorInIndexIntoOffset) {
+    var startOffset = factorInIndexIntoOffset ? this.Index : 0;
+    var adjustedTickDurationInAir
+        = BallTimeUtil.GetAdjustedTickDuration(this.tickDurationInAir_,
+                                               this.gameState_.BallCount);
+
+    this.inAirEvent_
+        = this.eventManager_.AddEvent(startOffset, adjustedTickDurationInAir);
     this.catchEvent_
-        = this.eventManager_.AddEvent(this.tickDurationInAir_ - 1, 1);
+        = this.eventManager_.AddEvent(
+            startOffset + adjustedTickDurationInAir - 1,
+            1);
   }
 }

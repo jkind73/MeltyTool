@@ -69,6 +69,10 @@ public static class FinMath {
   public static float CeilToNearest(this float value, float target)
     => MathF.Ceiling(value / target) * target;
 
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static float FloorToNearest(this float value, float target)
+    => MathF.Floor(value / target) * target;
+
   public static int Base10DigitCount(this int value)
     => (int) Math.Max(1, 1 + Math.Log10(value));
 

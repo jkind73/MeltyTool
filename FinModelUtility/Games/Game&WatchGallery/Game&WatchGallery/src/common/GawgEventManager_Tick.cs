@@ -38,7 +38,7 @@ public sealed partial class GawgEventManager {
       var lhsId = this.Id;
       var rhsId = other.Id;
 
-      if (lhsId > rhsId) {
+      if (lhsId >= rhsId) {
         return lhsId - rhsId;
       }
 

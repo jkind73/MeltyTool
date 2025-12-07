@@ -8,7 +8,8 @@ public sealed partial class GawgEventManager {
   public void MarkAllEventsComplete() {
     foreach (var gawgEvent in this.allIncompleteEvents_) {
       gawgEvent.State = GawgEventState.COMPLETE;
-      gawgEvent.Progress = 1;
+      gawgEvent.ElapsedTicks = gawgEvent.DurationInTicks;
+      gawgEvent.SteppedProgress = gawgEvent.Progress = 1;
     }
 
     this.allIncompleteEvents_.Clear();
@@ -57,7 +58,8 @@ public sealed partial class GawgEventManager {
   public IGawgEvent AddSoonestExclusiveEventAfter(
       ulong earliestTicksFromCurrent,
       ulong durationInTicks) {
-    var inclusiveStart = this.CurrentTick.GetTickAfter(earliestTicksFromCurrent);
+    var inclusiveStart
+        = this.CurrentTick.GetTickAfter(earliestTicksFromCurrent);
     var inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
 
     TryAgain:
@@ -84,6 +86,13 @@ public sealed partial class GawgEventManager {
   private sealed class GawgEvent(IGawgEventManager eventManager)
       : IGawgEvent, ITickable {
     public GawgEventState State { get; set; } = GawgEventState.WAITING;
+
+    public ulong DurationInTicks
+      => 1 + this.InclusiveEnd.GetDurationSince(this.InclusiveStart);
+
+    public ulong ElapsedTicks { get; set; }
+
+    public float SteppedProgress { get; set; }
     public float Progress { get; set; }
 
     public required bool IsExclusive { get; init; }
@@ -123,18 +132,22 @@ public sealed partial class GawgEventManager {
       {
         var state = this.State;
         if (state == GawgEventState.WAITING) {
+          this.ElapsedTicks = 0;
+          this.SteppedProgress = 0;
           this.Progress = 0;
         } else if (state == GawgEventState.COMPLETE) {
+          this.ElapsedTicks = this.DurationInTicks;
+          this.SteppedProgress = 1;
           this.Progress = 1;
         } else {
-          var durationInTicks
-              = 1 + this.InclusiveEnd.GetDurationSince(this.InclusiveStart);
           var completedTicks
               = eventManager.CurrentTick.GetDurationSince(this.InclusiveStart);
 
-          var singleTickSize = 1f / durationInTicks;
+          var singleTickSize = 1f / this.DurationInTicks;
           var progressInCurrentTick = eventManager.CurrentTickProgress;
 
+          this.ElapsedTicks = completedTicks;
+          this.SteppedProgress = singleTickSize * completedTicks;
           this.Progress = singleTickSize *
                           (completedTicks + progressInCurrentTick);
         }
