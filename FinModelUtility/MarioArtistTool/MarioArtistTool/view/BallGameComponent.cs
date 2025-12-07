@@ -105,6 +105,9 @@ public class BallGameComponent
     }
 
     {
+      this.ballBaseY_ = this.leftUpperArmBone_.LocalTransform
+                            .WorldMatrix.Translation.Y;
+
       var minMaxBoundsCalculator = new ModelMinMaxBoundsScaleCalculator();
       var bounds = minMaxBoundsCalculator.CalculateBounds(model);
 
@@ -112,8 +115,6 @@ public class BallGameComponent
       this.maxBallArcY_ = this.minBallArcY_ +
                           this.ballDistances_.Last() -
                           this.ballDistances_.First();
-
-      this.ballBaseY_ = this.minBallArcY_ / 2;
     }
   }
 
@@ -216,11 +217,11 @@ public class BallGameComponent
 
       var radians = MathF.PI * progress0To1;
       var x = ballDistanceX *
-                    MathF.Cos(radians) *
-                    ballState.Direction switch {
-                        BallDirection.LEFT  => -1,
-                        BallDirection.RIGHT => 1,
-                    };
+              MathF.Cos(radians) *
+              ballState.Direction switch {
+                  BallDirection.LEFT  => -1,
+                  BallDirection.RIGHT => 1,
+              };
       var y = this.ballBaseY_ + ballDistanceY * MathF.Sin(radians);
 
       GlTransform.Translate(x, y, 0);

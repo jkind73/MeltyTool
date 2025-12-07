@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Numerics;
 
+using fin.model;
 using fin.model.impl;
 using fin.model.util;
 using fin.ui.rendering;
@@ -29,10 +30,21 @@ public sealed class BallRenderer(float radius) : IRenderable {
   private ModelRenderer GenerateModelIfNull_() {
     var model = ModelImpl.CreateForViewer();
 
-    var material = model.MaterialManager.AddColorMaterial(Color.Black);
+    var whiteMaterial = model.MaterialManager.AddColorMaterial(Color.White);
+    whiteMaterial.CullingMode = CullingMode.SHOW_BACK_ONLY;
+
+    var blackMaterial = model.MaterialManager.AddColorMaterial(Color.Black);
+
+    whiteMaterial.DepthCompareType
+        = blackMaterial.DepthCompareType = DepthCompareType.Always;
 
     var mesh = model.Skin.AddMesh();
-    mesh.AddSimpleSphere(model.Skin, Vector3.Zero, radius, 60, material);
+    mesh.AddSimpleSphere(model.Skin, Vector3.Zero, radius, 30, whiteMaterial);
+    mesh.AddSimpleSphere(model.Skin,
+                         Vector3.Zero,
+                         radius * .9f,
+                         30,
+                         blackMaterial);
 
     var modelRenderer = new ModelRenderer(model);
     modelRenderer.GenerateModelIfNull();

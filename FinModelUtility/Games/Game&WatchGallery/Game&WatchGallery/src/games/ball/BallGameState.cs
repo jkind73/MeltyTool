@@ -1,6 +1,8 @@
 ﻿namespace gawg.games.ball;
 
-public sealed class BallGameState(uint ballCount, uint initialRightHandPosition) {
+public sealed class BallGameState(
+    uint ballCount,
+    uint initialRightHandPosition) {
   public uint BallCount => ballCount;
 
   // TODO: Vary this based on the score
@@ -13,15 +15,14 @@ public sealed class BallGameState(uint ballCount, uint initialRightHandPosition)
 
   public event Action<BallState> OnFail = delegate { };
 
-  public uint RightHandPosition { get; private set; } = initialRightHandPosition;
+  public uint RightHandPosition { get; private set; }
+    = initialRightHandPosition;
+
   public uint LeftHandPosition => (ballCount - 1) - this.RightHandPosition;
 
-  public void MoveLeft() {
-    this.RightHandPosition = (uint) Math.Max(0, (int) this.RightHandPosition - 1);
-  }
+  public void MoveLeft() => this.RightHandPosition
+      = (uint) Math.Max(0, (int) this.RightHandPosition - 1);
 
-  public void MoveRight() {
-    this.RightHandPosition
-        = Math.Min(this.RightHandPosition + 1, ballCount - 1);
-  }
+  public void MoveRight() => this.RightHandPosition
+      = Math.Min(this.RightHandPosition + 1, ballCount - 1);
 }
