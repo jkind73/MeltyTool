@@ -18,10 +18,10 @@ using marioartist.api;
 
 using marioartisttool.services;
 
-using MarioArtistTool.backgrounds;
-using MarioArtistTool.config;
-using MarioArtistTool.view;
-
+using marioartisttool.backgrounds;
+using marioartisttool.config;
+using marioartisttool.view;
+using marioartisttool.view.games.ball;
 using marioartisttool.ViewModels;
 
 namespace marioartisttool.Views;
@@ -153,7 +153,9 @@ public partial class MainView : UserControl {
                                             $"{JointIndex.NECK}:") ??
                                         false),
                       null));
-              characterObj.AddComponent(
+
+              var ballObj = characterObj.AddChildNode();
+              ballObj.AddComponent(
                   new BallGameComponent(
                       modelRenderComponent.SimpleBoneTransformView,
                       model,
