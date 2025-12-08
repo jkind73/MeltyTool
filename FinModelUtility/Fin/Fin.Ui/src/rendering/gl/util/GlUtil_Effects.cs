@@ -75,4 +75,19 @@ public static partial class GlUtil {
     ResetDepth();
     GL.DepthRange(0, 1);
   }
+
+  public static void RenderWithColor(
+      Action render,
+      Color color) {
+    SetBlendColor(color);
+    SetBlending(BlendEquation.ADD,
+                BlendFactor.ZERO,
+                BlendFactor.ONE_MINUS_CONST_ALPHA);
+    DisableChangingBlending = true;
+
+    render();
+
+    DisableChangingBlending = false;
+    ResetBlending();
+  }
 }

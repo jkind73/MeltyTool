@@ -21,7 +21,9 @@ public class BallGameComponent
     : ISceneNodeTickComponent, ISceneNodeRenderComponent {
   private readonly BallGameManager gameManager_;
   private readonly BallAudioManager audioManager_;
+
   private readonly BallRenderer ballRenderer_ = new(12);
+  private readonly TransparentBallRenderer transparentBallRenderer_ = new(12);
 
   private readonly SimpleBoneTransformView boneTransformView_;
 
@@ -157,7 +159,11 @@ public class BallGameComponent
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_() => this.ballRenderer_?.Dispose();
+  private void ReleaseUnmanagedResources_() {
+    this.audioManager_.Dispose();
+    this.ballRenderer_.Dispose();
+    this.transparentBallRenderer_.Dispose();
+  }
 
   public void Tick(ISceneNodeInstance self) {
     this.gameManager_.Tick();
@@ -210,31 +216,53 @@ public class BallGameComponent
 
   public void Render(ISceneNodeInstance self) {
     var ballStates = this.gameManager_.BallStates;
+    var ballCount = ballStates.Count;
+
+    for (uint ballI = 0; ballI < ballCount; ++ballI) {
+      var tickDurationInAir = GetTickDurationInAir_(ballI);
+      for (var tickI = 0; tickI < tickDurationInAir; ++tickI) {
+        GlTransform.PushMatrix();
+
+        var progress = tickI / (tickDurationInAir - 1f);
+        var (x, y) = this.GetPosition_(ballI, ballCount, progress);
+
+        GlTransform.Translate(x, y, 0);
+        this.transparentBallRenderer_.Render();
+
+        GlTransform.PopMatrix();
+      }
+    }
+
     foreach (var ballState in ballStates) {
       GlTransform.PushMatrix();
 
-      var ballDistanceX = this.baseBallDistance_ +
-                          this.ballDistances_[ballState.Index];
-      var ballDistanceY = float.Lerp(this.minBallArcY_,
-                                     this.maxBallArcY_,
-                                     1f * ballState.Index / ballStates.Count) -
-                          this.ballBaseY_;
+      var progress = ballState.AirSteppedProgress;
+      if (ballState.Direction == BallDirection.RIGHT) {
+        progress = 1 - progress;
+      }
 
-      var progress0To1 = ballState.AirSteppedProgress;
-
-      var radians = MathF.PI * progress0To1;
-      var x = ballDistanceX *
-              MathF.Cos(radians) *
-              ballState.Direction switch {
-                  BallDirection.LEFT  => 1,
-                  BallDirection.RIGHT => -1,
-              };
-      var y = this.ballBaseY_ + ballDistanceY * MathF.Sin(radians);
+      var (x, y) = this.GetPosition_(ballState.Index, ballCount, progress);
 
       GlTransform.Translate(x, y, 0);
       this.ballRenderer_.Render();
 
       GlTransform.PopMatrix();
     }
+  }
+
+  private static uint GetTickDurationInAir_(uint index) => (4 + index) * 2;
+
+  private (float x, float y) GetPosition_(uint index, int ballCount, float progress) {
+    var ballDistanceX = this.baseBallDistance_ + this.ballDistances_[index];
+    var ballDistanceY = float.Lerp(this.minBallArcY_,
+                                   this.maxBallArcY_,
+                                   1f * index / ballCount) -
+                        this.ballBaseY_;
+
+    var radians = MathF.PI * progress;
+    var x = ballDistanceX * MathF.Cos(radians);
+    var y = this.ballBaseY_ + ballDistanceY * MathF.Sin(radians);
+
+    return (x, y);
   }
 }

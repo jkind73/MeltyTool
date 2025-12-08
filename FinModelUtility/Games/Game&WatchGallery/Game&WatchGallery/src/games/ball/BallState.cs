@@ -12,7 +12,9 @@ public enum BallDirection {
 public sealed class BallState : ITickable {
   private readonly IGawgEventManager eventManager_;
   private readonly BallGameState gameState_;
+
   private readonly uint tickDurationInAir_;
+  private readonly uint adjustedTickDurationInAir_;
 
   public uint Index { get; }
 
@@ -20,7 +22,7 @@ public sealed class BallState : ITickable {
 
   public float AirSteppedProgress => BallTimeUtil.GetAdjustedSteppedProgress(
       this.inAirEvent_.ElapsedTicks,
-      this.inAirEvent_.DurationInTicks - 1,
+      this.tickDurationInAir_,
       this.gameState_.BallCount);
 
   public BallDirection Direction { get; private set; }
@@ -37,7 +39,11 @@ public sealed class BallState : ITickable {
     this.eventManager_ = eventManager;
     this.gameState_ = gameState;
     this.Index = index;
+
     this.tickDurationInAir_ = tickDurationInAir;
+    this.adjustedTickDurationInAir_ = BallTimeUtil.GetAdjustedTickDuration(
+        tickDurationInAir,
+        gameState.BallCount);
     this.Direction = initialDirection;
 
     this.UpdateEvents_();
@@ -84,23 +90,21 @@ public sealed class BallState : ITickable {
 
   private void UpdateEvents_() {
     var ballCount = this.gameState_.BallCount;
-    var adjustedTickDurationInAir
-        = BallTimeUtil.GetAdjustedTickDuration(this.tickDurationInAir_,
-                                               ballCount);
 
     if (this.inAirEvent_ == null) {
-      this.inAirEvent_
-          = this.eventManager_.AddEvent(this.Index, adjustedTickDurationInAir);
+      this.inAirEvent_ = this.eventManager_.AddEvent(
+          this.Index,
+          this.adjustedTickDurationInAir_);
     } else {
       this.inAirEvent_ = this.eventManager_.AddEventAtSameTimeAs(
           this.catchEvent_,
-          adjustedTickDurationInAir);
+          this.adjustedTickDurationInAir_);
     }
 
     this.catchEvent_ = this.eventManager_.AddEventRelativeToEndOf(
         this.inAirEvent_,
         -ballCount,
-        ballCount - 1);
+        ballCount);
 
     this.previousAirSteppedProgress_ = this.AirSteppedProgress;
   }

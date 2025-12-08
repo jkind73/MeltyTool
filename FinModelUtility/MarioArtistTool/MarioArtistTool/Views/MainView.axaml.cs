@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 
@@ -10,6 +11,7 @@ using fin.scene;
 using fin.scene.components;
 using fin.scene.instance;
 using fin.services;
+using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.scene;
 using fin.ui.rendering.viewer;
 using fin.util.asserts;
@@ -17,7 +19,6 @@ using fin.util.asserts;
 using marioartist.api;
 
 using marioartisttool.services;
-
 using marioartisttool.backgrounds;
 using marioartisttool.config;
 using marioartisttool.view;
@@ -114,20 +115,22 @@ public partial class MainView : UserControl {
 
             var characterObj = area.AddRootNode();
 
-            var modelObj = characterObj.AddChildNode();
-            modelObj.AddComponent(modelRenderComponent);
+            if (false) {
+              var modelObj = characterObj.AddChildNode();
+              modelObj.AddComponent(modelRenderComponent);
 
-            var shadowPlacementObj = characterObj.AddChildNode();
-            shadowPlacementObj.SetPosition(20, -20, -100);
-            shadowPlacementObj.SetScale(1, 1, 0);
+              var shadowPlacementObj = characterObj.AddChildNode();
+              shadowPlacementObj.SetPosition(20, -20, -100);
+              shadowPlacementObj.SetScale(1, 1, 0);
 
-            var shadowModelObj = shadowPlacementObj.AddChildNode();
-            shadowModelObj.AddComponent(
-                new ShadowRenderComponent(
-                    new LambdaSceneNodeRenderComponent(_ => modelRenderComponent
-                        .Render(false))));
+              var shadowModelObj = shadowPlacementObj.AddChildNode();
+              shadowModelObj.AddComponent(
+                  new ShadowRenderComponent(
+                      new
+                          LambdaSceneNodeRenderComponent(_
+                              => modelRenderComponent
+                                  .Render(false))));
 
-            if (true) {
               characterObj.AddComponent(
                   new LookAtMouseTickComponent(
                       modelRenderComponent.SimpleBoneTransformView,
@@ -144,15 +147,10 @@ public partial class MainView : UserControl {
               modelObj.AddComponent(new RotateTalentTickComponent());
               shadowModelObj.AddComponent(new RotateTalentTickComponent());
             } else {
-              characterObj.AddComponent(
-                  new LookAtMouseTickComponent(
-                      modelRenderComponent.SimpleBoneTransformView,
-                      model.Skeleton
-                           .Bones
-                           .Single(b => b.Name?.StartsWith(
-                                            $"{JointIndex.NECK}:") ??
-                                        false),
-                      null));
+              var modelObj = characterObj.AddChildNode();
+              modelObj.AddRenderComponent(_ => GlUtil.RenderWithColor(
+                                              () => modelRenderComponent.Render(),
+                                              Color.Black));
 
               var ballObj = characterObj.AddChildNode();
               ballObj.AddComponent(

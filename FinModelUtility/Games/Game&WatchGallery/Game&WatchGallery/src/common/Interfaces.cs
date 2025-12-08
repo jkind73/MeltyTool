@@ -39,7 +39,7 @@ public enum GawgEventState {
   COMPLETE,
 }
 
-public partial interface IGawgTick {
+public interface IGawgTick {
   ulong Id { get; }
 
   bool AtSameTimeAs(IGawgTick other);
@@ -53,15 +53,14 @@ public partial interface IGawgTick {
 
 [GenerateReadOnly]
 public partial interface IGawgEvent {
-  GawgEventState State { get; }
-
-  ulong DurationInTicks { get; }
-  ulong ElapsedTicks { get; }
-
-  float SteppedProgress { get; }
-  float Progress { get; }
-
-  bool IsExclusive { get; }
   IGawgTick InclusiveStart { get; }
   IGawgTick InclusiveEnd { get; }
+  ulong DurationInTicks { get; }
+
+  bool IsExclusive { get; }
+
+  GawgEventState State { get; }
+  ulong ElapsedTicks { get; }
+  float SteppedProgress { get; }
+  float Progress { get; }
 }

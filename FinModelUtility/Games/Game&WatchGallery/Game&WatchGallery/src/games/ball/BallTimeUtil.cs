@@ -5,12 +5,18 @@ namespace gawg.games.ball;
 public static class BallTimeUtil {
   public static uint GetAdjustedTickDuration(uint rawTickDuration,
                                              uint ballCount)
-    => rawTickDuration * ballCount - 1;
+    => rawTickDuration * ballCount;
+
+  public static ulong GetAdjustedStep(
+      ulong elapsedTicks,
+      uint ballCount)
+    => elapsedTicks / ballCount;
 
   public static float GetAdjustedSteppedProgress(
       ulong elapsedTicks,
-      ulong adjustedTickDuration,
+      ulong tickDuration,
       uint ballCount)
-    => (1f * elapsedTicks).FloorToNearest(ballCount) /
-       adjustedTickDuration;
+    => (GetAdjustedStep(elapsedTicks, ballCount) /
+        (tickDuration - 1f))
+        .Clamp(0, 1);
 }
