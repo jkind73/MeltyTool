@@ -16,6 +16,8 @@ public sealed class BallState : ITickable {
 
   public uint Index { get; }
 
+  private float previousAirSteppedProgress_;
+
   public float AirSteppedProgress => BallTimeUtil.GetAdjustedSteppedProgress(
       this.inAirEvent_.ElapsedTicks,
       this.inAirEvent_.DurationInTicks - 1,
@@ -38,13 +40,20 @@ public sealed class BallState : ITickable {
     this.tickDurationInAir_ = tickDurationInAir;
     this.Direction = initialDirection;
 
-    this.UpdateEvents_(true);
+    this.UpdateEvents_();
   }
 
   public void Tick() {
+    var currentAirSteppedProgress = this.AirSteppedProgress;
+    if (currentAirSteppedProgress > this.previousAirSteppedProgress_) {
+      this.gameState_.TriggerBallTickedEvent(this);
+    }
+
+    this.previousAirSteppedProgress_ = currentAirSteppedProgress;
+
     switch (this.catchEvent_.State) {
       case GawgEventState.ACTIVE: {
-        var caughtBall = this.Direction switch {
+        var juggledBall = this.Direction switch {
             BallDirection.LEFT
                 => this.Index == this.gameState_.LeftHandPosition,
             BallDirection.RIGHT
@@ -52,13 +61,14 @@ public sealed class BallState : ITickable {
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        if (caughtBall) {
+        if (juggledBall) {
           this.gameState_.AddPoint();
           this.Direction = this.Direction switch {
               BallDirection.LEFT  => BallDirection.RIGHT,
               BallDirection.RIGHT => BallDirection.LEFT,
           };
-          this.UpdateEvents_(false);
+          this.UpdateEvents_();
+          this.gameState_.TriggerBallJuggledEvent(this);
         }
 
         break;
@@ -66,28 +76,32 @@ public sealed class BallState : ITickable {
       // Uh oh. If it was allowed to complete, that means the player dropped
       // the ball.
       case GawgEventState.COMPLETE: {
-        this.gameState_.Fail(this);
+        this.gameState_.TriggerBallDroppedEvent(this);
         break;
       }
     }
   }
 
-  private void UpdateEvents_(bool factorInIndexIntoOffset) {
+  private void UpdateEvents_() {
     var ballCount = this.gameState_.BallCount;
-
-    var startOffset = factorInIndexIntoOffset
-        ? this.Index
-        : this.inAirEvent_.InclusiveEnd.GetDurationSince(
-            this.eventManager_.CurrentTick);
     var adjustedTickDurationInAir
         = BallTimeUtil.GetAdjustedTickDuration(this.tickDurationInAir_,
                                                ballCount);
 
-    this.inAirEvent_
-        = this.eventManager_.AddEvent(startOffset, adjustedTickDurationInAir);
-    this.catchEvent_
-        = this.eventManager_.AddEvent(
-            startOffset + adjustedTickDurationInAir - ballCount,
-            ballCount);
+    if (this.inAirEvent_ == null) {
+      this.inAirEvent_
+          = this.eventManager_.AddEvent(this.Index, adjustedTickDurationInAir);
+    } else {
+      this.inAirEvent_ = this.eventManager_.AddEventAtSameTimeAs(
+          this.catchEvent_,
+          adjustedTickDurationInAir);
+    }
+
+    this.catchEvent_ = this.eventManager_.AddEventRelativeToEndOf(
+        this.inAirEvent_,
+        -ballCount,
+        ballCount - 1);
+
+    this.previousAirSteppedProgress_ = this.AirSteppedProgress;
   }
 }

@@ -11,7 +11,7 @@ using fin.services;
 using marioartist.api;
 using marioartist.schema.mfs;
 
-using MarioArtistTool.config;
+using marioartisttool.config;
 
 using schema.binary;
 

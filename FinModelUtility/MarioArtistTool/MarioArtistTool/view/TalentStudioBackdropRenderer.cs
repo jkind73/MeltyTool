@@ -6,11 +6,10 @@ using fin.ui.rendering.viewer;
 
 using marioartist.schema.talent_studio;
 
+using marioartisttool.backgrounds;
 using marioartisttool.util;
 
-using MarioArtistTool.backgrounds;
-
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
   private readonly BackgroundRenderer backgroundRenderer_;

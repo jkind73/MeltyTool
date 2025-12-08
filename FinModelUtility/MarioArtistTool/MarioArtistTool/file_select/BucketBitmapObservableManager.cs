@@ -8,7 +8,7 @@ using fin.util.tasks;
 
 using marioartisttool.util;
 
-namespace MarioArtistTool.file_select;
+namespace marioartisttool.file_select;
 
 public sealed class BucketBitmapObservableManager {
   private static readonly Bitmap IDLE_IMAGE_

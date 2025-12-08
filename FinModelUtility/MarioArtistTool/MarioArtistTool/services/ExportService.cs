@@ -10,7 +10,7 @@ using fin.model.io.exporters.gltf;
 
 using marioartist.api;
 
-namespace MarioArtistTool.services;
+namespace marioartisttool.services;
 
 public static class ExportService {
   public static void ExportBundles(IReadOnlyList<IModelFileBundle> bundles,

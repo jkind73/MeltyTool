@@ -2,7 +2,7 @@
 using fin.ui.rendering.gl;
 
 
-namespace MarioArtistTool.backgrounds;
+namespace marioartisttool.backgrounds;
 
 public sealed class ShadowRenderComponent(ISceneNodeRenderComponent impl)
     : ISceneNodeRenderComponent {

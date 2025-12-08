@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 using fin.util.asserts;
 using fin.util.sets;
@@ -14,11 +15,28 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
     var oggFile = audioFileBundle.OggFile;
     Asserts.SequenceEqual(".ogg", oggFile.FileType.ToLower());
 
-    using var ogg = new VorbisReader(oggFile.OpenRead());
+    using var oggStream = oggFile.OpenRead();
 
     var mutableBuffer = audioManager.CreateLoadedAudioBuffer(
         audioFileBundle,
         oggFile.AsFileSet());
+
+    ImportAudioImpl_(mutableBuffer, oggStream);
+    return [mutableBuffer];
+  }
+
+  public IAudioBuffer<short>[] ImportAudio(
+      IAudioManager<short> audioManager,
+      Stream oggStream) {
+    var mutableBuffer = audioManager.CreateAudioBuffer();
+    ImportAudioImpl_(mutableBuffer, oggStream);
+    return [mutableBuffer];
+  }
+
+  private static void ImportAudioImpl_(
+      IAudioBuffer<short> mutableBuffer,
+      Stream oggStream) {
+    using var ogg = new VorbisReader(oggStream);
     mutableBuffer.Frequency = ogg.SampleRate;
 
     {
@@ -58,7 +76,5 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
 
       mutableBuffer.SetPcm(channels);
     }
-
-    return [mutableBuffer];
   }
 }

@@ -8,7 +8,7 @@ using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.model;
 using fin.util.time;
 
-namespace MarioArtistTool.backgrounds;
+namespace marioartisttool.backgrounds;
 
 public sealed class BoySceneryRenderer : IRenderable {
   private readonly IModelRenderer twoThousandRenderer_

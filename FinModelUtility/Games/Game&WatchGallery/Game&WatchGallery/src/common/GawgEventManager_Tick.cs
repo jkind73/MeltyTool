@@ -12,29 +12,29 @@ public sealed partial class GawgEventManager {
   private sealed class GawgTick : IGawgTick {
     public required ulong Id { get; init; }
 
-    public bool AtSameTimeAs(IReadOnlyGawgTick other) => this.Id == other.Id;
+    public bool AtSameTimeAs(IGawgTick other) => this.Id == other.Id;
 
-    public bool IsAfter(IReadOnlyGawgTick other)
+    public bool IsAfter(IGawgTick other)
       => this.GetDurationSince(other) < other.GetDurationSince(this);
 
-    public bool AtSameTimeAsOrAfter(IReadOnlyGawgTick other)
+    public bool AtSameTimeAsOrAfter(IGawgTick other)
       => this.AtSameTimeAs(other) || this.IsAfter(other);
 
-    public bool IsBefore(IReadOnlyGawgTick other)
+    public bool IsBefore(IGawgTick other)
       => this.GetDurationSince(other) > other.GetDurationSince(this);
 
-    public bool AtSameTimeAsOrBefore(IReadOnlyGawgTick other)
+    public bool AtSameTimeAsOrBefore(IGawgTick other)
       => this.AtSameTimeAs(other) || this.IsBefore(other);
 
-    public IGawgTick GetTickAfter(ulong delta) {
+    public IGawgTick GetRelativeTick(long delta) {
       if (delta == 0) {
         return this;
       }
 
-      return new GawgTick { Id = this.Id + delta, };
+      return new GawgTick { Id = (ulong) ((long) this.Id + delta) };
     }
 
-    public ulong GetDurationSince(IReadOnlyGawgTick other) {
+    public ulong GetDurationSince(IGawgTick other) {
       var lhsId = this.Id;
       var rhsId = other.Id;
 

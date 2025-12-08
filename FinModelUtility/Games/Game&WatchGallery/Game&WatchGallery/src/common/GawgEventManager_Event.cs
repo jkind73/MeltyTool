@@ -1,5 +1,7 @@
 ﻿using fin.scene;
 
+using static schema.binary.BinarySchemaContainerParser;
+
 namespace gawg.common;
 
 public sealed partial class GawgEventManager {
@@ -15,12 +17,46 @@ public sealed partial class GawgEventManager {
     this.allIncompleteEvents_.Clear();
   }
 
-  public IGawgEvent AddEvent(ulong ticksFromCurrent, ulong durationInTicks) {
-    var inclusiveStart = this.CurrentTick.GetTickAfter(ticksFromCurrent);
+  public IGawgEvent AddEvent(long ticksFromCurrent, ulong durationInTicks) {
+    var inclusiveStart = this.CurrentTick.GetRelativeTick(ticksFromCurrent);
 
     var newEvent = new GawgEvent(this) {
         InclusiveStart = inclusiveStart,
-        InclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks),
+        InclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks),
+        IsExclusive = false,
+    };
+
+    this.allIncompleteEvents_.AddLast(newEvent);
+
+    return newEvent;
+  }
+
+  public IGawgEvent AddEventRelativeToStartOf(
+      IReadOnlyGawgEvent other,
+      long offset,
+      ulong durationInTicks) {
+    var inclusiveStart = other.InclusiveStart.GetRelativeTick(offset);
+
+    var newEvent = new GawgEvent(this) {
+        InclusiveStart = inclusiveStart,
+        InclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks),
+        IsExclusive = false,
+    };
+
+    this.allIncompleteEvents_.AddLast(newEvent);
+
+    return newEvent;
+  }
+
+  public IGawgEvent AddEventRelativeToEndOf(
+      IReadOnlyGawgEvent other,
+      long offset,
+      ulong durationInTicks) {
+    var inclusiveStart = other.InclusiveEnd.GetRelativeTick(1 + offset);
+
+    var newEvent = new GawgEvent(this) {
+        InclusiveStart = inclusiveStart,
+        InclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks),
         IsExclusive = false,
     };
 
@@ -30,11 +66,11 @@ public sealed partial class GawgEventManager {
   }
 
   public bool TryToAddExclusiveEvent(
-      ulong ticksFromCurrent,
+      long ticksFromCurrent,
       ulong durationInTicks,
       out IGawgEvent outEvent) {
-    var inclusiveStart = this.CurrentTick.GetTickAfter(ticksFromCurrent);
-    var inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
+    var inclusiveStart = this.CurrentTick.GetRelativeTick(ticksFromCurrent);
+    var inclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks);
     foreach (var gawgEvent in this.allIncompleteEvents_) {
       if (gawgEvent.IsExclusive &&
           gawgEvent.InclusiveStart.AtSameTimeAsOrBefore(inclusiveEnd) &&
@@ -56,19 +92,18 @@ public sealed partial class GawgEventManager {
   }
 
   public IGawgEvent AddSoonestExclusiveEventAfter(
-      ulong earliestTicksFromCurrent,
+      long earliestTicksFromCurrent,
       ulong durationInTicks) {
-    var inclusiveStart
-        = this.CurrentTick.GetTickAfter(earliestTicksFromCurrent);
-    var inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
+    var inclusiveStart = this.CurrentTick.GetRelativeTick(earliestTicksFromCurrent);
+    var inclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks);
 
     TryAgain:
     foreach (var gawgEvent in this.allIncompleteEvents_) {
       if (gawgEvent.IsExclusive &&
           gawgEvent.InclusiveStart.AtSameTimeAsOrBefore(inclusiveEnd) &&
           inclusiveStart.AtSameTimeAsOrBefore(gawgEvent.InclusiveEnd)) {
-        inclusiveStart = gawgEvent.InclusiveEnd.GetTickAfter(1);
-        inclusiveEnd = inclusiveStart.GetTickAfter(durationInTicks);
+        inclusiveStart = gawgEvent.InclusiveEnd.GetRelativeTick(1);
+        inclusiveEnd = inclusiveStart.GetRelativeTick((long) durationInTicks);
 
         goto TryAgain;
       }

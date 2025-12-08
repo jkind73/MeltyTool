@@ -8,7 +8,7 @@ using fin.ui.avalonia.observables;
 
 using marioartisttool.util;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 public sealed class CursorObservableManager {
   private static readonly Cursor TSTLT_CURSOR_

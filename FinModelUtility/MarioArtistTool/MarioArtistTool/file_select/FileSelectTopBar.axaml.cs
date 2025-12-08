@@ -25,17 +25,13 @@ using fin.util.io;
 
 using marioartist.api;
 
-using MarioArtistTool.config;
-
+using marioartisttool.config;
 using marioartisttool.services;
-
-using MarioArtistTool.services;
-
 using marioartisttool.util;
 
 using ReactiveUI;
 
-namespace MarioArtistTool.file_select;
+namespace marioartisttool.file_select;
 
 public class FileSelectTopBarViewModel : BViewModel {
   public IReadOnlyList<IModelFileBundle> AllModelFileBundles {

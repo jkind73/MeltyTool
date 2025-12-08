@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:marioartisttool.ViewModels"
              xmlns:scene="clr-namespace:fin.ui.avalonia.scene;assembly=Fin.Ui.Avalonia"
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
-             xmlns:fileSelect="clr-namespace:MarioArtistTool.file_select"
+             xmlns:fileSelect="clr-namespace:marioartisttool.file_select"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="marioartisttool.Views.MainView"
              x:DataType="vm:MainViewModel"

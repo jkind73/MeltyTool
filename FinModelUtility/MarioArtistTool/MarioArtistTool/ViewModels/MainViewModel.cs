@@ -23,12 +23,12 @@ using marioartist.api;
 using marioartist.schema;
 using marioartist.schema.mfs;
 
-using MarioArtistTool.file_select;
+using marioartisttool.file_select;
 
 using marioartisttool.services;
 using marioartisttool.util;
 
-using MarioArtistTool.view;
+using marioartisttool.view;
 
 using ReactiveUI;
 

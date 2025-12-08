@@ -16,7 +16,7 @@ using fin.ui.rendering.viewer;
 using fin.util.linq;
 using fin.util.time;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
   private IModelRenderer? impl_;

@@ -1,6 +1,6 @@
 ﻿using fin.io;
 
-namespace MarioArtistTool.config;
+namespace marioartisttool.config;
 
 public sealed class Config {
   private const string FILE_NAME = "./config.json";

@@ -5,7 +5,7 @@ namespace gawg.games.ball;
 public static class BallTimeUtil {
   public static uint GetAdjustedTickDuration(uint rawTickDuration,
                                              uint ballCount)
-    => rawTickDuration * ballCount;
+    => rawTickDuration * ballCount - 1;
 
   public static float GetAdjustedSteppedProgress(
       ulong elapsedTicks,

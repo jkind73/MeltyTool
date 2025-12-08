@@ -9,7 +9,7 @@ using fin.model.skeleton;
 using fin.scene;
 using fin.util.time;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 /// <summary>
 ///   Needs to be a render component to be able to project the point relative

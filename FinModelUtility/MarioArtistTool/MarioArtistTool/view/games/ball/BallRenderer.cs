@@ -8,7 +8,7 @@ using fin.model.util;
 using fin.ui.rendering;
 using fin.ui.rendering.gl.model;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view.games.ball;
 
 public sealed class BallRenderer(float radius) : IRenderable {
   private ModelRenderer? impl_;

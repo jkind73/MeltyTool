@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:fileSelect="clr-namespace:MarioArtistTool.file_select"
+             xmlns:fileSelect="clr-namespace:marioartisttool.file_select"
              mc:Ignorable="d" d:DesignWidth="250"
              Height="28"
-             x:Class="MarioArtistTool.file_select.FileSelectTopBar"
+             x:Class="marioartisttool.file_select.FileSelectTopBar"
              x:DataType="fileSelect:FileSelectTopBarViewModel">
   <UserControl.Styles>
     <Style Selector="Button#MeltyButton:focused,

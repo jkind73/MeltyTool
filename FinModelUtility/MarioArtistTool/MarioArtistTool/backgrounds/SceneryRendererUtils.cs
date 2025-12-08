@@ -8,7 +8,7 @@ using fin.ui.rendering.gl.model;
 
 using marioartisttool.util;
 
-namespace MarioArtistTool.backgrounds;
+namespace marioartisttool.backgrounds;
 
 public static class SceneryRendererUtils {
   public const byte GIRL_ALPHA = 70;

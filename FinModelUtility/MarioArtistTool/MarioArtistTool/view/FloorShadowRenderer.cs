@@ -10,7 +10,7 @@ using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.model;
 using fin.ui.rendering.viewer;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 public sealed class FloorShadowRenderer : IOrthoRenderable {
   private IModelRenderer? impl_;

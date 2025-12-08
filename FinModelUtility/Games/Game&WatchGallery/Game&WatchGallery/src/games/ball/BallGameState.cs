@@ -11,9 +11,20 @@ public sealed class BallGameState(
   public int CurrentScore { get; private set; }
   public int AddPoint() => ++this.CurrentScore;
 
-  public void Fail(BallState ballState) => this.OnFail(ballState);
+  public event Action<BallState> OnBallTicked = delegate { };
 
-  public event Action<BallState> OnFail = delegate { };
+  public void TriggerBallTickedEvent(BallState ballState)
+    => this.OnBallTicked(ballState);
+
+  public event Action<BallState> OnBallDropped = delegate { };
+
+  public void TriggerBallDroppedEvent(BallState ballState)
+    => this.OnBallDropped(ballState);
+
+  public event Action<BallState> OnBallJuggled = delegate { };
+
+  public void TriggerBallJuggledEvent(BallState ballState)
+    => this.OnBallJuggled(ballState);
 
   public uint RightHandPosition { get; private set; }
     = initialRightHandPosition;

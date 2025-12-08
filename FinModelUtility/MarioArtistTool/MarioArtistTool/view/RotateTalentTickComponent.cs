@@ -3,7 +3,7 @@
 using fin.config.avalonia.services;
 using fin.scene;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view;
 
 public class RotateTalentTickComponent : ISceneNodeTickComponent {
   private float? prevMouseX_;

@@ -18,15 +18,17 @@ public partial interface IGawgEventManager : ITickable {
   // Event logic
   void MarkAllEventsComplete();
 
-  IGawgEvent AddEvent(ulong ticksFromCurrent, ulong durationInTicks);
+  IGawgEvent AddEvent(long ticksFromCurrent, ulong durationInTicks);
+  IGawgEvent AddEventRelativeToStartOf(IReadOnlyGawgEvent other, long offset, ulong durationInTicks);
+  IGawgEvent AddEventRelativeToEndOf(IReadOnlyGawgEvent other, long offset, ulong durationInTicks);
 
   bool TryToAddExclusiveEvent(
-      ulong ticksFromCurrent,
+      long ticksFromCurrent,
       ulong durationInTicks,
       out IGawgEvent outEvent);
 
   IGawgEvent AddSoonestExclusiveEventAfter(
-      ulong earliestTicksFromCurrent,
+      long earliestTicksFromCurrent,
       ulong duration);
 }
 
@@ -37,30 +39,16 @@ public enum GawgEventState {
   COMPLETE,
 }
 
-[GenerateReadOnly]
 public partial interface IGawgTick {
   ulong Id { get; }
 
-  [Const]
-  bool AtSameTimeAs(IReadOnlyGawgTick other);
-
-  [Const]
-  bool IsAfter(IReadOnlyGawgTick other);
-
-  [Const]
-  bool AtSameTimeAsOrAfter(IReadOnlyGawgTick other);
-
-  [Const]
-  bool IsBefore(IReadOnlyGawgTick other);
-
-  [Const]
-  bool AtSameTimeAsOrBefore(IReadOnlyGawgTick other);
-
-  [Const]
-  IGawgTick GetTickAfter(ulong delta);
-
-  [Const]
-  ulong GetDurationSince(IReadOnlyGawgTick other);
+  bool AtSameTimeAs(IGawgTick other);
+  bool IsAfter(IGawgTick other);
+  bool AtSameTimeAsOrAfter(IGawgTick other);
+  bool IsBefore(IGawgTick other);
+  bool AtSameTimeAsOrBefore(IGawgTick other);
+  IGawgTick GetRelativeTick(long delta);
+  ulong GetDurationSince(IGawgTick other);
 }
 
 [GenerateReadOnly]

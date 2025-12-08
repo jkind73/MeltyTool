@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 
 using fin.config.avalonia.services;
 using fin.math;
@@ -16,11 +15,12 @@ using gawg.games.ball;
 
 using marioartist.api;
 
-namespace MarioArtistTool.view;
+namespace marioartisttool.view.games.ball;
 
 public class BallGameComponent
     : ISceneNodeTickComponent, ISceneNodeRenderComponent {
   private readonly BallGameManager gameManager_;
+  private readonly BallAudioManager audioManager_;
   private readonly BallRenderer ballRenderer_ = new(12);
 
   private readonly SimpleBoneTransformView boneTransformView_;
@@ -47,6 +47,9 @@ public class BallGameComponent
   public BallGameComponent(SimpleBoneTransformView boneTransformView,
                            IReadOnlyModel model,
                            uint ballCount) {
+    this.gameManager_ = new BallGameManager(ballCount, 1);
+    this.audioManager_ = new(ballCount);
+
     this.boneTransformView_ = boneTransformView;
 
     var skeleton = model.Skeleton;
@@ -78,8 +81,6 @@ public class BallGameComponent
           = this.leftHandBone_.LocalTransform.Translation.Length();
 
       var totalArmLength = upperArmLength + forearmLength;
-
-      this.gameManager_ = new BallGameManager(ballCount, 1);
 
       this.baseBallDistance_
           = this.leftUpperArmBone_.LocalTransform.Translation.X;
@@ -116,6 +117,12 @@ public class BallGameComponent
                           this.ballDistances_.Last() -
                           this.ballDistances_.First();
     }
+
+    var gameState = this.gameManager_.GameState;
+    gameState.OnBallTicked
+        += ballState => this.audioManager_.PlayBallTickAudio(ballState.Index);
+    gameState.OnBallJuggled
+        += _ => this.audioManager_.PlayBallJuggleAudio();
   }
 
   private static (float upperArmRadians, float forearmRadians)
@@ -219,8 +226,8 @@ public class BallGameComponent
       var x = ballDistanceX *
               MathF.Cos(radians) *
               ballState.Direction switch {
-                  BallDirection.LEFT  => -1,
-                  BallDirection.RIGHT => 1,
+                  BallDirection.LEFT  => 1,
+                  BallDirection.RIGHT => -1,
               };
       var y = this.ballBaseY_ + ballDistanceY * MathF.Sin(radians);
 
