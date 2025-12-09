@@ -2,7 +2,7 @@
 
 namespace gawg.games.difficulty.ball;
 
-public sealed class GawgDynamicTickPeriod
+public sealed class GawgTickPeriod
     : IDynamicDifficultyValue<float> {
   public float GetValue(uint currentScore) {
     var currentHundred = (currentScore % 1000) / 100;

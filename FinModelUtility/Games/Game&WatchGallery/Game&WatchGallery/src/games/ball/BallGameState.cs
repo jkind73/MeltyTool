@@ -7,11 +7,11 @@ public sealed class BallGameState(
     uint initialRightHandPosition) {
   public uint BallCount => ballCount;
 
-  private readonly GawgDynamicDifficultyTickPeriod dynamicDifficultyTickPeriod_
+  private readonly GawgTickPeriod dynamicTickPeriod_
       = new();
 
   public float TickPeriod
-    => this.dynamicDifficultyTickPeriod_.GetValue(this.CurrentScore);
+    => this.dynamicTickPeriod_.GetValue(this.CurrentScore);
 
   public uint CurrentScore { get; private set; }
   public void AddPoint() => this.CurrentScore += 10;
