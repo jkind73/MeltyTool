@@ -12,7 +12,7 @@ public sealed class ChefManager : ITickable {
   private uint currentScore_;
 
   private readonly IDynamicDifficultyValue<uint> maxJuggledFoodItems_
-      = new MeltyPlayerMaxJuggledFoodValues();
+      = new GawgJuggledFoodCount();
 
   public void Tick() {
     this.eventManager_.Tick();
