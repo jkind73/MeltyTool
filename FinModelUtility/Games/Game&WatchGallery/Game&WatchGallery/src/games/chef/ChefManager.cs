@@ -1,6 +1,7 @@
 ﻿using fin.scene;
 
 using gawg.common;
+using gawg.common.difficulty;
 using gawg.games.chef.difficulty;
 
 namespace gawg.games.chef;

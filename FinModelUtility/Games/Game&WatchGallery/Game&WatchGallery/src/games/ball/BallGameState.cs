@@ -1,15 +1,20 @@
-﻿namespace gawg.games.ball;
+﻿using gawg.games.difficulty.ball;
+
+namespace gawg.games.ball;
 
 public sealed class BallGameState(
     uint ballCount,
     uint initialRightHandPosition) {
   public uint BallCount => ballCount;
 
-  // TODO: Vary this based on the score
-  public float TickPeriod => .5f;
+  private readonly GawgDynamicDifficultyTickPeriod dynamicDifficultyTickPeriod_
+      = new();
 
-  public int CurrentScore { get; private set; }
-  public int AddPoint() => ++this.CurrentScore;
+  public float TickPeriod
+    => this.dynamicDifficultyTickPeriod_.GetValue(this.CurrentScore);
+
+  public uint CurrentScore { get; private set; }
+  public void AddPoint() => this.CurrentScore += 10;
 
   public event Action<BallState> OnBallTicked = delegate { };
 

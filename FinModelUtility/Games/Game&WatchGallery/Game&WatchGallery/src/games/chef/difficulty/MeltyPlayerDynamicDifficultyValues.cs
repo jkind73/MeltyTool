@@ -1,4 +1,6 @@
-﻿namespace gawg.games.chef.difficulty;
+﻿using gawg.common.difficulty;
+
+namespace gawg.games.chef.difficulty;
 
 /// <summary>
 ///   Calculates the maximum number of food items allowed in the air, ramping
