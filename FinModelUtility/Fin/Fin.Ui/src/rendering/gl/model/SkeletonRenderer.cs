@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
-using fin.data.dictionaries;
 using fin.data.indexable;
 using fin.math.floats;
 using fin.math.matrix.four;

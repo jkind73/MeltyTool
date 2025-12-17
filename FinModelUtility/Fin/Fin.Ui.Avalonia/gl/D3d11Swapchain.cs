@@ -10,14 +10,10 @@ using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Rendering.Composition;
 
-using fin.util.asserts;
-
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Graphics.Wgl;
 using OpenTK.Platform.Windows;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
-using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 

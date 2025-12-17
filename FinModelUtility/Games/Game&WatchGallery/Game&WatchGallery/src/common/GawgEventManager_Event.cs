@@ -1,7 +1,5 @@
 ﻿using fin.scene;
 
-using static schema.binary.BinarySchemaContainerParser;
-
 namespace gawg.common;
 
 public sealed partial class GawgEventManager {

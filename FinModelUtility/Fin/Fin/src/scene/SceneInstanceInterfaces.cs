@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Numerics;
 
-using fin.animation;
 using fin.data.dictionaries;
 using fin.math;
 using fin.math.transform;

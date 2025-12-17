@@ -15,7 +15,6 @@ using fin.animation.types.quaternion;
 using fin.data.queues;
 using fin.model;
 using fin.model.io.importers;
-using fin.util.enumerables;
 using fin.util.hex;
 
 using UoT.hacks;

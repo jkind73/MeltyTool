@@ -12,8 +12,6 @@ using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
 using fin.math;
-using fin.math.matrix.four;
-using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;

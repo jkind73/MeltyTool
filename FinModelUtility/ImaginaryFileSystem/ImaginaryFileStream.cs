@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using System.Runtime.Versioning;
+﻿using System.Runtime.Versioning;
 using System.Security.AccessControl;
 
 namespace System.IO.Abstractions.TestingHelpers;

@@ -1,6 +1,4 @@
-﻿using readOnly;
-
-namespace gawg.common;
+﻿namespace gawg.common;
 
 public static class GawgEventManagerExtensions {
   public static IGawgEvent AddEventAfter(

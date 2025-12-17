@@ -4,7 +4,6 @@ using fin.io;
 using fin.io.bundles;
 using fin.model;
 using fin.model.io.importers.gltf;
-using fin.util.asserts;
 using fin.util.progress;
 
 using SharpGLTF.Schema2;
