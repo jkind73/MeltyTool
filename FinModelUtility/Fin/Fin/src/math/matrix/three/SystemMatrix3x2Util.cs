@@ -27,7 +27,7 @@ public static class SystemMatrix3x2Util {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static unsafe int GetRoughHashCode(this Matrix3x2 mat) {
-    var error = FloatsExtensions.ROUGHLY_EQUAL_ERROR;
+    var error = FloatsExtensions.EPSILON;
 
     var hash = new FluentHash();
     float* ptr = &mat.M11;

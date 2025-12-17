@@ -4,11 +4,11 @@ using System.Runtime.CompilerServices;
 namespace fin.math.floats;
 
 public static class FloatsExtensions {
-  public const float ROUGHLY_EQUAL_ERROR = .001f;
+  public const float EPSILON = .001f;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool IsRoughly(this float a, float b)
-    => a.IsRoughly(b, ROUGHLY_EQUAL_ERROR);
+    => a.IsRoughly(b, EPSILON);
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool IsRoughly(this float a, float b, float tolerance)
@@ -22,5 +22,5 @@ public static class FloatsExtensions {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static int GetRoughHashCode(this float a)
-    => (int) MathF.Round(a / ROUGHLY_EQUAL_ERROR);
+    => (int) MathF.Round(a / EPSILON);
 }

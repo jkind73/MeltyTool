@@ -29,7 +29,7 @@ public static class SystemMatrix4x4Util {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static unsafe int GetRoughHashCode(this in Matrix4x4 mat) {
-    var error = FloatsExtensions.ROUGHLY_EQUAL_ERROR;
+    var error = FloatsExtensions.EPSILON;
 
     var hash = new FluentHash();
     fixed (float* ptr = &mat.M11) {

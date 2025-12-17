@@ -279,7 +279,7 @@ public sealed class Matrix4x4Tests {
   private IReadOnlyFinMatrix4x4 GetCloseToIdentityMatrix_() {
     var closeToIdentityMatrix = new FinMatrix4x4().SetZero();
 
-    var error = FloatsExtensions.ROUGHLY_EQUAL_ERROR * .1f;
+    var error = FloatsExtensions.EPSILON * .1f;
     closeToIdentityMatrix[0, 0] = 1 + error;
     closeToIdentityMatrix[0, 1] = error;
     closeToIdentityMatrix[0, 2] = -error;
@@ -303,7 +303,7 @@ public sealed class Matrix4x4Tests {
   private IReadOnlyFinMatrix4x4 GetDifferentFromIdentityMatrix_() {
     var closeToIdentityMatrix = new FinMatrix4x4().SetZero();
 
-    var error = FloatsExtensions.ROUGHLY_EQUAL_ERROR * 10;
+    var error = FloatsExtensions.EPSILON * 10;
     closeToIdentityMatrix[0, 0] = 1 + error;
     closeToIdentityMatrix[0, 1] = error;
     closeToIdentityMatrix[0, 2] = -error;
