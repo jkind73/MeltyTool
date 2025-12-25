@@ -1,7 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.OpenGL;
-using Avalonia.ReactiveUI;
 using Avalonia.Win32;
+using ReactiveUI.Avalonia;
 
 using fin.ui.rendering.gl;
 
