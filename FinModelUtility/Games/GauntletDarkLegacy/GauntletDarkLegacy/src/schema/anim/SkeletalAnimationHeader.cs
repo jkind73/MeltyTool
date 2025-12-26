@@ -11,7 +11,7 @@ namespace gdl.schema.anim;
 /// </summary>
 [BinarySchema]
 [LocalPositions]
-public sealed partial class AnimHeader
+public sealed partial class SkeletalAnimationHeader
     : IBinaryDeserializable, IChildOf<ATreeHeader> {
   public ATreeHeader Parent { get; set; }
 
@@ -38,24 +38,24 @@ public sealed partial class AnimHeader
   public float[] CompressedScales { get; set; }
 
   [Skip]
-  public ListDictionary<ANodeInfo, AnimationSequence> SequencesByBone { get; }
-    = new();
+  public ListDictionary<ANodeInfo, SkeletalAnimationSequence>
+      SkeletalSequencesByBone { get; } = new();
 
   [ReadLogic]
   private void ReadSequences_(IBinaryReader br) {
-    this.SequencesByBone.Clear();
+    this.SkeletalSequencesByBone.Clear();
     foreach (var bone in this.Parent.ANodeInfos) {
       if (bone.Type is AnimType.SKEL_ANIM) {
         br.SubreadAt(
-            bone.AnimSeqInfoOffset,
+            bone.SequenceOffset,
             () => {
               for (var i = 0; i < this.sequenceCount_; ++i) {
-                var animationSequence = new AnimationSequence {
+                var animationSequence = new SkeletalAnimationSequence {
                     Parent = this,
                     Header = this.Parent.ATreeSequences[i],
                 };
                 animationSequence.Read(br);
-                this.SequencesByBone.Add(bone, animationSequence);
+                this.SkeletalSequencesByBone.Add(bone, animationSequence);
               }
             });
       }

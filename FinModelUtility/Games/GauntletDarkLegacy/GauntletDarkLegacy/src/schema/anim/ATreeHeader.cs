@@ -1,4 +1,6 @@
-﻿using schema.binary;
+﻿using fin.data.dictionaries;
+
+using schema.binary;
 using schema.binary.attributes;
 
 namespace gdl.schema.anim;
@@ -11,8 +13,8 @@ namespace gdl.schema.anim;
 [LocalPositions]
 public sealed partial class ATreeHeader : IBinaryDeserializable {
   private uint aTreeSequencesPointer_;
-  private uint animHeaderPointer_;
-  public uint ObjAnimHeaderPointer { get; set; }
+  private uint skeletalAnimationHeaderPointer_;
+  private uint objectAnimationHeaderPointer_;
   private uint aNodeInfoPointer_;
   private uint aNodeCount_;
   private uint aTreeSequenceCount_;
@@ -28,6 +30,9 @@ public sealed partial class ATreeHeader : IBinaryDeserializable {
   [RSequenceLengthSource(nameof(aTreeSequenceCount_))]
   public ATreeSequence[] ATreeSequences { get; set; }
 
-  [RAtPosition(nameof(animHeaderPointer_))]
-  public AnimHeader AnimHeader { get; } = new();
+  [RAtPosition(nameof(skeletalAnimationHeaderPointer_))]
+  public SkeletalAnimationHeader SkeletalAnimationHeader { get; } = new();
+
+  [RAtPosition(nameof(objectAnimationHeaderPointer_))]
+  public ObjectAnimationHeader ObjectAnimationHeader { get; } = new();
 }

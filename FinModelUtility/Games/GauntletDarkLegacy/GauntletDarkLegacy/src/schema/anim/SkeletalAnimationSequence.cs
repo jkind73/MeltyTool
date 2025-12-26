@@ -32,9 +32,9 @@ public enum SequenceType : ushort {
 ///   https://github.com/haekb/io_scene_gdl/blob/master/src/anim_model.py#L271
 /// </summary>
 [BinarySchema]
-public sealed partial class AnimationSequence
-    : IBinaryDeserializable, IChildOf<AnimHeader> {
-  public AnimHeader Parent { get; set; }
+public sealed partial class SkeletalAnimationSequence
+    : IBinaryDeserializable, IChildOf<SkeletalAnimationHeader> {
+  public SkeletalAnimationHeader Parent { get; set; }
 
   [Skip]
   public ATreeSequence Header { get; set; }

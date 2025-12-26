@@ -238,7 +238,7 @@ public sealed class GauntletDarkLegacyModelImporter
         }
       }
 
-      var gdlAnimationData = gdlSkeleton.Data.AnimHeader;
+      var gdlAnimationData = gdlSkeleton.Data.SkeletalAnimationHeader;
       var gdlAnimationHeaders = gdlSkeleton.Data.ATreeSequences;
 
       var logicalAnimations = new List<(string name, IEnumerable<int>)>();
@@ -280,9 +280,9 @@ public sealed class GauntletDarkLegacyModelImporter
         finAnimation.UseLoopingInterpolation
             = header0.Loop || gdlHeaders.Length > 1;
 
-        foreach (var gdlBone in gdlAnimationData.SequencesByBone.Keys) {
+        foreach (var gdlBone in gdlAnimationData.SkeletalSequencesByBone.Keys) {
           var allGdlSequencesForBone
-              = gdlAnimationData.SequencesByBone[gdlBone];
+              = gdlAnimationData.SkeletalSequencesByBone[gdlBone];
           var gdlBoneSequencesForAnimation
               = headerIs.Select(i => allGdlSequencesForBone[i]).ToArray();
 
@@ -290,25 +290,25 @@ public sealed class GauntletDarkLegacyModelImporter
             continue;
           }
 
-          var totalSequnceFrameCount
+          var totalSequenceFrameCount
               = gdlBoneSequencesForAnimation.Sum(s => s.FrameCount);
 
           var finBoneTracks
               = finAnimation.GetOrCreateBoneTracks(finBoneByGdlBone[gdlBone]);
 
           finAnimation.FrameCount
-              = Math.Max(finAnimation.FrameCount, totalSequnceFrameCount);
+              = Math.Max(finAnimation.FrameCount, totalSequenceFrameCount);
 
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
-                  totalSequnceFrameCount);
+                  totalSequenceFrameCount);
           rotationKeyframes.ConvertRadiansToQuaternionImpl
               = this.ConvertGdlRadiansToQuaternion_;
           var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
-              totalSequnceFrameCount);
+              totalSequenceFrameCount);
           var scaleKeyframes
               = finBoneTracks.UseSeparateScaleKeyframes(
-                  totalSequnceFrameCount);
+                  totalSequenceFrameCount);
 
           var startFrame = 0;
 
@@ -387,10 +387,13 @@ public sealed class GauntletDarkLegacyModelImporter
     }
 
     var finSkin = finModel.Skin;
+    var rootFinMeshByName = new Dictionary<string, IMesh>();
     foreach (var (definition, obj) in objects.ObjectDefinitions.Zip(
                  objects.RootObjects)) {
       var finRootMesh = finSkin.AddMesh();
       finRootMesh.Name = definition.Name;
+
+      rootFinMeshByName[finRootMesh.Name] = finRootMesh;
 
       var finBone
           = finBones.FirstOrDefault(b => finRootMesh.Name.Contains(b.Name!));
@@ -457,6 +460,40 @@ public sealed class GauntletDarkLegacyModelImporter
               VertexOrder.CLOCKWISE         => VertexOrder.COUNTER_CLOCKWISE,
               VertexOrder.COUNTER_CLOCKWISE => VertexOrder.CLOCKWISE,
           });
+        }
+      }
+    }
+
+    foreach (var gdlSkeleton in anim.Atrees) {
+      foreach (var gdlObjectAnimation in gdlSkeleton.Data.ObjectAnimationHeader
+                                                    .ObjectAnimations) {
+        var firstFinMeshName = gdlObjectAnimation.Name;
+
+        var indexOfFMarker = firstFinMeshName.LastIndexOf('F');
+
+        var lengthOfIndex = firstFinMeshName.Length - 1 - indexOfFMarker;
+        var currentMeshIndex
+            = int.Parse(firstFinMeshName[(indexOfFMarker + 1)..]);
+
+        var finMeshAnimation = finModel.AnimationManager.AddAnimation();
+        finMeshAnimation.Name = firstFinMeshName[..indexOfFMarker];
+
+        finMeshAnimation.FrameCount = gdlObjectAnimation.FrameCount;
+        finMeshAnimation.FrameRate = 30;
+
+        for (var f = gdlObjectAnimation.StartFrame;
+             f < gdlObjectAnimation.FrameCount;
+             ++f) {
+          var currentMeshName = $"{finMeshAnimation.Name}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
+
+          var finMesh = rootFinMeshByName[currentMeshName];
+          finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
+
+          var finMeshTracks = finMeshAnimation.AddMeshTracks(finMesh);
+          finMeshTracks.DisplayStates.Add(
+              new Keyframe<MeshDisplayState>(f, MeshDisplayState.VISIBLE));
+          finMeshTracks.DisplayStates.Add(
+              new Keyframe<MeshDisplayState>(f + 1, MeshDisplayState.HIDDEN));
         }
       }
     }

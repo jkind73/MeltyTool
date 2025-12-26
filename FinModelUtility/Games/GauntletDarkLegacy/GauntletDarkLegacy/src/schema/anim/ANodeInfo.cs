@@ -32,6 +32,6 @@ public sealed partial class ANodeInfo : IBinaryDeserializable {
   public AnimType Type { get; set; }
   public ushort Flags { get; set; }
   public MbFlags MbFlags { get; set; }
-  public uint AnimSeqInfoOffset { get; set; }
+  public uint SequenceOffset { get; set; }
   public int ParentId { get; set; }
 }
