@@ -11,7 +11,8 @@ namespace gdl.schema.objects;
 /// </summary>
 public enum ImageFormat : byte {
   RGBA_5551 = 0,
-  IDX_4_RGBA_5551 = 18,
+  IDX_4_RGBA_5551 = 16,
+  IDX_4_RGBA_5553 = 18,
 
   //IDX_4_BGR_555 = 1,
   //IDX_4_ABGR_8888 = 18,
@@ -35,6 +36,11 @@ public static class ImageFormatExtensions {
       case ImageFormat.IDX_4_RGBA_5551: {
         paletteCount = 16;
         pixelFormat = PixelFormat.RGBA5551;
+        return true;
+      }
+      case ImageFormat.IDX_4_RGBA_5553: {
+        paletteCount = 16;
+        pixelFormat = PixelFormat.RGBA5553;
         return true;
       }
       case ImageFormat.IDX_8_RGB_5551: {
