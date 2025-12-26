@@ -293,11 +293,13 @@ public sealed class GauntletDarkLegacyModelImporter
           var totalSequenceFrameCount
               = gdlBoneSequencesForAnimation.Sum(s => s.FrameCount);
 
-          var finBoneTracks
-              = finAnimation.GetOrCreateBoneTracks(finBoneByGdlBone[gdlBone]);
+          var finBone = finBoneByGdlBone[gdlBone];
+          var finBoneTracks = finAnimation.GetOrCreateBoneTracks(finBone);
 
           finAnimation.FrameCount
               = Math.Max(finAnimation.FrameCount, totalSequenceFrameCount);
+
+          var localPosition = finBone.LocalTransform.Translation;
 
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
@@ -345,23 +347,27 @@ public sealed class GauntletDarkLegacyModelImporter
               var positionX = gdlSequence.PositionXs[f];
               if (positionX != null) {
                 // For some inexplicable reason, the meshes are mirrored.
-                positionKeyframes.SetKeyframe(0,
-                                              frame,
-                                              -positionX.Value);
+                positionKeyframes.SetKeyframe(
+                    0,
+                    frame,
+                    localPosition.X - positionX.Value);
               }
 
               var positionY = gdlSequence.PositionYs[f];
               if (positionY != null) {
-                positionKeyframes.SetKeyframe(1,
-                                              frame,
-                                              positionY.Value);
+                positionKeyframes.SetKeyframe(
+                    1,
+                    frame,
+                    localPosition.Y +
+                    positionY.Value);
               }
 
               var positionZ = gdlSequence.PositionZs[f];
               if (positionZ != null) {
-                positionKeyframes.SetKeyframe(2,
-                                              frame,
-                                              positionZ.Value);
+                positionKeyframes.SetKeyframe(
+                    2,
+                    frame,
+                    localPosition.Z + positionZ.Value);
               }
 
               var scaleX = gdlSequence.ScaleXs[f];
@@ -484,7 +490,8 @@ public sealed class GauntletDarkLegacyModelImporter
         for (var f = gdlObjectAnimation.StartFrame;
              f < gdlObjectAnimation.FrameCount;
              ++f) {
-          var currentMeshName = $"{finMeshAnimation.Name}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
+          var currentMeshName
+              = $"{finMeshAnimation.Name}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
 
           var finMesh = rootFinMeshByName[currentMeshName];
           finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
