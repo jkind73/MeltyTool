@@ -4,6 +4,8 @@ using fin.scene;
 
 using games.pikmin2.api;
 
+using gdl.api;
+
 using grezzo.api;
 
 using hw.api;
@@ -33,6 +35,9 @@ public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
         Celeste64MapSceneFileBundle celeste64MapSceneFileBundle
             => new Celeste64MapSceneImporter().Import(
                 celeste64MapSceneFileBundle),
+        GauntletDarkLegacySceneFileBundle gauntletDarkLegacySceneFileBundle
+            => new GauntletDarkLegacySceneImporter().Import(
+                gauntletDarkLegacySceneFileBundle),
         LvlSceneFileBundle lvlSceneFileBundle
             => new LvlSceneImporter().Import(lvlSceneFileBundle),
         Pikmin2SceneFileBundle pikmin2SceneFileBundle

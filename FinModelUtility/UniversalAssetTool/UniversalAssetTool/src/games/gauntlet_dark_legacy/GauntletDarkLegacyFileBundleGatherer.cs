@@ -19,7 +19,8 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
         continue;
       }
 
-      if (!directory.TryToGetExistingFile("textures.ngc", out var texturesFile)) {
+      if (!directory.TryToGetExistingFile("textures.ngc",
+                                          out var texturesFile)) {
         continue;
       }
 
@@ -29,12 +30,24 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
         continue;
       }
 
+      directory.TryToGetExistingFile("worlds.ps2", out var worldsFile);
+
       organizer.Add(
           new GauntletDarkLegacyModelFileBundle {
               ObjectsFile = objectsFile,
               AnimFile = animFile,
               TexturesFile = texturesFile,
           }.Annotate(objectsFile));
+
+      if (worldsFile != null) {
+        organizer.Add(
+            new GauntletDarkLegacySceneFileBundle {
+                ObjectsFile = objectsFile,
+                AnimFile = animFile,
+                TexturesFile = texturesFile,
+                WorldsFile = worldsFile,
+            }.Annotate(worldsFile));
+      }
     }
   }
 }
