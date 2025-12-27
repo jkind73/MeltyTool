@@ -189,6 +189,8 @@ public sealed class GauntletDarkLegacyModelImporter
           return finMaterial;
         });
 
+    var finBonesByMeshNamePart = new Dictionary<string, IReadOnlyBone>();
+
     IBone? weaponBone = null;
     var finBones = new List<IReadOnlyBone>();
     foreach (var gdlSkeleton in anim.Atrees) {
@@ -220,6 +222,25 @@ public sealed class GauntletDarkLegacyModelImporter
 
         finBones.Add(finBone);
         finBoneByGdlBone[gdlANodeInfo] = finBone;
+
+        if (gdlANodeInfo.Type is AnimType.OBJ_ANIM) {
+          if (gdlSkeleton.Data.ObjectAnimationHeader
+                         .ObjectAnimationSequencesByBone.TryGetList(
+                             gdlANodeInfo,
+                             out var objectAnimations) &&
+              objectAnimations.Count > 0) {
+            foreach (var objectAnimation in objectAnimations) {
+              SplitObjAnimMeshName_(
+                  objectAnimation.Name,
+                  out var meshNamePrefix,
+                  out _,
+                  out _);
+              finBonesByMeshNamePart[meshNamePrefix] = finBone;
+            }
+          }
+        } else {
+          finBonesByMeshNamePart[gdlANodeInfo.MbDesc] = finBone;
+        }
 
         if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
@@ -306,7 +327,7 @@ public sealed class GauntletDarkLegacyModelImporter
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(
                   totalSequenceFrameCount);
           rotationKeyframes.ConvertRadiansToQuaternionImpl
-              = this.ConvertGdlRadiansToQuaternion_;
+              = ConvertGdlRadiansToQuaternion_;
           var positionKeyframes = finBoneTracks.UseSeparateTranslationKeyframes(
               totalSequenceFrameCount);
           var scaleKeyframes
@@ -402,8 +423,9 @@ public sealed class GauntletDarkLegacyModelImporter
 
       rootFinMeshByName[finRootMesh.Name] = finRootMesh;
 
-      var finBone
-          = finBones.FirstOrDefault(b => finRootMesh.Name.Contains(b.Name!));
+      var finBone = finBonesByMeshNamePart
+                    .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
+                    .Value;
 
       // HACK: Weapon isn't attached to the hand otherwise
       if (finBone == null && definition.Name.StartsWith("WEAP_")) {
@@ -492,16 +514,13 @@ public sealed class GauntletDarkLegacyModelImporter
     foreach (var gdlSkeleton in anim.Atrees) {
       foreach (var gdlObjectAnimation in gdlSkeleton.Data.ObjectAnimationHeader
                                                     .ObjectAnimations) {
-        var firstFinMeshName = gdlObjectAnimation.Name;
-
-        var indexOfFMarker = firstFinMeshName.LastIndexOf('F');
-
-        var lengthOfIndex = firstFinMeshName.Length - 1 - indexOfFMarker;
-        var currentMeshIndex
-            = int.Parse(firstFinMeshName[(indexOfFMarker + 1)..]);
-
+        SplitObjAnimMeshName_(
+            gdlObjectAnimation.Name,
+            out var meshNamePrefix,
+            out var lengthOfIndex,
+            out var currentMeshIndex);
         var finMeshAnimation = finModel.AnimationManager.AddAnimation();
-        finMeshAnimation.Name = firstFinMeshName[..indexOfFMarker];
+        finMeshAnimation.Name = meshNamePrefix;
 
         finMeshAnimation.FrameCount = gdlObjectAnimation.FrameCount;
         finMeshAnimation.FrameRate = 30;
@@ -510,7 +529,7 @@ public sealed class GauntletDarkLegacyModelImporter
              f < gdlObjectAnimation.FrameCount;
              ++f) {
           var currentMeshName
-              = $"{finMeshAnimation.Name}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
+              = $"{meshNamePrefix}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
 
           var finMesh = rootFinMeshByName[currentMeshName];
           finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
@@ -527,7 +546,22 @@ public sealed class GauntletDarkLegacyModelImporter
     return finModel;
   }
 
-  private Quaternion ConvertGdlRadiansToQuaternion_(float x, float y, float z) {
+  private static void SplitObjAnimMeshName_(
+      string objAnimMeshName,
+      out string prefix,
+      out int lengthOfIndex,
+      out int firstIndex) {
+    var indexOfFMarker = objAnimMeshName.LastIndexOf('F');
+
+    prefix = objAnimMeshName[..indexOfFMarker];
+    lengthOfIndex = objAnimMeshName.Length - 1 - indexOfFMarker;
+    firstIndex = int.Parse(objAnimMeshName[(indexOfFMarker + 1)..]);
+  }
+
+  private static Quaternion ConvertGdlRadiansToQuaternion_(
+      float x,
+      float y,
+      float z) {
     // y is definitely yaw, needs to be negative (e.g. turning side-to-side in idle)
     // x is definitely pitch, needs to be negative (e.g. legs running)
     // z must be roll, needs to be negative (e.g. archer bobbing back and forth in idle)
