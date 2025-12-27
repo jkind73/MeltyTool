@@ -217,11 +217,11 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
                     // https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L410
                     var value = br.ReadUInt16();
                     ColorUtil.SplitRgb5A1(value,
-                                          out var r,
-                                          out var g,
                                           out var b,
-                                          out _);
-                    vertexColors.Add(FinColor.FromRgbBytes(r, g, b));
+                                          out var g,
+                                          out var r,
+                                          out var a);
+                    vertexColors.Add(FinColor.FromRgbaBytes(r, g, b, a));
                     break;
                   }
                   default:

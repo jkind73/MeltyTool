@@ -56,6 +56,7 @@ public sealed class GauntletDarkLegacyModelImporter
         objects,
         anim,
         fileBundle.TexturesFile,
+        new Dictionary<int, IReadOnlyImage>(),
         null);
   }
 
@@ -65,6 +66,7 @@ public sealed class GauntletDarkLegacyModelImporter
       Objects objects,
       Anim anim,
       IReadOnlyGenericFile texturesFile,
+      Dictionary<int, IReadOnlyImage> textureImageCache,
       string? rootObjectName) {
     var finModel = new ModelImpl {
         FileBundle = fileBundle,
@@ -72,12 +74,18 @@ public sealed class GauntletDarkLegacyModelImporter
     };
 
     using var textureBr = texturesFile.OpenReadAsBinary(Endianness.BigEndian);
-    var lazyFinTextures = new LazyDictionary<int, IReadOnlyTexture>(textureIndex
-          => {
-        var gdlTexture = objects.Textures[textureIndex];
-        textureBr.Position = gdlTexture.TextureDataPointer;
 
-        IImage? finImage = null;
+    var lazyFinImages = new LazyDictionary<int, IReadOnlyImage>(textureIndex
+        => {
+      var gdlTexture = objects.Textures[textureIndex];
+      textureBr.Position = gdlTexture.TextureDataPointer;
+
+      if (textureImageCache.TryGetValue(textureIndex,
+                                        out var existingTextureImage)) {
+        return existingTextureImage;
+      }
+
+      IImage? finImage = null;
         if (!gdlTexture.Format.IsIndexed(out var paletteCount,
                                          out var pixelFormat)) {
           switch (gdlTexture.Format) {
@@ -180,6 +188,13 @@ public sealed class GauntletDarkLegacyModelImporter
                                               gdlTexture.Width,
                                               gdlTexture.Height);
 
+        return finImage;
+      });
+    var lazyFinTextures = new LazyDictionary<int, IReadOnlyTexture>(textureIndex
+          => {
+        var gdlTexture = objects.Textures[textureIndex];
+        var finImage = lazyFinImages[textureIndex];
+
         var finTexture = finModel.MaterialManager.CreateTexture(finImage);
         finTexture.Name
             = $"texture{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
@@ -260,12 +275,7 @@ public sealed class GauntletDarkLegacyModelImporter
           finBonesByMeshNamePart[gdlANodeInfo.MbDesc] = finBone;
         }
 
-        if (gdlANodeInfo.MbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
-          finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
-        } else if (gdlANodeInfo.MbFlags.CheckFlag(
-                       MbFlags.YAW_AND_PITCH_BILLBOARD)) {
-          finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
-        }
+        SetFaceTowardsCamera(finBone, gdlANodeInfo.MbFlags);
 
         // HACK: Need to manually attach the bone to the right wrist.
         // This is fucking stupid. Why is the weapon's parent bone not set?
@@ -494,8 +504,7 @@ public sealed class GauntletDarkLegacyModelImporter
 
                   finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
 
-                  if (gdlPrimitive.VertexColors.Count >=
-                      gdlPrimitive.Positions.Count) {
+                  if (gdlPrimitive.VertexColors.Count > 0) {
                     finVertex.SetColor(gdlPrimitive.VertexColors[i]);
                   }
 
@@ -581,6 +590,14 @@ public sealed class GauntletDarkLegacyModelImporter
     }
 
     return finModel;
+  }
+
+  public static void SetFaceTowardsCamera(IBone bone, MbFlags mbFlags) {
+    if (mbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
+      bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
+    } else if (mbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
+      bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
+    }
   }
 
   private static void SplitObjAnimMeshName_(

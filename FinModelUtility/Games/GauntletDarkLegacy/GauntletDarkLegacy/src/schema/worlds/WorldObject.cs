@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 
+using gdl.schema.anim;
+
 using schema.binary;
 using schema.binary.attributes;
 
@@ -20,7 +22,7 @@ public sealed partial class WorldObject : IBinaryDeserializable {
   public sbyte TriggerState { get; set; }
   public sbyte PTriggerState { get; set; }
  
-  public uint MbFlags { get; set; }
+  public MbFlags MbFlags { get; set; }
   public Vector3 Position { get; set; }
   public uint MbNodePointer { get; set; }
   public short NextIndex { get; set; }

@@ -1,4 +1,7 @@
-﻿using fin.data.queues;
+﻿using System.Drawing;
+
+using fin.data.queues;
+using fin.image;
 using fin.io;
 using fin.model;
 using fin.model.util;
@@ -34,8 +37,11 @@ public sealed class GauntletDarkLegacySceneImporter
     var objects = fileBundle.ObjectsFile.ReadNew<Objects>();
     var anim = fileBundle.AnimFile.ReadNew<Anim>();
     var worlds = fileBundle.WorldsFile.ReadNew<Worlds>();
+    var textureImageCache = new Dictionary<int, IReadOnlyImage>();
 
     var finArea = finScene.AddArea();
+    finArea.CreateCustomSkyboxNode();
+    finArea.BackgroundColor = Color.Black;
 
     var worldObjectQueue
         = new FinTuple2Queue<short, ISceneNode?>((0, null));
@@ -55,7 +61,12 @@ public sealed class GauntletDarkLegacySceneImporter
           objects,
           anim,
           fileBundle.TexturesFile,
+          textureImageCache,
           gdlWorldObject.Name);
+      GauntletDarkLegacyModelImporter.SetFaceTowardsCamera(
+          finModel.Skeleton.Root,
+          gdlWorldObject.MbFlags);
+
       finSceneNode.AddSceneModel(finModel);
 
       if (gdlWorldObject.ChildIndex != -1) {
