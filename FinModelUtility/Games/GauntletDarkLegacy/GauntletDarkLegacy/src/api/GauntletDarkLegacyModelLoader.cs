@@ -223,6 +223,8 @@ public sealed class GauntletDarkLegacyModelImporter
         finBones.Add(finBone);
         finBoneByGdlBone[gdlANodeInfo] = finBone;
 
+        // Fuck, man. There are way easier ways to do this... why the fuck did
+        // Midway not use integer IDs to link bones/meshes??????
         if (gdlANodeInfo.Type is AnimType.OBJ_ANIM) {
           if (gdlSkeleton.Data.ObjectAnimationHeader
                          .ObjectAnimationSequencesByBone.TryGetList(
@@ -249,6 +251,8 @@ public sealed class GauntletDarkLegacyModelImporter
           finBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
         }
 
+        // HACK: Need to manually attach the bone to the right wrist.
+        // This is fucking stupid. Why is the weapon's parent bone not set?
         if (finBone.Name is "R_WRIST") {
           weaponBone = finBone.AddChild(Vector3.Zero);
           weaponBone.Name = "WEAPON";
@@ -525,21 +529,33 @@ public sealed class GauntletDarkLegacyModelImporter
         finMeshAnimation.FrameCount = gdlObjectAnimation.FrameCount;
         finMeshAnimation.FrameRate = 30;
 
+        var meshesWithPrefix
+            = rootFinMeshByName
+              .Where(kvp => kvp.Key.StartsWith(meshNamePrefix))
+              .OrderBy(kvp => kvp.Key)
+              .Select(kvp => kvp.Value)
+              .GetEnumerator();
+
+        IMeshTracks? previousMeshTracks = null;
         for (var f = gdlObjectAnimation.StartFrame;
              f < gdlObjectAnimation.FrameCount;
              ++f) {
-          var currentMeshName
-              = $"{meshNamePrefix}F{(currentMeshIndex++).ToString($"D{lengthOfIndex}")}";
+          meshesWithPrefix.MoveNext();
+          var finMesh = meshesWithPrefix.Current;
 
-          var finMesh = rootFinMeshByName[currentMeshName];
           finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
 
           var finMeshTracks = finMeshAnimation.AddMeshTracks(finMesh);
           finMeshTracks.DisplayStates.Add(
               new Keyframe<MeshDisplayState>(f, MeshDisplayState.VISIBLE));
-          finMeshTracks.DisplayStates.Add(
-              new Keyframe<MeshDisplayState>(f + 1, MeshDisplayState.HIDDEN));
+
+          previousMeshTracks?.DisplayStates.Add(
+              new Keyframe<MeshDisplayState>(f, MeshDisplayState.HIDDEN));
+          previousMeshTracks = finMeshTracks;
         }
+        previousMeshTracks.DisplayStates.Add(
+            new Keyframe<MeshDisplayState>(gdlObjectAnimation.FrameCount,
+                                           MeshDisplayState.HIDDEN));
       }
     }
 
