@@ -12,6 +12,7 @@ using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
 using fin.math;
+using fin.math.floats;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -460,12 +461,30 @@ public sealed class GauntletDarkLegacyModelImporter
                 })
                 .ToArray();
 
-          var finPrimitive = finSubMesh.AddTriangleStrip(finVertices);
+          var triangleVertices
+              = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)>();
+
+          var faceDir = gdlPrimitive.FaceDir.IsRoughly(-1f) ? 1 : 0;
+          var facesDrawn = gdlPrimitive.FacesDrawn;
+          for (var f = 0; f < facesDrawn.Count; ++f) {
+            if (!facesDrawn[f]) {
+              continue;
+            }
+
+            if (((f + faceDir) & 1) == 1) {
+              triangleVertices.Add((finVertices[f + 0],
+                                    finVertices[f + 1],
+                                    finVertices[f + 2]));
+            } else {
+              triangleVertices.Add((finVertices[f + 1],
+                                    finVertices[f + 0],
+                                    finVertices[f + 2]));
+            }
+          }
+
+          var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
           finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
-          finPrimitive.SetVertexOrder(gdlPrimitive.VertexOrder switch {
-              VertexOrder.CLOCKWISE         => VertexOrder.COUNTER_CLOCKWISE,
-              VertexOrder.COUNTER_CLOCKWISE => VertexOrder.CLOCKWISE,
-          });
+          finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
         }
       }
     }

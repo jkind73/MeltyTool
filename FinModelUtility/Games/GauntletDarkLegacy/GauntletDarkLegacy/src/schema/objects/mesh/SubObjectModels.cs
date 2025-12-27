@@ -19,12 +19,13 @@ public class Primitive {
   public required IReadOnlyList<Vector3> Positions { get; init; }
   public required IReadOnlyList<Uv> Uvs { get; init; }
   public required IReadOnlyList<Vector3> Normals { get; init; }
+  public required IReadOnlyList<bool> FacesDrawn { get; init; }
   public required IReadOnlyList<IColor> VertexColors { get; init; }
-  public required VertexOrder VertexOrder { get; init; }
+  public required float FaceDir { get; init; }
 }
 
 /// <summary>
-///   Shamlessly stolen from:
+///   Shamelessly stolen from:
 ///   https://github.com/MosesofEgypt/gdl_tools/blob/main/gdl/compilation/g3d/serialization/model_vif.py#L92
 ///   https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Objects.gd#L527
 /// </summary>
@@ -40,7 +41,12 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
 
     for (var subObjI = 0; subObjI < this.Parent.SubObjectCount; ++subObjI) {
       var unpackCommand = br.ReadUInt32();
-      var unpackSize = (unpackCommand << 4) & 0xFFFFFFFF;
+
+      var qwc = subObjI == 0
+          ? this.Parent.SubObject0Qwc
+          : this.Parent.SubObjects[subObjI - 1].Qwc;
+
+      var unpackSize = qwc * 16;
 
       var endPosition = br.Position + unpackSize;
 
@@ -48,8 +54,11 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
       var positions = new List<Vector3>();
       var uvs = new List<Uv>();
       var normals = new List<Vector3>();
+      // It's so annoying we have to track this, but the models straight-up do
+      // not look right without this.
+      var facesDrawn = new List<bool>();
       var vertexColors = new List<IColor>();
-      var vertexOrder = VertexOrder.CLOCKWISE;
+      var faceDir = 1f;
 
       var mesh = new Mesh { Primitives = primitives };
       this.All.Add(mesh);
@@ -61,23 +70,27 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
 
         primitives.Add(new Primitive {
             Positions = positions, 
-            Normals = normals, 
             Uvs = uvs,
+            Normals = normals, 
+            FacesDrawn = facesDrawn,
             VertexColors = vertexColors,
-            VertexOrder = vertexOrder,
+            FaceDir = faceDir,
         });
 
         positions = [];
         uvs = [];
         normals = [];
+        facesDrawn = [];
         vertexColors = [];
       }
 
-      while (br.Position + 4 <= endPosition) {
+      while (br.Position + 4 < endPosition) {
+        // Ensure we're always 4-byte aligned
         br.Align(4);
 
         var startingOffset = br.Position;
 
+        // Read the header data and unpack it
         var signal = br.ReadNew<Signal>();
         signals.AddFirst(signal);
 
@@ -98,9 +111,9 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
               var unk2 = br.ReadSingle();
               var unk3 = br.ReadSingle();
 
-              vertexOrder = Math.Abs(unk2 - (-1)) < .0001f
-                  ? VertexOrder.CLOCKWISE
-                  : VertexOrder.COUNTER_CLOCKWISE;
+              // What the fuck is this format, why in the ever loving fuck is
+              // the vertex winding direction stored as a float????
+              faceDir = unk2;
               break;
             }
             case SignalIndex.VERTEX: {
@@ -177,9 +190,13 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
                     var y = ((packedNormal >> 5) & 0x1f) * normalScale - 1;
                     var z = ((packedNormal >> 10) & 0x1f) * normalScale - 1;
 
-                    // TODO: Handle skipped faces
-
                     normals.Add(Vector3.Normalize(new Vector3(x, y, z)));
+
+                    // This is super annoying. Just don't include faces that
+                    // invalid, why do it this way????
+                    if (i >= 2) {
+                      facesDrawn.Add(packedNormal < 0x8000);
+                    }
                     break;
                   }
                   default:
@@ -223,12 +240,8 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
                   signal.Index,
                   null);
           }
-
-          br.Align(4);
         }
       }
-
-      br.Align(16);
 
       signals.AddFirst((Signal?) null);
 
