@@ -3,24 +3,24 @@ using schema.binary.attributes;
 
 namespace gdl.schema.worlds;
 
-public interface IInstanceParams : IBinaryDeserializable;
+public interface IItemInstanceParams : IBinaryDeserializable;
 
 [BinarySchema]
-public sealed partial class ContainerInstanceParams : IInstanceParams {
+public sealed partial class ContainerItemInstanceParams : IItemInstanceParams {
   public uint Index { get; set; }
   public ushort Value { get; set; }
   private readonly byte[] padding_ = new byte[6];
 }
 
 [BinarySchema]
-public sealed partial class TrapInstanceParams : IInstanceParams {
+public sealed partial class TrapItemInstanceParams : IItemInstanceParams {
   public ushort Damage { get; set; }
   public ushort Interval { get; set; }
   private readonly byte[] padding_ = new byte[8];
 }
 
 [BinarySchema]
-public sealed partial class EnemyInstanceParams : IInstanceParams {
+public sealed partial class EnemyItemInstanceParams : IItemInstanceParams {
   public ushort Strength { get; set; }
   public ushort Ai { get; set; }
   public float Radius { get; set; }
@@ -29,7 +29,7 @@ public sealed partial class EnemyInstanceParams : IInstanceParams {
 }
 
 [BinarySchema]
-public sealed partial class ExitInstanceParams : IInstanceParams {
+public sealed partial class ExitItemInstanceParams : IItemInstanceParams {
   public uint Next { get; set; }
 
   [StringLengthSource(4)]
@@ -39,7 +39,7 @@ public sealed partial class ExitInstanceParams : IInstanceParams {
 }
 
 [BinarySchema]
-public sealed partial class GeneratorInstanceParams : IInstanceParams {
+public sealed partial class GeneratorItemInstanceParams : IItemInstanceParams {
   public ushort Strength { get; set; }
   public ushort Ai { get; set; }
   public ushort MaxEnemies { get; set; }
@@ -48,27 +48,27 @@ public sealed partial class GeneratorInstanceParams : IInstanceParams {
 }
 
 [BinarySchema]
-public sealed partial class ObstacleInstanceParams : IInstanceParams {
+public sealed partial class ObstacleItemInstanceParams : IItemInstanceParams {
   public ushort SubType { get; set; }
   public ushort Strength { get; set; }
   private readonly byte[] padding_ = new byte[8];
 }
 
 [BinarySchema]
-public sealed partial class PowerupInstanceParams : IInstanceParams {
+public sealed partial class PowerupItemInstanceParams : IItemInstanceParams {
   public ushort Value { get; set; }
   private readonly byte[] padding_ = new byte[10];
 }
 
 [BinarySchema]
-public sealed partial class RotatorInstanceParams : IInstanceParams {
+public sealed partial class RotatorItemInstanceParams : IItemInstanceParams {
   public uint TargetWorldObjectIndex { get; set; }
   public float Speed { get; set; }
   public float Delta { get; set; }
 }
 
 [BinarySchema]
-public sealed partial class SoundInstanceParams : IInstanceParams {
+public sealed partial class SoundItemInstanceParams : IItemInstanceParams {
   public float Radius { get; set; }
   public uint MusicArea { get; set; }
   public ushort Fade { get; set; }
@@ -77,14 +77,14 @@ public sealed partial class SoundInstanceParams : IInstanceParams {
 }
 
 [BinarySchema]
-public sealed partial class TransporterInstanceParams : IInstanceParams {
+public sealed partial class TransporterItemInstanceParams : IItemInstanceParams {
   public uint Id { get; set; }
   public uint DestinationId { get; set; }
   private readonly byte[] padding_ = new byte[4];
 }
 
 [BinarySchema]
-public sealed partial class TriggerInstanceParams : IInstanceParams {
+public sealed partial class TriggerItemInstanceParams : IItemInstanceParams {
   public uint TargetWorldObjectIndex { get; set; }
   public ushort Flags { get; set; }
   public byte Radius { get; set; }
@@ -96,6 +96,6 @@ public sealed partial class TriggerInstanceParams : IInstanceParams {
 }
 
 [BinarySchema]
-public sealed partial class UnimplementedInstanceParams : IInstanceParams {
+public sealed partial class UnimplementedItemInstanceParams : IItemInstanceParams {
   private readonly byte[] padding_ = new byte[12];
 }

@@ -15,6 +15,10 @@ public sealed partial class Worlds : IBinaryDeserializable {
   private uint worldObjectCount_;
   private uint worldObjectPointer_;
 
+  [RAtPosition(nameof(worldObjectPointer_))]
+  [RSequenceLengthSource(nameof(worldObjectCount_))]
+  public WorldObject[] WorldObjects { get; private set; }
+
   private uint collisionTriangleCount_;
   private uint collisionTrianglePointer_;
  
@@ -33,9 +37,17 @@ public sealed partial class Worlds : IBinaryDeserializable {
   public uint GridNumX { get; set; }
   public uint GridNumY { get; set; }
 
-  private uint itemInfoCount_;
-  private uint itemInfoPointer_;
+  private uint itemInstanceInfoCount_;
+  private uint itemInstanceInfoPointer_;
+
+  [RAtPosition(nameof(itemInstanceInfoPointer_))]
+  [RSequenceLengthSource(nameof(itemInstanceInfoCount_))]
+  public ItemInstanceInfo[] ItemInstanceInfos { get; private set; }
 
   private uint itemInstanceCount_;
   private uint itemInstancePointer_;
+
+  [RAtPosition(nameof(itemInstancePointer_))]
+  [RSequenceLengthSource(nameof(itemInstanceCount_))]
+  public ItemInstance[] ItemInstances { get; private set; }
 }

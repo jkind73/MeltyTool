@@ -28,6 +28,8 @@ using schema.binary;
 
 using SixLabors.ImageSharp.PixelFormats;
 
+using Object = gdl.schema.objects.Object;
+
 namespace gdl.api;
 
 public sealed class GauntletDarkLegacyModelFileBundle : IModelFileBundle {
@@ -40,7 +42,12 @@ public sealed class GauntletDarkLegacyModelFileBundle : IModelFileBundle {
 
 public sealed class GauntletDarkLegacyModelImporter
     : IModelImporter<GauntletDarkLegacyModelFileBundle> {
-  public IModel Import(GauntletDarkLegacyModelFileBundle fileBundle) {
+  public IModel Import(GauntletDarkLegacyModelFileBundle fileBundle)
+    => ImportImpl(fileBundle, null);
+
+  public static IModel ImportImpl(
+      GauntletDarkLegacyModelFileBundle fileBundle,
+      Func<ObjectDefinition, ISkeleton, IReadOnlyBone>? getBoneForMesh) {
     var objects = fileBundle.ObjectsFile.ReadNew<Objects>();
     var anim = fileBundle.AnimFile.ReadNew<Anim>();
 
@@ -427,9 +434,11 @@ public sealed class GauntletDarkLegacyModelImporter
 
       rootFinMeshByName[finRootMesh.Name] = finRootMesh;
 
-      var finBone = finBonesByMeshNamePart
-                    .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
-                    .Value;
+      var finBone =
+          getBoneForMesh?.Invoke(definition, finModel.Skeleton) ??
+          finBonesByMeshNamePart
+              .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
+              .Value;
 
       // HACK: Weapon isn't attached to the hand otherwise
       if (finBone == null && definition.Name.StartsWith("WEAP_")) {
@@ -553,6 +562,7 @@ public sealed class GauntletDarkLegacyModelImporter
               new Keyframe<MeshDisplayState>(f, MeshDisplayState.HIDDEN));
           previousMeshTracks = finMeshTracks;
         }
+
         previousMeshTracks.DisplayStates.Add(
             new Keyframe<MeshDisplayState>(gdlObjectAnimation.FrameCount,
                                            MeshDisplayState.HIDDEN));

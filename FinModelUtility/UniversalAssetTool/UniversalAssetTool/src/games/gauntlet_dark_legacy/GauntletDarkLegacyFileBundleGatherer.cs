@@ -32,14 +32,14 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
 
       directory.TryToGetExistingFile("worlds.ps2", out var worldsFile);
 
-      organizer.Add(
-          new GauntletDarkLegacyModelFileBundle {
-              ObjectsFile = objectsFile,
-              AnimFile = animFile,
-              TexturesFile = texturesFile,
-          }.Annotate(objectsFile));
-
-      if (worldsFile != null) {
+      if (worldsFile == null) {
+        organizer.Add(
+            new GauntletDarkLegacyModelFileBundle {
+                ObjectsFile = objectsFile,
+                AnimFile = animFile,
+                TexturesFile = texturesFile,
+            }.Annotate(objectsFile));
+      } else {
         organizer.Add(
             new GauntletDarkLegacySceneFileBundle {
                 ObjectsFile = objectsFile,

@@ -72,7 +72,7 @@ public enum ItemSubType : uint {
 ///   https://github.com/haekb/gdl-tools/blob/master/Addons/GDLFormat/Models/Worlds.gd#L125
 /// </summary>
 [BinarySchema]
-public sealed partial class ItemInfo : IBinaryDeserializable {
+public sealed partial class ItemInstanceInfo : IBinaryDeserializable {
   public ItemType Type { get; set; }
   public ItemSubType SubType { get; set; }
   public ushort CollisionType { get; set; }
@@ -89,10 +89,10 @@ public sealed partial class ItemInfo : IBinaryDeserializable {
   public uint MbFlags { get; set; }
   public uint Properties { get; set; }
   public ushort Value { get; set; }
-  public ushort Armor { get; set; }
-  public ushort Hitpoints { get; set; }
-  public ushort ActiveType { get; set; }
-  public ushort ActiveOff { get; set; }
-  public ushort ActiveOn { get; set; }
+  public short Armor { get; set; }
+  public short Hitpoints { get; set; }
+  public short ActiveType { get; set; }
+  public short ActiveOff { get; set; }
+  public short ActiveOn { get; set; }
   public uint AnimationTreeHeaderPointer { get; set; }
 }

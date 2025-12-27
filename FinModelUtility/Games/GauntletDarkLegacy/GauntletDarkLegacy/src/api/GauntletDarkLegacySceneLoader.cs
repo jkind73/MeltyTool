@@ -1,4 +1,7 @@
-﻿using fin.io;
+﻿using fin.data.queues;
+using fin.io;
+using fin.model;
+using fin.model.util;
 using fin.scene;
 
 using gdl.schema.anim;
@@ -19,10 +22,6 @@ public sealed class GauntletDarkLegacySceneFileBundle : ISceneFileBundle {
 public sealed class GauntletDarkLegacySceneImporter
     : ISceneImporter<GauntletDarkLegacySceneFileBundle> {
   public IScene Import(GauntletDarkLegacySceneFileBundle fileBundle) {
-    var objects = fileBundle.ObjectsFile.ReadNew<Objects>();
-    var anim = fileBundle.AnimFile.ReadNew<Anim>();
-    var worlds = fileBundle.WorldsFile.ReadNew<Worlds>();
-
     var finScene = new SceneImpl {
         FileBundle = fileBundle,
         Files = new HashSet<IReadOnlyGenericFile>([
@@ -31,6 +30,28 @@ public sealed class GauntletDarkLegacySceneImporter
             fileBundle.TexturesFile,
         ])
     };
+
+    var worlds = fileBundle.WorldsFile.ReadNew<Worlds>();
+
+    var boneByIndex = new Dictionary<int, IBone>();
+    var worldObjectsAndBoneByName = new Dictionary<string, WorldObject>();
+
+    /*var worldObj = finScene.AddArea().AddRootNode();
+    var finModel = GauntletDarkLegacyModelImporter.ImportImpl(
+        new GauntletDarkLegacyModelFileBundle {
+            ObjectsFile = fileBundle.ObjectsFile,
+            AnimFile = fileBundle.AnimFile,
+            TexturesFile = fileBundle.TexturesFile,
+        },
+        // TODO: Change each piece into a separate object instead
+        (gdlObject, finSkeleton) => {
+          if (worldObjectsByName.TryGetValue(gdlObject.Name, out var worldObject)) {
+            return finSkeleton.Root.AddChild(worldObject.Position);
+          }
+
+          return finSkeleton.Root;
+        });
+    worldObj.AddSceneModel(finModel);*/
 
     return finScene;
   }

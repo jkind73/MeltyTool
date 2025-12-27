@@ -11,11 +11,11 @@ namespace gdl.schema.worlds;
 /// </summary>
 [BinarySchema]
 public sealed partial class ItemInstance : IBinaryDeserializable {
-  public ushort Index { get; set; }
-  public byte MinPlayers { get; set; }
+  public short InstanceIndex { get; set; }
+  public sbyte MinPlayers { get; set; }
   public byte Flags { get; set; }
-  public ushort CollisionTriangleIndex { get; set; }
-  public ushort CollisionTriangleCount { get; set; }
+  public short CollisionTriangleIndex { get; set; }
+  public short CollisionTriangleCount { get; set; }
 
   [StringLengthSource(16)]
   public string Description { get; set; }
