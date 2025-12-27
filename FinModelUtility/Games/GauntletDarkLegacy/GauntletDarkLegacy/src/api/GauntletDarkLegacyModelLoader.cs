@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Numerics;
 
 using fin.animation.keyframes;
@@ -11,6 +12,7 @@ using fin.image.formats;
 using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
+using fin.io.bundles;
 using fin.math;
 using fin.math.floats;
 using fin.model;
@@ -28,8 +30,6 @@ using schema.binary;
 
 using SixLabors.ImageSharp.PixelFormats;
 
-using Object = gdl.schema.objects.Object;
-
 namespace gdl.api;
 
 public sealed class GauntletDarkLegacyModelFileBundle : IModelFileBundle {
@@ -42,30 +42,39 @@ public sealed class GauntletDarkLegacyModelFileBundle : IModelFileBundle {
 
 public sealed class GauntletDarkLegacyModelImporter
     : IModelImporter<GauntletDarkLegacyModelFileBundle> {
-  public IModel Import(GauntletDarkLegacyModelFileBundle fileBundle)
-    => ImportImpl(fileBundle, null);
-
-  public static IModel ImportImpl(
-      GauntletDarkLegacyModelFileBundle fileBundle,
-      Func<ObjectDefinition, ISkeleton, IReadOnlyBone>? getBoneForMesh) {
+  public IModel Import(GauntletDarkLegacyModelFileBundle fileBundle) {
     var objects = fileBundle.ObjectsFile.ReadNew<Objects>();
     var anim = fileBundle.AnimFile.ReadNew<Anim>();
 
-    var finModel = new ModelImpl {
-        FileBundle = fileBundle,
-        Files = new HashSet<IReadOnlyGenericFile>([
+    return ImportImpl(
+        fileBundle,
+        new HashSet<IReadOnlyGenericFile>([
             fileBundle.ObjectsFile,
             fileBundle.AnimFile,
             fileBundle.TexturesFile,
-        ])
+        ]),
+        objects,
+        anim,
+        fileBundle.TexturesFile,
+        null);
+  }
+
+  public static IModel ImportImpl(
+      IFileBundle fileBundle,
+      IReadOnlySet<IReadOnlyGenericFile> files,
+      Objects objects,
+      Anim anim,
+      IReadOnlyGenericFile texturesFile,
+      string? rootObjectName) {
+    var finModel = new ModelImpl {
+        FileBundle = fileBundle,
+        Files = files,
     };
 
-    var finTextures = new List<IReadOnlyTexture>();
-    {
-      using var textureBr
-          = fileBundle.TexturesFile.OpenReadAsBinary(Endianness.BigEndian);
-
-      foreach (var gdlTexture in objects.Textures) {
+    using var textureBr = texturesFile.OpenReadAsBinary(Endianness.BigEndian);
+    var lazyFinTextures = new LazyDictionary<int, IReadOnlyTexture>(textureIndex
+          => {
+        var gdlTexture = objects.Textures[textureIndex];
         textureBr.Position = gdlTexture.TextureDataPointer;
 
         IImage? finImage = null;
@@ -182,12 +191,12 @@ public sealed class GauntletDarkLegacyModelImporter
             ? WrapMode.CLAMP
             : WrapMode.REPEAT;
 
-        finTextures.Add(finTexture);
-      }
-    }
+        return finTexture;
+      });
+
     var lazyFinMaterials
         = new LazyDictionary<int, IReadOnlyMaterial>(index => {
-          var finTexture = finTextures[index];
+          var finTexture = lazyFinTextures[index];
           var finMaterial
               = finModel.MaterialManager.AddTextureMaterial(finTexture);
 
@@ -429,16 +438,18 @@ public sealed class GauntletDarkLegacyModelImporter
     var rootFinMeshByName = new Dictionary<string, IMesh>();
     foreach (var (definition, obj) in objects.ObjectDefinitions.Zip(
                  objects.RootObjects)) {
+      if (rootObjectName != null && definition.Name != rootObjectName) {
+        continue;
+      }
+
       var finRootMesh = finSkin.AddMesh();
       finRootMesh.Name = definition.Name;
 
       rootFinMeshByName[finRootMesh.Name] = finRootMesh;
 
-      var finBone =
-          getBoneForMesh?.Invoke(definition, finModel.Skeleton) ??
-          finBonesByMeshNamePart
-              .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
-              .Value;
+      var finBone = finBonesByMeshNamePart
+                    .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
+                    .Value;
 
       // HACK: Weapon isn't attached to the hand otherwise
       if (finBone == null && definition.Name.StartsWith("WEAP_")) {

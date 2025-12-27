@@ -31,27 +31,40 @@ public sealed class GauntletDarkLegacySceneImporter
         ])
     };
 
+    var objects = fileBundle.ObjectsFile.ReadNew<Objects>();
+    var anim = fileBundle.AnimFile.ReadNew<Anim>();
     var worlds = fileBundle.WorldsFile.ReadNew<Worlds>();
 
-    var boneByIndex = new Dictionary<int, IBone>();
-    var worldObjectsAndBoneByName = new Dictionary<string, WorldObject>();
+    var finArea = finScene.AddArea();
 
-    /*var worldObj = finScene.AddArea().AddRootNode();
-    var finModel = GauntletDarkLegacyModelImporter.ImportImpl(
-        new GauntletDarkLegacyModelFileBundle {
-            ObjectsFile = fileBundle.ObjectsFile,
-            AnimFile = fileBundle.AnimFile,
-            TexturesFile = fileBundle.TexturesFile,
-        },
-        // TODO: Change each piece into a separate object instead
-        (gdlObject, finSkeleton) => {
-          if (worldObjectsByName.TryGetValue(gdlObject.Name, out var worldObject)) {
-            return finSkeleton.Root.AddChild(worldObject.Position);
-          }
+    var worldObjectQueue
+        = new FinTuple2Queue<short, ISceneNode?>((0, null));
+    while (worldObjectQueue.TryDequeue(out var worldObjectIndex,
+                                       out var parentFinSceneNode)) {
+      var gdlWorldObject = worlds.WorldObjects[worldObjectIndex];
 
-          return finSkeleton.Root;
-        });
-    worldObj.AddSceneModel(finModel);*/
+      var finSceneNode
+          = parentFinSceneNode?.AddChildNode() ?? finArea.AddRootNode();
+      finSceneNode.SetPosition(-gdlWorldObject.Position.X,
+                               gdlWorldObject.Position.Y,
+                               gdlWorldObject.Position.Z);
+
+      var finModel = GauntletDarkLegacyModelImporter.ImportImpl(
+          finScene.FileBundle,
+          finScene.Files,
+          objects,
+          anim,
+          fileBundle.TexturesFile,
+          gdlWorldObject.Name);
+      finSceneNode.AddSceneModel(finModel);
+
+      if (gdlWorldObject.ChildIndex != -1) {
+        worldObjectQueue.Enqueue((gdlWorldObject.ChildIndex, finSceneNode));
+      }
+      if (gdlWorldObject.NextIndex != -1) {
+        worldObjectQueue.Enqueue((gdlWorldObject.NextIndex, parentFinSceneNode));
+      }
+    }
 
     return finScene;
   }
