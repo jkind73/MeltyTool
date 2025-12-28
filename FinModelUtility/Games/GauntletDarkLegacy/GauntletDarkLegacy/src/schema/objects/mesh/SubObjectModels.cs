@@ -12,6 +12,7 @@ using schema.binary.attributes;
 namespace gdl.schema.objects.mesh;
 
 public class Mesh {
+  public required short LmIndex { get; init; }
   public required IReadOnlyList<Primitive> Primitives { get; init; }
 }
 
@@ -42,6 +43,9 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
     for (var subObjI = 0; subObjI < this.Parent.SubObjectCount; ++subObjI) {
       var unpackCommand = br.ReadUInt32();
 
+      var lmIndex = subObjI == 0
+          ? this.Parent.SubObject0LmIndex
+          : this.Parent.SubObjects[subObjI - 1].LmIndex;
       var qwc = subObjI == 0
           ? this.Parent.SubObject0Qwc
           : this.Parent.SubObjects[subObjI - 1].Qwc;
@@ -60,7 +64,10 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
       var vertexColors = new List<IColor>();
       var faceDir = 1f;
 
-      var mesh = new Mesh { Primitives = primitives };
+      var mesh = new Mesh {
+          LmIndex = lmIndex,
+          Primitives = primitives
+      };
       this.All.Add(mesh);
 
       void AddCurrentPrimitiveToMesh() {

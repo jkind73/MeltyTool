@@ -100,6 +100,16 @@ public sealed class GauntletDarkLegacyModelImporter
                          .ReadImage(textureBr);
               break;
             }
+            case ImageFormat.L4: {
+                finImage = TiledImageReader
+                           .New(gdlTexture.Width,
+                                gdlTexture.Height,
+                                8,
+                                8,
+                                new L4PixelReader())
+                           .ReadImage(textureBr);
+              break;
+            }
           }
         } else {
           IColor[]? palette = null;
@@ -135,22 +145,6 @@ public sealed class GauntletDarkLegacyModelImporter
                                        g,
                                        b,
                                        a);
-                                 })
-                                 .ToArray();
-              break;
-            }
-            case PixelFormat.RGB555: {
-              palette = textureBr.ReadUInt16s(paletteCount)
-                                 .Select(v => {
-                                   ColorUtil.SplitRgb5A1(v,
-                                     out var r,
-                                     out var g,
-                                     out var b,
-                                     out _);
-                                   return FinColor.FromRgbBytes(
-                                       r,
-                                       g,
-                                       b);
                                  })
                                  .ToArray();
               break;
@@ -191,8 +185,10 @@ public sealed class GauntletDarkLegacyModelImporter
 
         return finImage;
       });
-    var lazyFinTextures = new LazyDictionary<int, IReadOnlyTexture>(textureIndex
+    var lazyFinTextures = new LazyDictionary<(ushort textureIndex, int uvIndex), IReadOnlyTexture>(tuple
           => {
+        var (textureIndex, uvIndex) = tuple;
+
         var gdlTexture = objects.Textures[textureIndex];
         var finImage = lazyFinImages[textureIndex];
 
@@ -207,16 +203,23 @@ public sealed class GauntletDarkLegacyModelImporter
             ? WrapMode.CLAMP
             : WrapMode.REPEAT;
 
+        finTexture.UvIndex = uvIndex;
+
         return finTexture;
       });
 
     var lazyFinMaterials
-        = new LazyDictionary<(int, MbFlags), IReadOnlyMaterial>(tuple => {
-          var (index, boneMbFlags) = tuple;
+        = new LazyDictionary<(ushort textureIndex, short lmIndex, MbFlags), IReadOnlyMaterial>(tuple => {
+          var (textureIndex, lmIndex, boneMbFlags) = tuple;
 
-          var finTexture = lazyFinTextures[index];
           var finMaterial
-              = finModel.MaterialManager.AddTextureMaterial(finTexture);
+              = finModel.MaterialManager.AddStandardMaterial();
+
+          finMaterial.DiffuseTexture = lazyFinTextures[(textureIndex, 0)];
+          if (lmIndex > -1) {
+            finMaterial.AmbientOcclusionTexture
+                = lazyFinTextures[((ushort) lmIndex, 1)];
+          }
 
           finMaterial.Shininess = MaterialConstants.DISABLED_SHININESS;
 
@@ -517,7 +520,9 @@ public sealed class GauntletDarkLegacyModelImporter
 
                   finVertex.SetLocalNormal(normal);
 
-                  finVertex.SetUv(gdlPrimitive.Uvs[i].Value);
+                  var uv = gdlPrimitive.Uvs[i];
+                  finVertex.SetUv(0, uv.Value);
+                  finVertex.SetUv(1, uv.LightmapUv ?? Vector2.Zero);
 
                   if (gdlPrimitive.VertexColors.Count > 0) {
                     finVertex.SetColor(gdlPrimitive.VertexColors[i]);
@@ -554,7 +559,9 @@ public sealed class GauntletDarkLegacyModelImporter
 
           var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
           finPrimitive.SetMaterial(
-              lazyFinMaterials[(textureIndex, gdlNode?.MbFlags ?? default)]);
+              lazyFinMaterials[(textureIndex, 
+                                gdlMesh.LmIndex,
+                                gdlNode?.MbFlags ?? default)]);
           finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
         }
       }

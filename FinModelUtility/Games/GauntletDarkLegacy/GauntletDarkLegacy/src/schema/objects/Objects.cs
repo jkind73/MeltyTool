@@ -35,8 +35,8 @@ public sealed partial class Objects : IBinaryDeserializable {
   public uint TextureStart { get; set; }
   public uint TextureEnd { get; set; }
   public uint TextureBits { get; set; }
-  public ushort LmtexFirst { get; set; }
-  public ushort LmtexEnd { get; set; }
+  public short LmTexFirst { get; set; }
+  public ushort LmTexNum { get; set; }
   public uint TextureInfo { get; set; }
 
   [RAtPosition(nameof(objectPointer_))]

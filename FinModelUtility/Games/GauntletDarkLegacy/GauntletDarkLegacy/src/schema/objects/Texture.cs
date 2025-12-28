@@ -26,6 +26,8 @@ public enum ImageFormat : byte {
   //IDX_8_I_8 = 115,
   //IDX_4_A_4 = 130,
   //IDX_4_I_4 = 131,
+
+  L4 = 146,
 }
 
 public static class ImageFormatExtensions {

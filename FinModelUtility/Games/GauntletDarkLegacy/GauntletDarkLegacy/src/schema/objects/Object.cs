@@ -17,7 +17,7 @@ public sealed partial class Object : IBinaryDeserializable {
   public uint SubObjectCount { get; set; }
   public ushort SubObject0Qwc { get; set; }
   public ushort SubObject0TextureIndex { get; set; }
-  public ushort SubObject0LmIndex { get; set; }
+  public short SubObject0LmIndex { get; set; }
   public short SubObject0Lodk { get; set; }
   public uint SubObjectPointer { get; set; }
   public uint SubObjectModelsPointer { get; set; }
