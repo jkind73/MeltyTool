@@ -38,34 +38,14 @@
               <DataGridTemplateColumn Width="*">
                 <DataGridTemplateColumn.CellTemplate>
                   <DataTemplate>
-                    <Grid
+                    <!-- Make this selectable when it's no longer bugged. -->
+                    <TextBlock
+                        Classes="regular"
                         Margin="7 0"
                         VerticalAlignment="Center"
-                        HorizontalAlignment="Left">
-                      <controls:If
-                          Condition="{Binding Converter={x:Static converters:StringConverters.StartsWithSlashes}}">
-                        <controls:If.ContentWhenTrue>
-                          <DockPanel>
-                            <TextBlock
-                                Classes="regular"
-                                Text="//" />
-                            <TextBlock
-                                Margin="-3 0 0 0"
-                                Classes="regular"
-                                TextTrimming="CharacterEllipsis"
-                                FlowDirection="RightToLeft"
-                                Text="{Binding Converter={x:Static converters:StringConverters.SubstringAfterSlashes}}" />
-                          </DockPanel>
-                        </controls:If.ContentWhenTrue>
-                        <controls:If.ContentWhenFalse>
-                          <TextBlock
-                              Classes="regular"
-                              TextTrimming="CharacterEllipsis"
-                              FlowDirection="RightToLeft"
-                              Text="{Binding}" />
-                        </controls:If.ContentWhenFalse>
-                      </controls:If>
-                    </Grid>
+                        HorizontalAlignment="Left"
+                        TextTrimming="LeadingCharacterEllipsis"
+                        Text="{Binding}" />
                   </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
               </DataGridTemplateColumn>

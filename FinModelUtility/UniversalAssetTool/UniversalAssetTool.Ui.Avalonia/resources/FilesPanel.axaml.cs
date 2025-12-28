@@ -5,21 +5,26 @@ using Avalonia.Controls;
 
 using fin.importers;
 using fin.io;
+using fin.ui.avalonia;
 using fin.util.linq;
 using fin.util.strings;
 
+using ReactiveUI;
+
 namespace uni.ui.avalonia.resources;
 
-public sealed class FilesPanelViewModelForDesigner() {
-  public IReadOnlyList<string> Paths { get; } = [
-      "//foo/bar/file.mod",
-      "//foo/bar/some-very-long-path-that-cannot-be-fully-shown.mod",
-      "C:/foo/bar/file.mod",
-      "C:/foo/bar/some-very-long-path-that-cannot-be-fully-shown.mod",
-  ];
+public sealed class FilesPanelViewModelForDesigner : FilesPanelViewModel {
+  public FilesPanelViewModelForDesigner() : base(null) {
+    this.Paths = [
+        "//foo/bar/file.mod",
+        "//foo/bar/some-very-long-path-that-cannot-be-fully-shown.mod",
+        "C:/foo/bar/file.mod",
+        "C:/foo/bar/some-very-long-path-that-cannot-be-fully-shown.mod",
+    ];
+  }
 }
 
-public sealed class FilesPanelViewModel {
+public class FilesPanelViewModel : BViewModel {
   public FilesPanelViewModel(IResource? resource) {
     var files = resource?.Files;
     if (files == null) {
@@ -33,15 +38,15 @@ public sealed class FilesPanelViewModel {
 
       paths = files
           .Select(file => {
-                    if (file.DisplayFullPath.TryRemoveStart(
-                            hierarchy.Root.FullPath,
-                            out var trimmed)) {
-                      return
-                          $"//{hierarchy.Name}{trimmed.Replace('\\', '/')}";
-                    }
+            if (file.DisplayFullPath.TryRemoveStart(
+                    hierarchy.Root.FullPath,
+                    out var trimmed)) {
+              return
+                  $"//{hierarchy.Name}{trimmed.Replace('\\', '/')}";
+            }
 
-                    return file.DisplayFullPath;
-                  });
+            return file.DisplayFullPath;
+          });
     } else {
       paths = files.Select(file => file.DisplayFullPath);
     }
@@ -49,7 +54,10 @@ public sealed class FilesPanelViewModel {
     this.Paths = paths.Distinct().Order().ToArray();
   }
 
-  public IReadOnlyList<string> Paths { get; }
+  public IReadOnlyList<string> Paths {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
 }
 
 public partial class FilesPanel : UserControl {
