@@ -25,10 +25,11 @@
               DataContext="{Binding SelectedTexturePreview}"
               HorizontalAlignment="Stretch"
               Height="101" />
-          <TextBlock Classes="regular spaceFirst"
-                     Text="{Binding SelectedTexturePreview.Texture.Name}"
-                     HorizontalAlignment="Center"
-                     TextTrimming="CharacterEllipsis" />
+          <SelectableTextBlock 
+              Classes="regular spaceFirst"
+              Text="{Binding SelectedTexturePreview.Texture.Name}"
+              HorizontalAlignment="Center"
+              TextTrimming="CharacterEllipsis" />
           <TextBlock Classes="caption"
                      HorizontalAlignment="Center">
             <TextBlock.Text>
