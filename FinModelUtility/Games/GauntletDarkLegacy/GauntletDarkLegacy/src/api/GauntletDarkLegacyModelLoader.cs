@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Numerics;
 
 using fin.animation.keyframes;
@@ -57,7 +56,8 @@ public sealed class GauntletDarkLegacyModelImporter
         anim,
         fileBundle.TexturesFile,
         new Dictionary<int, IReadOnlyImage>(),
-        null);
+        null,
+        default);
   }
 
   public static IModel ImportImpl(
@@ -67,7 +67,8 @@ public sealed class GauntletDarkLegacyModelImporter
       Anim anim,
       IReadOnlyGenericFile texturesFile,
       Dictionary<int, IReadOnlyImage> textureImageCache,
-      string? rootObjectName) {
+      string? rootObjectName,
+      MbFlags worldObjectMbFlags) {
     var finModel = new ModelImpl {
         FileBundle = fileBundle,
         Files = files,
@@ -76,16 +77,16 @@ public sealed class GauntletDarkLegacyModelImporter
     using var textureBr = texturesFile.OpenReadAsBinary(Endianness.BigEndian);
 
     var lazyFinImages = new LazyDictionary<int, IReadOnlyImage>(textureIndex
-        => {
-      var gdlTexture = objects.Textures[textureIndex];
-      textureBr.Position = gdlTexture.TextureDataPointer;
+          => {
+        var gdlTexture = objects.Textures[textureIndex];
+        textureBr.Position = gdlTexture.TextureDataPointer;
 
-      if (textureImageCache.TryGetValue(textureIndex,
-                                        out var existingTextureImage)) {
-        return existingTextureImage;
-      }
+        if (textureImageCache.TryGetValue(textureIndex,
+                                          out var existingTextureImage)) {
+          return existingTextureImage;
+        }
 
-      IImage? finImage = null;
+        IImage? finImage = null;
         if (!gdlTexture.Format.IsIndexed(out var paletteCount,
                                          out var pixelFormat)) {
           switch (gdlTexture.Format) {
@@ -210,17 +211,28 @@ public sealed class GauntletDarkLegacyModelImporter
       });
 
     var lazyFinMaterials
-        = new LazyDictionary<int, IReadOnlyMaterial>(index => {
+        = new LazyDictionary<(int, MbFlags), IReadOnlyMaterial>(tuple => {
+          var (index, boneMbFlags) = tuple;
+
           var finTexture = lazyFinTextures[index];
           var finMaterial
               = finModel.MaterialManager.AddTextureMaterial(finTexture);
 
           finMaterial.Shininess = MaterialConstants.DISABLED_SHININESS;
 
+          var blendSrcAndDst = GetBlendMode_(boneMbFlags, worldObjectMbFlags);
+          if (blendSrcAndDst != null) {
+            finMaterial.SetBlending(BlendEquation.ADD,
+                                    blendSrcAndDst.Value.src,
+                                    blendSrcAndDst.Value.dst,
+                                    LogicOp.UNDEFINED);
+          }
+
           return finMaterial;
         });
 
-    var finBonesByMeshNamePart = new Dictionary<string, IReadOnlyBone>();
+    var gdlNodeAndFinBonesByMeshNamePart
+        = new Dictionary<string, (ANodeInfo, IReadOnlyBone)>();
 
     IBone? weaponBone = null;
     var finBones = new List<IReadOnlyBone>();
@@ -268,11 +280,13 @@ public sealed class GauntletDarkLegacyModelImporter
                   out var meshNamePrefix,
                   out _,
                   out _);
-              finBonesByMeshNamePart[meshNamePrefix] = finBone;
+              gdlNodeAndFinBonesByMeshNamePart[meshNamePrefix]
+                  = (gdlANodeInfo, finBone);
             }
           }
         } else {
-          finBonesByMeshNamePart[gdlANodeInfo.MbDesc] = finBone;
+          gdlNodeAndFinBonesByMeshNamePart[gdlANodeInfo.MbDesc]
+              = (gdlANodeInfo, finBone);
         }
 
         SetFaceTowardsCamera(finBone, gdlANodeInfo.MbFlags);
@@ -457,9 +471,10 @@ public sealed class GauntletDarkLegacyModelImporter
 
       rootFinMeshByName[finRootMesh.Name] = finRootMesh;
 
-      var finBone = finBonesByMeshNamePart
-                    .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
-                    .Value;
+      var (gdlNode, finBone)
+          = gdlNodeAndFinBonesByMeshNamePart
+            .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
+            .Value;
 
       // HACK: Weapon isn't attached to the hand otherwise
       if (finBone == null && definition.Name.StartsWith("WEAP_")) {
@@ -538,7 +553,8 @@ public sealed class GauntletDarkLegacyModelImporter
           }
 
           var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
-          finPrimitive.SetMaterial(lazyFinMaterials[textureIndex]);
+          finPrimitive.SetMaterial(
+              lazyFinMaterials[(textureIndex, gdlNode?.MbFlags ?? default)]);
           finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
         }
       }
@@ -598,6 +614,22 @@ public sealed class GauntletDarkLegacyModelImporter
     } else if (mbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
       bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
     }
+  }
+
+  private static (BlendFactor src, BlendFactor dst)? GetBlendMode_(
+      MbFlags boneFlags,
+      MbFlags worldObjFlags) {
+    if (boneFlags.CheckFlag(MbFlags.BLEND_ADD) ||
+        worldObjFlags.CheckFlag(MbFlags.BLEND_ADD)) {
+      return (BlendFactor.SRC_ALPHA, BlendFactor.ONE);
+    }
+
+    if (boneFlags.CheckFlag(MbFlags.BLEND_MULTIPLY) ||
+        worldObjFlags.CheckFlag(MbFlags.BLEND_MULTIPLY)) {
+      return (BlendFactor.DST_COLOR, BlendFactor.ZERO);
+    }
+
+    return null;
   }
 
   private static void SplitObjAnimMeshName_(

@@ -15,8 +15,10 @@ public enum AnimType : ushort {
 }
 
 public enum MbFlags : uint {
+  BLEND_ADD = 1 << 23,
   YAW_ONLY_BILLBOARD = 1 << 24,
   YAW_AND_PITCH_BILLBOARD = 1 << 26,
+  BLEND_MULTIPLY = 1 << 30,
 }
 
 /// <summary>

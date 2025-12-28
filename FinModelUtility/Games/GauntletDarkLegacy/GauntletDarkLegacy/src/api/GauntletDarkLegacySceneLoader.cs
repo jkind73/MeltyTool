@@ -3,8 +3,6 @@
 using fin.data.queues;
 using fin.image;
 using fin.io;
-using fin.model;
-using fin.model.util;
 using fin.scene;
 
 using gdl.schema.anim;
@@ -62,9 +60,7 @@ public sealed class GauntletDarkLegacySceneImporter
           anim,
           fileBundle.TexturesFile,
           textureImageCache,
-          gdlWorldObject.Name);
-      GauntletDarkLegacyModelImporter.SetFaceTowardsCamera(
-          finModel.Skeleton.Root,
+          gdlWorldObject.Name,
           gdlWorldObject.MbFlags);
 
       finSceneNode.AddSceneModel(finModel);
