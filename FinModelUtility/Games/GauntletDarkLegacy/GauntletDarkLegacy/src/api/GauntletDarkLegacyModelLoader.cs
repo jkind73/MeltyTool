@@ -79,123 +79,26 @@ public sealed class GauntletDarkLegacyModelImporter
 
     var lazyFinImages = new LazyDictionary<int, IReadOnlyImage>(textureIndex
           => {
-        var gdlTexture = objects.Textures[textureIndex];
-        textureBr.Position = gdlTexture.TextureDataPointer;
-
         if (textureImageCache.TryGetValue(textureIndex,
                                           out var existingTextureImage)) {
           return existingTextureImage;
         }
 
-        IImage? finImage = null;
-        if (!gdlTexture.Format.IsIndexed(out var paletteCount,
-                                         out var pixelFormat)) {
-          switch (gdlTexture.Format) {
-            case ImageFormat.RGBA_5551: {
-              finImage = TiledImageReader
-                         .New(gdlTexture.Width,
-                              gdlTexture.Height,
-                              4,
-                              4,
-                              new Rgba5551PixelReader())
-                         .ReadImage(textureBr);
-              break;
-            }
-            case ImageFormat.L4: {
-                finImage = TiledImageReader
-                           .New(gdlTexture.Width,
-                                gdlTexture.Height,
-                                8,
-                                8,
-                                new L4PixelReader())
-                           .ReadImage(textureBr);
-              break;
-            }
-          }
-        } else {
-          IColor[]? palette = null;
-          IImage<L8>? indexedImage = null;
-          switch (pixelFormat) {
-            case PixelFormat.RGBA5551: {
-              palette = textureBr.ReadUInt16s(paletteCount)
-                                 .Select(v => {
-                                   ColorUtil.SplitRgb5A1(v,
-                                     out var r,
-                                     out var g,
-                                     out var b,
-                                     out var a);
-                                   return FinColor.FromRgbaBytes(
-                                       r,
-                                       g,
-                                       b,
-                                       a);
-                                 })
-                                 .ToArray();
-              break;
-            }
-            case PixelFormat.RGBA5553: {
-              palette = textureBr.ReadUInt16s(paletteCount)
-                                 .Select(v => {
-                                   ColorUtil.SplitRgb5A3(v,
-                                     out var r,
-                                     out var g,
-                                     out var b,
-                                     out var a);
-                                   return FinColor.FromRgbaBytes(
-                                       r,
-                                       g,
-                                       b,
-                                       a);
-                                 })
-                                 .ToArray();
-              break;
-            }
-          }
-
-          switch (paletteCount) {
-            case 16: {
-              indexedImage = TiledImageReader.New(
-                                                 gdlTexture.Width,
-                                                 gdlTexture.Height,
-                                                 8,
-                                                 8,
-                                                 new P4PixelReader())
-                                             .ReadImage(textureBr);
-              break;
-            }
-            case 256: {
-              indexedImage = TiledImageReader.New(
-                                                 gdlTexture.Width,
-                                                 gdlTexture.Height,
-                                                 8,
-                                                 4,
-                                                 new L8PixelReader())
-                                             .ReadImage(textureBr);
-              break;
-            }
-          }
-
-          if (palette != null && indexedImage != null) {
-            finImage = new IndexedImage8(pixelFormat, indexedImage, palette);
-          }
-        }
-
-        finImage ??= FinImage.CreateFromColor(Color.Magenta,
-                                              gdlTexture.Width,
-                                              gdlTexture.Height);
-
-        return finImage;
+        var gdlTexture = objects.Textures[textureIndex];
+        textureBr.Position = gdlTexture.TextureDataPointer;
+        return new GdlImageReader(gdlTexture).ReadImage(textureBr);
       });
-    var lazyFinTextures = new LazyDictionary<(ushort textureIndex, int uvIndex), IReadOnlyTexture>(tuple
+    var lazyFinTextures = new LazyDictionary<(ushort textureIndex, bool isLightmap), IReadOnlyTexture>(tuple
           => {
-        var (textureIndex, uvIndex) = tuple;
+        var (textureIndex, isLightmap) = tuple;
 
         var gdlTexture = objects.Textures[textureIndex];
         var finImage = lazyFinImages[textureIndex];
 
         var finTexture = finModel.MaterialManager.CreateTexture(finImage);
+        var prefix = !isLightmap ? "texture" : "lightmap";
         finTexture.Name
-            = $"texture{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
+            = $"{prefix}{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
 
         finTexture.WrapModeU = gdlTexture.Flags.CheckFlag(TextureFlags.CLAMP_U)
             ? WrapMode.CLAMP
@@ -204,7 +107,7 @@ public sealed class GauntletDarkLegacyModelImporter
             ? WrapMode.CLAMP
             : WrapMode.REPEAT;
 
-        finTexture.UvIndex = uvIndex;
+        finTexture.UvIndex = !isLightmap ? 0 : 1;
 
         return finTexture;
       });
@@ -218,12 +121,12 @@ public sealed class GauntletDarkLegacyModelImporter
 
           var outputColorAlpha = finMaterial.GenerateDiffuse(
               (equations.ColorOps.One, equations.ScalarOps.One),
-              lazyFinTextures[(textureIndex, 0)], 
+              lazyFinTextures[(textureIndex, false)], 
               (hasVertexColors, hasVertexColors));
 
           if (lmIndex > -1) {
             var lightmapColor = finMaterial.AddTextureSourceColor(
-                lazyFinTextures[((ushort) lmIndex, 1)]);
+                lazyFinTextures[((ushort) lmIndex, true)]);
 
             outputColorAlpha = (outputColorAlpha.Item1.Multiply(lightmapColor),
                                 outputColorAlpha.Item2);
