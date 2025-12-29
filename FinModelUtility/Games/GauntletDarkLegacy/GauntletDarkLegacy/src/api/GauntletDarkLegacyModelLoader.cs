@@ -79,7 +79,8 @@ public sealed class GauntletDarkLegacyModelImporter
 
         var gdlTexture = objects.Textures[textureIndex];
         textureBr.Position = gdlTexture.TextureDataPointer;
-        return new GdlImageReader(gdlTexture).ReadImage(textureBr);
+        return textureImageCache[textureIndex]
+            = new GdlImageReader(gdlTexture).ReadImage(textureBr);
       });
     var lazyFinTextures = new LazyDictionary<(ushort textureIndex, bool isLightmap), IReadOnlyTexture>(tuple
           => {
