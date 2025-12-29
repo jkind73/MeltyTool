@@ -431,43 +431,41 @@ public sealed class GauntletDarkLegacyModelImporter
             continue;
           }
 
-          var finVertices
-              = gdlPrimitive
-                .Positions
-                .Select((p, i) => {
-                  p /= 128f;
+          var finVertices = new IReadOnlyVertex[gdlPrimitive.Positions.Count];
+          for (var i = 0; i < gdlPrimitive.Positions.Count; ++i) {
+            var p = gdlPrimitive.Positions[i];
+            p /= 128f;
 
-                  // For some inexplicable reason, the meshes are mirrored.
-                  p.X *= -1;
+            // For some inexplicable reason, the meshes are mirrored.
+            p.X *= -1;
 
-                  var finVertex = finSkin.AddVertex(p);
+            var finVertex = finSkin.AddVertex(p);
 
-                  var normal = gdlPrimitive.Normals[i];
-                  normal.X *= -1;
+            var normal = gdlPrimitive.Normals[i];
+            normal.X *= -1;
 
-                  finVertex.SetLocalNormal(normal);
+            finVertex.SetLocalNormal(normal);
 
-                  var uv = gdlPrimitive.Uvs[i];
-                  finVertex.SetUv(0, uv.Value);
-                  finVertex.SetUv(1, uv.LightmapUv ?? Vector2.Zero);
+            var uv = gdlPrimitive.Uvs[i];
+            finVertex.SetUv(0, uv.Value);
+            finVertex.SetUv(1, uv.LightmapUv ?? Vector2.Zero);
 
-                  if (gdlPrimitive.VertexColors.Count > 0) {
-                    finVertex.SetColor(gdlPrimitive.VertexColors[i]);
-                  }
+            if (gdlPrimitive.VertexColors.Count > 0) {
+              finVertex.SetColor(gdlPrimitive.VertexColors[i]);
+            }
 
-                  if (finBoneWeights != null) {
-                    finVertex.SetBoneWeights(finBoneWeights);
-                  }
+            if (finBoneWeights != null) {
+              finVertex.SetBoneWeights(finBoneWeights);
+            }
 
-                  return finVertex;
-                })
-                .ToArray();
+            finVertices[i] = finVertex;
+          }
 
+          var facesDrawn = gdlPrimitive.FacesDrawn;
           var triangleVertices
-              = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)>();
+              = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)>(facesDrawn.Count(b => b));
 
           var faceDir = gdlPrimitive.FaceDir.IsRoughly(-1f) ? 1 : 0;
-          var facesDrawn = gdlPrimitive.FacesDrawn;
           for (var f = 0; f < facesDrawn.Count; ++f) {
             if (!facesDrawn[f]) {
               continue;
