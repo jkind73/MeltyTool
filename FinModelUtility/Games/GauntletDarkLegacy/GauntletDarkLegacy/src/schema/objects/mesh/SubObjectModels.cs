@@ -3,7 +3,6 @@
 using CommunityToolkit.Diagnostics;
 
 using fin.color;
-using fin.model;
 using fin.util.asserts;
 
 using schema.binary;
@@ -12,7 +11,7 @@ using schema.binary.attributes;
 namespace gdl.schema.objects.mesh;
 
 public class Mesh {
-  public required short LmIndex { get; init; }
+  public required SubObject SubObject { get; init; }
   public required IReadOnlyList<Primitive> Primitives { get; init; }
 }
 
@@ -40,15 +39,10 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
 
     var signals = new LinkedList<Signal?>();
 
-    for (var subObjI = 0; subObjI < this.Parent.SubObjectCount; ++subObjI) {
+    foreach (var subObj in this.Parent.SubObjects) {
       var unpackCommand = br.ReadUInt32();
 
-      var lmIndex = subObjI == 0
-          ? this.Parent.SubObject0LmIndex
-          : this.Parent.SubObjects[subObjI - 1].LmIndex;
-      var qwc = subObjI == 0
-          ? this.Parent.SubObject0Qwc
-          : this.Parent.SubObjects[subObjI - 1].Qwc;
+      var qwc = subObj.Qwc;
 
       var unpackSize = qwc * 16;
 
@@ -65,7 +59,7 @@ public sealed class SubObjectModels : IBinaryDeserializable, IChildOf<Object> {
       var faceDir = 1f;
 
       var mesh = new Mesh {
-          LmIndex = lmIndex,
+          SubObject = subObj,
           Primitives = primitives
       };
       this.All.Add(mesh);

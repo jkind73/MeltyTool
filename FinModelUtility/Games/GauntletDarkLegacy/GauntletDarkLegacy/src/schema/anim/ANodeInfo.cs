@@ -15,6 +15,9 @@ public enum AnimType : ushort {
 }
 
 public enum MbFlags : uint {
+  NO_Z_TEST = 1 << 6,
+  NO_Z_WRITE = 1 << 7,
+  NO_SHADING = 1 << 12,
   BLEND_ADD = 1 << 23,
   YAW_ONLY_BILLBOARD = 1 << 24,
   YAW_AND_PITCH_BILLBOARD = 1 << 26,

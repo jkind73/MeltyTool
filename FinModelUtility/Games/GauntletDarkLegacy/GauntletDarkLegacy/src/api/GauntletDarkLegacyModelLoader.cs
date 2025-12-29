@@ -1,15 +1,10 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 
 using fin.animation.keyframes;
-using fin.color;
 using fin.data.dictionaries;
 using fin.data.lazy;
 using fin.data.queues;
 using fin.image;
-using fin.image.formats;
-using fin.image.io;
-using fin.image.io.pixel;
 using fin.io;
 using fin.io.bundles;
 using fin.language.equations.fixedFunction;
@@ -27,8 +22,6 @@ using gdl.schema.anim;
 using gdl.schema.objects;
 
 using schema.binary;
-
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace gdl.api;
 
@@ -92,13 +85,17 @@ public sealed class GauntletDarkLegacyModelImporter
           => {
         var (textureIndex, isLightmap) = tuple;
 
+        if (textureIndex > objects.Textures.Length) {
+          ;
+        }
+
         var gdlTexture = objects.Textures[textureIndex];
         var finImage = lazyFinImages[textureIndex];
 
         var finTexture = finModel.MaterialManager.CreateTexture(finImage);
         var prefix = !isLightmap ? "texture" : "lightmap";
         finTexture.Name
-            = $"{prefix}{finTexture.Index}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
+            = $"{prefix}{textureIndex}_{gdlTexture.Format}_{gdlTexture.TextureDataPointer.ToHex()}";
 
         finTexture.WrapModeU = gdlTexture.Flags.CheckFlag(TextureFlags.CLAMP_U)
             ? WrapMode.CLAMP
@@ -121,24 +118,44 @@ public sealed class GauntletDarkLegacyModelImporter
 
           var outputColorAlpha = finMaterial.GenerateDiffuse(
               (equations.ColorOps.One, equations.ScalarOps.One),
-              lazyFinTextures[(textureIndex, false)], 
+              lazyFinTextures[(textureIndex, false)],
               (hasVertexColors, hasVertexColors));
 
-          if (lmIndex > -1) {
-            var lightmapColor = finMaterial.AddTextureSourceColor(
-                lazyFinTextures[((ushort) lmIndex, true)]);
+          var noShading = boneMbFlags.CheckFlag(MbFlags.NO_SHADING) ||
+                          worldObjectMbFlags.CheckFlag(MbFlags.NO_SHADING);
+          if (!noShading) {
+            if (objects.LmTexNum > 0) {
+              if (lmIndex > 0) {
+                var lightmapColor = finMaterial.AddTextureSourceColor(
+                    lazyFinTextures[((ushort) lmIndex, true)]);
 
-            outputColorAlpha = (outputColorAlpha.Item1.Multiply(lightmapColor),
-                                outputColorAlpha.Item2);
-          } else {
-            outputColorAlpha
-                = equations.GenerateLighting(outputColorAlpha,
-                                             equations.ColorOps.One);
+                outputColorAlpha = (outputColorAlpha.Item1.Multiply(lightmapColor),
+                                    outputColorAlpha.Item2);
+              } else {
+                outputColorAlpha
+                    = (equations.ColorOps.MultiplyWithConstant(
+                           outputColorAlpha.Item1,
+                           .25f), outputColorAlpha.Item2);
+              }
+            } else {
+              outputColorAlpha
+                  = equations.GenerateLighting(outputColorAlpha,
+                                               equations.ColorOps.One);
+            }
           }
 
           equations.SetOutputColorAlpha(outputColorAlpha);
 
           finMaterial.Shininess = MaterialConstants.DISABLED_SHININESS;
+
+          finMaterial.DepthMode = (
+              boneMbFlags.CheckFlag(MbFlags.NO_Z_TEST),
+              boneMbFlags.CheckFlag(MbFlags.NO_Z_WRITE)) switch {
+              (false, false) => DepthMode.READ_AND_WRITE,
+              (false, true)  => DepthMode.READ_ONLY,
+              (true, false)  => DepthMode.WRITE_ONLY,
+              (true, true) => DepthMode.NONE,
+          };
 
           var blendSrcAndDst = GetBlendMode_(boneMbFlags, worldObjectMbFlags);
           if (blendSrcAndDst != null) {
@@ -411,10 +428,7 @@ public sealed class GauntletDarkLegacyModelImporter
         var finSubMesh = finRootMesh.AddSubMesh();
 
         var gdlMesh = obj.SubObjectModels.All[m];
-
-        var textureIndex = m == 0
-            ? obj.SubObject0TextureIndex
-            : obj.SubObjects[m - 1].TextureIndex;
+        var textureIndex = gdlMesh.SubObject.TextureIndex;
 
         foreach (var gdlPrimitive in gdlMesh.Primitives) {
           if (gdlPrimitive.Positions.Count < 3) {
@@ -477,7 +491,7 @@ public sealed class GauntletDarkLegacyModelImporter
           var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
           finPrimitive.SetMaterial(
               lazyFinMaterials[(textureIndex, 
-                                gdlMesh.LmIndex,
+                                gdlMesh.SubObject.LmIndex,
                                 gdlPrimitive.VertexColors.Count > 0,
                                 gdlNode?.MbFlags ?? default)]);
           finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);

@@ -10,6 +10,6 @@ namespace gdl.schema.objects;
 public sealed partial class SubObject : IBinaryDeserializable {
   public ushort Qwc { get; set; }
   public ushort TextureIndex { get; set; }
-  public ushort Lodk { get; set; }
   public short LmIndex { get; set; }
+  public short Lodk { get; set; }
 }

@@ -1,4 +1,6 @@
-﻿using gdl.schema.objects.mesh;
+﻿using fin.util.enumerables;
+
+using gdl.schema.objects.mesh;
 
 using schema.binary;
 using schema.binary.attributes;
@@ -15,10 +17,8 @@ public sealed partial class Object : IBinaryDeserializable {
   public float BoundingRadius { get; set; }
   public uint Flags { get; set; }
   public uint SubObjectCount { get; set; }
-  public ushort SubObject0Qwc { get; set; }
-  public ushort SubObject0TextureIndex { get; set; }
-  public short SubObject0LmIndex { get; set; }
-  public short SubObject0Lodk { get; set; }
+  // For fuck's sake, why is the list split like this???
+  public SubObject SubObject0 { get; } = new();
   public uint SubObjectPointer { get; set; }
   public uint SubObjectModelsPointer { get; set; }
   public uint VertexCount { get; set; }
@@ -32,10 +32,16 @@ public sealed partial class Object : IBinaryDeserializable {
   [Skip]
   public SubObjectModels? SubObjectModels { get; set; }
 
-  [RAtPosition(nameof(SubObjectPointer))]
-  [RSequenceLengthSource(nameof(SubObjectCount))]
-  public SubObject[] SubObjects { get; set; }
+  [Skip]
+  private int TrueSubObjCount_ => ((int) this.SubObjectCount) - 1;
 
+  [RAtPosition(nameof(SubObjectPointer))]
+  [RSequenceLengthSource(nameof(TrueSubObjCount_))]
+  public SubObject[] SubObjectsPast0 { get; set; }
+
+  [Skip]
+  public IEnumerable<SubObject> SubObjects
+    => this.SubObject0.Yield().Concat(this.SubObjectsPast0);
   
   [ReadLogic]
   private void ReadMesh_(IBinaryReader br) {
