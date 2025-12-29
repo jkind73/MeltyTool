@@ -62,6 +62,9 @@ public sealed class GauntletDarkLegacySceneImporter
           textureImageCache,
           gdlWorldObject.Name,
           gdlWorldObject.MbFlags);
+      GauntletDarkLegacyModelImporter.SetFaceTowardsCamera(
+          finModel.Skeleton.Root,
+          gdlWorldObject.MbFlags);
 
       finSceneNode.AddSceneModel(finModel);
 

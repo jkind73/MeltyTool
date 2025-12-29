@@ -1,6 +1,7 @@
 ﻿using System.Buffers;
 using System.Runtime.CompilerServices;
 
+using fin.color;
 using fin.image;
 using fin.image.formats;
 using fin.math.floats;
@@ -17,18 +18,54 @@ using TextureMinFilter = OpenTK.Graphics.OpenGL4.TextureMinFilter;
 
 namespace fin.ui.rendering.gl.texture;
 
-public sealed class GlTexture : IGlTexture {
-  private static readonly Dictionary<IReadOnlyTexture, GlTexture> cache_
-      = new();
+public record GlTextureParams {
+  public required IReadOnlyImage Image { get; init; }
+  public required IReadOnlyList<IReadOnlyImage> MipmapImages { get; init; }
 
+  public WrapMode WrapModeU { get; init; }
+  public WrapMode WrapModeV { get; init; }
+
+  public required FinTextureMinFilter MinFilter { get; init; }
+  public required TextureMagFilter MagFilter { get; init; }
+  public required IColor? BorderColor { get; init; }
+
+  public required float MinLod { get; init; }
+  public required float MaxLod { get; init; }
+  public required float LodBias { get; init; }
+
+  public required bool ThreePointFiltering { get; init; }
+}
+
+public sealed class GlTexture : IGlTexture {
+  // Intentionally separates params from texture, so we can share a single GL
+  // texture between multiple Fin textures.
+  private static readonly Dictionary<GlTextureParams, GlTexture> cache_ = new();
 
   private const int UNDEFINED_ID = -1;
-  private readonly IReadOnlyTexture? texture_;
+  private readonly GlTextureParams? params_;
 
   public static GlTexture FromTexture(IReadOnlyTexture texture) {
-    if (!cache_.TryGetValue(texture, out var glTexture)) {
-      glTexture = new GlTexture(texture);
-      cache_[texture] = glTexture;
+    var prms = new GlTextureParams {
+        Image = texture.Image,
+        MipmapImages = texture.MipmapImages,
+
+        WrapModeU = texture.WrapModeU,
+        WrapModeV = texture.WrapModeV,
+
+        MinFilter = texture.MinFilter,
+        MagFilter = texture.MagFilter,
+        BorderColor = texture.BorderColor,
+
+        MinLod = texture.MinLod,
+        MaxLod = texture.MaxLod,
+        LodBias = texture.LodBias,
+
+        ThreePointFiltering = texture.ThreePointFiltering,
+    };
+
+    if (!cache_.TryGetValue(prms, out var glTexture)) {
+      glTexture = new GlTexture(prms);
+      cache_[prms] = glTexture;
     }
 
     return glTexture;
@@ -45,14 +82,14 @@ public sealed class GlTexture : IGlTexture {
     }
   }
 
-  private GlTexture(IReadOnlyTexture texture) {
-    this.texture_ = texture;
+  private GlTexture(GlTextureParams prms) {
+    this.params_ = prms;
 
     FinTextureMinFilter minFilter;
     TextureMagFilter magFilter;
-    if (!texture.ThreePointFiltering) {
-      minFilter = texture.MinFilter;
-      magFilter = texture.MagFilter;
+    if (!prms.ThreePointFiltering) {
+      minFilter = prms.MinFilter;
+      magFilter = prms.MagFilter;
     } else {
       // TODO: This is just an assumption for now, what should this be?
       minFilter = FinTextureMinFilter.NEAR;
@@ -65,11 +102,11 @@ public sealed class GlTexture : IGlTexture {
     var target = TextureTarget.Texture2D;
     GL.BindTexture(target, this.Id);
     {
-      var mipmapImages = texture.MipmapImages;
+      var mipmapImages = prms.MipmapImages;
 
       this.LoadMipmapImagesIntoTexture_(mipmapImages);
 
-      if (mipmapImages.Length == 1 &&
+      if (mipmapImages.Count == 1 &&
           minFilter is FinTextureMinFilter.NEAR_MIPMAP_NEAR
                        or FinTextureMinFilter.NEAR_MIPMAP_LINEAR
                        or FinTextureMinFilter.LINEAR_MIPMAP_NEAR
@@ -78,20 +115,20 @@ public sealed class GlTexture : IGlTexture {
       } else {
         GL.TexParameter(target,
                         TextureParameterName.TextureMaxLevel,
-                        mipmapImages.Length - 1);
+                        mipmapImages.Count - 1);
       }
 
-      var finBorderColor = texture.BorderColor;
+      var finBorderColor = prms.BorderColor;
       var hasBorderColor = finBorderColor != null;
       GL.TexParameter(target,
                       TextureParameterName.TextureWrapS,
                       (int) ConvertFinWrapToGlWrap_(
-                          texture.WrapModeU,
+                          prms.WrapModeU,
                           hasBorderColor));
       GL.TexParameter(target,
                       TextureParameterName.TextureWrapT,
                       (int) ConvertFinWrapToGlWrap_(
-                          texture.WrapModeV,
+                          prms.WrapModeV,
                           hasBorderColor));
 
       if (hasBorderColor) {
@@ -134,22 +171,23 @@ public sealed class GlTexture : IGlTexture {
           }));
       GL.TexParameter(target,
                       TextureParameterName.TextureMinLod,
-                      texture.MinLod);
+                      prms.MinLod);
       GL.TexParameter(target,
                       TextureParameterName.TextureMaxLod,
-                      texture.MaxLod);
-      if (!texture.LodBias.IsRoughly0()) {
+                      prms.MaxLod);
+      if (!prms.LodBias.IsRoughly0()) {
         GL.TexParameter(target,
                         TextureParameterName.TextureLodBias,
-                        texture.LodBias);
+                        prms.LodBias);
       }
     }
   }
 
   private static readonly MemoryPool<byte> pool_ = MemoryPool<byte>.Shared;
 
-  private void LoadMipmapImagesIntoTexture_(IReadOnlyImage[] mipmapImages) {
-    for (var i = 0; i < mipmapImages.Length; ++i) {
+  private void LoadMipmapImagesIntoTexture_(
+      IReadOnlyList<IReadOnlyImage> mipmapImages) {
+    for (var i = 0; i < mipmapImages.Count; ++i) {
       this.LoadImageIntoTexture_(mipmapImages[i], i);
     }
   }
@@ -224,7 +262,7 @@ public sealed class GlTexture : IGlTexture {
                          out var b,
                          out var a);
 
-              var outI = 4 * (y * imageWidth + x);  
+              var outI = 4 * (y * imageWidth + x);
               pixelBytes[outI] = r;
               pixelBytes[outI + 1] = g;
               pixelBytes[outI + 2] = b;
@@ -279,8 +317,8 @@ public sealed class GlTexture : IGlTexture {
     }
 
     this.IsDisposed = true;
-    if (this.texture_ != null) {
-      cache_.Remove(this.texture_);
+    if (this.params_ != null) {
+      cache_.Remove(this.params_);
     }
 
     var id = this.Id;

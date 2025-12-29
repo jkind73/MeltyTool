@@ -85,10 +85,6 @@ public sealed class GauntletDarkLegacyModelImporter
           => {
         var (textureIndex, isLightmap) = tuple;
 
-        if (textureIndex > objects.Textures.Length) {
-          ;
-        }
-
         var gdlTexture = objects.Textures[textureIndex];
         var finImage = lazyFinImages[textureIndex];
 
