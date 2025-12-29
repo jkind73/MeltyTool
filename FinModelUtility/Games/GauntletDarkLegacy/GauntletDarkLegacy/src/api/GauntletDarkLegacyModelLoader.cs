@@ -12,6 +12,7 @@ using fin.image.io;
 using fin.image.io.pixel;
 using fin.io;
 using fin.io.bundles;
+using fin.language.equations.fixedFunction;
 using fin.math;
 using fin.math.floats;
 using fin.model;
@@ -209,17 +210,30 @@ public sealed class GauntletDarkLegacyModelImporter
       });
 
     var lazyFinMaterials
-        = new LazyDictionary<(ushort textureIndex, short lmIndex, MbFlags), IReadOnlyMaterial>(tuple => {
-          var (textureIndex, lmIndex, boneMbFlags) = tuple;
+        = new LazyDictionary<(ushort textureIndex, short lmIndex, bool hasVertexColors, MbFlags), IReadOnlyMaterial>(tuple => {
+          var (textureIndex, lmIndex, hasVertexColors, boneMbFlags) = tuple;
 
-          var finMaterial
-              = finModel.MaterialManager.AddStandardMaterial();
+          var finMaterial = finModel.MaterialManager.AddFixedFunctionMaterial();
+          var equations = finMaterial.Equations;
 
-          finMaterial.DiffuseTexture = lazyFinTextures[(textureIndex, 0)];
+          var outputColorAlpha = finMaterial.GenerateDiffuse(
+              (equations.ColorOps.One, equations.ScalarOps.One),
+              lazyFinTextures[(textureIndex, 0)], 
+              (hasVertexColors, hasVertexColors));
+
           if (lmIndex > -1) {
-            finMaterial.AmbientOcclusionTexture
-                = lazyFinTextures[((ushort) lmIndex, 1)];
+            var lightmapColor = finMaterial.AddTextureSourceColor(
+                lazyFinTextures[((ushort) lmIndex, 1)]);
+
+            outputColorAlpha = (outputColorAlpha.Item1.Multiply(lightmapColor),
+                                outputColorAlpha.Item2);
+          } else {
+            outputColorAlpha
+                = equations.GenerateLighting(outputColorAlpha,
+                                             equations.ColorOps.One);
           }
+
+          equations.SetOutputColorAlpha(outputColorAlpha);
 
           finMaterial.Shininess = MaterialConstants.DISABLED_SHININESS;
 
@@ -561,6 +575,7 @@ public sealed class GauntletDarkLegacyModelImporter
           finPrimitive.SetMaterial(
               lazyFinMaterials[(textureIndex, 
                                 gdlMesh.LmIndex,
+                                gdlPrimitive.VertexColors.Count > 0,
                                 gdlNode?.MbFlags ?? default)]);
           finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
         }
