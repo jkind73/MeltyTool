@@ -1,7 +1,7 @@
 //------------------------------------------------
-//--- 010 Editor v14.0 Binary Template
+//--- 010 Editor v7.0.2 Binary Template
 //
-//      File: 
+//      File: Gamemaker 2 Data File
 //   Authors: 
 //   Version: 
 //   Purpose: 
@@ -11,53 +11,332 @@
 //   History: 
 //------------------------------------------------
 
+// Shamelessly stolen from:
+// https://github.com/jam1garner/gamemaker2-data-research/blob/master/data.win.bt
+
+local uint COLOR_COUNT = 0x00ff00;
+local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_ORIENTATION = 0x888800;
+local uint COLOR_HEADER = 0xffffff;
+local uint COLOR_NAME = 0x00ffff;
+
+LittleEndian();
+struct FORM {
+    char magic[4]; //FORM
+    uint size; // Size of rest of file
+} form;
+
 typedef struct {
-  uint address <bgcolor=0xffffff>;
-  
-  local uint tmp = FTell();
-  FSeek(address);
-  
-  uint unk0 <bgcolor=0xcccccc>;
-  uint pngOffset <bgcolor=0xff0000>;
-  
-  FSeek(tmp);  
-} TextureFile;
-
-FSeek(0x327188);
-uint txtrAddressCount;
-TextureFile textureFiles[txtrAddressCount] <optimize=false>;
+    uint name_offset<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    local uint temp = FTell();
+    FSeek(name_offset);
+    string name<bgcolor=cGreen>;
+    FSeek(temp);
+} CODE_Entry <bgcolor=COLOR_HEADER>;
 
 typedef struct {
-  uint address <bgcolor=0xffffff>;
-  
-  local uint tmp = FTell();
-  FSeek(address);
-  
-  uint nameOffset <bgcolor=0xff0000>;
+    uint count<bgcolor=COLOR_COUNT>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local int i;
+    local uint temp = FTell();
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        CODE_Entry entries;
+    }
+    FSeek(temp);
+} CODE <bgcolor=COLOR_HEADER>;
 
-  uint width <bgcolor=0xffff00>;
-  uint height <bgcolor=0xffff00>;
-  
-  uint marginLeft <bgcolor=0xff00ff>;
-  uint marginRight <bgcolor=0xff00ff>;
-  uint marginBottom <bgcolor=0xff00ff>;
-  uint marginTop <bgcolor=0xff00ff>;
-  
-  uint unk0[7];
-  
-  uint negativeOne <bgcolor=0x00ffff>;
-  uint version <bgcolor=0x00ffff>;
-  
-  uint unk1[2];
-  
-  uint sequenceOffset  <bgcolor=0x00ffff>;
-  uint nineSliceOffset <bgcolor=0x00ffff>;
-  
-  uint textureCount;
-  
-  FSeek(tmp);  
-} Sprite;
+struct SCPT_Entry {
+    uint name_offset<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    local uint temp = FTell();
+    FSeek(name_offset);
+    string name<bgcolor=cGreen>;
+    FSeek(temp);
+};
 
-FSeek(0x88f8);
-uint sprtAddressCount;
-Sprite sprites[sprtAddressCount] <optimize=false>;
+typedef struct {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local int i;
+    local uint temp = FTell();
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        SCPT_Entry entries;
+    }
+    FSeek(temp);
+} SCPT <bgcolor=COLOR_HEADER>;
+
+typedef struct {
+    uint string_offset<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint string_offset_again<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    float playSpeed<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    local uint temp = FTell();
+    FSeek(string_offset);
+    string name;
+    FSeek(temp);
+} SOND_Entry <bgcolor=COLOR_HEADER>;
+
+struct SOND {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local int i;
+    local uint temp = FTell();
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        SOND_Entry entries;
+    }
+    FSeek(temp);
+};
+
+struct STRING_entry {
+    uint length<bgcolor=cLtBlue>;
+    string str<bgcolor=cGreen>;
+};
+
+struct STRG {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        STRING_entry str;
+    }
+    FSeek(temp);
+};
+
+struct TXTR_entry {
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint texture_offset<bgcolor=COLOR_OFFSET>;
+    // Textures are only just seperated by starts?
+    // I see no length or end offset, so I assume it just
+    // goes from the start of one to the start of the next
+};
+
+struct TXTR {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        TXTR_entry str;
+    }
+    FSeek(temp);
+};
+
+struct AUDO_entry {
+    uint size<bgcolor=cLtBlue>;
+    byte file[size]<bgcolor=cGreen>;
+};
+
+struct AUDO {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        AUDO_entry audioFile;
+    }
+    FSeek(temp);
+};
+
+struct FUNC_entry {
+    uint name_offset<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk_offset<bgcolor=cLtPurple>;
+    local int temp = FTell();
+    FSeek(name_offset);
+    string name<bgcolor=cGreen>;
+    FSeek(temp); // Workaround for "Invalid structure. Ending position
+                 // was in front of starting position" error message
+};
+
+struct FUNC {
+    uint count<bgcolor=cLtBlue>;
+    FUNC_entry entries[count]<optimize=false>;
+};
+
+struct BGND_entry {
+    uint name_offset<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk_offset<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    FSeek(name_offset);
+    string name<bgcolor=cGreen>;
+    FSeek(temp);
+};
+
+struct BGND {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        BGND_entry background;
+    }
+    FSeek(temp);
+};
+
+struct GEN8 {
+    uint unk<bgcolor=cLtPurple>;
+    uint unk_string_offset<bgcolor=COLOR_OFFSET>;
+    uint unk_string_offset2<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk_string_offset3<bgcolor=COLOR_OFFSET>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint width<bgcolor=cYellow>;
+    uint height<bgcolor=cYellow>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint unk<bgcolor=cLtPurple>;
+    uint gameNameOffset<bgcolor=COLOR_OFFSET>;
+    local uint temp = FTell();
+    FSeek(unk_string_offset);
+    string unk_string1<bgcolor=cGreen>;
+    FSeek(unk_string_offset2);
+    string unk_string2<bgcolor=cGreen>;
+    FSeek(unk_string_offset3);
+    string unk_string3<bgcolor=cGreen>;
+    FSeek(gameNameOffset);
+    string gameName<bgcolor=COLOR_NAME>;
+    FSeek(temp);
+};
+
+struct SHDR {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=COLOR_OFFSET>;
+};
+
+struct EXTN_function_import {
+    uint stringOffset1<bgcolor=cLtGreen>;
+    uint unk1<bgcolor=cLtPurple>;
+    uint unk2<bgcolor=cLtPurple>;
+    uint unk3<bgcolor=cLtPurple>;
+    uint stringOffset2<bgcolor=cLtGreen>;
+    uint unk4<bgcolor=cLtPurple>;
+    uint unk5<bgcolor=cLtPurple>;
+    uint unk6<bgcolor=cLtPurple>;
+    uint unk7<bgcolor=cLtPurple>;
+    local uint temp = FTell();
+    FSeek(stringOffset1);
+    string string1<bgcolor=cGreen>;
+    FSeek(stringOffset2);
+    string string2<bgcolor=cGreen>;
+    FSeek(temp);
+};
+
+struct EXTN_extension_file {
+    uint stringOffset1<bgcolor=cLtGreen>;
+    uint stringOffset2<bgcolor=cLtGreen>;
+    uint stringOffset3<bgcolor=cLtGreen>;
+    uint unk<bgcolor=cLtPurple>;
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=cYellow>;
+    local uint temp = FTell();
+    FSeek(stringOffset1);
+    string string1<bgcolor=cGreen>;
+    FSeek(stringOffset2);
+    string string2<bgcolor=cGreen>;
+    FSeek(stringOffset3);
+    string string3<bgcolor=cGreen>;
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        EXTN_function_import import;
+    }
+    FSeek(temp);
+};
+
+struct EXTN_extension {
+    uint stringOffset1<bgcolor=cLtGreen>;
+    uint stringOffset2<bgcolor=cLtGreen>;
+    uint stringOffset3<bgcolor=cLtGreen>;
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=cYellow>;
+    local uint temp = FTell();
+    FSeek(stringOffset1);
+    string string1<bgcolor=cGreen>;
+    FSeek(stringOffset2);
+    string string2<bgcolor=cGreen>;
+    FSeek(stringOffset3);
+    string string3<bgcolor=cGreen>;
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        EXTN_extension_file file;
+    }
+    FSeek(temp);
+};
+
+struct EXTN {
+    uint count<bgcolor=cLtBlue>;
+    uint offsets[count]<bgcolor=cYellow>;
+    local int i;
+    for(i = 0; i < count; i++){
+        FSeek(offsets[i]);
+        EXTN_extension extension;
+    }
+};
+
+local uint nextPos;
+while(!FEof()){
+    struct SectionHeader {
+        char magic[4]<bgcolor=cRed>;
+        uint size<bgcolor=cBlue>;
+        nextPos = FTell() + size;
+        if(Strcmp(magic, "CODE") == 0)
+            CODE code;
+        if(Strcmp(magic, "SCPT") == 0)
+            SCPT script;
+        if(Strcmp(magic, "SOND") == 0)
+            SOND sounds;
+        if(Strcmp(magic, "STRG") == 0)
+            STRG strings;
+        if(Strcmp(magic, "TXTR") == 0)
+            TXTR textures;
+        if(Strcmp(magic, "AUDO") == 0)
+            AUDO audio;
+        if(Strcmp(magic, "FUNC") == 0)
+            FUNC functions;
+        if(Strcmp(magic, "BGND") == 0)
+            BGND backgrounds;
+        if(Strcmp(magic, "GEN8") == 0)
+            GEN8 metadata;
+        if(Strcmp(magic, "SHDR") == 0)
+            SHDR shaders;
+        //if(Strcmp(magic, "EXTN") == 0)
+        //    EXTN externs;
+    } section;
+    FSeek(nextPos);
+}

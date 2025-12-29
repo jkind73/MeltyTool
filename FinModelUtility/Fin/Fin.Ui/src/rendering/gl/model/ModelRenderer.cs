@@ -114,6 +114,8 @@ public sealed partial class ModelRenderer
     }
 
     this.matricesUbo_ ??= new(this.model_.Skin.BonesUsedByVertices.Count);
+
+    // TODO: This should be shared across all models with the same lighting
     this.lightsUbo_ ??= new LightsUbo();
 
     this.matricesUbo_.UpdateData(GlTransform.ModelMatrix,

@@ -25,6 +25,10 @@ public static class SceneExtensions {
     => sceneNode.SetPosition(position.X, position.Y, position.Z);
 
   public static ISceneNode SetScale(this ISceneNode sceneNode,
+                                    float scale)
+    => sceneNode.SetScale(scale, scale, scale);
+
+  public static ISceneNode SetScale(this ISceneNode sceneNode,
                                     in Vector3 scale)
     => sceneNode.SetScale(scale.X, scale.Y, scale.Z);
 

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text.RegularExpressions;
 
 using fin.data.lazy;
 using fin.image;
@@ -7,9 +8,11 @@ using fin.math;
 using fin.math.splines;
 using fin.model;
 using fin.model.impl;
+using fin.model.io.importers.assimp;
 using fin.model.util;
 using fin.scene;
 using fin.util.asserts;
+using fin.util.enumerables;
 using fin.util.sets;
 
 using gm.api;
@@ -26,13 +29,13 @@ public sealed class VictoryHeatRallyTrackSceneFileBundle : ISceneFileBundle {
   public IReadOnlyTreeFile? MainFile => TrackJsonFile;
 }
 
-public sealed class VictoryHeatRallyTrackSceneImporter
+public sealed partial class VictoryHeatRallyTrackSceneImporter
     : ISceneImporter<VictoryHeatRallyTrackSceneFileBundle> {
   public IScene Import(VictoryHeatRallyTrackSceneFileBundle fileBundle) {
     var trackJsonFile = fileBundle.TrackJsonFile;
 
     var fileSet = fileBundle.MainFile.AsFileSet();
-    var finScene = new SceneImpl {FileBundle = fileBundle, Files = fileSet};
+    var finScene = new SceneImpl { FileBundle = fileBundle, Files = fileSet };
 
     var finArea = finScene.AddArea();
     finScene.CreateDefaultLighting(finArea.AddRootNode());
@@ -41,8 +44,8 @@ public sealed class VictoryHeatRallyTrackSceneImporter
     var spriteDirectory =
         fileBundle.ExtractedDirectory.AssertGetExistingSubdir("dataWin\\sprt");
 
-    var lazySpriteImages = new LazyCaseInvariantStringDictionary<IImage>(
-        spriteName => {
+    var lazySpriteImages
+        = new LazyCaseInvariantStringDictionary<IImage>(spriteName => {
           if (!spriteDirectory.TryToGetExistingFile(
                   $"{spriteName}.png",
                   out var spriteFile)) {
@@ -51,6 +54,50 @@ public sealed class VictoryHeatRallyTrackSceneImporter
           }
 
           return FinImage.FromFile(spriteFile);
+        });
+
+    var modelDirectory = dataDirectory.AssertGetExistingSubdir("MODEL");
+    var lazyTrackItemModels
+        = new LazyDictionary<(int, string[]), IModel?>(tuple => {
+          var (modelIndex, spriteNames) = tuple;
+          var modelPath = modelIndex switch {
+              44 => "VHN/VHN_Billboard_Tower.obj",
+              
+              66 => "Waku Land/Carousel.obj",
+              67 => "Waku Land/Kiosk.obj",
+              68 => "Waku Land/Waku_Tent.obj",
+              69 => "Waku Land/Wooden_Coaster.obj",
+              70 => "Waku Land/Drop_Tower.obj",
+
+              75 => "Forest/Castle_L Fortress.obj",
+              
+              _  => null,
+          };
+
+          if (modelPath == null) {
+            return null;
+          }
+
+          var finModel = new AssimpModelImporter().Import(
+              new AssimpModelFileBundle {
+                  MainFile = modelDirectory.AssertGetExistingFile(modelPath)
+              });
+
+          var spriteName = spriteNames[0];
+          var spriteImage = lazySpriteImages[spriteName];
+          var (finMaterial, finTexture)
+              = finModel.MaterialManager.AddSimpleTextureMaterialFromImage(
+                  spriteImage,
+                  spriteName);
+          finMaterial.CullingMode = CullingMode.SHOW_BOTH;
+          finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
+
+          foreach (var primitive in
+                   finModel.Skin.Meshes.SelectMany(m => m.Primitives)) {
+            primitive.SetMaterial(finMaterial);
+          }
+
+          return finModel;
         });
 
     if (dataDirectory.TryToGetExistingFile(
@@ -90,7 +137,8 @@ public sealed class VictoryHeatRallyTrackSceneImporter
                                          n.my_array[1]))
                              .ToArray();
     {
-      var nodesModel = new ModelImpl {FileBundle = fileBundle, Files = fileSet};
+      var nodesModel = new ModelImpl
+          { FileBundle = fileBundle, Files = fileSet };
       var nodesMaterial = nodesModel.MaterialManager.AddNullMaterial();
       nodesMaterial.DepthMode = DepthMode.NONE;
       nodesMaterial.DepthCompareType = DepthCompareType.Always;
@@ -122,15 +170,23 @@ public sealed class VictoryHeatRallyTrackSceneImporter
                                 myStruct.y ?? 0)
               : Vector3.Zero;
 
-      var xScale = (myStruct?.scale ?? 1) *
-                   (myStruct?.image_xscale ?? 1) *
-                   (myStruct?.xscale ?? 1);
-      var yScale = (myStruct?.scale ?? 1) *
-                   (myStruct?.image_yscale ?? 1) *
-                   (myStruct?.yscale ?? 1);
+      var xScale = (myStruct?.image_xscale ?? 1) * (myStruct?.xscale ?? 1);
+      var yScale = (myStruct?.image_yscale ?? 1) * (myStruct?.yscale ?? 1);
+
+      var trackItemObj = finArea.AddRootNode();
+      trackItemObj.SetPosition(position);
+      trackItemObj.SetScale(myStruct?.scale ?? 1);
+      trackItemObj.SetRotationDegrees(0, myStruct.rotation ?? 0, 0);
 
       switch (trackItem.type) {
         case "Model": {
+          var finModel
+              = GenerateModelForTrackItemModel_(trackItem.my_struct,
+                                                lazyTrackItemModels);
+          if (finModel != null) {
+            trackItemObj.AddSceneModel(finModel);
+          }
+
           break;
         }
         case "Object": {
@@ -138,7 +194,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
         }
         case "Sprite": {
           var spriteModel = new ModelImpl
-              {FileBundle = fileBundle, Files = fileSet};
+              { FileBundle = fileBundle, Files = fileSet };
 
           var spriteIndex = trackItem.my_struct.sprite_index.AssertNonnull();
           var spriteImage = lazySpriteImages[spriteIndex];
@@ -157,9 +213,7 @@ public sealed class VictoryHeatRallyTrackSceneImporter
               spriteImage.Height * yScale,
               spriteMaterial);
 
-          var spriteObject = finArea.AddRootNode();
-          spriteObject.SetPosition(position);
-          spriteObject.AddSceneModel(spriteModel);
+          trackItemObj.AddSceneModel(spriteModel);
 
           break;
         }
@@ -167,6 +221,54 @@ public sealed class VictoryHeatRallyTrackSceneImporter
     }
 
     return finScene;
+  }
+
+  [GeneratedRegex("@ref sprite\\(([a-zA-Z0-9_]+)\\)")]
+  private static partial Regex REF_SPRITE_REGEX();
+
+  private static IModel? GenerateModelForTrackItemModel_(
+      TrackItemStruct? trackItem,
+      ILazyDictionary<(int, string[]), IModel?> lazyTrackItemModels) {
+    var vhrModel = trackItem?.model;
+    if (vhrModel == null) {
+      return null;
+    }
+
+    var refSpriteRegex = REF_SPRITE_REGEX();
+    var spriteNames
+        = vhrModel
+          .sprite!
+          .Select(sprite => refSpriteRegex.Match(sprite).Groups[1].Value)
+          .ToArray();
+
+    if (trackItem.model_index is { } modelIndex &&
+        lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
+      return lazyModel;
+    }
+
+    if (vhrModel.cmesh?.triangles == null) {
+      return null;
+    }
+
+    var cmesh = vhrModel.cmesh;
+
+    var finModel = ModelImpl.CreateForViewer();
+
+    var vhrVertices = cmesh.triangles.SelectMany(t => t.SeparateTriplets());
+
+    var finSkin = finModel.Skin;
+    var finVertices = vhrVertices.Select(position => {
+                                   var finVertex = finSkin.AddVertex(position.X,
+                                     -position.Z,
+                                     position.Y);
+
+                                   return (IReadOnlyVertex) finVertex;
+                                 })
+                                 .ToArray();
+
+    finSkin.AddMesh().AddTriangles(finVertices);
+
+    return finModel;
   }
 
   private class TrackItem {
