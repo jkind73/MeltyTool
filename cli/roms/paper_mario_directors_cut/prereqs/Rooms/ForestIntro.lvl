@@ -37,7 +37,7 @@ objFloorBlock(32,224,1,32,256,-31,bacExitSide,"wall-noRepeat")
 
 objFloorBlock(96,0,0,224,192,0,bacGrassFloor,"floor;-1")
 
-objFloorBlock(128,0,0,128,192,64,bacFrontFloorCover,"wall")
+objFloorBlock(128,0,64,128,192,0,bacFrontFloorCover,"wall")
 
 objTree1(160,32,0,0,0,0,-1,"")
 objTree1(160,96,0,0,0,0,-1,"")
