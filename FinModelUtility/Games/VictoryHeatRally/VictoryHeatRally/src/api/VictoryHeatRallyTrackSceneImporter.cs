@@ -13,6 +13,7 @@ using fin.model.util;
 using fin.scene;
 using fin.util.asserts;
 using fin.util.enumerables;
+using fin.util.linq;
 using fin.util.sets;
 
 using gm.api;
@@ -62,16 +63,24 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
           var (modelIndex, spriteNames) = tuple;
           var modelPath = modelIndex switch {
               44 => "VHN/VHN_Billboard_Tower.obj",
-              
+
+              50 => "County/Danger_County_Barn_Closed.obj",
+              52 => "County/Danger_County_Brush_Wall.obj",
+
               66 => "Waku Land/Carousel.obj",
               67 => "Waku Land/Kiosk.obj",
               68 => "Waku Land/Waku_Tent.obj",
               69 => "Waku Land/Wooden_Coaster.obj",
               70 => "Waku Land/Drop_Tower.obj",
 
+              72 => "Beach/Tiki_Bar.obj",
+              73 => "Beach/Tiki_Hut.obj",
+
+              74 => "Forest/Castle_Bridge.obj",
               75 => "Forest/Castle_L Fortress.obj",
-              
-              _  => null,
+              76 => "Forest/Castle_Ruins.obj",
+
+              _ => null,
           };
 
           if (modelPath == null) {
@@ -91,6 +100,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
                   spriteName);
           finMaterial.CullingMode = CullingMode.SHOW_BOTH;
           finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
+          finTexture.MinFilter = TextureMinFilter.NEAR;
 
           foreach (var primitive in
                    finModel.Skin.Meshes.SelectMany(m => m.Primitives)) {
@@ -130,12 +140,12 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
           Converters = [new SingleOrArrayConverter<string>()]
       })!;
 
-    var nodes = trackItems.Where(i => i.type is "Node").ToArray();
-    var nodePositions = nodes.Select(n => new Vector3(
-                                         n.my_array[0],
-                                         -n.my_array[2],
-                                         n.my_array[1]))
-                             .ToArray();
+    // Gets nodes for track
+    var trackNodes = trackItems
+                     .Where(i => i is { type: "Node", my_array: not null })
+                     .Select(i => new TrackNode(i.my_array!))
+                     .ToArray();
+    var nodePositions = trackNodes.Select(n => n.Translation).ToArray();
     {
       var nodesModel = new ModelImpl
           { FileBundle = fileBundle, Files = fileSet };
@@ -154,7 +164,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
       nodesObject.AddSceneModel(nodesModel);
     }
 
-    var nodesSpline = new LinearSpline(nodePositions);
+    var trackPath = new TrackPath(trackNodes);
     var visibleItems =
         trackItems.Where(i => i.type is "Model" or "Object" or "Sprite");
     foreach (var trackItem in visibleItems) {
@@ -162,21 +172,33 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
       var position =
           myStruct != null
-              ? myStruct.follow.IsTruthy()
-                  ? nodesSpline.GetPositionAtOffset(
-                      myStruct!.position!.Value * 32)
-                  : new Vector3(myStruct.x ?? 0,
-                                myStruct.z ?? 0,
-                                myStruct.y ?? 0)
+              ? new Vector3(myStruct.x ?? 0,
+                            -myStruct.z ?? 0,
+                            myStruct.y ?? 0)
               : Vector3.Zero;
 
-      var xScale = (myStruct?.image_xscale ?? 1) * (myStruct?.xscale ?? 1);
-      var yScale = (myStruct?.image_yscale ?? 1) * (myStruct?.yscale ?? 1);
+      var spriteScale = .5f;
+      var xScale = (myStruct?.image_xscale ?? 1) *
+                   (myStruct?.xscale ?? 1) *
+                   spriteScale;
+      var yScale = (myStruct?.image_yscale ?? 1) *
+                   (myStruct?.yscale ?? 1) *
+                   spriteScale;
 
       var trackItemObj = finArea.AddRootNode();
       trackItemObj.SetPosition(position);
       trackItemObj.SetScale(myStruct?.scale ?? 1);
       trackItemObj.SetRotationDegrees(0, myStruct.rotation ?? 0, 0);
+
+      ISceneNode? followItemObj = null;
+      if (myStruct.follow.IsTruthy()) {
+        followItemObj = finArea.AddRootNode();
+        followItemObj.SetPosition(trackPath.GetTranslationAtOffset(
+                                      (myStruct.position ?? 0) * 33f,
+                                      -myStruct.xoff_percent ?? 0));
+        followItemObj.SetScale(myStruct?.scale ?? 1);
+        followItemObj.SetRotationDegrees(0, myStruct.rotation ?? 0, 0);
+      }
 
       switch (trackItem.type) {
         case "Model": {
@@ -211,13 +233,50 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
               spriteSkin,
               spriteImage.Width * xScale,
               spriteImage.Height * yScale,
-              spriteMaterial);
+              spriteMaterial,
+              true,
+              (myStruct.flip_x ?? 1) == -1);
 
           trackItemObj.AddSceneModel(spriteModel);
+          followItemObj?.AddSceneModel(spriteModel);
 
           break;
         }
       }
+    }
+
+    // Adds floor
+    if (trackItems.Where(i => i.type == "Other")
+                  .TryGetSingle(out var otherTrackItem)) {
+      // TODO: Match bounds of scene
+
+      var floorModel = new ModelImpl
+          { FileBundle = fileBundle, Files = fileSet };
+
+      var floorImage
+          = lazySpriteImages[otherTrackItem.floortex.AssertNonnull()];
+
+      var (floorMaterial, floorTexture) = floorModel.MaterialManager
+                                                    .AddSimpleTextureMaterialFromImage(
+                                                        floorImage);
+      floorMaterial.CullingMode = CullingMode.SHOW_FRONT_ONLY;
+      floorTexture.WrapModeU = floorTexture.WrapModeV = WrapMode.REPEAT;
+
+      var textureSize = 256f;
+      var textureRepeat = 250;
+      var floorSize = textureSize * textureRepeat;
+
+      var floorSkin = floorModel.Skin;
+      var floorMesh = floorSkin.AddMesh();
+
+      var ul = (new Vector3(-floorSize / 2, 0, -floorSize / 2), new Vector2(0, 0));
+      var ur = (new Vector3(floorSize / 2, 0, -floorSize / 2), new Vector2(textureRepeat, 0));
+      var ll = (new Vector3(-floorSize / 2, 0, floorSize / 2), new Vector2(0, textureRepeat));
+      var lr = (new Vector3(floorSize / 2, 0, floorSize / 2), new Vector2(textureRepeat, textureRepeat));
+
+      floorMesh.AddSimpleQuad(floorSkin, ul, ur, lr, ll, floorMaterial);
+
+      finArea.AddRootNode().AddSceneModel(floorModel);
     }
 
     return finScene;
