@@ -62,10 +62,30 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
         = new LazyDictionary<(int, string[]), IModel?>(tuple => {
           var (modelIndex, spriteNames) = tuple;
           var modelPath = modelIndex switch {
+              15 => "Vehicles/Red_Bus.obj",
+
+              22 => "Jungle/Jungle_Stone Platform Arch.obj",
+              23 => "Jungle/Jungle_Stone Platforms Leaning.obj",
+
               44 => "VHN/VHN_Billboard_Tower.obj",
+              45 => "VHN/VHN_Main_Stage.obj",
+              46 => "VHN/VHN_Stadium_Quad.obj",
+              47 => "VHN/VHN_Stadium_Seats_Double.obj",
+
+              49 => "Forest/Forest_Tree Wall.obj",
 
               50 => "County/Danger_County_Barn_Closed.obj",
+              51 => "County/Danger_County_Barn_Open.obj",
               52 => "County/Danger_County_Brush_Wall.obj",
+              53 => "County/Wooden_Fence.obj",
+
+              58 => "Vehicles/Blue_Bus.obj",
+              59 => "Vehicles/Blue_VHN Truck.obj",
+              60 => "Vehicles/Boat_Big.obj",
+              61 => "Vehicles/Boat_Small.obj",
+              63 => "Vehicles/Red_Team Truck.obj",
+              64 => "Vehicles/Yellow_Bus.obj",
+              65 => "Vehicles/Yellow_Team Truck.obj",
 
               66 => "Waku Land/Carousel.obj",
               67 => "Waku Land/Kiosk.obj",
@@ -202,10 +222,11 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
       switch (trackItem.type) {
         case "Model": {
-          var finModel
+          var finModels
               = GenerateModelForTrackItemModel_(trackItem.my_struct,
                                                 lazyTrackItemModels);
-          if (finModel != null) {
+
+          foreach (var finModel in finModels) {
             trackItemObj.AddSceneModel(finModel);
           }
 
@@ -262,13 +283,15 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
       floorMaterial.CullingMode = CullingMode.SHOW_FRONT_ONLY;
       floorTexture.WrapModeU = floorTexture.WrapModeV = WrapMode.REPEAT;
 
-      var textureSize = 256f;
+      var textureSize = 250f;
       var textureRepeat = 250;
       var floorSize = textureSize * textureRepeat;
 
       var floorSkin = floorModel.Skin;
       var floorMesh = floorSkin.AddMesh();
 
+
+      // TODO: Either off by one tile or flipped
       var ul = (new Vector3(-floorSize / 2, 0, -floorSize / 2), new Vector2(0, 0));
       var ur = (new Vector3(floorSize / 2, 0, -floorSize / 2), new Vector2(textureRepeat, 0));
       var ll = (new Vector3(-floorSize / 2, 0, floorSize / 2), new Vector2(0, textureRepeat));
@@ -285,12 +308,12 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
   [GeneratedRegex("@ref sprite\\(([a-zA-Z0-9_]+)\\)")]
   private static partial Regex REF_SPRITE_REGEX();
 
-  private static IModel? GenerateModelForTrackItemModel_(
+  private static IEnumerable<IModel> GenerateModelForTrackItemModel_(
       TrackItemStruct? trackItem,
       ILazyDictionary<(int, string[]), IModel?> lazyTrackItemModels) {
     var vhrModel = trackItem?.model;
     if (vhrModel == null) {
-      return null;
+      yield break;
     }
 
     var refSpriteRegex = REF_SPRITE_REGEX();
@@ -302,11 +325,12 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
     if (trackItem.model_index is { } modelIndex &&
         lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
-      return lazyModel;
+      yield return lazyModel;
+      yield break;
     }
 
     if (vhrModel.cmesh?.triangles == null) {
-      return null;
+      yield break;
     }
 
     var cmesh = vhrModel.cmesh;
@@ -327,7 +351,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
     finSkin.AddMesh().AddTriangles(finVertices);
 
-    return finModel;
+    yield return finModel;
   }
 
   private class TrackItem {

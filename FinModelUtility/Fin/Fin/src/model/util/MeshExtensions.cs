@@ -395,21 +395,16 @@ public static class MeshExtensions {
       where TVertex : INormalVertex, ISingleUvVertex {
     bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
 
-    var topY = !alignBottom ? height / 2 : height;
-    var bottomY = !alignBottom ? -height / 2 : 0;
-
-    var point1 = new Vector3(-width / 2f, topY, 0);
-    var point2 = new Vector3(width / 2f, bottomY, 0);
+    var topZ = !alignBottom ? height / 2 : height;
+    var bottomZ = !alignBottom ? -height / 2 : 0;
 
     var leftU = !flipX ? 0 : 1;
     var rightU = !flipX ? 1 : 0;
 
-    var ul = (point1, new Vector2(leftU, 0));
-    var ur = (point1 with { X = point2.X, Z = point2.Z },
-              new Vector2(rightU, 0));
-    var lr = (point2, new Vector2(rightU, 1));
-    var ll = (point2 with { X = point1.X, Z = point1.Z },
-              new Vector2(leftU, 1));
+    var ul = (new Vector3(-width / 2f, 0, topZ), new Vector2(leftU, 0));
+    var ur = (new Vector3(width / 2f, 0, topZ), new Vector2(rightU, 0));
+    var lr = (new Vector3(width / 2f, 0, bottomZ), new Vector2(rightU, 1));
+    var ll = (new Vector3(-width / 2f, 0, bottomZ), new Vector2(leftU, 1));
 
     mesh.AddSimpleQuad(skin, ul, ur, lr, ll, material, bone);
   }

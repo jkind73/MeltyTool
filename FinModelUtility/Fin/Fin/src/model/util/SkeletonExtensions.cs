@@ -39,15 +39,18 @@ public static class SkeletonExtensions {
         = bone?.FaceTowardsCameraType ?? FaceTowardsCameraType.NONE;
     if (faceTowardsCameraType != FaceTowardsCameraType.NONE) {
       var camera = Camera.Instance;
-      rotation = Quaternion.CreateFromAxisAngle(
-              Vector3.UnitZ,
-              camera.YawDegrees * FinTrig.DEG_2_RAD - MathF.PI / 2);
       if (faceTowardsCameraType is FaceTowardsCameraType.YAW_AND_PITCH) {
+        rotation = Quaternion.CreateFromAxisAngle(
+            Vector3.UnitZ,
+            camera.YawDegrees * FinTrig.DEG_2_RAD - MathF.PI / 2);
         rotation *= Quaternion.CreateFromAxisAngle(
             Vector3.UnitX,
             camera.PitchDegrees * FinTrig.DEG_2_RAD + MathF.PI / 2);
       } else {
-        rotation *= Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2);
+        rotation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathF.PI / 2);
+        rotation *= Quaternion.CreateFromAxisAngle(
+            Vector3.UnitZ,
+            camera.YawDegrees * FinTrig.DEG_2_RAD - MathF.PI / 2);
       }
       return true;
     }
