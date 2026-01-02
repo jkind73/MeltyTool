@@ -2,7 +2,6 @@
 using fin.config;
 using fin.io;
 using fin.io.archive;
-using fin.util.strings;
 
 using gx.archives.rarc;
 using gx.compression.yay0;
@@ -15,7 +14,6 @@ namespace uni.platforms.gcn;
 
 public sealed class GcnFileHierarchyExtractor {
   private readonly RarcDump rarcDump_ = new();
-  private readonly RelDump relDump_ = new();
   private readonly Yay0Dec yay0Dec_ = new();
   private readonly Yaz0Dec yaz0Dec_ = new();
 
@@ -90,30 +88,11 @@ public sealed class GcnFileHierarchyExtractor {
         subdir.Refresh();
       }
 
-
-      // Dumps any REL files
       var didDump = false;
-      var relFiles =
-          subdir.GetExistingFiles()
-                .Where(file => file.Name.IndexOf(".rel") != -1 &&
-                               file.FileType == ".rarc")
-                .ToArray();
-      foreach (var relFile in relFiles) {
-        var prefix = relFile.Name.SubstringUpTo(".rel").ToString();
-        var mapFile =
-            subdir.GetExistingFiles()
-                  .Single(file => file.Name.StartsWith(prefix) &&
-                                  file.FileType == ".map");
-        didDump |=
-            this.relDump_.Run(relFile,
-                              mapFile,
-                              options.ContainerCleanupEnabled);
-      }
 
       // Dumps any ARC/RARC files.
       var arcFiles =
           subdir.GetExistingFiles()
-                .Where(file => !relFiles.Contains(file))
                 .Where(file => options.RarcDumpExtensions.Contains(
                            file.FileType))
                 .ToArray();

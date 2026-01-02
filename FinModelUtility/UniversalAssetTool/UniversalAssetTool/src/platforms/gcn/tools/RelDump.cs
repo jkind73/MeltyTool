@@ -116,7 +116,7 @@ namespace uni.platforms.gcn.tools {
                 int Offset = this.GetRELOffset_(
                     this.dataSectionMap_[Current_Section],
                     int.Parse(
-                        Line_Data[1],
+                        Line_Data[0],
                         NumberStyles
                             .AllowHexSpecifier));
                 int Size =
@@ -160,7 +160,10 @@ namespace uni.platforms.gcn.tools {
         }
       }
 
-      // TODO: Clean up REL/MAP files here
+      if (cleanup) {
+        relFile.Impl.Delete();
+        mapFile.Impl.Delete();
+      }
 
       return true;
     }
