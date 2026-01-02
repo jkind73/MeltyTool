@@ -1,4 +1,6 @@
-﻿using fin.config;
+﻿using ac.api;
+
+using fin.config;
 using fin.io;
 using fin.io.bundles;
 using fin.util.progress;
@@ -34,5 +36,18 @@ public sealed class AnimalCrossingFileBundleGatherer
                   FinConfig.CleanUpArchives);
       fileHierarchy.RefreshRootAndUpdateCache();
     }
+
+    var dataObjectDirectory
+        = root.AssertGetExistingSubdir("foresta/.data/dataobject.obj");
+
+    var modelFile = dataObjectDirectory.AssertGetExistingFile(
+            "int_yos_wheel_obj_model.bin");
+    var vertexFile = dataObjectDirectory.AssertGetExistingFile(
+            "int_yos_wheel_v.bin");
+
+    organizer.Add(new AnimalCrossingModelFileBundle {
+        ModelFile = modelFile,
+        VertexFile = vertexFile,
+    }.Annotate(modelFile));
   }
 }

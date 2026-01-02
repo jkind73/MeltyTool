@@ -1,4 +1,6 @@
-﻿using Celeste64.api;
+﻿using ac.api;
+
+using Celeste64.api;
 
 using grezzo.api;
 
@@ -53,6 +55,8 @@ namespace uni.api;
 public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
   public IModel Import(IModelFileBundle modelFileBundle)
     => modelFileBundle switch {
+        AnimalCrossingModelFileBundle animalCrossingModelFileBundle
+            => new AnimalCrossingModelImporter().Import(animalCrossingModelFileBundle),
         AseMeshModelFileBundle aseMeshModelFileBundle
             => new AseMeshModelImporter().Import(aseMeshModelFileBundle),
         AssimpModelFileBundle assimpModelFileBundle

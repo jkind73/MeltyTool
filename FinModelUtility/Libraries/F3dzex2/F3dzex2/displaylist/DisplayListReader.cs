@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using f3dzex2.displaylist.opcodes;
 using f3dzex2.io;
+
+using fin.util.hex;
 
 using schema.binary;
 
@@ -27,11 +30,22 @@ public interface IDisplayListReader {
 public sealed class DisplayListReader : IDisplayListReader {
   public IDisplayList ReadDisplayList(IReadOnlyN64Memory n64Memory,
                                       IOpcodeParser opcodeParser,
-                                      uint segmentedAddress)
-    => this.ReadPossibleDisplayLists(n64Memory,
-                                     opcodeParser,
-                                     segmentedAddress)
-           .Single();
+                                      uint segmentedAddress) {
+    var displayLists = this.ReadPossibleDisplayLists(n64Memory,
+                             opcodeParser,
+                             segmentedAddress)
+                           .ToArray();
+
+    if (displayLists.Length == 0) {
+      throw new Exception(
+          $"Failed to find a displaylist at segmented address: {segmentedAddress.ToHex()}");
+    } else if (displayLists.Length > 1) {
+      throw new Exception(
+          $"Expected only one, but found {displayLists.Length} displaylists at segmented address: {segmentedAddress.ToHex()}");
+    }
+
+    return displayLists[0];
+  }
 
   public IReadOnlyList<IDisplayList> ReadPossibleDisplayLists(
       IReadOnlyN64Memory n64Memory,
