@@ -29,7 +29,7 @@ namespace uni.platforms.gcn.tools {
                         "\\" +
                         Path.GetFileNameWithoutExtension(REL_Location);
 
-      if (Directory.Exists(Data_Dir)) {
+      if (!new FinDirectory(Data_Dir).IsEmpty) {
         return false;
       }
 
