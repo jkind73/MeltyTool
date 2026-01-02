@@ -15,7 +15,7 @@ public sealed class AnimalCrossingFileBundleGatherer
   public override GcnFileHierarchyExtractor.Options Options
     => GcnFileHierarchyExtractor
        .Options
-       .Empty()
+       .Standard()
        .UseRarcDumpForExtensions(".arc");
 
   protected override void GatherFileBundlesFromHierarchy(
