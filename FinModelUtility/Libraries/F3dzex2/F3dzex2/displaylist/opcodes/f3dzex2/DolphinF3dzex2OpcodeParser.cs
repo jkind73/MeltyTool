@@ -15,7 +15,12 @@ using schema.binary;
 
 namespace f3dzex2.displaylist.opcodes.f3dzex2;
 
-public sealed class F3dzex2OpcodeParser : IOpcodeParser {
+/// <summary>
+///   Alternate version of F3dzex2 used for GameCube ports of N64 games (at the
+///   very least used in Animal Crossing). Very similar to standard F3dzex2,
+///   but with some slight changes that make them incompatible with each other.
+/// </summary>
+public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
   public IOpcodeCommand Parse(IReadOnlyN64Memory n64Memory,
                               IDisplayListReader dlr,
                               SchemaBinaryReader br) {
@@ -100,6 +105,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
       case F3dzex2Opcode.G_SETCOMBINE: {
         return F3dUtil.ParseSetCombineOpcodeCommand(br);
       }
+      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_SETTIMG: {
         N64ImageParser.SplitN64ImageFormat(br.ReadByte(),
                                            out var colorFormat,
@@ -115,6 +121,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
             TextureSegmentedAddress = br.ReadUInt32(),
         };
       }
+      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_SETTILE:
         return F3dUtil.ParseSetTileOpcodeCommand(br);
       case F3dzex2Opcode.G_SETPRIMCOLOR: {
@@ -134,6 +141,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
             B = br.ReadByte(),
             A = br.ReadByte(),
         };
+      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_SETTILESIZE: {
         br.Position -= 1;
 
@@ -172,6 +180,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
             Lrt = lrt,
         };
       }
+      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_LOADBLOCK:
         return F3dUtil.ParseLoadBlockOpcodeCommand(br);
       case F3dzex2Opcode.G_GEOMETRYMODE: {
@@ -188,6 +197,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
             Params = mtxParams, RamAddress = address,
         };
       }
+      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_LOADTLUT: {
         br.AssertUInt24(0);
 

@@ -49,7 +49,7 @@ public sealed class AnimalCrossingModelImporter
     n64Memory.SetSegment(0, 0, (uint) mergedMemoryStream.Length);
 
     var displayListReader = new DisplayListReader();
-    var f3dzex2OpcodeParser = new F3dzex2OpcodeParser();
+    var f3dzex2OpcodeParser = new DolphinF3dzex2OpcodeParser();
 
     var displayList = displayListReader.ReadDisplayList(
         n64Hardware.Memory,
