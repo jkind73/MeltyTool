@@ -8,6 +8,21 @@ using schema.binary;
 namespace f3dzex2.displaylist.opcodes.f3dzex2;
 
 public static class F3dzex2Util {
+  public static LoadTlutOpcodeCommand ParseLoadTlutOpcodeCommand(
+      IBinaryReader br) {
+    br.AssertUInt24(0);
+
+    var tileDescriptor = (TileDescriptorIndex) br.ReadByte();
+
+    var rawNumColorsToLoad = br.ReadUInt16() >> 4;
+    var numColorsToLoad = (rawNumColorsToLoad >> 2) + 1;
+
+    return new LoadTlutOpcodeCommand {
+        TileDescriptorIndex = tileDescriptor,
+        NumColorsToLoad = (ushort) numColorsToLoad,
+    };
+  }
+
   public static Tri1OpcodeCommand ParseTri1OpcodeCommand(IBinaryReader br)
     => new() {
         VertexIndexA = (byte) (br.ReadByte() >> 1),

@@ -13,6 +13,14 @@ public enum F3dzex2Opcode : byte {
   G_TRI2 = 0x06,
   G_QUAD = 0x07,
 
+  // Dolphin-specific
+  G_TRIN = 0x09,
+  G_TRIN_INDEPEND = 0x0A,
+  G_SETTEXEDGEALPHA = 0xCE,
+  G_SETCOMBINE_NOTEV = 0xCF,
+  G_SETCOMBINE_TEV = 0xD0,
+  G_SETTILE_DOLPHIN = 0xD2,
+
   G_SPECIAL_3 = 0xD3,
   G_SPECIAL_2 = 0xD4,
   G_SPECIAL_1 = 0xD5,

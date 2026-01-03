@@ -189,17 +189,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
         };
       }
       case F3dzex2Opcode.G_LOADTLUT: {
-        br.AssertUInt24(0);
-
-        var tileDescriptor = (TileDescriptorIndex) br.ReadByte();
-
-        var rawNumColorsToLoad = br.ReadUInt16() >> 4;
-        var numColorsToLoad = (rawNumColorsToLoad >> 2) + 1;
-
-        return new LoadTlutOpcodeCommand {
-            TileDescriptorIndex = tileDescriptor,
-            NumColorsToLoad = (ushort) numColorsToLoad,
-        };
+        return F3dzex2Util.ParseLoadTlutOpcodeCommand(br);
       }
       case F3dzex2Opcode.G_MODIFYVTX:
         return new ModifyVtxOpcodeCommand();

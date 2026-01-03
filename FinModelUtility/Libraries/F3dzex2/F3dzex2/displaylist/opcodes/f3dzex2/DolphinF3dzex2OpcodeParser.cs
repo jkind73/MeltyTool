@@ -9,6 +9,7 @@ using f3dzex2.model;
 using fin.math;
 using fin.math.fixedPoint;
 using fin.schema;
+using fin.util.asserts;
 
 using schema.binary;
 
@@ -197,14 +198,25 @@ public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
             Params = mtxParams, RamAddress = address,
         };
       }
-      // TODO: REIMPLEMENT
       case F3dzex2Opcode.G_LOADTLUT: {
-        br.AssertUInt24(0);
+        var prms = br.ReadUInt24();
+        if (prms == 0) {
+          return F3dzex2Util.ParseLoadTlutOpcodeCommand(br);
+        }
 
-        var tileDescriptor = (TileDescriptorIndex) br.ReadByte();
+        // If the first 24 bits aren't 0, this is a GameCube TLUT command!
 
-        var rawNumColorsToLoad = br.ReadUInt16() >> 4;
-        var numColorsToLoad = (rawNumColorsToLoad >> 2) + 1;
+        // First two bits represent type of TLUT command, 2 is GameCube.
+        var type = prms.ExtractFromRight(22, 2);
+        Asserts.Equal((uint) 2, type);
+
+        var padding0 = prms.ExtractFromRight(20, 2);
+
+        var tileDescriptor = (TileDescriptorIndex) prms.ExtractFromRight(16, 4);
+
+        var padding1 = prms.ExtractFromRight(14, 2);
+
+        var numColorsToLoad = prms.ExtractFromRight(0, 14);
 
         return new LoadTlutOpcodeCommand {
             TileDescriptorIndex = tileDescriptor,
