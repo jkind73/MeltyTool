@@ -22,6 +22,8 @@ public partial class SceneImpl {
       }
     }
 
+    public string? Name { get; set; }
+
     public IReadOnlyList<ISceneNode> ChildNodes => this.childNodes_;
 
     public ISceneNode AddChildNode() {

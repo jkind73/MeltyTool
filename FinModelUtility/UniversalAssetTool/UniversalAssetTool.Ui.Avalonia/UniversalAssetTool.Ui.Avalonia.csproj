@@ -63,6 +63,12 @@
     <Compile Update="resources\model\mesh\MeshTree.axaml.cs">
       <DependentUpon>MeshTree.axaml</DependentUpon>
     </Compile>
+    <Compile Update="resources\scene\areas\AreasTree.axaml.cs">
+      <DependentUpon>AreasTree.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="resources\scene\ScenePanel.axaml.cs">
+      <DependentUpon>ScenePanel.axaml</DependentUpon>
+    </Compile>
     <Compile Update="toolbars\FileBundleToolbar.axaml.cs">
       <DependentUpon>FileBundleToolbar.axaml</DependentUpon>
     </Compile>

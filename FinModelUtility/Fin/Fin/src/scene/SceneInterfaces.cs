@@ -62,7 +62,7 @@ public partial interface ISceneArea : IDisposable {
 ///   characters.
 /// </summary>
 [GenerateReadOnly]
-public partial interface ISceneNode : IDisposable {
+public partial interface ISceneNode : IDisposable, INamed {
   new IReadOnlyList<ISceneNode> ChildNodes { get; }
   ISceneNode AddChildNode();
 

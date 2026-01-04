@@ -1,0 +1,52 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:scene="clr-namespace:uni.ui.avalonia.resources.scene"
+             xmlns:resource="clr-namespace:uni.ui.avalonia.resources"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:areas="clr-namespace:uni.ui.avalonia.resources.scene.areas"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="500"
+             x:Class="uni.ui.avalonia.resources.scene.ScenePanel"
+             x:DataType="scene:ScenePanelViewModel">
+  <Design.DataContext>
+    <scene:ScenePanelViewModelForDesigner />
+  </Design.DataContext>
+
+  <TabControl x:Name="ModelTabs"
+              Classes="h2 spaceFirst indented"
+              SelectionChanged="ClearSelectedItemsWhenTabChanged_"
+              TabStripPlacement="Left"
+              Margin="-12 0">
+    <TabControl.Styles>
+      <Style Selector="TabItem .sideTab > avalonia|MaterialIcon">
+        <Setter Property="Margin" Value="0 4 8 4" />
+      </Style>
+      <Style Selector="TabItem .sideTab > TextBlock">
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0 0 -10 0" />
+      </Style>
+    </TabControl.Styles>
+
+    <TabItem>
+      <TabItem.Header>
+        <StackPanel Classes="sideTab" Orientation="Horizontal">
+          <avalonia:MaterialIcon Kind="{StaticResource FileIcon}" />
+          <TextBlock Text="Files" />
+        </StackPanel>
+      </TabItem.Header>
+      <resource:FilesPanel DataContext="{Binding FilesPanel}" />
+    </TabItem>
+    <TabItem>
+      <TabItem.Header>
+        <StackPanel x:Name="AreasTabHeader"
+                    Classes="sideTab"
+                    Orientation="Horizontal">
+          <avalonia:MaterialIcon Kind="{StaticResource AreaIcon}" />
+          <TextBlock Text="Areas" />
+        </StackPanel>
+      </TabItem.Header>
+      <areas:AreasTree DataContext="{Binding AreasTree}" />
+    </TabItem>
+  </TabControl>
+</UserControl>

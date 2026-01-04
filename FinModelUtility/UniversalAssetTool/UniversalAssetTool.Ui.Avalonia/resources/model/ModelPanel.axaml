@@ -20,7 +20,7 @@
 
   <TabControl x:Name="ModelTabs"
               Classes="h2 spaceFirst indented"
-              SelectionChanged="ClearSelectedTextureWhenTabChanged_"
+              SelectionChanged="ClearSelectedItemsWhenTabChanged_"
               TabStripPlacement="Left"
               Margin="-12 0">
     <TabControl.Styles>

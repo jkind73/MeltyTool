@@ -91,7 +91,7 @@ namespace uni.ui.avalonia.resources.model {
       this.InitializeComponent();
     }
 
-    private void ClearSelectedTextureWhenTabChanged_(
+    private void ClearSelectedItemsWhenTabChanged_(
         object? sender,
         SelectionChangedEventArgs e) {
       if (e.Source != this.ModelTabs) {

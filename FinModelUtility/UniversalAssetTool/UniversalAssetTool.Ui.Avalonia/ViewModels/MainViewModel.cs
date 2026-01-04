@@ -15,6 +15,7 @@ using uni.ui.avalonia.common.treeViews;
 using uni.ui.avalonia.io;
 using uni.ui.avalonia.resources.audio;
 using uni.ui.avalonia.resources.model;
+using uni.ui.avalonia.resources.scene;
 using uni.ui.avalonia.toolbars;
 
 namespace uni.ui.avalonia.ViewModels;
@@ -70,7 +71,6 @@ public sealed class MainViewModel : BViewModel {
         Progress = FileBundleGatherersService.StartExtracting()
     };
 
-    this.ModelPanel = new ModelPanelViewModel();
     SceneInstanceService.OnSceneInstanceOpened
         += (_, sceneInstance) => {
           AvaloniaBitmapUtil.ClearCache();
@@ -101,7 +101,9 @@ public sealed class MainViewModel : BViewModel {
                     => animatableModel.Animation
                         = animation as IReadOnlyModelAnimation;
           } else {
-            this.ModelPanel = null;
+            this.ScenePanel = new ScenePanelViewModel {
+                Scene = sceneInstance.Definition
+            };
           }
         };
 
@@ -126,7 +128,14 @@ public sealed class MainViewModel : BViewModel {
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  public ModelPanelViewModel ModelPanel {
+  public ModelPanelViewModel? ModelPanel {
+    get;
+    private set => this.RaiseAndSetIfChanged(
+        ref field,
+        value);
+  }
+
+  public ScenePanelViewModel? ScenePanel {
     get;
     private set => this.RaiseAndSetIfChanged(
         ref field,

@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:converters="clr-namespace:uni.ui.avalonia.util.converters"
+             xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
+             xmlns:controls1="clr-namespace:uni.ui.avalonia.common.controls"
+             xmlns:areas="clr-namespace:uni.ui.avalonia.resources.scene.areas"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+             x:Class="uni.ui.avalonia.resources.scene.areas.AreasTree"
+             x:DataType="areas:AreasTreeViewModel">
+  <Design.DataContext>
+    <areas:AreasTreeViewModelForDesigner />
+  </Design.DataContext>
+
+  <controls:If Condition="{Binding RootNode.Children, Converter={x:Static converters:ListConverters.HasAnyItems}}">
+    <controls:If.ContentWhenTrue>
+      <Border BorderBrush="{StaticResource BorderBrush}"
+              BorderThickness="1">
+        <TreeView ItemsSource="{Binding RootNode.Children}"
+                  SelectionChanged="SelectingItemsControl_OnSelectionChanged">
+          <TreeView.Styles>
+            <Style Selector="TreeViewItem" x:DataType="areas:AreaOrNode">
+              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+            </Style>
+            <Style Selector="TreeViewItem">
+              <Setter Property="MinHeight" Value="{StaticResource RegularHeight}" />
+            </Style>
+          </TreeView.Styles>
+
+          <TreeView.ItemTemplate>
+            <TreeDataTemplate ItemsSource="{Binding Children}">
+              <StackPanel Orientation="Horizontal">
+                <controls:If Condition="{Binding Area, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  <StackPanel Orientation="Horizontal">
+                    <avalonia:MaterialIcon
+                        Height="{StaticResource RegularFontSize}"
+                        Margin="0 0 0 0"
+                        Kind="{StaticResource AreaIcon}" />
+
+                    <TextBlock 
+                        Margin="3 0 0 0"
+                        Classes="regular" Text="Area" />
+                    <TextBlock Classes="caption"
+                               Margin="4 1 0 0">
+                      <TextBlock.Text>
+                        <MultiBinding StringFormat="{} ({0} root nodes)">
+                          <Binding Path="Area.RootNodes.Count" />
+                        </MultiBinding>
+                      </TextBlock.Text>
+                    </TextBlock>
+                  </StackPanel>
+                </controls:If>
+
+                <controls:If Condition="{Binding Node, Converter={x:Static ObjectConverters.IsNotNull}}">
+                  <StackPanel Orientation="Horizontal">
+                    <avalonia:MaterialIcon
+                        Height="{StaticResource RegularFontSize}"
+                        Margin="0 0 0 0"
+                        Kind="{StaticResource ActorIcon}" />
+
+                    <TextBlock Classes="regular" 
+                               Text="{Binding Node.Name, StringFormat='Node [{0}]'}" />
+                  </StackPanel>
+                </controls:If>
+              </StackPanel>
+            </TreeDataTemplate>
+          </TreeView.ItemTemplate>
+        </TreeView>
+      </Border>
+    </controls:If.ContentWhenTrue>
+    <controls:If.ContentWhenFalse>
+      <controls1:EmptyState
+          Text="No areas to display."
+          Icon="{StaticResource AreaIcon}" />
+    </controls:If.ContentWhenFalse>
+  </controls:If>
+</UserControl>
