@@ -9,5 +9,5 @@ public record SonicAdventureModelFileBundle(
     uint ModelFileKey,
     uint ModelFileOffset,
     IReadOnlyTreeFile TextureFile) : IModelFileBundle {
-  public IReadOnlyTreeFile? MainFile { get; }
+  public IReadOnlyTreeFile MainFile => this.ModelFile;
 }
