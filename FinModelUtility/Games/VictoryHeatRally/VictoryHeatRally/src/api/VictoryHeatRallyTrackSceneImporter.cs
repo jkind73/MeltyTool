@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
+using System.Text;
 using System.Text.RegularExpressions;
 
 using fin.data.lazy;
@@ -17,7 +17,6 @@ using fin.util.linq;
 using fin.util.sets;
 
 using gm.api;
-using gm.schema.dataWin.chunk.sprt;
 
 using Newtonsoft.Json;
 
@@ -63,47 +62,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     var lazyTrackItemModels
         = new LazyDictionary<(int, string[]), IModel?>(tuple => {
           var (modelIndex, spriteNames) = tuple;
-          var modelPath = modelIndex switch {
-              15 => "Vehicles/Red_Bus.obj",
-
-              22 => "Jungle/Jungle_Stone Platform Arch.obj",
-              23 => "Jungle/Jungle_Stone Platforms Leaning.obj",
-
-              44 => "VHN/VHN_Billboard_Tower.obj",
-              45 => "VHN/VHN_Main_Stage.obj",
-              46 => "VHN/VHN_Stadium_Quad.obj",
-              47 => "VHN/VHN_Stadium_Seats_Double.obj",
-
-              49 => "Forest/Forest_Tree Wall.obj",
-
-              50 => "County/Danger_County_Barn_Closed.obj",
-              51 => "County/Danger_County_Barn_Open.obj",
-              52 => "County/Danger_County_Brush_Wall.obj",
-              53 => "County/Wooden_Fence.obj",
-
-              58 => "Vehicles/Blue_Bus.obj",
-              59 => "Vehicles/Blue_VHN Truck.obj",
-              60 => "Vehicles/Boat_Big.obj",
-              61 => "Vehicles/Boat_Small.obj",
-              63 => "Vehicles/Red_Team Truck.obj",
-              64 => "Vehicles/Yellow_Bus.obj",
-              65 => "Vehicles/Yellow_Team Truck.obj",
-
-              66 => "Waku Land/Carousel.obj",
-              67 => "Waku Land/Kiosk.obj",
-              68 => "Waku Land/Waku_Tent.obj",
-              69 => "Waku Land/Wooden_Coaster.obj",
-              70 => "Waku Land/Drop_Tower.obj",
-
-              72 => "Beach/Tiki_Bar.obj",
-              73 => "Beach/Tiki_Hut.obj",
-
-              74 => "Forest/Castle_Bridge.obj",
-              75 => "Forest/Castle_L Fortress.obj",
-              76 => "Forest/Castle_Ruins.obj",
-
-              _ => null,
-          };
+          var modelPath = GetPathForModelIndex_(modelIndex);
 
           if (modelPath == null) {
             return null;
@@ -225,8 +184,19 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
       switch (trackItem.type) {
         case "Model": {
           var modelIndex = trackItem.my_struct?.model_index ?? -1;
+
+          var sb = new StringBuilder();
+          sb.Append($"Model# {modelIndex}");
+
+          var path = GetPathForModelIndex_(modelIndex);
+          if (path != null) {
+            sb.Append($" ({path})");
+          }
+
           var sprite = GetSpriteNamesForModel_(trackItem.my_struct).FirstOrDefault();
-          trackItemObj.Name = $"Model# {modelIndex}, tex: {sprite}";
+          sb.Append($", tex: {sprite}");
+
+          trackItemObj.Name = sb.ToString();
 
           var finModels
               = GenerateModelForTrackItemModel_(trackItem.my_struct,
@@ -251,10 +221,12 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
           trackItemObj.Name = $"Sprite {spriteIndex}";
 
-          var (spriteMaterial, _) = spriteModel.MaterialManager
-                                               .AddSimpleTextureMaterialFromImage(
-                                                   spriteImage);
+          var (spriteMaterial, spriteTexture) = spriteModel.MaterialManager
+              .AddSimpleTextureMaterialFromImage(
+                  spriteImage);
           spriteMaterial.CullingMode = CullingMode.SHOW_FRONT_ONLY;
+          spriteTexture.MinFilter = TextureMinFilter.NEAR;
+          spriteTexture.MagFilter = TextureMagFilter.NEAR;
 
           var spriteSkin = spriteModel.Skin;
           var spriteMesh = spriteSkin.AddMesh();
@@ -313,6 +285,49 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
     return finScene;
   }
+  
+  private static string? GetPathForModelIndex_(int modelIndex)
+    => modelIndex switch {
+        15 => "Vehicles/Red_Bus.obj",
+
+        22 => "Jungle/Jungle_Stone Platform Arch.obj",
+        23 => "Jungle/Jungle_Stone Platforms Leaning.obj",
+
+        44 => "VHN/VHN_Billboard_Tower.obj",
+        45 => "VHN/VHN_Main_Stage.obj",
+        46 => "VHN/VHN_Stadium_Quad.obj",
+        47 => "VHN/VHN_Stadium_Seats_Double.obj",
+
+        49 => "Forest/Forest_Tree Wall.obj",
+
+        50 => "County/Danger_County_Barn_Closed.obj",
+        51 => "County/Danger_County_Barn_Open.obj",
+        52 => "County/Danger_County_Brush_Wall.obj",
+        53 => "County/Wooden_Fence.obj",
+
+        58 => "Vehicles/Blue_Bus.obj",
+        59 => "Vehicles/Blue_VHN Truck.obj",
+        60 => "Vehicles/Boat_Big.obj",
+        61 => "Vehicles/Boat_Small.obj",
+        63 => "Vehicles/Red_Team Truck.obj",
+        64 => "Vehicles/Yellow_Bus.obj",
+        65 => "Vehicles/Yellow_Team Truck.obj",
+
+        66 => "Waku Land/Carousel.obj",
+        67 => "Waku Land/Kiosk.obj",
+        68 => "Waku Land/Waku_Tent.obj",
+        69 => "Waku Land/Wooden_Coaster.obj",
+        70 => "Waku Land/Drop_Tower.obj",
+
+        72 => "Beach/Tiki_Bar.obj",
+        73 => "Beach/Tiki_Hut.obj",
+
+        74 => "Forest/Castle_Bridge.obj",
+        75 => "Forest/Castle_L Fortress.obj",
+        76 => "Forest/Castle_Ruins.obj",
+
+        _ => null,
+    };
 
   [GeneratedRegex("@ref sprite\\(([a-zA-Z0-9_]+)\\)")]
   private static partial Regex REF_SPRITE_REGEX();

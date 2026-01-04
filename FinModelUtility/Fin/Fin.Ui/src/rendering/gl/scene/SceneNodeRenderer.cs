@@ -8,6 +8,8 @@ public sealed class SceneNodeRenderer : IRenderable, IDisposable {
   private readonly SceneModelRenderer[] modelRenderers_;
   private readonly SceneNodeRenderer[] childNodeRenderers_;
 
+  private IReadOnlySceneNode? selectedNode_;
+
   public SceneNodeRenderer(ISceneNodeInstance sceneNode,
                            IReadOnlyLighting? lighting) {
     this.sceneNode_ = sceneNode;
@@ -21,6 +23,9 @@ public sealed class SceneNodeRenderer : IRenderable, IDisposable {
           .ChildNodes
           .Select(n => new SceneNodeRenderer(n, lighting))
           .ToArray();
+
+    SelectedNodeService.OnNodeSelected += selectedNode
+        => this.selectedNode_ = selectedNode;
   }
 
   ~SceneNodeRenderer() => this.ReleaseUnmanagedResources_();
@@ -47,6 +52,19 @@ public sealed class SceneNodeRenderer : IRenderable, IDisposable {
     => this.modelRenderers_;
 
   public void Render() {
+    var isSelected = this.selectedNode_ == this.sceneNode_.Definition;
+    if (isSelected) {
+      GlUtil.RenderOutline(this.RenderImpl_);
+    }
+
+    this.RenderImpl_();
+
+    if (isSelected) {
+      GlUtil.RenderHighlight(this.RenderImpl_);
+    }
+  }
+
+  private void RenderImpl_() {
     GlTransform.PushMatrix();
     GlTransform.MultMatrix(this.sceneNode_.Transform.LocalMatrix);
 
