@@ -151,35 +151,26 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     foreach (var trackItem in visibleItems) {
       var myStruct = trackItem.my_struct;
 
-      var position =
-          myStruct != null
-              ? new Vector3(myStruct.x ?? 0,
-                            -myStruct.z ?? 0,
-                            myStruct.y ?? 0)
-              : Vector3.Zero;
+      var position = myStruct != null
+          ? new Vector3(myStruct.x ?? 0,
+                        -myStruct.z ?? 0,
+                        myStruct.y ?? 0)
+          : Vector3.Zero;
 
-      var spriteScale = .5f;
+      if (position.IsRoughly0()) {
+        position = trackPath.GetTranslationAtOffset(
+            (myStruct.position ?? 0) * 33f,
+            -myStruct.xoff_percent ?? 0);
+      }
+
       var xScale = (myStruct?.image_xscale ?? 1) *
-                   (myStruct?.xscale ?? 1) *
-                   spriteScale;
+                   (myStruct?.xscale ?? 1);
       var yScale = (myStruct?.image_yscale ?? 1) *
-                   (myStruct?.yscale ?? 1) *
-                   spriteScale;
+                   (myStruct?.yscale ?? 1);
 
       var trackItemObj = finArea.AddRootNode();
       trackItemObj.SetPosition(position);
-      trackItemObj.SetScale(myStruct?.scale ?? 1);
       trackItemObj.SetRotationDegrees(0, myStruct.rotation ?? 0, 0);
-
-      ISceneNode? followItemObj = null;
-      if (myStruct.follow.IsTruthy()) {
-        followItemObj = finArea.AddRootNode();
-        followItemObj.SetPosition(trackPath.GetTranslationAtOffset(
-                                      (myStruct.position ?? 0) * 33f,
-                                      -myStruct.xoff_percent ?? 0));
-        followItemObj.SetScale(myStruct?.scale ?? 1);
-        followItemObj.SetRotationDegrees(0, myStruct.rotation ?? 0, 0);
-      }
 
       switch (trackItem.type) {
         case "Model": {
@@ -202,6 +193,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
               = GenerateModelForTrackItemModel_(trackItem.my_struct,
                                                 lazyTrackItemModels);
 
+          trackItemObj.SetScale(myStruct?.scale ?? 1);
           foreach (var finModel in finModels) {
             trackItemObj.AddSceneModel(finModel);
           }
@@ -240,7 +232,6 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
               (myStruct.flip_x ?? 1) == -1);
 
           trackItemObj.AddSceneModel(spriteModel);
-          followItemObj?.AddSceneModel(spriteModel);
 
           break;
         }
@@ -367,6 +358,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     if (trackItem.model_index is { } modelIndex &&
         lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
       yield return lazyModel;
+      yield break;
     }
 
     if (vhrModel.cmesh?.triangles == null) {
