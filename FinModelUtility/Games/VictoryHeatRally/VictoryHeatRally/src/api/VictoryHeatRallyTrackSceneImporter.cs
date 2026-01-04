@@ -5,7 +5,6 @@ using fin.data.lazy;
 using fin.image;
 using fin.io;
 using fin.math;
-using fin.math.splines;
 using fin.model;
 using fin.model.impl;
 using fin.model.io.importers.assimp;
@@ -20,6 +19,7 @@ using gm.api;
 
 using Newtonsoft.Json;
 
+using vhr.json;
 
 namespace vhr.api;
 
@@ -352,80 +352,5 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     finSkin.AddMesh().AddTriangles(finVertices);
 
     yield return finModel;
-  }
-
-  private class TrackItem {
-    public float[]? my_array;
-    public TrackItemStruct? my_struct;
-    public string? type;
-
-    // Background
-    public string[] bgindex;
-    public int[]? xoff;
-    public int[]? xparallax;
-    public int[]? yoff;
-    public int[]? yparallax;
-
-    // Other
-    public string? bgm;
-    public string? floortex;
-    public int? fog_enabled;
-    public int? laps;
-    public int? rally;
-    public int? startpos;
-    public string? spr_barrier;
-    public int? timeofday;
-    public string? track_name;
-  }
-
-  private class TrackItemStruct {
-    public int? alt_texture;
-    public int? flip_x;
-    public int? follow;
-    public int? image_index;
-    public float? image_xscale;
-    public float? image_yscale;
-    public TrackItemModel? model;
-    public int? model_index;
-    public string? @object;
-    public int? position;
-    public float? rotation;
-    public float? scale;
-    public string? sprite_index;
-    public string? type;
-    public float? x;
-    public float? xoffset;
-    public float? xoff_percent;
-    public float? xscale;
-    public float? y;
-    public float? yscale;
-    public float? z;
-  }
-
-  private class TrackItemModel {
-    public bool? array;
-    public TrackItemCmesh? cmesh;
-    public string? model;
-
-    [JsonConverter(typeof(SingleOrArrayConverter<string>))]
-    public List<string>? sprite;
-
-    public int? subdiv;
-    public int? tilt;
-
-    [JsonConverter(typeof(SingleOrArrayConverter<string>))]
-    public List<string>? texture;
-  }
-
-  private class TrackItemCmesh {
-    public int? group;
-    public int? matrix;
-    public string? name;
-    public string? shapeList;
-    public bool? solid;
-    public int? submeshes;
-    public int? triangle;
-    public float[][]? triangles;
-    public int? type;
   }
 }

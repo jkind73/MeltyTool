@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-
-namespace vhr.api;
+namespace vhr.json;
 
 /// <summary>
 ///   Shamelessly stolen from:
