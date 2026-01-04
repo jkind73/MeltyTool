@@ -92,6 +92,7 @@ public sealed class MainViewModel : BViewModel {
                 = animatableModel.AnimationPlaybackManager;
 
             this.ModelPanel = new ModelPanelViewModel { Model = model };
+            this.ScenePanel = null;
 
             var animationsPanel = this.ModelPanel.AnimationsPanel;
             animationsPanel.AnimationPlaybackManager
@@ -101,6 +102,7 @@ public sealed class MainViewModel : BViewModel {
                     => animatableModel.Animation
                         = animation as IReadOnlyModelAnimation;
           } else {
+            this.ModelPanel = null;
             this.ScenePanel = new ScenePanelViewModel {
                 Scene = sceneInstance.Definition
             };

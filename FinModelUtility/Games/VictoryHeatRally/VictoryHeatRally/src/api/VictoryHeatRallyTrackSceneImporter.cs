@@ -288,10 +288,16 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
   
   private static string? GetPathForModelIndex_(int modelIndex)
     => modelIndex switch {
+        13 => "Steel Buildings/Fort_Loggins_Hangar.obj",
+
         15 => "Vehicles/Red_Bus.obj",
 
         22 => "Jungle/Jungle_Stone Platform Arch.obj",
         23 => "Jungle/Jungle_Stone Platforms Leaning.obj",
+
+        34 => "Frostbite/Glacier_Tower_Tall.obj",
+        38 => "Frostbite/Snow_Pier_Long.obj",
+        39 => "Frostbite/Snow_Pier_Square.obj",
 
         44 => "VHN/VHN_Billboard_Tower.obj",
         45 => "VHN/VHN_Main_Stage.obj",
@@ -309,6 +315,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
         59 => "Vehicles/Blue_VHN Truck.obj",
         60 => "Vehicles/Boat_Big.obj",
         61 => "Vehicles/Boat_Small.obj",
+        62 => "Vehicles/Hovercraft.obj",
         63 => "Vehicles/Red_Team Truck.obj",
         64 => "Vehicles/Yellow_Bus.obj",
         65 => "Vehicles/Yellow_Team Truck.obj",
@@ -318,6 +325,8 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
         68 => "Waku Land/Waku_Tent.obj",
         69 => "Waku Land/Wooden_Coaster.obj",
         70 => "Waku Land/Drop_Tower.obj",
+
+        71 => "Frostbite/Igloo.obj",
 
         72 => "Beach/Tiki_Bar.obj",
         73 => "Beach/Tiki_Hut.obj",
@@ -358,7 +367,6 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     if (trackItem.model_index is { } modelIndex &&
         lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
       yield return lazyModel;
-      yield break;
     }
 
     if (vhrModel.cmesh?.triangles == null) {
