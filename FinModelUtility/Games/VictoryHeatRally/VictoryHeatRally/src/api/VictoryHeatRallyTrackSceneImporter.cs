@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
 using fin.data.lazy;
@@ -16,6 +17,7 @@ using fin.util.linq;
 using fin.util.sets;
 
 using gm.api;
+using gm.schema.dataWin.chunk.sprt;
 
 using Newtonsoft.Json;
 
@@ -222,6 +224,10 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
       switch (trackItem.type) {
         case "Model": {
+          var modelIndex = trackItem.my_struct?.model_index ?? -1;
+          var sprite = GetSpriteNamesForModel_(trackItem.my_struct).FirstOrDefault();
+          trackItemObj.Name = $"Model# {modelIndex}, tex: {sprite}";
+
           var finModels
               = GenerateModelForTrackItemModel_(trackItem.my_struct,
                                                 lazyTrackItemModels);
@@ -233,6 +239,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
           break;
         }
         case "Object": {
+          trackItemObj.Name = $"Object";
           break;
         }
         case "Sprite": {
@@ -241,6 +248,8 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
           var spriteIndex = trackItem.my_struct.sprite_index.AssertNonnull();
           var spriteImage = lazySpriteImages[spriteIndex];
+
+          trackItemObj.Name = $"Sprite {spriteIndex}";
 
           var (spriteMaterial, _) = spriteModel.MaterialManager
                                                .AddSimpleTextureMaterialFromImage(
@@ -308,6 +317,19 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
   [GeneratedRegex("@ref sprite\\(([a-zA-Z0-9_]+)\\)")]
   private static partial Regex REF_SPRITE_REGEX();
 
+  private static IEnumerable<string> GetSpriteNamesForModel_(
+      TrackItemStruct? trackItem) {
+    var vhrModel = trackItem?.model;
+    if (vhrModel == null) {
+      yield break;
+    }
+
+    var refSpriteRegex = REF_SPRITE_REGEX();
+    foreach (var sprite in vhrModel.sprite!) {
+      yield return refSpriteRegex.Match(sprite).Groups[1].Value;
+    }
+  }
+
   private static IEnumerable<IModel> GenerateModelForTrackItemModel_(
       TrackItemStruct? trackItem,
       ILazyDictionary<(int, string[]), IModel?> lazyTrackItemModels) {
@@ -316,12 +338,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
       yield break;
     }
 
-    var refSpriteRegex = REF_SPRITE_REGEX();
-    var spriteNames
-        = vhrModel
-          .sprite!
-          .Select(sprite => refSpriteRegex.Match(sprite).Groups[1].Value)
-          .ToArray();
+    var spriteNames = GetSpriteNamesForModel_(trackItem).ToArray();
 
     if (trackItem.model_index is { } modelIndex &&
         lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
