@@ -9,27 +9,18 @@ namespace fin.io.bundles;
 public interface IFileBundle : IUiFile {
   FileBundleType Type { get; }
 
-  IReadOnlyTreeFile? MainFile { get; }
+  IReadOnlyTreeFile MainFile { get; }
 
   IEnumerable<IReadOnlyGenericFile> Files {
-    get {
-      if (this.MainFile != null) {
-        yield return this.MainFile;
-      }
-    }
+    get { yield return this.MainFile; }
   }
-
 
   IReadOnlyTreeDirectory Directory => this.MainFile.AssertGetParent();
 
-  ReadOnlySpan<char> IUiFile.RawName
-    => this.MainFile != null ? this.MainFile.Name : "(n/a)";
-
+  ReadOnlySpan<char> IUiFile.RawName => this.MainFile.Name;
   ReadOnlySpan<char> DisplayName => this.HumanReadableName ?? this.RawName;
 
-  ReadOnlySpan<char> DisplayFullPath
-    => this.MainFile?.DisplayFullPath ??
-       this.HumanReadableName ?? this.RawName;
+  ReadOnlySpan<char> DisplayFullPath => this.MainFile.DisplayFullPath;
 
   string TrueFullPath => Asserts.CastNonnull(this.MainFile.FullPath);
 }

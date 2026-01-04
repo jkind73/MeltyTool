@@ -16,11 +16,11 @@ public sealed class Sm64LevelSceneFileBundle(
     IReadOnlyTreeFile sm64Rom,
     LevelId levelId)
     : ISceneFileBundle {
-  public IReadOnlyTreeFile? MainFile => null;
-  public IReadOnlyTreeDirectory Directory { get; } = directory;
+  public IReadOnlyTreeFile MainFile => sm64Rom;
+  public IReadOnlyTreeDirectory Directory => directory;
 
-  public IReadOnlyTreeFile Sm64Rom { get; } = sm64Rom;
-  public LevelId LevelId { get; } = levelId;
+  public IReadOnlyTreeFile Sm64Rom => sm64Rom;
+  public LevelId LevelId => levelId;
   string IUiFile.HumanReadableName => $"{this.LevelId}".ToLower();
   public string TrueFullPath => this.Sm64Rom.FullPath;
 }

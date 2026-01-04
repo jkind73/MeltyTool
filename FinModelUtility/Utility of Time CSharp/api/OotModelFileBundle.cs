@@ -8,11 +8,11 @@ namespace UoT.api {
       IReadOnlyTreeDirectory directory,
       IReadOnlyTreeFile ootRom,
       IZFile zFile) : IModelFileBundle {
-    public IReadOnlyTreeFile? MainFile => null;
-    public IReadOnlyTreeDirectory Directory { get; } = directory;
+    public IReadOnlyTreeFile MainFile => ootRom;
+    public IReadOnlyTreeDirectory Directory => directory;
 
-    public IReadOnlyTreeFile OotRom { get; } = ootRom;
-    public IZFile ZFile { get; } = zFile;
+    public IReadOnlyTreeFile OotRom => ootRom;
+    public IZFile ZFile => zFile;
 
     string IUiFile.HumanReadableName => this.ZFile.FileName;
     public string TrueFullPath => this.OotRom.FullPath;
