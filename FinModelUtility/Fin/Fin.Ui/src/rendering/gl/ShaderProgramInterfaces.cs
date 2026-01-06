@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 
+using readOnly;
+
 
 namespace fin.ui.rendering.gl;
 
@@ -13,7 +15,8 @@ public interface IShaderUniformArray<T> {
   void SetAndMaybeMarkDirty(int index, in T value);
 }
 
-public interface IShaderProgram : IDisposable {
+[GenerateReadOnly]
+public partial interface IShaderProgram : IDisposable {
   IShaderUniform<bool> GetUniformBool(string name);
   IShaderUniform<int> GetUniformInt(string name);
   IShaderUniform<float> GetUniformFloat(string name);
