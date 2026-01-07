@@ -81,6 +81,7 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
       GlShaderProgram shaderProgram);
 
   public IReadOnlyMaterial? Material { get; }
+  public IReadOnlyShaderProgram ShaderProgram => this.impl_;
 
   public void Use() {
     this.cameraPositionUniform_.SetAndMaybeMarkDirty(Camera.Instance.Position);
