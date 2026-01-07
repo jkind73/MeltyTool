@@ -78,14 +78,14 @@ public class BallGameComponent
 
     {
       var upperArmLength
-          = this.leftForearmBone_.LocalTransform.Translation.Length();
+          = this.leftForearmBone_.Transform.LocalTranslation.Length();
       var forearmLength
-          = this.leftHandBone_.LocalTransform.Translation.Length();
+          = this.leftHandBone_.Transform.LocalTranslation.Length();
 
       var totalArmLength = upperArmLength + forearmLength;
 
       this.baseBallDistance_
-          = this.leftUpperArmBone_.LocalTransform.Translation.X;
+          = this.leftUpperArmBone_.Transform.LocalTranslation.X;
 
       var minBallDistance = totalArmLength * .32f;
       var maxBallDistance = totalArmLength * .76f;
@@ -108,8 +108,8 @@ public class BallGameComponent
     }
 
     {
-      this.ballBaseY_ = this.leftUpperArmBone_.LocalTransform
-                            .WorldMatrix.Translation.Y;
+      this.ballBaseY_
+          = this.leftUpperArmBone_.Transform.WorldMatrix.Translation.Y;
 
       var minMaxBoundsCalculator = new ModelMinMaxBoundsScaleCalculator();
       var bounds = minMaxBoundsCalculator.CalculateBounds(model);
