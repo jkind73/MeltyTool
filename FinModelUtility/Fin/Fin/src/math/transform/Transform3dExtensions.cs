@@ -18,9 +18,9 @@ public static class Transform3dExtensions {
                            out var quaternion,
                            out var scale);
 
-    transform.Translation = translation;
-    transform.Rotation = quaternion;
-    transform.Scale = scale;
+    transform.LocalTranslation = translation;
+    transform.LocalRotation = quaternion;
+    transform.LocalScale = scale;
   }
 
 
@@ -32,7 +32,7 @@ public static class Transform3dExtensions {
                                     float x,
                                     float y,
                                     float z)
-    => transform.Translation = new Vector3(x, y, z);
+    => transform.LocalTranslation = new Vector3(x, y, z);
 
 
   public static void SetRotationRadians(this ITransform3d transform,
@@ -67,11 +67,11 @@ public static class Transform3dExtensions {
 
   public static void SetRotation(this ITransform3d transform,
                                  Quaternion quaternion)
-    => transform.Rotation = quaternion;
+    => transform.LocalRotation = quaternion;
 
   public static void SetScale(this ITransform3d transform,
                               Vector3 xyz)
-    => transform.Scale = xyz;
+    => transform.LocalScale = xyz;
 
   public static void SetScale(this ITransform3d transform,
                               IReadOnlyXyz xyz)

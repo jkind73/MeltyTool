@@ -35,9 +35,9 @@ public partial class ModelImpl<TVertex> {
         this.Root = this;
         this.Parent = parent;
 
-        this.LocalTransform
-            = new Transform3d(parent?.LocalTransform as Transform3d);
-        this.LocalTransform.SetTranslation(x, y, z);
+        this.Transform
+            = new Transform3d(parent?.Transform as Transform3d);
+        this.Transform.SetTranslation(x, y, z);
 
         this.skeleton_.bones.Add(this);
 
@@ -57,9 +57,9 @@ public partial class ModelImpl<TVertex> {
         this.Root = root;
         this.Parent = parent;
 
-        this.LocalTransform
-            = new Transform3d(parent?.LocalTransform as Transform3d);
-        this.LocalTransform.SetTranslation(x, y, z);
+        this.Transform
+            = new Transform3d(parent?.Transform as Transform3d);
+        this.Transform.SetTranslation(x, y, z);
 
         this.skeleton_.bones.Add(this);
 
@@ -91,7 +91,7 @@ public partial class ModelImpl<TVertex> {
         return child;
       }
 
-      public ITransform3d LocalTransform { get; }
+      public ITransform3d Transform { get; }
       public bool IgnoreParentScale { get; set; }
 
       public IBone AlwaysFaceTowardsCamera(

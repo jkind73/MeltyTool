@@ -45,8 +45,8 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   public static IBone CreateAdjustedRootBone(IModel finModel) {
     var finSkeleton = finModel.Skeleton;
     var bone = finSkeleton.Root.AddRoot(0, 0, 0);
-    bone.LocalTransform.SetRotationDegrees(-90, 180, 0);
-    bone.LocalTransform.SetScale(-1, 1, 1);
+    bone.Transform.SetRotationDegrees(-90, 180, 0);
+    bone.Transform.SetScale(-1, 1, 1);
     return bone;
   }
 

@@ -74,7 +74,7 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
         finBoneWithoutBillboards[bone.Id] = finBone;
         finBoneWithBillboards[bone.Id] = finBone;
 
-        var localTransform = finBone.LocalTransform;
+        var localTransform = finBone.Transform;
         localTransform.SetRotationDegrees(bone.Rotation);
         localTransform.SetScale(bone.Scale);
 

@@ -265,10 +265,10 @@ public sealed class HWUgxResource : HWBinaryResource {
                     parentFinBone.AddRoot(xSign * position.X, position.Y, position.Z)
                     : parentFinBone.AddChild(xSign * position.X, position.Y, position.Z);
 
-            finBone.LocalTransform.SetRotationRadians(rotation.X,
+            finBone.Transform.SetRotationRadians(rotation.X,
               xSign * rotation.Y,
               xSign * rotation.Z);
-            finBone.LocalTransform.SetScale(scaleShear[0].X,
+            finBone.Transform.SetScale(scaleShear[0].X,
                                             scaleShear[1].Y,
                                             scaleShear[2].Z);
 

@@ -12,8 +12,9 @@ namespace fin.math.transform;
 public partial interface ITransform3d
     : ITransform<Vector3, Quaternion?, Vector3?> {
   new Matrix4x4 WorldMatrix { get; }
+
   new Matrix4x4 LocalMatrix { get; }
-  new Vector3? EulerRadians { get; set; }
+  new Vector3? LocalEulerRadians { get; set; }
 }
 
 public sealed class Transform3d : ITransform3d {
@@ -59,13 +60,13 @@ public sealed class Transform3d : ITransform3d {
       this.isLocalMatrixDirty_ = false;
 
       return field
-          = SystemMatrix4x4Util.FromTrs(this.Translation,
-                                        this.Rotation,
-                                        this.Scale);
+          = SystemMatrix4x4Util.FromTrs(this.LocalTranslation,
+                                        this.LocalRotation,
+                                        this.LocalScale);
     }
   } = Matrix4x4.Identity;
 
-  public Vector3 Translation {
+  public Vector3 LocalTranslation {
     get;
     set {
       field = value;
@@ -73,7 +74,7 @@ public sealed class Transform3d : ITransform3d {
     }
   }
 
-  public Quaternion? Rotation {
+  public Quaternion? LocalRotation {
     get {
       if (!this.isQuaternionDirty_) {
         return this.rotation_;
@@ -91,7 +92,7 @@ public sealed class Transform3d : ITransform3d {
     }
   }
 
-  public Vector3? EulerRadians {
+  public Vector3? LocalEulerRadians {
     get {
       if (!this.isEulerRadiansDirty_) {
         return this.eulerRadians_;
@@ -109,7 +110,7 @@ public sealed class Transform3d : ITransform3d {
     }
   }
 
-  public Vector3? Scale {
+  public Vector3? LocalScale {
     get;
     set {
       field = value;

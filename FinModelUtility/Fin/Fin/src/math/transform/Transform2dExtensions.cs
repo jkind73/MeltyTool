@@ -16,19 +16,19 @@ public static class Transform2dExtensions {
                      out var translation,
                      out _);
 
-    transform.Translation = translation;
-    transform.Rotation = quaternion;
-    transform.Scale = scale;
+    transform.LocalTranslation = translation;
+    transform.LocalRotation = quaternion;
+    transform.LocalScale = scale;
   }
 
 
   public static void SetTranslation(this ITransform2d transform,
                                     float x,
                                     float y)
-    => transform.Translation = new Vector2(x, y);
+    => transform.LocalTranslation = new Vector2(x, y);
 
   public static void SetScale(this ITransform2d transform,
                               float x,
                               float y)
-    => transform.Scale = new Vector2(x, y);
+    => transform.LocalScale = new Vector2(x, y);
 }

@@ -26,8 +26,8 @@ public static class SkeletonExtensions {
                            out var scale);
 
     var child = parent.AddChild(translation);
-    child.LocalTransform.Rotation = rotation;
-    child.LocalTransform.Scale = scale;
+    child.Transform.LocalRotation = rotation;
+    child.Transform.LocalScale = scale;
 
     return child;
   }

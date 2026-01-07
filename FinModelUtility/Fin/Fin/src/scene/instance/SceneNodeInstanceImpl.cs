@@ -17,9 +17,9 @@ public partial class SceneInstanceImpl {
       this.sceneObject_ = sceneObject;
       
       this.Transform = new Transform3d(parent?.Transform);
-      this.Transform.Translation = sceneObject.Position;
-      this.Transform.Rotation = QuaternionUtil.Create(sceneObject.Rotation);
-      this.Transform.Scale = sceneObject.Scale;
+      this.Transform.LocalTranslation = sceneObject.Position;
+      this.Transform.LocalRotation = QuaternionUtil.Create(sceneObject.Rotation);
+      this.Transform.LocalScale = sceneObject.Scale;
 
       this.ChildNodes = sceneObject.ChildNodes
                                    .Select(n => new SceneNodeInstanceImpl(

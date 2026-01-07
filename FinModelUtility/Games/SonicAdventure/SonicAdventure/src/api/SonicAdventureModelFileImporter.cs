@@ -44,11 +44,11 @@ public sealed class SonicAdventureModelFileImporter
                                              finModel.Skeleton.Root));
     while (objAndBoneQueue.TryDequeue(out var saObj, out var parentFinBone)) {
       var finBone = parentFinBone.AddChild(saObj.Position);
-      finBone.LocalTransform.SetRotationDegrees(
+      finBone.Transform.SetRotationDegrees(
           new Vector3(saObj.Rotation.X, saObj.Rotation.Y, saObj.Rotation.Z) /
           0x10000 *
           360);
-      finBone.LocalTransform.SetScale(saObj.Scale);
+      finBone.Transform.SetScale(saObj.Scale);
 
       var saAttach = saObj.Attach;
       if (saAttach != null) {

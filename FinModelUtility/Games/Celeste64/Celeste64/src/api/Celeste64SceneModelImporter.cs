@@ -214,7 +214,7 @@ public sealed class Celeste64MapSceneImporter
               = (float) FrameTime.ElapsedTimeSinceApplicationOpened
                                  .TotalSeconds;
           var transform = instance.Transform;
-          transform.Translation = origin +
+          transform.LocalTranslation = origin +
                                   Vector3.UnitY *
                                   MathF.Sin(totalSeconds * 2) *
                                   2;

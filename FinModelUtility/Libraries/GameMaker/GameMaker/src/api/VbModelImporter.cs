@@ -26,7 +26,7 @@ public sealed class VbModelImporter : IModelImporter<VbModelFileBundle> {
     };
 
     var finRootBone = finModel.Skeleton.Root.AddChild(0, 0, 0);
-    finRootBone.LocalTransform.SetRotationDegrees(90, 0, 0);
+    finRootBone.Transform.SetRotationDegrees(90, 0, 0);
 
     var finSkin = finModel.Skin;
     var weights =

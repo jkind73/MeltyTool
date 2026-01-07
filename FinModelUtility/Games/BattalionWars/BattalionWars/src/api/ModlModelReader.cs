@@ -92,7 +92,7 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
         var finBone = parentFinBone.AddChild(flipSign * bonePosition.X,
                                              bonePosition.Y,
                                              bonePosition.Z);
-        finBone.LocalTransform.Rotation = rotation;
+        finBone.Transform.LocalRotation = rotation;
 
         var identifier = modlNode.GetIdentifier();
         finBone.Name = identifier;

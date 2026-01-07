@@ -359,8 +359,8 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
     var gltfTransform = gltfNode.LocalTransform;
 
     var finBone = parentFinBone.AddChild(gltfTransform.Translation);
-    finBone.LocalTransform.SetRotation(gltfTransform.Rotation);
-    finBone.LocalTransform.SetScale(gltfTransform.Scale);
+    finBone.Transform.SetRotation(gltfTransform.Rotation);
+    finBone.Transform.SetScale(gltfTransform.Scale);
 
     finBone.Name = gltfNode.Name;
 

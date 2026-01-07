@@ -113,11 +113,11 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
       var rotationFactor = 1f / 32768f * 3.14159f;
       var bone = parentBone.AddChild(joint.Translation);
-      bone.LocalTransform.SetRotationRadians(
+      bone.Transform.SetRotationRadians(
           joint.Rotation.X * rotationFactor,
           joint.Rotation.Y * rotationFactor,
           joint.Rotation.Z * rotationFactor);
-      bone.LocalTransform.SetScale(joint.Scale);
+      bone.Transform.SetScale(joint.Scale);
       bone.Name = jointName;
 
       bone.IgnoreParentScale = node.Entry.IgnoreParentScale;

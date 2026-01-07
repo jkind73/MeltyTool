@@ -8,7 +8,7 @@ namespace fin.math.transform;
 public partial interface ITransform2d : ITransform<Vector2, float, Vector2>;
 
 public sealed class Transform2d : ITransform2d {
-  public Vector2 Translation { get; set; }
-  public float Rotation { get; set; }
-  public Vector2 Scale { get; set; } = Vector2.One;
+  public Vector2 LocalTranslation { get; set; }
+  public float LocalRotation { get; set; }
+  public Vector2 LocalScale { get; set; } = Vector2.One;
 }

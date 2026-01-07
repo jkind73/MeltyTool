@@ -92,8 +92,8 @@ public sealed class CmbModelBuilder {
       var finBone
           = (finBoneParent ?? finModel.Skeleton.Root).AddChild(
               translation);
-      finBone.LocalTransform.SetRotationRadians(radians);
-      finBone.LocalTransform.SetScale(scale);
+      finBone.Transform.SetRotationRadians(radians);
+      finBone.Transform.SetScale(scale);
       finBones[cmbBone.id] = finBone;
 
       if (boneChildren.TryGetList(cmbBone, out var children)) {

@@ -78,7 +78,7 @@ public sealed class Celeste64MapModelImporter
     var finSkin = finModel.Skin;
 
     var finRootBone = finModel.Skeleton.Root.AddRoot(0, 0, 0);
-    finRootBone.LocalTransform.SetRotationDegrees(-90, 180, 0);
+    finRootBone.Transform.SetRotationDegrees(-90, 180, 0);
 
     var finBoneWeights = finSkin.GetOrCreateBoneWeights(
         VertexSpace.RELATIVE_TO_BONE,

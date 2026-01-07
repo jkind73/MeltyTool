@@ -89,10 +89,10 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
                                           openTkQuaternion.Z,
                                           openTkQuaternion.W);
           var eulerRadians = QuaternionUtil.ToEulerRadians(quaternion);
-          bone.LocalTransform.SetRotationRadians(eulerRadians);
+          bone.Transform.SetRotationRadians(eulerRadians);
 
           var scale = mbn.Scale;
-          bone.LocalTransform.SetScale(scale);
+          bone.Transform.SetScale(scale);
 
           finBoneByIndex[mbn.Id] = bone;
           finBoneByName[bone.Name] = bone;

@@ -324,7 +324,7 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
         if ((rotation != null && rotation != Quaternion.Identity) ||
             isRotationBone) {
           var rotationBone = finBone = finBone.AddChild(Vector3.Zero);
-          rotationBone.LocalTransform.SetRotation(
+          rotationBone.Transform.SetRotation(
               rotation ?? Quaternion.Identity);
           if (isRotationBone) {
             var rotationTracks = animation.GetOrCreateBoneTracks(rotationBone);

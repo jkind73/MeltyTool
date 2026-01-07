@@ -310,8 +310,8 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
       var joint = mod.joints[jointIndex];
 
       var bone = (parent ?? model.Skeleton.Root).AddChild(joint.position);
-      bone.LocalTransform.SetRotationRadians(joint.rotation);
-      bone.LocalTransform.SetScale(joint.scale);
+      bone.Transform.SetRotationRadians(joint.rotation);
+      bone.Transform.SetScale(joint.scale);
 
       if (mod.jointNames.Count > 0) {
         var jointName = mod.jointNames[jointIndex];

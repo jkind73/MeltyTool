@@ -23,8 +23,8 @@ public class RotateTalentTickComponent : ISceneNodeTickComponent {
     }
 
     var transform = self.Transform;
-    transform.EulerRadians
-        = new Vector3(0, transform.EulerRadians.Value.Y + 10 * mouseDeltaX, 0);
+    transform.LocalEulerRadians
+        = new Vector3(0, transform.LocalEulerRadians.Value.Y + 10 * mouseDeltaX, 0);
 
     this.prevMouseX_ = mouseX;
   }

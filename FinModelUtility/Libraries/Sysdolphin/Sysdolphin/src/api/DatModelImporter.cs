@@ -76,8 +76,8 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
       var (finParentBone, jObj) = boneQueue.Dequeue();
 
       var finBone = finParentBone.AddChild(jObj.Position);
-      finBone.LocalTransform.SetRotationRadians(jObj.RotationRadians);
-      finBone.LocalTransform.SetScale(jObj.Scale);
+      finBone.Transform.SetRotationRadians(jObj.RotationRadians);
+      finBone.Transform.SetScale(jObj.Scale);
       finBone.Name = jObj.Name;
 
       finBoneByJObj[jObj] = finBone;

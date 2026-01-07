@@ -145,7 +145,7 @@ public sealed class AssimpModelImporter : IModelImporter<AssimpModelFileBundle> 
       finBone.Name = name;
       finBoneByName[name] = finBone;
 
-      finBone.LocalTransform.SetMatrix(assNode.Transform);
+      finBone.Transform.SetMatrix(assNode.Transform);
 
       nodeAndBoneQueue.Enqueue(
           assNode.Children.Select(childNode

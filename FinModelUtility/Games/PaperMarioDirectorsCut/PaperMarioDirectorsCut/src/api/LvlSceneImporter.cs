@@ -256,8 +256,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
     // Bark
     {
       var barkRootBone = treeRootBone.AddChild(0, 0, 12);
-      barkRootBone.LocalTransform.SetRotationDegrees(0, 0, 45);
-      barkRootBone.LocalTransform.SetScale(1.5f, 1.5f, 2);
+      barkRootBone.Transform.SetRotationDegrees(0, 0, 45);
+      barkRootBone.Transform.SetScale(1.5f, 1.5f, 2);
 
       var barkTexture = treeMaterialManager.CreateTexture(
           FinImage.FromFile(
@@ -296,7 +296,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                                    (2, 1));
 
       var leavesBone2 = leavesRootBone.AddChild(new Vector3(0, 0, 12));
-      leavesBone2.LocalTransform.EulerRadians = new Vector3(0, 0, MathF.PI / 2);
+      leavesBone2.Transform.LocalEulerRadians = new Vector3(0, 0, MathF.PI / 2);
       leavesMesh.AddSimpleCylinder(treeSkin,
                                    new Vector3(-80, -80, 20),
                                    new Vector3(80, 80, 180),

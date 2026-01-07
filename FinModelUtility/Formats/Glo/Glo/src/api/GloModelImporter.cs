@@ -219,12 +219,12 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
           var scale = gloMesh.ScaleKeys[0].Scale;
 
           var finBone = parentFinBone.AddChild(position);
-          finBone.LocalTransform.SetRotationRadians(
+          finBone.Transform.SetRotationRadians(
               rotation.X,
               rotation.Y,
               rotation.Z);
           // This is weird, but seems to be right for levels.
-          finBone.LocalTransform.SetScale(scale.Y, scale.X, scale.Z);
+          finBone.Transform.SetScale(scale.Y, scale.X, scale.Z);
           finBone.Name = name + "_bone";
           finBone.IgnoreParentScale = true;
           meshesAndBones.Add((gloMesh, finBone));
