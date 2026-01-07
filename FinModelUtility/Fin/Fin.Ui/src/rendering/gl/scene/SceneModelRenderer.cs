@@ -81,8 +81,6 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
   public ISkeletonRenderer SkeletonRenderer { get; }
 
   public void Render() {
-    GlTransform.PushMatrix();
-
     var model = this.sceneModel_.Model;
     var skeleton = model.Skeleton;
 
@@ -157,7 +155,5 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
 
       GlTransform.PopMatrix();
     }
-
-    GlTransform.PopMatrix();
   }
 }

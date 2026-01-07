@@ -54,14 +54,10 @@ public static class GlTransform {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static void PushMatrix() {
-    currentMatrix_.Push();
-  }
+  public static void PushMatrix() => currentMatrix_.Push();
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static void PopMatrix() {
-    currentMatrix_.Pop();
-  }
+  public static void PopMatrix() => currentMatrix_.Pop();
 
   public static void MatrixMode(TransformMatrixMode mode)
     => currentMatrix_ = mode switch {

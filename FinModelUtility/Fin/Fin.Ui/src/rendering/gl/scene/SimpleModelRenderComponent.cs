@@ -83,8 +83,6 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   public void Render(ISceneNodeInstance _) => this.Render();
 
   public void Render(bool allowUpdatingState = true) {
-    GlTransform.PushMatrix();
-
     var model = this.Model;
     var skeleton = model.Skeleton;
 
@@ -149,8 +147,6 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     if (FinConfig.ShowSkeleton || this.isBoneSelected_) {
       this.SkeletonRenderer.Render();
     }
-
-    GlTransform.PopMatrix();
   }
 
   public IReadOnlyModel Model { get; }
