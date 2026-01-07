@@ -10,6 +10,9 @@ using fin.shaders.glsl;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
+  /// <summary>
+  ///   Mesh renderer that merges primitives by material.
+  /// </summary>
   private sealed class MergedMaterialMeshRenderer(
       IReadOnlyModel model,
       IReadOnlyMesh mesh,

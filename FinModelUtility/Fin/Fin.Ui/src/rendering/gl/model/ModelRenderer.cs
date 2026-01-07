@@ -17,10 +17,8 @@ namespace fin.ui.rendering.gl.model;
 public sealed partial class ModelRenderer
     : IDynamicModelRenderer {
   private readonly IReadOnlyList<IReadOnlyBone> bonesUsedByVertices_;
-
   private readonly Matrix4x4[] boneMatrices_;
-
-  private readonly IDynamicModelRenderer impl_;
+  private readonly MergedMaterialMeshesRenderer impl_;
 
   public static IModelRenderer CreateStatic(
       IReadOnlyModel model,

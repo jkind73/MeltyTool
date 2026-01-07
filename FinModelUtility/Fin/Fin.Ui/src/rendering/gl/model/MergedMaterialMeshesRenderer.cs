@@ -9,6 +9,9 @@ using fin.image.util;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
+  /// <summary>
+  ///   Model renderer that merges primitives by material.
+  /// </summary>
   private sealed class MergedMaterialMeshesRenderer : IDynamicModelRenderer {
     private readonly bool dynamic_;
     private readonly IReadOnlyTextureTransformManager? textureTransformManager_;

@@ -6,7 +6,10 @@ using fin.ui.rendering.gl.material;
 namespace fin.ui.rendering.gl.model;
 
 public partial class ModelRenderer {
-  private sealed class PrimitivesWithCommonMaterialRenderer : IDisposable {
+  /// <summary>
+  ///   Renderer for all primitives sharing a material in a single mesh.
+  /// </summary>
+  private sealed class MergedMaterialPrimitivesRenderer : IDisposable {
     private readonly IGlBufferRenderer bufferRenderer_;
     private bool isSelected_;
 
@@ -14,7 +17,7 @@ public partial class ModelRenderer {
     public IReadOnlyMaterial? Material { get; }
     public IGlMaterialShader MaterialShader { get; }
 
-    public PrimitivesWithCommonMaterialRenderer(
+    public MergedMaterialPrimitivesRenderer(
         IReadOnlyTextureTransformManager? textureTransformManager,
         IGlBufferManager bufferManager,
         IReadOnlyModel model,
@@ -39,7 +42,7 @@ public partial class ModelRenderer {
                                   false);
     }
 
-    ~PrimitivesWithCommonMaterialRenderer()
+    ~MergedMaterialPrimitivesRenderer()
       => this.ReleaseUnmanagedResources_();
 
     public void Dispose() {
