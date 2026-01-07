@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using fin.data.indexable;
 using fin.math.matrix.four;
 using fin.model.accessor;
-using fin.model.util;
 
 namespace fin.model.skeleton;
 
