@@ -1,5 +1,6 @@
 ﻿using fin.config;
 using fin.data.dictionaries;
+using fin.data.indexable;
 using fin.model;
 using fin.model.skeleton;
 using fin.model.util;
@@ -8,11 +9,11 @@ using fin.ui.rendering.gl.model;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneModelRenderer : IRenderable, IDisposable {
+public sealed class SceneModelRenderer : IRenderable {
   private readonly ISceneModelInstance sceneModel_;
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
-  private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
+  private readonly IndexableDictionary<IReadOnlyMesh, bool> hiddenMeshes_;
   private bool isBoneSelected_;
   private bool hadOverrides_;
 
@@ -24,7 +25,10 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
   public SceneModelRenderer(ISceneModelInstance sceneModel,
                             IReadOnlyLighting? lighting) {
     this.sceneModel_ = sceneModel;
+
     this.meshes_ = sceneModel.Model.Skin.Meshes.ToArray();
+    this.hiddenMeshes_
+        = new IndexableDictionary<IReadOnlyMesh, bool>(this.meshes_.Length);
 
     var model = sceneModel.Model;
     this.modelRenderer_ =
@@ -89,9 +93,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
 
     this.hiddenMeshes_.Clear();
     foreach (var mesh in this.meshes_) {
-      if (mesh.DefaultDisplayState == MeshDisplayState.HIDDEN) {
-        this.hiddenMeshes_.Add(mesh);
-      }
+      this.hiddenMeshes_[mesh]
+          = mesh.DefaultDisplayState == MeshDisplayState.HIDDEN;
     }
 
     var hasAnyOverrides = this.sceneModel_.SimpleBoneTransformView.HasAnyOverrides;
@@ -124,11 +127,8 @@ public sealed class SceneModelRenderer : IRenderable, IDisposable {
             continue;
           }
 
-          if (displayState == MeshDisplayState.HIDDEN) {
-            this.hiddenMeshes_.Add(meshTracks.Mesh);
-          } else {
-            this.hiddenMeshes_.Remove(meshTracks.Mesh);
-          }
+          this.hiddenMeshes_[meshTracks.Mesh]
+              = displayState == MeshDisplayState.HIDDEN;
         }
       }
     } else {

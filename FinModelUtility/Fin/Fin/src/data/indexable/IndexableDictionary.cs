@@ -53,7 +53,10 @@ public sealed class IndexableDictionary<TIndexable, TValue>(int capacity)
 
   public int Count { get; private set; }
 
-  public void Clear() => this.impl_.Clear();
+  public void Clear() {
+    this.impl_.Clear();
+    this.impl_.EnsureCapacity(capacity);
+  }
 
   public TValue this[int index] {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

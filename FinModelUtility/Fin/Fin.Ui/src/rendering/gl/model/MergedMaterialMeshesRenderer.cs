@@ -1,9 +1,10 @@
-﻿using fin.math;
+﻿using fin.data.indexable;
+using fin.image.util;
+using fin.math;
 using fin.model;
 using fin.model.util;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
-using fin.image.util;
 
 
 namespace fin.ui.rendering.gl.model;
@@ -100,7 +101,7 @@ public partial class ModelRenderer {
 
     public IReadOnlyModel Model { get; }
 
-    public IReadOnlySet<IReadOnlyMesh>? HiddenMeshes { get; set; }
+    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 
     public IReadOnlyList<MergedMaterialMeshRenderer> MeshRenderers
       => this.materialMeshRenderers_;

@@ -1,5 +1,6 @@
 ﻿using fin.animation;
 using fin.config;
+using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
@@ -13,7 +14,7 @@ namespace fin.ui.rendering.gl.scene;
 public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
-  private readonly HashSet<IReadOnlyMesh> hiddenMeshes_ = [];
+  private readonly IndexableDictionary<IReadOnlyMesh, bool> hiddenMeshes_;
   private bool isBoneSelected_;
   private bool hadOverrides_;
 
@@ -22,7 +23,10 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   public SimpleModelRenderComponent(IReadOnlyModel model,
                                     IReadOnlyLighting? lighting) {
     this.Model = model;
+
     this.meshes_ = model.Skin.Meshes.ToArray();
+    this.hiddenMeshes_
+        = new IndexableDictionary<IReadOnlyMesh, bool>(this.meshes_.Length);
 
     this.SimpleBoneTransformView = new();
 
@@ -92,9 +96,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     if (allowUpdatingState) {
       this.hiddenMeshes_.Clear();
       foreach (var mesh in this.meshes_) {
-        if (mesh.DefaultDisplayState == MeshDisplayState.HIDDEN) {
-          this.hiddenMeshes_.Add(mesh);
-        }
+        this.hiddenMeshes_[mesh]
+            = mesh.DefaultDisplayState == MeshDisplayState.HIDDEN;
       }
 
       var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
@@ -128,11 +131,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
               continue;
             }
 
-            if (displayState == MeshDisplayState.HIDDEN) {
-              this.hiddenMeshes_.Add(meshTracks.Mesh);
-            } else {
-              this.hiddenMeshes_.Remove(meshTracks.Mesh);
-            }
+            this.hiddenMeshes_[meshTracks.Mesh]
+                = displayState == MeshDisplayState.HIDDEN;
           }
         }
       } else {

@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 
+using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
@@ -88,7 +89,7 @@ public sealed partial class ModelRenderer
 
   public IReadOnlyModel Model => this.impl_.Model;
 
-  public IReadOnlySet<IReadOnlyMesh>? HiddenMeshes {
+  public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
     get => this.impl_.HiddenMeshes;
     set => this.impl_.HiddenMeshes = value;
   }

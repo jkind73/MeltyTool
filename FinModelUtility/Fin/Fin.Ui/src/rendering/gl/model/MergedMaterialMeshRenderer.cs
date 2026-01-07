@@ -1,10 +1,11 @@
 ﻿using fin.data.dictionaries;
+using fin.data.indexable;
+using fin.image.util;
 using fin.math;
 using fin.model;
 using fin.model.util;
-using fin.ui.rendering.gl.material;
-using fin.image.util;
 using fin.shaders.glsl;
+using fin.ui.rendering.gl.material;
 
 
 namespace fin.ui.rendering.gl.model;
@@ -92,9 +93,11 @@ public partial class ModelRenderer {
     public IReadOnlyList<MergedMaterialPrimitivesRenderer>?
         MaterialRenderers => this.materialMeshRenderers_;
 
-    public void Render(IReadOnlyMesh? selectedMesh,
-                       IReadOnlySet<IReadOnlyMesh>? hiddenMeshes) {
-      if (hiddenMeshes?.Contains(mesh) ?? false) {
+    public void Render(
+        IReadOnlyMesh? selectedMesh,
+        IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? hiddenMeshes) {
+      if ((hiddenMeshes?.TryGetValue(mesh, out var isHidden) ?? false) &&
+          isHidden) {
         return;
       }
 
