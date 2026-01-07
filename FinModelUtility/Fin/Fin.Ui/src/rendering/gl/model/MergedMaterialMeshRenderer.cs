@@ -20,7 +20,7 @@ public partial class ModelRenderer {
       IGlBufferManager bufferManager,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
       : IDisposable {
-    private PrimitivesWithCommonMaterialRenderer[]? materialMeshRenderers_;
+    private MergedMaterialPrimitivesRenderer[]? materialMeshRenderers_;
 
     private MergedMaterialMeshRenderer[] children_
         = mesh.SubMeshes.Select(subMesh => new MergedMaterialMeshRenderer(
@@ -54,7 +54,7 @@ public partial class ModelRenderer {
       }
 
       var materialMeshRenderers
-          = new List<PrimitivesWithCommonMaterialRenderer>();
+          = new List<MergedMaterialPrimitivesRenderer>();
       foreach (var material in materialQueue) {
         var primitives = primitivesByMaterial[material];
         if (!primitiveMerger.TryToMergePrimitives(
@@ -63,7 +63,7 @@ public partial class ModelRenderer {
           continue;
         }
 
-        materialMeshRenderers.Add(new PrimitivesWithCommonMaterialRenderer(
+        materialMeshRenderers.Add(new MergedMaterialPrimitivesRenderer(
                                       textureTransformManager,
                                       bufferManager,
                                       model,
@@ -89,7 +89,7 @@ public partial class ModelRenderer {
       }
     }
 
-    public IReadOnlyList<PrimitivesWithCommonMaterialRenderer>?
+    public IReadOnlyList<MergedMaterialPrimitivesRenderer>?
         MaterialRenderers => this.materialMeshRenderers_;
 
     public void Render(IReadOnlyMesh? selectedMesh,

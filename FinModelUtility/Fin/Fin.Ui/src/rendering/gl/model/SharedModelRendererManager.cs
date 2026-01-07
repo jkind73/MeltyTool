@@ -19,7 +19,7 @@ public partial class ModelRenderer {
   private class MeshRendererTuple {
     public required TransformTuple TransformTuple { get; init; }
     public required IModelRenderer ModelRenderer { get; init; }
-    public required PrimitivesWithCommonMaterialRenderer MaterialRenderer { get; init; }
+    public required MergedMaterialPrimitivesRenderer MaterialRenderer { get; init; }
   }
 
   private static readonly List<TransformTuple> transformTuples_ = new();
