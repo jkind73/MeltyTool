@@ -11,6 +11,7 @@ namespace fin.math.transform;
 [GenerateReadOnly]
 public partial interface ITransform3d
     : ITransform<Vector3, Quaternion?, Vector3?> {
+  bool IgnoreParentScale { get; set; }
   new Matrix4x4 WorldMatrix { get; }
 
   new Matrix4x4 LocalMatrix { get; }
@@ -35,6 +36,14 @@ public sealed class Transform3d : ITransform3d {
     this.parent_?.children_.Add(this);
   }
 
+  public bool IgnoreParentScale {
+    get;
+    set {
+      field = value;
+      this.MarkLocalDirty_();
+    }
+  }
+
   public Matrix4x4 WorldMatrix {
     get {
       if (!this.isWorldMatrixDirty_) {
@@ -44,7 +53,12 @@ public sealed class Transform3d : ITransform3d {
       this.isWorldMatrixDirty_ = false;
 
       if (this.parent_ != null) {
-        return field = this.LocalMatrix * this.parent_.WorldMatrix;
+        var parentWorldMatrix = this.parent_.WorldMatrix;
+        if (this.IgnoreParentScale) {
+          parentWorldMatrix = parentWorldMatrix.FilterTrs(true, true, false);
+        }
+
+        return field = this.LocalMatrix * parentWorldMatrix;
       }
 
       return field = this.LocalMatrix;

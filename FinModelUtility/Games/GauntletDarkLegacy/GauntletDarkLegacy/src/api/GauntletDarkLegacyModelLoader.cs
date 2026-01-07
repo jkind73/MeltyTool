@@ -299,7 +299,7 @@ public sealed class GauntletDarkLegacyModelImporter
           finAnimation.FrameCount
               = Math.Max(finAnimation.FrameCount, totalSequenceFrameCount);
 
-          var localPosition = finBone.LocalTransform.Translation;
+          var localPosition = finBone.Transform.LocalTranslation;
 
           var rotationKeyframes
               = finBoneTracks.UseSeparateEulerRadiansKeyframes(

@@ -128,7 +128,7 @@ public sealed class SkeletonRenderer
     this.scaleByBone_ = scaleByBone;
     foreach (var bone in skeleton.Bones) {
       if (bone.Children is [var childBone]) {
-        var length = childBone.LocalTransform.Translation.X;
+        var length = childBone.Transform.LocalTranslation.X;
         scaleByBone[bone] = new Vector3(length);
         continue;
       }

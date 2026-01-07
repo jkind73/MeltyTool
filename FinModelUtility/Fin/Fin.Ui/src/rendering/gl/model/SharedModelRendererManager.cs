@@ -83,7 +83,7 @@ public partial class ModelRenderer {
 
     var cameraPosition = Camera.Instance.Position;
     foreach (var tuple in transformTuples_) {
-      tuple.Distance = (cameraPosition - tuple.Transform.Translation).Length();
+      tuple.Distance = (cameraPosition - tuple.Transform.LocalTranslation).Length();
     }
 
     materialRendererTuples_.Sort((lhs, rhs) => {

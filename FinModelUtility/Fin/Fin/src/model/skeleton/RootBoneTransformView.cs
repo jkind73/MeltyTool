@@ -28,7 +28,7 @@ public sealed class RootBoneTransformView : IBoneTransformView {
       return false;
     }
 
-    translation = this.bone_.LocalTransform.Translation;
+    translation = this.bone_.Transform.LocalTranslation;
     return true;
   }
 
@@ -38,7 +38,7 @@ public sealed class RootBoneTransformView : IBoneTransformView {
       return false;
     }
 
-    rotation = this.bone_.LocalTransform.Rotation ?? Quaternion.Identity;
+    rotation = this.bone_.Transform.LocalRotation ?? Quaternion.Identity;
     return true;
   }
 
@@ -48,7 +48,7 @@ public sealed class RootBoneTransformView : IBoneTransformView {
       return false;
     }
 
-    scale = this.bone_.LocalTransform.Scale ?? Vector3.One;
+    scale = this.bone_.Transform.LocalScale ?? Vector3.One;
     return true;
   }
 }

@@ -92,7 +92,11 @@ public partial class ModelImpl<TVertex> {
       }
 
       public ITransform3d Transform { get; }
-      public bool IgnoreParentScale { get; set; }
+
+      public bool IgnoreParentScale {
+        get => this.Transform.IgnoreParentScale;
+        set => this.Transform.IgnoreParentScale = value;
+      }
 
       public IBone AlwaysFaceTowardsCamera(
           FaceTowardsCameraType faceTowardsCameraType)

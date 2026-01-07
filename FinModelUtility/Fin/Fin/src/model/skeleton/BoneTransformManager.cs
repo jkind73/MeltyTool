@@ -184,7 +184,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
             modelMatrix);
       } else {
         boneToWorldMatrix.Impl = parentMatrix;
-        boneToWorldMatrix.MultiplyInPlace(bone.LocalTransform.LocalMatrix);
+        boneToWorldMatrix.MultiplyInPlace(bone.Transform.LocalMatrix);
         this.bonesToInverseWorldMatrices_[bone]
             = boneToWorldMatrix.CloneAndInvert();
       }

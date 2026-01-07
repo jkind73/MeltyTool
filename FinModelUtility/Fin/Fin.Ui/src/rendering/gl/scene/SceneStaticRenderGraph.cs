@@ -40,7 +40,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     foreach (var element in this.elements_) {
       var transform = element.Renderable.Transform;
       element.Distance = transform != null
-          ? (camera.Position - element.Renderable.Transform.Translation)
+          ? (camera.Position - element.Renderable.Transform.LocalTranslation)
           .LengthSquared()
           : 0;
     }
