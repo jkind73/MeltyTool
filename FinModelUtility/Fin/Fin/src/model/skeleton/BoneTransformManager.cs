@@ -171,41 +171,20 @@ public sealed class BoneTransformManager : IBoneTransformManager {
 
     foreach (var (bone, boneToWorldMatrix, parentBoneToWorldMatrix) in this
                  .boneList_) {
+      var parentMatrix = parentBoneToWorldMatrix.Impl;
+      if (bone.IgnoreParentScale) {
+        parentMatrix = parentMatrix.FilterTrs(true, true, false);
+      }
+
       if (!isFirstPass) {
-        var parentMatrix = parentBoneToWorldMatrix.Impl;
-        if (bone.IgnoreParentScale) {
-          parentMatrix = parentMatrix.FilterTrs(true, true, false);
-        }
-        
         boneTransformView.TargetBone(bone);
         boneToWorldMatrix.Impl = BoneTransformUtils.CalculateBoneToWorldMatrix(
             boneTransformView,
             parentMatrix,
             modelMatrix);
       } else {
-        boneToWorldMatrix.CopyFrom(parentBoneToWorldMatrix);
-
-        var localTransform = bone.LocalTransform;
-        var localTranslation = localTransform.Translation;
-        var localRotation = localTransform.Rotation;
-        var localScale = localTransform.Scale;
-
-        if (bone is {
-                IgnoreParentScale: false,
-                FaceTowardsCameraType: FaceTowardsCameraType.NONE
-            }) {
-          var localMatrix = SystemMatrix4x4Util.FromTrs(localTranslation,
-            localRotation,
-            localScale);
-          boneToWorldMatrix.MultiplyInPlace(localMatrix);
-        } else {
-          boneToWorldMatrix.ApplyTrsWithFancyBoneEffects(bone,
-            localTranslation,
-            localRotation,
-            localScale,
-            true);
-        }
-
+        boneToWorldMatrix.Impl = parentMatrix;
+        boneToWorldMatrix.MultiplyInPlace(bone.LocalTransform.LocalMatrix);
         this.bonesToInverseWorldMatrices_[bone]
             = boneToWorldMatrix.CloneAndInvert();
       }
@@ -367,48 +346,4 @@ public sealed class BoneTransformManager : IBoneTransformManager {
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void ProjectNormal(IReadOnlyBone bone, ref Vector3 xyz)
     => ProjectionUtil.ProjectNormal(this.GetWorldMatrix(bone).Impl, ref xyz);
-}
-
-public static class BoneTransformManagerExtensions {
-  public static void ApplyTrsWithFancyBoneEffects(
-      this IFinMatrix4x4? matrix,
-      IReadOnlyBone bone,
-      in Vector3 localPosition,
-      in Quaternion? localRotation,
-      in Vector3? localScale,
-      bool isFirstPass) {
-    if (matrix == null) {
-      return;
-    }
-
-    // Applies translation first, so it's affected by parent rotation/scale.
-    var localTranslationMatrix =
-        SystemMatrix4x4Util.FromTranslation(localPosition);
-    matrix.MultiplyInPlace(localTranslationMatrix);
-
-    // Extracts translation/rotation/scale.
-    matrix.CopyTranslationInto(out var translationBuffer);
-    if (!(!isFirstPass &&
-          bone.TryGetFaceCameraQuaternion(out var rotationBuffer))) {
-      matrix.CopyRotationInto(out rotationBuffer);
-    }
-
-    Vector3 scaleBuffer;
-    if (bone.IgnoreParentScale) {
-      scaleBuffer = new Vector3(1);
-    } else {
-      matrix.CopyScaleInto(out scaleBuffer);
-    }
-
-    // Gets final matrix.
-    FinMatrix4x4Util.FromTrs(
-        translationBuffer,
-        rotationBuffer,
-        scaleBuffer,
-        matrix);
-    matrix.MultiplyInPlace(
-        SystemMatrix4x4Util.FromTrs(null,
-                                    localRotation,
-                                    localScale));
-  }
 }
