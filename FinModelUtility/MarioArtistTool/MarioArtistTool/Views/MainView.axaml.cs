@@ -115,7 +115,7 @@ public partial class MainView : UserControl {
 
             var characterObj = area.AddRootNode();
 
-            if (false) {
+            if (true) {
               var modelObj = characterObj.AddChildNode();
               modelObj.AddComponent(modelRenderComponent);
 
