@@ -30,12 +30,6 @@ public partial class UniversalAssetToolForm : Form {
 
     this.modelTabs_.OnAnimationSelected += animation =>
         this.sceneViewerPanel_.Animation = animation;
-    this.modelTabs_.OnBoneSelected += bone => {
-      var skeletonRenderer = this.sceneViewerPanel_.SkeletonRenderer;
-      if (skeletonRenderer != null) {
-        skeletonRenderer.SelectedBone = bone;
-      }
-    };
 
     this.modelToolStrip_.Progress.ProgressChanged +=
         (_, currentProgress) => {

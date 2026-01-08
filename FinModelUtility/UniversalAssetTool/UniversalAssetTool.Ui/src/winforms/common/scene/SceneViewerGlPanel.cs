@@ -217,9 +217,6 @@ public sealed class SceneViewerGlPanel : BGlPanel, ISceneViewer {
     set => this.viewerImpl_.Animation = value;
   }
 
-  public ISkeletonRenderer? SkeletonRenderer
-    => this.viewerImpl_.SkeletonRenderer;
-
   public IOrthoRenderable? BackdropRenderer {
     get => this.viewerImpl_.BackdropRenderer;
     set => this.viewerImpl_.BackdropRenderer = value;

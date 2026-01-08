@@ -37,9 +37,4 @@ public partial class ModelTabs : UserControl {
     add => this.animationsTab_.OnAnimationSelected += value;
     remove => this.animationsTab_.OnAnimationSelected -= value;
   }
-
-  public event SkeletonTab.BoneSelected OnBoneSelected {
-    add => this.skeletonTab_.OnBoneSelected += value;
-    remove => this.skeletonTab_.OnBoneSelected -= value;
-  }
 }

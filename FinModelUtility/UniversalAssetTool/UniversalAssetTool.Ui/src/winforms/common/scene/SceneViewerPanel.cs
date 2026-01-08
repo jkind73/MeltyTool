@@ -34,8 +34,6 @@ public partial class SceneViewerPanel : UserControl, ISceneViewer {
   public IAnimationPlaybackManager? AnimationPlaybackManager 
     => this.impl_.AnimationPlaybackManager;
 
-  public ISkeletonRenderer? SkeletonRenderer => this.impl_.SkeletonRenderer;
-
   public IOrthoRenderable? BackdropRenderer {
     get => this.impl_.BackdropRenderer;
     set => this.impl_.BackdropRenderer = value;

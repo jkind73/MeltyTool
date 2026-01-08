@@ -13,6 +13,5 @@ public interface ISceneViewer {
   IAnimatableModel? FirstSceneModel { get; }
   IAnimationPlaybackManager? AnimationPlaybackManager { get; }
   IReadOnlyModelAnimation? Animation { get; set; }
-  ISkeletonRenderer? SkeletonRenderer { get; }
   IOrthoRenderable? BackdropRenderer { get; set; }
 }

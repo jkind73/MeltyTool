@@ -81,13 +81,6 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public IAnimationPlaybackManager? AnimationPlaybackManager
     => this.FirstSceneModel?.AnimationPlaybackManager;
 
-  public ISkeletonRenderer? SkeletonRenderer
-    => this.sceneRenderer_
-           ?.AreaRenderers.FirstOrDefault()
-           ?.RootNodeRenderers.FirstOrDefault()
-           ?.ModelRenderers.FirstOrDefault()
-           ?.SkeletonRenderer;
-
   public IReadOnlyModelAnimation? Animation {
     get => this.FirstSceneModel?.Animation;
     set {
