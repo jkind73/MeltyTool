@@ -60,9 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Libraries\F3dzex2\F3dzex2\F3dzex2.csproj" />
-    <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.8.2" />
+	<ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
+	<ProjectReference Include="..\..\..\Fin\Fin.Ui\Fin.Ui.csproj" />
   </ItemGroup>
 </Project>

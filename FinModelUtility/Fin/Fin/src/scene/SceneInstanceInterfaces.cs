@@ -52,24 +52,4 @@ public partial interface ISceneNodeInstance : ITickable, IDisposable {
   new IReadOnlyList<ISceneNodeInstance> ChildNodes { get; }
 
   new Transform3d Transform { get; }
-
-  new IReadOnlyList<ISceneModelInstance> Models { get; }
-}
-
-/// <summary>
-///   An instance of a model rendered in a scene. This will automatically
-///   take care of rendering animations, and also supports adding sub-models
-///   onto bones.
-/// </summary>
-[GenerateReadOnly]
-public partial interface ISceneModelInstance
-    : IAnimatableModel, ITickable, IDisposable {
-  new IReadOnlySceneModel Definition { get; }
-
-  new IReadOnlyListDictionary<IReadOnlyBone, ISceneModelInstance> Children {
-    get;
-  }
-
-  new SimpleBoneTransformView SimpleBoneTransformView { get; }
-  new ITextureTransformManager TextureTransformManager { get; }
 }

@@ -85,20 +85,11 @@ public static class SceneExtensions {
 
   public static IEnumerable<IReadOnlyModel> EnumerateAllModels(
       this IReadOnlyScene scene) {
-    var queue = new FinQueue<IReadOnlySceneModel>();
     foreach (var node in scene.EnumerateAllNodes()) {
-      queue.Enqueue(node.Models);
-
       foreach (var modelRenderComponent in node.Components
-                                               .WhereIs<ISceneNodeComponent,
-                                                   IModelRenderComponent>()) {
+                                               .OfType<IModelRenderComponent>()) {
         yield return modelRenderComponent.Model;
       }
-    }
-
-    while (queue.TryDequeue(out var model)) {
-      yield return model.Model;
-      queue.Enqueue(model.Children.Values);
     }
   }
 

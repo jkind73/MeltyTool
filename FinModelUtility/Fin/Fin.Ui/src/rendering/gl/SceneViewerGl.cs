@@ -6,7 +6,6 @@ using fin.model;
 using fin.scene;
 using fin.scene.components;
 using fin.services;
-using fin.ui.rendering.gl.model;
 using fin.ui.rendering.gl.scene;
 using fin.ui.rendering.viewer;
 using fin.util.time;
@@ -103,10 +102,11 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public int Height { get; set; }
 
   public float ViewerScale { get; set; } = 1;
-
   public float GlobalScale { get; set; } = 1;
+  
   public float NearPlane { get; set; }
   public float FarPlane { get; set; }
+  
   public bool ShowGrid { get; set; }
   public IOrthoRenderable? BackdropRenderer { get; set; } = new SkyboxRenderer();
 

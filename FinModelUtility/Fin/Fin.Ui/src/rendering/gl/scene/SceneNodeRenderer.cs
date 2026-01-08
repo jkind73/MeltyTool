@@ -4,18 +4,12 @@ namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneNodeRenderer : IRenderable {
   private readonly ISceneNodeInstance sceneNode_;
-  private readonly SceneModelRenderer[] modelRenderers_;
   private readonly SceneNodeRenderer[] childNodeRenderers_;
 
   private IReadOnlySceneNode? selectedNode_;
 
   public SceneNodeRenderer(ISceneNodeInstance sceneNode) {
     this.sceneNode_ = sceneNode;
-    this.modelRenderers_
-        = sceneNode
-          .Models
-          .Select(model => new SceneModelRenderer(model))
-          .ToArray();
     this.childNodeRenderers_
         = sceneNode
           .ChildNodes
@@ -34,10 +28,6 @@ public sealed class SceneNodeRenderer : IRenderable {
   }
 
   private void ReleaseUnmanagedResources_() {
-    foreach (var modelRenderer in this.ModelRenderers) {
-      modelRenderer.Dispose();
-    }
-
     foreach (var child in this.ChildNodeRenderers) {
       child.Dispose();
     }
@@ -45,9 +35,6 @@ public sealed class SceneNodeRenderer : IRenderable {
 
   public IReadOnlyList<SceneNodeRenderer> ChildNodeRenderers
     => this.childNodeRenderers_;
-
-  public IReadOnlyList<SceneModelRenderer> ModelRenderers
-    => this.modelRenderers_;
 
   public void Render() {
     var isSelected = this.selectedNode_ == this.sceneNode_.Definition;
@@ -65,10 +52,6 @@ public sealed class SceneNodeRenderer : IRenderable {
   private void RenderImpl_() {
     GlTransform.PushMatrix();
     GlTransform.MultMatrix(this.sceneNode_.Transform.LocalMatrix);
-
-    foreach (var model in this.modelRenderers_) {
-      model.Render();
-    }
 
     foreach (var component in this.sceneNode_.Definition.Components) {
       if (component is ISceneNodeRenderComponent renderComponent) {

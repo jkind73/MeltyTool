@@ -9,7 +9,6 @@ namespace fin.scene;
 public partial class SceneImpl {
   private class SceneNodeImpl : ISceneNode {
     private readonly List<ISceneNode> childNodes_ = [];
-    private readonly List<ISceneModel> models_ = [];
     private readonly List<ISceneNodeComponent> components_ = [];
 
     public void Dispose() {
@@ -66,14 +65,6 @@ public partial class SceneImpl {
     public ISceneNode SetScale(float x, float y, float z) {
       this.Scale = new Vector3(x, y, z);
       return this;
-    }
-
-    public IReadOnlyList<ISceneModel> Models => this.models_;
-
-    public ISceneModel AddSceneModel(IReadOnlyModel model) {
-      var sceneModel = new SceneModelImpl(model);
-      this.models_.Add(sceneModel);
-      return sceneModel;
     }
 
     public IReadOnlyList<ISceneNodeComponent> Components => this.components_;

@@ -37,8 +37,8 @@ public static class SceneService {
           var area = scene.AddArea();
           var obj = area.AddRootNode();
 
-          var lighting = scene.CreateDefaultLighting(obj, [model]);
-          obj.AddComponent(new SimpleModelRenderComponent(model, lighting));
+          scene.CreateDefaultLighting(obj, [model]);
+          obj.AddComponent(new SimpleModelRenderComponent(model));
 
           OpenScene(fileTreeLeafNode, scene);
         };

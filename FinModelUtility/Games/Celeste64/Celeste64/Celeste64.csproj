@@ -10,7 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
+	<ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
+	<ProjectReference Include="..\..\..\Fin\Fin.Ui\Fin.Ui.csproj" />
   </ItemGroup>
 
 </Project>

@@ -25,9 +25,6 @@ public partial class SceneInstanceImpl {
                                                this,
                                                n))
                                    .ToArray();
-      this.Models = sceneObject.Models
-                               .Select(m => new SceneModelInstanceImpl(m))
-                               .ToArray();
     }
 
     ~SceneNodeInstanceImpl() => this.ReleaseUnmanagedResources_();
@@ -38,10 +35,6 @@ public partial class SceneInstanceImpl {
     }
 
     private void ReleaseUnmanagedResources_() {
-      foreach (var model in this.Models) {
-        model.Dispose();
-      }
-
       foreach (var child in this.ChildNodes) {
         child.Dispose();
       }
@@ -52,8 +45,6 @@ public partial class SceneInstanceImpl {
     public IReadOnlyList<ISceneNodeInstance> ChildNodes { get; }
 
     public Transform3d Transform { get; }
-
-    public IReadOnlyList<ISceneModelInstance> Models { get; }
 
     public void Tick() {
       foreach (var component in this.sceneObject_.Components) {

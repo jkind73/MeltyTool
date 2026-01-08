@@ -82,9 +82,6 @@ public partial interface ISceneNode : IDisposable, INamed {
 
   ISceneNode SetScale(float x, float y, float z);
 
-  new IReadOnlyList<ISceneModel> Models { get; }
-  ISceneModel AddSceneModel(IReadOnlyModel model);
-
   new IReadOnlyList<ISceneNodeComponent> Components { get; }
   ISceneNode AddComponent(ISceneNodeComponent component);
 }
@@ -98,20 +95,4 @@ public interface ISceneNodeTickComponent : ISceneNodeComponent {
 
 public interface ISceneNodeRenderComponent : ISceneNodeComponent {
   void Render(ISceneNodeInstance self);
-}
-
-/// <summary>
-///   An instance of a model rendered in a scene. This will automatically
-///   take care of rendering animations, and also supports adding sub-models
-///   onto bones.
-/// </summary>
-[GenerateReadOnly]
-public partial interface ISceneModel {
-  new IReadOnlyListDictionary<IReadOnlyBone, IReadOnlySceneModel> Children {
-    get;
-  }
-
-  ISceneModel AddModelOntoBone(IReadOnlyModel model, IReadOnlyBone bone);
-
-  new IReadOnlyModel Model { get; }
 }

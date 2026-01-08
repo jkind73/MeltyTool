@@ -115,7 +115,7 @@ public sealed class HWVisResource : HWXmlResource {
     var modelQueue = new Queue<(VisModel, VisSubModelRef?, bool)>();
     modelQueue.Enqueue((firstModel, null, true));
 
-    var attachmentPointMap = new NullFriendlyDictionary<string, (ISceneModel, IReadOnlyBone)>();
+    //var attachmentPointMap = new NullFriendlyDictionary<string, (ISceneModel, IReadOnlyBone)>();
 
     while (modelQueue.Count > 0) {
       var (visModel, subModelRef, flipFaces) = modelQueue.Dequeue();
@@ -135,7 +135,8 @@ public sealed class HWVisResource : HWXmlResource {
                                            flipFaces);
           var model = ugx.Mesh;
 
-          ISceneModel sceneModel;
+          // TODO: Support this again
+          /*ISceneModel sceneModel;
           var attachmentBoneName = subModelRef?.ToBone;
           if (attachmentBoneName != null) {
             var (parentSceneModel, attachmentPointBone)
@@ -150,7 +151,7 @@ public sealed class HWVisResource : HWXmlResource {
 
           foreach (var bone in model.Skeleton) {
             attachmentPointMap[bone.Name.AssertNonnull()] = (sceneModel, bone);
-          }
+          }*/
         } catch(Exception e) {
           ;
         }

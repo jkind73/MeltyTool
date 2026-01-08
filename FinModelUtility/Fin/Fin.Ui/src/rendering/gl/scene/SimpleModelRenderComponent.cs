@@ -20,8 +20,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
   private bool needsToAlwaysUpdateMatrices_;
 
-  public SimpleModelRenderComponent(IReadOnlyModel model,
-                                    IReadOnlyLighting? lighting) {
+  public SimpleModelRenderComponent(IReadOnlyModel model) {
     this.Model = model;
 
     this.meshes_ = model.Skin.Meshes.ToArray();

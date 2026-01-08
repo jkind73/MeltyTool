@@ -107,11 +107,9 @@ public partial class MainView : UserControl {
             config.MostRecentFileName = file.FullPath;
             config.Save();
 
-            var lightingObj = area.AddRootNode();
-            var lighting = scene.CreateDefaultLighting(lightingObj, [model]);
+            scene.CreateDefaultLighting(area.AddRootNode(), [model]);
 
-            var modelRenderComponent
-                = new SimpleModelRenderComponent(model, lighting);
+            var modelRenderComponent = new SimpleModelRenderComponent(model);
 
             var characterObj = area.AddRootNode();
 

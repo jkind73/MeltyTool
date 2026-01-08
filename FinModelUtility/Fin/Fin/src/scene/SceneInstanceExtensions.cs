@@ -21,20 +21,12 @@ public static class SceneInstanceExtensions {
 
   public static IEnumerable<IAnimatableModel> EnumerateAllAnimatableModels(
       this ISceneInstance scene) {
-    var queue = new FinQueue<ISceneModelInstance>();
     foreach (var node in scene.EnumerateAllNodes()) {
-      queue.Enqueue(node.Models);
-
       foreach (var modelRenderComponent
                in node.Definition.Components
                       .WhereIs<ISceneNodeComponent, IModelRenderComponent>()) {
         yield return modelRenderComponent;
       }
-    }
-
-    while (queue.TryDequeue(out var model)) {
-      yield return model;
-      queue.Enqueue(model.Children.Values);
     }
   }
 }
