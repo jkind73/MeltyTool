@@ -1,27 +1,25 @@
-﻿using fin.model;
-using fin.scene;
+﻿using fin.scene;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneNodeRenderer : IRenderable, IDisposable {
+public sealed class SceneNodeRenderer : IRenderable {
   private readonly ISceneNodeInstance sceneNode_;
   private readonly SceneModelRenderer[] modelRenderers_;
   private readonly SceneNodeRenderer[] childNodeRenderers_;
 
   private IReadOnlySceneNode? selectedNode_;
 
-  public SceneNodeRenderer(ISceneNodeInstance sceneNode,
-                           IReadOnlyLighting? lighting) {
+  public SceneNodeRenderer(ISceneNodeInstance sceneNode) {
     this.sceneNode_ = sceneNode;
     this.modelRenderers_
         = sceneNode
           .Models
-          .Select(model => new SceneModelRenderer(model, lighting))
+          .Select(model => new SceneModelRenderer(model))
           .ToArray();
     this.childNodeRenderers_
         = sceneNode
           .ChildNodes
-          .Select(n => new SceneNodeRenderer(n, lighting))
+          .Select(n => new SceneNodeRenderer(n))
           .ToArray();
 
     SelectedNodeService.OnNodeSelected += selectedNode

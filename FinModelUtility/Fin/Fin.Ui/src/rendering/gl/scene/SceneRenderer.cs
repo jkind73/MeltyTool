@@ -1,15 +1,15 @@
 ﻿using fin.scene;
+using fin.ui.rendering.gl.ubo;
 
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneRenderer : IRenderable, IDisposable {
-  public SceneRenderer(ISceneInstance scene) {
-    this.AreaRenderers
-        = scene.Areas
-               .Select(area => new SceneAreaRenderer(area, scene.Lighting))
-               .ToArray();
-  }
+public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
+  private LightsUbo? lightsUbo_;
+
+  public IReadOnlyList<SceneAreaRenderer> AreaRenderers { get; } = scene.Areas
+      .Select(area => new SceneAreaRenderer(area))
+      .ToArray();
 
   ~SceneRenderer() => this.ReleaseUnmanagedResources_();
 
@@ -19,14 +19,18 @@ public sealed class SceneRenderer : IRenderable, IDisposable {
   }
 
   private void ReleaseUnmanagedResources_() {
+    this.lightsUbo_?.Dispose();
+
     foreach (var areaRenderer in this.AreaRenderers) {
       areaRenderer.Dispose();
     }
   }
 
-  public IReadOnlyList<SceneAreaRenderer> AreaRenderers { get; }
-
   public void Render() {
+    this.lightsUbo_ ??= new LightsUbo();
+    this.lightsUbo_.UpdateData(scene.Lighting);
+    this.lightsUbo_.Bind();
+
     foreach (var areaRenderer in this.AreaRenderers) {
       areaRenderer.Render();
     }

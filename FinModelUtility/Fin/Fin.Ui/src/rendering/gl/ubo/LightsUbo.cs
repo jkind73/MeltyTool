@@ -31,11 +31,11 @@ public sealed class LightsUbo : IDisposable {
 
   private void ReleaseUnmanagedResources_() => this.impl_.Dispose();
 
-  public void UpdateData(bool useLighting, IReadOnlyLighting? lighting) {
+  public void UpdateData(IReadOnlyLighting? lighting) {
     var offset = 0;
     Span<byte> buffer = stackalloc byte[SIZE_OF_BUFFER];
 
-    if (!useLighting || lighting == null) {
+    if (lighting == null) {
       offset += SIZE_OF_LIGHT * MaterialConstants.MAX_LIGHTS +
                 UboUtil.SIZE_OF_VECTOR4;
       UboUtil.AppendFloat(buffer, ref offset, 0);

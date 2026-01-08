@@ -1,23 +1,21 @@
-﻿using fin.model;
-using fin.scene;
+﻿using fin.scene;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneAreaRenderer : IRenderable, IDisposable {
+public sealed class SceneAreaRenderer : IRenderable {
   private readonly SceneNodeRenderer[] rootNodeRenderers_;
 
-  public SceneAreaRenderer(ISceneAreaInstance sceneArea,
-                           IReadOnlyLighting? lighting) {
+  public SceneAreaRenderer(ISceneAreaInstance sceneArea) {
     var customSkybox = sceneArea.CustomSkyboxObject;
     this.CustomSkyboxRenderer = customSkybox != null
-        ? new SceneNodeRenderer(customSkybox, lighting)
+        ? new SceneNodeRenderer(customSkybox)
         : null;
 
     this.rootNodeRenderers_
         = sceneArea
           .RootNodes
           .Where(obj => obj != customSkybox)
-          .Select(obj => new SceneNodeRenderer(obj, lighting))
+          .Select(obj => new SceneNodeRenderer(obj))
           .ToArray();
   }
 

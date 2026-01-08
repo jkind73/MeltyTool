@@ -23,30 +23,24 @@ public sealed partial class ModelRenderer
 
   public static IModelRenderer CreateStatic(
       IReadOnlyModel model,
-      IReadOnlyLighting? lighting = null,
       IReadOnlyBoneTransformManager? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
-                         lighting,
                          boneTransformManager,
                          textureTransformManager);
 
   public static IDynamicModelRenderer CreateDynamic(
       IReadOnlyModel model,
-      IReadOnlyLighting? lighting = null,
       IReadOnlyBoneTransformManager? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
     => new ModelRenderer(model,
-                         lighting,
                          boneTransformManager,
                          textureTransformManager,
                          true);
 
 
   private MatricesUbo? matricesUbo_;
-  private LightsUbo? lightsUbo_;
   private readonly IReadOnlyModel model_;
-  private readonly IReadOnlyLighting? lighting_;
   private readonly IReadOnlyBoneTransformManager? boneTransformManager_;
 
   /// <summary>
@@ -54,15 +48,12 @@ public sealed partial class ModelRenderer
   ///
   ///   NOTE: This will only be valid in the GL context this was first rendered in!
   /// </summary>
-  public ModelRenderer(IReadOnlyModel model,
-                       IReadOnlyLighting? lighting = null,
-                       IReadOnlyBoneTransformManager? boneTransformManager
-                           = null,
-                       IReadOnlyTextureTransformManager? textureTransformManager
-                           = null,
-                       bool dynamic = false) {
+  public ModelRenderer(
+      IReadOnlyModel model,
+      IReadOnlyBoneTransformManager? boneTransformManager = null,
+      IReadOnlyTextureTransformManager? textureTransformManager = null,
+      bool dynamic = false) {
     this.model_ = model;
-    this.lighting_ = lighting;
     this.boneTransformManager_ = boneTransformManager;
 
     this.bonesUsedByVertices_ = model.Skin.BonesUsedByVertices.ToArray();
@@ -84,7 +75,7 @@ public sealed partial class ModelRenderer
   private void ReleaseUnmanagedResources_() {
     this.impl_.Dispose();
     this.matricesUbo_?.Dispose();
-    this.lightsUbo_?.Dispose();
+    this.LightsUbo?.Dispose();
   }
 
   public IReadOnlyModel Model => this.impl_.Model;
@@ -94,7 +85,7 @@ public sealed partial class ModelRenderer
     set => this.impl_.HiddenMeshes = value;
   }
 
-  public bool UseLighting { get; set; }
+  public LightsUbo? LightsUbo { get; set; }
 
   public void UpdateBuffer() => this.impl_.UpdateBuffer();
 
@@ -114,17 +105,13 @@ public sealed partial class ModelRenderer
 
     this.matricesUbo_ ??= new(this.model_.Skin.BonesUsedByVertices.Count);
 
-    // TODO: This should be shared across all models with the same lighting
-    this.lightsUbo_ ??= new LightsUbo();
-
     this.matricesUbo_.UpdateData(GlTransform.ModelMatrix,
                                  GlTransform.ViewMatrix,
                                  GlTransform.ProjectionMatrix,
                                  this.boneMatrices_);
     this.matricesUbo_.Bind();
 
-    this.lightsUbo_.UpdateData(this.UseLighting, this.lighting_);
-    this.lightsUbo_.Bind();
+    this.LightsUbo?.Bind();
 
     this.impl_.Render();
   }

@@ -47,11 +47,9 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
 
     this.modelRenderer_ =
         new ModelRenderer(model,
-                          lighting,
                           this.BoneTransformManager,
                           this.TextureTransformManager) {
             HiddenMeshes = this.hiddenMeshes_,
-            UseLighting = new UseLightingDetector().ShouldUseLightingFor(model)
         };
 
     this.SkeletonRenderer

@@ -4,7 +4,7 @@ using fin.ui.rendering.gl.material;
 
 namespace fin.ui.rendering.gl.model;
 
-public interface IModelRenderer : IRenderable, IDisposable {
+public interface IModelRenderer : IRenderable {
   IReadOnlyModel Model { get; }
   IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 

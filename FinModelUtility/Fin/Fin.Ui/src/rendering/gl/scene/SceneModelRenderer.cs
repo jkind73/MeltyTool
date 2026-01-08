@@ -22,8 +22,7 @@ public sealed class SceneModelRenderer : IRenderable {
   private readonly List<(IReadOnlyBone, SceneModelRenderer[])>
       children_ = [];
 
-  public SceneModelRenderer(ISceneModelInstance sceneModel,
-                            IReadOnlyLighting? lighting) {
+  public SceneModelRenderer(ISceneModelInstance sceneModel) {
     this.sceneModel_ = sceneModel;
 
     this.meshes_ = sceneModel.Model.Skin.Meshes.ToArray();
@@ -33,11 +32,9 @@ public sealed class SceneModelRenderer : IRenderable {
     var model = sceneModel.Model;
     this.modelRenderer_ =
         new ModelRenderer(model,
-                            lighting,
-                            sceneModel.BoneTransformManager,
-                            sceneModel.TextureTransformManager) {
+                          sceneModel.BoneTransformManager,
+                          sceneModel.TextureTransformManager) {
             HiddenMeshes = this.hiddenMeshes_,
-            UseLighting = new UseLightingDetector().ShouldUseLightingFor(model)
         };
 
     this.SkeletonRenderer
@@ -57,7 +54,7 @@ public sealed class SceneModelRenderer : IRenderable {
     foreach (var (bone, boneChildren) in sceneModel.Children.GetPairs()) {
       this.children_.Add(
           (bone,
-           boneChildren.Select(child => new SceneModelRenderer(child, lighting))
+           boneChildren.Select(child => new SceneModelRenderer(child))
                        .ToArray()));
     }
 
