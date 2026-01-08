@@ -32,6 +32,16 @@ public partial class ModelRenderer {
                                     textureTransformManager))
               .ToArray();
 
+    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
+      get;
+      set {
+        field = value;
+        foreach (var child in this.children_) {
+          child.HiddenMeshes = value;
+        }
+      }
+    }
+
     // Generates buffer manager and model within the current GL context.
     public void GenerateModelIfNull() {
       if (this.materialMeshRenderers_ != null) {
@@ -71,7 +81,9 @@ public partial class ModelRenderer {
                                       modelRequirements,
                                       mesh,
                                       material,
-                                      mergedPrimitives));
+                                      mergedPrimitives) {
+                                      HiddenMeshes = this.HiddenMeshes
+                                  });
       }
 
       this.materialMeshRenderers_ = materialMeshRenderers.ToArray();
@@ -93,31 +105,15 @@ public partial class ModelRenderer {
     public IReadOnlyList<MergedMaterialPrimitivesRenderer>?
         MaterialRenderers => this.materialMeshRenderers_;
 
-    public void Render(
-        IReadOnlyMesh? selectedMesh,
-        IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? hiddenMeshes) {
-      if ((hiddenMeshes?.TryGetValue(mesh, out var isHidden) ?? false) &&
-          isHidden) {
-        return;
-      }
-
+    public void Render() {
       this.GenerateModelIfNull();
 
-      var isSelected = selectedMesh == mesh;
       foreach (var materialMeshRenderer in this.materialMeshRenderers_!) {
-        if (isSelected) {
-          GlUtil.RenderOutline(materialMeshRenderer.Render);
-        }
-
         materialMeshRenderer.Render();
-
-        if (isSelected) {
-          GlUtil.RenderHighlight(materialMeshRenderer.Render);
-        }
       }
 
       foreach (var child in this.children_) {
-        child.Render(selectedMesh, hiddenMeshes);
+        child.Render();
       }
     }
 

@@ -1,4 +1,5 @@
-﻿using fin.math;
+﻿using fin.data.indexable;
+using fin.math;
 using fin.model;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
@@ -11,11 +12,14 @@ public partial class ModelRenderer {
   /// </summary>
   private sealed class MergedMaterialPrimitivesRenderer : IDisposable {
     private readonly IGlBufferRenderer bufferRenderer_;
-    private bool isSelected_;
+    private bool isMaterialSelected_;
+    private bool isMeshSelected_;
 
     public IReadOnlyMesh Mesh { get; }
     public IReadOnlyMaterial? Material { get; }
     public IGlMaterialShader MaterialShader { get; }
+
+    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 
     public MergedMaterialPrimitivesRenderer(
         IReadOnlyTextureTransformManager? textureTransformManager,
@@ -37,9 +41,11 @@ public partial class ModelRenderer {
 
       SelectedMaterialsService.OnMaterialsSelected
           += selectedMaterials =>
-              this.isSelected_ = this.Material != null &&
+              this.isMaterialSelected_ = this.Material != null &&
                                  (selectedMaterials?.Contains(this.Material) ??
                                   false);
+      SelectedMeshService.OnMeshSelected += selectedMesh
+          => this.isMeshSelected_ = this.Mesh == selectedMesh;
     }
 
     ~MergedMaterialPrimitivesRenderer()
@@ -56,9 +62,20 @@ public partial class ModelRenderer {
     }
 
     public void Render() {
+      if ((this.HiddenMeshes?.TryGetValue(this.Mesh, out var isHidden) ??
+           false) && isHidden) {
+        return;
+      }
+
+      var isSelected = this.isMaterialSelected_ || this.isMeshSelected_;
+
+      if (isSelected) {
+        GlUtil.RenderOutline(this.RenderImpl_);
+      }
+
       this.RenderImpl_();
 
-      if (this.isSelected_) {
+      if (isSelected) {
         GlUtil.RenderHighlight(this.RenderImpl_);
       }
     }

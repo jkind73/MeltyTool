@@ -19,7 +19,6 @@ public partial class ModelRenderer {
 
     private IGlBufferManager? bufferManager_;
     private IDynamicGlBufferManager? dynamicBufferManager_;
-    private IReadOnlyMesh? selectedMesh_;
 
     private MergedMaterialMeshRenderer[] materialMeshRenderers_ = [];
 
@@ -30,9 +29,6 @@ public partial class ModelRenderer {
       this.Model = model;
       this.textureTransformManager_ = textureTransformManager;
       this.dynamic_ = dynamic;
-
-      SelectedMeshService.OnMeshSelected += selectedMesh
-          => this.selectedMesh_ = selectedMesh;
     }
 
     // Generates buffer manager and model within the current GL context.
@@ -76,7 +72,9 @@ public partial class ModelRenderer {
                                          mesh,
                                          modelRequirements,
                                          this.bufferManager_,
-                                         this.textureTransformManager_);
+                                         this.textureTransformManager_) {
+            HiddenMeshes = this.HiddenMeshes,
+        };
         materialMeshRenderer.GenerateModelIfNull();
         allMaterialMeshRenderers.Add(materialMeshRenderer);
       }
@@ -112,7 +110,7 @@ public partial class ModelRenderer {
       this.GenerateModelIfNull();
 
       foreach (var meshRenderer in this.materialMeshRenderers_) {
-        meshRenderer.Render(this.selectedMesh_, this.HiddenMeshes);
+        meshRenderer.Render();
       }
     }
 
