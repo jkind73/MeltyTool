@@ -37,17 +37,4 @@ public partial class SceneInstanceImpl(IReadOnlyScene scene)
   // TODO: Clone lighting here instead?
 
   public IReadOnlyLighting? Lighting => scene.Lighting;
-
-
-  private float viewerScale_ = 1;
-
-  public float ViewerScale {
-    get => this.viewerScale_;
-    set {
-      this.viewerScale_ = value;
-      foreach (var area in this.Areas) {
-        area.ViewerScale = this.viewerScale_;
-      }
-    }
-  }
 }

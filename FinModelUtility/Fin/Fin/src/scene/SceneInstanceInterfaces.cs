@@ -23,8 +23,6 @@ public partial interface ISceneInstance : ITickable, IDisposable {
   new IReadOnlyList<ISceneAreaInstance> Areas { get; }
 
   new IReadOnlyLighting? Lighting { get; }
-
-  new float ViewerScale { get; set; }
 }
 
 /// <summary>
@@ -38,8 +36,6 @@ public partial interface ISceneAreaInstance : ITickable, IDisposable {
   new IReadOnlySceneArea Definition { get; }
 
   new IReadOnlyList<ISceneNodeInstance> RootNodes { get; }
-
-  new float ViewerScale { get; set; }
 
   new ISceneNodeInstance? CustomSkyboxObject { get; }
 }
@@ -58,8 +54,6 @@ public partial interface ISceneNodeInstance : ITickable, IDisposable {
   new Transform3d Transform { get; }
 
   new IReadOnlyList<ISceneModelInstance> Models { get; }
-
-  new float ViewerScale { get; set; }
 }
 
 /// <summary>
@@ -78,6 +72,4 @@ public partial interface ISceneModelInstance
 
   new SimpleBoneTransformView SimpleBoneTransformView { get; }
   new ITextureTransformManager TextureTransformManager { get; }
-
-  new float ViewerScale { get; set; }
 }

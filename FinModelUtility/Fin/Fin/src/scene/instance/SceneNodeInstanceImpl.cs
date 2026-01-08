@@ -10,7 +10,6 @@ namespace fin.scene.instance;
 public partial class SceneInstanceImpl {
   private class SceneNodeInstanceImpl
       : ISceneNodeInstance {
-    private float viewerScale_ = 1;
     private readonly IReadOnlySceneNode sceneObject_;
     public SceneNodeInstanceImpl(SceneNodeInstanceImpl? parent,
                                  IReadOnlySceneNode sceneObject) {
@@ -65,16 +64,6 @@ public partial class SceneInstanceImpl {
 
       foreach (var child in this.ChildNodes) {
         child.Tick();
-      }
-    }
-
-    public float ViewerScale {
-      get => this.viewerScale_;
-      set {
-        this.viewerScale_ = value;
-        foreach (var model in this.Models) {
-          model.ViewerScale = this.viewerScale_;
-        }
       }
     }
   }

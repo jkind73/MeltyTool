@@ -111,7 +111,5 @@ public partial class SceneInstanceImpl {
             = value;
       }
     }
-
-    public float ViewerScale { get; set; } = 1;
   }
 }

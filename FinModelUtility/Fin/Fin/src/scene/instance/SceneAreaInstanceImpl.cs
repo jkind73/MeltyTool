@@ -35,18 +35,6 @@ public partial class SceneInstanceImpl {
       }
     }
 
-    private float viewerScale_ = 1;
-
-    public float ViewerScale {
-      get => this.viewerScale_;
-      set {
-        this.viewerScale_ = value;
-        foreach (var obj in this.RootNodes) {
-          obj.ViewerScale = this.viewerScale_;
-        }
-      }
-    }
-
     public Color? BackgroundColor => sceneArea.BackgroundColor;
 
     public ISceneNodeInstance? CustomSkyboxObject { get; }

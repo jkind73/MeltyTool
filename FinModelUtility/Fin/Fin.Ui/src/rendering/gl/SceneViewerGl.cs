@@ -102,15 +102,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   public int Width { get; set; }
   public int Height { get; set; }
 
-  public float ViewerScale {
-    get;
-    set {
-      field = value;
-      if (this.scene_ != null) {
-        this.scene_.ViewerScale = value;
-      }
-    }
-  } = 1;
+  public float ViewerScale { get; set; } = 1;
 
   public float GlobalScale { get; set; } = 1;
   public float NearPlane { get; set; }
