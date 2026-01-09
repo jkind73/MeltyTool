@@ -7,12 +7,15 @@ namespace fin.ui.rendering.gl.scene;
 public sealed class SceneRenderer : IRenderable {
   private const bool USE_RENDER_GRAPH = false;
 
+  private readonly ISceneInstance scene_;
+
   private LightsUbo? lightsUbo_;
 
   private IReadOnlyList<SceneAreaRenderer> areaRenderers_;
   private readonly SceneStaticRenderGraph renderGraph_;
 
   public SceneRenderer(ISceneInstance scene) {
+    this.scene_ = scene;
     if (USE_RENDER_GRAPH) {
       this.renderGraph_ = new(scene);
     } else {
@@ -43,7 +46,7 @@ public sealed class SceneRenderer : IRenderable {
 
   public void Render() {
     this.lightsUbo_ ??= new LightsUbo();
-    this.lightsUbo_.UpdateData(scene.Lighting);
+    this.lightsUbo_.UpdateData(this.scene_.Lighting);
     this.lightsUbo_.Bind();
 
     if (USE_RENDER_GRAPH) {
