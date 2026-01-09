@@ -20,6 +20,9 @@ public sealed class MagFilterInterpolatable<T>(IInterpolator<T> interpolator)
   public IInterpolatable<T>? Impl { get; set; }
   public bool HasAnyData => this.Impl?.HasAnyData ?? false;
 
+  public int AnimationLength => this.Impl?.AnimationLength ?? 0;
+  public bool Looping => this.Impl?.Looping ?? false;
+
   public bool TryGetAtFrame(float frame, out T value) {
     if (this.Impl == null) {
       value = default!;

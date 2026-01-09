@@ -10,6 +10,9 @@ namespace fin.animation.interpolation;
 public interface IInterpolatable<T> {
   bool HasAnyData { get; }
 
+  int AnimationLength { get; }
+  bool Looping { get; }
+
   [Const]
   bool TryGetAtFrame(float frame, out T value);
 

@@ -23,6 +23,9 @@ public sealed class CombinedVector3Keyframes<TKeyframe>(
 
   public IReadOnlyList<TKeyframe> Definitions => this.impl_.Definitions;
   public bool HasAnyData => this.impl_.HasAnyData;
+  
+  public int AnimationLength => sharedConfig.AnimationLength;
+  public bool Looping => sharedConfig.Looping;
 
   public void Add(TKeyframe keyframe) => this.impl_.Add(keyframe);
 

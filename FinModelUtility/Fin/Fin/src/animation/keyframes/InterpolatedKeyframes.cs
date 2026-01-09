@@ -30,6 +30,9 @@ public sealed class InterpolatedKeyframes<TKeyframe, T>(
   public IReadOnlyList<TKeyframe> Definitions => this.impl_;
   public bool HasAnyData => this.Definitions.Count > 0;
 
+  public int AnimationLength => sharedConfig.AnimationLength;
+  public bool Looping => sharedConfig.Looping;
+
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void Add(TKeyframe keyframe) => this.impl_.AddKeyframe(keyframe);
 

@@ -30,6 +30,9 @@ public sealed class SeparateVector3Keyframes<TKeyframe>(
              individualConfig,
              individualConfig) { }
 
+  public int AnimationLength => sharedConfig.AnimationLength;
+  public bool Looping => sharedConfig.Looping;
+
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes { get; }
     = [
         new InterpolatedKeyframes<TKeyframe, float>(

@@ -27,6 +27,9 @@ public sealed class SeparateQuaternionKeyframes<TKeyframe>(
              individualConfig,
              individualConfig) { }
 
+  public int AnimationLength => sharedConfig.AnimationLength;
+  public bool Looping => sharedConfig.Looping;
+
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes { get; }
     = [
         new InterpolatedKeyframes<TKeyframe, float>(

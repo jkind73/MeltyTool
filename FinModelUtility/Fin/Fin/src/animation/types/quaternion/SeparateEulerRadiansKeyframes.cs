@@ -38,6 +38,9 @@ public sealed class SeparateEulerRadiansKeyframes<TKeyframe>(
              individualConfig,
              individualConfig) { }
 
+  public int AnimationLength => sharedConfig.AnimationLength;
+  public bool Looping => sharedConfig.Looping;
+
   public IReadOnlyList<IInterpolatableKeyframes<TKeyframe, float>> Axes
     => this.axes_;
 
