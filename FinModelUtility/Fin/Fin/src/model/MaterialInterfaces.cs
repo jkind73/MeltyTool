@@ -76,7 +76,7 @@ public enum DepthCompareType {
 }
 
 [GenerateReadOnly]
-public partial interface IMaterial : INamed {
+public partial interface IMaterial : IIndexable, INamed {
   new IEnumerable<IReadOnlyTexture> Textures { get; }
 
   new CullingMode CullingMode { get; set; }

@@ -17,6 +17,8 @@ public interface IShaderUniformArray<T> {
 
 [GenerateReadOnly]
 public partial interface IShaderProgram : IDisposable {
+  int ProgramId { get; }
+
   IShaderUniform<bool> GetUniformBool(string name);
   IShaderUniform<int> GetUniformInt(string name);
   IShaderUniform<float> GetUniformFloat(string name);

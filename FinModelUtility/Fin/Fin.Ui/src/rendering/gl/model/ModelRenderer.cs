@@ -15,8 +15,7 @@ namespace fin.ui.rendering.gl.model;
 ///
 ///   NOTE: This will only be valid in the GL context this was first rendered in!
 /// </summary>
-public sealed partial class ModelRenderer
-    : IDynamicModelRenderer {
+public sealed partial class ModelRenderer : IDynamicModelRenderer {
   private readonly IReadOnlyList<IReadOnlyBone> bonesUsedByVertices_;
   private readonly Matrix4x4[] boneMatrices_;
   private readonly MergedMaterialMeshesRenderer impl_;
@@ -42,6 +41,8 @@ public sealed partial class ModelRenderer
   private MatricesUbo? matricesUbo_;
   private readonly IReadOnlyModel model_;
   private readonly IReadOnlyBoneTransformManager? boneTransformManager_;
+
+  public IEnumerable<IMeshRenderer> MeshRenderers => this.impl_.MeshRenderers;
 
   /// <summary>
   ///   A renderer for a Fin model.
@@ -90,6 +91,14 @@ public sealed partial class ModelRenderer
   public void UpdateBuffer() => this.impl_.UpdateBuffer();
 
   public void Render() {
+    this.UpdateMatricesUbo();
+    this.BindMatricesUbo();
+    this.LightsUbo?.Bind();
+
+    this.impl_.Render();
+  }
+
+  public void UpdateMatricesUbo() {
     var boneIndex = 1;
     // Intentionally looping by index to avoid allocating an enumerator.
     for (var i = 0; i < this.bonesUsedByVertices_.Count; ++i) {
@@ -104,16 +113,14 @@ public sealed partial class ModelRenderer
     }
 
     this.matricesUbo_ ??= new(this.model_.Skin.BonesUsedByVertices.Count);
-
     this.matricesUbo_.UpdateData(GlTransform.ModelMatrix,
                                  GlTransform.ViewMatrix,
                                  GlTransform.ProjectionMatrix,
                                  this.boneMatrices_);
+  }
+
+  public void BindMatricesUbo() {
     this.matricesUbo_.Bind();
-
-    this.LightsUbo?.Bind();
-
-    this.impl_.Render();
   }
 
   public void GenerateModelIfNull() => this.impl_.GenerateModelIfNull();

@@ -9,7 +9,9 @@ namespace fin.model.impl;
 public partial class ModelImpl<TVertex> {
   private partial class MaterialManagerImpl {
     public ITextureMaterial AddTextureMaterial(IReadOnlyTexture texture) {
-      var material = new TextureMaterialImpl(texture);
+      var material = new TextureMaterialImpl(texture) {
+          Index = this.materials_.Count
+      };
       this.materials_.Add(material);
       return material;
     }

@@ -171,7 +171,7 @@ public partial interface IPointsPrimitive : IPrimitive {
 }
 
 [GenerateReadOnly]
-public partial interface IPrimitive {
+public partial interface IPrimitive : IIndexable {
   new PrimitiveType Type { get; }
   new IReadOnlyList<IReadOnlyVertex> Vertices { get; }
 

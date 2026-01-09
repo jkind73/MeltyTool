@@ -153,6 +153,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
   }
 
   public int ProgramId => this.cachedShaderProgram_.ProgramId;
+  public override string ToString() => $"Program #{this.ProgramId}";
 
   public string VertexShaderSource
     => this.cachedShaderProgram_.VertexShaderSource;

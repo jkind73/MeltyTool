@@ -6,7 +6,9 @@ public partial class ModelImpl<TVertex> {
   private partial class MaterialManagerImpl {
     public IShaderMaterial AddShaderMaterial(string vertexShader,
                                              string fragmentShader) {
-      var material = new ShaderMaterialImpl(vertexShader, fragmentShader);
+      var material = new ShaderMaterialImpl(vertexShader, fragmentShader) {
+          Index = this.materials_.Count
+      };
       this.materials_.Add(material);
       return material;
     }

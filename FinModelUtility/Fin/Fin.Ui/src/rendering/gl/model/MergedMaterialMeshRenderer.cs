@@ -20,7 +20,7 @@ public partial class ModelRenderer {
       IModelRequirements modelRequirements,
       IGlBufferManager bufferManager,
       IReadOnlyTextureTransformManager? textureTransformManager = null)
-      : IDisposable {
+      : IMeshRenderer {
     private MergedMaterialPrimitivesRenderer[]? materialMeshRenderers_;
 
     private MergedMaterialMeshRenderer[] children_
@@ -42,6 +42,9 @@ public partial class ModelRenderer {
       }
     }
 
+    public IEnumerable<IMeshRenderer> Children => this.children_;
+    public IEnumerable<IMaterialRenderer> MaterialRenderers => this.materialMeshRenderers_!;
+
     // Generates buffer manager and model within the current GL context.
     public void GenerateModelIfNull() {
       if (this.materialMeshRenderers_ != null) {
@@ -58,6 +61,7 @@ public partial class ModelRenderer {
         primitivesByMaterial.Add(primitive.Material, primitive);
         materialQueue.Add(
             primitive.Material,
+            primitive.Index,
             primitive.InversePriority,
             (primitive.Material?.TransparencyType ??
              TransparencyType.OPAQUE) ==
@@ -66,7 +70,7 @@ public partial class ModelRenderer {
 
       var materialMeshRenderers
           = new List<MergedMaterialPrimitivesRenderer>();
-      foreach (var material in materialQueue) {
+      foreach (var (minPrimitiveIndex, inversePriority, material) in materialQueue) {
         var primitives = primitivesByMaterial[material];
         if (!primitiveMerger.TryToMergePrimitives(
                 primitives,
@@ -82,6 +86,8 @@ public partial class ModelRenderer {
                                       mesh,
                                       material,
                                       mergedPrimitives) {
+                                      MinPrimitiveIndex = minPrimitiveIndex,
+                                      InversePriority = inversePriority,
                                       HiddenMeshes = this.HiddenMeshes
                                   });
       }
@@ -102,9 +108,6 @@ public partial class ModelRenderer {
       }
     }
 
-    public IReadOnlyList<MergedMaterialPrimitivesRenderer>?
-        MaterialRenderers => this.materialMeshRenderers_;
-
     public void Render() {
       this.GenerateModelIfNull();
 
@@ -121,7 +124,7 @@ public partial class ModelRenderer {
         IReadOnlyMaterial material)
       => this.materialMeshRenderers_?
              .Where(r => r.Material == material)
-             .Select(r => r.MaterialShader) ??
+             .Select(r => r.GlMaterialShader) ??
          [];
   }
 }

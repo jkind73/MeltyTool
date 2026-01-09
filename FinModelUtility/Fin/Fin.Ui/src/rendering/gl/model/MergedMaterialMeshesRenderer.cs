@@ -56,9 +56,10 @@ public partial class ModelRenderer {
           continue;
         }
 
-        meshQueue.Add(mesh, UInt32.MaxValue, false);
+        meshQueue.Add(mesh, int.MaxValue, UInt32.MaxValue, false);
         foreach (var primitive in mesh.Primitives) {
           meshQueue.Add(mesh,
+                        primitive.Index,
                         primitive.InversePriority,
                         (primitive.Material?.TransparencyType ??
                          TransparencyType.OPAQUE) ==
@@ -69,7 +70,7 @@ public partial class ModelRenderer {
       foreach (var mesh in meshQueue) {
         var materialMeshRenderer = new MergedMaterialMeshRenderer(
                                          this.Model,
-                                         mesh,
+                                         mesh.item,
                                          modelRequirements,
                                          this.bufferManager_,
                                          this.textureTransformManager_) {
@@ -99,12 +100,17 @@ public partial class ModelRenderer {
 
     public IReadOnlyModel Model { get; }
 
-    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
+    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
+      get;
+      set;
+    }
 
-    public IReadOnlyList<MergedMaterialMeshRenderer> MeshRenderers
-      => this.materialMeshRenderers_;
+    public IEnumerable<IMeshRenderer> MeshRenderers => this.materialMeshRenderers_;
 
     public void UpdateBuffer() => this.dynamicBufferManager_?.UpdateBuffer();
+
+    public void UpdateMatricesUbo() { }
+    public void BindMatricesUbo() { }
 
     public void Render() {
       this.GenerateModelIfNull();
@@ -116,7 +122,7 @@ public partial class ModelRenderer {
 
     public IEnumerable<IGlMaterialShader> GetMaterialShaders(
         IReadOnlyMaterial material)
-      => this.materialMeshRenderers_.SelectMany(
-          p => p.GetMaterialShaders(material));
+      => this.materialMeshRenderers_.SelectMany(p => p.GetMaterialShaders(
+                                                    material));
   }
 }

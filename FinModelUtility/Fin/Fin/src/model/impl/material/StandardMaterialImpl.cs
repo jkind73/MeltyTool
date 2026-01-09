@@ -7,7 +7,9 @@ namespace fin.model.impl;
 public partial class ModelImpl<TVertex> {
   private partial class MaterialManagerImpl {
     public IStandardMaterial AddStandardMaterial() {
-      var material = new StandardMaterialImpl();
+      var material = new StandardMaterialImpl {
+          Index = this.materials_.Count
+      };
       this.materials_.Add(material);
       return material;
     }

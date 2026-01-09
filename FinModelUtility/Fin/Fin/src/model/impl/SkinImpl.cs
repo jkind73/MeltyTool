@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 
+using fin.data;
 using fin.data.indexable;
 using fin.data.sets;
 using fin.math.matrix.four;
@@ -18,6 +19,8 @@ public partial class ModelImpl<TVertex> {
     private readonly List<TVertex> typedVertices_;
     private readonly List<IMesh> meshes_ = [];
     private readonly List<IMesh> rootMeshes_ = [];
+
+    private readonly Counter primitiveCounter_ = new();
 
     private readonly FinSortedSet<IReadOnlyBone> bonesUsedByVertices_
         = new((lhs, rhs) => lhs.Index.CompareTo(rhs.Index));
@@ -137,6 +140,8 @@ public partial class ModelImpl<TVertex> {
         PrimitiveType type,
         IReadOnlyList<IReadOnlyVertex> vertices)
         : IPrimitive {
+      public required int Index { get; init; }
+
       public PrimitiveType Type { get; } = type;
       public IReadOnlyList<IReadOnlyVertex> Vertices { get; } = vertices;
 

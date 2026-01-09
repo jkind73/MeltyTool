@@ -4,7 +4,6 @@ using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
-using fin.model.util;
 using fin.scene;
 using fin.scene.components;
 using fin.ui.rendering.gl.model;
@@ -80,63 +79,68 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   private void ReleaseUnmanagedResources_() => this.modelRenderer_.Dispose();
 
   public ISkeletonRenderer SkeletonRenderer { get; }
+  public IModelRenderer ModelRenderer => this.modelRenderer_;
 
-  public void Render(ISceneNodeInstance _) => this.Render();
-
-  public void Render(bool allowUpdatingState = true) {
+  public void TickAnimatables() {
     var model = this.Model;
     var skeleton = model.Skeleton;
 
     var animation = this.Animation;
     var animationPlaybackManager = this.AnimationPlaybackManager;
 
-    if (allowUpdatingState) {
-      this.hiddenMeshes_.Clear();
-      foreach (var mesh in this.meshes_) {
-        this.hiddenMeshes_[mesh]
-            = mesh.DefaultDisplayState == MeshDisplayState.HIDDEN;
-      }
+    this.hiddenMeshes_.Clear();
+    foreach (var mesh in this.meshes_) {
+      this.hiddenMeshes_[mesh]
+          = mesh.DefaultDisplayState == MeshDisplayState.HIDDEN;
+    }
 
-      var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
-      if (animation != null ||
-          this.needsToAlwaysUpdateMatrices_ ||
-          // Need to update for one extra frame, if overrides were just cleared.
-          this.hadOverrides_ ||
-          hasAnyOverrides) {
-        animationPlaybackManager.Tick();
-        this.BoneTransformManager.CalculateMatrices(
-            skeleton.Root,
-            model.Skin.BoneWeights,
-            this.SimpleBoneTransformView,
-            BoneWeightTransformType.FOR_RENDERING,
-            GlTransform.ModelMatrix);
-      }
-      
-      this.hadOverrides_ = hasAnyOverrides;
+    var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
+    if (animation != null ||
+        this.needsToAlwaysUpdateMatrices_ ||
+        // Need to update for one extra frame, if overrides were just cleared.
+        this.hadOverrides_ ||
+        hasAnyOverrides) {
+      animationPlaybackManager.Tick();
+      this.BoneTransformManager.CalculateMatrices(
+          skeleton.Root,
+          model.Skin.BoneWeights,
+          this.SimpleBoneTransformView,
+          BoneWeightTransformType.FOR_RENDERING,
+          GlTransform.ModelMatrix);
+    }
+    
+    this.hadOverrides_ = hasAnyOverrides;
 
-      if (animation != null) {
-        var frame = (float) animationPlaybackManager.Frame;
-        this.TextureTransformManager.CalculateMatrices(
-            model.MaterialManager.Textures,
-            (animation, frame));
+    if (animation != null) {
+      var frame = (float) animationPlaybackManager.Frame;
+      this.TextureTransformManager.CalculateMatrices(
+          model.MaterialManager.Textures,
+          (animation, frame));
 
-        if (animation.HasAnyMeshTracks) {
-          foreach (var meshTracks in animation.MeshTracks) {
-            if (!meshTracks.DisplayStates.TryGetAtFrame(
-                    frame,
-                    out var displayState)) {
-              continue;
-            }
-
-            this.hiddenMeshes_[meshTracks.Mesh]
-                = displayState == MeshDisplayState.HIDDEN;
+      if (animation.HasAnyMeshTracks) {
+        foreach (var meshTracks in animation.MeshTracks) {
+          if (!meshTracks.DisplayStates.TryGetAtFrame(
+                  frame,
+                  out var displayState)) {
+            continue;
           }
+
+          this.hiddenMeshes_[meshTracks.Mesh]
+              = displayState == MeshDisplayState.HIDDEN;
         }
-      } else {
-        this.TextureTransformManager.CalculateMatrices(
-            model.MaterialManager.Textures,
-            null);
       }
+    } else {
+      this.TextureTransformManager.CalculateMatrices(
+          model.MaterialManager.Textures,
+          null);
+    }
+  }
+
+  public void Render(ISceneNodeInstance _) => this.Render();
+
+  public void Render(bool allowUpdatingState = true) {
+    if (allowUpdatingState) {
+      this.TickAnimatables();
     }
 
     this.modelRenderer_.Render();

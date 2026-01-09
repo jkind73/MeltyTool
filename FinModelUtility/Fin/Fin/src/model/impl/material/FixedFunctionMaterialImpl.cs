@@ -11,7 +11,9 @@ public partial class ModelImpl<TVertex> {
   private partial class MaterialManagerImpl {
     public IFixedFunctionMaterial AddFixedFunctionMaterial() {
       this.Registers ??= new FixedFunctionRegisters();
-      var material = new FixedFunctionMaterialImpl(this.Registers);
+      var material = new FixedFunctionMaterialImpl(this.Registers) {
+          Index = this.materials_.Count
+      };
       this.materials_.Add(material);
       return material;
     }

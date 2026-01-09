@@ -8,10 +8,26 @@ public interface IModelRenderer : IRenderable {
   IReadOnlyModel Model { get; }
   IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 
+  void UpdateMatricesUbo();
+  void BindMatricesUbo();
+
   void GenerateModelIfNull();
   IEnumerable<IGlMaterialShader> GetMaterialShaders(IReadOnlyMaterial material);
+
+  IEnumerable<IMeshRenderer> MeshRenderers { get; }
 }
 
 public interface IDynamicModelRenderer : IModelRenderer {
   void UpdateBuffer();
+}
+
+public interface IMeshRenderer : IRenderable {
+  IEnumerable<IMeshRenderer> Children { get; }
+  IEnumerable<IMaterialRenderer> MaterialRenderers { get; }
+}
+
+public interface IMaterialRenderer : IRenderable {
+  int MinPrimitiveIndex { get; }
+  uint InversePriority { get; }
+  IGlMaterialShader GlMaterialShader { get; }
 }

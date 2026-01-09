@@ -5,11 +5,14 @@ using fin.ui.rendering.gl.ubo;
 namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
+  private const bool USE_RENDER_GRAPH = false;
+
   private LightsUbo? lightsUbo_;
 
   public IReadOnlyList<SceneAreaRenderer> AreaRenderers { get; } = scene.Areas
       .Select(area => new SceneAreaRenderer(area))
       .ToArray();
+  private readonly SceneStaticRenderGraph renderGraph_ = new(scene);
 
   ~SceneRenderer() => this.ReleaseUnmanagedResources_();
 
@@ -21,6 +24,7 @@ public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
   private void ReleaseUnmanagedResources_() {
     this.lightsUbo_?.Dispose();
 
+    this.renderGraph_.Dispose();
     foreach (var areaRenderer in this.AreaRenderers) {
       areaRenderer.Dispose();
     }
@@ -31,8 +35,12 @@ public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
     this.lightsUbo_.UpdateData(scene.Lighting);
     this.lightsUbo_.Bind();
 
-    foreach (var areaRenderer in this.AreaRenderers) {
-      areaRenderer.Render();
+    if (USE_RENDER_GRAPH) {
+      this.renderGraph_.Render();
+    } else {
+      foreach (var areaRenderer in this.AreaRenderers) {
+        areaRenderer.Render();
+      }
     }
   }
 }

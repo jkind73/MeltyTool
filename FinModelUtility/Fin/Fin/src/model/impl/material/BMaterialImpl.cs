@@ -10,6 +10,7 @@ public partial class ModelImpl<TVertex> {
   private abstract class BMaterialImpl : IMaterial {
     public abstract IEnumerable<IReadOnlyTexture> Textures { get; }
 
+    public required int Index { get; init; }
     public string? Name { get; set; }
     public CullingMode CullingMode { get; set; }
 

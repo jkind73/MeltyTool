@@ -10,15 +10,17 @@ public partial class ModelRenderer {
   /// <summary>
   ///   Renderer for all primitives sharing a material in a single mesh.
   /// </summary>
-  private sealed class MergedMaterialPrimitivesRenderer : IDisposable {
+  private sealed class MergedMaterialPrimitivesRenderer : IMaterialRenderer {
     private readonly IGlBufferRenderer bufferRenderer_;
     private bool isMaterialSelected_;
     private bool isMeshSelected_;
 
     public IReadOnlyMesh Mesh { get; }
     public IReadOnlyMaterial? Material { get; }
-    public IGlMaterialShader MaterialShader { get; }
-
+    public required int MinPrimitiveIndex { get; init; }
+    public required uint InversePriority { get; init; }
+    public IGlMaterialShader GlMaterialShader { get; }
+    
     public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 
     public MergedMaterialPrimitivesRenderer(
@@ -32,7 +34,7 @@ public partial class ModelRenderer {
       this.Mesh = mesh;
       this.Material = material;
 
-      this.MaterialShader = GlMaterialShader.FromMaterial(model,
+      this.GlMaterialShader = gl.material.GlMaterialShader.FromMaterial(model,
         modelRequirements,
         material,
         textureTransformManager);
@@ -57,7 +59,7 @@ public partial class ModelRenderer {
     }
 
     private void ReleaseUnmanagedResources_() {
-      this.MaterialShader?.Dispose();
+      this.GlMaterialShader?.Dispose();
       this.bufferRenderer_?.Dispose();
     }
 
@@ -81,7 +83,7 @@ public partial class ModelRenderer {
     }
 
     private void RenderImpl_() {
-      this.MaterialShader?.Use();
+      this.GlMaterialShader?.Use();
 
       if (this.Material != null) {
         GlUtil.SetBlendingSeparate(this.Material.ColorBlendEquation,

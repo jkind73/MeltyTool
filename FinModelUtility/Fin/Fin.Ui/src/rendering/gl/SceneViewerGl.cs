@@ -23,7 +23,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
   private SceneRenderer? sceneRenderer_;
 
   private ISceneAreaInstance? singleArea_;
-  private SceneAreaRenderer? singleAreaRenderer_;
+  private SceneNodeRenderer? customSkyboxRenderer_;
 
   ~SceneViewerGl() => this.ReleaseUnmanagedResources_();
 
@@ -49,7 +49,7 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         this.scene_ = null;
         this.sceneRenderer_ = null;
         this.singleArea_ = null;
-        this.singleAreaRenderer_ = null;
+        this.customSkyboxRenderer_ = null;
         this.backgroundRenderer_.BackgroundImage = null;
         this.ViewerScale = 1;
       } else {
@@ -60,9 +60,9 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
         var areas = this.scene_?.Areas;
         this.singleArea_ = areas is { Count: 1 } ? areas[0] : null;
 
-        var areaRenderers = this.sceneRenderer_.AreaRenderers;
-        this.singleAreaRenderer_ = areaRenderers is { Count: 1 }
-            ? areaRenderers[0]
+        this.customSkyboxRenderer_
+            = this.singleArea_?.CustomSkyboxObject is { } customSkyboxObject
+                ? new SceneNodeRenderer(customSkyboxObject)
             : null;
 
         var singleAreaDefinition = this.singleArea_?.Definition;
@@ -193,9 +193,6 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
       GlTransform.MatrixMode(TransformMatrixMode.MODEL);
       GlTransform.LoadIdentity();
 
-      var customSkyboxRenderer
-          = this.singleAreaRenderer_?.CustomSkyboxRenderer;
-
       if (this.backgroundRenderer_.IsValid) {
         GlTransform.Ortho2d(0, width, height, 0);
         GlTransform.Translate(hWidth, hHeight, 0);
@@ -203,10 +200,10 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
         this.backgroundRenderer_.AspectRatio = hWidth / hHeight;
         this.backgroundRenderer_.Render();
-      } else if (customSkyboxRenderer != null) {
+      } else if (this.customSkyboxRenderer_ != null) {
         GlTransform.Translate(this.Camera.Position);
         GlTransform.Scale(this.GlobalScale);
-        customSkyboxRenderer.Render();
+        this.customSkyboxRenderer_.Render();
       } else {
         this.BackdropRenderer?.Render();
       }
