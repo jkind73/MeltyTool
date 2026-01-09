@@ -133,6 +133,10 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
       this.BackdropRenderer?.ViewportWidth = width;
       this.BackdropRenderer?.ViewportHeight = height;
 
+      this.sceneRenderer_?.Scale = this.GlobalScale * this.ViewerScale;
+      this.sceneRenderer_?.NearPlane = glNearPlane;
+      this.sceneRenderer_?.FarPlane = glFarPlane;
+
       var skyboxRenderer = this.BackdropRenderer as ISkyboxRenderer;
       skyboxRenderer?.NearPlane
           = this.infiniteGridRenderer_.NearPlane = glNearPlane;

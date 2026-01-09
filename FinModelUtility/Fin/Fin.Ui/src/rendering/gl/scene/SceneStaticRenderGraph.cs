@@ -1,10 +1,9 @@
-﻿using fin.data.dictionaries;
-using fin.data.queues;
+﻿using fin.data.queues;
 using fin.image.util;
+using fin.math;
 using fin.scene;
 using fin.ui.rendering.gl.material;
 using fin.ui.rendering.gl.model;
-
 
 namespace fin.ui.rendering.gl.scene;
 
@@ -43,10 +42,8 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
 }
 
 public record RenderGraphElement(IRenderGraphParams Params) {
-  public float Distance { get; set; }
-
-  public override string ToString()
-    => $"{this.Params}, Distance: {this.Distance}";
+  public ulong SortKey { get; set; }
+  public override string ToString() => $"{this.Params}, Sort key: {this.SortKey}";
 }
 
 public sealed class SceneStaticRenderGraph : IRenderable {
@@ -58,6 +55,10 @@ public sealed class SceneStaticRenderGraph : IRenderable {
 
   private List<RenderGraphElement>? elements_;
   private IReadOnlySceneNode? selectedNode_;
+
+  public float Scale { get; set; }
+  public float NearPlane { get; set; }
+  public float FarPlane { get; set; }
 
   public SceneStaticRenderGraph(ISceneInstance scene) {
     this.scene_ = scene;
@@ -138,11 +139,77 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       GlTransform.PopMatrix();
     }
 
+    // Loosely based on: https://realtimecollisiondetection.net/blog/?p=86
+    // Transparent bits
+    const int transparentInversePriorityBitCount = 16;
+    var transparentInversePriorityMask
+        = ((ulong) 1 << transparentInversePriorityBitCount) - 1;
+    const int transparentMinPrimitiveIndexBitCount = 16;
+    var transparentMinPrimitiveIndexMask
+        = ((ulong) 1 << transparentMinPrimitiveIndexBitCount) - 1;
+    const int transparentDepthBitCount = 31;
+    var transparentDepthMax = ((ulong) 1 << transparentDepthBitCount) - 1;
+
+    // Opaque bits
+    const int opaqueProgramIdBitCount = 20;
+    var opaqueProgramIdMask = ((ulong) 1 << opaqueProgramIdBitCount) - 1;
+    const int opaqueMaterialIndexBitCount = 12;
+    var opaqueMaterialIndexMask
+        = ((ulong) 1 << opaqueMaterialIndexBitCount) - 1;
+    const int opaqueDepthBitCount = 31;
+    var opaqueDepthMax = ((ulong) 1 << opaqueDepthBitCount) - 1;
+
     var camera = Camera.Instance;
     foreach (var element in this.elements_!) {
       var transform = element.Params.Node.Transform;
-      element.Distance
-          = (camera.Position - transform.LocalTranslation).LengthSquared();
+
+      ulong sortKey = 0;
+
+      var materialShader = element.Params.GlMaterialShader;
+      var material = materialShader?.Material;
+
+      var isTransparent
+          = material?.TransparencyType is TransparencyType.TRANSPARENT or null;
+      sortKey |= (isTransparent ? (ulong) 1 : 0) << 63;
+
+      var distance = (camera.Position - transform.LocalTranslation).Length() * this.Scale;
+      var distance0To1
+          = ((distance - this.NearPlane) / (this.FarPlane - this.NearPlane))
+          .Clamp(0, 1);
+
+      var prms = element.Params;
+
+      if (isTransparent) {
+        var inversePriorityBits
+            = prms.InversePriority & transparentInversePriorityMask;
+        sortKey
+            |= inversePriorityBits <<
+               (transparentDepthBitCount +
+                transparentMinPrimitiveIndexBitCount);
+
+        var minPrimitiveIndexBits
+            = (ulong) prms.MinPrimitiveIndex & transparentMinPrimitiveIndexMask;
+        sortKey |= minPrimitiveIndexBits << transparentDepthBitCount;
+
+        var distance1To0 = 1 - distance0To1;
+        var depthBits = (ulong) (distance1To0 * transparentDepthMax);
+        sortKey |= depthBits;
+      } else {
+        var programIdBits
+            = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & opaqueProgramIdMask;
+        sortKey
+            |= programIdBits <<
+               (opaqueDepthBitCount +
+                opaqueMaterialIndexBitCount);
+
+        var materialIndexBits = (ulong) (material?.Index ?? 0) & opaqueMaterialIndexMask;
+        sortKey |= materialIndexBits << opaqueDepthBitCount;
+
+        var depthBits = (ulong) (distance0To1 * opaqueDepthMax);
+        sortKey |= depthBits;
+      }
+
+      element.SortKey = sortKey;
     }
 
     this.elements_.Sort(this.comparer_);
@@ -196,72 +263,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
   }
 
   private sealed class RenderGraphComparer : IComparer<RenderGraphElement> {
-    public int Compare(RenderGraphElement lhs, RenderGraphElement rhs) {
-      const int LHS_FIRST = -1;
-      const int RHS_SECOND = LHS_FIRST;
-      const int RHS_FIRST = 1;
-      const int LHS_SECOND = RHS_FIRST;
-
-      var frontToBackDepthComparison = lhs.Distance.CompareTo(rhs.Distance);
-      var backToFrontDepthComparison = -frontToBackDepthComparison;
-
-      var lhsRenderable = lhs.Params;
-      var rhsRenderable = rhs.Params;
-
-      var lhsMaterialShader = lhsRenderable.GlMaterialShader;
-      var rhsMaterialShader = rhsRenderable.GlMaterialShader;
-
-      var lhsMaterial = lhsMaterialShader?.Material;
-      var rhsMaterial = rhsMaterialShader?.Material;
-
-      if (lhsMaterial == null && rhsMaterial == null) {
-        return backToFrontDepthComparison;
-      }
-
-      if (lhsMaterial == null) {
-        return LHS_SECOND;
-      }
-
-      if (rhsMaterial == null) {
-        return RHS_SECOND;
-      }
-
-      var isTransparent =
-          lhsMaterial.TransparencyType is TransparencyType.TRANSPARENT;
-      if (isTransparent &&
-          rhsMaterial.TransparencyType != TransparencyType.TRANSPARENT) {
-        return lhsMaterial.TransparencyType.CompareTo(
-            rhsMaterial.TransparencyType);
-      }
-
-      if (isTransparent) {
-        var lhsInversePriority = lhsRenderable.InversePriority;
-        var rhsInversePriority = rhsRenderable.InversePriority;
-        if (lhsInversePriority != rhsInversePriority) {
-          return lhsInversePriority.CompareTo(rhsInversePriority);
-        }
-
-        // Helps keep rendering stable.
-        var lhsMinPrimitiveIndex = lhsRenderable.MinPrimitiveIndex;
-        var rhsMinPrimitiveIndex = rhsRenderable.MinPrimitiveIndex;
-        if (lhsMinPrimitiveIndex != rhsMinPrimitiveIndex) {
-          return lhsMinPrimitiveIndex.CompareTo(rhsMinPrimitiveIndex);
-        }
-
-        return backToFrontDepthComparison;
-      }
-
-      var lhsShaderProgram = lhsMaterialShader!.ShaderProgram.ProgramId;
-      var rhsShaderProgram = rhsMaterialShader!.ShaderProgram.ProgramId;
-      if (lhsShaderProgram != rhsShaderProgram) {
-        return lhsShaderProgram.CompareTo(rhsShaderProgram);
-      }
-
-      if (lhsMaterial != rhsMaterial) {
-        return lhsMaterial.Index.CompareTo(rhsMaterial.Index);
-      }
-
-      return frontToBackDepthComparison;
-    }
+    public int Compare(RenderGraphElement lhs, RenderGraphElement rhs)
+      => lhs.SortKey.CompareTo(rhs.SortKey);
   }
 }

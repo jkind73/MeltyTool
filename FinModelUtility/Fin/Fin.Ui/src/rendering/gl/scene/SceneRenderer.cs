@@ -14,6 +14,16 @@ public sealed class SceneRenderer : IRenderable {
   private IReadOnlyList<SceneAreaRenderer> areaRenderers_;
   private readonly SceneStaticRenderGraph renderGraph_;
 
+  public float Scale {
+    set => this.renderGraph_?.Scale = value;
+  }
+  public float NearPlane {
+    set => this.renderGraph_?.NearPlane = value;
+  }
+  public float FarPlane {
+    set => this.renderGraph_?.FarPlane = value;
+  }
+
   public SceneRenderer(ISceneInstance scene) {
     this.scene_ = scene;
     if (USE_RENDER_GRAPH) {
