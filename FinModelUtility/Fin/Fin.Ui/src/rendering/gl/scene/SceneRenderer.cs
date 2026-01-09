@@ -4,15 +4,23 @@ using fin.ui.rendering.gl.ubo;
 
 namespace fin.ui.rendering.gl.scene;
 
-public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
+public sealed class SceneRenderer : IRenderable {
   private const bool USE_RENDER_GRAPH = false;
 
   private LightsUbo? lightsUbo_;
 
-  public IReadOnlyList<SceneAreaRenderer> AreaRenderers { get; } = scene.Areas
+  private IReadOnlyList<SceneAreaRenderer> areaRenderers_;
+  private readonly SceneStaticRenderGraph renderGraph_;
+
+  public SceneRenderer(ISceneInstance scene) {
+    if (USE_RENDER_GRAPH) {
+      this.renderGraph_ = new(scene);
+    } else {
+      this.areaRenderers_ = scene.Areas
       .Select(area => new SceneAreaRenderer(area))
       .ToArray();
-  private readonly SceneStaticRenderGraph renderGraph_ = new(scene);
+    }
+  }
 
   ~SceneRenderer() => this.ReleaseUnmanagedResources_();
 
@@ -24,9 +32,12 @@ public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
   private void ReleaseUnmanagedResources_() {
     this.lightsUbo_?.Dispose();
 
-    this.renderGraph_.Dispose();
-    foreach (var areaRenderer in this.AreaRenderers) {
-      areaRenderer.Dispose();
+    if (USE_RENDER_GRAPH) {
+      this.renderGraph_.Dispose();
+    } else {
+      foreach (var areaRenderer in this.areaRenderers_) {
+        areaRenderer.Dispose();
+      }
     }
   }
 
@@ -38,7 +49,7 @@ public sealed class SceneRenderer(ISceneInstance scene) : IRenderable {
     if (USE_RENDER_GRAPH) {
       this.renderGraph_.Render();
     } else {
-      foreach (var areaRenderer in this.AreaRenderers) {
+      foreach (var areaRenderer in this.areaRenderers_) {
         areaRenderer.Render();
       }
     }
