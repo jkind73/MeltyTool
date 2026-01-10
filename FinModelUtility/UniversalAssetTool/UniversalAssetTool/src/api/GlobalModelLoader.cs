@@ -81,6 +81,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new GeoModelImporter().Import(geoModelFileBundle),
         GloModelFileBundle gloModelFileBundle
             => new GloModelImporter().Import(gloModelFileBundle),
+        FlatGltfModelFileBundle flatGltfModelFileBundle
+            => new FlatGltfModelImporter().Import(flatGltfModelFileBundle),
         GltfModelFileBundle gltfModelFileBundle
             => new GltfModelImporter().Import(gltfModelFileBundle),
         Ma3d1ModelFileBundle ma3d1ModelFileBundle
