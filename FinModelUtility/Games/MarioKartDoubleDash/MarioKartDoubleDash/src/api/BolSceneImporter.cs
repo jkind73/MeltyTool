@@ -50,14 +50,10 @@ public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
       var skyModel = bmdModelImporter.Import(new BmdModelFileBundle {
           BmdFile = skyBmd
       });
-      skyModel.DisableDepthOnAllMaterials();
 
-      var skyObject = finArea.CreateCustomSkyboxNode();
+      // Skybox, but not fixed to the camera.
+      var skyObject = finArea.AddRootNode();
       skyObject.AddSceneModel(skyModel);
-
-      var scale = .05f;
-      skyObject.SetScale(scale, scale, scale);
-      skyObject.Rotation.SetDegrees(90, 0, 0);
     }
 
     var objectsDir = courseDirectory.AssertGetExistingSubdir("objects");
@@ -77,6 +73,7 @@ public sealed class BolSceneImporter : ISceneImporter<BolSceneFileBundle> {
       if (objModels != null) {
         var finObj = finArea.AddRootNode();
         finObj.SetPosition(bolObj.Position);
+        finObj.SetScale(bolObj.Scale);
 
         foreach (var objModel in objModels) {
           finObj.AddSceneModel(objModel);
