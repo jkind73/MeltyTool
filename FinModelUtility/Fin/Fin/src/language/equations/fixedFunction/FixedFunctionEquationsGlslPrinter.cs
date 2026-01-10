@@ -4,6 +4,7 @@ using System.Linq;
 
 using fin.image.util;
 using fin.model;
+using fin.model.util;
 using fin.shaders.glsl;
 using fin.util.asserts;
 using fin.util.enumerables;
@@ -310,7 +311,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
           sb.AppendLine(";");
           sb.AppendLine();
 
-          if (material.TransparencyType == TransparencyType.TRANSPARENT) {
+          if (material.GetTransparencyType() == TransparencyType.TRANSPARENT) {
             sb.AppendLine(
                 "fragColor = vec4(colorComponent, alphaComponent);");
           } else {

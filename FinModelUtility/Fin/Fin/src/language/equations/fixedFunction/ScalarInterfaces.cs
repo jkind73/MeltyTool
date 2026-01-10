@@ -11,10 +11,12 @@ public interface IScalarIdentifiedValue<out TIdentifier>
 public interface IScalarInput<out TIdentifier>
     : IScalarIdentifiedValue<TIdentifier>;
 
-public interface IScalarOutput<out TIdentifier>
-    : IScalarIdentifiedValue<TIdentifier> {
+public interface IScalarOutput : IScalarFactor {
   IScalarValue ScalarValue { get; }
 }
+
+public interface IScalarOutput<out TIdentifier>
+    : IScalarIdentifiedValue<TIdentifier>, IScalarOutput;
 
 public interface IScalarValue : IValue<IScalarValue> {
   bool Clamp { get; set; }

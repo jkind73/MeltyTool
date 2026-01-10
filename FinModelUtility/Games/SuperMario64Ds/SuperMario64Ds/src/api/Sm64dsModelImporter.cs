@@ -380,10 +380,6 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
 
     equations.SetOutputColorAlpha(outputColorAlpha);
 
-    finMaterial.TransparencyType = hasVertexColor
-        ? TransparencyType.TRANSPARENT
-        : finMaterial.Textures.FirstOrDefault()?.TransparencyType ??
-          TransparencyType.OPAQUE;
     finMaterial.SetDefaultAlphaCompare();
 
 

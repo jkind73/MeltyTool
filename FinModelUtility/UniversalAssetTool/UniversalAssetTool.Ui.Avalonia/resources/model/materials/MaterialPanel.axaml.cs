@@ -3,6 +3,7 @@ using System.Linq;
 using Avalonia.Controls;
 
 using fin.model;
+using fin.model.util;
 using fin.ui.avalonia;
 
 using ReactiveUI;
@@ -36,7 +37,7 @@ namespace uni.ui.avalonia.resources.model.materials {
 
         this.MaterialKeyValueGrid = new KeyValueGridViewModel {
             KeyValuePairs = [
-                ("Transparency type", material?.TransparencyType),
+                ("Transparency type", material?.GetTransparencyType()),
                 ("Culling Mode", material?.CullingMode),
                 ("Depth Compare Type", material?.DepthCompareType),
                 ("Depth Mode", material?.DepthMode),

@@ -31,7 +31,6 @@ public partial class ModelImpl<TVertex> {
 
     public FixedFunctionMaterialImpl(IFixedFunctionRegisters registers) {
       this.Registers = registers;
-      this.TransparencyType = TransparencyType.TRANSPARENT;
     }
 
     public override IEnumerable<IReadOnlyTexture> Textures => this.textures_;

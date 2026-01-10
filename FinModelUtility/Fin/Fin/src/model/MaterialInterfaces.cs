@@ -11,6 +11,7 @@ using fin.io;
 using fin.language.equations.fixedFunction;
 using fin.shaders.glsl;
 using fin.image.util;
+using fin.model.util;
 
 using readOnly;
 
@@ -86,8 +87,6 @@ public partial interface IMaterial : IIndexable, INamed {
 
   new bool IgnoreLights { get; set; }
   new float Shininess { get; set; }
-
-  new TransparencyType TransparencyType { get; set; }
 
   new bool UpdateColorChannel { get; set; }
   new bool UpdateAlphaChannel { get; set; }
@@ -366,7 +365,7 @@ public partial interface IFixedFunctionMaterial : IMaterialWithNormalTexture {
     => this.SetAlphaCompare(AlphaCompareType.Always, 0);
 
   IFixedFunctionMaterial SetDefaultAlphaCompare() {
-    switch (this.TransparencyType) {
+    switch (this.GetTransparencyType()) {
       case TransparencyType.MASK: {
         this.SetAlphaCompare(AlphaCompareType.Greater,
                              GlslConstants.MIN_ALPHA_BEFORE_DISCARD_MASK);

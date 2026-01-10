@@ -8,6 +8,7 @@ using fin.math;
 using fin.model;
 using fin.util.enums;
 using fin.image.util;
+using fin.model.util;
 using fin.util.strings;
 
 namespace fin.shaders.glsl;
@@ -779,7 +780,7 @@ public static class GlslUtil {
 
   public static void AppendAlphaDiscard(BracketStringBuilder src,
                                         IReadOnlyMaterial material) {
-    switch (material.TransparencyType) {
+    switch (material.GetTransparencyType()) {
       case TransparencyType.MASK: {
         src.AppendLine(
             $$"""

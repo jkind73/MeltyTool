@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 using fin.animation.keyframes;
 using fin.color;
@@ -155,26 +156,26 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
                       StringComparer.OrdinalIgnoreCase.GetHashCode(tuple.Item2)
               )));
       var finMaterialMap
-          = new LazyDictionary<(IReadOnlyTexture? finTexture,
-              TransparencyType meshTransparencyType, bool withCulling),
+          = new LazyDictionary<(IReadOnlyTexture? finTexture, byte alpha, bool withCulling),
               IMaterial>(
               tuple => {
-                var (finTexture, meshTransparencyType, withCulling) = tuple;
+                var (finTexture, alpha, withCulling) = tuple;
 
                 IMaterial finMaterial;
                 if (finTexture == null) {
-                  finMaterial = finModel.MaterialManager.AddStandardMaterial();
+                  finMaterial = finModel.MaterialManager.AddNullMaterial();
                 } else {
-                  finMaterial
+                  var textureMaterial
                       = finModel.MaterialManager.AddTextureMaterial(finTexture);
+                  finMaterial = textureMaterial;
+
+                  textureMaterial.DiffuseColor
+                      = Color.FromArgb(alpha, 255, 255, 255);
                 }
 
                 if (withCulling) {
                   finMaterial.CullingMode = CullingMode.SHOW_BOTH;
                 }
-
-                finMaterial.TransparencyType = meshTransparencyType.Merge(
-                    finTexture?.TransparencyType ?? TransparencyType.OPAQUE);
 
                 return finMaterial;
               });
@@ -343,10 +344,7 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
         var name = gloMesh.Name;
         var idealMesh = firstMeshMap[name];
 
-        var meshTransparencyType
-            = TransparencyTypeUtil.GetTransparencyType(
-                idealMesh.MeshTranslucency);
-        var meshColor = FinColor.FromAlphaFloat(idealMesh.MeshTranslucency);
+        var meshAlpha = (byte) (idealMesh.MeshTranslucency * 255);
 
         // Anything with these names are debug objects and can be ignored.
         if (this.hiddenNames_.Contains(name)) {
@@ -374,7 +372,7 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
             previousTextureName = textureFilename;
             finMaterial = finMaterialMap[
                 (finTextureMap[(gloMesh, textureFilename)],
-                 meshTransparencyType,
+                 meshAlpha,
                  enableBackfaceCulling)];
             previousMaterial = finMaterial;
           }
@@ -384,9 +382,9 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
             var gloVertexRef = gloFace.VertexRefs[v];
             var gloVertex = (Vector3) gloVertices[gloVertexRef.Index];
 
-            IColor vertexColor = meshColor;
+            var vertexColor = Color.White;
             if (knownDarkVerticesHack.IsDarkVertex(gloVertexRef, out var actualPosition)) {
-              vertexColor = FinColor.FromRgbaFloats(0, 0, 0, meshColor.Af);
+              vertexColor = Color.Black;
               gloVertex = actualPosition;
             }
 
@@ -420,7 +418,7 @@ public sealed class GloModelImporter : IModelImporter<GloModelFileBundle> {
             previousTextureName = textureFilename;
             finMaterial = finMaterialMap[
                 (finTextureMap[(gloMesh, textureFilename)],
-                 meshTransparencyType,
+                 meshAlpha,
                  true)];
             previousMaterial = finMaterial;
           }

@@ -61,7 +61,7 @@ public partial class ModelRenderer {
           meshQueue.Add(mesh,
                         primitive.Index,
                         primitive.InversePriority,
-                        (primitive.Material?.TransparencyType ??
+                        (primitive.Material?.GetTransparencyType() ??
                          TransparencyType.OPAQUE) ==
                         TransparencyType.TRANSPARENT);
         }

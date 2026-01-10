@@ -2,8 +2,6 @@
 using System.Collections.ObjectModel;
 using System.Drawing;
 
-using fin.image.util;
-
 namespace fin.model.impl;
 
 public partial class ModelImpl<TVertex> {
@@ -17,33 +15,13 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class TextureMaterialImpl : BMaterialImpl, ITextureMaterial {
-    public TextureMaterialImpl(IReadOnlyTexture texture) {
-      this.Texture = texture;
-      this.Textures
-          = new ReadOnlyCollection<IReadOnlyTexture>([texture]);
+  private class TextureMaterialImpl(IReadOnlyTexture texture)
+      : BMaterialImpl, ITextureMaterial {
+    public IReadOnlyTexture Texture { get; } = texture;
 
-      this.UpdateTransparencyType_();
-    }
-
-    public IReadOnlyTexture Texture { get; }
     public override IEnumerable<IReadOnlyTexture> Textures { get; }
+      = new ReadOnlyCollection<IReadOnlyTexture>([texture]);
 
-    public Color? DiffuseColor {
-      get;
-      set {
-        field = value;
-        this.UpdateTransparencyType_();
-      }
-    }
-
-    private void UpdateTransparencyType_() {
-      if (this.Texture.TransparencyType == TransparencyType.TRANSPARENT ||
-          (this.DiffuseColor?.A ?? 255) < 255) {
-        this.TransparencyType = TransparencyType.TRANSPARENT;
-      } else {
-        this.TransparencyType = this.Texture.TransparencyType;
-      }
-    }
+    public Color? DiffuseColor { get; set; }
   }
 }

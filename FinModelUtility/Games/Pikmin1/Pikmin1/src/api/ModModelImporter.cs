@@ -244,14 +244,6 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
                     modPopulatedMaterial,
                     gxTextures,
                     lazyTextureDictionary).Material;
-
-                var flags = modMaterial.flags;
-                finMaterial.TransparencyType
-                    = flags.CheckFlag(MaterialFlags.TRANSPARENT_BLEND)
-                        ? TransparencyType.TRANSPARENT
-                        : flags.CheckFlag(MaterialFlags.ALPHA_CLIP)
-                            ? TransparencyType.MASK
-                            : TransparencyType.OPAQUE;
               } else {
                 finMaterial = model.MaterialManager.AddNullMaterial();
               }

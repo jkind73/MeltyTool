@@ -251,11 +251,6 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
 
               equations.SetOutputColorAlpha(outputColorAlpha);
 
-              finMaterial.TransparencyType = alpha < 1
-                  ? TransparencyType.TRANSPARENT
-                  : finMaterial.Textures.FirstOrDefault()?.TransparencyType ??
-                    TransparencyType.OPAQUE;
-
               finMaterial.SetDefaultAlphaCompare();
 
               return finMaterial;

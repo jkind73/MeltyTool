@@ -41,6 +41,8 @@ public static class ValueExtensions {
 
   public static bool IsRoughly(this IScalarValue? value, float intensity)
     => value switch {
+        IScalarOutput scalarOutput
+            => scalarOutput.ScalarValue.IsRoughly(intensity),
         IScalarConstant scalarConstant
             => scalarConstant.Value.IsRoughly_(intensity),
         null => intensity.IsRoughly0(),

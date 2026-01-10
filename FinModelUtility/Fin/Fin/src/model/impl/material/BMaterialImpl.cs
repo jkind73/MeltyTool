@@ -24,9 +24,6 @@ public partial class ModelImpl<TVertex> {
     public float Shininess { get; set; } =
       MaterialConstants.DEFAULT_SHININESS;
 
-    public TransparencyType TransparencyType { get; set; }
-      = TransparencyType.MASK;
-
     public bool UpdateColorChannel { get; set; } = true;
     public bool UpdateAlphaChannel { get; set; } = true;
 

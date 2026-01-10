@@ -39,7 +39,7 @@ public static class FixedFunctionMaterialUtil {
 
     var textureImages = textureSources.Select(t => t?.Image).ToArray();
 
-    var isOpaque = material.TransparencyType == TransparencyType.OPAQUE ||
+    var isOpaque = material.GetTransparencyType() == TransparencyType.OPAQUE ||
                    material is {
                        ColorDstFactor: BlendFactor.ZERO,
                        ColorSrcFactor: BlendFactor.ONE

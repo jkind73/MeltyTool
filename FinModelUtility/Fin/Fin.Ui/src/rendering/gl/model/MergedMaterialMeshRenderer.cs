@@ -63,7 +63,7 @@ public partial class ModelRenderer {
             primitive.Material,
             primitive.Index,
             primitive.InversePriority,
-            (primitive.Material?.TransparencyType ??
+            (primitive.Material?.GetTransparencyType() ??
              TransparencyType.OPAQUE) ==
             TransparencyType.TRANSPARENT);
       }

@@ -18,6 +18,7 @@ using fin.io.bundles;
 using fin.language.equations.fixedFunction;
 using fin.model;
 using fin.model.impl;
+using fin.model.util;
 using fin.util.enums;
 
 using schema.binary;
@@ -446,7 +447,6 @@ public sealed class DlModelBuilder {
 
               // TODO: I'm not sure if alpha compare is ever used on the N64
               finMaterial.DisableAlphaCompare();
-              finMaterial.TransparencyType = TransparencyType.OPAQUE;
               if (!doBlend) {
                 finMaterial.SetBlending(BlendEquation.ADD,
                                         BlendFactor.ONE,
@@ -490,7 +490,6 @@ public sealed class DlModelBuilder {
                                         blendSrcFactor,
                                         blendDstFactor,
                                         LogicOp.UNDEFINED);
-                finMaterial.TransparencyType = TransparencyType.TRANSPARENT;
               }
 
               // Shamelessly stolen from:
@@ -819,8 +818,9 @@ public sealed class DlModelBuilder {
       this.cachedMaterialParams_ = newMaterialParams;
       this.cachedMaterial_ = this.lazyMaterialDictionary_[newMaterialParams];
 
-      this.isMaterialTransparent_ = this.cachedMaterial_.TransparencyType ==
-                                    TransparencyType.TRANSPARENT;
+      this.isMaterialTransparent_
+          = this.cachedMaterial_.GetTransparencyType() ==
+            TransparencyType.TRANSPARENT;
     }
 
     return this.cachedMaterial_;
