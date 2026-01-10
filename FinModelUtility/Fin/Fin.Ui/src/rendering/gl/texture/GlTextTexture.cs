@@ -75,6 +75,7 @@ public sealed class GlTextTexture : IGlTexture {
   }
 
   public int Id => this.impl_.ColorTextureId;
+  public long Handle => this.impl_.ColorTextureHandle;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void Bind(int textureIndex = 0) => this.impl_.Bind();
