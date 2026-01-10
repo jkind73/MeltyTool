@@ -11,8 +11,8 @@ public partial class GlShaderProgram {
   public IShaderUniformArray<Matrix4x4> GetUniformMat4s(
       string name,
       int length) {
-      if (!this.cachedUniforms_.TryGetValue(name, out var uniform)) {
-        this.cachedUniforms_[name] = uniform =
+      if (!this.cachedUniformsByName_.TryGetValue(name, out var uniform)) {
+        this.cachedUniformsByName_[name] = uniform =
             new Mat4sShaderUniform(this.GetUniformLocation_(name), length);
       }
 

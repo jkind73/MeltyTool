@@ -16,6 +16,8 @@ public sealed partial class GlShaderProgram : IShaderProgram {
   private bool isDisposed_;
   private readonly CachedShaderProgram cachedShaderProgram_;
 
+  private BShaderUniform[]? cachedUniforms_;
+
   private static ReferenceCountCacheDictionary<string, int>
       vertexShaderCache_ = new(
           src => CreateAndCompileShader_(src, ShaderType.VertexShader),
@@ -167,8 +169,10 @@ public sealed partial class GlShaderProgram : IShaderProgram {
       return;
     }
 
+    this.cachedUniforms_ ??= this.cachedUniformsByName_.Values.ToArray();
+
     GlUtil.UseProgram(this.ProgramId);
-    foreach (var uniform in this.cachedUniforms_.Values) {
+    foreach (var uniform in this.cachedUniforms_) {
       uniform.PassValueToProgramIfDirty();
     }
   }

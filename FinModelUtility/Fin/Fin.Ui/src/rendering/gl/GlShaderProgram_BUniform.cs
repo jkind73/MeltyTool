@@ -1,7 +1,7 @@
 ﻿namespace fin.ui.rendering.gl;
 
 public partial class GlShaderProgram {
-  private Dictionary<string, BShaderUniform> cachedUniforms_ = new();
+  private Dictionary<string, BShaderUniform> cachedUniformsByName_ = new();
 
   private int GetUniformLocation_(string name)
     => this.cachedShaderProgram_.GetUniformLocation(name);

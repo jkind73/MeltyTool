@@ -9,8 +9,8 @@ namespace fin.ui.rendering.gl;
 
 public partial class GlShaderProgram {
   public IShaderUniform<Matrix4x4> GetUniformMat4(string name) {
-    if (!this.cachedUniforms_.TryGetValue(name, out var uniform)) {
-      this.cachedUniforms_[name] = uniform =
+    if (!this.cachedUniformsByName_.TryGetValue(name, out var uniform)) {
+      this.cachedUniformsByName_[name] = uniform =
           new Mat4ShaderUniform(this.GetUniformLocation_(name));
     }
 

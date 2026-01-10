@@ -7,8 +7,8 @@ namespace fin.ui.rendering.gl;
 
 public partial class GlShaderProgram {
   public IShaderUniform<float> GetUniformFloat(string name) {
-      if (!this.cachedUniforms_.TryGetValue(name, out var uniform)) {
-        this.cachedUniforms_[name] = uniform =
+      if (!this.cachedUniformsByName_.TryGetValue(name, out var uniform)) {
+        this.cachedUniformsByName_[name] = uniform =
             new FloatShaderUniform(this.GetUniformLocation_(name));
       }
 
