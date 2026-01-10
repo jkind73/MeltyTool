@@ -22,6 +22,8 @@ public partial class ModelRenderer {
 
     private MergedMaterialMeshRenderer[] materialMeshRenderers_ = [];
 
+    public int VaoId => this.bufferManager_?.VaoId ?? 0;
+
     public MergedMaterialMeshesRenderer(
         IReadOnlyModel model,
         IReadOnlyTextureTransformManager? textureTransformManager = null,

@@ -8,6 +8,7 @@ public interface IModelRenderer : IRenderable {
   IReadOnlyModel Model { get; }
   IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
 
+  int VaoId { get; }
   void UpdateMatricesUbo();
   void BindMatricesUbo();
 

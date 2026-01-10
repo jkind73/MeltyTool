@@ -14,6 +14,7 @@ public interface IRenderGraphParams {
   bool IsTransparent { get; }
   int MinPrimitiveIndex { get; }
   uint InversePriority { get; }
+  int VaoId { get; }
 }
 
 public class RenderGraphComponentRenderer : IRenderGraphParams {
@@ -23,6 +24,7 @@ public class RenderGraphComponentRenderer : IRenderGraphParams {
   public bool IsTransparent => true;
   public int MinPrimitiveIndex => int.MaxValue;
   public uint InversePriority => uint.MaxValue;
+  public int VaoId => 0;
 
   public override string ToString() => "(Component)";
 }
@@ -35,6 +37,7 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   public required bool IsTransparent { get; init; }
   public required int MinPrimitiveIndex { get; init; }
   public required uint InversePriority { get; init; }
+  public int VaoId => this.ModelRenderer.VaoId;
 
   public override string ToString() {
     var material = this.GlMaterialShader.Material;
@@ -159,12 +162,14 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     var transparentDepthMax = ((ulong) 1 << transparentDepthBitCount) - 1;
 
     // Opaque bits
-    const int opaqueProgramIdBitCount = 20;
+    const int opaqueProgramIdBitCount = 16;
     var opaqueProgramIdMask = ((ulong) 1 << opaqueProgramIdBitCount) - 1;
+    const int opaqueVaoIdBitCount = 12;
+    var opaqueVaoIdMask = ((ulong) 1 << opaqueVaoIdBitCount) - 1;
     const int opaqueMaterialIndexBitCount = 12;
     var opaqueMaterialIndexMask
         = ((ulong) 1 << opaqueMaterialIndexBitCount) - 1;
-    const int opaqueDepthBitCount = 31;
+    const int opaqueDepthBitCount = 23;
     var opaqueDepthMax = ((ulong) 1 << opaqueDepthBitCount) - 1;
 
     var camera = Camera.Instance;
@@ -207,6 +212,13 @@ public sealed class SceneStaticRenderGraph : IRenderable {
             = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & opaqueProgramIdMask;
         sortKey
             |= programIdBits <<
+               (opaqueDepthBitCount +
+                opaqueMaterialIndexBitCount +
+                opaqueVaoIdBitCount);
+
+        var vaoIdBits = (ulong) (prms.VaoId) & opaqueVaoIdMask;
+        sortKey
+            |= vaoIdBits <<
                (opaqueDepthBitCount +
                 opaqueMaterialIndexBitCount);
 

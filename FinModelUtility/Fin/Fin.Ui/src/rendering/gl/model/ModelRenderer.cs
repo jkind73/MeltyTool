@@ -20,6 +20,8 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
   private readonly Matrix4x4[] boneMatrices_;
   private readonly MergedMaterialMeshesRenderer impl_;
 
+  public int VaoId => this.impl_.VaoId;
+
   public static IModelRenderer CreateStatic(
       IReadOnlyModel model,
       IReadOnlyBoneTransformManager? boneTransformManager = null,

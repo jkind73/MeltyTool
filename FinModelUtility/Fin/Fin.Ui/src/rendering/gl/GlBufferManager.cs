@@ -17,6 +17,8 @@ using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 namespace fin.ui.rendering.gl;
 
 public interface IGlBufferManager : IDisposable {
+  int VaoId { get; }
+
   IGlBufferRenderer CreateRenderer(
       FinPrimitiveType primitiveType,
       IReadOnlyList<IReadOnlyVertex> triangleVertices,
@@ -36,6 +38,8 @@ public sealed class GlBufferManager : IDynamicGlBufferManager {
   private readonly IModelRequirements modelRequirements_;
   private readonly BufferUsageHint bufferType_;
   private readonly VertexArrayObject vao_;
+
+  public int VaoId => this.vao_.VaoId;
 
   public static IGlBufferManager CreateStatic(
       IReadOnlyModel model,
