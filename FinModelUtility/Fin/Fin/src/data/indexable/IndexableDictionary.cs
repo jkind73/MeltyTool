@@ -33,9 +33,15 @@ public static class IndexableDictionaryExtensions {
   public static bool TryGetValue<TKey, TValue>(
       this IReadOnlyIndexableDictionary<TKey, TValue> impl,
       TKey key,
+      out TValue value) where TKey : IIndexable
+    => impl.TryGetValue(key.Index, out value);
+
+  public static bool TryGetValue<TKey, TValue>(
+      this IReadOnlyIndexableDictionary<TKey, TValue> impl,
+      int index,
       out TValue value) where TKey : IIndexable {
-    if (impl.ContainsKey(key)) {
-      value = impl[key];
+    if (impl.ContainsKey(index)) {
+      value = impl[index];
       return true;
     }
 
