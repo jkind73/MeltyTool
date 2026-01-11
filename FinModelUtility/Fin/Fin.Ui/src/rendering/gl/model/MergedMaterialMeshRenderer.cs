@@ -51,56 +51,14 @@ public partial class ModelRenderer {
         return;
       }
 
-      var primitiveMerger = new PrimitiveMerger();
-      var materialQueue = new RenderPriorityOrderedSet<IReadOnlyMaterial?>();
-      var primitivesByMaterial
-          = new ListDictionary<IReadOnlyMaterial?, IReadOnlyPrimitive>(
-              new NullFriendlyDictionary<IReadOnlyMaterial?,
-                  IList<IReadOnlyPrimitive>>());
-      foreach (var primitive in mesh.Primitives) {
-        primitivesByMaterial.Add(primitive.Material, primitive);
-        materialQueue.Add(
-            primitive.Material,
-            primitive.Index,
-            primitive.InversePriority,
-            (primitive.Material?.GetTransparencyType() ??
-             TransparencyType.OPAQUE) ==
-            TransparencyType.TRANSPARENT);
-      }
-
-      var mergedPrimitives = new List<MergedPrimitive>();
-      var materialTuples
-          = new List<(int minPrimitiveIndex, uint inversePriority, IReadOnlyMaterial? material)>();
-      foreach (var (minPrimitiveIndex, inversePriority, material) in materialQueue) {
-        var primitives = primitivesByMaterial[material];
-        if (!primitiveMerger.TryToMergePrimitives(
-                primitives,
-                out var mergedPrimitive)) {
-          continue;
-        }
-
-        mergedPrimitives.Add(mergedPrimitive);
-        materialTuples.Add((minPrimitiveIndex, inversePriority, material));
-      }
-
       this.materialMeshRenderers_
-          = bufferManager
-            .CreateRenderers(mergedPrimitives)
-            .Select((renderer, i) => {
-              var (minPrimitiveIndex, inversePriority, material) = materialTuples[i];
-              return new MergedMaterialPrimitivesRenderer(
-                  textureTransformManager,
-                  model,
-                  modelRequirements,
-                  mesh,
-                  material,
-                  renderer) {
-                  MinPrimitiveIndex = minPrimitiveIndex,
-                  InversePriority = inversePriority,
-                  HiddenMeshes = this.HiddenMeshes
-              };
-            })
-            .ToArray();
+          = MergedMaterialPrimitivesRenderer.CreateFromPrimitives(
+              bufferManager,
+              model,
+              mesh,
+              textureTransformManager,
+              modelRequirements,
+              this.HiddenMeshes);
     }
 
     ~MergedMaterialMeshRenderer() => this.ReleaseUnmanagedResources_();
