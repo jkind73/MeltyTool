@@ -124,7 +124,7 @@ public sealed partial class GlBufferManager {
       GlUtil.BindVao(this.vaoId_);
 
       if (this.indices_ != null) {
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
+        GlUtil.BindEbo(this.eboId_);
 
         GlUtil.ValidateCurrentProgram();
         GL.DrawElements(

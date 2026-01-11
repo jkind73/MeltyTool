@@ -68,6 +68,7 @@ public static partial class GlUtil {
     ResetFlipFaces();
     ResetUbo();
     ResetVao();
+    ResetEbo();
 
     for (var i = 0; i < MaterialConstants.MAX_TEXTURES; ++i) {
       UnbindTexture(i);
