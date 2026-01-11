@@ -5,6 +5,7 @@ using Avalonia;
 
 using fin.services;
 using fin.ui.avalonia;
+using fin.ui.rendering.gl;
 using fin.util.time;
 
 namespace marioartisttool.desktop;
@@ -17,6 +18,7 @@ class Program {
   public static void Main(string[] args) {
     CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
     FrameTime.Initialize();
+    GpuUtil.Initialize();
 
     try {
       BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
