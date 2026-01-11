@@ -58,7 +58,6 @@ public sealed class FloorShadowRenderer : IOrthoRenderable {
 
     var material = model.MaterialManager.AddColorMaterial(Color.White);
     material.DepthMode = DepthMode.READ_ONLY;
-    material.TransparencyType = TransparencyType.OPAQUE;
 
     var transparent = new Vector4(0, 0, 0, 0);
     var shadow = new Vector4(0, 0, 0, .75f);
