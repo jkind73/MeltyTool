@@ -319,6 +319,10 @@ public sealed class GlTexture : IGlTexture {
       return;
     }
 
+    if (this.IsDisposed) {
+      return;
+    }
+
     this.IsDisposed = true;
     if (this.params_ != null) {
       cache_.Remove(this.params_);
