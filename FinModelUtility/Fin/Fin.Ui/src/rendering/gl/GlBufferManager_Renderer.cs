@@ -1,7 +1,5 @@
 ﻿using fin.math;
-using fin.model;
 using fin.ui.rendering.gl.model;
-using fin.util.enumerables;
 using fin.util.linq;
 
 using Nito.Disposables;

@@ -23,6 +23,7 @@ public interface IDynamicModelRenderer : IModelRenderer {
 }
 
 public interface IMeshRenderer : IRenderable {
+  void GenerateModelIfNull();
   IEnumerable<IMeshRenderer> Children { get; }
   IEnumerable<IMaterialRenderer> MaterialRenderers { get; }
 }

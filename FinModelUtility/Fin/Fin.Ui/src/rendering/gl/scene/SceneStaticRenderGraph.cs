@@ -112,6 +112,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         var meshRendererQueue
             = new FinQueue<IMeshRenderer>(modelRenderer.MeshRenderers);
         while (meshRendererQueue.TryDequeue(out var meshRenderer)) {
+          meshRenderer.GenerateModelIfNull();
           meshRendererQueue.Enqueue(meshRenderer.Children);
 
           foreach (var primitiveRenderer in meshRenderer.MaterialRenderers) {
