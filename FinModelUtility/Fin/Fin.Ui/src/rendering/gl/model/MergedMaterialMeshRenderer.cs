@@ -68,31 +68,39 @@ public partial class ModelRenderer {
             TransparencyType.TRANSPARENT);
       }
 
-      var materialMeshRenderers
-          = new List<MergedMaterialPrimitivesRenderer>();
+      var mergedPrimitives = new List<MergedPrimitive>();
+      var materialTuples
+          = new List<(int minPrimitiveIndex, uint inversePriority, IReadOnlyMaterial? material)>();
       foreach (var (minPrimitiveIndex, inversePriority, material) in materialQueue) {
         var primitives = primitivesByMaterial[material];
         if (!primitiveMerger.TryToMergePrimitives(
                 primitives,
-                out var mergedPrimitives)) {
+                out var mergedPrimitive)) {
           continue;
         }
 
-        materialMeshRenderers.Add(new MergedMaterialPrimitivesRenderer(
-                                      textureTransformManager,
-                                      bufferManager,
-                                      model,
-                                      modelRequirements,
-                                      mesh,
-                                      material,
-                                      mergedPrimitives) {
-                                      MinPrimitiveIndex = minPrimitiveIndex,
-                                      InversePriority = inversePriority,
-                                      HiddenMeshes = this.HiddenMeshes
-                                  });
+        mergedPrimitives.Add(mergedPrimitive);
+        materialTuples.Add((minPrimitiveIndex, inversePriority, material));
       }
 
-      this.materialMeshRenderers_ = materialMeshRenderers.ToArray();
+      this.materialMeshRenderers_
+          = bufferManager
+            .CreateRenderers(mergedPrimitives)
+            .Select((renderer, i) => {
+              var (minPrimitiveIndex, inversePriority, material) = materialTuples[i];
+              return new MergedMaterialPrimitivesRenderer(
+                  textureTransformManager,
+                  model,
+                  modelRequirements,
+                  mesh,
+                  material,
+                  renderer) {
+                  MinPrimitiveIndex = minPrimitiveIndex,
+                  InversePriority = inversePriority,
+                  HiddenMeshes = this.HiddenMeshes
+              };
+            })
+            .ToArray();
     }
 
     ~MergedMaterialMeshRenderer() => this.ReleaseUnmanagedResources_();

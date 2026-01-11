@@ -1,7 +1,10 @@
-﻿using fin.model;
+﻿using fin.math;
+using fin.model;
 using fin.ui.rendering.gl.model;
 using fin.util.enumerables;
 using fin.util.linq;
+
+using Nito.Disposables;
 
 using OpenTK.Graphics.OpenGL4;
 
@@ -11,103 +14,113 @@ using PrimitiveType = OpenTK.Graphics.OpenGL4.PrimitiveType;
 namespace fin.ui.rendering.gl;
 
 public partial interface IGlBufferManager {
-  IGlBufferRenderer CreateRenderer(
-      FinPrimitiveType primitiveType,
-      IReadOnlyList<IReadOnlyVertex> triangleVertices,
-      bool isFlipped = false);
-
-  IGlBufferRenderer CreateRenderer(in MergedPrimitive mergedPrimitive);
+  IGlBufferRenderer[] CreateRenderers(
+      IReadOnlyList<MergedPrimitive> mergedPrimitives);
 }
 
 public interface IGlBufferRenderer : IRenderable;
 
 public sealed partial class GlBufferManager {
-  public IGlBufferRenderer CreateRenderer(
-      FinPrimitiveType primitiveType,
-      IReadOnlyList<IReadOnlyVertex> triangleVertices,
-      bool isFlipped = false)
-    => new GlBufferRenderer(this.vao_.VaoId,
-                            primitiveType,
-                            isFlipped,
-                            triangleVertices);
+  private const DrawElementsType INDEX_TYPE = DrawElementsType.UnsignedInt;
 
-  public IGlBufferRenderer CreateRenderer(in MergedPrimitive mergedPrimitive)
-    => new GlBufferRenderer(this.vao_.VaoId, mergedPrimitive);
+  public IGlBufferRenderer[] CreateRenderers(
+      IReadOnlyList<MergedPrimitive> mergedPrimitives) {
+    IReadOnlyList<int> restartIndex = [
+        (int) (INDEX_TYPE switch {
+            DrawElementsType.UnsignedByte => byte.MaxValue,
+            DrawElementsType.UnsignedShort => ushort.MaxValue,
+            DrawElementsType.UnsignedInt => uint.MaxValue,
+            _ => throw new ArgumentOutOfRangeException()
+        })
+    ];
 
-  public sealed class GlBufferRenderer : IGlBufferRenderer {
-    private readonly int vaoId_;
-    private PrimitiveType beginMode_;
-    private readonly bool isFlipped_;
+    IGlBufferRenderer[] renderers
+        = new IGlBufferRenderer[mergedPrimitives.Count];
+    var eboDisposable = new Disposable(null);
 
-    // Present if in indices mode
-    private int eboId_;
-    private readonly int[]? indices_;
+    GlUtil.BindVao(this.VaoId);
+    GL.GenBuffers(1, out int eboId);
 
-    // Present if in vertex mode
-    private readonly int vertexCount_;
+    var eboIndices = new List<int>();
+    var eboInstanceCount = 0;
+    for (var i = 0; i < mergedPrimitives.Count; ++i) {
+      var mergedPrimitive = mergedPrimitives[i];
+      var mpIndices
+          = mergedPrimitive
+            .Vertices
+            .Select(vertices => vertices.Select(vertex => vertex.Index))
+            .Intersperse(restartIndex)
+            .SelectMany(indices => indices)
+            .ToArray();
 
-    private const DrawElementsType INDEX_TYPE = DrawElementsType.UnsignedInt;
-
-    public GlBufferRenderer(
-        int vaoId,
-        FinPrimitiveType primitiveType,
-        bool isFlipped,
-        IEnumerable<IReadOnlyVertex> vertices) : this(
-        vaoId,
-        new MergedPrimitive {
-            PrimitiveType = primitiveType,
-            Vertices = vertices.Yield(),
-            IsFlipped = isFlipped
-        }) { }
-
-    public GlBufferRenderer(
-        int vaoId,
-        in MergedPrimitive mergedPrimitive) {
-      this.vaoId_ = vaoId;
-      this.beginMode_ = mergedPrimitive.PrimitiveType switch {
-          FinPrimitiveType.POINTS         => PrimitiveType.Points,
-          FinPrimitiveType.LINES          => PrimitiveType.Lines,
-          FinPrimitiveType.LINE_STRIP     => PrimitiveType.LineStrip,
-          FinPrimitiveType.TRIANGLES      => PrimitiveType.Triangles,
-          FinPrimitiveType.TRIANGLE_FAN   => PrimitiveType.TriangleFan,
-          FinPrimitiveType.TRIANGLE_STRIP => PrimitiveType.TriangleStrip,
-          _                            => throw new ArgumentOutOfRangeException()
-      };
-      this.isFlipped_ = mergedPrimitive.IsFlipped;
-
-      GlUtil.BindVao(this.vaoId_);
-      GL.GenBuffers(1, out this.eboId_);
-
-      IReadOnlyList<int> restartIndex = [
-          (int) (INDEX_TYPE switch {
-              DrawElementsType.UnsignedByte  => byte.MaxValue,
-              DrawElementsType.UnsignedShort => ushort.MaxValue,
-              DrawElementsType.UnsignedInt   => uint.MaxValue,
-              _                              => throw new ArgumentOutOfRangeException()
-          })
-      ];
-
-      var vertices = mergedPrimitive.Vertices.SelectMany(e => e).ToArray();
-
-      if (!vertices.All((v, i) => v.Index == i)) {
-        this.indices_ =
-            mergedPrimitive
-                .Vertices
-                .Select(vertices
-                            => vertices.Select(vertex => vertex.Index))
-                .Intersperse(restartIndex)
-                .SelectMany(indices => indices)
-                .ToArray();
-
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.eboId_);
-        GL.BufferData(BufferTarget.ElementArrayBuffer,
-                      new IntPtr(sizeof(int) * this.indices_.Length),
-                      this.indices_,
-                      BufferUsageHint.StaticDraw);
+      if (mpIndices.IsSequentiallyIncreasing(
+              out var vertexOffset,
+              out var vertexCount)) {
+        renderers[i] = new GlBufferRenderer(
+            this.VaoId,
+            mergedPrimitive.PrimitiveType,
+            mergedPrimitive.IsFlipped,
+            null,
+            null,
+            vertexOffset,
+            vertexCount
+        );
       } else {
-        this.vertexCount_ = vertices.Length;
+        vertexOffset = eboIndices.Count;
+        vertexCount = mpIndices.Length;
+
+        eboIndices.AddRange(mpIndices);
+
+        renderers[i] = new GlBufferRenderer(
+            this.VaoId,
+            mergedPrimitive.PrimitiveType,
+            mergedPrimitive.IsFlipped,
+            eboId,
+            eboDisposable,
+            vertexOffset,
+            vertexCount
+        );
       }
     }
+
+    if (eboIndices.Count == 0) {
+      GL.DeleteBuffers(1, ref eboId);
+    } else {
+      GL.BindBuffer(BufferTarget.ElementArrayBuffer, eboId);
+      GL.BufferData(BufferTarget.ElementArrayBuffer,
+                    new IntPtr(sizeof(int) * eboIndices.Count),
+                    eboIndices.ToArray(),
+                    BufferUsageHint.StaticDraw);
+
+      var count = eboInstanceCount;
+      eboDisposable.Add(() => {
+        if (--count == 0) {
+          GL.DeleteBuffers(1, ref eboId);
+        }
+      });
+    }
+
+    return renderers;
+  }
+
+  public sealed class GlBufferRenderer(
+      int vaoId,
+      FinPrimitiveType primitiveType,
+      bool isFlipped,
+      int? eboId,
+      IDisposable? eboDisposable,
+      int vertexOffset,
+      int vertexCount) : IGlBufferRenderer {
+    private readonly PrimitiveType beginMode_
+        = primitiveType switch {
+            FinPrimitiveType.POINTS => PrimitiveType.Points,
+            FinPrimitiveType.LINES => PrimitiveType.Lines,
+            FinPrimitiveType.LINE_STRIP => PrimitiveType.LineStrip,
+            FinPrimitiveType.TRIANGLES => PrimitiveType.Triangles,
+            FinPrimitiveType.TRIANGLE_FAN => PrimitiveType.TriangleFan,
+            FinPrimitiveType.TRIANGLE_STRIP => PrimitiveType.TriangleStrip,
+            _ => throw new ArgumentOutOfRangeException()
+        };
 
     ~GlBufferRenderer() => this.ReleaseUnmanagedResources_();
 
@@ -116,27 +129,26 @@ public sealed partial class GlBufferManager {
       GC.SuppressFinalize(this);
     }
 
-    private void ReleaseUnmanagedResources_()
-      => GL.DeleteBuffers(1, ref this.eboId_);
+    private void ReleaseUnmanagedResources_() => eboDisposable?.Dispose();
 
     public void Render() {
-      GlUtil.SetFlipFaces(this.isFlipped_);
-      GlUtil.BindVao(this.vaoId_);
+      GlUtil.SetFlipFaces(isFlipped);
+      GlUtil.BindVao(vaoId);
 
-      if (this.indices_ != null) {
-        GlUtil.BindEbo(this.eboId_);
+      if (eboId != null) {
+        GlUtil.BindEbo(eboId.Value);
 
         GlUtil.ValidateCurrentProgram();
         GL.DrawElements(
             this.beginMode_,
-            this.indices_.Length,
+            vertexCount,
             INDEX_TYPE,
-            IntPtr.Zero);
+            new IntPtr(sizeof(int) * vertexOffset));
       } else {
         GL.DrawArrays(
             this.beginMode_,
-            0,
-            this.vertexCount_);
+            vertexOffset,
+            vertexCount);
       }
     }
   }

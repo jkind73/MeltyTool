@@ -25,12 +25,11 @@ public partial class ModelRenderer {
 
     public MergedMaterialPrimitivesRenderer(
         IReadOnlyTextureTransformManager? textureTransformManager,
-        IGlBufferManager bufferManager,
         IReadOnlyModel model,
         IModelRequirements modelRequirements,
         IReadOnlyMesh mesh,
         IReadOnlyMaterial? material,
-        in MergedPrimitive mergedPrimitive) {
+        IGlBufferRenderer bufferRenderer) {
       this.Mesh = mesh;
       this.Material = material;
 
@@ -39,7 +38,7 @@ public partial class ModelRenderer {
         material,
         textureTransformManager);
 
-      this.bufferRenderer_ = bufferManager.CreateRenderer(mergedPrimitive);
+      this.bufferRenderer_ = bufferRenderer;
 
       SelectedMaterialsService.OnMaterialsSelected
           += selectedMaterials =>
