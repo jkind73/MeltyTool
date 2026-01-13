@@ -1,8 +1,8 @@
 ﻿using fin.data.dictionaries;
-using fin.data.indexable;
 using fin.image.util;
 using fin.math;
 using fin.model;
+using fin.model.skin;
 using fin.model.util;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
@@ -24,7 +24,7 @@ public partial class ModelRenderer {
     public required uint InversePriority { get; init; }
     public IGlMaterialShader GlMaterialShader { get; }
     
-    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes { get; set; }
+    public IReadOnlyMeshVisibilityDictionary? MeshVisibility { get; set; }
 
     public static MergedMaterialPrimitivesRenderer[] CreateFromPrimitives(
         IGlBufferManager bufferManager,
@@ -32,7 +32,7 @@ public partial class ModelRenderer {
         IReadOnlyMesh mesh,
         IReadOnlyTextureTransformManager? textureTransformManager,
         IModelRequirements modelRequirements,
-        IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? hiddenMeshes) {
+        IReadOnlyMeshVisibilityDictionary? meshVisibility) {
       var primitiveMerger = new PrimitiveMerger();
       var materialQueue = new RenderPriorityOrderedSet<IReadOnlyMaterial?>();
       var primitivesByMaterial
@@ -78,7 +78,7 @@ public partial class ModelRenderer {
                   renderer) {
                   MinPrimitiveIndex = minPrimitiveIndex,
                   InversePriority = inversePriority,
-                  HiddenMeshes = hiddenMeshes
+                  MeshVisibility = meshVisibility
               };
             })
             .ToArray();
@@ -124,8 +124,8 @@ public partial class ModelRenderer {
     }
 
     public void Render() {
-      if ((this.HiddenMeshes?.TryGetValue(this.Mesh, out var isHidden) ??
-           false) && isHidden) {
+      var isVisible = this.MeshVisibility?[this.Mesh] ?? true;
+      if (!isVisible) {
         return;
       }
 

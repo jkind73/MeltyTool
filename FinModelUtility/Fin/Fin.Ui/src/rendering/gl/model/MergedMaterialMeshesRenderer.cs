@@ -1,7 +1,7 @@
-﻿using fin.data.indexable;
-using fin.image.util;
+﻿using fin.image.util;
 using fin.math;
 using fin.model;
+using fin.model.skin;
 using fin.model.util;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
@@ -76,7 +76,7 @@ public partial class ModelRenderer {
                                          modelRequirements,
                                          this.bufferManager_,
                                          this.textureTransformManager_) {
-            HiddenMeshes = this.HiddenMeshes,
+            MeshVisibility = this.MeshVisibility,
         };
         materialMeshRenderer.GenerateModelIfNull();
         allMaterialMeshRenderers.Add(materialMeshRenderer);
@@ -102,7 +102,7 @@ public partial class ModelRenderer {
 
     public IReadOnlyModel Model { get; }
 
-    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
+    public IReadOnlyMeshVisibilityDictionary? MeshVisibility {
       get;
       set;
     }

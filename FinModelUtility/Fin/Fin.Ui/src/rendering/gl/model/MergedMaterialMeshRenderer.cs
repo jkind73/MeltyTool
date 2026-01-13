@@ -1,9 +1,6 @@
-﻿using fin.data.dictionaries;
-using fin.data.indexable;
-using fin.image.util;
-using fin.math;
+﻿using fin.math;
 using fin.model;
-using fin.model.util;
+using fin.model.skin;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
@@ -32,12 +29,12 @@ public partial class ModelRenderer {
                                     textureTransformManager))
               .ToArray();
 
-    public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
+    public IReadOnlyMeshVisibilityDictionary? MeshVisibility {
       get;
       set {
         field = value;
         foreach (var child in this.children_) {
-          child.HiddenMeshes = value;
+          child.MeshVisibility = value;
         }
       }
     }
@@ -58,7 +55,7 @@ public partial class ModelRenderer {
               mesh,
               textureTransformManager,
               modelRequirements,
-              this.HiddenMeshes);
+              this.MeshVisibility);
     }
 
     ~MergedMaterialMeshRenderer() => this.ReleaseUnmanagedResources_();

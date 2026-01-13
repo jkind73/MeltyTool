@@ -1,9 +1,9 @@
 ﻿using System.Numerics;
 
-using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
+using fin.model.skin;
 using fin.ui.rendering.gl.material;
 using fin.ui.rendering.gl.ubo;
 
@@ -83,9 +83,9 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
 
   public IReadOnlyModel Model => this.impl_.Model;
 
-  public IReadOnlyIndexableDictionary<IReadOnlyMesh, bool>? HiddenMeshes {
-    get => this.impl_.HiddenMeshes;
-    set => this.impl_.HiddenMeshes = value;
+  public IReadOnlyMeshVisibilityDictionary? MeshVisibility {
+    get => this.impl_.MeshVisibility;
+    set => this.impl_.MeshVisibility = value;
   }
 
   public LightsUbo? LightsUbo { get; set; }

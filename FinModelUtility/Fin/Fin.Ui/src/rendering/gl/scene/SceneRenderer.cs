@@ -5,7 +5,7 @@ using fin.ui.rendering.gl.ubo;
 namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneRenderer : IRenderable {
-  private const bool USE_RENDER_GRAPH = false;
+  private const bool USE_RENDER_GRAPH = true;
 
   private readonly ISceneInstance scene_;
 

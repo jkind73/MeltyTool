@@ -4,6 +4,7 @@ using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
+using fin.model.skin;
 using fin.scene;
 using fin.scene.components;
 using fin.ui.rendering.gl.model;
@@ -13,7 +14,7 @@ namespace fin.ui.rendering.gl.scene;
 public sealed class SimpleModelRenderComponent : IModelRenderComponent {
   private readonly IReadOnlyMesh[] meshes_;
   private readonly IModelRenderer modelRenderer_;
-  private readonly IndexableDictionary<IReadOnlyMesh, bool> hiddenMeshes_;
+  private readonly MeshVisibilityDictionary meshVisibility_;
   private bool isBoneSelected_;
   private bool hadOverrides_;
 
@@ -23,8 +24,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     this.Model = model;
 
     this.meshes_ = model.Skin.Meshes.ToArray();
-    this.hiddenMeshes_
-        = new IndexableDictionary<IReadOnlyMesh, bool>(this.meshes_.Length);
+    this.meshVisibility_ = new MeshVisibilityDictionary(model);
 
     this.SimpleBoneTransformView = new();
 
@@ -47,7 +47,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
         new ModelRenderer(model,
                           this.BoneTransformManager,
                           this.TextureTransformManager) {
-            HiddenMeshes = this.hiddenMeshes_,
+            MeshVisibility = this.meshVisibility_,
         };
 
     this.SkeletonRenderer
@@ -88,11 +88,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     var animation = this.Animation;
     var animationPlaybackManager = this.AnimationPlaybackManager;
 
-    this.hiddenMeshes_.Clear();
-    foreach (var mesh in this.meshes_) {
-      this.hiddenMeshes_[mesh]
-          = mesh.DefaultDisplayState == MeshDisplayState.HIDDEN;
-    }
+    this.meshVisibility_.Reset();
 
     var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
     if (animation != null ||
@@ -125,8 +121,8 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
             continue;
           }
 
-          this.hiddenMeshes_[meshTracks.Mesh]
-              = displayState == MeshDisplayState.HIDDEN;
+          this.meshVisibility_[meshTracks.Mesh]
+              = displayState is not MeshDisplayState.HIDDEN;
         }
       }
     } else {
