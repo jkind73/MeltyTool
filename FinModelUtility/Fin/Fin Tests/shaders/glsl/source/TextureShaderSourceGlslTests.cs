@@ -1,6 +1,8 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 using fin.image;
+using fin.image.util;
 
 using NUnit.Framework;
 
@@ -12,7 +14,10 @@ public sealed class TextureShaderSourceGlslTests {
   [Test]
   public void TestWithoutNormalsNotMasked()
     => AssertGlsl_(
-        new MockMaterialOptions { WithUvs = true, },
+        new MockMaterialOptions {
+            TransparencyType = TransparencyType.TRANSPARENT,
+            WithUvs = true,
+        },
         $$"""
           #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
@@ -36,7 +41,7 @@ public sealed class TextureShaderSourceGlslTests {
   public void TestWithColorsWithoutNormalsMasked()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
+            TransparencyType = TransparencyType.MASK,
             WithNormals = false,
             WithColors = true,
             WithUvs = true,
@@ -65,7 +70,7 @@ public sealed class TextureShaderSourceGlslTests {
   public void TestWithNormals()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
+            TransparencyType = TransparencyType.MASK,
             WithNormals = true,
             WithUvs = true,
         },
@@ -113,6 +118,12 @@ public sealed class TextureShaderSourceGlslTests {
                         options,
                         mm => mm.AddTextureMaterial(
                             mm.CreateTexture(
-                                FinImage.Create1x1FromColor(Color.Red))))
+                                FinImage.Create1x1FromColor(
+                                    options.TransparencyType switch {
+                                        TransparencyType.OPAQUE      => Color.White,
+                                        TransparencyType.MASK        => Color.FromArgb(0, 255, 255, 255),
+                                        TransparencyType.TRANSPARENT => Color.FromArgb(128, 255, 255, 255),
+                                        _                            => throw new ArgumentOutOfRangeException()
+                                    }))))
                     .FragmentShaderSource);
 }

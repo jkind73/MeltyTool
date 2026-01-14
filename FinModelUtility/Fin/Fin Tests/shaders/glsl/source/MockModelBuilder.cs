@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Drawing;
 
+using fin.image.util;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
-using fin.image.util;
 
 namespace fin.shaders.glsl.source;
 
 public struct MockMaterialOptions {
-  public bool Masked { get; init; }
+  public TransparencyType TransparencyType { get; init; }
   public bool WithNormals { get; init; }
   public bool WithColors { get; init; }
   public bool WithUvs { get; init; }

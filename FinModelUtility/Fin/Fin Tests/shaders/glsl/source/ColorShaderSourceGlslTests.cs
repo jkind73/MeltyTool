@@ -1,5 +1,7 @@
 ﻿using System.Drawing;
 
+using fin.image.util;
+
 using NUnit.Framework;
 
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -8,10 +10,10 @@ namespace fin.shaders.glsl.source;
 
 public sealed class ColorShaderSourceGlslTests {
   [Test]
-  public void TestWithoutNormalsNotMasked()
+  public void TestWithoutNormalsTransparent()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = false,
+            TransparencyType = TransparencyType.TRANSPARENT,
             WithNormals = false,
         },
         $$"""
@@ -32,10 +34,9 @@ public sealed class ColorShaderSourceGlslTests {
           """);
 
   [Test]
-  public void TestWithoutNormalsMasked()
+  public void TestWithoutNormalsOpaque()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = false,
         },
         $$"""
@@ -48,10 +49,6 @@ public sealed class ColorShaderSourceGlslTests {
 
           void main() {
             fragColor = diffuseColor;
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -59,7 +56,6 @@ public sealed class ColorShaderSourceGlslTests {
   public void TestWithVertexColorAndNormal()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = true,
             WithColors = true,
         },
@@ -91,10 +87,6 @@ public sealed class ColorShaderSourceGlslTests {
             // Have to renormalize because the vertex normals can become distorted when interpolated.
             vec3 fragNormal = normalize(vertexNormal);
             fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, shininess, fragColor, vec4(1)).rgb,  useLighting);
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -104,6 +96,10 @@ public sealed class ColorShaderSourceGlslTests {
         expectedSource,
         MockMaterial.BuildAndGetSource(
                         options,
-                        mm => mm.AddColorMaterial(Color.Red))
+                        mm => mm.AddColorMaterial(
+                            options.TransparencyType is not TransparencyType
+                                .TRANSPARENT
+                                ? Color.Red
+                                : Color.FromArgb(128, 255, 0, 0)))
                     .FragmentShaderSource);
 }

@@ -2,6 +2,7 @@
 using System.Drawing;
 
 using fin.image;
+using fin.image.util;
 using fin.language.equations.fixedFunction;
 using fin.model;
 
@@ -28,7 +29,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
           
             float alphaComponent = 1.0;
           
-            fragColor = vec4(colorComponent, alphaComponent);
+            fragColor = vec4(colorComponent, 1);
           }
           """);
 
@@ -141,7 +142,9 @@ public sealed class FixedFunctionShaderSourceGlslTests {
     => Assert.AreEqual(
         expectedSource,
         MockMaterial.BuildAndGetSource(
-                        options with { Masked = false, },
+                        options with {
+                            TransparencyType = TransparencyType.TRANSPARENT
+                        },
                         mm => {
                           var texture = mm.CreateTexture(
                               FinImage.Create1x1FromColor(Color.White));

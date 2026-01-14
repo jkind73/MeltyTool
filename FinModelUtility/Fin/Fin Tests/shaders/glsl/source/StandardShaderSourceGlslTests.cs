@@ -2,6 +2,7 @@
 using System.Drawing;
 
 using fin.image;
+using fin.image.util;
 using fin.model;
 
 using NUnit.Framework;
@@ -24,10 +25,6 @@ public sealed class StandardShaderSourceGlslTests {
 
           void main() {
             fragColor = vec4(1);
-          
-            if (fragColor.a < .01) {
-              discard;
-            }
           }
           """);
 
@@ -35,7 +32,6 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithoutNormalsNoTextures()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = false,
         },
         (m, t) => { },
@@ -47,10 +43,6 @@ public sealed class StandardShaderSourceGlslTests {
 
           void main() {
             fragColor = vec4(1);
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -69,10 +61,6 @@ public sealed class StandardShaderSourceGlslTests {
 
           void main() {
             fragColor = vertexColor0;
-          
-            if (fragColor.a < .01) {
-              discard;
-            }
           }
           """);
 
@@ -80,7 +68,7 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithoutNormalsDiffuseOnly()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
+            TransparencyType = TransparencyType.MASK,
             WithNormals = false,
             WithUvs = true,
         },
@@ -108,7 +96,6 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithoutNormalsEmissiveOnly()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = false,
             WithUvs = true,
         },
@@ -129,10 +116,6 @@ public sealed class StandardShaderSourceGlslTests {
             vec4 emissiveColor = texture(emissiveTexture, uv0);
             fragColor.rgb += emissiveColor.rgb;
             fragColor.rgb = min(fragColor.rgb, 1.0);
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -140,7 +123,6 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithNormalsNoTextures()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = true,
         },
         (m, t) => { },
@@ -170,10 +152,6 @@ public sealed class StandardShaderSourceGlslTests {
             // Have to renormalize because the vertex normals can become distorted when interpolated.
             vec3 fragNormal = normalize(vertexNormal);
             fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, shininess, fragColor, vec4(1)).rgb, useLighting);
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -181,7 +159,7 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithNormalsDiffuseOnly()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
+            TransparencyType = TransparencyType.MASK,
             WithNormals = true,
             WithUvs = true,
         },
@@ -225,7 +203,6 @@ public sealed class StandardShaderSourceGlslTests {
   public void TestWithNormalsEmissiveOnly()
     => AssertGlsl_(
         new MockMaterialOptions {
-            Masked = true,
             WithNormals = true,
             WithUvs = true,
         },
@@ -262,10 +239,6 @@ public sealed class StandardShaderSourceGlslTests {
             vec4 emissiveColor = texture(emissiveTexture, uv0);
             fragColor.rgb += emissiveColor.rgb;
             fragColor.rgb = min(fragColor.rgb, 1.0);
-          
-            if (fragColor.a < .95) {
-              discard;
-            }
           }
           """);
 
@@ -279,7 +252,12 @@ public sealed class StandardShaderSourceGlslTests {
                         options,
                         mm => {
                           var texture = mm.CreateTexture(
-                              FinImage.Create1x1FromColor(Color.White));
+                              FinImage.Create1x1FromColor(options.TransparencyType switch {
+                                  TransparencyType.OPAQUE      => Color.White,
+                                  TransparencyType.MASK        => Color.FromArgb(0, 255, 255, 255),
+                                  TransparencyType.TRANSPARENT => Color.FromArgb(128, 255, 255, 255),
+                                  _                            => throw new ArgumentOutOfRangeException()
+                              }));
                           var material = mm.AddStandardMaterial();
                           createMaterial(material, texture);
                           return material;

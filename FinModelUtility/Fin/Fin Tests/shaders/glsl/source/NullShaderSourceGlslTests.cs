@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using fin.image.util;
+
+using NUnit.Framework;
 
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -18,7 +20,6 @@ public sealed class NullShaderSourceGlslTests {
     => AssertGlsl_(
         new MockMaterialOptions {
             WithColors = false,
-            Masked = withMask,
             WithNormals = withNormals,
             WithUvs = withUvs,
         },
@@ -46,7 +47,7 @@ public sealed class NullShaderSourceGlslTests {
     => AssertGlsl_(
         new MockMaterialOptions {
             WithColors = true,
-            Masked = withMask,
+            TransparencyType = TransparencyType.TRANSPARENT,
             WithNormals = withNormals,
             WithUvs = withUvs,
         },
