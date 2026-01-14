@@ -181,9 +181,6 @@ public sealed class GlTexture : IGlTexture {
                         prms.LodBias);
       }
     }
-
-    this.Handle = GL.Arb.GetTextureHandle(this.Id);
-    GL.Arb.MakeTextureHandleResident(this.Handle);
   }
 
   private static readonly MemoryPool<byte> pool_ = MemoryPool<byte>.Shared;
@@ -328,8 +325,6 @@ public sealed class GlTexture : IGlTexture {
       cache_.Remove(this.params_);
     }
 
-    GL.Arb.MakeTextureHandleNonResident(this.Handle);
-
     var id = this.Id;
     GL.DeleteTextures(1, ref id);
 
@@ -337,7 +332,6 @@ public sealed class GlTexture : IGlTexture {
   }
 
   public int Id { get; private set; } = UNDEFINED_ID;
-  public long Handle { get; }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void Bind(int textureIndex = 0)

@@ -40,9 +40,6 @@ public sealed class GlFbo : IFinDisposable {
                     TextureParameterName.TextureWrapT,
                     (int) TextureWrapMode.ClampToBorder);
 
-    this.ColorTextureHandle = GL.Arb.GetTextureHandle(this.colorTextureId_);
-    GL.Arb.MakeTextureHandleResident(this.ColorTextureHandle);
-
     // Create Depth Tex
     GL.GenTextures(1, out this.depthTextureId_);
     GL.BindTexture(TextureTarget.Texture2D, this.depthTextureId_);
@@ -96,8 +93,6 @@ public sealed class GlFbo : IFinDisposable {
   private void ReleaseUnmanagedResources_() {
     this.IsDisposed = true;
 
-    GL.Arb.MakeTextureHandleNonResident(this.ColorTextureHandle);
-
     GL.DeleteFramebuffers(1, ref this.fboId_);
     GL.DeleteTextures(1, ref this.colorTextureId_);
     GL.DeleteTextures(1, ref this.depthTextureId_);
@@ -106,7 +101,6 @@ public sealed class GlFbo : IFinDisposable {
   public int Width { get; }
   public int Height { get; }
   public int ColorTextureId => this.colorTextureId_;
-  public long ColorTextureHandle { get; }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void Bind(int textureIndex = 0)
