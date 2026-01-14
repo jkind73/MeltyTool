@@ -38,21 +38,24 @@ public sealed class CmbImageReader : IImageReader {
     var tilePixelIndexer = new MortonPixelIndexer();
 
     if (format.IsRgb()) {
-      IPixelReader<Rgb24> pixelReader = format switch {
-          GlTextureFormat.RGB8   => new Rgb24PixelReader(),
-          GlTextureFormat.RGB565 => new Rgb565PixelReader(),
+      return format switch {
+          GlTextureFormat.RGB8   => TiledImageReader.New(width,
+            height,
+            blockWidth,
+            blockHeight,
+            tilePixelIndexer,
+            new Rgb24PixelReader()),
+          GlTextureFormat.RGB565 => TiledImageReader.New(width,
+            height,
+            blockWidth,
+            blockHeight,
+            tilePixelIndexer,
+            new Bgr565PixelReader()),
           _ => throw new ArgumentOutOfRangeException(
               nameof(format),
               format,
               null)
       };
-
-      return TiledImageReader.New(width,
-                                  height,
-                                  blockWidth,
-                                  blockHeight,
-                                  tilePixelIndexer,
-                                  pixelReader);
     }
 
     if (format.IsRgba()) {

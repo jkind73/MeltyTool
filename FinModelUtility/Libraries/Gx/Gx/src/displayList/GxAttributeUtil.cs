@@ -76,7 +76,7 @@ public static class GxAttributeUtil {
                                  GxColorComponentType colorComponentType) {
     switch (colorComponentType) {
       case GxColorComponentType.RGB565: {
-        ColorUtil.SplitRgb565(br.ReadUInt16(),
+        ColorUtil.SplitBgr565(br.ReadUInt16(),
                               out var r,
                               out var g,
                               out var b);

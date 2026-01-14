@@ -48,7 +48,7 @@ public sealed class GxImageReader : IImageReader {
             height,
             4,
             4,
-            new Rgb565PixelReader()),
+            new Bgr565PixelReader()),
         GxTextureFormat.A3_RGB5 => TiledImageReader.New(
             width,
             height,

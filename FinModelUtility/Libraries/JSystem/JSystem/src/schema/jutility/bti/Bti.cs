@@ -163,7 +163,7 @@ public partial class Bti : IBinaryConvertible {
                                           alpha);
                       }
                       case GxPaletteFormat.PAL_R5_G6_B5: {
-                        ColorUtil.SplitRgb565(entry,
+                        ColorUtil.SplitBgr565(entry,
                                               out var r,
                                               out var b,
                                               out var g);
