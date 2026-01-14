@@ -13,5 +13,5 @@ void main() {
 
   float alphaComponent = texture(texture0, uv0).a*0.4980392;
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 }

@@ -141,5 +141,5 @@ void main() {
 
   float alphaComponent = (scalar_3dsAlpha0 + vertexColor0.rgb.r*vertexColor0.rgb.r*2.0)*scalar_3dsAlpha1;
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 }

@@ -22,9 +22,6 @@ public static class MockMaterial {
     var model = ModelImpl.CreateForViewer();
 
     var material = buildMaterial(model.MaterialManager);
-    material.TransparencyType = options.Masked
-        ? TransparencyType.MASK
-        : TransparencyType.TRANSPARENT;
 
     var skin = model.Skin;
     var v = skin.AddVertex(0, 0, 0);

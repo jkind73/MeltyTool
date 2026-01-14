@@ -1,7 +1,14 @@
 #version 460
 precision mediump float;
 
-uniform sampler2D diffuseTexture;
+struct Texture {
+  sampler2D sampler;
+  mat3x2 transform2d;
+};
+
+
+uniform vec4 diffuseColor;
+uniform Texture diffuseTexture;
 
 out vec4 fragColor;
 
@@ -9,5 +16,9 @@ in vec4 vertexColor0;
 in vec2 uv0;
 
 void main() {
-  fragColor = texture(diffuseTexture, uv0) * vertexColor0;
+  fragColor = texture(diffuseTexture.sampler, diffuseTexture.transform2d * vec3((uv0).x, (uv0).y, 1)) * vertexColor0 * diffuseColor;
+
+  if (fragColor.a < .01) {
+    discard;
+  }
 }

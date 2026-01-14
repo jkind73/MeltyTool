@@ -13,5 +13,5 @@ void main() {
 
   float alphaComponent = scalar_3dsAlpha1;
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 }

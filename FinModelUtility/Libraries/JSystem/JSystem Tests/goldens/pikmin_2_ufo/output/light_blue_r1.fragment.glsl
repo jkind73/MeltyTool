@@ -152,5 +152,5 @@ void main() {
 
   float alphaComponent = scalar_GxMaterialAlpha3;
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 }

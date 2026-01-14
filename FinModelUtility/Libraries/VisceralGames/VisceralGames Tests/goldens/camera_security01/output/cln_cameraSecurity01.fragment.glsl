@@ -149,8 +149,4 @@ void main() {
   vec3 textureNormal = texture(normalTexture, uv0).xyz * 2.0 - 1.0;
   fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
   fragColor.rgb = mix(fragColor.rgb, applyMergedLightingColors(vertexPosition, fragNormal, shininess, fragColor, texture(specularTexture, uv0)).rgb, useLighting);
-
-  if (fragColor.a < .95) {
-    discard;
-  }
 }

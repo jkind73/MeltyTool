@@ -16,6 +16,7 @@ public sealed class SkinExtensionsTests {
   }
 
   private class PrimitiveStub : IReadOnlyPrimitive {
+    public required int Index { get; init; }
     public required PrimitiveType Type { get; init; }
     public required VertexOrder VertexOrder { get; init; }
     public required IReadOnlyList<IReadOnlyVertex> Vertices { get; init; }
@@ -31,6 +32,7 @@ public sealed class SkinExtensionsTests {
     var vertexZ = new VertexStub(2, Vector3.UnitZ);
 
     var primitive = new PrimitiveStub {
+        Index = 123,
         Type = PrimitiveType.TRIANGLES,
         VertexOrder = VertexOrder.COUNTER_CLOCKWISE,
         Vertices = [

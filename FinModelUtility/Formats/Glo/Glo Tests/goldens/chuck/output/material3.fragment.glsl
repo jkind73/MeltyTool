@@ -30,6 +30,7 @@ layout (std140, binding = 2) uniform Lights {
 
 uniform vec3 cameraPosition;
 
+uniform vec4 diffuseColor;
 uniform sampler2D diffuseTexture;
 uniform bool hasSpecular;
 uniform float shininess;
@@ -139,7 +140,7 @@ vec4 applyMergedLightingColors(vec3 position, vec3 normal, float shininess, vec4
 }
 
 void main() {
-  fragColor = texture(diffuseTexture, uv0) * vertexColor0;
+  fragColor = texture(diffuseTexture, uv0) * vertexColor0 * diffuseColor;
 
   // Have to renormalize because the vertex normals can become distorted when interpolated.
   vec3 fragNormal = normalize(vertexNormal);

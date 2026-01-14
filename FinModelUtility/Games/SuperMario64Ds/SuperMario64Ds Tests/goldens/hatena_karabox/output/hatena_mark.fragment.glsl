@@ -12,9 +12,9 @@ void main() {
 
   float alphaComponent = texture(texture0, uv0).a;
 
-  fragColor = vec4(colorComponent, 1);
+  fragColor = vec4(colorComponent, alphaComponent);
 
-  if (!(alphaComponent > 0.95)) {
+  if (!(alphaComponent > 0.01)) {
     discard;
   }
 }

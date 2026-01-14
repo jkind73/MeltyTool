@@ -134,5 +134,5 @@ void main() {
 
   float alphaComponent = texture(texture0, uv0).a*scalar_3dsAlpha3;
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 }

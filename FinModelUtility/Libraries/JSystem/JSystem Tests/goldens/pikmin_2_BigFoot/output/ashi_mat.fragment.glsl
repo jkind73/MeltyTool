@@ -162,7 +162,7 @@ void main() {
 
   float alphaComponent = texture(texture3.sampler, texture3.transform2d * vec3((uv0).x, (uv0).y, 1)).a + -1.0*(1.0 + -1.0*scalar_GxAlphaRegister0);
 
-  fragColor = vec4(colorComponent, alphaComponent);
+  fragColor = vec4(colorComponent, 1);
 
   if (!(alphaComponent >= 0.003921569)) {
     discard;
