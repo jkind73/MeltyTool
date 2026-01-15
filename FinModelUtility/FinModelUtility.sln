@@ -312,6 +312,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AnimalCrossing", "AnimalCro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimalCrossing", "Games\AnimalCrossing\AnimalCrossing\AnimalCrossing.csproj", "{74B8E1AD-BB54-4B68-A849-1D17F0157B43}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RollerCoasterTycoon", "RollerCoasterTycoon", "{E9B6355C-424A-45F4-B88F-35E3B80E94B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RollerCoasterTycoon", "Games\RollerCoasterTycoon\RollerCoasterTycoon\RollerCoasterTycoon.csproj", "{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -1064,6 +1068,14 @@ Global
 		{74B8E1AD-BB54-4B68-A849-1D17F0157B43}.Release|x64.Build.0 = Release|x64
 		{74B8E1AD-BB54-4B68-A849-1D17F0157B43}.Release|x86.ActiveCfg = Release|x86
 		{74B8E1AD-BB54-4B68-A849-1D17F0157B43}.Release|x86.Build.0 = Release|x86
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Debug|x64.ActiveCfg = Debug|x64
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Debug|x64.Build.0 = Debug|x64
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Debug|x86.ActiveCfg = Debug|x86
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Debug|x86.Build.0 = Debug|x86
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x64.ActiveCfg = Release|x64
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x64.Build.0 = Release|x64
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x86.ActiveCfg = Release|x86
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1201,6 +1213,8 @@ Global
 		{A231A8F4-93AE-426E-8D81-C74382865A9C} = {E58E8142-49D5-4AD9-AF3D-9A6CC0225381}
 		{DB96BD12-C2DE-4C25-A2AA-F57A498975F2} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
 		{74B8E1AD-BB54-4B68-A849-1D17F0157B43} = {DB96BD12-C2DE-4C25-A2AA-F57A498975F2}
+		{E9B6355C-424A-45F4-B88F-35E3B80E94B6} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
+		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D} = {E9B6355C-424A-45F4-B88F-35E3B80E94B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CFECBD7-FE88-4CC9-8E1B-6F7805F4F45A}
