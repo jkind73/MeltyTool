@@ -18,7 +18,7 @@ public sealed class ColorUtilTests {
                          byte expectedR,
                          byte expectedG,
                          byte expectedB) {
-    ColorUtil.SplitBgr565(value,
+    ColorUtil.SplitRgb565(value,
                           out var actualR,
                           out var actualG,
                           out var actualB);

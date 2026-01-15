@@ -217,17 +217,6 @@ public sealed class GlTexture : IGlTexture {
                             fastLock.byteScan0);
         break;
       }
-      case Bgr565Image bgr565Image: {
-        using var fastLock = bgr565Image.UnsafeLock();
-        PassBytesIntoImage_(level,
-                            PixelInternalFormat.Rgb,
-                            imageWidth,
-                            imageHeight,
-                            PixelFormat.Rgb,
-                            PixelType.UnsignedShort565,
-                            fastLock.byteScan0);
-        break;
-      }
       // TODO: Luminance/LuminanceAlpha is not supported in OpenGL ES. Implement support for R/RG instead
       /*
       case La16Image la16Image: {
@@ -298,22 +287,6 @@ public sealed class GlTexture : IGlTexture {
       int imageWidth,
       int imageHeight,
       PixelFormat pixelFormat,
-      byte* scan0)
-    => PassBytesIntoImage_(level,
-                           internalFormat,
-                           imageWidth,
-                           imageHeight,
-                           pixelFormat,
-                           PixelType.UnsignedByte,
-                           scan0);
-
-  private static unsafe void PassBytesIntoImage_(
-      int level,
-      PixelInternalFormat internalFormat,
-      int imageWidth,
-      int imageHeight,
-      PixelFormat pixelFormat,
-      PixelType pixelType,
       byte* scan0) {
     // This is required to fix a rare issue with alignment:
     // https://stackoverflow.com/questions/52460143/texture-not-showing-correctly
@@ -325,7 +298,7 @@ public sealed class GlTexture : IGlTexture {
                   imageHeight,
                   0,
                   pixelFormat,
-                  pixelType,
+                  PixelType.UnsignedByte,
                   (IntPtr) scan0);
   }
 

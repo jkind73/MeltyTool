@@ -240,7 +240,7 @@ public sealed class TObj : IBinaryDeserializable {
           }
           case GxPaletteFormat.PAL_R5_G6_B5: {
             // Curiously, the colors are flipped here.
-            ColorUtil.SplitBgr565(br.ReadUInt16(),
+            ColorUtil.SplitRgb565(br.ReadUInt16(),
                                   out var r,
                                   out var g,
                                   out var b);

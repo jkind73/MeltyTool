@@ -113,8 +113,8 @@ public readonly struct Dxt1TileReader(
     var color1Value = colorValues[0];
     var color2Value = colorValues[1];
 
-    ColorUtil.SplitBgr565(color1Value, out var r1, out var g1, out var b1);
-    ColorUtil.SplitBgr565(color2Value, out var r2, out var g2, out var b2);
+    ColorUtil.SplitRgb565(color1Value, out var r1, out var g1, out var b1);
+    ColorUtil.SplitRgb565(color2Value, out var r2, out var g2, out var b2);
 
     palette[0] = new Rgba32(r1, g1, b1);
     palette[1] = new Rgba32(r2, g2, b2);

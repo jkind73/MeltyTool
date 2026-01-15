@@ -23,7 +23,7 @@ public static class ColorUtil {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static void SplitBgr565(
+  public static void SplitRgb565(
       ushort color,
       out byte r,
       out byte g,
@@ -34,7 +34,7 @@ public static class ColorUtil {
   }
 
   public static IColor ParseRgb565(ushort color) {
-    SplitBgr565(color, out var r, out var g, out var b);
+    SplitRgb565(color, out var r, out var g, out var b);
     return FinColor.FromRgbBytes(r, g, b);
   }
 
