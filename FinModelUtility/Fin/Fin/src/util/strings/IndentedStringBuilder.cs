@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 
@@ -14,7 +15,7 @@ public class IndentedStringBuilder {
   public override string ToString() => this.impl_.ToString();
 
   public IndentedStringBuilder AppendBlock(ReadOnlySpan<char> prefix,
-                                          Action handler) {
+                                           Action handler) {
     this.Append(prefix);
     this.AppendLine(" {");
 
@@ -80,14 +81,23 @@ public class IndentedStringBuilder {
     return this;
   }
 
-  public IndentedStringBuilder AppendLine(ReadOnlySpan<char> chars) {
-    this.Append(chars);
+  public IndentedStringBuilder AppendLine<T>(T value) {
+    this.Append(value);
     this.AppendNewline_();
     return this;
   }
 
-  public IndentedStringBuilder AppendLine<T>(T value) {
-    this.Append(value);
+  public IndentedStringBuilder Append(
+      [InterpolatedStringHandlerArgument("")]
+      IndentedInterpolatedStringHandler handler) {
+    // (Appending logic is magically inserted here.)
+    return this;
+  }
+
+  public IndentedStringBuilder AppendLine(
+      [InterpolatedStringHandlerArgument("")]
+      IndentedInterpolatedStringHandler value) {
+    // (Appending logic is magically inserted here.)
     this.AppendNewline_();
     return this;
   }
