@@ -4,7 +4,7 @@ using System.Text;
 
 namespace fin.util.strings;
 
-public class BracketStringBuilder {
+public class IndentedStringBuilder {
   private readonly StringBuilder impl_ = new();
 
   private int currentIndentAmount_;
@@ -13,7 +13,7 @@ public class BracketStringBuilder {
 
   public override string ToString() => this.impl_.ToString();
 
-  public BracketStringBuilder AppendBlock(ReadOnlySpan<char> prefix,
+  public IndentedStringBuilder AppendBlock(ReadOnlySpan<char> prefix,
                                           Action handler) {
     this.Append(prefix);
     this.AppendLine(" {");
@@ -30,7 +30,7 @@ public class BracketStringBuilder {
     return this;
   }
 
-  public BracketStringBuilder Append(char c) {
+  public IndentedStringBuilder Append(char c) {
     if (c is '\n') {
       this.AppendNewline_();
     } else {
@@ -41,10 +41,10 @@ public class BracketStringBuilder {
     return this;
   }
 
-  public BracketStringBuilder Append(string s)
+  public IndentedStringBuilder Append(string s)
     => this.Append(s.AsSpan());
 
-  public BracketStringBuilder Append(ReadOnlySpan<char> chars) {
+  public IndentedStringBuilder Append(ReadOnlySpan<char> chars) {
     var l = 0;
     foreach (var line in chars.EnumerateLines()) {
       if (l++ > 0) {
@@ -60,33 +60,33 @@ public class BracketStringBuilder {
     return this;
   }
 
-  public BracketStringBuilder Append<T>(T value)
+  public IndentedStringBuilder Append<T>(T value)
     => this.Append(value?.ToString() ?? "");
 
-  public BracketStringBuilder AppendLine() {
+  public IndentedStringBuilder AppendLine() {
     this.AppendNewline_();
     return this;
   }
 
-  public BracketStringBuilder AppendLine(char c) {
+  public IndentedStringBuilder AppendLine(char c) {
     this.Append(c);
     this.AppendNewline_();
     return this;
   }
 
-  public BracketStringBuilder AppendLine(string s) {
+  public IndentedStringBuilder AppendLine(string s) {
     this.Append(s);
     this.AppendNewline_();
     return this;
   }
 
-  public BracketStringBuilder AppendLine(ReadOnlySpan<char> chars) {
+  public IndentedStringBuilder AppendLine(ReadOnlySpan<char> chars) {
     this.Append(chars);
     this.AppendNewline_();
     return this;
   }
 
-  public BracketStringBuilder AppendLine<T>(T value) {
+  public IndentedStringBuilder AppendLine<T>(T value) {
     this.Append(value);
     this.AppendNewline_();
     return this;

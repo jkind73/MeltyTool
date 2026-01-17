@@ -21,7 +21,7 @@ public sealed class HiddenShaderSourceGlsl : IShaderSourceGlsl {
          }
          """;
 
-  public void AppendFragmentMain(BracketStringBuilder sb) {
+  public void AppendFragmentMain(IndentedStringBuilder sb) {
     sb.AppendLine("discard;");
   }
 }

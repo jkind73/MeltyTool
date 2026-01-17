@@ -68,7 +68,7 @@ public static class GlslUtil {
 
     var location = 0;
 
-    var vertexSrc = new BracketStringBuilder();
+    var vertexSrc = new IndentedStringBuilder();
 
     var hasNormals = modelRequirements.HasNormals;
 
@@ -440,7 +440,7 @@ public static class GlslUtil {
   }
 
   public static void AppendTextureHeadersIfNeeded(
-      this BracketStringBuilder sb,
+      this IndentedStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures,
       IReadOnlyList<IReadOnlyModelAnimation> animations
   ) {
@@ -449,7 +449,7 @@ public static class GlslUtil {
   }
 
   public static void AppendTextureStructIfNeeded(
-      this BracketStringBuilder sb,
+      this IndentedStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures,
       IReadOnlyList<IReadOnlyModelAnimation> animations
   ) {
@@ -522,7 +522,7 @@ public static class GlslUtil {
   }
 
   public static void AppendThreePointFilteringMethodsIfNeeded(
-      this BracketStringBuilder sb,
+      this IndentedStringBuilder sb,
       IEnumerable<IReadOnlyTexture?> textures) {
     if (!textures.Any(t => t?.ThreePointFiltering ?? false)) {
       return;
@@ -655,13 +655,13 @@ public static class GlslUtil {
       string uvName,
       IReadOnlyTexture? finTexture,
       IReadOnlyList<IReadOnlyModelAnimation> animations) {
-    var sb = new BracketStringBuilder();
+    var sb = new IndentedStringBuilder();
     AppendReadColorFromTexture(sb, textureName, uvName, finTexture, animations);
     return sb.ToString();
   }
 
   public static void AppendReadColorFromTexture(
-      BracketStringBuilder sb,
+      IndentedStringBuilder sb,
       string textureName,
       string uvName,
       IReadOnlyTexture? finTexture,
@@ -778,7 +778,7 @@ public static class GlslUtil {
         : TextureTransformType.NONE;
   }
 
-  public static void AppendAlphaDiscard(BracketStringBuilder src,
+  public static void AppendAlphaDiscard(IndentedStringBuilder src,
                                         IReadOnlyMaterial material) {
     switch (material.GetTransparencyType()) {
       case TransparencyType.MASK: {

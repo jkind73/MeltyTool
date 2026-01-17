@@ -36,7 +36,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     var hasNormals = shaderRequirements.HasNormals;
     this.hasLighting_ = !material.IgnoreLights && hasNormals;
 
-    var sb = new BracketStringBuilder();
+    var sb = new IndentedStringBuilder();
     sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
 
@@ -108,7 +108,7 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource { get; }
   public string FragmentShaderSource { get; }
 
-  public void AppendFragmentMain(BracketStringBuilder sb) {
+  public void AppendFragmentMain(IndentedStringBuilder sb) {
     sb.AppendLine(
         $"fragColor = {GlslUtil.ReadColorFromTexture("diffuseTexture", $"uv{this.uvIndex_}", this.diffuseTexture_, this.animations_)}" +
         (this.hasColors_ ? " * vertexColor0" : "") +

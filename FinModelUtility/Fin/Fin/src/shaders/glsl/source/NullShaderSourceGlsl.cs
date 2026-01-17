@@ -14,7 +14,7 @@ public sealed class NullShaderSourceGlsl(
 
   public string FragmentShaderSource {
     get {
-      var sb = new BracketStringBuilder();
+      var sb = new IndentedStringBuilder();
       sb.AppendLine(
           $"""
            #version {GlslConstants.FRAGMENT_SHADER_VERSION}
@@ -41,7 +41,7 @@ public sealed class NullShaderSourceGlsl(
     }
   }
 
-  public void AppendFragmentMain(BracketStringBuilder sb) {
+  public void AppendFragmentMain(IndentedStringBuilder sb) {
     sb.AppendLine(
         $"fragColor = {(shaderRequirements.UsedColors.AnyTrue() ? $"{GlslConstants.IN_VERTEX_COLOR_NAME}0" : "vec4(1)")};");
   }

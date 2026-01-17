@@ -31,7 +31,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     this.animations_ = model.AnimationManager.Animations;
 
-    var sb = new BracketStringBuilder();
+    var sb = new IndentedStringBuilder();
     sb.AppendLine(
         $"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
@@ -183,7 +183,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
   public string FragmentShaderSource { get; set; }
 
-  public void AppendFragmentMain(BracketStringBuilder sb) {
+  public void AppendFragmentMain(IndentedStringBuilder sb) {
     var getDiffuseTextureColor = GlslUtil.ReadColorFromTexture(
         "diffuseTexture",
         $"{GlslConstants.IN_UV_NAME}{this.diffuseTexture_?.UvIndex ?? 0}",

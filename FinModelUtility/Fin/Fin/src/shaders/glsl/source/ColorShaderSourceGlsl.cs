@@ -21,7 +21,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     var hasNormals = shaderRequirements.HasNormals;
     this.hasLighting_ = !material.IgnoreLights && hasNormals;
 
-    var sb = new BracketStringBuilder();
+    var sb = new IndentedStringBuilder();
     sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
@@ -85,7 +85,7 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource { get; }
   public string FragmentShaderSource { get; }
 
-  public void AppendFragmentMain(BracketStringBuilder sb) {
+  public void AppendFragmentMain(IndentedStringBuilder sb) {
     sb.AppendLine(
         $"fragColor = diffuseColor{this.hasColors_ switch {
             false => "",

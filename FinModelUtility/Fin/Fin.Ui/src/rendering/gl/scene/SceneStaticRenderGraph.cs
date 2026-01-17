@@ -109,6 +109,8 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         var modelRenderer = modelRenderComponent.ModelRenderer;
         modelRenderer.GenerateModelIfNull();
 
+        // TODO: Splitting by mesh is a *major* bottleneck, need to just split
+        // by material.
         var meshRendererQueue
             = new FinQueue<IMeshRenderer>(modelRenderer.MeshRenderers);
         while (meshRendererQueue.TryDequeue(out var meshRenderer)) {
