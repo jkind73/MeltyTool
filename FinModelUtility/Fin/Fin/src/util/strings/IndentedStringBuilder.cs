@@ -89,14 +89,14 @@ public class IndentedStringBuilder {
 
   public IndentedStringBuilder Append(
       [InterpolatedStringHandlerArgument("")]
-      IndentedInterpolatedStringHandler handler) {
+      in IndentedInterpolatedStringHandler handler) {
     // (Appending logic is magically inserted here.)
     return this;
   }
 
   public IndentedStringBuilder AppendLine(
       [InterpolatedStringHandlerArgument("")]
-      IndentedInterpolatedStringHandler value) {
+      in IndentedInterpolatedStringHandler value) {
     // (Appending logic is magically inserted here.)
     this.AppendNewline_();
     return this;
