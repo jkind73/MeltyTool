@@ -1,10 +1,11 @@
 #version 460
 
-layout (std140, binding = 1) uniform Matrices {
+layout (std140, binding = 1) uniform GlobalMatrices {
+  mat4 projectionViewMatrix;
+};
+
+layout (std140, binding = 2) uniform CurrentMatrices {
   mat4 modelMatrix;
-  mat4 viewMatrix;
-  mat4 projectionMatrix;
-  
   mat4 boneMatrices[1];  
 };
 
@@ -19,8 +20,7 @@ out vec3 vertexNormal;
 out vec2 uv0;
 
 void main() {
-  mat4 mvMatrix = viewMatrix * modelMatrix;
-  mat4 mvpMatrix = projectionMatrix * mvMatrix;
+  mat4 mvpMatrix = projectionViewMatrix * modelMatrix;
 
   gl_Position = mvpMatrix * vec4(in_Position, 1);
 

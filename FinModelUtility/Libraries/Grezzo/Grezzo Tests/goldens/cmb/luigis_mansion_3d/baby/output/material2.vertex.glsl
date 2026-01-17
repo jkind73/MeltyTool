@@ -1,10 +1,11 @@
 #version 460
 
-layout (std140, binding = 1) uniform Matrices {
+layout (std140, binding = 1) uniform GlobalMatrices {
+  mat4 projectionViewMatrix;
+};
+
+layout (std140, binding = 2) uniform CurrentMatrices {
   mat4 modelMatrix;
-  mat4 viewMatrix;
-  mat4 projectionMatrix;
-  
   mat4 boneMatrices[30];  
 };
 
@@ -21,8 +22,7 @@ out vec3 vertexNormal;
 out vec2 uv0;
 
 void main() {
-  mat4 mvMatrix = viewMatrix * modelMatrix;
-  mat4 mvpMatrix = projectionMatrix * mvMatrix;
+  mat4 mvpMatrix = projectionViewMatrix * modelMatrix;
   mat4 mergedBoneMatrix = boneMatrices[in_BoneIds.x] * in_BoneWeights.x +
                           boneMatrices[in_BoneIds.y] * in_BoneWeights.y +
                           boneMatrices[in_BoneIds.z] * in_BoneWeights.z;

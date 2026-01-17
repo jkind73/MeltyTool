@@ -1,11 +1,12 @@
 #version 460
 precision mediump float;
 
-layout (std140, binding = 1) uniform Matrices {
+layout (std140, binding = 1) uniform GlobalMatrices {
+  mat4 projectionViewMatrix;
+};
+
+layout (std140, binding = 2) uniform CurrentMatrices {
   mat4 modelMatrix;
-  mat4 viewMatrix;
-  mat4 projectionMatrix;
-  
   mat4 boneMatrices[7];  
 };
 
@@ -30,7 +31,7 @@ struct Light {
   int attenuationFunction;
 };
 
-layout (std140, binding = 2) uniform Lights {
+layout (std140, binding = 3) uniform Lights {
   Light lights[8];
   vec4 ambientLightColor;
   float useLighting;
@@ -64,7 +65,7 @@ void main() {
   // Have to renormalize because the vertex normals can become distorted when interpolated.
   vec3 fragNormal = normalize(vertexNormal);
 
-  vec2 sphericalReflectionUv = acos(normalize(projectionMatrix * viewMatrix * vec4(fragNormal, 0)).xy) / 3.14159;
+  vec2 sphericalReflectionUv = acos(normalize(projectionViewMatrix * vec4(fragNormal, 0)).xy) / 3.14159;
 
   vec3 colorComponent = (ambientLightColor.rgb + vec3(1.0))*vertexColor0.rgb*vec3(0.5) + texture(texture0.sampler, transformUv3d(texture0.transform3d, sphericalReflectionUv)).rgb*vec3(0.5);
 

@@ -1,11 +1,12 @@
 #version 460
 precision mediump float;
 
-layout (std140, binding = 1) uniform Matrices {
+layout (std140, binding = 1) uniform GlobalMatrices {
+  mat4 projectionViewMatrix;
+};
+
+layout (std140, binding = 2) uniform CurrentMatrices {
   mat4 modelMatrix;
-  mat4 viewMatrix;
-  mat4 projectionMatrix;
-  
   mat4 boneMatrices[16];  
 };
 
@@ -30,7 +31,7 @@ struct Light {
   int attenuationFunction;
 };
 
-layout (std140, binding = 2) uniform Lights {
+layout (std140, binding = 3) uniform Lights {
   Light lights[8];
   vec4 ambientLightColor;
   float useLighting;
@@ -143,7 +144,7 @@ void main() {
   vec3 textureNormal = texture(normalTexture.sampler, normalTexture.transform2d * vec3((uv0).x, (uv0).y, 1)).xyz * 2.0 - 1.0;
   fragNormal = normalize(mat3(tangent, binormal, fragNormal) * textureNormal);
 
-  vec2 sphericalReflectionUv = acos(normalize(projectionMatrix * viewMatrix * vec4(fragNormal, 0)).xy) / 3.14159;
+  vec2 sphericalReflectionUv = acos(normalize(projectionViewMatrix * vec4(fragNormal, 0)).xy) / 3.14159;
 
   vec4 individualLightDiffuseColors[8];
   vec4 individualLightSpecularColors[8];

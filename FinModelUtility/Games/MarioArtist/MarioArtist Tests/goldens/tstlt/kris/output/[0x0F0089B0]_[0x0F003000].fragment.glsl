@@ -22,7 +22,7 @@ struct Light {
   int attenuationFunction;
 };
 
-layout (std140, binding = 2) uniform Lights {
+layout (std140, binding = 3) uniform Lights {
   Light lights[8];
   vec4 ambientLightColor;
   float useLighting;
