@@ -12,15 +12,19 @@ public static class GlslConstants {
 
   public const string FLOAT_PRECISION = "precision mediump float;";
 
-  public const int UBO_MATRICES_BINDING_INDEX = 1;
-  public const string UBO_MATRICES_NAME = "Matrices";
+  public const int UBO_GLOBAL_MATRICES_BINDING_INDEX = 1;
+  public const string UBO_GLOBAL_MATRICES_NAME = "GlobalMatrices";
 
-  public const int UBO_LIGHTS_BINDING_INDEX = 2;
-  public const string UBO_LIGHTS_NAME = "Lights";
+  public const string UNIFORM_PROJECTION_VIEW_MATRIX_NAME = "projectionViewMatrix";
+
+  public const int UBO_CURRENT_MATRICES_BINDING_INDEX = 2;
+  public const string UBO_CURRENT_MATRICES_NAME = "CurrentMatrices";
 
   public const string UNIFORM_MODEL_MATRIX_NAME = "modelMatrix";
-  public const string UNIFORM_VIEW_MATRIX_NAME = "viewMatrix";
-  public const string UNIFORM_PROJECTION_MATRIX_NAME = "projectionMatrix";
+
+  public const int UBO_LIGHTS_BINDING_INDEX = 3;
+  public const string UBO_LIGHTS_NAME = "Lights";
+
   public const string UNIFORM_CAMERA_POSITION_NAME = "cameraPosition";
 
   public const string UNIFORM_BONE_MATRICES_NAME = "boneMatrices";

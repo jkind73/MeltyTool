@@ -78,7 +78,7 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
         $$"""
           #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           layout(location = 0) in vec3 in_Position;
 
@@ -93,7 +93,7 @@ public sealed class PolygonStudioSkyboxRenderer : ISkyboxRenderer {
           #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
           

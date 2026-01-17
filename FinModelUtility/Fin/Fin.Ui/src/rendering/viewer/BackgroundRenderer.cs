@@ -133,7 +133,7 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
         $$"""
           #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           uniform float aspectRatio;
           uniform float scrollX;

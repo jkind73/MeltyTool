@@ -79,7 +79,7 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
         $$"""
           #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           uniform mat4 inverseProjectionViewMatrix;
           uniform float nearPlane;
@@ -102,7 +102,7 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
           #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
           

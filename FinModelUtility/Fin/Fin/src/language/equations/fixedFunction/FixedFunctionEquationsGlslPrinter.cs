@@ -43,7 +43,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     var usesLinearReflectionMapping
         = shaderRequirements.UsesLinearReflectionMapping;
     if (usesSphericalReflectionMapping || usesLinearReflectionMapping) {
-      sb.AppendLine(GlslUtil.GetMatricesHeader(model));
+      sb.AppendLine(GlslUtil.GetMatricesHeaders(model));
       sb.AppendLine();
     }
 
@@ -251,14 +251,14 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
 
             if (usesSphericalReflectionMapping) {
               sb.AppendLine($"""
-                             vec2 {GlslConstants.IN_SPHERICAL_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
+                             vec2 {GlslConstants.IN_SPHERICAL_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
 
                              """);
             }
 
             if (usesLinearReflectionMapping) {
               sb.AppendLine($"""
-                             vec2 {GlslConstants.IN_LINEAR_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME} * {GlslConstants.UNIFORM_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
+                             vec2 {GlslConstants.IN_LINEAR_REFLECTION_UV_NAME} = acos(normalize({GlslConstants.UNIFORM_PROJECTION_VIEW_MATRIX_NAME} * vec4(fragNormal, 0)).xy) / 3.14159;
 
                              """);
             }

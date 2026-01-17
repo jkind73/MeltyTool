@@ -80,7 +80,7 @@ public static class GlslUtil {
     vertexSrc.AppendLine($"""
                           #version {GlslConstants.VERTEX_SHADER_VERSION}
 
-                          {GetMatricesHeader(model)}
+                          {GetMatricesHeaders(model)}
 
                           uniform vec3 {GlslConstants.UNIFORM_CAMERA_POSITION_NAME};
 
@@ -170,8 +170,7 @@ public static class GlslUtil {
     vertexSrc.Append($$"""
 
                        void main() {
-                         mat4 mvMatrix = {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}} * {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}};
-                         mat4 mvpMatrix = {{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}} * mvMatrix;
+                         mat4 mvpMatrix = {{GlslConstants.UNIFORM_PROJECTION_VIEW_MATRIX_NAME}} * {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}};
 
                        """);
 
@@ -281,13 +280,14 @@ public static class GlslUtil {
     return vertexSrc.ToString();
   }
 
-  public static string GetMatricesHeader(IReadOnlyModel model)
+  public static string GetMatricesHeaders(IReadOnlyModel model)
     => $$"""
-         layout (std140, binding = {{GlslConstants.UBO_MATRICES_BINDING_INDEX}}) uniform {{GlslConstants.UBO_MATRICES_NAME}} {
+         layout (std140, binding = {{GlslConstants.UBO_GLOBAL_MATRICES_BINDING_INDEX}}) uniform {{GlslConstants.UBO_GLOBAL_MATRICES_NAME}} {
+           mat4 {{GlslConstants.UNIFORM_PROJECTION_VIEW_MATRIX_NAME}};
+         };
+         
+         layout (std140, binding = {{GlslConstants.UBO_CURRENT_MATRICES_BINDING_INDEX}}) uniform {{GlslConstants.UBO_CURRENT_MATRICES_NAME}} {
            mat4 {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}};
-           mat4 {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}};
-           mat4 {{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}};
-           
            mat4 {{GlslConstants.UNIFORM_BONE_MATRICES_NAME}}[{{1 + model.Skin.BonesUsedByVertices.Count}}];  
          };
          """;

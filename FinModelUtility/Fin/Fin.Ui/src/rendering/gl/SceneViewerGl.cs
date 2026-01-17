@@ -7,6 +7,7 @@ using fin.scene;
 using fin.scene.components;
 using fin.services;
 using fin.ui.rendering.gl.scene;
+using fin.ui.rendering.gl.ubo;
 using fin.ui.rendering.viewer;
 using fin.util.time;
 
@@ -24,6 +25,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
   private ISceneAreaInstance? singleArea_;
   private SceneNodeRenderer? customSkyboxRenderer_;
+
+  private ViewMatricesUbo? viewMatricesUbo_;
 
   ~SceneViewerGl() => this.ReleaseUnmanagedResources_();
 
@@ -177,6 +180,12 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
                          this.Camera.Position + this.Camera.Normal,
                          this.Camera.Up);
     }
+
+    if (this.viewMatricesUbo_ == null) {
+      this.viewMatricesUbo_ = new();
+      this.viewMatricesUbo_.Bind();
+    }
+    this.viewMatricesUbo_.UpdateData();
 
     this.RenderSkybox_();
     this.RenderScene_();

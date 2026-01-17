@@ -40,7 +40,7 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
                          true);
 
 
-  private MatricesUbo? matricesUbo_;
+  private ModelMatricesUbo? matricesUbo_;
   private readonly IReadOnlyModel model_;
   private readonly IReadOnlyBoneTransformManager? boneTransformManager_;
 
@@ -115,10 +115,7 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
     }
 
     this.matricesUbo_ ??= new(this.model_.Skin.BonesUsedByVertices.Count);
-    this.matricesUbo_.UpdateData(GlTransform.ModelMatrix,
-                                 GlTransform.ViewMatrix,
-                                 GlTransform.ProjectionMatrix,
-                                 this.boneMatrices_);
+    this.matricesUbo_.UpdateData(GlTransform.ModelMatrix, this.boneMatrices_);
   }
 
   public void BindMatricesUbo() {

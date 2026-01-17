@@ -59,7 +59,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
         $$"""
           #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
 
           uniform mat4 inverseProjectionViewMatrix;
           uniform float nearPlane;
@@ -82,7 +82,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
           #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.GetMatricesHeader(model)}}
+          {{GlslUtil.GetMatricesHeaders(model)}}
           
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
 
@@ -109,7 +109,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
             float t = -({{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}}.z) / rayWorld.z;
             vec2 vertexPosition = {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}}.xy + t * rayWorld.xy;
             
-            vec4 pp = {{GlslConstants.UNIFORM_PROJECTION_MATRIX_NAME}} * {{GlslConstants.UNIFORM_VIEW_MATRIX_NAME}} * vec4(vertexPosition, 0.0, 1.0);
+            vec4 pp = {{GlslConstants.UNIFORM_PROJECTION_VIEW_MATRIX_NAME}} * vec4(vertexPosition, 0.0, 1.0);
             float ndcDepth = pp.z / pp.w;
             
             float near = gl_DepthRange.near;
