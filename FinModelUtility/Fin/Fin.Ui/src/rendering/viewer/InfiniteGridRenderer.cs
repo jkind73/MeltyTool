@@ -61,13 +61,21 @@ public sealed class InfiniteGridRenderer : IRenderable {
 
           {{GlslUtil.GetMatricesHeader(model)}}
 
+          uniform mat4 inverseProjectionViewMatrix;
+          uniform float nearPlane;
+          uniform float farPlane;
+          
           layout(location = 0) in vec3 in_Position;
-
-          out vec2 screenPosition;
+          
+          out vec3 rayWorld;
             
           void main() {
-            screenPosition = in_Position.xy * vec2(1.0, -1.0);
             gl_Position = {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}} * vec4(in_Position, 1.0);
+
+            // ray from camera to fragment in world space
+            vec2 screenPosition = in_Position.xy * vec2(1.0, -1.0);
+            rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
+            rayWorld = -normalize(rayWorld);
           }
           """,
         $$"""
@@ -78,11 +86,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
           
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
 
-          uniform mat4 inverseProjectionViewMatrix;
-          uniform float nearPlane;
-          uniform float farPlane;
-
-          in vec2 screenPosition;
+          in vec3 rayWorld;
 
           out vec4 fragColor;
 
@@ -101,10 +105,6 @@ public sealed class InfiniteGridRenderer : IRenderable {
           }
 
           void main() {
-            // ray from camera to fragment in world space
-            vec3 rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
-            rayWorld = -normalize(rayWorld);
-            
             // calculate fragment position in world space
             float t = -({{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}}.z) / rayWorld.z;
             vec2 vertexPosition = {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}}.xy + t * rayWorld.xy;

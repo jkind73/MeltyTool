@@ -81,13 +81,21 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
           {{GlslUtil.GetMatricesHeader(model)}}
 
+          uniform mat4 inverseProjectionViewMatrix;
+          uniform float nearPlane;
+          uniform float farPlane;
+          
           layout(location = 0) in vec3 in_Position;
 
-          out vec2 screenPosition;
+          out vec3 rayWorld;
             
           void main() {
-            screenPosition = in_Position.xy * vec2(1.0, -1.0);
             gl_Position = {{GlslConstants.UNIFORM_MODEL_MATRIX_NAME}} * vec4(in_Position, 1.0);
+
+            // ray from camera to fragment in world space
+            vec2 screenPosition = in_Position.xy * vec2(1.0, -1.0);
+            rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
+            rayWorld = -normalize(rayWorld);
           }
           """,
         $$"""
@@ -98,19 +106,11 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
           uniform vec3 {{GlslConstants.UNIFORM_CAMERA_POSITION_NAME}};
           
-          uniform mat4 inverseProjectionViewMatrix;
-          uniform float nearPlane;
-          uniform float farPlane;
-          
-          in vec2 screenPosition;
+          in vec3 rayWorld;
 
           out vec4 fragColor;
 
           void main() {
-            // ray from camera to fragment in world space
-            vec3 rayWorld = (inverseProjectionViewMatrix * vec4(screenPosition * (farPlane - nearPlane), farPlane + nearPlane, farPlane - nearPlane)).xyz;
-            rayWorld = -normalize(rayWorld);
-            
             vec4 groundColor = {{FinColor.FromHexString("#423431").ToGlslVec4()}};
             vec4 skyColor1 = {{FinColor.FromSystemColor(Color.AliceBlue).ToGlslVec4()}};
             vec4 skyColor2 = {{FinColor.FromSystemColor(Color.DarkBlue).ToGlslVec4()}};
