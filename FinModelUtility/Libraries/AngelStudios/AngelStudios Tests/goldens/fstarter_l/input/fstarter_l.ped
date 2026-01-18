@@ -1,0 +1,36 @@
+skel: fped01
+
+lod 0 { fstarter_l_lod_1 }
+
+
+anim {
+	standpose_center: fped01_standpose_center
+	walk: fstarter_walk
+	run: fped01_run
+	stn_cheer: fped01_idle_cheer
+	stn_clap: fped01_idle_clap
+	stn_look: fped01_idle_look
+	stn_wow: fped01_idle_wow
+	stn_yell: fped01_idle_yell
+	avoidl: fped01_avoid_left
+	avoidr: fped01_avoid_right
+	avoidl_hop: fped01_avoid_left_hop
+	avoidr_hop: fped01_avoid_right_hop
+	avoidl_step: fped01_avoid_left_step
+	avoidr_step: fped01_avoid_right_step
+	avoidl_bstep: fped01_avoid_left_backstep
+	avoidr_bstep: fped01_avoid_right_backstep
+	avoidl_jump: fped01_avoid_left_jump
+	avoidr_jump: fped01_avoid_right_jump
+	avoidl_spin: fped01_avoid_left_spin
+	avoidr_spin: fped01_avoid_right_spin
+	hit_under: fped01_hit_under
+	hit_over: fped01_hit_over
+	hit_ground: fped01_hit_ground
+	paint: fped01_paint_line
+	ready: fstarter_l_ready
+	set: fstarter_l_set
+	go: fstarter_l_go
+}
+
+phys: ped

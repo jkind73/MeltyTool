@@ -105,7 +105,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisceralGames", "Libraries\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisceralGames Tests", "Libraries\VisceralGames\VisceralGames Tests\VisceralGames Tests.csproj", "{4A26CA2D-CA84-475A-906A-FDDADFEA2705}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelStudios", "Libraries\AngelStudios\AngelStudios.csproj", "{D56EF0D4-DE4A-43E7-8888-972CF9D278C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngelStudios", "Libraries\AngelStudios\AngelStudios\AngelStudios.csproj", "{D56EF0D4-DE4A-43E7-8888-972CF9D278C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AngelStudios Tests", "Libraries\AngelStudios\AngelStudios Tests\AngelStudios Tests.csproj", "{03683F44-C0F6-4729-A78D-4C57D8618A99}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Games", "Games", "{B0CB1025-E553-478F-AB51-B6D44312A46B}"
 EndProject
@@ -1076,6 +1078,14 @@ Global
 		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x64.Build.0 = Release|x64
 		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x86.ActiveCfg = Release|x86
 		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D}.Release|x86.Build.0 = Release|x86
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Debug|x64.ActiveCfg = Debug|x64
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Debug|x64.Build.0 = Debug|x64
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Debug|x86.ActiveCfg = Debug|x86
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Debug|x86.Build.0 = Debug|x86
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Release|x64.ActiveCfg = Release|x64
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Release|x64.Build.0 = Release|x64
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Release|x86.ActiveCfg = Release|x86
+		{03683F44-C0F6-4729-A78D-4C57D8618A99}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1215,6 +1225,7 @@ Global
 		{74B8E1AD-BB54-4B68-A849-1D17F0157B43} = {DB96BD12-C2DE-4C25-A2AA-F57A498975F2}
 		{E9B6355C-424A-45F4-B88F-35E3B80E94B6} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
 		{CA6F1D4B-D64B-4EFD-9A4D-B03FD2FDF48D} = {E9B6355C-424A-45F4-B88F-35E3B80E94B6}
+		{03683F44-C0F6-4729-A78D-4C57D8618A99} = {EBBF498C-4EC4-42B4-9AC1-349C274AAE03}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CFECBD7-FE88-4CC9-8E1B-6F7805F4F45A}

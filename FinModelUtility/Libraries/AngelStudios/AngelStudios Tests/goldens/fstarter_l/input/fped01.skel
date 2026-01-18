@@ -1,0 +1,137 @@
+Version: 101
+NumBones 22
+bone root {
+	offset 0.000000 1.027015 0.007294
+	transX 
+	transY 
+	transZ 
+	rotX 
+	rotY 
+	rotZ 
+	bone spine_01 {
+		offset 0.000000 0.041479 0.000000
+		rotX 
+		rotY 
+		rotZ 
+		bone spine_02 {
+			offset 0.000000 0.148317 0.000000
+			rotX 
+			rotY 
+			rotZ 
+			bone clavicle_l {
+				offset 0.042000 0.213593 0.005918
+				rotX 
+				rotY 
+				rotZ 
+				bone shoulder_l {
+					offset 0.107904 -0.015407 -0.032501
+					rotX 
+					rotY 
+					rotZ 
+					bone elbow_l {
+						offset -0.000947 -0.251756 0.000000
+						rotX 
+						rotY 
+						rotZ 
+						bone wrist_l {
+							offset 0.000000 -0.248486 0.000000
+							rotX 
+							rotY 
+							rotZ 
+							bone index01_l {
+								offset -0.000895 -0.086243 0.000000
+								rotX 
+								rotY 
+								rotZ 
+							}
+						}
+					}
+				}
+			}
+			bone clavicle_r {
+				offset -0.042000 0.213590 0.005918
+				rotX 
+				rotY 
+				rotZ 
+				bone shoulder_r {
+					offset -0.107904 -0.015401 -0.032501
+					rotX 
+					rotY 
+					rotZ 
+					bone elbow_r {
+						offset 0.000950 -0.251756 0.000000
+						rotX 
+						rotY 
+						rotZ 
+						bone wrist_r {
+							offset -0.000000 -0.248486 0.000000
+							rotX 
+							rotY 
+							rotZ 
+							bone index01_r {
+								offset 0.000300 -0.086407 0.000320
+								rotX 
+								rotY 
+								rotZ 
+							}
+						}
+					}
+				}
+			}
+			bone neck {
+				offset 0.000000 0.233625 -0.016220
+				rotX 
+				rotY 
+				rotZ 
+				bone head {
+					offset 0.000000 0.103953 0.005132
+					rotX 
+					rotY 
+					rotZ 
+				}
+			}
+		}
+	}
+	bone pelvis {
+		offset 0.000000 -0.034087 0.000000
+		rotX 
+		rotY 
+		rotZ 
+		bone hip_l {
+			offset 0.084383 -0.045000 0.000000
+			rotX 
+			rotY 
+			rotZ 
+			bone knee_l {
+				offset 0.000000 -0.429529 0.008144
+				rotX 
+				rotY 
+				rotZ 
+				bone ankle_l {
+					offset 0.000000 -0.430411 -0.034816
+					rotX 
+					rotY 
+					rotZ 
+				}
+			}
+		}
+		bone hip_r {
+			offset -0.084383 -0.045000 0.000000
+			rotX 
+			rotY 
+			rotZ 
+			bone knee_r {
+				offset 0.000000 -0.429529 0.008144
+				rotX 
+				rotY 
+				rotZ 
+				bone ankle_r {
+					offset 0.000000 -0.430410 -0.034816
+					rotX 
+					rotY 
+					rotZ 
+				}
+			}
+		}
+	}
+}

@@ -26,6 +26,7 @@ public sealed class PedModelImporter : IModelImporter<PedModelFileBundle> {
 
     var animDirectory = pedFile.AssertGetParent();
     var skelFile = animDirectory.AssertGetExistingFile($"{ped.SkelName}.skel");
+    files.Add(skelFile);
     var skel = skelFile.ReadNewFromText<Skel>();
 
     var finRootBone = finModel.Skeleton.Root;
@@ -50,6 +51,7 @@ public sealed class PedModelImporter : IModelImporter<PedModelFileBundle> {
         continue;
       }
 
+      files.Add(animFile);
       var anim = animFile.ReadNew<Anim>();
 
       var finAnimation = finAnimationManager.AddAnimation();
@@ -79,6 +81,7 @@ public sealed class PedModelImporter : IModelImporter<PedModelFileBundle> {
 
     var xmodFile = modelFileBundle.ModelDirectory.AssertGetExistingFile(
         $"{ped.XmodNames[0]}.xmod");
+    files.Add(xmodFile);
     new XmodModelImporter().ImportInto(
         new XmodModelFileBundle {
             XmodFile = xmodFile,

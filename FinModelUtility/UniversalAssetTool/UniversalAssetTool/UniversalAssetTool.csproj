@@ -136,7 +136,7 @@
     <ProjectReference Include="..\..\Games\AnimalCrossing\AnimalCrossing\AnimalCrossing.csproj" />
     <ProjectReference Include="..\..\Games\PokemonColosseum\PokemonColosseum\PokemonColosseum.csproj" />
 
-    <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios.csproj" />
+    <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios\AngelStudios.csproj" />
     <ProjectReference Include="..\..\Libraries\F3dzex2\F3dzex2\F3dzex2.csproj" />
     <ProjectReference Include="..\..\Libraries\Fmod\Fmod\Fmod.csproj" />
     <ProjectReference Include="..\..\Libraries\Grezzo\Grezzo\Grezzo.csproj" />
@@ -151,10 +151,11 @@
     <ProjectReference Include="..\..\Games\GauntletDarkLegacy\GauntletDarkLegacy\GauntletDarkLegacy.csproj" />
     <ProjectReference Include="..\..\Games\HaloWars\HaloWars\HaloWars.csproj" />
     <ProjectReference Include="..\..\Games\MarioArtist\MarioArtist\MarioArtist.csproj" />
-	<ProjectReference Include="..\..\Games\MarioKartDoubleDash\MarioKartDoubleDash\MarioKartDoubleDash.csproj" />
-	<ProjectReference Include="..\..\Games\MariosPicross\MariosPicross\MariosPicross.csproj" />
+    <ProjectReference Include="..\..\Games\MarioKartDoubleDash\MarioKartDoubleDash\MarioKartDoubleDash.csproj" />
+    <ProjectReference Include="..\..\Games\MariosPicross\MariosPicross\MariosPicross.csproj" />
     <ProjectReference Include="..\..\Games\PaperMarioDirectorsCut\PaperMarioDirectorsCut\PaperMarioDirectorsCut.csproj" />
-    <ProjectReference Include="..\..\Games\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor.csproj" />
+    <ProjectReference
+      Include="..\..\Games\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor.csproj" />
     <ProjectReference Include="..\..\Games\Pikmin1\Pikmin1\Pikmin1.csproj" />
     <ProjectReference Include="..\..\Games\Pikmin2\Pikmin2\Pikmin2.csproj" />
     <ProjectReference Include="..\..\Games\RollingMadness3d\RollingMadness3d\RollingMadness3d.csproj" />
