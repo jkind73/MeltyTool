@@ -88,8 +88,6 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     var animation = this.Animation;
     var animationPlaybackManager = this.AnimationPlaybackManager;
 
-    this.meshVisibility_.Reset();
-
     var hasAnyOverrides = this.SimpleBoneTransformView.HasAnyOverrides;
     if (animation != null ||
         this.needsToAlwaysUpdateMatrices_ ||
@@ -113,6 +111,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
           model.MaterialManager.Textures,
           (animation, frame));
 
+      this.meshVisibility_.Reset();
       if (animation.HasAnyMeshTracks) {
         foreach (var meshTracks in animation.MeshTracks) {
           if (!meshTracks.DisplayStates.TryGetAtFrame(
