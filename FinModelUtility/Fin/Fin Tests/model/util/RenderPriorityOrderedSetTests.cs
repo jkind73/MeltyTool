@@ -20,19 +20,19 @@ public sealed class RenderPriorityOrderedSetTests {
         { "1 foo", 0, 0, false },
     };
 
-    Asserts.SequenceEqual<IEnumerable<(int, uint, string)>>(
+    Asserts.SequenceEqual<IEnumerable<(bool, int, uint, string)>>(
         impl,
         [
             // Opaque
-            (0, 0, "1 foo"),
-            (1, 0, "2 foo"),
-            (0, 1, "1 123"),
-            (1, 1, "2 123"),
+            (false, 0, 0, "1 foo"),
+            (false, 1, 0, "2 foo"),
+            (false, 0, 1, "1 123"),
+            (false, 1, 1, "2 123"),
             // Transparent
-            (0, 0, "1 bar"),
-            (1, 0, "2 bar"),
-            (0, 1, "1 abc"),
-            (1, 1, "2 abc"),
+            (true, 0, 0, "1 bar"),
+            (true, 1, 0, "2 bar"),
+            (true, 0, 1, "1 abc"),
+            (true, 1, 1, "2 abc"),
         ]);
   }
 
@@ -49,14 +49,14 @@ public sealed class RenderPriorityOrderedSetTests {
         { "foo", 0, 0, false },
     };
 
-    Asserts.SequenceEqual<IEnumerable<(int, uint, string)>>(
+    Asserts.SequenceEqual<IEnumerable<(bool, int, uint, string)>>(
         impl,
         [
-            (0, 0, "foo"),
-            (0, 1, "123"),
-            (0, 0, "bar-1"),
-            (0, 0, "bar-2"),
-            (0, 1, "abc"),
+            (false, 0, 0, "foo"),
+            (false, 0, 1, "123"),
+            (true, 0, 0, "bar-1"),
+            (true, 0, 0, "bar-2"),
+            (true, 0, 1, "abc"),
         ]);
   }
 }

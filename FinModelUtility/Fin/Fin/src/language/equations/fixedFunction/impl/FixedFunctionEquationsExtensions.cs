@@ -1,4 +1,5 @@
-﻿using fin.model;
+﻿using fin.image.util;
+using fin.model;
 
 namespace fin.language.equations.fixedFunction;
 
@@ -21,8 +22,11 @@ public static partial class FixedFunctionEquationsExtensions {
 
       diffuseSurfaceColor
           = colorOps.Multiply(diffuseSurfaceColor, textureColor);
-      diffuseSurfaceAlpha
-          = scalarOps.Multiply(diffuseSurfaceAlpha, textureAlpha);
+
+      if (finTexture.TransparencyType is not TransparencyType.OPAQUE) {
+        diffuseSurfaceAlpha
+            = scalarOps.Multiply(diffuseSurfaceAlpha, textureAlpha);
+      }
     }
 
     if (hasVertexColorAlpha0.color) {

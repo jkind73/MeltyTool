@@ -9,10 +9,18 @@ public static class MaterialTransparencyTypeUtil {
   public static TransparencyType GetTransparencyType(
       this IReadOnlyMaterial material) {
     // TODO: Anything else to handle here?
-    // First off, handle any blend equations.
-    if (material.ColorSrcFactor is BlendFactor.ONE &&
-        material.ColorDstFactor is BlendFactor.ZERO) {
-      return TransparencyType.OPAQUE;
+    // First off, handle any blend equations:
+    {
+      if (material.ColorSrcFactor is BlendFactor.ONE &&
+          material.ColorDstFactor is BlendFactor.ZERO) {
+        return TransparencyType.OPAQUE;
+      }
+
+      // Additive blend mode.
+      if (material.ColorSrcFactor is BlendFactor.SRC_ALPHA &&
+          material.ColorDstFactor is BlendFactor.ONE) {
+        return TransparencyType.TRANSPARENT;
+      }
     }
 
     // TODO: Detect this from the model

@@ -131,7 +131,7 @@ void main() {
 
   vec3 colorComponent = (ambientLightColor.rgb + mergedLightDiffuseColor.rgb)*vec3(0.501961)*texture(texture0, uv0).rgb;
 
-  float alphaComponent = 0.64*texture(texture0, uv0).a;
+  float alphaComponent = 0.64;
 
   fragColor = vec4(colorComponent, alphaComponent);
 

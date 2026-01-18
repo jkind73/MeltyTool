@@ -219,15 +219,13 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         modelRenderer.GenerateModelIfNull();
 
         foreach (var primitiveRenderer in modelRenderer.MaterialRenderers) {
-          var transparencyType = primitiveRenderer.GlMaterialShader.Material?.GetTransparencyType() ??
-                         TransparencyType.OPAQUE;
+          var isTransparent = primitiveRenderer.IsTransparent;
           elements.AddLast(
               new RenderGraphElement(
                   new RenderGraphMaterialRenderer {
                       Node = node,
                       GlMaterialShader = primitiveRenderer.GlMaterialShader,
-                      IsTransparent
-                          = transparencyType is TransparencyType.TRANSPARENT,
+                      IsTransparent = isTransparent,
                       MinPrimitiveIndex = primitiveRenderer.MinPrimitiveIndex,
                       InversePriority = primitiveRenderer.InversePriority,
                       ModelRenderer = modelRenderer,

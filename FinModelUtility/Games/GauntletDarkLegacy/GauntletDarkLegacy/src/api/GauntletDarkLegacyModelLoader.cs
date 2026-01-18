@@ -116,7 +116,7 @@ public sealed class GauntletDarkLegacyModelImporter
           var outputColorAlpha = finMaterial.GenerateDiffuse(
               (equations.ColorOps.One, equations.ScalarOps.One),
               lazyFinTextures[(textureIndex, false)],
-              (hasVertexColors, hasVertexColors));
+              (hasVertexColors, false));
 
           var noShading = boneMbFlags.CheckFlag(MbFlags.NO_SHADING) ||
                           worldObjectMbFlags.CheckFlag(MbFlags.NO_SHADING);
