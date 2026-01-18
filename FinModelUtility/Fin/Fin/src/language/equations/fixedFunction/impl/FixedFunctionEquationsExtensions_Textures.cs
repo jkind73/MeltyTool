@@ -1,4 +1,5 @@
-﻿using fin.model;
+﻿using fin.image.util;
+using fin.model;
 using fin.util.enumerables;
 
 namespace fin.language.equations.fixedFunction;
@@ -33,9 +34,15 @@ public static partial class FixedFunctionEquationsExtensions {
     var color = equations.CreateOrGetColorInput(
         FixedFunctionSource.TEXTURE_COLOR_0 +
         index);
-    var alpha = equations.CreateOrGetScalarInput(
-        FixedFunctionSource.TEXTURE_ALPHA_0 +
-        index);
+
+    IScalarValue alpha;
+    if (texture.TransparencyType is TransparencyType.OPAQUE) {
+      alpha = ScalarConstant.ONE;
+    } else {
+      alpha = equations.CreateOrGetScalarInput(
+          FixedFunctionSource.TEXTURE_ALPHA_0 +
+          index);
+    }
 
     return (color, alpha);
   }
