@@ -14,7 +14,6 @@ using fin.scene.components;
 using fin.schema.vector;
 using fin.ui;
 using fin.ui.rendering;
-using fin.util.linq;
 
 
 namespace fin.scene;

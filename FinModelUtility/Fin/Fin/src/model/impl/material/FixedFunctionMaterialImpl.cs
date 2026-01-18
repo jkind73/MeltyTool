@@ -3,7 +3,6 @@ using System.Linq;
 
 using fin.color;
 using fin.language.equations.fixedFunction;
-using fin.image.util;
 
 namespace fin.model.impl;
 

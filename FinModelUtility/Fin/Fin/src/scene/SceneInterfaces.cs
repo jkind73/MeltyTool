@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 
-using fin.data.dictionaries;
 using fin.image;
 using fin.importers;
 using fin.io.bundles;

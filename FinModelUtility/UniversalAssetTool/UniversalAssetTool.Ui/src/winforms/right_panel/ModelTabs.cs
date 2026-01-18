@@ -4,8 +4,6 @@ using fin.animation;
 using fin.model;
 using fin.shaders.glsl;
 
-using uni.ui.winforms.right_panel.skeleton;
-
 namespace uni.ui.winforms.right_panel;
 
 public partial class ModelTabs : UserControl {

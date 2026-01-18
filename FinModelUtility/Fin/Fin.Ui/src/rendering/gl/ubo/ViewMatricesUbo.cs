@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-using fin.shaders.glsl;
+﻿using fin.shaders.glsl;
 
 namespace fin.ui.rendering.gl.ubo;
 

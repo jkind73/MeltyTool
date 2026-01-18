@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Numerics;
 
-using fin.image.util;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;

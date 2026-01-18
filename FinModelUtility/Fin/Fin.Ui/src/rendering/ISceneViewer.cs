@@ -2,7 +2,6 @@
 using fin.model;
 using fin.scene;
 using fin.scene.components;
-using fin.ui.rendering.gl.model;
 using fin.ui.rendering.viewer;
 
 namespace fin.ui.rendering;

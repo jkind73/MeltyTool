@@ -12,7 +12,6 @@ using fin.services;
 using fin.ui.avalonia.gl;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
-using fin.ui.rendering.gl.model;
 using fin.ui.rendering.viewer;
 
 namespace fin.ui.avalonia.scene;

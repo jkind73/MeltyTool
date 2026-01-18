@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using fin.data.dictionaries;
-using fin.math;
 using fin.math.transform;
 using fin.model;
-using fin.model.skeleton;
-using fin.scene.components;
 
 using readOnly;
 

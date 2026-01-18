@@ -1,6 +1,4 @@
-﻿using fin.data.dictionaries;
-
-using schema.binary;
+﻿using schema.binary;
 using schema.binary.attributes;
 
 namespace gdl.schema.anim;

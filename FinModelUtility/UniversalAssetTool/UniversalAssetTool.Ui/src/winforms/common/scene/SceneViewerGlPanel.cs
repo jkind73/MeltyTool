@@ -7,7 +7,6 @@ using fin.scene.components;
 using fin.ui;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
-using fin.ui.rendering.gl.model;
 using fin.ui.rendering.viewer;
 
 using uni.config;

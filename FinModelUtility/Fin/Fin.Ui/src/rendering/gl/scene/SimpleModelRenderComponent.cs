@@ -1,6 +1,5 @@
 ﻿using fin.animation;
 using fin.config;
-using fin.data.indexable;
 using fin.math;
 using fin.model;
 using fin.model.skeleton;
