@@ -12,6 +12,8 @@ public partial class GlState {
 }
 
 public static partial class GlUtil {
+  public const bool VALIDATE_PROGRAM = false;
+
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void UseProgram(int shader) {
     if (currentState_.CurrentShader == shader) {
@@ -23,6 +25,11 @@ public static partial class GlUtil {
   }
 
   public static void ValidateCurrentProgram() {
+    // Validation is slow, so let's not do it if we don't need to.
+    if (!VALIDATE_PROGRAM) {
+      return;
+    }
+
     var programId = currentState_.CurrentShader;
 
     GL.ValidateProgram(programId);
