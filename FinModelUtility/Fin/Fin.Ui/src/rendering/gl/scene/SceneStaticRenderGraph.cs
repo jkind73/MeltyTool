@@ -52,9 +52,108 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   }
 }
 
-public record RenderGraphElement(IRenderGraphParams Params) {
-  public ulong SortKey { get; set; }
+public class RenderGraphElement {
+  public RenderGraphElement(IRenderGraphParams prms) {
+    this.Params = prms;
+    this.InitSortKey();
+  }
+
+  public IRenderGraphParams Params { get; }
+  public ulong SortKey { get; private set; }
+
   public override string ToString() => $"{this.Params}, Sort key: {this.SortKey}";
+
+  // Loosely based on: https://realtimecollisiondetection.net/blog/?p=86
+  // Transparent bits
+  public const int transparentInversePriorityBitCount = 16;
+  public const ulong transparentInversePriorityMask
+      = ((ulong) 1 << transparentInversePriorityBitCount) - 1;
+  public const int transparentMinPrimitiveIndexBitCount = 16;
+  public const ulong transparentMinPrimitiveIndexMask
+      = ((ulong) 1 << transparentMinPrimitiveIndexBitCount) - 1;
+  public const int transparentDepthBitCount = 31;
+  public const ulong transparentDepthMax = ((ulong) 1 << transparentDepthBitCount) - 1;
+
+  // Opaque bits
+  public const int opaqueProgramIdBitCount = 16;
+  public const ulong opaqueProgramIdMask = ((ulong) 1 << opaqueProgramIdBitCount) - 1;
+  public const int opaqueVaoIdBitCount = 12;
+  public const ulong opaqueVaoIdMask = ((ulong) 1 << opaqueVaoIdBitCount) - 1;
+  public const int opaqueMaterialIndexBitCount = 12;
+  public const ulong opaqueMaterialIndexMask
+      = ((ulong) 1 << opaqueMaterialIndexBitCount) - 1;
+  public const int opaqueDepthBitCount = 23;
+  public const ulong opaqueDepthMax = ((ulong) 1 << opaqueDepthBitCount) - 1;
+
+  public void InitSortKey() {
+    ulong sortKey = 0;
+
+    var prms = this.Params;
+    var materialShader = prms.GlMaterialShader;
+    var material = materialShader?.Material;
+
+    var isTransparent = prms.IsTransparent;
+    sortKey |= (isTransparent ? (ulong) 1 : 0) << 63;
+
+    if (isTransparent) {
+      var inversePriorityBits
+          = prms.InversePriority & transparentInversePriorityMask;
+      sortKey
+          |= inversePriorityBits <<
+             (transparentDepthBitCount +
+              transparentMinPrimitiveIndexBitCount);
+
+      var minPrimitiveIndexBits
+          = (ulong) prms.MinPrimitiveIndex & transparentMinPrimitiveIndexMask;
+      sortKey |= minPrimitiveIndexBits << transparentDepthBitCount;
+    } else {
+      var programIdBits
+          = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & opaqueProgramIdMask;
+      sortKey
+          |= programIdBits <<
+             (opaqueDepthBitCount +
+              opaqueMaterialIndexBitCount +
+              opaqueVaoIdBitCount);
+
+      var vaoIdBits = (ulong) (prms.VaoId) & opaqueVaoIdMask;
+      sortKey
+          |= vaoIdBits <<
+             (opaqueDepthBitCount +
+              opaqueMaterialIndexBitCount);
+
+      var materialIndexBits = (ulong) (material?.Index ?? 0) & opaqueMaterialIndexMask;
+      sortKey |= materialIndexBits << opaqueDepthBitCount;
+    }
+
+    this.SortKey = sortKey;
+  }
+
+  public void UpdateSortKey(ICamera camera, float nearPlane, float farPlane, float scale) {
+    ulong sortKey = this.SortKey;
+
+    var prms = this.Params;
+    var transform = prms.Node.Transform;
+
+    var isTransparent = prms.IsTransparent;
+    sortKey |= (isTransparent ? (ulong) 1 : 0) << 63;
+
+    var distance = (camera.Position - transform.LocalTranslation).Length() * scale;
+    var distance0To1
+        = ((distance - nearPlane) / (farPlane - nearPlane))
+        .Clamp(0, 1);
+
+    if (isTransparent) {
+      var distance1To0 = 1 - distance0To1;
+      var depthBits = (ulong) (distance1To0 * transparentDepthMax);
+
+      sortKey = (sortKey & ~transparentDepthMax) | depthBits;
+    } else {
+      var depthBits = (ulong) (distance0To1 * opaqueDepthMax);
+      sortKey = (sortKey & ~opaqueDepthMax) | depthBits;
+    }
+
+    this.SortKey = sortKey;
+  }
 }
 
 public sealed class SceneStaticRenderGraph : IRenderable {
@@ -64,7 +163,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       List<(IReadOnlySceneNodeInstance, SimpleModelRenderComponent)>
       modelRenderComponents_ = new();
 
-  private List<RenderGraphElement>? elements_;
+  private RenderGraphElement[] elements_;
 
   private IReadOnlySceneNode? selectedNode_;
   private IReadOnlyMesh? selectedMesh_;
@@ -92,23 +191,21 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_() {
-    this.elements_?.Clear();
-  }
+  private void ReleaseUnmanagedResources_() { }
 
   private void GenerateModelIfNull_() {
     if (this.elements_ != null) {
       return;
     }
 
-    this.elements_ = new();
+    var elements = new LinkedList<RenderGraphElement>();
     foreach (var node in this.scene_.EnumerateAllNodes()) {
       foreach (var renderComponent in node.Definition.Components
                                           .OfType<
                                               ISceneNodeRenderComponent>()) {
         if (renderComponent is not SimpleModelRenderComponent
             modelRenderComponent) {
-          this.elements_.Add(
+          elements.AddLast(
               new RenderGraphElement(
                   new RenderGraphComponentRenderer {
                       Node = node,
@@ -124,7 +221,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         foreach (var primitiveRenderer in modelRenderer.MaterialRenderers) {
           var transparencyType = primitiveRenderer.GlMaterialShader.Material?.GetTransparencyType() ??
                          TransparencyType.OPAQUE;
-          this.elements_.Add(
+          elements.AddLast(
               new RenderGraphElement(
                   new RenderGraphMaterialRenderer {
                       Node = node,
@@ -139,6 +236,8 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         }
       }
     }
+
+    this.elements_ = elements.ToArray();
   }
 
   private readonly RenderGraphComparer comparer_ = new();
@@ -156,86 +255,9 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       GlTransform.PopMatrix();
     }
 
-    // Loosely based on: https://realtimecollisiondetection.net/blog/?p=86
-    // Transparent bits
-    const int transparentInversePriorityBitCount = 16;
-    var transparentInversePriorityMask
-        = ((ulong) 1 << transparentInversePriorityBitCount) - 1;
-    const int transparentMinPrimitiveIndexBitCount = 16;
-    var transparentMinPrimitiveIndexMask
-        = ((ulong) 1 << transparentMinPrimitiveIndexBitCount) - 1;
-    const int transparentDepthBitCount = 31;
-    var transparentDepthMax = ((ulong) 1 << transparentDepthBitCount) - 1;
-
-    // Opaque bits
-    const int opaqueProgramIdBitCount = 16;
-    var opaqueProgramIdMask = ((ulong) 1 << opaqueProgramIdBitCount) - 1;
-    const int opaqueVaoIdBitCount = 12;
-    var opaqueVaoIdMask = ((ulong) 1 << opaqueVaoIdBitCount) - 1;
-    const int opaqueMaterialIndexBitCount = 12;
-    var opaqueMaterialIndexMask
-        = ((ulong) 1 << opaqueMaterialIndexBitCount) - 1;
-    const int opaqueDepthBitCount = 23;
-    var opaqueDepthMax = ((ulong) 1 << opaqueDepthBitCount) - 1;
-
     var camera = Camera.Instance;
-    foreach (var element in this.elements_!) {
-      var transform = element.Params.Node.Transform;
-
-      ulong sortKey = 0;
-
-      var materialShader = element.Params.GlMaterialShader;
-      var material = materialShader?.Material;
-
-      var prms = element.Params;
-
-      var isTransparent = prms.IsTransparent;
-      sortKey |= (isTransparent ? (ulong) 1 : 0) << 63;
-
-      var distance = (camera.Position - transform.LocalTranslation).Length() * this.Scale;
-      var distance0To1
-          = ((distance - this.NearPlane) / (this.FarPlane - this.NearPlane))
-          .Clamp(0, 1);
-
-
-      if (isTransparent) {
-        var inversePriorityBits
-            = prms.InversePriority & transparentInversePriorityMask;
-        sortKey
-            |= inversePriorityBits <<
-               (transparentDepthBitCount +
-                transparentMinPrimitiveIndexBitCount);
-
-        var minPrimitiveIndexBits
-            = (ulong) prms.MinPrimitiveIndex & transparentMinPrimitiveIndexMask;
-        sortKey |= minPrimitiveIndexBits << transparentDepthBitCount;
-
-        var distance1To0 = 1 - distance0To1;
-        var depthBits = (ulong) (distance1To0 * transparentDepthMax);
-        sortKey |= depthBits;
-      } else {
-        var programIdBits
-            = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & opaqueProgramIdMask;
-        sortKey
-            |= programIdBits <<
-               (opaqueDepthBitCount +
-                opaqueMaterialIndexBitCount +
-                opaqueVaoIdBitCount);
-
-        var vaoIdBits = (ulong) (prms.VaoId) & opaqueVaoIdMask;
-        sortKey
-            |= vaoIdBits <<
-               (opaqueDepthBitCount +
-                opaqueMaterialIndexBitCount);
-
-        var materialIndexBits = (ulong) (material?.Index ?? 0) & opaqueMaterialIndexMask;
-        sortKey |= materialIndexBits << opaqueDepthBitCount;
-
-        var depthBits = (ulong) (distance0To1 * opaqueDepthMax);
-        sortKey |= depthBits;
-      }
-
-      element.SortKey = sortKey;
+    foreach (var element in this.elements_) {
+      element.UpdateSortKey(camera, this.NearPlane, this.FarPlane, this.Scale);
     }
 
     this.elements_.Sort(this.comparer_);
