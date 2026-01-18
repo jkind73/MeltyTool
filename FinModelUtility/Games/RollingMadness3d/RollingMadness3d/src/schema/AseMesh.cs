@@ -63,9 +63,8 @@ public sealed partial class Vertex : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class UvData : IBinaryConvertible {
-  public Vector2 Uv { get; set; }
-  public float Unk0 { get; set; }
-  public float Unk1 { get; set; }
+  public Vector2 Uv0 { get; set; }
+  public Vector2 Uv1 { get; set; }
   public Vector2 LightmapUv { get; set; }
 }
 
@@ -74,8 +73,8 @@ public sealed partial class Triangle : IBinaryConvertible {
   public uint Vertex1 { get; set; }
   public uint Vertex2 { get; set; }
   public uint Vertex3 { get; set; }
-  public uint MaterialIndex { get; set; }
-  public int Unk1 { get; set; }
+  public int MainTextureIndex { get; set; }
+  public int DecalTextureIndex { get; set; }
   public int LightmapIndex { get; set; }
   public int Unk3 { get; set; }
 }
