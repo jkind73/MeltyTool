@@ -118,9 +118,7 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
     this.matricesUbo_.UpdateData(GlTransform.ModelMatrix, this.boneMatrices_);
   }
 
-  public void BindMatricesUbo() {
-    this.matricesUbo_.Bind();
-  }
+  public void BindMatricesUbo() => this.matricesUbo_.Bind();
 
   public void GenerateModelIfNull() => this.impl_.GenerateModelIfNull();
 

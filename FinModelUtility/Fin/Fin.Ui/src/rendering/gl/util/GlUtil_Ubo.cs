@@ -3,17 +3,36 @@
 namespace fin.ui.rendering.gl;
 
 public partial class GlState {
-  public int CurrentUboId { get; set; } = -1;
+  public int CurrentUboDataId { get; set; } = -1;
+  public int[] CurrentUboBufferBaseIdByIndex { get; } = [-1, -1, -1, -1];
 }
 
 public static partial class GlUtil {
-  public static void ResetUbo() => BindUbo(0);
+  public static void ResetUboData() => BindUboData(0);
 
-  public static void BindUbo(int uboId) {
-    if (currentState_.CurrentUboId == uboId) {
+  public static void BindUboData(int uboId) {
+    if (currentState_.CurrentUboDataId == uboId) {
       return;
     }
 
     GL.BindBuffer(BufferTarget.UniformBuffer, uboId);
+  }
+
+  public static void ResetUboBufferBase() {
+    BindUboBufferBase(0, 0);
+    BindUboBufferBase(1, 0);
+    BindUboBufferBase(2, 0);
+    BindUboBufferBase(3, 0);
+  }
+
+  public static void BindUboBufferBase(int bindingIndex, int uboId) {
+    if (currentState_.CurrentUboBufferBaseIdByIndex[bindingIndex] == uboId) {
+      return;
+    }
+
+    currentState_.CurrentUboBufferBaseIdByIndex[bindingIndex] = uboId;
+    GL.BindBufferBase(BufferRangeTarget.UniformBuffer,
+                      bindingIndex,
+                      uboId);
   }
 }

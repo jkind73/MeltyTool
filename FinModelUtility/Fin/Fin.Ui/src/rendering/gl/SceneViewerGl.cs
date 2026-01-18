@@ -183,9 +183,9 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
     if (this.viewMatricesUbo_ == null) {
       this.viewMatricesUbo_ = new();
-      this.viewMatricesUbo_.Bind();
     }
     this.viewMatricesUbo_.UpdateData();
+    this.viewMatricesUbo_.Bind();
 
     this.RenderSkybox_();
     this.RenderScene_();

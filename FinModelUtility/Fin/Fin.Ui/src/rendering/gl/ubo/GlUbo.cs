@@ -12,12 +12,12 @@ public sealed class GlUbo : IDisposable {
     this.id_ = GL.GenBuffer();
     this.buffer_ = new byte[bufferSize];
 
-    GlUtil.BindUbo(this.id_);
+    GlUtil.BindUboData(this.id_);
     GL.BufferData(BufferTarget.UniformBuffer,
                   bufferSize,
                   IntPtr.Zero,
                   BufferUsageHint.StreamDraw);
-    GlUtil.ResetUbo();
+    GlUtil.ResetUboData();
   }
 
   ~GlUbo() => this.ReleaseUnmanagedResources_();
@@ -36,17 +36,14 @@ public sealed class GlUbo : IDisposable {
 
     newData.CopyTo(this.buffer_);
     fixed (byte* bufferPtr = &newData.GetPinnableReference()) {
-      GlUtil.BindUbo(this.id_);
+      GlUtil.BindUboData(this.id_);
       GL.BufferSubData(BufferTarget.UniformBuffer,
                        IntPtr.Zero,
                        new IntPtr(newData.Length),
                        new IntPtr(bufferPtr));
-      GlUtil.ResetUbo();
+      GlUtil.ResetUboData();
     }
   }
 
-  public void Bind()
-    => GL.BindBufferBase(BufferRangeTarget.UniformBuffer,
-                         this.bindingIndex_,
-                         this.id_);
+  public void Bind() => GlUtil.BindUboBufferBase(this.bindingIndex_, this.id_);
 }

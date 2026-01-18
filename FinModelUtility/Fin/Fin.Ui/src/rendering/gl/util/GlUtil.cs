@@ -66,7 +66,8 @@ public static partial class GlUtil {
     ResetCulling();
     ResetDepth();
     ResetFlipFaces();
-    ResetUbo();
+    ResetUboData();
+    ResetUboBufferBase();
     ResetVao();
     ResetEbo();
 
