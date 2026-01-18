@@ -60,7 +60,6 @@ public sealed class AseMeshModelImporter
             int aseLightmapIndex), IReadOnlyMaterial>(tuple => {
           var (aseMainTextureIndex, aseDecalTextureIndex, aseLightmapIndex) = tuple;
 
-
           var finMaterial = finMaterialManager.AddFixedFunctionMaterial();
 
           var finMainTexture = lazyTextureMap[
@@ -129,9 +128,15 @@ public sealed class AseMeshModelImporter
         = aseMesh.Triangles.ToListDictionary(t => (t.MainTextureIndex,
                                                    t.DecalTextureIndex,
                                                    t.LightmapIndex));
-    foreach (var (mainAndDecalAndLightmapIndex, aseTriangles) in
-             trianglesByMaterialIndex.GetPairs()) {
+
+    var mainAndDecalAndLightmapIndexes = trianglesByMaterialIndex.Keys.OrderBy(k => k.MainTextureIndex)
+                                       .ThenBy(k => k.DecalTextureIndex)
+                                       .ThenBy(k => k.LightmapIndex);
+
+    foreach (var mainAndDecalAndLightmapIndex in mainAndDecalAndLightmapIndexes) {
       var finMaterial = lazyMaterialMap[mainAndDecalAndLightmapIndex];
+
+      var aseTriangles = trianglesByMaterialIndex[mainAndDecalAndLightmapIndex];
       var triangleVertices = aseTriangles.Select(t => (
                                                      finVertices[t.Vertex1],
                                                      finVertices[t.Vertex2],
