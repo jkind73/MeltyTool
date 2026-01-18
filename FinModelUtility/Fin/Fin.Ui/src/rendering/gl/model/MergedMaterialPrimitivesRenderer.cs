@@ -118,12 +118,13 @@ public partial class ModelRenderer {
         var material = visibilityMeshMaterialTuple.material;
         if (isMerged) {
           mergedPrimitiveByMaterial[material] = mergedPrimitive;
-        } else {
+        } else if (visibilityMeshMaterialTuple.meshTuple?.isVisibilityAnimated is
+                   false) {
           mergedPrimitive.Base = mergedPrimitiveByMaterial.TryGetValue(
-                  material,
-                  out var baseMergedPrimitive)
-                  ? baseMergedPrimitive
-                  : null;
+              material,
+              out var baseMergedPrimitive)
+              ? baseMergedPrimitive
+              : null;
         }
 
         mergedPrimitives.Add(mergedPrimitive);
