@@ -31,7 +31,7 @@ public sealed class Earthbound3dFileBundleGatherer
         ]);
 
     foreach (var glbFile in root.FilesWithExtensionRecursive(".glb")) {
-      organizer.Add(new FlatGltfModelFileBundle(glbFile) {
+      organizer.Add(new GltfModelFileBundle(glbFile) {
           AdditionalProcessing = ProcessModel_,
       }.Annotate(glbFile));
     }

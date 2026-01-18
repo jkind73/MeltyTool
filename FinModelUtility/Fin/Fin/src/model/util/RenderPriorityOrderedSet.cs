@@ -9,7 +9,7 @@ using fin.data.sets;
 namespace fin.model.util;
 
 public sealed class RenderPriorityOrderedSet<T>
-    : IEnumerable<(int index, uint inversePriority, T item)> {
+    : IEnumerable<(bool isTransparent, int index, uint inversePriority, T item)> {
   // TODO: Optimize this somehow?
   private readonly OrderedHashSet<T> elements_ = [];
 
@@ -32,11 +32,11 @@ public sealed class RenderPriorityOrderedSet<T>
 
   IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();
 
-  public IEnumerator<(int index, uint inversePriority, T item)> GetEnumerator()
+  public IEnumerator<(bool isTransparent, int index, uint inversePriority, T item)> GetEnumerator()
     => this.elements_
            .OrderBy(value => this.isTransparentByElement_[value])
            .ThenBy(value => this.inversePriorityByElement_[value])
            .ThenBy(value => this.indexByElement_[value])
-           .Select(value => (this.indexByElement_[value], this.inversePriorityByElement_[value], value))
+           .Select(value => (this.isTransparentByElement_[value], this.indexByElement_[value], this.inversePriorityByElement_[value], value))
            .GetEnumerator();
 }

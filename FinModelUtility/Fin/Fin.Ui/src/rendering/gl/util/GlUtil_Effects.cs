@@ -15,7 +15,7 @@ public static partial class GlUtil {
     SetBlending(BlendEquation.ADD,
                        BlendFactor.CONST_COLOR,
                        BlendFactor.CONST_ALPHA);
-    SetDepth(DepthMode.READ_ONLY);
+    SetDepth(DepthMode.READ_ONLY, DepthCompareType.Equal);
     DisableChangingBlending = true;
     DisableChangingDepth = true;
 

@@ -1,6 +1,6 @@
 ﻿using fin.math;
+using fin.model;
 using fin.ui.rendering.gl.model;
-using fin.util.linq;
 
 using Nito.Disposables;
 
@@ -23,14 +23,17 @@ public sealed partial class GlBufferManager {
 
   public IGlBufferRenderer[] CreateRenderers(
       IReadOnlyList<MergedPrimitive> mergedPrimitives) {
-    IReadOnlyList<int> restartIndex = [
+    var restartIndex =
         (int) (INDEX_TYPE switch {
             DrawElementsType.UnsignedByte => byte.MaxValue,
             DrawElementsType.UnsignedShort => ushort.MaxValue,
             DrawElementsType.UnsignedInt => uint.MaxValue,
             _ => throw new ArgumentOutOfRangeException()
-        })
-    ];
+        });
+
+    var rangeByPrimitive
+        = new Dictionary<IReadOnlyPrimitive, (bool isArray, int vertexOffset,
+            int vertexCount)>();
 
     IGlBufferRenderer[] renderers
         = new IGlBufferRenderer[mergedPrimitives.Count];
@@ -43,17 +46,53 @@ public sealed partial class GlBufferManager {
     var eboInstanceCount = 0;
     for (var i = 0; i < mergedPrimitives.Count; ++i) {
       var mergedPrimitive = mergedPrimitives[i];
-      var mpIndices
-          = mergedPrimitive
-            .Vertices
-            .Select(vertices => vertices.Select(vertex => vertex.Index))
-            .Intersperse(restartIndex)
-            .SelectMany(indices => indices)
-            .ToArray();
 
-      if (mpIndices.IsSequentiallyIncreasing(
-              out var vertexOffset,
-              out var vertexCount)) {
+      bool isArray;
+      int vertexOffset, vertexCount;
+
+      // Nice, can reuse an existing primitive's range
+      if (mergedPrimitive.Base != null) {
+        var primitive = mergedPrimitive.Vertices.First().Item1;
+        (isArray, vertexOffset, vertexCount) = rangeByPrimitive[primitive];
+      }
+      // Otherwise, find the new range
+      else {
+        var mpIndices = new List<int>();
+        var primitiveRanges
+            = new List<(IReadOnlyPrimitive primitive, int offset, int count)>();
+
+        foreach (var (primitive, vertices) in mergedPrimitive.Vertices) {
+          if (mpIndices.Count > 0 && mergedPrimitive.RequiresSeparators) {
+            mpIndices.Add(restartIndex);
+          }
+
+          var offset = mpIndices.Count;
+
+          foreach (var vertex in vertices) {
+            mpIndices.Add(vertex.Index);
+          }
+
+          var count = mpIndices.Count - offset;
+
+          primitiveRanges.Add((primitive, offset, count));
+        }
+
+        isArray = mpIndices.IsSequentiallyIncreasing(
+            out vertexOffset,
+            out vertexCount);
+        if (!isArray) {
+          vertexOffset = eboIndices.Count;
+          vertexCount = mpIndices.Count;
+          eboIndices.AddRange(mpIndices);
+        }
+
+        foreach (var (primitive, offset, count) in primitiveRanges) {
+          rangeByPrimitive[primitive]
+              = (isArray, vertexOffset + offset, count);
+        }
+      }
+
+      if (isArray) {
         renderers[i] = new GlBufferRenderer(
             this.VaoId,
             mergedPrimitive.PrimitiveType,
@@ -61,14 +100,8 @@ public sealed partial class GlBufferManager {
             null,
             null,
             vertexOffset,
-            vertexCount
-        );
+            vertexCount);
       } else {
-        vertexOffset = eboIndices.Count;
-        vertexCount = mpIndices.Length;
-
-        eboIndices.AddRange(mpIndices);
-
         renderers[i] = new GlBufferRenderer(
             this.VaoId,
             mergedPrimitive.PrimitiveType,

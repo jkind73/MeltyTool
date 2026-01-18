@@ -1,6 +1,7 @@
 ﻿using fin.data.queues;
 using fin.image.util;
 using fin.math;
+using fin.model;
 using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.material;
@@ -11,6 +12,7 @@ namespace fin.ui.rendering.gl.scene;
 public interface IRenderGraphParams {
   ISceneNodeInstance Node { get; }
   IReadOnlyGlMaterialShader? GlMaterialShader { get; }
+  bool IsSelected { get; }
   bool IsTransparent { get; }
   int MinPrimitiveIndex { get; }
   uint InversePriority { get; }
@@ -21,6 +23,7 @@ public class RenderGraphComponentRenderer : IRenderGraphParams {
   public required ISceneNodeInstance Node { get; init; }
   public IReadOnlyGlMaterialShader? GlMaterialShader => null;
   public required ISceneNodeRenderComponent RenderComponent { get; init; }
+  public bool IsSelected => false;
   public bool IsTransparent => true;
   public int MinPrimitiveIndex => int.MaxValue;
   public uint InversePriority => uint.MaxValue;
@@ -34,6 +37,7 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   public required IReadOnlyGlMaterialShader GlMaterialShader { get; init; }
   public required IModelRenderer ModelRenderer { get; init; }
   public required IMaterialRenderer MaterialRenderer { get; init; }
+  public bool IsSelected => this.MaterialRenderer.IsSelected;
   public required bool IsTransparent { get; init; }
   public required int MinPrimitiveIndex { get; init; }
   public required uint InversePriority { get; init; }
@@ -61,7 +65,10 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       modelRenderComponents_ = new();
 
   private List<RenderGraphElement>? elements_;
+
   private IReadOnlySceneNode? selectedNode_;
+  private IReadOnlyMesh? selectedMesh_;
+  private IReadOnlySet<IReadOnlyMaterial>? selectedMaterials_;
 
   public float Scale { get; set; }
   public float NearPlane { get; set; }
@@ -69,8 +76,13 @@ public sealed class SceneStaticRenderGraph : IRenderable {
 
   public SceneStaticRenderGraph(ISceneInstance scene) {
     this.scene_ = scene;
+
     SelectedNodeService.OnNodeSelected += selectedNode
         => this.selectedNode_ = selectedNode;
+    SelectedMeshService.OnMeshSelected += selectedMesh
+        => this.selectedMesh_ = selectedMesh;
+    SelectedMaterialsService.OnMaterialsSelected += selectedMaterials
+        => this.selectedMaterials_ = selectedMaterials;
   }
 
   ~SceneStaticRenderGraph() => this.ReleaseUnmanagedResources_();
@@ -109,30 +121,21 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         var modelRenderer = modelRenderComponent.ModelRenderer;
         modelRenderer.GenerateModelIfNull();
 
-        // TODO: Splitting by mesh is a *major* bottleneck, need to just split
-        // by material.
-        var meshRendererQueue
-            = new FinQueue<IMeshRenderer>(modelRenderer.MeshRenderers);
-        while (meshRendererQueue.TryDequeue(out var meshRenderer)) {
-          meshRenderer.GenerateModelIfNull();
-          meshRendererQueue.Enqueue(meshRenderer.Children);
-
-          foreach (var primitiveRenderer in meshRenderer.MaterialRenderers) {
-            var transparencyType = primitiveRenderer.GlMaterialShader.Material?.GetTransparencyType() ??
-                           TransparencyType.OPAQUE;
-            this.elements_.Add(
-                new RenderGraphElement(
-                    new RenderGraphMaterialRenderer {
-                        Node = node,
-                        GlMaterialShader = primitiveRenderer.GlMaterialShader,
-                        IsTransparent
-                            = transparencyType is TransparencyType.TRANSPARENT,
-                        MinPrimitiveIndex = primitiveRenderer.MinPrimitiveIndex,
-                        InversePriority = primitiveRenderer.InversePriority,
-                        ModelRenderer = modelRenderer,
-                        MaterialRenderer = primitiveRenderer,
-                    }));
-          }
+        foreach (var primitiveRenderer in modelRenderer.MaterialRenderers) {
+          var transparencyType = primitiveRenderer.GlMaterialShader.Material?.GetTransparencyType() ??
+                         TransparencyType.OPAQUE;
+          this.elements_.Add(
+              new RenderGraphElement(
+                  new RenderGraphMaterialRenderer {
+                      Node = node,
+                      GlMaterialShader = primitiveRenderer.GlMaterialShader,
+                      IsTransparent
+                          = transparencyType is TransparencyType.TRANSPARENT,
+                      MinPrimitiveIndex = primitiveRenderer.MinPrimitiveIndex,
+                      InversePriority = primitiveRenderer.InversePriority,
+                      ModelRenderer = modelRenderer,
+                      MaterialRenderer = primitiveRenderer,
+                  }));
         }
       }
     }
@@ -237,14 +240,16 @@ public sealed class SceneStaticRenderGraph : IRenderable {
 
     this.elements_.Sort(this.comparer_);
 
-    if (this.selectedNode_ != null) {
+    var isSomethingSelected = this.selectedNode_ != null ||
+                              this.selectedMesh_ != null ||
+                              (this.selectedMaterials_?.Any() ?? false);
+
+    if (isSomethingSelected) {
       foreach (var element in this.elements_) {
         var prms = element.Params;
-        if (this.selectedNode_ != prms.Node.Definition) {
-          continue;
+        if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
+          GlUtil.RenderOutline(() => RenderParams_(prms));
         }
-
-        GlUtil.RenderOutline(() => RenderParams_(prms));
       }
     }
 
@@ -253,15 +258,12 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       RenderParams_(prms);
     }
 
-    if (this.selectedNode_ != null) {
+    if (isSomethingSelected) {
       foreach (var element in this.elements_) {
         var prms = element.Params;
-
-        if (this.selectedNode_ != prms.Node.Definition) {
-          continue;
+        if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
+          GlUtil.RenderHighlight(() => RenderParams_(prms));
         }
-
-        GlUtil.RenderHighlight(() => RenderParams_(prms));
       }
     }
   }

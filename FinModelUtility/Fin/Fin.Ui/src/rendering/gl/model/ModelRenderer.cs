@@ -44,7 +44,7 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
   private readonly IReadOnlyModel model_;
   private readonly IReadOnlyBoneTransformManager? boneTransformManager_;
 
-  public IEnumerable<IMeshRenderer> MeshRenderers => this.impl_.MeshRenderers;
+  public IEnumerable<IMaterialRenderer> MaterialRenderers => this.impl_.MaterialRenderers;
 
   /// <summary>
   ///   A renderer for a Fin model.

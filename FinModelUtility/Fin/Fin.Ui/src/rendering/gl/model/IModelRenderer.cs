@@ -15,21 +15,18 @@ public interface IModelRenderer : IRenderable {
   void GenerateModelIfNull();
   IEnumerable<IGlMaterialShader> GetMaterialShaders(IReadOnlyMaterial material);
 
-  IEnumerable<IMeshRenderer> MeshRenderers { get; }
+  IEnumerable<IMaterialRenderer> MaterialRenderers { get; }
 }
 
 public interface IDynamicModelRenderer : IModelRenderer {
   void UpdateBuffer();
 }
 
-public interface IMeshRenderer : IRenderable {
-  void GenerateModelIfNull();
-  IEnumerable<IMeshRenderer> Children { get; }
-  IEnumerable<IMaterialRenderer> MaterialRenderers { get; }
-}
-
 public interface IMaterialRenderer : IRenderable {
   int MinPrimitiveIndex { get; }
   uint InversePriority { get; }
   IGlMaterialShader GlMaterialShader { get; }
+  bool IsTransparent { get; }
+
+  bool IsSelected { get; }
 }

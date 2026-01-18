@@ -1,8 +1,6 @@
-﻿using fin.image.util;
-using fin.math;
+﻿using fin.math;
 using fin.model;
 using fin.model.skin;
-using fin.model.util;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
@@ -20,7 +18,7 @@ public partial class ModelRenderer {
     private IGlBufferManager? bufferManager_;
     private IDynamicGlBufferManager? dynamicBufferManager_;
 
-    private MergedMaterialMeshRenderer[] materialMeshRenderers_ = [];
+    private MergedMaterialPrimitivesRenderer[] materialRenderers_ = [];
 
     public int VaoId => this.bufferManager_?.VaoId ?? 0;
 
@@ -49,40 +47,13 @@ public partial class ModelRenderer {
             = GlBufferManager.CreateDynamic(this.Model, modelRequirements);
       }
 
-      var allMaterialMeshRenderers = new List<MergedMaterialMeshRenderer>();
-
-      // TODO: Optimize this with something like a "MinMap"?
-      var meshQueue = new RenderPriorityOrderedSet<IReadOnlyMesh>();
-      foreach (var mesh in this.Model.Skin.Meshes) {
-        if (mesh.IsSubMesh) {
-          continue;
-        }
-
-        meshQueue.Add(mesh, int.MaxValue, UInt32.MaxValue, false);
-        foreach (var primitive in mesh.Primitives) {
-          meshQueue.Add(mesh,
-                        primitive.Index,
-                        primitive.InversePriority,
-                        (primitive.Material?.GetTransparencyType() ??
-                         TransparencyType.OPAQUE) ==
-                        TransparencyType.TRANSPARENT);
-        }
-      }
-
-      foreach (var mesh in meshQueue) {
-        var materialMeshRenderer = new MergedMaterialMeshRenderer(
-                                         this.Model,
-                                         mesh.item,
-                                         modelRequirements,
-                                         this.bufferManager_,
-                                         this.textureTransformManager_) {
-            MeshVisibility = this.MeshVisibility,
-        };
-        materialMeshRenderer.GenerateModelIfNull();
-        allMaterialMeshRenderers.Add(materialMeshRenderer);
-      }
-
-      this.materialMeshRenderers_ = allMaterialMeshRenderers.ToArray();
+      this.materialRenderers_
+          = MergedMaterialPrimitivesRenderer.CreateFromPrimitives(
+              this.bufferManager_,
+              this.Model,
+              this.textureTransformManager_,
+              modelRequirements,
+              this.MeshVisibility);
     }
 
     ~MergedMaterialMeshesRenderer() => this.ReleaseUnmanagedResources_();
@@ -93,8 +64,8 @@ public partial class ModelRenderer {
     }
 
     private void ReleaseUnmanagedResources_() {
-      foreach (var meshRenderer in this.materialMeshRenderers_) {
-        meshRenderer.Dispose();
+      foreach (var materialRenderer in this.materialRenderers_) {
+        materialRenderer.Dispose();
       }
 
       this.bufferManager_?.Dispose();
@@ -102,12 +73,10 @@ public partial class ModelRenderer {
 
     public IReadOnlyModel Model { get; }
 
-    public IReadOnlyMeshVisibilityDictionary? MeshVisibility {
-      get;
-      set;
-    }
+    public IReadOnlyMeshVisibilityDictionary? MeshVisibility { get; set; }
 
-    public IEnumerable<IMeshRenderer> MeshRenderers => this.materialMeshRenderers_;
+    public IEnumerable<IMaterialRenderer> MaterialRenderers
+      => this.materialRenderers_;
 
     public void UpdateBuffer() => this.dynamicBufferManager_?.UpdateBuffer();
 
@@ -117,14 +86,15 @@ public partial class ModelRenderer {
     public void Render() {
       this.GenerateModelIfNull();
 
-      foreach (var meshRenderer in this.materialMeshRenderers_) {
+      foreach (var meshRenderer in this.materialRenderers_) {
         meshRenderer.Render();
       }
     }
 
     public IEnumerable<IGlMaterialShader> GetMaterialShaders(
         IReadOnlyMaterial material)
-      => this.materialMeshRenderers_.SelectMany(p => p.GetMaterialShaders(
-                                                    material));
+      => this.materialRenderers_.Where(p => p.Material == material)
+             .Select(p => p.GlMaterialShader)
+             .Distinct();
   }
 }
