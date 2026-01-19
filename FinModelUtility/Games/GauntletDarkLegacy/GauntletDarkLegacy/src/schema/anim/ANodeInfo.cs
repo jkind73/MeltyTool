@@ -14,6 +14,7 @@ public enum AnimType : ushort {
   EMPTY = 0xFFFF,
 }
 
+[Flags]
 public enum MbFlags : uint {
   NO_Z_TEST = 1 << 6,
   NO_Z_WRITE = 1 << 7,

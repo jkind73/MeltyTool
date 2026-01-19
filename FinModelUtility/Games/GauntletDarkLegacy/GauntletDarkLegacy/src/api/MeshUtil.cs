@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 
-using fin.data.lazy;
 using fin.math.floats;
 using fin.model;
 using fin.model.impl;
@@ -19,8 +18,7 @@ public static class MeshUtil {
       IReadOnlyBoneWeights? finBoneWeights,
       ObjectDefinition definition,
       Object obj,
-      ILazyDictionary<(ushort textureIndex, short lmIndex, bool hasVertexColors,
-          MbFlags), IReadOnlyMaterial> lazyFinMaterials,
+      LazyGdlMaterials lazyFinMaterials,
       MbFlags mbFlags,
       out IMesh outRootMesh) {
     var finSkin = finModel.Skin;
