@@ -321,6 +321,7 @@ public sealed class GauntletDarkLegacyModelImporter
 
       MeshUtil.AddObjectMesh(finModel,
                              finBoneWeights,
+                             Matrix4x4.Identity,
                              definition,
                              obj,
                              lazyFinMaterials,

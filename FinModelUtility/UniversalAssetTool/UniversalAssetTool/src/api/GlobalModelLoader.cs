@@ -77,6 +77,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new D3dModelImporter().Import(modModelFileBundle),
         GauntletDarkLegacyModelFileBundle animModelFileBundle
             => new GauntletDarkLegacyModelImporter().Import(animModelFileBundle),
+        GauntletDarkLegacyWorldModelFileBundle animModelFileBundle
+            => new GauntletDarkLegacyWorldModelImporter().Import(animModelFileBundle),
         GeoModelFileBundle geoModelFileBundle
             => new GeoModelImporter().Import(geoModelFileBundle),
         GloModelFileBundle gloModelFileBundle

@@ -41,6 +41,13 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
             }.Annotate(objectsFile));
       } else {
         organizer.Add(
+            new GauntletDarkLegacyWorldModelFileBundle {
+                ObjectsFile = objectsFile,
+                AnimFile = animFile,
+                TexturesFile = texturesFile,
+                WorldsFile = worldsFile,
+            }.Annotate(objectsFile));
+        organizer.Add(
             new GauntletDarkLegacySceneFileBundle {
                 ObjectsFile = objectsFile,
                 AnimFile = animFile,

@@ -16,6 +16,7 @@ public static class MeshUtil {
   public static IModel AddObjectMesh(
       ModelImpl finModel,
       IReadOnlyBoneWeights? finBoneWeights,
+      in Matrix4x4 matrix,
       ObjectDefinition definition,
       Object obj,
       LazyGdlMaterials lazyFinMaterials,
@@ -41,15 +42,18 @@ public static class MeshUtil {
         var finVertices = new IReadOnlyVertex[gdlPrimitive.Positions.Count];
         for (var i = 0; i < gdlPrimitive.Positions.Count; ++i) {
           var p = gdlPrimitive.Positions[i];
+          var normal = gdlPrimitive.Normals[i];
+
           p /= 128f;
 
           // For some inexplicable reason, the meshes are mirrored.
           p.X *= -1;
+          normal.X *= -1;
+
+          p = Vector3.Transform(p, matrix);
+          normal = Vector3.TransformNormal(normal, matrix);
 
           var finVertex = finSkin.AddVertex(p);
-
-          var normal = gdlPrimitive.Normals[i];
-          normal.X *= -1;
 
           finVertex.SetLocalNormal(normal);
 
