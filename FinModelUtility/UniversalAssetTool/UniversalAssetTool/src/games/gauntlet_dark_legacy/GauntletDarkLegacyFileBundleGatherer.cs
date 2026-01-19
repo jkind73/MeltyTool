@@ -14,6 +14,9 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
+    var monstersDirectory =
+        fileHierarchy.Root.AssertGetExistingSubdir("Gauntlet/MONSTERS");
+
     foreach (var directory in fileHierarchy) {
       if (!directory.TryToGetExistingFile("objects.ngc", out var objectsFile)) {
         continue;
@@ -53,6 +56,7 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
                 AnimFile = animFile,
                 TexturesFile = texturesFile,
                 WorldsFile = worldsFile,
+                MonstersDirectory = monstersDirectory,
             }.Annotate(worldsFile));
       }
     }

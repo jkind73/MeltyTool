@@ -24,4 +24,6 @@ public sealed partial class ItemInstance : IBinaryDeserializable {
   public Vector3 Rotation { get; set; }
 
   public byte[] Params { get; } = new byte[12];
+
+  public override string ToString() => this.Description;
 }

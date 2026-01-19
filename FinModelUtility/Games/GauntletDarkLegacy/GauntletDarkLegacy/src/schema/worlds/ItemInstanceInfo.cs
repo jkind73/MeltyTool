@@ -95,4 +95,6 @@ public sealed partial class ItemInstanceInfo : IBinaryDeserializable {
   public short ActiveOff { get; set; }
   public short ActiveOn { get; set; }
   public uint AnimationTreeHeaderPointer { get; set; }
+
+  public override string ToString() => this.Description;
 }
