@@ -103,14 +103,17 @@ public partial class ModelImpl<TVertex> {
         => this.AlwaysFaceTowardsCamera(faceTowardsCameraType, Quaternion.Identity);
       public IBone AlwaysFaceTowardsCamera(
           FaceTowardsCameraType faceTowardsCameraType,
-          in Quaternion adjustment) {
+          in Quaternion preAdjustment) {
         this.FaceTowardsCameraType = faceTowardsCameraType;
-        this.FaceTowardsCameraAdjustment = adjustment;
+        this.FaceTowardsCameraPreAdjustment = preAdjustment;
+        this.FaceTowardsCameraPostAdjustment =
+            Quaternion.Inverse(preAdjustment);
         return this;
       }
 
       public FaceTowardsCameraType FaceTowardsCameraType { get; private set; }
-      public Quaternion FaceTowardsCameraAdjustment { get; private set; }
+      public Quaternion FaceTowardsCameraPreAdjustment { get; private set; }
+      public Quaternion FaceTowardsCameraPostAdjustment { get; private set; }
     }
 
     IEnumerator IEnumerable.GetEnumerator() => this.GetEnumerator();

@@ -7,6 +7,7 @@ using fin.image;
 using fin.io;
 using fin.io.bundles;
 using fin.math;
+using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -381,7 +382,11 @@ public sealed class GauntletDarkLegacyModelImporter
 
   public static void SetFaceTowardsCamera(IBone bone, MbFlags mbFlags) {
     if (mbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD)) {
-      bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY);
+      bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
+                                   QuaternionUtil.CreateZyxRadians(
+                                       -MathF.PI / 2,
+                                       0,
+                                       0));
     } else if (mbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
       bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_AND_PITCH);
     }

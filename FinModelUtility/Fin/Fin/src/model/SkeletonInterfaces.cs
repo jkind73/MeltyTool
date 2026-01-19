@@ -31,12 +31,13 @@ public partial interface ILeafBone : IIndexable, INamed {
 
   IBone AlwaysFaceTowardsCamera(
       FaceTowardsCameraType faceTowardsCameraType,
-      in Quaternion adjustment);
+      in Quaternion preAdjustment);
 
   IBone AlwaysFaceTowardsCamera(FaceTowardsCameraType faceTowardsCameraType);
 
   new FaceTowardsCameraType FaceTowardsCameraType { get; }
-  new Quaternion FaceTowardsCameraAdjustment { get; }
+  new Quaternion FaceTowardsCameraPreAdjustment { get; }
+  new Quaternion FaceTowardsCameraPostAdjustment { get; }
 }
 
 [GenerateReadOnly]

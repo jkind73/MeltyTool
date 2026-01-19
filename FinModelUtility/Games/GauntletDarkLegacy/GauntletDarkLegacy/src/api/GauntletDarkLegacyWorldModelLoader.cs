@@ -9,6 +9,7 @@ using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enums;
 
 using gdl.schema.anim;
 using gdl.schema.objects;
@@ -95,13 +96,25 @@ public sealed class GauntletDarkLegacyWorldModelImporter
       var (definition, obj) = tuple;
       var mbFlags = gdlWorldObject.MbFlags;
 
-      GauntletDarkLegacyModelImporter.SetFaceTowardsCamera(
-          finModel.Skeleton.Root,
-          mbFlags);
+      IBoneWeights? boneWeights = null;
+      Matrix4x4 translationMatrix = Matrix4x4.Identity;
+      if (mbFlags.CheckFlag(MbFlags.YAW_ONLY_BILLBOARD) ||
+          mbFlags.CheckFlag(MbFlags.YAW_AND_PITCH_BILLBOARD)) {
+        var finBone = finModel.Skeleton.Root.AddChild(translation);
+        GauntletDarkLegacyModelImporter.SetFaceTowardsCamera(
+            finBone,
+            mbFlags);
+
+        boneWeights = finModel.Skin.GetOrCreateBoneWeights(
+            VertexSpace.RELATIVE_TO_BONE,
+            finBone);
+      } else {
+        translationMatrix = Matrix4x4.CreateTranslation(translation);
+      }
 
       MeshUtil.AddObjectMesh(finModel,
-                             null,
-                             Matrix4x4.CreateTranslation(translation),
+                             boneWeights,
+                             translationMatrix,
                              definition,
                              obj,
                              lazyFinMaterials,
