@@ -400,14 +400,9 @@ public sealed class GauntletDarkLegacyModelImporter
         continue;
       }
 
-      var finRootMesh = finSkin.AddMesh();
-      finRootMesh.Name = definition.Name;
-
-      rootFinMeshByName[finRootMesh.Name] = finRootMesh;
-
       var (gdlNode, finBone)
           = gdlNodeAndFinBonesByMeshNamePart
-            .FirstOrDefault(kvp => finRootMesh.Name.Contains(kvp.Key))
+            .FirstOrDefault(kvp => definition.Name.Contains(kvp.Key))
             .Value;
 
       // HACK: Weapon isn't attached to the hand otherwise
@@ -421,77 +416,15 @@ public sealed class GauntletDarkLegacyModelImporter
                                                finBone)
               : null;
 
-      for (var m = 0; m < (obj.SubObjectModels?.All.Count ?? 0); ++m) {
-        var finSubMesh = finRootMesh.AddSubMesh();
+      MeshUtil.AddObjectMesh(finModel,
+                             finBoneWeights,
+                             definition,
+                             obj,
+                             lazyFinMaterials,
+                             gdlNode?.MbFlags ?? default,
+                             out var finRootMesh);
 
-        var gdlMesh = obj.SubObjectModels.All[m];
-        var textureIndex = gdlMesh.SubObject.TextureIndex;
-
-        foreach (var gdlPrimitive in gdlMesh.Primitives) {
-          if (gdlPrimitive.Positions.Count < 3) {
-            continue;
-          }
-
-          var finVertices = new IReadOnlyVertex[gdlPrimitive.Positions.Count];
-          for (var i = 0; i < gdlPrimitive.Positions.Count; ++i) {
-            var p = gdlPrimitive.Positions[i];
-            p /= 128f;
-
-            // For some inexplicable reason, the meshes are mirrored.
-            p.X *= -1;
-
-            var finVertex = finSkin.AddVertex(p);
-
-            var normal = gdlPrimitive.Normals[i];
-            normal.X *= -1;
-
-            finVertex.SetLocalNormal(normal);
-
-            var uv = gdlPrimitive.Uvs[i];
-            finVertex.SetUv(0, uv.Value);
-            finVertex.SetUv(1, uv.LightmapUv ?? Vector2.Zero);
-
-            if (gdlPrimitive.VertexColors.Count > 0) {
-              finVertex.SetColor(gdlPrimitive.VertexColors[i]);
-            }
-
-            if (finBoneWeights != null) {
-              finVertex.SetBoneWeights(finBoneWeights);
-            }
-
-            finVertices[i] = finVertex;
-          }
-
-          var facesDrawn = gdlPrimitive.FacesDrawn;
-          var triangleVertices
-              = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)>(facesDrawn.Count(b => b));
-
-          var faceDir = gdlPrimitive.FaceDir.IsRoughly(-1f) ? 1 : 0;
-          for (var f = 0; f < facesDrawn.Count; ++f) {
-            if (!facesDrawn[f]) {
-              continue;
-            }
-
-            if (((f + faceDir) & 1) == 1) {
-              triangleVertices.Add((finVertices[f + 0],
-                                    finVertices[f + 1],
-                                    finVertices[f + 2]));
-            } else {
-              triangleVertices.Add((finVertices[f + 1],
-                                    finVertices[f + 0],
-                                    finVertices[f + 2]));
-            }
-          }
-
-          var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
-          finPrimitive.SetMaterial(
-              lazyFinMaterials[(textureIndex, 
-                                gdlMesh.SubObject.LmIndex,
-                                gdlPrimitive.VertexColors.Count > 0,
-                                gdlNode?.MbFlags ?? default)]);
-          finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
-        }
-      }
+      rootFinMeshByName[finRootMesh.Name!] = finRootMesh;
     }
 
     foreach (var gdlSkeleton in anim.Atrees) {
