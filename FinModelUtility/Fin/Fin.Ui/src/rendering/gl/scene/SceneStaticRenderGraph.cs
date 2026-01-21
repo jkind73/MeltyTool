@@ -49,7 +49,7 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   }
 }
 
-public class RenderGraphElement {
+public class RenderGraphElement : IComparable<RenderGraphElement> {
   public RenderGraphElement(IRenderGraphParams prms) {
     this.Params = prms;
     this.InitSortKey();
@@ -151,6 +151,9 @@ public class RenderGraphElement {
 
     this.SortKey = sortKey;
   }
+
+  public int CompareTo(RenderGraphElement other)
+    => this.SortKey.CompareTo(other.SortKey);
 }
 
 public sealed class SceneStaticRenderGraph : IRenderable {
@@ -235,8 +238,6 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     this.elements_ = elements.ToArray();
   }
 
-  private readonly RenderGraphComparer comparer_ = new();
-
   public void Render() {
     this.GenerateModelIfNull_();
 
@@ -255,7 +256,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       element.UpdateSortKey(camera, this.NearPlane, this.FarPlane, this.Scale);
     }
 
-    this.elements_.Sort(this.comparer_);
+    this.elements_.Sort();
 
     var isSomethingSelected = this.selectedNode_ != null ||
                               this.selectedMesh_ != null ||
@@ -302,10 +303,5 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     }
 
     GlTransform.PopMatrix();
-  }
-
-  private sealed class RenderGraphComparer : IComparer<RenderGraphElement> {
-    public int Compare(RenderGraphElement lhs, RenderGraphElement rhs)
-      => lhs.SortKey.CompareTo(rhs.SortKey);
   }
 }
