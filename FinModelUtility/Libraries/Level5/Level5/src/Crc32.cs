@@ -1,23 +1,24 @@
-﻿namespace level5;
+﻿using System.Text;
 
-public sealed class Crc32 {
-  public static uint Crc32C(byte[] input) {
+
+namespace level5;
+
+public static class Crc32 {
+  private static readonly Encoding SHIFT_JIS_ENCODING_ =
+      Encoding.GetEncoding(932);
+
+  public static uint Crc32C(ReadOnlySpan<byte> input) {
     var hash = 0xffffffffu;
     for (var i = 0; i < input.Length; i++)
       hash = (hash >> 8) ^ CrcTable[input[i] ^ hash & 0xff];
-    return hash;
+    return ~hash;
   }
 
   public static uint Crc32C(string input) {
-    uint crc = 0xFFFFFFFF;
-
-    foreach (char d in input) {
-      char c = d;
-      //if ((uint)(c - 0x41) < 0x1A) c += (char)0x20;
-      crc = CrcTable[(byte)crc ^ c] ^ (crc >> 8);
-    }
-
-    return ~crc;
+    Span<byte> bytes =
+        stackalloc byte[SHIFT_JIS_ENCODING_.GetMaxByteCount(input.Length)];
+    SHIFT_JIS_ENCODING_.GetBytes(input, bytes);
+    return Crc32C(bytes);
   }
 
   private static readonly uint[] CrcTable = [

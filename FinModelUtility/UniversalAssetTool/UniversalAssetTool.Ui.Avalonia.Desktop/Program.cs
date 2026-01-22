@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Text;
 
 using Avalonia;
 
@@ -19,6 +20,7 @@ class Program {
   [STAThread]
   public static void Main(string[] args) {
     CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
     FrameTime.Initialize();
     GpuUtil.Initialize();
 

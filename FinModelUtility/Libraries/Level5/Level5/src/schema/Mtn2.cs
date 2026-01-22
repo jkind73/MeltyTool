@@ -11,6 +11,7 @@ using fin.util.asserts;
 using level5.decompression;
 
 using schema.binary;
+using schema.binary.attributes;
 
 
 namespace level5.schema;
@@ -53,7 +54,7 @@ public sealed class Mtn2 {
 
     r.Position = nameOffset;
     this.Anim.NameHash = r.ReadUInt32();
-    this.Anim.Name = r.ReadStringNT();
+    this.Anim.Name = r.ReadStringNT(StringEncodingType.SHIFT_JIS);
 
     var data = new Level5Decompressor().Decompress(
         r.SubreadAt(compDataOffset,

@@ -4,6 +4,7 @@ using fin.schema;
 using level5.decompression;
 
 using schema.binary;
+using schema.binary.attributes;
 
 namespace level5.schema;
 
@@ -51,7 +52,7 @@ public sealed class Resource {
 
       r.Position = (uint)stringTableOffset;
       while (!r.Eof) {
-        string mname = r.ReadStringNT();
+        string mname = r.ReadStringNT(StringEncodingType.SHIFT_JIS);
         if (mname == "")
           break;
         if (!this.ResourceNames.ContainsKey(Crc32.Crc32C(mname)))
