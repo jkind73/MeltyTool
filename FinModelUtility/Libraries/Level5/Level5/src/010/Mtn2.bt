@@ -1,0 +1,107 @@
+//------------------------------------------------
+//--- 010 Editor v16.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+LittleEndian();
+
+local int C_LENGTH = 0x00FFFF;
+local int C_OFFSET = 0xFF0000;
+local int C_COUNT = 0x0000FF;
+local int C_STRING = 0x00FF00;
+local int C_HASH = 0xFFFF00;
+
+local int C_TIME = 0xFFFFFF;
+local int C_VISIBILITY = 0xFF00FF;
+
+FSeek(0x8);
+
+int decomSize <bgcolor=C_LENGTH>;
+int nameOffset <bgcolor=C_OFFSET>;
+int compDataOffset <bgcolor=C_OFFSET>;
+int positionCount <bgcolor=C_COUNT>;
+int rotationCount <bgcolor=C_COUNT>;
+int scaleCount <bgcolor=C_COUNT>;
+int boneVisibilityCount <bgcolor=C_COUNT>;
+int boneCount <bgcolor=C_COUNT>;
+
+FSeek(nameOffset);
+uint nameHash <bgcolor=C_HASH>;
+string name <bgcolor=C_STRING>;
+
+FSeek(compDataOffset);
+uint hashOffset <bgcolor=C_OFFSET>;
+uint trackInfoOffset <bgcolor=C_OFFSET>;
+uint dataOffset <bgcolor=C_OFFSET>;
+
+FSeek(compDataOffset + hashOffset);
+uint boneHashes[(trackInfoOffset - hashOffset) / 4] <bgcolor=C_HASH>;
+
+FSeek(compDataOffset + trackInfoOffset);
+ushort animTrackOffsets[4] <bgcolor=C_OFFSET>;
+
+struct AnimTrackInfo {
+  byte type;
+  byte dataType;
+  
+  byte unk;
+  
+  byte dataCount <bgcolor=C_COUNT>;
+
+  ushort start;
+  ushort end;
+};
+
+local uint infoI;
+for (infoI = 0; infoI < 4; ++infoI) {
+  FSeek(compDataOffset + animTrackOffsets[infoI]);
+  AnimTrackInfo animTrackInfo;
+}
+
+struct AnimTrackData(AnimTrackInfo& animTrackInfo, uint offset, uint count) {
+  struct AnimTrackDataElement {
+    uint flagOffset <bgcolor=C_OFFSET>;
+    uint keyFrameOffset <bgcolor=C_OFFSET>;
+    uint keyDataOffset <bgcolor=C_OFFSET>;
+    uint padding;
+    
+    FSeek(compDataOffset + flagOffset);
+    ushort boneIndex;
+    byte keyFrameCount <bgcolor=C_COUNT>;
+    byte flag;
+    
+    FSeek(compDataOffset + keyFrameOffset);
+    ushort keyFrameTimes[keyFrameCount] <bgcolor=C_TIME>;
+    
+    FSeek(compDataOffset + keyDataOffset);
+    struct KeyFrameData {
+      Assert(animTrackInfo.dataType == 4);
+      if (flag == 0x20) {
+          uint64 long_value <bgcolor=C_VISIBILITY>;
+      } else if (flag == 0x00) {
+          uint16 short_value <bgcolor=C_VISIBILITY>;
+      }
+    } keyFrames[keyFrameCount] <optimize=false>;
+  };
+    
+  local uint dataI;
+  for (dataI = animTrackInfo.start; dataI < offset + count; ++dataI) {
+    FSeek(compDataOffset + dataOffset + 4 * 4 * dataI);
+    
+    AnimTrackDataElement element;    
+  }
+};
+
+local uint offset;
+offset += positionCount;
+offset += rotationCount;
+offset += scaleCount;
+AnimTrackData track3(animTrackInfo[3], offset, boneVisibilityCount);

@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 
+using CommunityToolkit.Diagnostics;
+
 using fin.data.dictionaries;
 using fin.io;
 using fin.math.rotations;
@@ -154,7 +156,19 @@ public sealed class Mtn2 {
               animdata[j] = br.ReadSingle();
               break;
             case 4:
-              animdata[j] = br.ReadInt16();
+              switch (flag) {
+                case 0: {
+                  animdata[j] = br.ReadUInt16();
+                  break;
+                }
+                case 0x20: {
+                  animdata[j] = br.ReadUInt64();
+                  break;
+                }
+                default: {
+                  throw new NotImplementedException($"Flag with value: {flag.ToHexString()}");
+                }
+              }
               break;
             default:
               throw new NotImplementedException(
