@@ -8,6 +8,14 @@ using schema.binary.attributes;
 
 namespace level5.schema;
 
+public enum ResourceType {
+  MATERIAL_1 = 220,
+  MATERIAL_2 = 230,
+  TEXTURE_DATA = 240,
+  MATERIAL_DATA = 290,
+  NULL = 9999,
+}
+
 public sealed class Resource {
   public sealed class Material {
     public string Name { get; set; }
@@ -20,6 +28,8 @@ public sealed class Resource {
   Dictionary<uint, string> ResourceNames { get; set; } =
     new Dictionary<uint, string>();
 
+  Dictionary<uint, (ResourceType, string)> ResourceData { get; set; } = new();
+
   public List<string> TextureNames { get; } = [];
 
   public List<Material> Materials { get; } = [];
@@ -29,6 +39,14 @@ public sealed class Resource {
       return this.ResourceNames[crc];
 
     return "";
+  }
+
+  public (ResourceType, string)? GetResourceData(uint crc) {
+    if (this.ResourceData.TryGetValue(crc, out (ResourceType, string) data)) {
+      return data;
+    }
+
+    return null;
   }
 
   [Unknown]
@@ -63,10 +81,10 @@ public sealed class Resource {
       for (int i = 0; i < materialTableSectionCount; i++) {
         var offset = r.ReadInt16() << 2;
         var count = r.ReadInt16();
-        var unknown = r.ReadInt16();
+        var resourceType = (ResourceType) r.ReadInt16();
         var size = r.ReadInt16();
 
-        if (unknown == 0x270F)
+        if (resourceType == ResourceType.NULL)
           continue;
 
         var temp = r.Position;
@@ -76,14 +94,18 @@ public sealed class Resource {
           string resourceName = (this.ResourceNames.ContainsKey(key)
               ? this.ResourceNames[key]
               : key.ToString("X"));
+
+          this.ResourceData[key] = (resourceType, resourceName);
+          
           //Console.WriteLine(resourceName + " " + unknown.ToString("X") + " " + size.ToString("X"));
 
-          if (unknown is 0xDC or 0xE6) {
+          if (resourceType is ResourceType.MATERIAL_1
+                              or ResourceType.MATERIAL_2) {
             // TODO: Default libs
             ;
-          } else if (unknown == 0xF0) {
+          } else if (resourceType == ResourceType.TEXTURE_DATA) {
             this.TextureNames.Add(resourceName);
-          } else if (unknown == 0x122) {
+          } else if (resourceType == ResourceType.MATERIAL_DATA) {
             Material mat = new Material();
             mat.Name = resourceName;
             r.Position += 12;

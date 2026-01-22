@@ -35,7 +35,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
         Files = modelFileBundle.Files.ToHashSet()
     };
 
-    var finBoneByIndex = new Dictionary<uint, IBone>();
+    var finBoneByHash = new Dictionary<uint, IBone>();
     var finBoneByName = new Dictionary<string, IBone>();
     {
       var mbnFiles = modelDirectory.GetFilesWithFileType(".mbn").ToArray();
@@ -94,7 +94,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
           var scale = mbn.Scale;
           bone.Transform.SetScale(scale);
 
-          finBoneByIndex[mbn.Id] = bone;
+          finBoneByHash[mbn.Id] = bone;
           finBoneByName[bone.Name] = bone;
 
           mbnQueue.Enqueue(
@@ -140,8 +140,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
         });
 
     // Adds vertices
-    Dictionary<uint, (Prm prm, IMesh mesh)> prmsByAnimationReferenceHash =
-        new();
+    ListDictionary<uint, IMesh> prmsByAnimationReferenceHash = new();
     {
       var prmFiles = modelDirectory.GetFilesWithFileType(".prm").ToArray();
       if (prmFiles.Any()) {
@@ -155,7 +154,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
 
           var prmAnimationReferenceHashes = prm.AnimationReferenceHashes;
           foreach (var hash in prmAnimationReferenceHashes) {
-            prmsByAnimationReferenceHash[hash] = (prm, mesh);
+            prmsByAnimationReferenceHash.Add(hash, mesh);
           }
 
           var finVertices = new List<IVertex>();
@@ -177,7 +176,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
                 var boneId = prmVertex.Bones[b];
                 var weight = prmVertex.Weights[b];
 
-                var finBone = finBoneByIndex[boneId];
+                var finBone = finBoneByHash[boneId];
                 boneWeightList.Add(new BoneWeight(finBone, null, weight));
               }
 
@@ -221,47 +220,57 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
             finAnimation.FrameRate = 30;
             finAnimation.FrameCount = anim.FrameCount;
 
+            var meshesAlreadyTouched = new HashSet<IMesh>();
             foreach (var (animationReferenceHash, framesAndValues) in mtn2
                          .Somethings.GetPairs()) {
-              if (!prmsByAnimationReferenceHash.TryGetValue(
+              if (!prmsByAnimationReferenceHash.TryGetList(
                       animationReferenceHash,
-                      out var prmAndMesh)) {
+                      out var meshes)) {
                 continue;
               }
 
-              var (prm, mesh) = prmAndMesh;
-              var meshTracks = finAnimation.AddMeshTracks(mesh);
-              var displayStates = meshTracks.DisplayStates;
+              if (meshes.Count > 1) {
+                ;
+              }
 
-              foreach (var frameAndValue in framesAndValues) {
-                // TODO: Still not clear what the hash is meant to be,
-                // sometimes the thing above fails to match. It's also possible
-                // for this to target a bone, which is not explicitly handled
-                // here.
-                // - Not sure of any other mechanism to fiddle with textures,
-                //   i.e. selecting which eye or mouth to show. Probably done
-                //   via these values somehow?
-                // - Why do PRMs need multiple values? Maybe each encodes a
-                //   different state, potentially those texture cases?
-
-                var (frame, value) = frameAndValue;
-
-                // TODO: This is just a guess, but still doesn't look right.
-                var displayState = (MeshDisplayState?) null;
-                if (value == 1) {
-                  displayState = MeshDisplayState.VISIBLE;
-                } else if (value == 0) {
-                  displayState = MeshDisplayState.HIDDEN;
+              foreach (var mesh in meshes) {
+                if (!meshesAlreadyTouched.Add(mesh)) {
+                  ;
                 }
 
-                if (displayState != null) {
-                  displayStates.SetKeyframe(frame, displayState.Value);
+                var meshTracks = finAnimation.AddMeshTracks(mesh);
+                var displayStates = meshTracks.DisplayStates;
+
+                foreach (var frameAndValue in framesAndValues) {
+                  // TODO: Still not clear what the hash is meant to be,
+                  // sometimes the thing above fails to match. It's also possible
+                  // for this to target a bone, which is not explicitly handled
+                  // here.
+                  // - Not sure of any other mechanism to fiddle with textures,
+                  //   i.e. selecting which eye or mouth to show. Probably done
+                  //   via these values somehow?
+                  // - Why do PRMs need multiple values? Maybe each encodes a
+                  //   different state, potentially those texture cases?
+
+                  var (frame, value) = frameAndValue;
+
+                  // TODO: This is just a guess, but still doesn't look right.
+                  var displayState = (MeshDisplayState?) null;
+                  if (value == 1) {
+                    displayState = MeshDisplayState.VISIBLE;
+                  } else if (value == 0) {
+                    displayState = MeshDisplayState.HIDDEN;
+                  }
+
+                  if (displayState != null) {
+                    displayStates.SetKeyframe(frame, displayState.Value);
+                  }
                 }
               }
             }
 
             foreach (var transformNode in anim.TransformNodes) {
-              if (!finBoneByIndex.TryGetValue(transformNode.Hash,
+              if (!finBoneByHash.TryGetValue(transformNode.Hash,
                                               out var finBone)) {
                 continue;
               }
