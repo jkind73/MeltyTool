@@ -239,12 +239,9 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
                 // used to index into that array.
                 var (frame, value) = frameAndValue;
 
-                // TODO: Various values may be used to encode texture info?
-                var bits = Convert.ToString(value, 2).PadLeft(16, '0');
-
                 // TODO: This is just a guess, but still doesn't look right.
                 var displayState = (MeshDisplayState?) null;
-                if (value == 257) {
+                if (value == 1) {
                   displayState = MeshDisplayState.VISIBLE;
                 } else if (value == 0) {
                   displayState = MeshDisplayState.HIDDEN;

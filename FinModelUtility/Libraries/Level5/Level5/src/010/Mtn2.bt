@@ -87,7 +87,7 @@ struct AnimTrackData(AnimTrackInfo& animTrackInfo, uint offset, uint count) {
       if (flag == 0x20) {
           uint64 long_value <bgcolor=C_VISIBILITY>;
       } else if (flag == 0x00) {
-          uint16 short_value <bgcolor=C_VISIBILITY>;
+          byte byte_value <bgcolor=C_VISIBILITY>;
       }
     } keyFrames[keyFrameCount] <optimize=false>;
   };

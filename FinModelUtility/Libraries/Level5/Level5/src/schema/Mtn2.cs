@@ -158,7 +158,7 @@ public sealed class Mtn2 {
             case 4:
               switch (flag) {
                 case 0: {
-                  animdata[j] = br.ReadUInt16();
+                  animdata[j] = br.ReadByte();
                   break;
                 }
                 case 0x20: {
@@ -204,6 +204,9 @@ public sealed class Mtn2 {
                                 (frame, (short)Math.Round(animdata[0])));
             break;
           }
+          default:
+            throw new NotImplementedException(
+                "Track Type " + track.Type + " not implemented");
         }
       }
     }
