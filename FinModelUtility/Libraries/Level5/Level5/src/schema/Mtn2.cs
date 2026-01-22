@@ -12,6 +12,7 @@ using level5.decompression;
 
 using schema.binary;
 
+
 namespace level5.schema;
 
 public sealed class Mtn2 {
@@ -55,8 +56,9 @@ public sealed class Mtn2 {
     this.Anim.Name = r.ReadStringNT();
 
     var data = new Level5Decompressor().Decompress(
-        r.SubreadAt(compDataOffset, () => r.ReadBytes(
-                        (int)(r.Length - compDataOffset))));
+        r.SubreadAt(compDataOffset,
+                    () => r.ReadBytes(
+                        (int) (r.Length - compDataOffset))));
 
     using (var d =
            new SchemaBinaryReader(new MemoryStream(data), endianness)) {
@@ -76,7 +78,7 @@ public sealed class Mtn2 {
       // Track Information
       List<AnimTrack> tracks = [];
       for (int i = 0; i < 4; i++) {
-        d.Position = ((uint)(trackInfoOffset + 2 * i));
+        d.Position = ((uint) (trackInfoOffset + 2 * i));
         d.Position = (d.ReadUInt16());
 
         tracks.Add(new AnimTrack() {
@@ -99,17 +101,37 @@ public sealed class Mtn2 {
       }
 
       var offset = 0;
-      this.ReadFrameData_(d, offset, positionCount, dataOffset, boneCount,
-                          tracks[0]);
+      this.ReadFrameData_(d,
+                          offset,
+                          positionCount,
+                          dataOffset,
+                          boneCount,
+                          tracks[0],
+                          hashes);
       offset += positionCount;
-      this.ReadFrameData_(d, offset, rotationCount, dataOffset, boneCount,
-                          tracks[1]);
+      this.ReadFrameData_(d,
+                          offset,
+                          rotationCount,
+                          dataOffset,
+                          boneCount,
+                          tracks[1],
+                          hashes);
       offset += rotationCount;
-      this.ReadFrameData_(d, offset, scaleCount, dataOffset, boneCount,
-                          tracks[2]);
+      this.ReadFrameData_(d,
+                          offset,
+                          scaleCount,
+                          dataOffset,
+                          boneCount,
+                          tracks[2],
+                          hashes);
       offset += scaleCount;
-      this.ReadFrameData_(d, offset, toggledPrmCount, dataOffset, boneCount,
-                          tracks[3]);
+      this.ReadFrameData_(d,
+                          offset,
+                          toggledPrmCount,
+                          dataOffset,
+                          boneCount,
+                          tracks[3],
+                          hashes);
     }
   }
 
@@ -118,9 +140,10 @@ public sealed class Mtn2 {
                               int count,
                               uint dataOffset,
                               int boneCount,
-                              AnimTrack track) {
+                              AnimTrack track,
+                              IReadOnlyList<uint> hashes) {
     for (int i = offset; i < offset + count; i++) {
-      br.Position = ((uint)(dataOffset + 4 * 4 * i));
+      br.Position = ((uint) (dataOffset + 4 * 4 * i));
       var flagOffset = br.ReadUInt32();
       var keyFrameOffset = br.ReadUInt32();
       var keyDataOffset = br.ReadUInt32();
@@ -138,7 +161,7 @@ public sealed class Mtn2 {
       br.Position = (keyDataOffset);
       for (int k = 0; k < keyFrameCount; k++) {
         var temp = br.Position;
-        br.Position = ((uint)(keyFrameOffset + k * 2));
+        br.Position = ((uint) (keyFrameOffset + k * 2));
         var frame = br.ReadInt16();
         br.Position = (temp);
 
@@ -147,10 +170,11 @@ public sealed class Mtn2 {
         }
 
         float[] animdata = new float[track.DataCount];
+        ulong boneVisibilityData = 0;
         for (int j = 0; j < track.DataCount; j++)
           switch (track.DataType) {
             case 1:
-              animdata[j] = br.ReadInt16() / (float)short.MaxValue;
+              animdata[j] = br.ReadInt16() / (float) short.MaxValue;
               break;
             case 2:
               animdata[j] = br.ReadSingle();
@@ -162,11 +186,12 @@ public sealed class Mtn2 {
                   break;
                 }
                 case 0x20: {
-                  animdata[j] = br.ReadUInt64();
+                  boneVisibilityData = br.ReadUInt64();
                   break;
                 }
                 default: {
-                  throw new NotImplementedException($"Flag with value: {flag.ToHexString()}");
+                  throw new NotImplementedException(
+                      $"Flag with value: {flag.ToHexString()}");
                 }
               }
               break;
@@ -177,17 +202,22 @@ public sealed class Mtn2 {
 
         switch (track.Type) {
           case 1:
-            node.AddKey(frame, animdata[0],
+            node.AddKey(frame,
+                        animdata[0],
                         AnimationTrackFormat.TranslateX);
-            node.AddKey(frame, animdata[1],
+            node.AddKey(frame,
+                        animdata[1],
                         AnimationTrackFormat.TranslateY);
-            node.AddKey(frame, animdata[2],
+            node.AddKey(frame,
+                        animdata[2],
                         AnimationTrackFormat.TranslateZ);
             break;
           case 2:
             // TODO: Invert?
             var e = QuaternionUtil.ToEulerRadians(
-                new Quaternion(animdata[0], animdata[1], animdata[2],
+                new Quaternion(animdata[0],
+                               animdata[1],
+                               animdata[2],
                                animdata[3]));
             node.AddKey(frame, e.X, AnimationTrackFormat.RotateX);
             node.AddKey(frame, e.Y, AnimationTrackFormat.RotateY);
@@ -199,9 +229,21 @@ public sealed class Mtn2 {
             node.AddKey(frame, animdata[2], AnimationTrackFormat.ScaleZ);
             break;
           case 9: {
-            Asserts.Equal(1, animdata.Length);
-            this.Somethings.Add(node.Hash,
-                                (frame, (short)Math.Round(animdata[0])));
+            switch (flag) {
+              case 0x00: {
+                this.Somethings.Add(node.Hash,
+                                    (frame, (short) Math.Round(animdata[0])));
+                break;
+              }
+              case 0x20: {
+                for (var b = 0; b < hashes.Count; ++b) {
+                  var isActive = (boneVisibilityData >> b) & 1;
+                  this.Somethings.Add(hashes[boneIndex + b],
+                                      (frame, (short) isActive));
+                }
+                break;
+              }
+            }
             break;
           }
           default:
