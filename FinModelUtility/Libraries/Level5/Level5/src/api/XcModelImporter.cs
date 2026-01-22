@@ -220,7 +220,6 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
             finAnimation.FrameRate = 30;
             finAnimation.FrameCount = anim.FrameCount;
 
-            var meshesAlreadyTouched = new HashSet<IMesh>();
             foreach (var (animationReferenceHash, framesAndValues) in mtn2
                          .Somethings.GetPairs()) {
               if (!prmsByAnimationReferenceHash.TryGetList(
@@ -229,15 +228,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
                 continue;
               }
 
-              if (meshes.Count > 1) {
-                ;
-              }
-
               foreach (var mesh in meshes) {
-                if (!meshesAlreadyTouched.Add(mesh)) {
-                  ;
-                }
-
                 var meshTracks = finAnimation.AddMeshTracks(mesh);
                 var displayStates = meshTracks.DisplayStates;
 
