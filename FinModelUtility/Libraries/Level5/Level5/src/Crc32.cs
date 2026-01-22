@@ -17,8 +17,8 @@ public static class Crc32 {
   public static uint Crc32C(string input) {
     Span<byte> bytes =
         stackalloc byte[SHIFT_JIS_ENCODING_.GetMaxByteCount(input.Length)];
-    SHIFT_JIS_ENCODING_.GetBytes(input, bytes);
-    return Crc32C(bytes);
+    var len = SHIFT_JIS_ENCODING_.GetBytes(input, bytes);
+    return Crc32C(bytes.Slice(0, len));
   }
 
   private static readonly uint[] CrcTable = [

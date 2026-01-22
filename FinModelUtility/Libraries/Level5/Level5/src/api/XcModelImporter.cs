@@ -134,6 +134,8 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
           // TODO: Figure out how to fix culling issues
           finMaterial.CullingMode = CullingMode.SHOW_BOTH;
 
+          finMaterial.Shininess = 0;
+
           return finMaterial;
         });
 
@@ -232,11 +234,16 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
               var displayStates = meshTracks.DisplayStates;
 
               foreach (var frameAndValue in framesAndValues) {
-                // TODO: This value seems to encode mesh visibility, but
-                // probably also encodes which frame/texture offset to use
-                // for textures on faces. My guess is that there's some
-                // array of data in the PRM or material, and this value is
-                // used to index into that array.
+                // TODO: Still not clear what the hash is meant to be,
+                // sometimes the thing above fails to match. It's also possible
+                // for this to target a bone, which is not explicitly handled
+                // here.
+                // - Not sure of any other mechanism to fiddle with textures,
+                //   i.e. selecting which eye or mouth to show. Probably done
+                //   via these values somehow?
+                // - Why do PRMs need multiple values? Maybe each encodes a
+                //   different state, potentially those texture cases?
+
                 var (frame, value) = frameAndValue;
 
                 // TODO: This is just a guess, but still doesn't look right.
