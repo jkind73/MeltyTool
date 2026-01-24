@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Abstractions;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -232,20 +233,30 @@ public partial class ComplexFileSystem {
              .File
              .CreateText(path);
 
-    public void Decrypt(string path)
-      => impl.GetFileSystemForPath_(path)
-             .File
-             .Decrypt(path);
+    public void Decrypt(string path) {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        throw new NotImplementedException();
+      }
+
+      impl.GetFileSystemForPath_(path)
+          .File
+          .Decrypt(path);
+    }
+
+    public void Encrypt(string path) {
+      if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        throw new NotImplementedException();
+      }
+
+      impl.GetFileSystemForPath_(path)
+          .File
+          .Encrypt(path);
+    }
 
     public void Delete(string path)
       => impl.GetFileSystemForPath_(path)
              .File
              .Delete(path);
-
-    public void Encrypt(string path)
-      => impl.GetFileSystemForPath_(path)
-             .File
-             .Encrypt(path);
 
     public bool Exists([NotNullWhen(true)] string? path)
       => impl.GetFileSystemForPath_(path!)
@@ -287,10 +298,25 @@ public partial class ComplexFileSystem {
              .File
              .GetLastWriteTimeUtc(path);
 
-    public UnixFileMode GetUnixFileMode(string path)
-      => impl.GetFileSystemForPath_(path)
-             .File
-             .GetUnixFileMode(path);
+    public UnixFileMode GetUnixFileMode(string path) {
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        throw new NotImplementedException();
+      }
+      
+      return impl.GetFileSystemForPath_(path)
+                 .File
+                 .GetUnixFileMode(path);
+    }
+
+    public void SetUnixFileMode(string path, UnixFileMode mode) {
+      if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+        throw new NotImplementedException();
+      }
+
+      impl.GetFileSystemForPath_(path)
+          .File
+          .SetUnixFileMode(path, mode);
+    }
 
     public FileSystemStream Open(string path, FileMode mode)
       => impl.GetFileSystemForPath_(path)
@@ -460,11 +486,6 @@ public partial class ComplexFileSystem {
       => impl.GetFileSystemForPath_(path)
              .File
              .SetLastWriteTimeUtc(path, lastWriteTimeUtc);
-
-    public void SetUnixFileMode(string path, UnixFileMode mode)
-      => impl.GetFileSystemForPath_(path)
-             .File
-             .SetUnixFileMode(path, mode);
 
     public void WriteAllBytes(string path, byte[] bytes)
       => impl.GetFileSystemForPath_(path)
