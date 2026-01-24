@@ -14,7 +14,7 @@ public static class BoneTransformUtils {
     boneTransformView.TryGetLocalScale(out var localScale);
 
     var boneToWorldMatrix = Matrix4x4.Multiply(
-        SystemMatrix4X4Util.FromTrs(localTranslation,
+        SystemMatrix4x4Util.FromTrs(localTranslation,
                                     localRotation,
                                     localScale),
         parent);
@@ -56,7 +56,7 @@ public static class BoneTransformUtils {
     }
 
     var invertedModelMatrix = filteredModelMatrix.AssertInvert();
-    return SystemMatrix4X4Util.FromTrs(
+    return SystemMatrix4x4Util.FromTrs(
                worldTranslation,
                worldRotation,
                worldScale) *

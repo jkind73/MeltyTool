@@ -18,7 +18,7 @@ namespace KSoft.Granny3D
 		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyBuildCompositeTransform4x4(
 			[In] ref GrannyTransform transform,
-			out granny_matrix_4x4 matrix4X4);
+			out granny_matrix_4x4 matrix4x4);
 
 		[DllImport(K_DLL_NAME_)]
 		public static extern Ptr<GrannyTexture> GrannyGetMaterialTextureByType(
@@ -125,8 +125,8 @@ namespace KSoft.Granny3D
 		public static extern void GrannyUpdateModelMatrix(
 			Ptr<GrannyModelInstance> modelInstance,
 			float secondsElapsed,
-			[In] ref granny_matrix_4x4 modelMatrix4X4,
-			out granny_matrix_4x4 destMatrix4X4,
+			[In] ref granny_matrix_4x4 modelMatrix4x4,
+			out granny_matrix_4x4 destMatrix4x4,
 			bool inverse);
 
 		[DllImport(K_DLL_NAME_)]
@@ -175,7 +175,7 @@ namespace KSoft.Granny3D
 			int firstBone,
 			int boneCount,
 			Ptr<GrannyLocalPose> localPose,
-			[In] ref granny_matrix_4x4 offset4X4,
+			[In] ref granny_matrix_4x4 offset4x4,
 			Ptr<GrannyWorldPose> result);
 		[DllImport(K_DLL_NAME_)]
 		public static extern Ptr<granny_matrix_4x4> GrannyGetWorldPose4x4(Ptr<GrannyWorldPose> worldPose, int boneIndex);
@@ -191,8 +191,8 @@ namespace KSoft.Granny3D
 			[In] Ptr<GrannySkeleton> skeleton,
 			int boneIndex,
 			[In] Ptr<GrannyLocalPose> localPose,
-			[In] ref granny_matrix_4x4 offset4X4,
-			out granny_matrix_4x4 result4X4,
+			[In] ref granny_matrix_4x4 offset4x4,
+			out granny_matrix_4x4 result4x4,
 			[In] int[] sparseBoneArray,
 			[In] int[] sparseBoneArrayReverse);
 		#endregion
@@ -222,7 +222,7 @@ namespace KSoft.Granny3D
 		public static extern void GrannyDeformVertices(
 			Ptr<GrannyMeshDeformer> deformer,
 			[In] int[] matrixIndices,
-			[In] ref granny_matrix_4x4 matrixBuffer4X4,
+			[In] ref granny_matrix_4x4 matrixBuffer4x4,
 			int vertexCount,
 			IntPtr sourceVertices,
 			IntPtr destVertices);

@@ -67,16 +67,16 @@ public interface IBoneTransformManager : IReadOnlyBoneTransformManager {
 
 public sealed class BoneTransformManager : IBoneTransformManager {
   // TODO: This is going to be slow, can we put this somewhere else for O(1) access?
-  private readonly IndexableDictionary<IReadOnlyBone, IFinMatrix4X4>
+  private readonly IndexableDictionary<IReadOnlyBone, IFinMatrix4x4>
       bonesToWorldMatrices_ = new();
 
   private readonly IndexableDictionary<IReadOnlyBone, IReadOnlyFinMatrix4x4>
       bonesToInverseWorldMatrices_ = new();
 
-  private readonly IndexableDictionary<IReadOnlyBoneWeights, IFinMatrix4X4>
+  private readonly IndexableDictionary<IReadOnlyBoneWeights, IFinMatrix4x4>
       boneWeightsToWorldMatrices_ = new();
 
-  private readonly IndexableDictionary<IReadOnlyBoneWeights, IFinMatrix4X4>
+  private readonly IndexableDictionary<IReadOnlyBoneWeights, IFinMatrix4x4>
       boneWeightsInverseMatrices_ = new();
 
   private IndexableDictionary<IReadOnlyVertex, IReadOnlyFinMatrix4x4?>
@@ -86,7 +86,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
   public IReadOnlyFinMatrix4x4 ManagerMatrix { get; }
 
   public BoneTransformManager() {
-    this.ManagerMatrix = FinMatrix4X4.identity;
+    this.ManagerMatrix = FinMatrix4x4.identity;
   }
 
   public BoneTransformManager(
@@ -138,7 +138,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
     this.InitModelVertices_(model);
   }
 
-  private readonly List<(IReadOnlyBone, FinMatrix4X4, IReadOnlyFinMatrix4x4)>
+  private readonly List<(IReadOnlyBone, FinMatrix4x4, IReadOnlyFinMatrix4x4)>
       boneList_ = [];
 
   public void CalculateMatrices(
@@ -157,7 +157,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
       while (boneQueue.Count > 0) {
         var (bone, parentBoneToWorldMatrix) = boneQueue.Dequeue();
 
-        var boneToWorldMatrix = new FinMatrix4X4();
+        var boneToWorldMatrix = new FinMatrix4x4();
         this.bonesToWorldMatrices_[bone] = boneToWorldMatrix;
 
         this.boneList_.Add((bone, boneToWorldMatrix, parentBoneToWorldMatrix));
@@ -195,7 +195,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
                 boneWeights,
                 out var boneWeightInverseMatrix)) {
           this.boneWeightsInverseMatrices_[boneWeights] =
-              boneWeightInverseMatrix = new FinMatrix4X4();
+              boneWeightInverseMatrix = new FinMatrix4x4();
         }
 
         boneWeightInverseMatrix.SetZero();
@@ -218,7 +218,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
                 boneWeights,
                 out var boneWeightMatrix)) {
           this.boneWeightsToWorldMatrices_[boneWeights] =
-              boneWeightMatrix = new FinMatrix4X4();
+              boneWeightMatrix = new FinMatrix4x4();
         }
 
         boneWeightMatrix.SetZero();

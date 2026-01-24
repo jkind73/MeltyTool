@@ -94,7 +94,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
       }
 
       inverseBindMatrixByJObj[jObj]
-          = new FinMatrix4X4(inverseBindMatrixFloatBuffer).TransposeInPlace();
+          = new FinMatrix4x4(inverseBindMatrixFloatBuffer).TransposeInPlace();
 
       foreach (var datChildBone in jObj.GetChildren()) {
         boneQueue.Enqueue((finBone, datChildBone));
@@ -221,7 +221,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
               _                => UvType.STANDARD
           };
 
-          FinMatrix4X4Util.FromTrs(tObj.Translation,
+          FinMatrix4x4Util.FromTrs(tObj.Translation,
                                    tObj.RotationRadians.CreateZyxRadians(),
                                    tObj.Scale)
                           .InvertInPlace()

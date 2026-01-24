@@ -17,11 +17,11 @@ public enum TransformMatrixMode {
 }
 
 public static class GlTransform {
-  private static readonly Matrix4X4Stack MODEL_MATRIX_ = new();
-  private static readonly Matrix4X4Stack VIEW_MATRIX_ = new();
-  private static readonly Matrix4X4Stack PROJECTION_MATRIX_ = new();
+  private static readonly Matrix4x4stack MODEL_MATRIX_ = new();
+  private static readonly Matrix4x4stack VIEW_MATRIX_ = new();
+  private static readonly Matrix4x4stack PROJECTION_MATRIX_ = new();
 
-  private static Matrix4X4Stack currentMatrix_ = MODEL_MATRIX_;
+  private static Matrix4x4stack currentMatrix_ = MODEL_MATRIX_;
 
   public static Matrix4x4 ModelMatrix {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -83,7 +83,7 @@ public static class GlTransform {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Translate(float x, float y, float z)
-    => MultMatrix(SystemMatrix4X4Util.FromTranslation(x, y, z));
+    => MultMatrix(SystemMatrix4x4Util.FromTranslation(x, y, z));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Translate(in Vector3 xyz)
@@ -92,15 +92,15 @@ public static class GlTransform {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(float x, float y, float z)
-    => MultMatrix(SystemMatrix4X4Util.FromScale(x, y, z));
+    => MultMatrix(SystemMatrix4x4Util.FromScale(x, y, z));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(float scale)
-    => MultMatrix(SystemMatrix4X4Util.FromScale(scale, scale, scale));
+    => MultMatrix(SystemMatrix4x4Util.FromScale(scale, scale, scale));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(Vector3 scale)
-    => MultMatrix(SystemMatrix4X4Util.FromScale(scale));
+    => MultMatrix(SystemMatrix4x4Util.FromScale(scale));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Rotate(double degrees, double x, double y, double z)

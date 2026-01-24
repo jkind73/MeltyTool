@@ -74,7 +74,7 @@ public sealed class Transform3d : ITransform3d {
       this.isLocalMatrixDirty_ = false;
 
       return field
-          = SystemMatrix4X4Util.FromTrs(this.LocalTranslation,
+          = SystemMatrix4x4Util.FromTrs(this.LocalTranslation,
                                         this.LocalRotation,
                                         this.LocalScale);
     }

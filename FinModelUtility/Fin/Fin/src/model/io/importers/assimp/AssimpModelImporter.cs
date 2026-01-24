@@ -275,9 +275,9 @@ public sealed class AssimpModelImporter : IModelImporter<AssimpModelFileBundle> 
               if (vertexWeight.VertexID == i && vertexWeight.Weight > 0) {
                 var finBone = finBoneByName[assBone.Name];
 
-                var offsetMatrix = new FinMatrix4X4(assBone.OffsetMatrix)
+                var offsetMatrix = new FinMatrix4x4(assBone.OffsetMatrix)
                     .TransposeInPlace();
-                IFinMatrix4X4 finInverseBindMatrix = offsetMatrix;
+                IFinMatrix4x4 finInverseBindMatrix = offsetMatrix;
 
                 boneWeights.Add(new BoneWeight(finBone,
                                                finInverseBindMatrix,

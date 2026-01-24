@@ -30,8 +30,8 @@ public sealed class ModelMatricesUbo {
 
     // TODO: Merge model/view/projection matrices with bone matrices here
     // rather than in the shader
-    UboUtil.AppendMatrix4X4(buffer, ref offset, modelMatrix);
-    UboUtil.AppendMatrix4X4S(buffer, ref offset, boneMatrices);
+    UboUtil.AppendMatrix4x4(buffer, ref offset, modelMatrix);
+    UboUtil.AppendMatrix4x4s(buffer, ref offset, boneMatrices);
 
     this.impl_.UpdateDataIfChanged(buffer);
   }

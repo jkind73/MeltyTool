@@ -67,13 +67,13 @@ public sealed class TextureTransform : ITextureTransform {
   }
 
   public Matrix4x4 AsMatrix() => this.IsTransform3d
-      ? SystemMatrix4X4Util.FromCtrs(
+      ? SystemMatrix4x4Util.FromCtrs(
           this.Center,
           this.Translation,
           this.RotationRadians?.CreateZyxRadians(),
           this.Scale)
       : new Matrix4x4(
-          SystemMatrix3X2Util.FromCtrss(
+          SystemMatrix3x2Util.FromCtrss(
               this.Center?.Xy(),
               this.Translation?.Xy(),
               this.RotationRadians?.Z,

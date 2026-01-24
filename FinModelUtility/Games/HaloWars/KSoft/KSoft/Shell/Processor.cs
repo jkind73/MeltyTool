@@ -131,13 +131,13 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		public int Compare(Processor x, Processor y) => StaticCompare(x, y);
 		/// <summary>See <see cref="IComparer{T}.Compare"/></summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
+		/// <param name="objX"></param>
+		/// <param name="objY"></param>
 		/// <returns></returns>
-		int System.Collections.IComparer.Compare(object x, object y)
+		int System.Collections.IComparer.Compare(object objX, object objY)
 		{
-			Debug.TypeCheck.CastValue(x, out Processor x);
-			Debug.TypeCheck.CastValue(y, out Processor y);
+			Debug.TypeCheck.CastValue(objX, out Processor x);
+			Debug.TypeCheck.CastValue(objY, out Processor y);
 
 			return StaticCompare(x, y);
 		}
