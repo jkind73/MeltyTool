@@ -13,8 +13,8 @@ namespace KSoft.Collections.Generic
 	public sealed class PropertyComparer<T>
 		: Comparer<T>
 	{
-		readonly System.Reflection.PropertyInfo mProperty;
-		readonly SortDirection mDirection;
+		readonly System.Reflection.PropertyInfo mProperty_;
+		readonly SortDirection mDirection_;
 
 		/// <summary>Validate the property used for this comparison is valid</summary>
 		/// <param name="type"></param>
@@ -23,20 +23,20 @@ namespace KSoft.Collections.Generic
 		/// <exception cref="MissingMemberException" />
 		void ValidateProperty(Type type, bool checkPropertyOwner = false)
 		{
-			if (!this.mProperty.CanRead)
+			if (!this.mProperty_.CanRead)
 			{
 				throw new MemberAccessException(string.Format(Util.InvariantCultureInfo,
 					"{0}'s property '{1}' can't be read!",
 					type.Name,
-					this.mProperty.Name));
+					this.mProperty_.Name));
 			}
 
-			if (checkPropertyOwner && this.mProperty.DeclaringType != type)
+			if (checkPropertyOwner && this.mProperty_.DeclaringType != type)
 			{
 				throw new MissingMemberException(string.Format(Util.InvariantCultureInfo,
 					"Property '{1}' is not a member of {0}!",
 					type.Name,
-					this.mProperty.Name));
+					this.mProperty_.Name));
 			}
 		}
 
@@ -47,14 +47,14 @@ namespace KSoft.Collections.Generic
 		/// <exception cref="ArgumentNullException"/>
 		/// <exception cref="MemberAccessException" />
 		/// <exception cref="MissingMemberException" />
-		public PropertyComparer(System.Reflection.PropertyInfo property, SortDirection direction = SortDirection.Ascending)
+		public PropertyComparer(System.Reflection.PropertyInfo property, SortDirection direction = SortDirection.ASCENDING)
 		{
 			Contract.Requires<ArgumentNullException>(property != null);
 
 			var type = typeof(T);
 
-			this.mProperty = property;
-			this.mDirection = direction;
+			this.mProperty_ = property;
+			this.mDirection_ = direction;
 
 			this.ValidateProperty(type, true);
 		}
@@ -63,7 +63,7 @@ namespace KSoft.Collections.Generic
 		/// <param name="direction">Direction of comparison results</param>
 		/// <exception cref="MemberAccessException" />
 		/// <exception cref="MissingMemberException" />
-		public PropertyComparer(string propertyName = null, SortDirection direction = SortDirection.Ascending)
+		public PropertyComparer(string propertyName = null, SortDirection direction = SortDirection.ASCENDING)
 		{
 			var type = typeof(T);
 
@@ -72,7 +72,7 @@ namespace KSoft.Collections.Generic
 				var properties = type.GetProperties();
 				if (properties.Length > 0)
 				{
-					this.mProperty = properties[0];
+					this.mProperty_ = properties[0];
 				}
 				else
 				{
@@ -86,7 +86,7 @@ namespace KSoft.Collections.Generic
 				var prop = type.GetProperty(propertyName);
 				if (prop != null)
 				{
-					this.mProperty = prop;
+					this.mProperty_ = prop;
 				}
 				else
 				{
@@ -96,13 +96,13 @@ namespace KSoft.Collections.Generic
 				}
 			}
 
-			this.mDirection = direction;
+			this.mDirection_ = direction;
 
 			this.ValidateProperty(type);
 		}
-		/// <summary>Build a default comparer with <see cref="SortDirection.Ascending">Ascending</see> results</summary>
+		/// <summary>Build a default comparer with <see cref="SortDirection.ASCENDING">Ascending</see> results</summary>
 		public PropertyComparer()
-			: this((string)null, SortDirection.Ascending)
+			: this((string)null, SortDirection.ASCENDING)
 		{
 		}
 		#endregion
@@ -115,19 +115,19 @@ namespace KSoft.Collections.Generic
 
 			// #REVIEW: I think it's safe to cast to IComparable<T>
 			// unless you're still using .NET 1 assemblies...why would you do such a thing?
-			var obj1 = this.mProperty.GetValue(x, null) as IComparable;
-			var obj2 = this.mProperty.GetValue(y, null) as IComparable;
+			var obj1 = this.mProperty_.GetValue(x, null) as IComparable;
+			var obj2 = this.mProperty_.GetValue(y, null) as IComparable;
 
 			int result = obj1.CompareTo(obj2);
 
-			if (this.mDirection != SortDirection.Ascending)
+			if (this.mDirection_ != SortDirection.ASCENDING)
 				result *= -1;
 
 			return result;
 		}
 
 		public static PropertyComparer<T> SortBy(string propertyName,
-			SortDirection direction = SortDirection.Ascending)
+			SortDirection direction = SortDirection.ASCENDING)
 		{
 			return new PropertyComparer<T>(propertyName, direction);
 		}

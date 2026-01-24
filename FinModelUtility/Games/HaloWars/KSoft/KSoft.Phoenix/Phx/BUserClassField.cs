@@ -5,19 +5,19 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams()
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams()
 		{
-			ElementName = "Fields",
-			DataName = "Name",
+			elementName = "Fields",
+			dataName = "Name",
 		};
 		#endregion
 
-		BTriggerVarType mType;
+		BTriggerVarType mType_;
 
 		#region IXmlElementStreamable Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttributeEnum("Type", ref this.mType);
+			s.StreamAttributeEnum("Type", ref this.mType_);
 		}
 		#endregion
 	};

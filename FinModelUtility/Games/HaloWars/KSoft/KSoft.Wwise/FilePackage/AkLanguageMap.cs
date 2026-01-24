@@ -3,24 +3,24 @@
 	public sealed class AkLanguageMap
 		: IO.IEndianStreamSerializable
 	{
-	AkLanguageMapEntry[] mEntries;
+	AkLanguageMapEntry[] mEntries_;
 
-		bool mUseAsciiStrings;
+		bool mUseAsciiStrings_;
 
 		public AkLanguageMap(bool useAsciiStrings)
 		{
-			this.mUseAsciiStrings = useAsciiStrings;
+			this.mUseAsciiStrings_ = useAsciiStrings;
 		}
 
-		internal uint TotalMapSize;
+		internal uint totalMapSize;
 
 		public uint CalculateTotalMapSize()
 		{
-			uint char_size = (uint)(this.mUseAsciiStrings ? sizeof(byte) : sizeof(short));
+			uint charSize = (uint)(this.mUseAsciiStrings_ ? sizeof(byte) : sizeof(short));
 
-			uint result = sizeof(uint) + (uint)(this.mEntries.Length * AkLanguageMapEntry.kSizeOf);
-			foreach (var se in this.mEntries)
-				result += (uint)(se.Value.Length + 1) * char_size;
+			uint result = sizeof(uint) + (uint)(this.mEntries_.Length * AkLanguageMapEntry.K_SIZE_OF);
+			foreach (var se in this.mEntries_)
+				result += (uint)(se.value.Length + 1) * charSize;
 
 			return result;
 		}
@@ -29,18 +29,18 @@
 		public void Serialize(IO.EndianStream s)
 		{
 			Memory.Strings.StringStorage ss;
-			if (this.mUseAsciiStrings)
+			if (this.mUseAsciiStrings_)
 				ss = Memory.Strings.StringStorage.CStringAscii;
 			else
 			{
-				ss = s.ByteOrder == Shell.EndianFormat.Little
+				ss = s.ByteOrder == Shell.EndianFormat.LITTLE
 					? Memory.Strings.StringStorage.CStringUnicode
 					: Memory.Strings.StringStorage.CStringUnicodeBigEndian;
 			}
 
-			s.StreamArrayInt32(ref this.mEntries);
-			for (int x = 0; x < this.mEntries.Length; x++)
-				s.Stream(ref this.mEntries[x].Value, ss);
+			s.StreamArrayInt32(ref this.mEntries_);
+			for (int x = 0; x < this.mEntries_.Length; x++)
+				s.Stream(ref this.mEntries_[x].value, ss);
 		}
 		#endregion
 	};

@@ -34,7 +34,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     var normalTexture = material.NormalTexture;
     var hasNormalTexture = normalTexture != null;
 
-    sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
+    sb.AppendLine($"#version {GlslConstants.FragmentShaderVersion}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
 
@@ -84,7 +84,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
 
     // TODO: Optimize this if we only need ambient
     if (dependsOnLights || dependsOnAmbientLight) {
-      sb.AppendLine(GlslUtil.LIGHT_HEADER);
+      sb.AppendLine(GlslUtil.LightHeader);
       sb.AppendLine($"uniform bool {GlslConstants.UNIFORM_HAS_SPECULAR_NAME};");
       sb.AppendLine($"uniform float {GlslConstants.UNIFORM_SHININESS_NAME};");
     }
@@ -359,12 +359,12 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
               }
               case AlphaOpValue.BOTH_REQUIRED: {
                 switch (material.AlphaOp) {
-                  case AlphaOp.And: {
+                  case AlphaOp.AND: {
                     sb.Append(
                         $"if (!({alphaCompareText0} && {alphaCompareText1})");
                     break;
                   }
-                  case AlphaOp.Or: {
+                  case AlphaOp.OR: {
                     sb.Append(
                         $"if (!({alphaCompareText0} || {alphaCompareText1})");
                     break;
@@ -408,20 +408,20 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       string alphaAccessorText,
       float reference)
     => alphaCompareType switch {
-        AlphaCompareType.Never => "false",
-        AlphaCompareType.Less =>
+        AlphaCompareType.NEVER => "false",
+        AlphaCompareType.LESS =>
             $"{alphaAccessorText} < {reference:0.0###########}",
-        AlphaCompareType.Equal =>
+        AlphaCompareType.EQUAL =>
             $"{alphaAccessorText} == {reference:0.0###########}",
-        AlphaCompareType.LEqual =>
+        AlphaCompareType.L_EQUAL =>
             $"{alphaAccessorText} <= {reference:0.0###########}",
-        AlphaCompareType.Greater =>
+        AlphaCompareType.GREATER =>
             $"{alphaAccessorText} > {reference:0.0###########}",
-        AlphaCompareType.NEqual =>
+        AlphaCompareType.N_EQUAL =>
             $"{alphaAccessorText} != {reference:0.0###########}",
-        AlphaCompareType.GEqual =>
+        AlphaCompareType.G_EQUAL =>
             $"{alphaAccessorText} >= {reference:0.0###########}",
-        AlphaCompareType.Always => "true",
+        AlphaCompareType.ALWAYS => "true",
         _ => throw new ArgumentOutOfRangeException(
             nameof(alphaCompareType),
             alphaCompareType,
@@ -445,7 +445,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     var is1False = compareValue1 == AlphaCompareValue.ALWAYS_FALSE;
     var is1True = compareValue1 == AlphaCompareValue.ALWAYS_TRUE;
 
-    if (alphaOp == AlphaOp.And) {
+    if (alphaOp == AlphaOp.AND) {
       if (is0False || is1False) {
         return AlphaOpValue.ALWAYS_FALSE;
       }
@@ -465,7 +465,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       return AlphaOpValue.BOTH_REQUIRED;
     }
 
-    if (alphaOp == AlphaOp.Or) {
+    if (alphaOp == AlphaOp.OR) {
       if (is0True || is1True) {
         return AlphaOpValue.ALWAYS_TRUE;
       }
@@ -500,15 +500,15 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     var isReference0 = Math.Abs(reference - 0) < .001;
     var isReference1 = Math.Abs(reference - 1) < .001;
 
-    if (compareType == AlphaCompareType.Always ||
-        (compareType == AlphaCompareType.GEqual && isReference0) ||
-        (compareType == AlphaCompareType.LEqual && isReference1)) {
+    if (compareType == AlphaCompareType.ALWAYS ||
+        (compareType == AlphaCompareType.G_EQUAL && isReference0) ||
+        (compareType == AlphaCompareType.L_EQUAL && isReference1)) {
       return AlphaCompareValue.ALWAYS_TRUE;
     }
 
-    if (compareType == AlphaCompareType.Never ||
-        (compareType == AlphaCompareType.Greater && isReference1) ||
-        (compareType == AlphaCompareType.Less && isReference0)) {
+    if (compareType == AlphaCompareType.NEVER ||
+        (compareType == AlphaCompareType.GREATER && isReference1) ||
+        (compareType == AlphaCompareType.LESS && isReference0)) {
       return AlphaCompareValue.ALWAYS_FALSE;
     }
 

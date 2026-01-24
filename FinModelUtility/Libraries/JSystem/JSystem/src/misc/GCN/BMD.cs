@@ -16,72 +16,72 @@ using schema.binary;
 
 namespace jsystem.GCN;
 
-public partial class BMD {
-  public BmdHeader Header;
-  public Inf1 INF1 { get; set; }
-  public VTX1Section VTX1;
-  public Evp1 EVP1;
-  public Drw1 DRW1 { get; set; }
-  public Jnt1 JNT1 { get; set; }
-  public SHP1Section SHP1;
-  public MAT3Section MAT3;
-  public Tex1 TEX1 { get; set; }
+public partial class Bmd {
+  public BmdHeader header;
+  public Inf1 Inf1 { get; set; }
+  public Vtx1Section vtx1;
+  public Evp1 evp1;
+  public Drw1 Drw1 { get; set; }
+  public Jnt1 Jnt1 { get; set; }
+  public Shp1Section shp1;
+  public Mat3Section mat3;
+  public Tex1 Tex1 { get; set; }
 
-  public BMD(byte[] file) {
+  public Bmd(byte[] file) {
     using var br =
         new SchemaBinaryReader((Stream) new MemoryStream(file),
                                Endianness.BigEndian);
-    this.Header = br.ReadNew<BmdHeader>();
+    this.header = br.ReadNew<BmdHeader>();
 
-    bool OK;
+    bool ok;
     while (!br.Eof) {
       switch (br.ReadString(4)) {
-        case nameof(this.INF1):
+        case nameof(this.Inf1):
           br.Position -= 4L;
-          this.INF1 = br.ReadNew<Inf1>();
+          this.Inf1 = br.ReadNew<Inf1>();
           break;
-        case nameof(this.VTX1):
+        case nameof(this.vtx1):
           br.Position -= 4L;
-          this.VTX1 = new VTX1Section(br, out OK);
-          if (!OK) {
+          this.vtx1 = new Vtx1Section(br, out ok);
+          if (!ok) {
             // TODO: Message box
             //int num2 = (int) System.Windows.Forms.MessageBox.Show("Error 4");
             return;
           } else
             break;
-        case nameof(this.EVP1):
+        case nameof(this.evp1):
           br.Position -= 4L;
-          this.EVP1 = br.ReadNew<Evp1>();
+          this.evp1 = br.ReadNew<Evp1>();
           break;
-        case nameof(this.DRW1):
+        case nameof(this.Drw1):
           br.Position -= 4L;
-          this.DRW1 = br.ReadNew<Drw1>();
+          this.Drw1 = br.ReadNew<Drw1>();
           break;
-        case nameof(this.JNT1):
+        case nameof(this.Jnt1):
           br.Position -= 4L;
-          this.JNT1 = br.ReadNew<Jnt1>();
+          this.Jnt1 = br.ReadNew<Jnt1>();
           break;
-        case nameof(this.SHP1):
+        case nameof(this.shp1):
           br.Position -= 4L;
-          this.SHP1 = new SHP1Section(br, out OK);
-          if (!OK) {
+          this.shp1 = new Shp1Section(br, out ok);
+          if (!ok) {
             // TODO: Message box
             //int num2 = (int) System.Windows.Forms.MessageBox.Show("Error 7");
             return;
           } else
             break;
-        case "MAT1" or "MAT2" or nameof(this.MAT3):
+        case "MAT1" or "MAT2" or nameof(this.mat3):
           br.Position -= 4L;
-          this.MAT3 = new MAT3Section(br, out OK);
-          if (!OK) {
+          this.mat3 = new Mat3Section(br, out ok);
+          if (!ok) {
             // TODO: Message box
             //int num2 = (int) System.Windows.Forms.MessageBox.Show("Error 8");
             return;
           } else
             break;
-        case nameof(this.TEX1):
+        case nameof(this.Tex1):
           br.Position -= 4L;
-          this.TEX1 = br.ReadNew<Tex1>();
+          this.Tex1 = br.ReadNew<Tex1>();
           break;
         default:
           return;
@@ -89,12 +89,12 @@ public partial class BMD {
     }
   }
 
-  public MA.Node[] GetJoints() {
+  public Ma.Node[] GetJoints() {
     var nodeIndexStack = new Stack<int>();
     nodeIndexStack.Push(-1);
-    var nodeList = new List<MA.Node>();
+    var nodeList = new List<Ma.Node>();
     int nodeIndex = -1;
-    foreach (Inf1Entry entry in this.INF1.Data.Entries) {
+    foreach (Inf1Entry entry in this.Inf1.Data.Entries) {
       switch (entry.Type) {
         case Inf1EntryType.TERMINATOR:
           goto label_7;
@@ -105,9 +105,9 @@ public partial class BMD {
           nodeIndexStack.Pop();
           break;
         case Inf1EntryType.JOINT:
-          var jnt1 = this.JNT1.Data;
+          var jnt1 = this.Jnt1.Data;
           var jointIndex = jnt1.RemapTable[entry.Index];
-          nodeList.Add(new MA.Node(
+          nodeList.Add(new Ma.Node(
                            jnt1.Joints[jointIndex],
                            jnt1.StringTable[jointIndex],
                            nodeIndexStack.Peek()));

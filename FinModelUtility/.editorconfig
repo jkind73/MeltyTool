@@ -23,10 +23,10 @@ dotnet_diagnostic.ca1711.severity = none
 #dotnet_diagnostic.ca1725.severity = error
 
 # CA1822: Member does not access instance data and can be marked as static
-dotnet_diagnostic.ca1822.severity = error
+#dotnet_diagnostic.ca1822.severity = error
 
 # CA1852: Type can be sealed because it has no subtypes in its containing assembly and is not externally visible
-dotnet_diagnostic.ca1852.severity = error
+#dotnet_diagnostic.ca1852.severity = error
 
 # CA2201: Exception type System.Exception is not sufficiently specific
 #dotnet_diagnostic.ca2201.severity = error

@@ -20,13 +20,13 @@ public partial class Inf1 : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class Inf1Data : IBinaryConvertible {
-  public ushort ScalingRule;
+  public ushort scalingRule;
   private readonly ushort padding_ = ushort.MaxValue;
 
   [Unknown]
-  public uint Unknown2;
+  public uint unknown2;
 
-  public uint NrVertex;
+  public uint nrVertex;
 
   [WPointerTo(nameof(Entries))]
   private uint entryoffset_;

@@ -3,23 +3,23 @@ namespace KSoft.Phoenix.HaloWars
 {
 	public enum BChatSpeaker
 	{
-		Serena,
-		Forge,
-		Cutter,
-		Voice_of_God,
-		Generic_Soldiers,
-		Arcadian_Police,
-		Civilians,
-		Anders,
-		RhinoCommander,
-		Spartan1,
-		Spartan2,
-		SpartanSniper,
-		SpartanRockeLauncher,
+		SERENA,
+		FORGE,
+		CUTTER,
+		VOICE_OF_GOD,
+		GENERIC_SOLDIERS,
+		ARCADIAN_POLICE,
+		CIVILIANS,
+		ANDERS,
+		RHINO_COMMANDER,
+		SPARTAN1,
+		SPARTAN2,
+		SPARTAN_SNIPER,
+		SPARTAN_ROCKE_LAUNCHER,
 
-		Covenant = Anders,
-		Arbiter = RhinoCommander,
+		COVENANT = ANDERS,
+		ARBITER = RHINO_COMMANDER,
 
-		ODST = SpartanRockeLauncher+1+1 + 1,
+		ODST = SPARTAN_ROCKE_LAUNCHER+1+1 + 1,
 	};
 }

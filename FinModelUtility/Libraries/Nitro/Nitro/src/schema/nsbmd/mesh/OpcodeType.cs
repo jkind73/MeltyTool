@@ -3,14 +3,14 @@
 public enum OpcodeType : byte {
   // 0x_0
   NOP = 0x00,
-  UNKNOWN_0x40 = 0x40,
-  UNKNOWN_0x80 = 0x80,
+  UNKNOWN_0_X40 = 0x40,
+  UNKNOWN_0_X80 = 0x80,
 
   // 0x01
   END = 0x01,
 
   // 0x02
-  UNKNOWN_0x02 = 0x02,
+  UNKNOWN_0_X02 = 0x02,
 
   // 0x03
   LOAD_MATRIX = 0x03,
@@ -30,11 +30,11 @@ public enum OpcodeType : byte {
   MULT_MATRIX_4 = 0x66, // w/ both store and load position
 
   // 0x_7
-  UNKNOWN_0x07 = 0x07,
-  UNKNOWN_0x47 = 0x47,
+  UNKNOWN_0_X07 = 0x07,
+  UNKNOWN_0_X47 = 0x47,
 
   // 0x08
-  UNKNOWN_0x08 = 0x08,
+  UNKNOWN_0_X08 = 0x08,
 
   // 0x09
   STORE_MATRIX = 0x09,
@@ -44,8 +44,8 @@ public enum OpcodeType : byte {
   SCALE_DOWN = 0x2b,
 
   // 0x0c
-  UNKNOWN_0x0c = 0x0c,
+  UNKNOWN_0_X0_C = 0x0c,
 
   // 0x0d
-  UNKNOWN_0x0d = 0x0d,
+  UNKNOWN_0_X0D = 0x0d,
 }

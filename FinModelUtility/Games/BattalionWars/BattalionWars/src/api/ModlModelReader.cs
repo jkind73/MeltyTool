@@ -39,7 +39,7 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
       IReadOnlyTreeFile modlFile,
       IList<IReadOnlyTreeFile>? animFiles,
       GameVersion gameVersion) {
-    var flipSign = ModlFlags.FLIP_HORIZONTALLY ? -1 : 1;
+    var flipSign = ModlFlags.flipHorizontally ? -1 : 1;
 
     using var br = new SchemaBinaryReader(modlFile.OpenRead(),
                                           Endianness.BigEndian);
@@ -138,7 +138,7 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
                   : textureFile.ReadNew<Text>();
               image = texr.Image;
             } else {
-              image = FinImage.Create1x1FromColor(Color.Magenta);
+              image = FinImage.Create1X1FromColor(Color.Magenta);
             }
 
             var finTexture =
@@ -306,8 +306,8 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
       fbtPositions.SetAllKeyframes(
           animBoneFrames.PositionFrames.Select(
               (axes) => {
-                var (fPX, fPY, fPZ) = axes;
-                return new Vector3(flipSign * fPX, fPY, fPZ);
+                var (fPx, fPy, fPz) = axes;
+                return new Vector3(flipSign * fPx, fPy, fPz);
               }));
 
       var fbtRotations = finBoneTracks.UseCombinedQuaternionKeyframes(
@@ -315,11 +315,11 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
       fbtRotations.SetAllKeyframes(
           animBoneFrames.RotationFrames.Select(
               (axes) => {
-                var (fRX, fRY, fRZ, frW) = axes;
+                var (fRx, fRy, fRz, frW) = axes;
                 return new Quaternion(
-                    flipSign * fRX,
-                    fRY,
-                    fRZ,
+                    flipSign * fRx,
+                    fRy,
+                    fRz,
                     flipSign * frW);
               }));
     }

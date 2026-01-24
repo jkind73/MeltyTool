@@ -34,7 +34,7 @@ public partial class Object(uint keyedPointer, uint key) : IKeyedInstance<Object
   private uint attachPointer_;
   
   public Vector3 Position { get; set; }
-  public Vector3i Rotation { get; } = new();
+  public Vector3I Rotation { get; } = new();
   public Vector3 Scale { get; set; }
 
   private uint childPointer_;

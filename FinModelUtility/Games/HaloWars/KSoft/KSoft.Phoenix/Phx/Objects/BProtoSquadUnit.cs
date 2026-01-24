@@ -5,37 +5,37 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Unit")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Unit")
 		{
-			Flags = 0
+			flags = 0
 		};
 		#endregion
 
 		#region Count
-		int mCount;
+		int mCount_;
 		public int Count
 		{
-			get { return this.mCount; }
-			set { this.mCount = value; }
+			get { return this.mCount_; }
+			set { this.mCount_ = value; }
 		}
 		#endregion
 
 		#region UnitID
-		int mUnitID;
+		int mUnitId_;
 		[Meta.BProtoObjectReference]
-		public int UnitID
+		public int UnitId
 		{
-			get { return this.mUnitID; }
-			set { this.mUnitID = value; }
+			get { return this.mUnitId_; }
+			set { this.mUnitId_ = value; }
 		}
 		#endregion
 
 		#region UnitRole
-		BUnitRole mUnitRole;
+		BUnitRole mUnitRole_;
 		public BUnitRole UnitRole
 		{
-			get { return this.mUnitRole; }
-			set { this.mUnitRole = value; }
+			get { return this.mUnitRole_; }
+			set { this.mUnitRole_ = value; }
 		}
 		#endregion
 
@@ -46,9 +46,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttribute("count", ref this.mCount);
-			s.StreamAttributeEnumOpt("role", ref this.mUnitRole, e => e != BUnitRole.Normal);
-			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mUnitID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
+			s.StreamAttribute("count", ref this.mCount_);
+			s.StreamAttributeEnumOpt("role", ref this.mUnitRole_, e => e != BUnitRole.NORMAL);
+			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mUnitId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
 		}
 		#endregion
 	};

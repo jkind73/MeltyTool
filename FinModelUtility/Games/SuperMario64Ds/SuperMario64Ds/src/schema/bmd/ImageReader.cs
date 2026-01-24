@@ -26,7 +26,7 @@ public sealed class ImageReader {
         return ReadPalette16_(texture, palette.AssertNonnull());
       case TextureType.PALETTE_256:
         return ReadPalette256_(texture, palette.AssertNonnull());
-      case TextureType.TEX_4X4:
+      case TextureType.TEX_4_X4:
         return ReadTex4x4_(texture, palette.AssertNonnull());
       case TextureType.A5_I3:
         return ReadA5I3_(texture, palette.AssertNonnull());
@@ -113,7 +113,7 @@ public sealed class ImageReader {
     var blocks = textureBr.ReadUInt32s(blockCount);
     var palIndices = textureBr.ReadUInt16s(blockCount);
 
-    foreach (var (i, (blox0, palidx_data)) in blocks.Zip(palIndices).Index()) {
+    foreach (var (i, (blox0, palidxData)) in blocks.Zip(palIndices).Index()) {
       var blockX = i % blockXCount;
       var blockY = (i - blockX) / blockXCount;
 
@@ -124,26 +124,26 @@ public sealed class ImageReader {
           byte texel = (byte) (blox & 0x3);
           blox >>= 2;
 
-          int pal_offset = (int) ((palidx_data & 0x3FFF) << 1);
-          ushort color_mode = (ushort) (palidx_data >> 14);
+          int palOffset = (int) ((palidxData & 0x3FFF) << 1);
+          ushort colorMode = (ushort) (palidxData >> 14);
 
           Rgba32? color = null;
           switch (texel) {
-            case 0: color = paletteColors[pal_offset]; break;
-            case 1: color = paletteColors[pal_offset + 1]; break;
+            case 0: color = paletteColors[palOffset]; break;
+            case 1: color = paletteColors[palOffset + 1]; break;
             case 2: {
-              switch (color_mode) {
+              switch (colorMode) {
                 case 0:
-                case 2: color = paletteColors[pal_offset + 2]; break;
+                case 2: color = paletteColors[palOffset + 2]; break;
                 case 1: {
-                  Rgba32 c0 = paletteColors[pal_offset];
-                  Rgba32 c1 = paletteColors[pal_offset + 1];
+                  Rgba32 c0 = paletteColors[palOffset];
+                  Rgba32 c1 = paletteColors[palOffset + 1];
                   color = MixColors_(c0, 1, c1, 1);
                 }
                   break;
                 case 3: {
-                  Rgba32 c0 = paletteColors[pal_offset];
-                  Rgba32 c1 = paletteColors[pal_offset + 1];
+                  Rgba32 c0 = paletteColors[palOffset];
+                  Rgba32 c1 = paletteColors[palOffset + 1];
                   color = MixColors_(c0, 5, c1, 3);
                 }
                   break;
@@ -151,14 +151,14 @@ public sealed class ImageReader {
             }
               break;
             case 3: {
-              switch (color_mode) {
+              switch (colorMode) {
                 case 0:
                 case 1: color = null; break;
                 case 2:
-                  color = paletteColors[pal_offset + 3]; break;
+                  color = paletteColors[palOffset + 3]; break;
                 case 3: {
-                  Rgba32 c0 = paletteColors[pal_offset];
-                  Rgba32 c1 = paletteColors[pal_offset + 1];
+                  Rgba32 c0 = paletteColors[palOffset];
+                  Rgba32 c1 = paletteColors[palOffset + 1];
                   color = MixColors_(c0, 3, c1, 5);
                 }
                   break;

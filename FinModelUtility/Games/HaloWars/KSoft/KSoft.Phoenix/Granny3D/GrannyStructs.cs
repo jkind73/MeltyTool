@@ -6,10 +6,10 @@ using granny_matrix_4x4 = System.Numerics.Matrix4x4;
 
 namespace KSoft.Granny3D
 {
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_data_type_definition
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyDataTypeDefinition
 	{
-		public granny_member_type MemberType;
+		public GrannyMemberType MemberType;
 		public CharPtr Name;
 		public IntPtr/*TPtr<granny_data_type_definition>*/ ReferenceTypeInternal;
 		public int ArrayWidth;
@@ -19,20 +19,20 @@ namespace KSoft.Granny3D
 		IntPtr Ignored;
 
 		// #64BIT: Workaround encountered issues trying to define a field which was a TPtr of the same parent type
-		public TPtr<granny_data_type_definition> ReferenceType { get { return new TPtr<granny_data_type_definition>(this.ReferenceTypeInternal); } }
+		public Ptr<GrannyDataTypeDefinition> ReferenceType { get { return new Ptr<GrannyDataTypeDefinition>(this.ReferenceTypeInternal); } }
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_variant
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyVariant
 	{
-		public TPtr<granny_data_type_definition> Type;
+		public Ptr<GrannyDataTypeDefinition> Type;
 		public IntPtr Object;
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_transform
+	public struct GrannyTransform
 	{
-		public granny_transform_flags Flags;
+		public GrannyTransformFlags Flags;
 		public Vector3 Position;
 		public Vector4 Orientation;
 		public Vector3 ScaleShear0;
@@ -41,7 +41,7 @@ namespace KSoft.Granny3D
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_matrix_3x3
+	public struct GrannyMatrix3X3
 	{
 		public Vector3 Row0;
 		public Vector3 Row1;
@@ -49,26 +49,26 @@ namespace KSoft.Granny3D
 	};
 
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_file_info
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyFileInfo
 	{
-		public TPtr<granny_art_tool_info> ArtToolInfo;
+		public Ptr<GrannyArtToolInfo> ArtToolInfo;
 		public IntPtr /*granny_exporter_info*/ ExporterInfo;
 		public CharPtr FromFileName;
-		public ArrayOfRefsPtr<granny_texture> Textures;
-		public ArrayOfRefsPtr<granny_material> Materials;
-		public ArrayOfRefsPtr<granny_skeleton> Skeletons;
-		public ArrayOfRefsPtr<granny_vertex_data> VertexDatas;
-		public ArrayOfRefsPtr<granny_tri_topology> TriTopologies;
-		public ArrayOfRefsPtr<granny_mesh> Meshes;
-		public ArrayOfRefsPtr<granny_model> Models;
-		public ArrayOfRefsPtr<granny_track_group> TrackGroups;
-		public ArrayOfRefsPtr<granny_animation> Animations;
-		public granny_variant ExtendedData;
+		public ArrayOfRefsPtr<GrannyTexture> Textures;
+		public ArrayOfRefsPtr<GrannyMaterial> Materials;
+		public ArrayOfRefsPtr<GrannySkeleton> Skeletons;
+		public ArrayOfRefsPtr<GrannyVertexData> VertexDatas;
+		public ArrayOfRefsPtr<GrannyTriTopology> TriTopologies;
+		public ArrayOfRefsPtr<GrannyMesh> Meshes;
+		public ArrayOfRefsPtr<GrannyModel> Models;
+		public ArrayOfRefsPtr<GrannyTrackGroup> TrackGroups;
+		public ArrayOfRefsPtr<GrannyAnimation> Animations;
+		public GrannyVariant ExtendedData;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_art_tool_info
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyArtToolInfo
 	{
 		public CharPtr FromArtToolName;
 		public int ArtToolMajorRevision;
@@ -78,97 +78,97 @@ namespace KSoft.Granny3D
 		public Vector3 RightVector;
 		public Vector3 UpVector;
 		public Vector3 BackVector;
-		public granny_variant ExtendedData;
+		public GrannyVariant ExtendedData;
 	};
 
 	#region granny_texture
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_texture
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyTexture
 	{
 		public CharPtr FromFileName;
-		public granny_texture_type TextureType;
+		public GrannyTextureType TextureType;
 		public int Width;
 		public int Height;
-		public granny_texture_encoding Encoding;
+		public GrannyTextureEncoding Encoding;
 		public int SubFormat;
-		public TPtr<granny_pixel_layout> Layout;
-		public ArrayPtr<granny_texture_image> Images;
-		public granny_variant ExtendedData;
+		public Ptr<GrannyPixelLayout> Layout;
+		public ArrayPtr<GrannyTextureImage> Images;
+		public GrannyVariant ExtendedData;
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_pixel_layout;
+	public struct GrannyPixelLayout;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_texture_image;
+	public struct GrannyTextureImage;
 	#endregion
 
 	#region granny_material
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_material
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyMaterial
 	{
 		public CharPtr Name;
-		public ArrayPtr<granny_material_map> Maps;
-		public TPtr<granny_texture> Texture;
-		public granny_variant ExtendedData;
+		public ArrayPtr<GrannyMaterialMap> Maps;
+		public Ptr<GrannyTexture> Texture;
+		public GrannyVariant ExtendedData;
 	};
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_material_map;
+	public struct GrannyMaterialMap;
 	#endregion
 
 	#region granny_skeleton
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_skeleton
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannySkeleton
 	{
 		public CharPtr Name;
-		public ArrayPtr<granny_bone> Bones;
+		public ArrayPtr<GrannyBone> Bones;
 		public int LODType;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_bone
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyBone
 	{
 		public CharPtr Name;
 		public int ParentIndex;
-		public granny_transform LocalTransform;
+		public GrannyTransform LocalTransform;
 		public granny_matrix_4x4 InverseWorld4x4;
 		public float LODError;
-		public granny_variant ExtendedData;
+		public GrannyVariant ExtendedData;
 	};
 	#endregion
 
 	#region granny_mesh
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_mesh
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyMesh
 	{
 		public CharPtr Name;
-		public TPtr<granny_vertex_data> PrimaryVertexData;
-		public ArrayPtr<granny_morph_target> MorphTargets;
-		public TPtr<granny_tri_topology> PrimaryTopology;
-		public ArrayPtr<granny_material_binding> MaterialBindings;
-		public ArrayPtr<granny_bone_binding> BoneBindings;
-		public granny_variant ExtendedData;
+		public Ptr<GrannyVertexData> PrimaryVertexData;
+		public ArrayPtr<GrannyMorphTarget> MorphTargets;
+		public Ptr<GrannyTriTopology> PrimaryTopology;
+		public ArrayPtr<GrannyMaterialBinding> MaterialBindings;
+		public ArrayPtr<GrannyBoneBinding> BoneBindings;
+		public GrannyVariant ExtendedData;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_vertex_data
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyVertexData
 	{
-		public TPtr<granny_data_type_definition> VertexType;
+		public Ptr<GrannyDataTypeDefinition> VertexType;
 		public ArrayPtr Vertices;
 		public ArrayCharPtr VertexComponentNames;
-		public ArrayPtr<granny_vertex_annotation_set> VertexAnnotationSets;
+		public ArrayPtr<GrannyVertexAnnotationSet> VertexAnnotationSets;
 	};
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_vertex_annotation_set;
+	public struct GrannyVertexAnnotationSet;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_morph_target;
+	public struct GrannyMorphTarget;
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_tri_topology
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyTriTopology
 	{
-		public ArrayPtr<granny_tri_material_group> Groups;
+		public ArrayPtr<GrannyTriMaterialGroup> Groups;
 		public ArrayPtr Indices;
 		public ArrayPtr<ushort> Indices16;
 		public ArrayPtr VertexToVertexMap;
@@ -176,33 +176,33 @@ namespace KSoft.Granny3D
 		public ArrayPtr SideToNeightborMap;
 		public ArrayPtr BonesForTriangle;
 		public ArrayPtr TriangleToBoneIndices;
-		public ArrayPtr<granny_tri_annotation_set> TriAnnotationSets;
+		public ArrayPtr<GrannyTriAnnotationSet> TriAnnotationSets;
 	};
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_tri_material_group
+	public struct GrannyTriMaterialGroup
 	{
 		public int MaterialIndex;
 		public int TriFirst;
 		public int TriCount;
 	};
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_tri_annotation_set
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyTriAnnotationSet
 	{
 		public CharPtr Name;
-		public TPtr<granny_data_type_definition> TriAnnotationType;
+		public Ptr<GrannyDataTypeDefinition> TriAnnotationType;
 		public ArrayPtr TriAnnotations;
 		public int IndicesMapFromTriToAnnotation; // BOOL
 		public ArrayPtr<int> TriAnnotationIndices;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_material_binding
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyMaterialBinding
 	{
-		public TPtr<granny_material> Material;
+		public Ptr<GrannyMaterial> Material;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_bone_binding
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyBoneBinding
 	{
 		public CharPtr BoneName;
 		public Vector3 OBBMin;
@@ -212,70 +212,70 @@ namespace KSoft.Granny3D
 	#endregion
 
 	#region granny_model
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_model
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyModel
 	{
 		public CharPtr Name;
-		public TPtr<granny_skeleton> Skeleton;
-		public granny_transform InitialPlacement;
-		public ArrayPtr<granny_model_mesh_binding> MeshBindings;
+		public Ptr<GrannySkeleton> Skeleton;
+		public GrannyTransform InitialPlacement;
+		public ArrayPtr<GrannyModelMeshBinding> MeshBindings;
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_model_mesh_binding
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyModelMeshBinding
 	{
-		public TPtr<granny_mesh> Mesh;
+		public Ptr<GrannyMesh> Mesh;
 	};
 	#endregion
 
 	#region granny_track_group
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_track_group
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyTrackGroup
 	{
 		public CharPtr Name;
 		public ArrayPtr /*granny_vector_track */ VectorTracks;
 		public ArrayPtr /*granny_transform_track */ TransformTracks;
 		public ArrayPtr<float> TransformLODErrors;
 		public ArrayPtr /*granny_text_track */ TextTracks;
-		public granny_transform InitialPlacement;
-		public granny_track_group_flags Flags;
+		public GrannyTransform InitialPlacement;
+		public GrannyTrackGroupFlags Flags;
 		public Vector3 LoopTranslation;
 		public IntPtr /*granny_periodic_loop */ PeriodicLoop;
 		public IntPtr /*granny_transform_track */ RootMotion;
-		public granny_variant ExtendedData;
+		public GrannyVariant ExtendedData;
 	};
 	#endregion
 
 	#region granny_animation
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct granny_animation
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct GrannyAnimation
 	{
 		public CharPtr Name;
 		public float Duration;
 		public float TimeStep;
 		public float Oversampling;
-		public ArrayOfRefsPtr<granny_track_group> TrackGroups;
+		public ArrayOfRefsPtr<GrannyTrackGroup> TrackGroups;
 	};
 	#endregion
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_model_instance;
+	public struct GrannyModelInstance;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_control;
+	public struct GrannyControl;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_model_control_binding;
+	public struct GrannyModelControlBinding;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_world_pose;
+	public struct GrannyWorldPose;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_mesh_binding;
+	public struct GrannyMeshBinding;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_mesh_deformer;
+	public struct GrannyMeshDeformer;
 
 	[StructLayout(LayoutKind.Sequential)]
-	public struct granny_local_pose;
+	public struct GrannyLocalPose;
 }

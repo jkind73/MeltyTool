@@ -4,9 +4,9 @@ using fin.io;
 namespace uni.platforms.wii.tools;
 
 public static class WiiToolsConstants {
-  public static IReadOnlySystemDirectory WIT_DIRECTORY { get; } =
-    DirectoryConstants.TOOLS_DIRECTORY.AssertGetExistingSubdir("wit");
+  public static IReadOnlySystemDirectory WitDirectory { get; } =
+    DirectoryConstants.toolsDirectory.AssertGetExistingSubdir("wit");
 
-  public static IReadOnlySystemFile WIT_EXE { get; } =
-    WIT_DIRECTORY.AssertGetExistingFile("wit.exe");
+  public static IReadOnlySystemFile WitExe { get; } =
+    WitDirectory.AssertGetExistingFile("wit.exe");
 }

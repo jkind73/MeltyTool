@@ -9,41 +9,41 @@ namespace KSoft.Collections
 		public struct Enumerator
 			: IEnumerator<char>
 		{
-			readonly string mData;
-			readonly int mStart, mEnd;
-			int mCurrent;
+			readonly string mData_;
+			readonly int mStart_, mEnd_;
+			int mCurrent_;
 
 			public Enumerator(StringSegment segment)
 			{
-				this.mData = segment.mData;
-				this.mStart = segment.mOffset;
-				this.mEnd = this.mStart + segment.mCount;
-				this.mCurrent = this.mStart - 1;
+				this.mData_ = segment.mData_;
+				this.mStart_ = segment.mOffset_;
+				this.mEnd_ = this.mStart_ + segment.mCount_;
+				this.mCurrent_ = this.mStart_ - 1;
 			}
 			public void Dispose() { }
 
 			#region IEnumerator<char> Members
 			public char Current { get {
-				if (this.mCurrent < this.mStart)	throw new InvalidOperationException("Enumeration has not started");
-				if (this.mCurrent >= this.mEnd)	throw new InvalidOperationException("Enumeration already finished");
+				if (this.mCurrent_ < this.mStart_)	throw new InvalidOperationException("Enumeration has not started");
+				if (this.mCurrent_ >= this.mEnd_)	throw new InvalidOperationException("Enumeration already finished");
 
-				return this.mData[this.mCurrent];
+				return this.mData_[this.mCurrent_];
 			} }
 			object System.Collections.IEnumerator.Current { get { return this.Current; } }
 
 			public bool MoveNext()
 			{
-				if (this.mCurrent < this.mEnd)
+				if (this.mCurrent_ < this.mEnd_)
 				{
-					++this.mCurrent;
-					return this.mCurrent < this.mEnd;
+					++this.mCurrent_;
+					return this.mCurrent_ < this.mEnd_;
 				}
 				return false;
 			}
 
 			public void Reset()
 			{
-				this.mCurrent = this.mStart - 1;
+				this.mCurrent_ = this.mStart_ - 1;
 			}
 			#endregion
 		};

@@ -5,94 +5,94 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BProtoTechEffectDisplayNameIconType
 	{
-		Unit,
-		Building,
-		Misc,
-		Tech,
+		UNIT,
+		BUILDING,
+		MISC,
+		TECH,
 	};
 
 	public enum BProtoTechEffectSetAgeLevel
 	{
-		Invalid = TypeExtensions.kNone,
-		None = 0,
+		INVALID = TypeExtensions.K_NONE,
+		NONE = 0,
 
-		Age1, // not explicitly parsed by the engine
-		Age2,
-		Age3,
-		Age4,
+		AGE1, // not explicitly parsed by the engine
+		AGE2,
+		AGE3,
+		AGE4,
 	};
 
 	public enum BProtoTechEffectType
 	{
-		Data,
-		TransformUnit,
-		TransformProtoUnit,
-		TransformProtoSquad,
-		Build,
-		SetAge,
-		GodPower,
-		TechStatus,
-		Ability,
-		SharedLOS,
-		AttachSquad,
+		DATA,
+		TRANSFORM_UNIT,
+		TRANSFORM_PROTO_UNIT,
+		TRANSFORM_PROTO_SQUAD,
+		BUILD,
+		SET_AGE,
+		GOD_POWER,
+		TECH_STATUS,
+		ABILITY,
+		SHARED_LOS,
+		ATTACH_SQUAD,
 	};
 
 	public enum BProtoTechEffectTargetType
 	{
-		None = TypeExtensions.kNone,
+		NONE = TypeExtensions.K_NONE,
 
-		ProtoUnit,
-		ProtoSquad,
-		Unit,
-		Tech,
-		TechAll,
-		Player,
+		PROTO_UNIT,
+		PROTO_SQUAD,
+		UNIT,
+		TECH,
+		TECH_ALL,
+		PLAYER,
 	};
 
 	public enum BProtoTechFlags
 	{
 		// 0x1C
-		NoSound,// = 1<<0,
-		[XmlIgnore] Forbid,// = 1<<1,
-		Perpetual,// = 1<<2,
-		OrPrereqs,// = 1<<3,
-		Shadow,// = 1<<4,
+		NO_SOUND,// = 1<<0,
+		[XmlIgnore] FORBID,// = 1<<1,
+		PERPETUAL,// = 1<<2,
+		OR_PREREQS,// = 1<<3,
+		SHADOW,// = 1<<4,
 		/// <summary>Tech applies to a unique, ie specific, unit</summary>
-		UniqueProtoUnitInstance,// = 1<<5,
-		Unobtainable,// = 1<<6,
-		[XmlIgnore] OwnStaticData,// = 1<<7,
+		UNIQUE_PROTO_UNIT_INSTANCE,// = 1<<5,
+		UNOBTAINABLE,// = 1<<6,
+		[XmlIgnore] OWN_STATIC_DATA,// = 1<<7,
 
 		// 0x1D
-		Instant,// = 1<<7,
+		INSTANT,// = 1<<7,
 
 		// 0x78
-		HiddenFromStats,// = 1<<0, // actually just appears to be a bool field
+		HIDDEN_FROM_STATS,// = 1<<0, // actually just appears to be a bool field
 	};
 
 	public enum BProtoTechStatus
 	{
-		Invalid = TypeExtensions.kNone,
+		INVALID = TypeExtensions.K_NONE,
 
-		UnObtainable = 0,
-		Obtainable,
-		Available,
-		Researching,
-		Active,
-		Disabled,
-		CoopResearching,
+		UN_OBTAINABLE = 0,
+		OBTAINABLE,
+		AVAILABLE,
+		RESEARCHING,
+		ACTIVE,
+		DISABLED,
+		COOP_RESEARCHING,
 	};
 
 	public enum BProtoTechTypeCountOperator : short
 	{
-		e, // '0' isn't explicitly parsed
-		gt,
-		lt,
+		E, // '0' isn't explicitly parsed
+		GT,
+		LT,
 	};
 
 	public enum BProtoTechAlphaMode
 	{
-		None = -1,
-		Excluded = 0,
-		AlphaOnly = 1,
+		NONE = -1,
+		EXCLUDED = 0,
+		ALPHA_ONLY = 1,
 	};
 }

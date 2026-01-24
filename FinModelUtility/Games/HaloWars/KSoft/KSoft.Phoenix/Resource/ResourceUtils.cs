@@ -30,7 +30,7 @@ namespace KSoft.Phoenix.Resource
 		#endregion
 
 		#region Xml extensions
-		static readonly HashSet<string> kXmlBasedFilesExtensions = [
+		static readonly HashSet<string> KXmlBasedFilesExtensions = [
 			".xml",
 
 			".vis",
@@ -56,24 +56,24 @@ namespace KSoft.Phoenix.Resource
 		{
 			string ext = Path.GetExtension(filename);
 
-			return kXmlBasedFilesExtensions.Contains(ext);
+			return KXmlBasedFilesExtensions.Contains(ext);
 		}
 
 		public static bool IsXmbFile(string filename)
 		{
 			string ext = Path.GetExtension(filename);
 
-			return ext == Xmb.XmbFile.kFileExt;
+			return ext == Xmb.XmbFile.K_FILE_EXT;
 		}
 
 		public static string AddXmbExtension(string filename)
 		{
-			return filename + Xmb.XmbFile.kFileExt;
+			return filename + Xmb.XmbFile.K_FILE_EXT;
 		}
 
 		public static void RemoveXmbExtension(ref string filename)
 		{
-			filename = filename.Replace(Xmb.XmbFile.kFileExt, "");
+			filename = filename.Replace(Xmb.XmbFile.K_FILE_EXT, "");
 
 			//if (System.IO.Path.GetExtension(filename) != ".xml")
 			//	filename += ".xml";
@@ -86,7 +86,7 @@ namespace KSoft.Phoenix.Resource
 		#endregion
 
 		#region IsDataBasedFile
-		static readonly HashSet<string> kDataBasedFileExtensions = [
+		static readonly HashSet<string> KDataBasedFileExtensions = [
 			".cfg",
 			".txt"
 		];
@@ -98,10 +98,10 @@ namespace KSoft.Phoenix.Resource
 			if (ext == ".xmb")
 				return true;
 
-			if (kXmlBasedFilesExtensions.Contains(ext))
+			if (KXmlBasedFilesExtensions.Contains(ext))
 				return true;
 
-			if (kDataBasedFileExtensions.Contains(ext))
+			if (KDataBasedFileExtensions.Contains(ext))
 				return true;
 
 			return false;
@@ -109,10 +109,10 @@ namespace KSoft.Phoenix.Resource
 		#endregion
 
 		#region Scaleform extensions
-		const uint kSwfSignature = 0x00535746; // \x00SWF
-		const uint kGfxSignature = 0x00584647; // \x00XFG
-		const uint kSwfCompressedSignature = 0x00535743; // \x00SWC
-		const uint kGfxCompressedSignature = 0x00584643; // \x00XFC
+		const uint K_SWF_SIGNATURE_ = 0x00535746; // \x00SWF
+		const uint K_GFX_SIGNATURE_ = 0x00584647; // \x00XFG
+		const uint K_SWF_COMPRESSED_SIGNATURE_ = 0x00535743; // \x00SWC
+		const uint K_GFX_COMPRESSED_SIGNATURE_ = 0x00584643; // \x00XFC
 
 		public static bool IsScaleformFile(string filename)
 		{
@@ -125,10 +125,10 @@ namespace KSoft.Phoenix.Resource
 			signature = s.ReadUInt32() & 0x00FFFFFF;
 			switch (signature)
 			{
-			case kSwfSignature:
-			case kGfxSignature:
-			case kSwfCompressedSignature:
-			case kGfxCompressedSignature:
+			case K_SWF_SIGNATURE_:
+			case K_GFX_SIGNATURE_:
+			case K_SWF_COMPRESSED_SIGNATURE_:
+			case K_GFX_COMPRESSED_SIGNATURE_:
 				return true;
 
 			default: return false;
@@ -138,8 +138,8 @@ namespace KSoft.Phoenix.Resource
 		{
 			switch (signature)
 			{
-			case kGfxSignature:				return kSwfSignature;
-			case kGfxCompressedSignature:	return kSwfCompressedSignature;
+			case K_GFX_SIGNATURE_:				return K_SWF_SIGNATURE_;
+			case K_GFX_COMPRESSED_SIGNATURE_:	return K_SWF_COMPRESSED_SIGNATURE_;
 
 			default: throw new KSoft.Debug.UnreachableException(signature.ToString("X8"));
 			}
@@ -148,8 +148,8 @@ namespace KSoft.Phoenix.Resource
 		{
 			switch(signature)
 			{
-			case kSwfSignature:
-			case kSwfCompressedSignature:
+			case K_SWF_SIGNATURE_:
+			case K_SWF_COMPRESSED_SIGNATURE_:
 				return true;
 
 			default:
@@ -189,18 +189,18 @@ namespace KSoft.Phoenix.Resource
 			Shell.EndianFormat endianFormat,
 			Shell.ProcessorSize vaSize)
 		{
-			byte[] file_bytes = File.ReadAllBytes(xmbFile);
+			byte[] fileBytes = File.ReadAllBytes(xmbFile);
 
-			using (var xmb_ms = new MemoryStream(file_bytes, false))
-			using (var xmb = new IO.EndianStream(xmb_ms, endianFormat, FileAccess.Read))
-			using (var xml_ms = new MemoryStream(IntegerMath.kMega * 1))
+			using (var xmbMs = new MemoryStream(fileBytes, false))
+			using (var xmb = new IO.EndianStream(xmbMs, endianFormat, FileAccess.Read))
+			using (var xmlMs = new MemoryStream(IntegerMath.K_MEGA * 1))
 			{
 				xmb.StreamMode = FileAccess.Read;
 
-				XmbToXml(xmb, xml_ms, vaSize);
+				XmbToXml(xmb, xmlMs, vaSize);
 
-				using (var xml_fs = File.Create(xmlFile))
-					xml_ms.WriteTo(xml_fs);
+				using (var xmlFs = File.Create(xmlFile))
+					xmlMs.WriteTo(xmlFs);
 			}
 		}
 
@@ -212,17 +212,17 @@ namespace KSoft.Phoenix.Resource
 			var bdt = new Xmb.BinaryDataTree();
 			bdt.DecompileAttributesWithTypeData = decompileAttributesWithTypeData;
 
-			byte[] bdt_bytes;
+			byte[] bdtBytes;
 			using (var fs = File.OpenRead(xmbFile))
 			{
-				bdt_bytes = new byte[fs.Length];
-				int bytes_read = fs.Read(bdt_bytes, 0, bdt_bytes.Length);
-				if (bytes_read != bdt_bytes.Length)
+				bdtBytes = new byte[fs.Length];
+				int bytesRead = fs.Read(bdtBytes, 0, bdtBytes.Length);
+				if (bytesRead != bdtBytes.Length)
 					throw new IOException("Failed to read all BinaryDataTree bytes");
 			}
 
-			using (var bdt_ms = new MemoryStream(bdt_bytes, writable: false))
-			using (var es = new IO.EndianStream(bdt_ms, Shell.EndianFormat.Big, permissions: FileAccess.Read))
+			using (var bdtMs = new MemoryStream(bdtBytes, writable: false))
+			using (var es = new IO.EndianStream(bdtMs, Shell.EndianFormat.BIG, permissions: FileAccess.Read))
 			{
 				es.StreamMode = FileAccess.Read;
 

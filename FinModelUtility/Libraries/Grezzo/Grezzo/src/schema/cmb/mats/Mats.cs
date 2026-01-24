@@ -11,11 +11,11 @@ public sealed partial class Mats : IBinaryConvertible {
   public Material[] Materials { get; set; }
 
   [Skip]
-  private uint TotalCombinerCount_
+  private uint TotalCombinerCount
     => (uint) this.Materials
                   .SelectMany(material => material.texEnvStagesIndices)
                   .Max() + 1;
 
-  [RSequenceLengthSource(nameof(TotalCombinerCount_))]
+  [RSequenceLengthSource(nameof(TotalCombinerCount))]
   public Combiner[] Combiners { get; set; }
 }

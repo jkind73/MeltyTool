@@ -6,40 +6,40 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseNamedObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Power")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Power")
 		{
-			DataName = kXmlAttrName,
-			Flags = XML.BCollectionXmlParamsFlags.RequiresDataNamePreloading
+			dataName = K_XML_ATTR_NAME,
+			flags = XML.BCollectionXmlParamsFlags.REQUIRES_DATA_NAME_PRELOADING
 		};
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.Data,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Powers.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.ProtoData,
-			kXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.PROTO_DATA,
+			KXmlFileInfo);
 
-		static readonly Collections.CodeEnum<BPowerFlags> kFlagsProtoEnum = new Collections.CodeEnum<BPowerFlags>();
-		static readonly Collections.BBitSetParams kFlagsParams = new Collections.BBitSetParams(() => kFlagsProtoEnum);
+		static readonly Collections.CodeEnum<BPowerFlags> KFlagsProtoEnum = new Collections.CodeEnum<BPowerFlags>();
+		static readonly Collections.BBitSetParams KFlagsParams = new Collections.BBitSetParams(() => KFlagsProtoEnum);
 
-		static readonly Collections.CodeEnum<BPowerToggableFlags> kFlags2ProtoEnum = new Collections.CodeEnum<BPowerToggableFlags>();
-		static readonly Collections.BBitSetParams kFlags2Params = new Collections.BBitSetParams(() => kFlags2ProtoEnum)
+		static readonly Collections.CodeEnum<BPowerToggableFlags> KFlags2ProtoEnum = new Collections.CodeEnum<BPowerToggableFlags>();
+		static readonly Collections.BBitSetParams KFlags2Params = new Collections.BBitSetParams(() => KFlags2ProtoEnum)
 		{
 			kGetMemberDefaultValue = (id) =>
 			{
 				switch (id)
 				{
-				case (int)BPowerToggableFlags.CameraEnableUserScroll:
-				case (int)BPowerToggableFlags.CameraEnableUserYaw:
-				case (int)BPowerToggableFlags.CameraEnableUserZoom:
-				case (int)BPowerToggableFlags.CameraEnableAutoZoomInstant:
-				case (int)BPowerToggableFlags.CameraEnableAutoZoom:
-				case (int)BPowerToggableFlags.ShowInPowerMenu:
+				case (int)BPowerToggableFlags.CAMERA_ENABLE_USER_SCROLL:
+				case (int)BPowerToggableFlags.CAMERA_ENABLE_USER_YAW:
+				case (int)BPowerToggableFlags.CAMERA_ENABLE_USER_ZOOM:
+				case (int)BPowerToggableFlags.CAMERA_ENABLE_AUTO_ZOOM_INSTANT:
+				case (int)BPowerToggableFlags.CAMERA_ENABLE_AUTO_ZOOM:
+				case (int)BPowerToggableFlags.SHOW_IN_POWER_MENU:
 					return true;
 
-				case (int)BPowerToggableFlags.ShowTransportArrows:
+				case (int)BPowerToggableFlags.SHOW_TRANSPORT_ARROWS:
 				default:
 					return false;
 				}
@@ -52,207 +52,207 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BListArray<BPowerTargetEffectiveness> TargetEffectiveness { get; private set; }
 		public Collections.BTypeValuesSingle Populations { get; private set; }
 		#region UIRadius
-		float mUIRadius;
-		public float UIRadius
+		float mUiRadius_;
+		public float UiRadius
 		{
-			get { return this.mUIRadius; }
-			set { this.mUIRadius = value; }
+			get { return this.mUiRadius_; }
+			set { this.mUiRadius_ = value; }
 		}
 		#endregion
 		#region PowerType
-		BPowerType mPowerType = BPowerType.Invalid;
+		BPowerType mPowerType_ = BPowerType.INVALID;
 		public BPowerType PowerType
 		{
-			get { return this.mPowerType; }
-			set { this.mPowerType = value; }
+			get { return this.mPowerType_; }
+			set { this.mPowerType_ = value; }
 		}
 		#endregion
 		#region AutoRecharge
-		int mAutoRecharge;
+		int mAutoRecharge_;
 		/// <remarks>In milliseconds</remarks>
 		public int AutoRecharge
 		{
-			get { return this.mAutoRecharge; }
-			set { this.mAutoRecharge = value; }
+			get { return this.mAutoRecharge_; }
+			set { this.mAutoRecharge_ = value; }
 		}
 		#endregion
 		#region UseLimit
-		int mUseLimit;
+		int mUseLimit_;
 		public int UseLimit
 		{
-			get { return this.mUseLimit; }
-			set { this.mUseLimit = value; }
+			get { return this.mUseLimit_; }
+			set { this.mUseLimit_ = value; }
 		}
 		#endregion
 		public Collections.BBitSet Flags { get; private set; }
 		public Collections.BBitSet Flags2 { get; private set; }
 		#region IconTextureName
-		string mIconTextureName;
+		string mIconTextureName_;
 		[Meta.TextureReference]
 		public string IconTextureName
 		{
-			get { return this.mIconTextureName; }
-			set { this.mIconTextureName = value; }
+			get { return this.mIconTextureName_; }
+			set { this.mIconTextureName_ = value; }
 		}
 		#endregion
 		public List<int> IconLocations { get; private set; }
 		[Meta.BProtoTechReference]
 		public List<int> TechPrereqs { get; private set; }
 		#region ActionType
-		BActionType mActionType = BActionType.Invalid;
+		BActionType mActionType_ = BActionType.INVALID;
 		public BActionType ActionType
 		{
-			get { return this.mActionType; }
-			set { this.mActionType = value; }
+			get { return this.mActionType_; }
+			set { this.mActionType_ = value; }
 		}
 		#endregion
 		#region MinigameType
-		BMinigameType mMinigameType;
+		BMinigameType mMinigameType_;
 		public BMinigameType MinigameType
 		{
-			get { return this.mMinigameType; }
-			set { this.mMinigameType = value; }
+			get { return this.mMinigameType_; }
+			set { this.mMinigameType_ = value; }
 		}
 		#endregion
 		#region CameraZoomMin
-		float mCameraZoomMin;
+		float mCameraZoomMin_;
 		public float CameraZoomMin
 		{
-			get { return this.mCameraZoomMin; }
-			set { this.mCameraZoomMin = value; }
+			get { return this.mCameraZoomMin_; }
+			set { this.mCameraZoomMin_ = value; }
 		}
 		#endregion
 		#region CameraZoomMax
-		float mCameraZoomMax;
+		float mCameraZoomMax_;
 		public float CameraZoomMax
 		{
-			get { return this.mCameraZoomMax; }
-			set { this.mCameraZoomMax = value; }
+			get { return this.mCameraZoomMax_; }
+			set { this.mCameraZoomMax_ = value; }
 		}
 		#endregion
 		#region CameraPitchMin
-		float mCameraPitchMin;
+		float mCameraPitchMin_;
 		public float CameraPitchMin
 		{
-			get { return this.mCameraPitchMin; }
-			set { this.mCameraPitchMin = value; }
+			get { return this.mCameraPitchMin_; }
+			set { this.mCameraPitchMin_ = value; }
 		}
 		#endregion
 		#region CameraPitchMax
-		float mCameraPitchMax;
+		float mCameraPitchMax_;
 		public float CameraPitchMax
 		{
-			get { return this.mCameraPitchMax; }
-			set { this.mCameraPitchMax = value; }
+			get { return this.mCameraPitchMax_; }
+			set { this.mCameraPitchMax_ = value; }
 		}
 		#endregion
 		#region CameraEffectIn
-		string mCameraEffectIn;
+		string mCameraEffectIn_;
 		[Meta.CameraEffectReference]
 		public string CameraEffectIn
 		{
-			get { return this.mCameraEffectIn; }
-			set { this.mCameraEffectIn = value; }
+			get { return this.mCameraEffectIn_; }
+			set { this.mCameraEffectIn_ = value; }
 		}
 		#endregion
 		#region CameraEffectOut
-		string mCameraEffectOut;
+		string mCameraEffectOut_;
 		[Meta.CameraEffectReference]
 		public string CameraEffectOut
 		{
-			get { return this.mCameraEffectOut; }
-			set { this.mCameraEffectOut = value; }
+			get { return this.mCameraEffectOut_; }
+			set { this.mCameraEffectOut_ = value; }
 		}
 		#endregion
 		#region MinDistanceToSquad
-		float mMinDistanceToSquad = PhxUtil.kInvalidSingle;
+		float mMinDistanceToSquad_ = PhxUtil.K_INVALID_SINGLE;
 		public float MinDistanceToSquad
 		{
-			get { return this.mMinDistanceToSquad; }
-			set { this.mMinDistanceToSquad = value; }
+			get { return this.mMinDistanceToSquad_; }
+			set { this.mMinDistanceToSquad_ = value; }
 		}
 		#endregion
 		#region MaxDistanceToSquad
-		float mMaxDistanceToSquad = PhxUtil.kInvalidSingle;
+		float mMaxDistanceToSquad_ = PhxUtil.K_INVALID_SINGLE;
 		public float MaxDistanceToSquad
 		{
-			get { return this.mMaxDistanceToSquad; }
-			set { this.mMaxDistanceToSquad = value; }
+			get { return this.mMaxDistanceToSquad_; }
+			set { this.mMaxDistanceToSquad_ = value; }
 		}
 		#endregion
 		#region ShowTargetHighlight
 
-		int mShowTargetHighlightObjectType = TypeExtensions.kNone;
+		int mShowTargetHighlightObjectType_ = TypeExtensions.K_NONE;
 		[Meta.ObjectTypeReference]
 		public int ShowTargetHighlightObjectType
 		{
-			get { return this.mShowTargetHighlightObjectType; }
-			set { this.mShowTargetHighlightObjectType = value; }
+			get { return this.mShowTargetHighlightObjectType_; }
+			set { this.mShowTargetHighlightObjectType_ = value; }
 		}
 
-		BRelationType mShowTargetHighlightRelation = BRelationType.Any;
+		BRelationType mShowTargetHighlightRelation_ = BRelationType.ANY;
 		public BRelationType ShowTargetHighlightRelation
 		{
-			get { return this.mShowTargetHighlightRelation; }
-			set { this.mShowTargetHighlightRelation = value; }
+			get { return this.mShowTargetHighlightRelation_; }
+			set { this.mShowTargetHighlightRelation_ = value; }
 		}
 
 		bool HasShowTargetHighlightData { get {
-			return this.mShowTargetHighlightObjectType.IsNotNone()
+			return this.mShowTargetHighlightObjectType_.IsNotNone()
 				||
-				this.mShowTargetHighlightRelation != BRelationType.Any;
+				this.mShowTargetHighlightRelation_ != BRelationType.ANY;
 		} }
 		#endregion
 		public List<int> ChildObjectIDs { get; private set; }
 		#region BaseDataLevel
-		BProtoPowerDataLevel mBaseDataLevel;
+		BProtoPowerDataLevel mBaseDataLevel_;
 		public BProtoPowerDataLevel BaseDataLevel
 		{
-			get { return this.mBaseDataLevel; }
-			set { this.mBaseDataLevel = value; }
+			get { return this.mBaseDataLevel_; }
+			set { this.mBaseDataLevel_ = value; }
 		}
 		#endregion
 		public Collections.BListExplicitIndex<BProtoPowerDataLevel> LevelData { get; private set; }
 		#region TriggerScript
-		string mTriggerScript;
+		string mTriggerScript_;
 		[Meta.TriggerScriptReference]
 		public string TriggerScript
 		{
-			get { return this.mTriggerScript; }
-			set { this.mTriggerScript = value; }
+			get { return this.mTriggerScript_; }
+			set { this.mTriggerScript_ = value; }
 		}
 		#endregion
 		#region CommandTriggerScript
-		string mCommandTriggerScript;
+		string mCommandTriggerScript_;
 		[Meta.TriggerScriptReference]
 		public string CommandTriggerScript
 		{
-			get { return this.mCommandTriggerScript; }
-			set { this.mCommandTriggerScript = value; }
+			get { return this.mCommandTriggerScript_; }
+			set { this.mCommandTriggerScript_ = value; }
 		}
 		#endregion
 
 		public BProtoPower()
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDisplayNameID = true;
-			textData.HasRolloverTextID = true;
-			textData.HasPrereqTextID = true;
-			textData.HasChooseTextID = true;
+			textData.HasDisplayNameId = true;
+			textData.HasRolloverTextId = true;
+			textData.HasPrereqTextId = true;
+			textData.HasChooseTextId = true;
 
-			this.Cost = new Collections.BTypeValuesSingle(BResource.kBListTypeValuesParams);
+			this.Cost = new Collections.BTypeValuesSingle(BResource.KBListTypeValuesParams);
 			this.DynamicCosts = new Collections.BListArray<BPowerDynamicCost>();
 			this.TargetEffectiveness = new Collections.BListArray<BPowerTargetEffectiveness>();
-			this.Populations = new Collections.BTypeValuesSingle(BPopulation.kBListParamsSingle);
+			this.Populations = new Collections.BTypeValuesSingle(BPopulation.KBListParamsSingle);
 
-			this.Flags = new Collections.BBitSet(kFlagsParams);
-			this.Flags2 = new Collections.BBitSet(kFlags2Params);
+			this.Flags = new Collections.BBitSet(KFlagsParams);
+			this.Flags2 = new Collections.BBitSet(KFlags2Params);
 
 			this.IconLocations = [];
 			this.TechPrereqs = [];
 
 			this.ChildObjectIDs = [];
-			this.LevelData = new Collections.BListExplicitIndex<BProtoPowerDataLevel>(BProtoPowerDataLevel.kBListExplicitIndexParams);
+			this.LevelData = new Collections.BListExplicitIndex<BProtoPowerDataLevel>(BProtoPowerDataLevel.KBListExplicitIndexParams);
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -266,48 +266,48 @@ namespace KSoft.Phoenix.Phx
 
 				using (var bm = s.EnterCursorBookmarkOpt("Cost", this.Cost, x => x.HasNonZeroItems)) if (bm.IsNotNull)
 					XML.XmlUtil.SerializeCostHack(s, this.Cost);
-				XML.XmlUtil.Serialize(s, this.DynamicCosts, BPowerDynamicCost.kBListXmlParams);
-				XML.XmlUtil.Serialize(s, this.TargetEffectiveness, BPowerTargetEffectiveness.kBListXmlParams);
-				XML.XmlUtil.Serialize(s, this.Populations, BPopulation.kBListXmlParamsSingle_LowerCase);
-				s.StreamElementOpt("UIRadius", ref this.mUIRadius, Predicates.IsNotZero);
-				s.StreamElementEnumOpt("PowerType", ref this.mPowerType, e => e != BPowerType.Invalid);
-				s.StreamElementOpt("AutoRecharge", ref this.mAutoRecharge, Predicates.IsNotZero);
-				s.StreamElementOpt("UseLimit", ref this.mUseLimit, Predicates.IsNotZero);
-				XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.kFlagsAreElementNamesThatMeanTrue);
-				XML.XmlUtil.Serialize(s, this.Flags2, XML.BBitSetXmlParams.kFlagsAreElementNamesThatMeanTrue);
-				s.StreamElementOpt("Icon", ref this.mIconTextureName, Predicates.IsNotNullOrEmpty);
+				XML.XmlUtil.Serialize(s, this.DynamicCosts, BPowerDynamicCost.KBListXmlParams);
+				XML.XmlUtil.Serialize(s, this.TargetEffectiveness, BPowerTargetEffectiveness.KBListXmlParams);
+				XML.XmlUtil.Serialize(s, this.Populations, BPopulation.KBListXmlParamsSingleLowerCase);
+				s.StreamElementOpt("UIRadius", ref this.mUiRadius_, Predicates.IsNotZero);
+				s.StreamElementEnumOpt("PowerType", ref this.mPowerType_, e => e != BPowerType.INVALID);
+				s.StreamElementOpt("AutoRecharge", ref this.mAutoRecharge_, Predicates.IsNotZero);
+				s.StreamElementOpt("UseLimit", ref this.mUseLimit_, Predicates.IsNotZero);
+				XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.KFlagsAreElementNamesThatMeanTrue);
+				XML.XmlUtil.Serialize(s, this.Flags2, XML.BBitSetXmlParams.KFlagsAreElementNamesThatMeanTrue);
+				s.StreamElementOpt("Icon", ref this.mIconTextureName_, Predicates.IsNotNullOrEmpty);
 				s.StreamElements("IconLocation", this.IconLocations, xs, StreamIconLocation);
-				s.StreamElements("TechPrereq", this.TechPrereqs, xs, XML.BXmlSerializerInterface.StreamTechID);
-				s.StreamElementEnumOpt("Action", ref this.mActionType, BProtoAction.kNotInvalidActionType);
-				s.StreamElementEnumOpt("Minigame", ref this.mMinigameType, e => e != BMinigameType.None);
-				s.StreamElementOpt("CameraZoomMin", ref this.mCameraZoomMin, Predicates.IsNotZero);
-				s.StreamElementOpt("CameraZoomMax", ref this.mCameraZoomMax, Predicates.IsNotZero);
-				s.StreamElementOpt("CameraPitchMin", ref this.mCameraPitchMin, Predicates.IsNotZero);
-				s.StreamElementOpt("CameraPitchMax", ref this.mCameraPitchMax, Predicates.IsNotZero);
-				s.StreamElementOpt("CameraEffectIn", ref this.mCameraEffectIn, Predicates.IsNotNullOrEmpty);
-				s.StreamElementOpt("CameraEffectOut", ref this.mCameraEffectOut, Predicates.IsNotNullOrEmpty);
-				s.StreamElementOpt("MinDistanceToSquad", ref this.mMinDistanceToSquad, PhxPredicates.IsNotInvalid);
-				s.StreamElementOpt("MaxDistanceToSquad", ref this.mMaxDistanceToSquad, PhxPredicates.IsNotInvalid);
+				s.StreamElements("TechPrereq", this.TechPrereqs, xs, XML.BXmlSerializerInterface.StreamTechId);
+				s.StreamElementEnumOpt("Action", ref this.mActionType_, BProtoAction.KNotInvalidActionType);
+				s.StreamElementEnumOpt("Minigame", ref this.mMinigameType_, e => e != BMinigameType.NONE);
+				s.StreamElementOpt("CameraZoomMin", ref this.mCameraZoomMin_, Predicates.IsNotZero);
+				s.StreamElementOpt("CameraZoomMax", ref this.mCameraZoomMax_, Predicates.IsNotZero);
+				s.StreamElementOpt("CameraPitchMin", ref this.mCameraPitchMin_, Predicates.IsNotZero);
+				s.StreamElementOpt("CameraPitchMax", ref this.mCameraPitchMax_, Predicates.IsNotZero);
+				s.StreamElementOpt("CameraEffectIn", ref this.mCameraEffectIn_, Predicates.IsNotNullOrEmpty);
+				s.StreamElementOpt("CameraEffectOut", ref this.mCameraEffectOut_, Predicates.IsNotNullOrEmpty);
+				s.StreamElementOpt("MinDistanceToSquad", ref this.mMinDistanceToSquad_, PhxPredicates.IsNotInvalid);
+				s.StreamElementOpt("MaxDistanceToSquad", ref this.mMaxDistanceToSquad_, PhxPredicates.IsNotInvalid);
 				using (var bm = s.EnterCursorBookmarkOpt("ShowTargetHighlight", this, x => x.HasShowTargetHighlightData)) if (bm.IsNotNull)
 				{
-					xs.StreamDBID(s, "ObjectType", ref this.mShowTargetHighlightObjectType, DatabaseObjectKind.ObjectType, xmlSource: XML.XmlUtil.kSourceAttr);
-					s.StreamAttributeEnumOpt("Relation", ref this.mShowTargetHighlightRelation, e => e != BRelationType.Any);
+					xs.StreamDbid(s, "ObjectType", ref this.mShowTargetHighlightObjectType_, DatabaseObjectKind.OBJECT_TYPE, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+					s.StreamAttributeEnumOpt("Relation", ref this.mShowTargetHighlightRelation_, e => e != BRelationType.ANY);
 				}
 				using (var bm = s.EnterCursorBookmarkOpt("ChildObjects", this.ChildObjectIDs, Predicates.HasItems)) if (bm.IsNotNull)
 				{
-					s.StreamElements("Object", this.ChildObjectIDs, xs, XML.BXmlSerializerInterface.StreamObjectID);
+					s.StreamElements("Object", this.ChildObjectIDs, xs, XML.BXmlSerializerInterface.StreamObjectId);
 				}
 				using (var bm = s.EnterCursorBookmarkOpt("BaseDataLevel", this, x => x.BaseDataLevel != null)) if (bm.IsNotNull)
 				{
 					if (s.IsReading)
-						this.mBaseDataLevel = new BProtoPowerDataLevel();
+						this.mBaseDataLevel_ = new BProtoPowerDataLevel();
 
 					this.BaseDataLevel.Serialize(s);
 				}
-				XML.XmlUtil.Serialize(s, this.LevelData, BProtoPowerDataLevel.kBListExplicitIndexXmlParams);
+				XML.XmlUtil.Serialize(s, this.LevelData, BProtoPowerDataLevel.KBListExplicitIndexXmlParams);
 			}
-			s.StreamElementOpt("TriggerScript", ref this.mTriggerScript, Predicates.IsNotNullOrEmpty);
-			s.StreamElementOpt("CommandTriggerScript", ref this.mCommandTriggerScript, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("TriggerScript", ref this.mTriggerScript_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("CommandTriggerScript", ref this.mCommandTriggerScript_, Predicates.IsNotNullOrEmpty);
 		}
 
 		static void StreamIconLocation<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs,
@@ -324,28 +324,28 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "DynamicCost",
+			elementName = "DynamicCost",
 		};
 		#endregion
 
 		#region ObjectType
-		int mObjectType = TypeExtensions.kNone;
+		int mObjectType_ = TypeExtensions.K_NONE;
 		[Meta.ObjectTypeReference]
 		public int ObjectType
 		{
-			get { return this.mObjectType; }
-			set { this.mObjectType = value; }
+			get { return this.mObjectType_; }
+			set { this.mObjectType_ = value; }
 		}
 		#endregion
 
 		#region Multiplier
-		float mMultiplier = 1.0f;
+		float mMultiplier_ = 1.0f;
 		public float Multiplier
 		{
-			get { return this.mMultiplier; }
-			set { this.mMultiplier = value; }
+			get { return this.mMultiplier_; }
+			set { this.mMultiplier_ = value; }
 		}
 		#endregion
 
@@ -356,8 +356,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDBID(s, "ObjectType", ref this.mObjectType, DatabaseObjectKind.ObjectType, isOptional: false, xmlSource: XML.XmlUtil.kSourceAttr);
-			s.StreamCursor(ref this.mMultiplier);
+			xs.StreamDbid(s, "ObjectType", ref this.mObjectType_, DatabaseObjectKind.OBJECT_TYPE, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			s.StreamCursor(ref this.mMultiplier_);
 		}
 		#endregion
 	};
@@ -366,28 +366,28 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "TargetEffectiveness",
+			elementName = "TargetEffectiveness",
 		};
 		#endregion
 
 		#region ObjectType
-		int mObjectType = TypeExtensions.kNone;
+		int mObjectType_ = TypeExtensions.K_NONE;
 		[Meta.ObjectTypeReference]
 		public int ObjectType
 		{
-			get { return this.mObjectType; }
-			set { this.mObjectType = value; }
+			get { return this.mObjectType_; }
+			set { this.mObjectType_ = value; }
 		}
 		#endregion
 
 		#region Effectiveness
-		int mEffectiveness;
+		int mEffectiveness_;
 		public int Effectiveness
 		{
-			get { return this.mEffectiveness; }
-			set { this.mEffectiveness = value; }
+			get { return this.mEffectiveness_; }
+			set { this.mEffectiveness_ = value; }
 		}
 		#endregion
 
@@ -398,8 +398,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDBID(s, "ObjectType", ref this.mObjectType, DatabaseObjectKind.ObjectType, isOptional: false, xmlSource: XML.XmlUtil.kSourceAttr);
-			s.StreamCursor(ref this.mEffectiveness);
+			xs.StreamDbid(s, "ObjectType", ref this.mObjectType_, DatabaseObjectKind.OBJECT_TYPE, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			s.StreamCursor(ref this.mEffectiveness_);
 		}
 		#endregion
 	};
@@ -408,16 +408,16 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly Collections.BListExplicitIndexParams<BProtoPowerDataLevel> kBListExplicitIndexParams = new
+		public static readonly Collections.BListExplicitIndexParams<BProtoPowerDataLevel> KBListExplicitIndexParams = new
 			Collections.BListExplicitIndexParams<BProtoPowerDataLevel>()
 		{
 			kComparer = new ComparerForDataCount(),//PhxUtil.CreateDummyComparerAlwaysNonZero<BProtoPowerDataLevel>(),
 			kTypeGetInvalid = () => new BProtoPowerDataLevel()
 		};
-		public static readonly XML.BListExplicitIndexXmlParams<BProtoPowerDataLevel> kBListExplicitIndexXmlParams = new
+		public static readonly XML.BListExplicitIndexXmlParams<BProtoPowerDataLevel> KBListExplicitIndexXmlParams = new
 			XML.BListExplicitIndexXmlParams<BProtoPowerDataLevel>("DataLevel", "level")
 		{
-			IndexBase = 0
+			indexBase = 0
 		};
 
 		private sealed class ComparerForDataCount
@@ -445,7 +445,7 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			XML.XmlUtil.Serialize(s, this.Data, BProtoPowerData.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Data, BProtoPowerData.KBListXmlParams);
 		}
 		#endregion
 	};
@@ -454,89 +454,89 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "Data",
+			elementName = "Data",
 		};
 		#endregion
 
 		#region Name
-		string mName;
+		string mName_;
 		public string Name
 		{
-			get { return this.mName; }
-			set { this.mName = value; }
+			get { return this.mName_; }
+			set { this.mName_ = value; }
 		}
 		#endregion
 
 		#region DataType
-		ProtoPowerDataType mDataType = ProtoPowerDataType.Invalid;
+		ProtoPowerDataType mDataType_ = ProtoPowerDataType.INVALID;
 		public ProtoPowerDataType DataType
 		{
-			get { return this.mDataType; }
-			set { this.mDataType = value; }
+			get { return this.mDataType_; }
+			set { this.mDataType_ = value; }
 		}
 		#endregion
 
 		#region Data
-		float mDataFloat;
-		int mDataInt = TypeExtensions.kNone;
-		bool mDataBool;
-		string mDataString;
+		float mDataFloat_;
+		int mDataInt_ = TypeExtensions.K_NONE;
+		bool mDataBool_;
+		string mDataString_;
 
 		public float Float
 		{
-			get { return this.mDataFloat; }
-			set { this.mDataFloat = value; }
+			get { return this.mDataFloat_; }
+			set { this.mDataFloat_ = value; }
 		}
 
 		public int Int
 		{
-			get { return this.mDataInt; }
-			set { this.mDataInt = value; }
+			get { return this.mDataInt_; }
+			set { this.mDataInt_ = value; }
 		}
 		[Meta.BProtoObjectReference]
-		public int ObjectID
+		public int ObjectId
 		{
-			get { return this.mDataInt; }
-			set { this.mDataInt = value; }
+			get { return this.mDataInt_; }
+			set { this.mDataInt_ = value; }
 		}
 		[Meta.BProtoSquadReference]
-		public int SquadID
+		public int SquadId
 		{
-			get { return this.mDataInt; }
-			set { this.mDataInt = value; }
+			get { return this.mDataInt_; }
+			set { this.mDataInt_ = value; }
 		}
 		[Meta.BProtoTechReference]
-		public int TechID
+		public int TechId
 		{
-			get { return this.mDataInt; }
-			set { this.mDataInt = value; }
+			get { return this.mDataInt_; }
+			set { this.mDataInt_ = value; }
 		}
 		[Meta.ObjectTypeReference]
 		public int ObjectType
 		{
-			get { return this.mDataInt; }
-			set { this.mDataInt = value; }
+			get { return this.mDataInt_; }
+			set { this.mDataInt_ = value; }
 		}
 
 		public bool Bool
 		{
-			get { return this.mDataBool; }
-			set { this.mDataBool = value; }
+			get { return this.mDataBool_; }
+			set { this.mDataBool_ = value; }
 		}
 
 		[Meta.SoundCueReference]
 		public string SoundCue
 		{
-			get { return this.mDataString; }
-			set { this.mDataString = value; }
+			get { return this.mDataString_; }
+			set { this.mDataString_ = value; }
 		}
 		[Meta.TextureReference]
 		public string TextureName
 		{
-			get { return this.mDataString; }
-			set { this.mDataString = value; }
+			get { return this.mDataString_; }
+			set { this.mDataString_ = value; }
 		}
 		#endregion
 
@@ -547,40 +547,40 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnum("type", ref this.mDataType);
-			s.StreamAttribute("name", ref this.mName);
+			s.StreamAttributeEnum("type", ref this.mDataType_);
+			s.StreamAttribute("name", ref this.mName_);
 
 			switch (this.DataType)
 			{
-			case ProtoPowerDataType.Float:
-				s.StreamCursor(ref this.mDataFloat);
+			case ProtoPowerDataType.FLOAT:
+				s.StreamCursor(ref this.mDataFloat_);
 				break;
 
-			case ProtoPowerDataType.Int:
-				s.StreamCursor(ref this.mDataInt);
+			case ProtoPowerDataType.INT:
+				s.StreamCursor(ref this.mDataInt_);
 				break;
-			case ProtoPowerDataType.ProtoObject:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDataInt, DatabaseObjectKind.Object, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
+			case ProtoPowerDataType.PROTO_OBJECT:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDataInt_, DatabaseObjectKind.OBJECT, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
-			case ProtoPowerDataType.ProtoSquad:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDataInt, DatabaseObjectKind.Squad, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
+			case ProtoPowerDataType.PROTO_SQUAD:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDataInt_, DatabaseObjectKind.SQUAD, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
-			case ProtoPowerDataType.Tech:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDataInt, DatabaseObjectKind.Tech, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
+			case ProtoPowerDataType.TECH:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDataInt_, DatabaseObjectKind.TECH, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
-			case ProtoPowerDataType.ObjectType:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDataInt, DatabaseObjectKind.ObjectType, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
-				break;
-
-			case ProtoPowerDataType.Bool:
-				s.StreamCursor(ref this.mDataBool);
+			case ProtoPowerDataType.OBJECT_TYPE:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDataInt_, DatabaseObjectKind.OBJECT_TYPE, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
 
-			case ProtoPowerDataType.Sound:
-				s.StreamCursor(ref this.mDataString);
+			case ProtoPowerDataType.BOOL:
+				s.StreamCursor(ref this.mDataBool_);
 				break;
-			case ProtoPowerDataType.Texture:
-				s.StreamCursor(ref this.mDataString);
+
+			case ProtoPowerDataType.SOUND:
+				s.StreamCursor(ref this.mDataString_);
+				break;
+			case ProtoPowerDataType.TEXTURE:
+				s.StreamCursor(ref this.mDataString_);
 				break;
 			}
 
@@ -593,262 +593,262 @@ namespace KSoft.Phoenix.Phx
 	{
 		public static Dictionary<string, ProtoPowerDataType> kHelper = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"HudUpSound", ProtoPowerDataType.Sound},
-			{"HudAbortSound", ProtoPowerDataType.Sound},
-			{"HudFireSound", ProtoPowerDataType.Sound},
+			{"HudUpSound", ProtoPowerDataType.SOUND},
+			{"HudAbortSound", ProtoPowerDataType.SOUND},
+			{"HudFireSound", ProtoPowerDataType.SOUND},
 
-			{"HudLastFireSound", ProtoPowerDataType.Sound},
-			{"HudStartEnvSound", ProtoPowerDataType.Sound},
-			{"HudStopEnvSound", ProtoPowerDataType.Sound},
+			{"HudLastFireSound", ProtoPowerDataType.SOUND},
+			{"HudStartEnvSound", ProtoPowerDataType.SOUND},
+			{"HudStopEnvSound", ProtoPowerDataType.SOUND},
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kCarpetBombing = new Dictionary<string,ProtoPowerDataType>
 		{
-			{"Projectile", ProtoPowerDataType.ProtoObject},
-			{"Impact", ProtoPowerDataType.ProtoObject},
-			{"Explosion", ProtoPowerDataType.ProtoObject},
-			{"Bomber", ProtoPowerDataType.ProtoObject},
-			{"InitialDelay", ProtoPowerDataType.Float},
-			{"FuseTime", ProtoPowerDataType.Float},
-			{"MaxBombs", ProtoPowerDataType.Int},
-			{"MaxBombOffset", ProtoPowerDataType.Float},
-			{"BombSpacing", ProtoPowerDataType.Float},
-			{"LengthMultiplier", ProtoPowerDataType.Float},
-			{"WedgeLengthMultiplier", ProtoPowerDataType.Float},
-			{"WedgeMinOffset", ProtoPowerDataType.Float},
-			{"NudgeMultiplier", ProtoPowerDataType.Float},
-			{"BomberFlyinDistance", ProtoPowerDataType.Float},
-			{"BomberFlyinHeight", ProtoPowerDataType.Float},
-			{"BomberBombHeight", ProtoPowerDataType.Float},
-			{"BomberSpeed", ProtoPowerDataType.Float},
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"Projectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"Impact", ProtoPowerDataType.PROTO_OBJECT},
+			{"Explosion", ProtoPowerDataType.PROTO_OBJECT},
+			{"Bomber", ProtoPowerDataType.PROTO_OBJECT},
+			{"InitialDelay", ProtoPowerDataType.FLOAT},
+			{"FuseTime", ProtoPowerDataType.FLOAT},
+			{"MaxBombs", ProtoPowerDataType.INT},
+			{"MaxBombOffset", ProtoPowerDataType.FLOAT},
+			{"BombSpacing", ProtoPowerDataType.FLOAT},
+			{"LengthMultiplier", ProtoPowerDataType.FLOAT},
+			{"WedgeLengthMultiplier", ProtoPowerDataType.FLOAT},
+			{"WedgeMinOffset", ProtoPowerDataType.FLOAT},
+			{"NudgeMultiplier", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinDistance", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinHeight", ProtoPowerDataType.FLOAT},
+			{"BomberBombHeight", ProtoPowerDataType.FLOAT},
+			{"BomberSpeed", ProtoPowerDataType.FLOAT},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kCleansing = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"Beam", ProtoPowerDataType.ProtoObject},
-			{"Projectile", ProtoPowerDataType.ProtoObject},
-			{"TickLength", ProtoPowerDataType.Float},
-			{"SuppliesPerTick", ProtoPowerDataType.Float},
-			{"MinBeamDistance", ProtoPowerDataType.Float},
-			{"MaxBeamDistance", ProtoPowerDataType.Float},
-			{"CommandInterval", ProtoPowerDataType.Float},
-			{"MaxBeamSpeed", ProtoPowerDataType.Float},
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"Beam", ProtoPowerDataType.PROTO_OBJECT},
+			{"Projectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"TickLength", ProtoPowerDataType.FLOAT},
+			{"SuppliesPerTick", ProtoPowerDataType.FLOAT},
+			{"MinBeamDistance", ProtoPowerDataType.FLOAT},
+			{"MaxBeamDistance", ProtoPowerDataType.FLOAT},
+			{"CommandInterval", ProtoPowerDataType.FLOAT},
+			{"MaxBeamSpeed", ProtoPowerDataType.FLOAT},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kCryo = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"CryoObject", ProtoPowerDataType.ProtoObject},
-			{"CryoRadius", ProtoPowerDataType.Float},
-			{"MinCryoFalloff", ProtoPowerDataType.Float},
-			{"FilterType", ProtoPowerDataType.ObjectType},
-			{"TickDuration", ProtoPowerDataType.Float},
-			{"NumTicks", ProtoPowerDataType.Int},
-			{"CryoAmountPerTick", ProtoPowerDataType.Float},
-			{"EffectStartTime", ProtoPowerDataType.Float},
-			{"MaxKillHp", ProtoPowerDataType.Float},
-			{"FreezingThawTime", ProtoPowerDataType.Float},
-			{"FrozenThawTime", ProtoPowerDataType.Float},
+			{"CryoObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"CryoRadius", ProtoPowerDataType.FLOAT},
+			{"MinCryoFalloff", ProtoPowerDataType.FLOAT},
+			{"FilterType", ProtoPowerDataType.OBJECT_TYPE},
+			{"TickDuration", ProtoPowerDataType.FLOAT},
+			{"NumTicks", ProtoPowerDataType.INT},
+			{"CryoAmountPerTick", ProtoPowerDataType.FLOAT},
+			{"EffectStartTime", ProtoPowerDataType.FLOAT},
+			{"MaxKillHp", ProtoPowerDataType.FLOAT},
+			{"FreezingThawTime", ProtoPowerDataType.FLOAT},
+			{"FrozenThawTime", ProtoPowerDataType.FLOAT},
 
-			{"Bomber", ProtoPowerDataType.ProtoObject},
-			{"BomberBombTime", ProtoPowerDataType.Float},
-			{"BomberFlyinDistance", ProtoPowerDataType.Float},
-			{"BomberFlyinHeight", ProtoPowerDataType.Float},
-			{"BomberBombHeight", ProtoPowerDataType.Float},
-			{"BomberSpeed", ProtoPowerDataType.Float},
-			{"BomberFlyOutTime", ProtoPowerDataType.Float},
+			{"Bomber", ProtoPowerDataType.PROTO_OBJECT},
+			{"BomberBombTime", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinDistance", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinHeight", ProtoPowerDataType.FLOAT},
+			{"BomberBombHeight", ProtoPowerDataType.FLOAT},
+			{"BomberSpeed", ProtoPowerDataType.FLOAT},
+			{"BomberFlyOutTime", ProtoPowerDataType.FLOAT},
 
-			{"AirImpactObject", ProtoPowerDataType.ProtoObject},
+			{"AirImpactObject", ProtoPowerDataType.PROTO_OBJECT},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kDisruption = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"DisruptionObject", ProtoPowerDataType.ProtoObject},
-			{"PulseObject", ProtoPowerDataType.ProtoObject},
-			{"StrikeObject", ProtoPowerDataType.ProtoObject},
-			{"DisruptionRadius", ProtoPowerDataType.Float},
-			{"DisruptionTimeSec", ProtoPowerDataType.Float},
-			{"DisruptionStartTime", ProtoPowerDataType.Float},
-			{"PulseSpacing", ProtoPowerDataType.Float},
-			{"PulseSound", ProtoPowerDataType.Sound},
+			{"DisruptionObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"PulseObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"StrikeObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"DisruptionRadius", ProtoPowerDataType.FLOAT},
+			{"DisruptionTimeSec", ProtoPowerDataType.FLOAT},
+			{"DisruptionStartTime", ProtoPowerDataType.FLOAT},
+			{"PulseSpacing", ProtoPowerDataType.FLOAT},
+			{"PulseSound", ProtoPowerDataType.SOUND},
 
-			{"Bomber", ProtoPowerDataType.ProtoObject},
-			{"BomberBombTime", ProtoPowerDataType.Float},
-			{"BomberFlyinDistance", ProtoPowerDataType.Float},
-			{"BomberFlyinHeight", ProtoPowerDataType.Float},
-			{"BomberBombHeight", ProtoPowerDataType.Float},
-			{"BomberSpeed", ProtoPowerDataType.Float},
-			{"BomberFlyOutTime", ProtoPowerDataType.Float},
+			{"Bomber", ProtoPowerDataType.PROTO_OBJECT},
+			{"BomberBombTime", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinDistance", ProtoPowerDataType.FLOAT},
+			{"BomberFlyinHeight", ProtoPowerDataType.FLOAT},
+			{"BomberBombHeight", ProtoPowerDataType.FLOAT},
+			{"BomberSpeed", ProtoPowerDataType.FLOAT},
+			{"BomberFlyOutTime", ProtoPowerDataType.FLOAT},
 
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kOdst = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"Projectile", ProtoPowerDataType.ProtoObject},
-			{"SquadSpawnDelay", ProtoPowerDataType.Float},
+			{"Projectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"SquadSpawnDelay", ProtoPowerDataType.FLOAT},
 
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kOrbital = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"TargetBeam", ProtoPowerDataType.ProtoObject},
-			{"Projectile", ProtoPowerDataType.ProtoObject},
-			{"Effect", ProtoPowerDataType.ProtoObject},
-			{"RockSmall", ProtoPowerDataType.ProtoObject},
-			{"RockMedium", ProtoPowerDataType.ProtoObject},
-			{"RockLarge", ProtoPowerDataType.ProtoObject},
-			{"NumShots", ProtoPowerDataType.Int},
-			{"TargetingDelay", ProtoPowerDataType.Float},
-			{"AutoShotDelay", ProtoPowerDataType.Float},
-			{"AutoShotInnerRadius", ProtoPowerDataType.Float},
-			{"AutoShotOuterRadius", ProtoPowerDataType.Float},
-			{"XOffset", ProtoPowerDataType.Float},
-			{"YOffset", ProtoPowerDataType.Float},
-			{"ZOffset", ProtoPowerDataType.Float},
-			{"FiredSound", ProtoPowerDataType.Sound},
+			{"TargetBeam", ProtoPowerDataType.PROTO_OBJECT},
+			{"Projectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"Effect", ProtoPowerDataType.PROTO_OBJECT},
+			{"RockSmall", ProtoPowerDataType.PROTO_OBJECT},
+			{"RockMedium", ProtoPowerDataType.PROTO_OBJECT},
+			{"RockLarge", ProtoPowerDataType.PROTO_OBJECT},
+			{"NumShots", ProtoPowerDataType.INT},
+			{"TargetingDelay", ProtoPowerDataType.FLOAT},
+			{"AutoShotDelay", ProtoPowerDataType.FLOAT},
+			{"AutoShotInnerRadius", ProtoPowerDataType.FLOAT},
+			{"AutoShotOuterRadius", ProtoPowerDataType.FLOAT},
+			{"XOffset", ProtoPowerDataType.FLOAT},
+			{"YOffset", ProtoPowerDataType.FLOAT},
+			{"ZOffset", ProtoPowerDataType.FLOAT},
+			{"FiredSound", ProtoPowerDataType.SOUND},
 
-			{"CommandInterval", ProtoPowerDataType.Float},
-			{"ShotInterval", ProtoPowerDataType.Float},
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"CommandInterval", ProtoPowerDataType.FLOAT},
+			{"ShotInterval", ProtoPowerDataType.FLOAT},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kRage = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"TickLength", ProtoPowerDataType.Float},
-			{"SuppliesPerTick", ProtoPowerDataType.Float},
-			{"SuppliesPerTickAttacking", ProtoPowerDataType.Float},
-			{"SuppliesPerJump", ProtoPowerDataType.Float},
-			{"DamageMultiplier", ProtoPowerDataType.Float},
-			{"DamageTakenMultiplier", ProtoPowerDataType.Float},
-			{"SpeedMultiplier", ProtoPowerDataType.Float},
-			{"NudgeMultiplier", ProtoPowerDataType.Float},
-			{"ScanRadius", ProtoPowerDataType.Float},
-			{"TeleportTime", ProtoPowerDataType.Float},
-			{"TeleportLateralDistance", ProtoPowerDataType.Float},
-			{"TeleportJumpDistance", ProtoPowerDataType.Float},
-			{"TimeBetweenRetarget", ProtoPowerDataType.Float},
-			{"MotionBlurAmount", ProtoPowerDataType.Float},
-			{"MotionBlurDistance", ProtoPowerDataType.Float},
-			{"MotionBlurTime", ProtoPowerDataType.Float},
-			{"DistanceVsAngleWeight", ProtoPowerDataType.Float},
-			{"Projectile", ProtoPowerDataType.ProtoObject},
-			{"HandAttachObject", ProtoPowerDataType.ProtoObject},
-			{"TeleportAttachObject", ProtoPowerDataType.ProtoObject},
-			{"AuraAttachFxSmall", ProtoPowerDataType.ProtoObject},
-			{"AuraAttachFxMedium", ProtoPowerDataType.ProtoObject},
-			{"AuraAttachFxLarge", ProtoPowerDataType.ProtoObject},
-			{"HealAttachFx", ProtoPowerDataType.ProtoObject},
-			{"AuraFilterType", ProtoPowerDataType.ObjectType},
+			{"TickLength", ProtoPowerDataType.FLOAT},
+			{"SuppliesPerTick", ProtoPowerDataType.FLOAT},
+			{"SuppliesPerTickAttacking", ProtoPowerDataType.FLOAT},
+			{"SuppliesPerJump", ProtoPowerDataType.FLOAT},
+			{"DamageMultiplier", ProtoPowerDataType.FLOAT},
+			{"DamageTakenMultiplier", ProtoPowerDataType.FLOAT},
+			{"SpeedMultiplier", ProtoPowerDataType.FLOAT},
+			{"NudgeMultiplier", ProtoPowerDataType.FLOAT},
+			{"ScanRadius", ProtoPowerDataType.FLOAT},
+			{"TeleportTime", ProtoPowerDataType.FLOAT},
+			{"TeleportLateralDistance", ProtoPowerDataType.FLOAT},
+			{"TeleportJumpDistance", ProtoPowerDataType.FLOAT},
+			{"TimeBetweenRetarget", ProtoPowerDataType.FLOAT},
+			{"MotionBlurAmount", ProtoPowerDataType.FLOAT},
+			{"MotionBlurDistance", ProtoPowerDataType.FLOAT},
+			{"MotionBlurTime", ProtoPowerDataType.FLOAT},
+			{"DistanceVsAngleWeight", ProtoPowerDataType.FLOAT},
+			{"Projectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"HandAttachObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"TeleportAttachObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"AuraAttachFxSmall", ProtoPowerDataType.PROTO_OBJECT},
+			{"AuraAttachFxMedium", ProtoPowerDataType.PROTO_OBJECT},
+			{"AuraAttachFxLarge", ProtoPowerDataType.PROTO_OBJECT},
+			{"HealAttachFx", ProtoPowerDataType.PROTO_OBJECT},
+			{"AuraFilterType", ProtoPowerDataType.OBJECT_TYPE},
 
-			{"HealPerKillCombatValue", ProtoPowerDataType.Float},
-			{"AuraRadius", ProtoPowerDataType.Float},
-			{"AuraDamageBonus", ProtoPowerDataType.Float},
-			{"AttackSound", ProtoPowerDataType.Sound},
+			{"HealPerKillCombatValue", ProtoPowerDataType.FLOAT},
+			{"AuraRadius", ProtoPowerDataType.FLOAT},
+			{"AuraDamageBonus", ProtoPowerDataType.FLOAT},
+			{"AttackSound", ProtoPowerDataType.SOUND},
 
-			{"CommandInterval", ProtoPowerDataType.Float},
-			{"HintTime", ProtoPowerDataType.Float},
-			{"MovementProjectionMultiplier", ProtoPowerDataType.Float},
-			{"CameraZoom", ProtoPowerDataType.Float},
+			{"CommandInterval", ProtoPowerDataType.FLOAT},
+			{"HintTime", ProtoPowerDataType.FLOAT},
+			{"MovementProjectionMultiplier", ProtoPowerDataType.FLOAT},
+			{"CameraZoom", ProtoPowerDataType.FLOAT},
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kRepair = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"RepairObject", ProtoPowerDataType.ProtoObject},
-			{"RepairAttachment", ProtoPowerDataType.ProtoObject},
-			{"NeverStops", ProtoPowerDataType.Bool},
-			{"RepairRadius", ProtoPowerDataType.Float},
-			{"FilterType", ProtoPowerDataType.ObjectType},
-			{"TickDuration", ProtoPowerDataType.Float},
-			{"NumTicks", ProtoPowerDataType.Int},
-			{"RepairCombatValuePerTick", ProtoPowerDataType.Float},
-			{"SpreadAmongSquads", ProtoPowerDataType.Bool},
-			{"AllowReinforce", ProtoPowerDataType.Bool},
-			{"CooldownTimeIfDamaged", ProtoPowerDataType.Float},
-			{"HealAny", ProtoPowerDataType.Bool},
+			{"RepairObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"RepairAttachment", ProtoPowerDataType.PROTO_OBJECT},
+			{"NeverStops", ProtoPowerDataType.BOOL},
+			{"RepairRadius", ProtoPowerDataType.FLOAT},
+			{"FilterType", ProtoPowerDataType.OBJECT_TYPE},
+			{"TickDuration", ProtoPowerDataType.FLOAT},
+			{"NumTicks", ProtoPowerDataType.INT},
+			{"RepairCombatValuePerTick", ProtoPowerDataType.FLOAT},
+			{"SpreadAmongSquads", ProtoPowerDataType.BOOL},
+			{"AllowReinforce", ProtoPowerDataType.BOOL},
+			{"CooldownTimeIfDamaged", ProtoPowerDataType.FLOAT},
+			{"HealAny", ProtoPowerDataType.BOOL},
 
-			{"IgnorePlacement", ProtoPowerDataType.Bool},
+			{"IgnorePlacement", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kTransport = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"Base", ProtoPowerDataType.Texture},
-			{"Mover", ProtoPowerDataType.Texture},
+			{"Base", ProtoPowerDataType.TEXTURE},
+			{"Mover", ProtoPowerDataType.TEXTURE},
 
-			{"MaxGroundVehicles", ProtoPowerDataType.Int},
-			{"MaxInfantryUnits", ProtoPowerDataType.Int},
+			{"MaxGroundVehicles", ProtoPowerDataType.INT},
+			{"MaxInfantryUnits", ProtoPowerDataType.INT},
 
-			{"MinTransportDistance", ProtoPowerDataType.Float},
+			{"MinTransportDistance", ProtoPowerDataType.FLOAT},
 
-			{"RequiresLOS", ProtoPowerDataType.Bool},
+			{"RequiresLOS", ProtoPowerDataType.BOOL},
 
 			//kHelper
 		};
 
 		public static Dictionary<string, ProtoPowerDataType> kWave = new Dictionary<string, ProtoPowerDataType>
 		{
-			{"TickLength", ProtoPowerDataType.Float},
-			{"SuppliesPerTick", ProtoPowerDataType.Float},
-			{"MaxBallSpeedStagnant", ProtoPowerDataType.Float},
-			{"MaxBallSpeedPulling", ProtoPowerDataType.Float},
-			{"ExplodeTime", ProtoPowerDataType.Float},
-			{"PullingRange", ProtoPowerDataType.Float},
-			{"ExplosionForceOnDebris", ProtoPowerDataType.Float},
-			{"HealthToCapture", ProtoPowerDataType.Float},
-			{"NudgeStrength", ProtoPowerDataType.Float},
-			{"InitialLateralPullStrength", ProtoPowerDataType.Float},
-			{"CapturedRadialSpacing", ProtoPowerDataType.Float},
-			{"CapturedSpringStrength", ProtoPowerDataType.Float},
-			{"CapturedSpringDampening", ProtoPowerDataType.Float},
-			{"CapturedSpringRestLength", ProtoPowerDataType.Float},
-			{"CapturedMinLateralSpeed", ProtoPowerDataType.Float},
-			{"RipAttachmentChancePulling", ProtoPowerDataType.Float},
-			{"DebrisAngularDamping", ProtoPowerDataType.Float},
-			{"MaxExplosionDamageBankPerCaptured", ProtoPowerDataType.Float},
-			{"CommandInterval", ProtoPowerDataType.Float},
-			{"MinBallDistance", ProtoPowerDataType.Float},
-			{"MaxBallDistance", ProtoPowerDataType.Float},
-			{"PickupObjectRate", ProtoPowerDataType.Float},
-			{"MaxCapturedObjects", ProtoPowerDataType.Int},
-			{"LightningPerTick", ProtoPowerDataType.Int},
-			{"NudgeChancePulling", ProtoPowerDataType.Int},
-			{"ThrowPartChancePulling", ProtoPowerDataType.Int},
-			{"LightningChancePulling", ProtoPowerDataType.Int},
-			{"BallObject", ProtoPowerDataType.ProtoObject},
-			{"LightningProjectile", ProtoPowerDataType.ProtoObject},
-			{"ExplodeProjectile", ProtoPowerDataType.ProtoObject},
-			{"DebrisProjectile", ProtoPowerDataType.ProtoObject},
-			{"PickupAttachment", ProtoPowerDataType.ProtoObject},
-			{"ThrowUnitsOnExplosion", ProtoPowerDataType.Bool},
-			{"ExplodeSound", ProtoPowerDataType.Sound},
-			{"MinDamageBankPercentToThrow", ProtoPowerDataType.Float},
-			{"LightningBeamVisual", ProtoPowerDataType.ProtoObject},
+			{"TickLength", ProtoPowerDataType.FLOAT},
+			{"SuppliesPerTick", ProtoPowerDataType.FLOAT},
+			{"MaxBallSpeedStagnant", ProtoPowerDataType.FLOAT},
+			{"MaxBallSpeedPulling", ProtoPowerDataType.FLOAT},
+			{"ExplodeTime", ProtoPowerDataType.FLOAT},
+			{"PullingRange", ProtoPowerDataType.FLOAT},
+			{"ExplosionForceOnDebris", ProtoPowerDataType.FLOAT},
+			{"HealthToCapture", ProtoPowerDataType.FLOAT},
+			{"NudgeStrength", ProtoPowerDataType.FLOAT},
+			{"InitialLateralPullStrength", ProtoPowerDataType.FLOAT},
+			{"CapturedRadialSpacing", ProtoPowerDataType.FLOAT},
+			{"CapturedSpringStrength", ProtoPowerDataType.FLOAT},
+			{"CapturedSpringDampening", ProtoPowerDataType.FLOAT},
+			{"CapturedSpringRestLength", ProtoPowerDataType.FLOAT},
+			{"CapturedMinLateralSpeed", ProtoPowerDataType.FLOAT},
+			{"RipAttachmentChancePulling", ProtoPowerDataType.FLOAT},
+			{"DebrisAngularDamping", ProtoPowerDataType.FLOAT},
+			{"MaxExplosionDamageBankPerCaptured", ProtoPowerDataType.FLOAT},
+			{"CommandInterval", ProtoPowerDataType.FLOAT},
+			{"MinBallDistance", ProtoPowerDataType.FLOAT},
+			{"MaxBallDistance", ProtoPowerDataType.FLOAT},
+			{"PickupObjectRate", ProtoPowerDataType.FLOAT},
+			{"MaxCapturedObjects", ProtoPowerDataType.INT},
+			{"LightningPerTick", ProtoPowerDataType.INT},
+			{"NudgeChancePulling", ProtoPowerDataType.INT},
+			{"ThrowPartChancePulling", ProtoPowerDataType.INT},
+			{"LightningChancePulling", ProtoPowerDataType.INT},
+			{"BallObject", ProtoPowerDataType.PROTO_OBJECT},
+			{"LightningProjectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"ExplodeProjectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"DebrisProjectile", ProtoPowerDataType.PROTO_OBJECT},
+			{"PickupAttachment", ProtoPowerDataType.PROTO_OBJECT},
+			{"ThrowUnitsOnExplosion", ProtoPowerDataType.BOOL},
+			{"ExplodeSound", ProtoPowerDataType.SOUND},
+			{"MinDamageBankPercentToThrow", ProtoPowerDataType.FLOAT},
+			{"LightningBeamVisual", ProtoPowerDataType.PROTO_OBJECT},
 
-			{"MinBallHeight", ProtoPowerDataType.Float},
-			{"MaxBallHeight", ProtoPowerDataType.Float},
-			{"CameraDistance", ProtoPowerDataType.Float},
-			{"CameraHeight", ProtoPowerDataType.Float},
-			{"CameraHoverPointDistance", ProtoPowerDataType.Float},
-			{"CameraMaxBallAngle", ProtoPowerDataType.Float},
-			{"PickupShakeDuration", ProtoPowerDataType.Float},
-			{"PickupRumbleShakeStrength", ProtoPowerDataType.Float},
-			{"PickupCameraShakeStrength", ProtoPowerDataType.Float},
+			{"MinBallHeight", ProtoPowerDataType.FLOAT},
+			{"MaxBallHeight", ProtoPowerDataType.FLOAT},
+			{"CameraDistance", ProtoPowerDataType.FLOAT},
+			{"CameraHeight", ProtoPowerDataType.FLOAT},
+			{"CameraHoverPointDistance", ProtoPowerDataType.FLOAT},
+			{"CameraMaxBallAngle", ProtoPowerDataType.FLOAT},
+			{"PickupShakeDuration", ProtoPowerDataType.FLOAT},
+			{"PickupRumbleShakeStrength", ProtoPowerDataType.FLOAT},
+			{"PickupCameraShakeStrength", ProtoPowerDataType.FLOAT},
 
-			{"HintTime", ProtoPowerDataType.Float},
+			{"HintTime", ProtoPowerDataType.FLOAT},
 		};
 	};
 }

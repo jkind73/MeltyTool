@@ -13,9 +13,9 @@ namespace KSoft.Memory.Strings
 		public Values.PtrHandle BaseAddress { get; private set; }
 
 		#region AddressSize
-		readonly Shell.ProcessorSize mAddressSize;
+		readonly Shell.ProcessorSize mAddressSize_;
 		/// <summary>Size of addresses used for referencing serialized strings</summary>
-		public Shell.ProcessorSize AddressSize { get { return this.mAddressSize; } }
+		public Shell.ProcessorSize AddressSize { get { return this.mAddressSize_; } }
 		#endregion
 
 		/// <summary>Is an empty string entry automatically add to the pool</summary>
@@ -37,10 +37,10 @@ namespace KSoft.Memory.Strings
 				this.Storage = method;
 				this.AllowDuplicates = false; }
 
-			this.mAddressSize = addressSize;
+			this.mAddressSize_ = addressSize;
 			this.ImplicitNull = implicitNull;
 
-			this.BaseAddress = this.mAddressSize == Shell.ProcessorSize.x64 ?
+			this.BaseAddress = this.mAddressSize_ == Shell.ProcessorSize.X64 ?
 				Values.PtrHandle.Null64 : Values.PtrHandle.Null32;
 		}
 		/// <summary>Define a new <see cref="StringMemoryPool"/> configuration</summary>
@@ -54,7 +54,7 @@ namespace KSoft.Memory.Strings
 				this.Storage = method;
 				this.AllowDuplicates = false; }
 
-			this.mAddressSize = baseAddress.Is64bit ? Shell.ProcessorSize.x64 : Shell.ProcessorSize.x32;
+			this.mAddressSize_ = baseAddress.Is64bit ? Shell.ProcessorSize.X64 : Shell.ProcessorSize.X32;
 			this.ImplicitNull = implicitNull;
 			this.BaseAddress = baseAddress;
 		}

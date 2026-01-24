@@ -45,23 +45,23 @@ public sealed class OpcodeReader {
       case OpcodeType.TEXCOORD: {
         return br.ReadNew<TexCoordOpcode>();
       }
-      case OpcodeType.VERTEX_0x23: {
-        return br.ReadNew<Vertex0x23Opcode>();
+      case OpcodeType.VERTEX_0_X23: {
+        return br.ReadNew<Vertex0X23Opcode>();
       }
-      case OpcodeType.VERTEX_0x24: {
-        return br.ReadNew<Vertex0x24Opcode>();
+      case OpcodeType.VERTEX_0_X24: {
+        return br.ReadNew<Vertex0X24Opcode>();
       }
-      case OpcodeType.VERTEX_0x25: {
-        return br.ReadNew<Vertex0x25Opcode>();
+      case OpcodeType.VERTEX_0_X25: {
+        return br.ReadNew<Vertex0X25Opcode>();
       }
-      case OpcodeType.VERTEX_0x26: {
-        return br.ReadNew<Vertex0x26Opcode>();
+      case OpcodeType.VERTEX_0_X26: {
+        return br.ReadNew<Vertex0X26Opcode>();
       }
-      case OpcodeType.VERTEX_0x27: {
-        return br.ReadNew<Vertex0x27Opcode>();
+      case OpcodeType.VERTEX_0_X27: {
+        return br.ReadNew<Vertex0X27Opcode>();
       }
-      case OpcodeType.VERTEX_0x28: {
-        return br.ReadNew<Vertex0x28Opcode>();
+      case OpcodeType.VERTEX_0_X28: {
+        return br.ReadNew<Vertex0X28Opcode>();
       }
       case OpcodeType.BEGIN_VERTEX_LIST: {
         return br.ReadNew<BeginVertexListOpcode>();
@@ -69,31 +69,31 @@ public sealed class OpcodeReader {
       case OpcodeType.END_VERTEX_LIST: {
         return br.ReadNew<EndVertexListOpcode>();
       }
-      case OpcodeType.MATRIX_UNK_0x10:
-      case OpcodeType.MATRIX_UNK_0x11:
-      case OpcodeType.MATRIX_UNK_0x12:
-      case OpcodeType.MATRIX_UNK_0x13:
-      case OpcodeType.MATRIX_UNK_0x15:
-      case OpcodeType.MATRIX_UNK_0x16:
-      case OpcodeType.MATRIX_UNK_0x17:
-      case OpcodeType.MATRIX_UNK_0x18:
-      case OpcodeType.MATRIX_UNK_0x19:
-      case OpcodeType.MATRIX_UNK_0x1A:
-      case OpcodeType.MATRIX_UNK_0x1B:
-      case OpcodeType.MATRIX_UNK_0x1C:
-      case OpcodeType.UNK_0x29:
-      case OpcodeType.UNK_0x2A:
-      case OpcodeType.UNK_0x2B:
-      case OpcodeType.LIGHTING_UNK_0x30:
-      case OpcodeType.LIGHTING_UNK_0x31:
-      case OpcodeType.LIGHTING_UNK_0x32:
-      case OpcodeType.LIGHTING_UNK_0x33:
-      case OpcodeType.LIGHTING_UNK_0x34:
-      case OpcodeType.UNK_0x50:
-      case OpcodeType.UNK_0x60:
-      case OpcodeType.UNK_0x70:
-      case OpcodeType.UNK_0x71:
-      case OpcodeType.UNK_0x72: {
+      case OpcodeType.MATRIX_UNK_0_X10:
+      case OpcodeType.MATRIX_UNK_0_X11:
+      case OpcodeType.MATRIX_UNK_0_X12:
+      case OpcodeType.MATRIX_UNK_0_X13:
+      case OpcodeType.MATRIX_UNK_0_X15:
+      case OpcodeType.MATRIX_UNK_0_X16:
+      case OpcodeType.MATRIX_UNK_0_X17:
+      case OpcodeType.MATRIX_UNK_0_X18:
+      case OpcodeType.MATRIX_UNK_0_X19:
+      case OpcodeType.MATRIX_UNK_0_X1_A:
+      case OpcodeType.MATRIX_UNK_0_X1_B:
+      case OpcodeType.MATRIX_UNK_0_X1_C:
+      case OpcodeType.UNK_0_X29:
+      case OpcodeType.UNK_0_X2_A:
+      case OpcodeType.UNK_0_X2_B:
+      case OpcodeType.LIGHTING_UNK_0_X30:
+      case OpcodeType.LIGHTING_UNK_0_X31:
+      case OpcodeType.LIGHTING_UNK_0_X32:
+      case OpcodeType.LIGHTING_UNK_0_X33:
+      case OpcodeType.LIGHTING_UNK_0_X34:
+      case OpcodeType.UNK_0_X50:
+      case OpcodeType.UNK_0_X60:
+      case OpcodeType.UNK_0_X70:
+      case OpcodeType.UNK_0_X71:
+      case OpcodeType.UNK_0_X72: {
         var opcode = new UnhandledOpcode(type);
         opcode.Read(br);
         return opcode;

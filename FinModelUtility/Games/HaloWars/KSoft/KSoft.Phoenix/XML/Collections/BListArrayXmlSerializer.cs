@@ -30,19 +30,19 @@ namespace KSoft.Phoenix.XML
 		: BListXmlSerializerBase<T>
 		where T : IO.ITagElementStringNameStreamable, new()
 	{
-		BListXmlParams mParams;
-		Collections.BListArray<T> mList;
+		BListXmlParams mParams_;
+		Collections.BListArray<T> mList_;
 
-		public override BListXmlParams Params { get { return this.mParams; } }
-		public override Collections.BListBase<T> List { get { return this.mList; } }
+		public override BListXmlParams Params { get { return this.mParams_; } }
+		public override Collections.BListBase<T> List { get { return this.mList_; } }
 
 		public BListArrayXmlSerializer(BListXmlParams @params, Collections.BListArray<T> list)
 		{
 			Contract.Requires<ArgumentNullException>(@params != null);
 			Contract.Requires<ArgumentNullException>(list != null);
 
-			this.mParams = @params;
-			this.mList = list;
+			this.mParams_ = @params;
+			this.mList_ = list;
 		}
 
 		#region IXmlElementStreamable Members

@@ -16,7 +16,7 @@ public partial class ModelImpl<TVertex> {
     public DepthMode DepthMode { get; set; } = DepthMode.READ_AND_WRITE;
 
     public DepthCompareType DepthCompareType { get; set; }
-      = DepthCompareType.Less;
+      = DepthCompareType.LESS;
 
     public bool IgnoreLights { get; set; }
 

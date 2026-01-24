@@ -14,7 +14,7 @@ namespace KSoft.Text
 
 	/// <summary>Encapsulates an <see cref="Encoding"/> from a <see cref="StringStorage"/> definition</summary>
 	/// <remarks>
-	/// For <see cref="StringStorageType.CString"/> cases, the encoding does not check if there
+	/// For <see cref="StringStorageType.C_STRING"/> cases, the encoding does not check if there
 	/// is an existing '\0' character in the user supplied strings. If you pass such strings to
 	/// the encoding for streaming the results will be undefined. Oh and bad.
 	/// </remarks>
@@ -24,21 +24,21 @@ namespace KSoft.Text
 		, IEquatable<StringStorageEncoding>, IEqualityComparer<StringStorageEncoding>
 		, IComparer<StringStorageEncoding>, IComparable<StringStorageEncoding>
 	{
-		Encoding mBaseEncoding;
+		Encoding mBaseEncoding_;
 		#region Storage
-		StringStorage mStorage;
+		StringStorage mStorage_;
 		/// <summary>The string storage definition for this encoding</summary>
-		public StringStorage Storage { get => this.mStorage; }
+		public StringStorage Storage { get => this.mStorage_; }
 		#endregion
-		Options mOptions;
-		bool DontAlwaysFlush { get => (this.mOptions & Options.DontAlwaysFlush) != 0; }
+		Options mOptions_;
+		bool DontAlwaysFlush { get => (this.mOptions_ & Options.DONT_ALWAYS_FLUSH) != 0; }
 		/// <summary>Number of bytes a null character consumes</summary>
-		int mNullCharacterSize;
+		int mNullCharacterSize_;
 		/// <summary>
 		/// Number of bytes used to store a fixed length character array using
 		/// the <see cref="StringStorageType"/> defined in <see cref="storage"/>
 		/// </summary>
-		int mFixedLengthByteLength;
+		int mFixedLengthByteLength_;
 
 		#region Ctor
 		/// <summary>Initialize an encoding for this library's methods of String Storages</summary>
@@ -46,45 +46,45 @@ namespace KSoft.Text
 		/// <param name="options"><see cref="System.Text.Encoding"/> options</param>
 		public StringStorageEncoding(StringStorage storage, Options options = 0)
 		{
-			bool use_bom = (options & Options.UseByteOrderMark) != 0;
-			bool big_endian = storage.ByteOrder == Shell.EndianFormat.Big;
-			bool throw_on_invalid = (options & Options.ThrowOnInvalidBytes) != 0;
+			bool useBom = (options & Options.USE_BYTE_ORDER_MARK) != 0;
+			bool bigEndian = storage.ByteOrder == Shell.EndianFormat.BIG;
+			bool throwOnInvalid = (options & Options.THROW_ON_INVALID_BYTES) != 0;
 
-			this.mNullCharacterSize = sizeof(byte); // The majority of encodings only require 1 byte for the null character
+			this.mNullCharacterSize_ = sizeof(byte); // The majority of encodings only require 1 byte for the null character
 			switch (storage.WidthType)
 			{
-				case StringStorageWidthType.Ascii:
-					this.mBaseEncoding = ASCII;
+				case StringStorageWidthType.ASCII:
+					this.mBaseEncoding_ = ASCII;
 					break;
-				case StringStorageWidthType.Unicode:
-					this.mBaseEncoding = new UnicodeEncoding(big_endian, use_bom, throw_on_invalid);
-					this.mNullCharacterSize = UnicodeEncoding.CharSize; // #REVIEW: should we really do this?
+				case StringStorageWidthType.UNICODE:
+					this.mBaseEncoding_ = new UnicodeEncoding(bigEndian, useBom, throwOnInvalid);
+					this.mNullCharacterSize_ = UnicodeEncoding.CharSize; // #REVIEW: should we really do this?
 					break;
 				case StringStorageWidthType.UTF7:
-					this.mBaseEncoding = new UTF7Encoding(!throw_on_invalid);
+					this.mBaseEncoding_ = new UTF7Encoding(!throwOnInvalid);
 					break;
 				case StringStorageWidthType.UTF8:
-					this.mBaseEncoding = new UTF8Encoding(use_bom, throw_on_invalid);
+					this.mBaseEncoding_ = new UTF8Encoding(useBom, throwOnInvalid);
 					break;
 				case StringStorageWidthType.UTF32:
-					this.mBaseEncoding = new UTF32Encoding(big_endian, use_bom, throw_on_invalid);
-					this.mNullCharacterSize = 4 * sizeof(byte);
+					this.mBaseEncoding_ = new UTF32Encoding(bigEndian, useBom, throwOnInvalid);
+					this.mNullCharacterSize_ = 4 * sizeof(byte);
 					break;
 
 				default: throw new Debug.UnreachableException();
 			}
 
-			this.mFixedLengthByteLength = !storage.IsFixedLength
+			this.mFixedLengthByteLength_ = !storage.IsFixedLength
 				? 0
 				: this.GetMaxCleanByteCount(storage.FixedLength);
 
-			this.mStorage = storage;
-			this.mOptions = options;
+			this.mStorage_ = storage;
+			this.mOptions_ = options;
 		}
 
 		public override object Clone()
 		{
-			return new StringStorageEncoding(this.mStorage, this.mOptions);
+			return new StringStorageEncoding(this.mStorage_, this.mOptions_);
 		}
 		#endregion
 
@@ -99,11 +99,11 @@ namespace KSoft.Text
 			// In case someone is trying to encode a string outside of the storage's bounds
 			this.ClampCharCount(ref count);
 
-			int byte_count = this.mBaseEncoding.GetByteCount(chars, index, count);
+			int byteCount = this.mBaseEncoding_.GetByteCount(chars, index, count);
 
-			byte_count = this.CalculateByteCount(byte_count); // Add our String Storage calculations
+			byteCount = this.CalculateByteCount(byteCount); // Add our String Storage calculations
 
-			return byte_count;
+			return byteCount;
 		}
 		/// <summary>Encodes a set of characters from the specified character array into the specified byte array</summary>
 		/// <param name="chars">The character array containing the set of characters to encode</param>
@@ -118,14 +118,14 @@ namespace KSoft.Text
 			this.ClampCharCount(ref charCount);
 
 			// Add our String Storage calculations
-			int bytes_written = this.EncodeStringStorageTypePrefixData(chars, charIndex, charCount, bytes, byteIndex);
+			int bytesWritten = this.EncodeStringStorageTypePrefixData(chars, charIndex, charCount, bytes, byteIndex);
 
-			bytes_written += this.mBaseEncoding.GetBytes(chars, charIndex, charCount, bytes, byteIndex + bytes_written);
+			bytesWritten += this.mBaseEncoding_.GetBytes(chars, charIndex, charCount, bytes, byteIndex + bytesWritten);
 
 			// Add our String Storage calculations
-			bytes_written += this.EncodeStringStorageTypePostfixData(chars, charIndex, charCount, bytes, bytes_written);
+			bytesWritten += this.EncodeStringStorageTypePostfixData(chars, charIndex, charCount, bytes, bytesWritten);
 
-			return bytes_written;
+			return bytesWritten;
 		}
 		/// <summary>Calculates the number of characters produced by decoding a sequence of bytes from the specified byte array</summary>
 		/// <param name="bytes">The byte array containing the sequence of bytes to decode</param>
@@ -136,9 +136,9 @@ namespace KSoft.Text
 		{
 			count = this.CalculateCharByteCount(bytes, ref index, count); // Remove our String Storage calculations
 
-			int char_count = this.mBaseEncoding.GetCharCount(bytes, index, count);
+			int charCount = this.mBaseEncoding_.GetCharCount(bytes, index, count);
 
-			return char_count;
+			return charCount;
 		}
 		/// <summary>Decodes a sequence of bytes from the specified byte array into the specified character array</summary>
 		/// <param name="bytes">The byte array containing the sequence of bytes to decode</param>
@@ -151,20 +151,20 @@ namespace KSoft.Text
 		{
 			byteCount = this.CalculateCharByteCount(bytes, ref byteIndex, byteCount); // Remove our String Storage calculations
 
-			int chars_written = this.mBaseEncoding.GetChars(bytes, byteIndex, byteCount, chars, charIndex);
+			int charsWritten = this.mBaseEncoding_.GetChars(bytes, byteIndex, byteCount, chars, charIndex);
 
-			return chars_written;
+			return charsWritten;
 		}
 		/// <summary>Calculates the maximum number of bytes produced by encoding the specified number of characters</summary>
 		/// <param name="charCount">The number of characters to encode</param>
 		/// <returns>The maximum number of bytes produced by encoding the specified number of characters</returns>
 		public override int GetMaxByteCount(int charCount)
 		{
-			int max_count = this.mBaseEncoding.GetMaxByteCount(charCount);
+			int maxCount = this.mBaseEncoding_.GetMaxByteCount(charCount);
 
-			max_count = this.CalculateByteCount(max_count); // Add our String Storage calculations
+			maxCount = this.CalculateByteCount(maxCount); // Add our String Storage calculations
 
-			return max_count;
+			return maxCount;
 		}
 		/// <summary>
 		/// Calculates the maximum number of bytes produced by encoding the specified number of characters WITHOUT
@@ -174,16 +174,16 @@ namespace KSoft.Text
 		/// <returns></returns>
 		public int GetMaxCleanByteCount(int charCount)
 		{
-			int max_count = this.mBaseEncoding.GetMaxByteCount(charCount);
+			int maxCount = this.mBaseEncoding_.GetMaxByteCount(charCount);
 
 			// NOTE: that GetMaxByteCount considers potential leftover surrogates from a previous decoder operation.
 			// Because of the decoder, passing a value of 1 to the method retrieves 2 for a single-byte encoding,
 			// such as ASCII. Your application should use the IsSingleByte property if this information is necessary.
 			// ...That being said, it looks like they internally use a null character. So for streaming related cases,
 			// we have to circumcise the fucking count.
-			max_count -= this.mNullCharacterSize;
+			maxCount -= this.mNullCharacterSize_;
 
-			return max_count;
+			return maxCount;
 		}
 		/// <summary>Calculates the maximum number of characters produced by decoding the specified number of bytes</summary>
 		/// <param name="byteCount">The number of bytes to decode</param>
@@ -195,26 +195,26 @@ namespace KSoft.Text
 			// sneak a peak at the length prefix bytes
 			byteCount = this.CalculateCharByteCount(byteCount); // Remove our String Storage calculations
 
-			int max_count = this.mBaseEncoding.GetMaxCharCount(byteCount);
+			int maxCount = this.mBaseEncoding_.GetMaxCharCount(byteCount);
 
-			return max_count;
+			return maxCount;
 		}
 		// #REVIEW: override?
 		//public override string ToString()		{ return mBaseEncoding.ToString(); }
 		#endregion
 
 		#region overrides to baseEncoding
-		public override string BodyName			=> this.mBaseEncoding.BodyName;
-		public override int CodePage			=> this.mBaseEncoding.CodePage;
-		public override string EncodingName		=> this.mBaseEncoding.EncodingName;
-		public override string HeaderName		=> this.mBaseEncoding.HeaderName;
-		public override bool IsBrowserDisplay	=> this.mBaseEncoding.IsBrowserDisplay;
-		public override bool IsBrowserSave		=> this.mBaseEncoding.IsBrowserSave;
-		public override bool IsMailNewsDisplay	=> this.mBaseEncoding.IsMailNewsDisplay;
-		public override bool IsMailNewsSave		=> this.mBaseEncoding.IsMailNewsSave;
-		public override bool IsSingleByte		=> this.mBaseEncoding.IsSingleByte;
-		public override string WebName			=> this.mBaseEncoding.WebName;
-		public override int WindowsCodePage		=> this.mBaseEncoding.WindowsCodePage;
+		public override string BodyName			=> this.mBaseEncoding_.BodyName;
+		public override int CodePage			=> this.mBaseEncoding_.CodePage;
+		public override string EncodingName		=> this.mBaseEncoding_.EncodingName;
+		public override string HeaderName		=> this.mBaseEncoding_.HeaderName;
+		public override bool IsBrowserDisplay	=> this.mBaseEncoding_.IsBrowserDisplay;
+		public override bool IsBrowserSave		=> this.mBaseEncoding_.IsBrowserSave;
+		public override bool IsMailNewsDisplay	=> this.mBaseEncoding_.IsMailNewsDisplay;
+		public override bool IsMailNewsSave		=> this.mBaseEncoding_.IsMailNewsSave;
+		public override bool IsSingleByte		=> this.mBaseEncoding_.IsSingleByte;
+		public override string WebName			=> this.mBaseEncoding_.WebName;
+		public override int WindowsCodePage		=> this.mBaseEncoding_.WindowsCodePage;
 
 		/// <summary>Compares this to another object testing for equality</summary>
 		/// <param name="obj"></param>
@@ -231,9 +231,9 @@ namespace KSoft.Text
 		}
 		public override System.Text.Decoder GetDecoder() => new Decoder(this);
 		public override System.Text.Encoder GetEncoder() => new Encoder(this);
-		public override int GetHashCode() => this.mBaseEncoding.GetHashCode();
-		public override byte[] GetPreamble() => this.mBaseEncoding.GetPreamble();
-		public override bool IsAlwaysNormalized(NormalizationForm form) => this.mBaseEncoding.IsAlwaysNormalized(form);
+		public override int GetHashCode() => this.mBaseEncoding_.GetHashCode();
+		public override byte[] GetPreamble() => this.mBaseEncoding_.GetPreamble();
+		public override bool IsAlwaysNormalized(NormalizationForm form) => this.mBaseEncoding_.IsAlwaysNormalized(form);
 		#endregion
 
 		#region IEquatable<StringStorageEncoding> Members
@@ -245,8 +245,8 @@ namespace KSoft.Text
 		/// <returns>true if both this object and <paramref name="obj"/> are equal</returns>
 		public bool Equals(StringStorageEncoding other)
 		{
-			return this.mOptions == other.mOptions &&
-			       this.mStorage.Equals(other.mStorage);
+			return this.mOptions_ == other.mOptions_ &&
+			       this.mStorage_.Equals(other.mStorage_);
 		}
 
 		public bool Equals(StringStorageEncoding x, StringStorageEncoding y) => x.Equals(y);
@@ -265,10 +265,10 @@ namespace KSoft.Text
 		/// <returns></returns>
 		public int CompareTo(StringStorageEncoding other)
 		{
-			int cmp = this.mStorage.CompareTo(other.mStorage);
+			int cmp = this.mStorage_.CompareTo(other.mStorage_);
 
 			if (cmp == 0)
-				return ((int) this.mOptions) - ((int)other.mOptions);
+				return ((int) this.mOptions_) - ((int)other.mOptions_);
 
 			return cmp;
 		}
@@ -276,7 +276,7 @@ namespace KSoft.Text
 
 
 		#region Static encodings
-		internal static readonly StringStorageEncoding[] kStorageEncodingList = EncodingArrayFromStorageArray(StringStorage.kStorageTypesList);
+		internal static readonly StringStorageEncoding[] KStorageEncodingList = EncodingArrayFromStorageArray(StringStorage.KStorageTypesList);
 		static StringStorageEncoding[] EncodingArrayFromStorageArray(StringStorage[] storageArray)
 		{
 			var encodings = new StringStorageEncoding[storageArray.Length];
@@ -299,8 +299,8 @@ namespace KSoft.Text
 		{
 			Contract.Ensures(Contract.Result<StringStorageEncoding>() != null);
 
-			StringStorageEncoding sse = Array.Find(kStorageEncodingList,
-				x => x.mStorage.Equals(storageDesc));
+			StringStorageEncoding sse = Array.Find(KStorageEncodingList,
+				x => x.mStorage_.Equals(storageDesc));
 
 			return sse ?? new StringStorageEncoding(storageDesc);
 		}

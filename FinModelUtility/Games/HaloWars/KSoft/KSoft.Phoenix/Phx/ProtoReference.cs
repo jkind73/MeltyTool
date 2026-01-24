@@ -11,11 +11,11 @@ namespace KSoft.Phoenix.Phx.Meta
 		int ProtoKindId { get; }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public abstract class ProtoDataReferenceAttribute
 		: Attribute
 	{
-		public const AttributeTargets kValidOn = 0
+		public const AttributeTargets K_VALID_ON = 0
 			| AttributeTargets.Field
 			| AttributeTargets.Property
 			| AttributeTargets.Parameter
@@ -28,7 +28,7 @@ namespace KSoft.Phoenix.Phx.Meta
 	};
 
 	/// <summary>For fields in ProtoData that are not actually used in any meaningful way</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class UnusedDataAttribute : Attribute
 	{
 		public UnusedDataAttribute() { }
@@ -36,67 +36,67 @@ namespace KSoft.Phoenix.Phx.Meta
 	};
 
 	/// <summary>Localized string reference</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple=false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple=false)]
 	public sealed class LocStringReferenceAttribute : Attribute;
 
 	#region ProtoFileReferences
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple=false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple=false)]
 	public abstract class ProtoFileReferenceAttribute : Attribute
 	{
 		public abstract string FileExtension { get; }
 	};
 
 	/// <summary>DDX reference</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple=false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple=false)]
 	public sealed class TextureReferenceAttribute : ProtoFileReferenceAttribute
 	{
 		public override string FileExtension { get { return "ddx"; } }
 	};
 
 	/// <summary>.physics reference</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class PhysicsInfoReferenceAttribute : ProtoFileReferenceAttribute
 	{
 		public override string FileExtension { get { return "physics"; } }
 	};
 
 	/// <summary>.TriggerScript reference</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class TriggerScriptReferenceAttribute : ProtoFileReferenceAttribute
 	{
 		public override string FileExtension { get { return "triggerscript"; } }
 	};
 
 	/// <summary>.vis reference</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class VisualReferenceAttribute : ProtoFileReferenceAttribute
 	{
 		public override string FileExtension { get { return "vis"; } }
 	};
 	#endregion
 
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class SoundCueReferenceAttribute : Attribute;
 
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class BAnimTypeReferenceAttribute : Attribute;
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class AttachmentTypeReferenceAttribute : Attribute;
 
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class CameraEffectReferenceAttribute : Attribute;
 
 	/// <summary>Reference to an Action in a Tactic</summary>
-	[AttributeUsage(ProtoDataReferenceAttribute.kValidOn, AllowMultiple = false)]
+	[AttributeUsage(ProtoDataReferenceAttribute.K_VALID_ON, AllowMultiple = false)]
 	public sealed class BProtoActionReferenceAttribute : Attribute;
 
 	#region GameData
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public abstract class GameDataObjectReferenceAttribute
 		: ProtoDataReferenceAttribute
 		, IProtoDataReferenceAttribute
 	{
-		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.GameData; } }
+		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.GAME_DATA; } }
 
 		public abstract GameDataObjectKind ProtoKind { get; }
 
@@ -106,91 +106,91 @@ namespace KSoft.Phoenix.Phx.Meta
 	};
 
 	/// <summary>Cost/Resource type reference</summary>
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public sealed class ResourceReferenceAttribute : GameDataObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(string); } }
-		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.Cost; } }
+		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.COST; } }
 	};
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public sealed class PopulationReferenceAttribute : GameDataObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(string); } }
-		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.Pop; } }
+		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.POP; } }
 	};
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public sealed class RateReferenceAttribute : GameDataObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(string); } }
-		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.Rate; } }
+		public override GameDataObjectKind ProtoKind { get { return GameDataObjectKind.RATE; } }
 	};
 	#endregion
 
 	#region HPBar data
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public abstract class ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public abstract class ProtoHpBarObjectReferenceAttribute
 		: ProtoDataReferenceAttribute
 		, IProtoDataReferenceAttribute
 	{
-		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.HPData; } }
+		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.HP_DATA; } }
 
-		public abstract HPBarDataObjectKind ProtoKind { get; }
+		public abstract HpBarDataObjectKind ProtoKind { get; }
 
 		Type IProtoDataReferenceAttribute.ProtoType { get { return this.ProtoType; } }
 		string IProtoDataReferenceAttribute.ProtoKindName { get { return this.ProtoKind.ToString(); } }
 		int IProtoDataReferenceAttribute.ProtoKindId { get { return (int) this.ProtoKind; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoHPBarReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoHpBarReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
-		public override Type ProtoType { get { return typeof(BProtoHPBar); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.HPBar; } }
+		public override Type ProtoType { get { return typeof(BProtoHpBar); } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.HP_BAR; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoHPBarColorStagesReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoHpBarColorStagesReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
-		public override Type ProtoType { get { return typeof(BProtoHPBarColorStages); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.ColorStages; } }
+		public override Type ProtoType { get { return typeof(BProtoHpBarColorStages); } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.COLOR_STAGES; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoVeterancyBarReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoVeterancyBarReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoVeterancyBar); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.VeterancyBar; } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.VETERANCY_BAR; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoPieProgressReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoPieProgressReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoPieProgress); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.PieProgress; } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.PIE_PROGRESS; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoBobbleHeadReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoBobbleHeadReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoBobbleHead); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.BobbleHead; } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.BOBBLE_HEAD; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
-	public sealed class BProtoBuildingStrengthReferenceAttribute : ProtoHPBarObjectReferenceAttribute
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
+	public sealed class BProtoBuildingStrengthReferenceAttribute : ProtoHpBarObjectReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoBuildingStrength); } }
-		public override HPBarDataObjectKind ProtoKind { get { return HPBarDataObjectKind.BuildingStrength; } }
+		public override HpBarDataObjectKind ProtoKind { get { return HpBarDataObjectKind.BUILDING_STRENGTH; } }
 	};
 	#endregion
 
 	#region Proto data
-	[AttributeUsage(kValidOn, AllowMultiple = false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple = false)]
 	public abstract class ProtoReferenceAttribute
 		: ProtoDataReferenceAttribute
 		, IProtoDataReferenceAttribute
 	{
-		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.Database; } }
+		public override ProtoDataObjectSourceKind ObjectSourceKind { get { return ProtoDataObjectSourceKind.DATABASE; } }
 
 		public abstract DatabaseObjectKind ProtoKind { get; }
 
@@ -199,110 +199,110 @@ namespace KSoft.Phoenix.Phx.Meta
 		int IProtoDataReferenceAttribute.ProtoKindId { get { return (int) this.ProtoKind; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BAbilityReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BAbility); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Ability; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.ABILITY; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BCivReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BCiv); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Civ; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.CIV; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BDamageTypeReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BDamageType); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.DamageType; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.DAMAGE_TYPE; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BProtoImpactEffectReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoImpactEffect); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.ImpactEffect; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.IMPACT_EFFECT; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BLeaderReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BLeader); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Leader; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.LEADER; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BProtoObjectReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoObject); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Object; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.OBJECT; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class ObjectTypeReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return null; } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.ObjectType; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.OBJECT_TYPE; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BProtoPowerReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoPower); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Power; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.POWER; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BProtoSquadReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoSquad); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Squad; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.SQUAD; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BTacticDataReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BTacticData); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Tactic; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.TACTIC; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BProtoTechReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BProtoTech); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Tech; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.TECH; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class TerrainTileTypeReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(TerrainTileType); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.TerrainTileType; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.TERRAIN_TILE_TYPE; } }
 	};
 
 	/// <summary>Object or ObjectType</summary>
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class UnitReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return null; } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.Unit; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.UNIT; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BUserClassReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BUserClass); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.UserClass; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.USER_CLASS; } }
 	};
 
-	[AttributeUsage(kValidOn, AllowMultiple=false)]
+	[AttributeUsage(K_VALID_ON, AllowMultiple=false)]
 	public sealed class BWeaponTypeReferenceAttribute : ProtoReferenceAttribute
 	{
 		public override Type ProtoType { get { return typeof(BWeaponType); } }
-		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.WeaponType; } }
+		public override DatabaseObjectKind ProtoKind { get { return DatabaseObjectKind.WEAPON_TYPE; } }
 	};
 	#endregion
 }

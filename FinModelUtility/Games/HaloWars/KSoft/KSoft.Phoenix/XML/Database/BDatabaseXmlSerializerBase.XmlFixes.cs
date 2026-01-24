@@ -7,11 +7,11 @@ namespace KSoft.Phoenix.XML
 		protected virtual void FixWeaponTypes() {}
 
 		protected static XmlNode XPathSelectNodeByName(IO.XmlElementStream s, BListXmlParams op,
-			string dataName, string attributeName = Phx.DatabaseNamedObject.kXmlAttrName)
+			string dataName, string attributeName = Phx.DatabaseNamedObject.K_XML_ATTR_NAME)
 		{
 			string xpath = string.Format(
 				"/{0}/{1}[@{2}='{3}']",
-				op.RootName, op.ElementName, attributeName, dataName);
+				op.rootName, op.elementName, attributeName, dataName);
 			return s.Document.SelectSingleNode(xpath);
 		}
 
@@ -43,7 +43,7 @@ namespace KSoft.Phoenix.XML
 
 		protected static void FixTacticsTraceFixEvent(IO.XmlElementStream s, string tacticName, string xpath)
 		{
-			Debug.Trace.XML.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.kNone,
+			Debug.Trace.Xml.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.K_NONE,
 				"{0}: Fixing Tactic with XPath={1}", s.StreamName, xpath);
 		}
 
@@ -61,7 +61,7 @@ namespace KSoft.Phoenix.XML
 			if (!args.IsNullOrEmpty())
 				messageOutput = message.Format(args);
 
-			Debug.Trace.XML.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.kNone,
+			Debug.Trace.Xml.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.K_NONE,
 				"{0}: {1}", lineInfoString, messageOutput);
 		}
 	};

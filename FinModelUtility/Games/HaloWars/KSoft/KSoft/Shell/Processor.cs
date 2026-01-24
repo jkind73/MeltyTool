@@ -27,21 +27,21 @@ namespace KSoft.Shell
 		// which, being a value type cctor, may not run when we want it
 		static class Constants
 		{
-			public static readonly BitFieldTraits kByteOrderBitField =
+			public static readonly BitFieldTraits KByteOrderBitField =
 				new BitFieldTraits(BitEncoders.EndianFormat.BitCountTrait);
-			public static readonly BitFieldTraits kProcessorSizeBitField =
-				new BitFieldTraits(BitEncoders.ProcessorSize.BitCountTrait, kByteOrderBitField);
-			public static readonly BitFieldTraits kInstructionSetBitField =
-				new BitFieldTraits(BitEncoders.InstructionSet.BitCountTrait, kProcessorSizeBitField);
+			public static readonly BitFieldTraits KProcessorSizeBitField =
+				new BitFieldTraits(BitEncoders.ProcessorSize.BitCountTrait, KByteOrderBitField);
+			public static readonly BitFieldTraits KInstructionSetBitField =
+				new BitFieldTraits(BitEncoders.InstructionSet.BitCountTrait, KProcessorSizeBitField);
 
-			public static readonly BitFieldTraits kLastBitField =
-				kInstructionSetBitField;
+			public static readonly BitFieldTraits KLastBitField =
+				KInstructionSetBitField;
 		};
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>6 bits at last count</remarks>
-		public static int BitCount { get => Constants.kLastBitField.FieldsBitCount; }
-		public static uint Bitmask { get => Constants.kLastBitField.FieldsBitmask.u32; }
+		public static int BitCount { get => Constants.KLastBitField.FieldsBitCount; }
+		public static uint Bitmask { get => Constants.KLastBitField.FieldsBitmask.u32; }
 		#endregion
 
 		#region Internal Value
@@ -82,15 +82,15 @@ namespace KSoft.Shell
 		#region Value properties
 		/// <summary>The processor's instruction set</summary>
 		public InstructionSet InstructionSet { get =>
-			BitEncoders.InstructionSet.BitDecode(this.mHandle, Constants.kInstructionSetBitField.BitIndex);
+			BitEncoders.InstructionSet.BitDecode(this.mHandle, Constants.KInstructionSetBitField.BitIndex);
 		}
 		/// <summary>The processor's instruction size</summary>
 		public ProcessorSize ProcessorSize { get =>
-			BitEncoders.ProcessorSize.BitDecode(this.mHandle, Constants.kProcessorSizeBitField.BitIndex);
+			BitEncoders.ProcessorSize.BitDecode(this.mHandle, Constants.KProcessorSizeBitField.BitIndex);
 		}
 		/// <summary>The processor's byte ordering</summary>
 		public EndianFormat ByteOrder { get =>
-			BitEncoders.EndianFormat.BitDecode(this.mHandle, Constants.kByteOrderBitField.BitIndex);
+			BitEncoders.EndianFormat.BitDecode(this.mHandle, Constants.KByteOrderBitField.BitIndex);
 		}
 		#endregion
 
@@ -136,10 +136,10 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int System.Collections.IComparer.Compare(object x, object y)
 		{
-			Debug.TypeCheck.CastValue(x, out Processor _x);
-			Debug.TypeCheck.CastValue(y, out Processor _y);
+			Debug.TypeCheck.CastValue(x, out Processor x);
+			Debug.TypeCheck.CastValue(y, out Processor y);
 
-			return StaticCompare(_x, _y);
+			return StaticCompare(x, y);
 		}
 		#endregion
 
@@ -153,9 +153,9 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			Debug.TypeCheck.CastValue(obj, out Processor _obj);
+			Debug.TypeCheck.CastValue(obj, out Processor obj);
 
-			return StaticCompare(this, _obj);
+			return StaticCompare(this, obj);
 		}
 		#endregion
 
@@ -175,12 +175,12 @@ namespace KSoft.Shell
 		#region Util
 		static int StaticCompare(Processor lhs, Processor rhs)
 		{
-			Contract.Assert(BitCount < Bits.kInt32BitCount,
+			Contract.Assert(BitCount < Bits.K_INT32_BIT_COUNT,
 				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
 
-			int lhs_data = (int)lhs.mHandle;
-			int rhs_data = (int)rhs.mHandle;
-			int result = lhs_data - rhs_data;
+			int lhsData = (int)lhs.mHandle;
+			int rhsData = (int)rhs.mHandle;
+			int result = lhsData - rhsData;
 
 			return result;
 		}
@@ -192,25 +192,25 @@ namespace KSoft.Shell
 		public static Processor Undefined		{ get => kUndefined; }
 
 		#region Intel
-		static readonly Processor kIntelx86 = new Processor(ProcessorSize.x32, EndianFormat.Little, InstructionSet.Intel);
+		static readonly Processor kIntelx86 = new Processor(ProcessorSize.X32, EndianFormat.LITTLE, InstructionSet.INTEL);
 		/// <summary>Intel's x86 processor definition</summary>
 		public static Processor Intelx86		{ get { return kIntelx86; } }
 
-		static readonly Processor kIntelx64 = new Processor(ProcessorSize.x64, EndianFormat.Little, InstructionSet.Intel);
+		static readonly Processor kIntelx64 = new Processor(ProcessorSize.X64, EndianFormat.LITTLE, InstructionSet.INTEL);
 		/// <summary>Intel's x64 processor definition</summary>
 		public static Processor Intelx64		{ get { return kIntelx64; } }
 		#endregion
 
 		#region PowerPc
-		static readonly Processor kPowerPc32 = new Processor(ProcessorSize.x32, EndianFormat.Big, InstructionSet.PPC);
+		static readonly Processor kPowerPc32 = new Processor(ProcessorSize.X32, EndianFormat.BIG, InstructionSet.PPC);
 		/// <summary>IBM's PowerPC 32-bit processor definition</summary>
 		public static Processor PowerPc32		{ get { return kPowerPc32; } }
 
-		static readonly Processor kPowerPc64 = new Processor(ProcessorSize.x64, EndianFormat.Big, InstructionSet.PPC);
+		static readonly Processor kPowerPc64 = new Processor(ProcessorSize.X64, EndianFormat.BIG, InstructionSet.PPC);
 		/// <summary>IBM's PowerPC 64-bit processor definition</summary>
 		public static Processor PowerPc64		{ get { return kPowerPc64; } }
 
-		static readonly Processor kPowerPcXenon = new Processor(ProcessorSize.x32, EndianFormat.Big, InstructionSet.PPC);
+		static readonly Processor kPowerPcXenon = new Processor(ProcessorSize.X32, EndianFormat.BIG, InstructionSet.PPC);
 		/// <summary>IBM's PowerPC (Xenon) processor definition</summary>
 		/// <remarks>
 		/// Why is there a special Xenon definition? Because if I recall correctly, the Xenon is a 64-bit processor however

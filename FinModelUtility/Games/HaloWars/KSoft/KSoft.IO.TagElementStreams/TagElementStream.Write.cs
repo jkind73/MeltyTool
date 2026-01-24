@@ -119,7 +119,7 @@ namespace KSoft.IO
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
@@ -140,7 +140,7 @@ namespace KSoft.IO
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
@@ -154,7 +154,7 @@ namespace KSoft.IO
 		public bool WriteElementOptOnTrue(TName name, Values.KGuid value, Predicate<Values.KGuid> predicate)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc, TCursor, TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc, TCursor, TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
@@ -177,7 +177,7 @@ namespace KSoft.IO
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
@@ -198,7 +198,7 @@ namespace KSoft.IO
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
@@ -212,7 +212,7 @@ namespace KSoft.IO
 		public bool WriteAttributeOptOnTrue(TName name, Values.KGuid value, Predicate<Values.KGuid> predicate)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc, TCursor, TName>.kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc, TCursor, TName>.K_CURSOR_NULL_MSG);
 			Contract.Requires(predicate != null);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
@@ -329,13 +329,13 @@ namespace KSoft.IO
 	};
 	partial class TagElementStreamContract<TDoc, TCursor, TName>
 	{
-		internal const string kCursorNullMsg = "Element cursor must not be null when writing an attribute.";
+		internal const string K_CURSOR_NULL_MSG = "Element cursor must not be null when writing an attribute.";
 
 		#region WriteAttribute
 		public override void WriteAttributeEnum<TEnum>(TName name, TEnum value, bool isFlags)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
 
 			throw new NotImplementedException();
 		}
@@ -343,7 +343,7 @@ namespace KSoft.IO
 		public override void WriteAttribute(TName name, Values.KGuid value)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, kCursorNullMsg);
+			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
 
 			throw new NotImplementedException();
 		}
@@ -359,8 +359,8 @@ namespace KSoft.IO
 		where TDoc : class
 		where TCursor : class
 	{
-		TagElementStream<TDoc, TCursor, TName> mStream;
-		TCursor mOldCursor;
+		TagElementStream<TDoc, TCursor, TName> mStream_;
+		TCursor mOldCursor_;
 
 		/// <summary>Saves the stream's cursor so a new one can be specified, but then later restored to the saved cursor, via <see cref="Dispose()"/></summary>
 		/// <param name="stream">The underlying stream for this bookmark</param>
@@ -370,18 +370,18 @@ namespace KSoft.IO
 			Contract.Requires<ArgumentNullException>(stream != null);
 			Contract.Requires<ArgumentNullException>(elementName != null);
 
-			this.mStream = null;
-			this.mOldCursor = null;
-			(this.mStream = stream).WriteElementBegin(elementName, out this.mOldCursor);
+			this.mStream_ = null;
+			this.mOldCursor_ = null;
+			(this.mStream_ = stream).WriteElementBegin(elementName, out this.mOldCursor_);
 		}
 
 		/// <summary>Returns the cursor of the underlying stream to the last saved cursor value</summary>
 		public void Dispose()
 		{
-			if (this.mStream != null)
+			if (this.mStream_ != null)
 			{
-				this.mStream.WriteElementEnd(ref this.mOldCursor);
-				this.mStream = null;
+				this.mStream_.WriteElementEnd(ref this.mOldCursor_);
+				this.mStream_ = null;
 			}
 		}
 	};

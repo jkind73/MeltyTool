@@ -5,227 +5,227 @@ using granny_matrix_4x4 = System.Numerics.Matrix4x4;
 
 namespace KSoft.Granny3D
 {
-	public static class Granny2DLL
+	public static class Granny2Dll
 	{
-		public const int kAssumedPointerSize = sizeof(ulong);
+		public const int K_ASSUMED_POINTER_SIZE = sizeof(ulong);
 
-		const string kDllName = @"Granny3D\Granny2.dll";
-		const CharSet kCharSet = CharSet.Ansi;
+		const string K_DLL_NAME_ = @"Granny3D\Granny2.dll";
+		const CharSet K_CHAR_SET_ = CharSet.Ansi;
 
-		[DllImport(kDllName, CharSet=kCharSet)]
-		public static extern bool GrannyFindBoneByName(TPtr<granny_skeleton> Skeleton, string BoneName, out int BoneIndex);
+		[DllImport(K_DLL_NAME_, CharSet=K_CHAR_SET_)]
+		public static extern bool GrannyFindBoneByName(Ptr<GrannySkeleton> skeleton, string boneName, out int boneIndex);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyBuildCompositeTransform4x4(
-			[In] ref granny_transform transform,
-			out granny_matrix_4x4 matrix4x4);
+			[In] ref GrannyTransform transform,
+			out granny_matrix_4x4 matrix4X4);
 
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_texture> GrannyGetMaterialTextureByType(
-			TPtr<granny_material> material,
-			granny_material_texture_type channel);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyTexture> GrannyGetMaterialTextureByType(
+			Ptr<GrannyMaterial> material,
+			GrannyMaterialTextureType channel);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyConvertSingleObject(
-			TPtr<granny_data_type_definition> SourceType,
-			IntPtr SourceObject,
-			TPtr<granny_data_type_definition> DestType,
-			IntPtr DestObject);
+			Ptr<GrannyDataTypeDefinition> sourceType,
+			IntPtr sourceObject,
+			Ptr<GrannyDataTypeDefinition> destType,
+			IntPtr destObject);
 
-		[DllImport(kDllName)]
-		public static extern int GrannyGetTypeTableCount(IntPtr /* granny_data_type_definition** */ TypeTable);
+		[DllImport(K_DLL_NAME_)]
+		public static extern int GrannyGetTypeTableCount(IntPtr /* granny_data_type_definition** */ typeTable);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyBuildSkeletonRelativeTransforms(
-			int SourceTransformStride,
-			[In] granny_transform[] SourceTransforms,
-			int SourceParentStride,
-			[In] int[] SourceParents,
-			int Count,
-			int ResultStride,
-			[Out] granny_transform[] Results);
+			int sourceTransformStride,
+			[In] GrannyTransform[] sourceTransforms,
+			int sourceParentStride,
+			[In] int[] sourceParents,
+			int count,
+			int resultStride,
+			[Out] GrannyTransform[] results);
 
 		#region granny_file
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern IntPtr /* granny_file* */ GrannyReadEntireFile(string filename);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeFile(IntPtr /* granny_file* */ File);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeFileSection(IntPtr /* granny_file* */ File, int SectionIndex);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_file_info> GrannyGetFileInfo(IntPtr /* granny_file* */File);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeFile(IntPtr /* granny_file* */ file);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeFileSection(IntPtr /* granny_file* */ file, int sectionIndex);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyFileInfo> GrannyGetFileInfo(IntPtr /* granny_file* */file);
 		#endregion
 
 		#region granny_file_info
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern bool GrannyComputeBasisConversion(
-			[In] TPtr<granny_file_info> FileInfo,
-			float DesiredUnitsPerMeter,
-			[In] ref Vector3 DesiredOrigin3,
-			[In] ref Vector3 DesiredRight3,
-			[In] ref Vector3 DesiredUp3,
-			[In] ref Vector3 DesiredBack3,
-			out Vector3 ResultAffine3,
-			out granny_matrix_3x3 ResultLinear3x3,
-			out granny_matrix_3x3 ResultInverseLinear3x3);
+			[In] Ptr<GrannyFileInfo> fileInfo,
+			float desiredUnitsPerMeter,
+			[In] ref Vector3 desiredOrigin3,
+			[In] ref Vector3 desiredRight3,
+			[In] ref Vector3 desiredUp3,
+			[In] ref Vector3 desiredBack3,
+			out Vector3 resultAffine3,
+			out GrannyMatrix3X3 resultLinear3X3,
+			out GrannyMatrix3X3 resultInverseLinear3X3);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyTransformFile(
-			TPtr<granny_file_info> FileInfo,
-			[In] ref Vector3 Affine3,
-			[In] ref granny_matrix_3x3 Linear3x3,
-			[In] ref granny_matrix_3x3 InverseLinear3x3,
-			float AffineTolerance,
-			float LinearTolerance,
-			granny_transform_file_flags Flags);
+			Ptr<GrannyFileInfo> fileInfo,
+			[In] ref Vector3 affine3,
+			[In] ref GrannyMatrix3X3 linear3X3,
+			[In] ref GrannyMatrix3X3 inverseLinear3X3,
+			float affineTolerance,
+			float linearTolerance,
+			GrannyTransformFileFlags flags);
 		#endregion
 
 		#region granny_mesh
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_tri_material_group> GrannyGetMeshTriangleGroups(TPtr<granny_mesh> mesh);
-		[DllImport(kDllName)]
-		public static extern bool GrannyMeshIsRigid(TPtr<granny_mesh> Mesh);
-		[DllImport(kDllName)]
-		public static extern int GrannyGetMeshIndexCount(TPtr<granny_mesh> Mesh);
-		[DllImport(kDllName)]
-		public static extern void GrannyCopyMeshIndices(TPtr<granny_mesh> mesh, int bytesPerIndex, IntPtr dstIndexData);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_data_type_definition> GrannyGetMeshVertexType(TPtr<granny_mesh> mesh);
-		[DllImport(kDllName)]
-		public static extern int GrannyGetMeshVertexCount(TPtr<granny_mesh> mesh);
-		[DllImport(kDllName)]
-		public static extern IntPtr GrannyGetMeshVertices(TPtr<granny_mesh> Mesh);
-		[DllImport(kDllName)]
-		public static extern void GrannyCopyMeshVertices(TPtr<granny_mesh> mesh, TPtr<granny_data_type_definition> vertType, IntPtr dstVertexData);
-		[DllImport(kDllName)]
-		public static extern int GrannyGetMeshTriangleCount(TPtr<granny_mesh> mesh);
-		[DllImport(kDllName)]
-		public static extern int GrannyGetMeshTriangleGroupCount(TPtr<granny_mesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyTriMaterialGroup> GrannyGetMeshTriangleGroups(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern bool GrannyMeshIsRigid(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern int GrannyGetMeshIndexCount(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyCopyMeshIndices(Ptr<GrannyMesh> mesh, int bytesPerIndex, IntPtr dstIndexData);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyDataTypeDefinition> GrannyGetMeshVertexType(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern int GrannyGetMeshVertexCount(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern IntPtr GrannyGetMeshVertices(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyCopyMeshVertices(Ptr<GrannyMesh> mesh, Ptr<GrannyDataTypeDefinition> vertType, IntPtr dstVertexData);
+		[DllImport(K_DLL_NAME_)]
+		public static extern int GrannyGetMeshTriangleCount(Ptr<GrannyMesh> mesh);
+		[DllImport(K_DLL_NAME_)]
+		public static extern int GrannyGetMeshTriangleGroupCount(Ptr<GrannyMesh> mesh);
 		#endregion
 
 		#region granny_model_instance
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_model_instance> GrannyInstantiateModel(TPtr<granny_model> Model);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeModelInstance(TPtr<granny_model_instance> ModelInstance);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_model_control_binding> GrannyModelControlsBegin(TPtr<granny_model_instance> Model);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_model_control_binding> GrannyModelControlsEnd(TPtr<granny_model_instance> Model);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_model_control_binding> GrannyModelControlsNext(TPtr<granny_model_control_binding> Binding);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyModelInstance> GrannyInstantiateModel(Ptr<GrannyModel> model);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeModelInstance(Ptr<GrannyModelInstance> modelInstance);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyModelControlBinding> GrannyModelControlsBegin(Ptr<GrannyModelInstance> model);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyModelControlBinding> GrannyModelControlsEnd(Ptr<GrannyModelInstance> model);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyModelControlBinding> GrannyModelControlsNext(Ptr<GrannyModelControlBinding> binding);
 
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_skeleton> GrannyGetSourceSkeleton(TPtr<granny_model_instance> Model);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannySkeleton> GrannyGetSourceSkeleton(Ptr<GrannyModelInstance> model);
 
-		[DllImport(kDllName)]
-		public static extern void GrannySetModelClock(TPtr<granny_model_instance> ModelInstance, float NewClock);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannySetModelClock(Ptr<GrannyModelInstance> modelInstance, float newClock);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyUpdateModelMatrix(
-			TPtr<granny_model_instance> ModelInstance,
-			float SecondsElapsed,
-			[In] ref granny_matrix_4x4 ModelMatrix4x4,
-			out granny_matrix_4x4 DestMatrix4x4,
-			bool Inverse);
+			Ptr<GrannyModelInstance> modelInstance,
+			float secondsElapsed,
+			[In] ref granny_matrix_4x4 modelMatrix4X4,
+			out granny_matrix_4x4 destMatrix4X4,
+			bool inverse);
 
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannySampleModelAnimations(
-			TPtr<granny_model_instance> ModelInstance,
-			int FirstBone,
-			int BoneCount,
-			TPtr<granny_local_pose> Result);
+			Ptr<GrannyModelInstance> modelInstance,
+			int firstBone,
+			int boneCount,
+			Ptr<GrannyLocalPose> result);
 
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeCompletedModelControls(TPtr<granny_model_instance> ModelInstance);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeCompletedModelControls(Ptr<GrannyModelInstance> modelInstance);
 		#endregion
 
 		#region granny_control
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_control> GrannyPlayControlledAnimation(
-			float StartTime,
-			TPtr<granny_animation> Animation,
-			TPtr<granny_model_instance> Model);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeControl(TPtr<granny_control> Control);
-		[DllImport(kDllName)]
-		public static extern void GrannySetControlLoopCount(TPtr<granny_control> Control, int LoopCount);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeControlOnceUnused(TPtr<granny_control> Control);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_control> GrannyGetControlFromBinding(TPtr<granny_model_control_binding> Binding);
-		[DllImport(kDllName)]
-		public static extern float GrannyEaseControlOut(TPtr<granny_control> Control, float Duration);
-		[DllImport(kDllName)]
-		public static extern void GrannyCompleteControlAt(TPtr<granny_control> Control, float AtSeconds);
-		[DllImport(kDllName)]
-		public static extern IntPtr /* void** */ GrannyGetControlUserDataArray(TPtr<granny_control> Control);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyControl> GrannyPlayControlledAnimation(
+			float startTime,
+			Ptr<GrannyAnimation> animation,
+			Ptr<GrannyModelInstance> model);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeControl(Ptr<GrannyControl> control);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannySetControlLoopCount(Ptr<GrannyControl> control, int loopCount);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeControlOnceUnused(Ptr<GrannyControl> control);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyControl> GrannyGetControlFromBinding(Ptr<GrannyModelControlBinding> binding);
+		[DllImport(K_DLL_NAME_)]
+		public static extern float GrannyEaseControlOut(Ptr<GrannyControl> control, float duration);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyCompleteControlAt(Ptr<GrannyControl> control, float atSeconds);
+		[DllImport(K_DLL_NAME_)]
+		public static extern IntPtr /* void** */ GrannyGetControlUserDataArray(Ptr<GrannyControl> control);
 		#endregion
 
 		#region granny_world_pose
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_world_pose> GrannyNewWorldPose(int BoneCount);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeWorldPose(TPtr<granny_world_pose> WorldPose);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_matrix_4x4> GrannyGetWorldPoseComposite4x4Array(TPtr<granny_world_pose> WorldPose);
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyWorldPose> GrannyNewWorldPose(int boneCount);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeWorldPose(Ptr<GrannyWorldPose> worldPose);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<granny_matrix_4x4> GrannyGetWorldPoseComposite4x4Array(Ptr<GrannyWorldPose> worldPose);
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyBuildWorldPose(
-			TPtr<granny_skeleton> Skeleton,
-			int FirstBone,
-			int BoneCount,
-			TPtr<granny_local_pose> LocalPose,
-			[In] ref granny_matrix_4x4 Offset4x4,
-			TPtr<granny_world_pose> Result);
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_matrix_4x4> GrannyGetWorldPose4x4(TPtr<granny_world_pose> WorldPose, int BoneIndex);
+			Ptr<GrannySkeleton> skeleton,
+			int firstBone,
+			int boneCount,
+			Ptr<GrannyLocalPose> localPose,
+			[In] ref granny_matrix_4x4 offset4X4,
+			Ptr<GrannyWorldPose> result);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<granny_matrix_4x4> GrannyGetWorldPose4x4(Ptr<GrannyWorldPose> worldPose, int boneIndex);
 		#endregion
 
 		#region granny_local_pose
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_local_pose> GrannyNewLocalPose(int BoneCount);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeLocalPose(TPtr<granny_local_pose> pose);
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyLocalPose> GrannyNewLocalPose(int boneCount);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeLocalPose(Ptr<GrannyLocalPose> pose);
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyGetWorldMatrixFromLocalPose(
-			[In] TPtr<granny_skeleton> Skeleton,
-			int BoneIndex,
-			[In] TPtr<granny_local_pose> LocalPose,
-			[In] ref granny_matrix_4x4 Offset4x4,
-			out granny_matrix_4x4 Result4x4,
-			[In] int[] SparseBoneArray,
-			[In] int[] SparseBoneArrayReverse);
+			[In] Ptr<GrannySkeleton> skeleton,
+			int boneIndex,
+			[In] Ptr<GrannyLocalPose> localPose,
+			[In] ref granny_matrix_4x4 offset4X4,
+			out granny_matrix_4x4 result4X4,
+			[In] int[] sparseBoneArray,
+			[In] int[] sparseBoneArrayReverse);
 		#endregion
 
 		#region granny_mesh_binding
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_mesh_binding> GrannyNewMeshBinding(
-			TPtr<granny_mesh> Mesh,
-			TPtr<granny_skeleton> FromSkeleton,
-			TPtr<granny_skeleton> ToSkeleton);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeMeshBinding(TPtr<granny_mesh_binding> binding);
-		[DllImport(kDllName)]
-		public static extern TPtr<int> GrannyGetMeshBindingToBoneIndices(TPtr<granny_mesh_binding> Binding);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyMeshBinding> GrannyNewMeshBinding(
+			Ptr<GrannyMesh> mesh,
+			Ptr<GrannySkeleton> fromSkeleton,
+			Ptr<GrannySkeleton> toSkeleton);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeMeshBinding(Ptr<GrannyMeshBinding> binding);
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<int> GrannyGetMeshBindingToBoneIndices(Ptr<GrannyMeshBinding> binding);
 		#endregion
 
 		#region granny_mesh_deformer
-		[DllImport(kDllName)]
-		public static extern TPtr<granny_mesh_deformer> GrannyNewMeshDeformer(
-			TPtr<granny_data_type_definition> InputVertexLayout,
-			TPtr<granny_data_type_definition> OutputVertexLayout,
-			granny_deformation_type DeformationType,
-			granny_deformer_tail_flags TailFlag);
-		[DllImport(kDllName)]
-		public static extern void GrannyFreeMeshDeformer(TPtr<granny_mesh_deformer> Deformer);
-		[DllImport(kDllName)]
+		[DllImport(K_DLL_NAME_)]
+		public static extern Ptr<GrannyMeshDeformer> GrannyNewMeshDeformer(
+			Ptr<GrannyDataTypeDefinition> inputVertexLayout,
+			Ptr<GrannyDataTypeDefinition> outputVertexLayout,
+			GrannyDeformationType deformationType,
+			GrannyDeformerTailFlags tailFlag);
+		[DllImport(K_DLL_NAME_)]
+		public static extern void GrannyFreeMeshDeformer(Ptr<GrannyMeshDeformer> deformer);
+		[DllImport(K_DLL_NAME_)]
 		public static extern void GrannyDeformVertices(
-			TPtr<granny_mesh_deformer> Deformer,
-			[In] int[] MatrixIndices,
-			[In] ref granny_matrix_4x4 MatrixBuffer4x4,
-			int VertexCount,
-			IntPtr SourceVertices,
-			IntPtr DestVertices);
+			Ptr<GrannyMeshDeformer> deformer,
+			[In] int[] matrixIndices,
+			[In] ref granny_matrix_4x4 matrixBuffer4X4,
+			int vertexCount,
+			IntPtr sourceVertices,
+			IntPtr destVertices);
 		#endregion
 	};
 }

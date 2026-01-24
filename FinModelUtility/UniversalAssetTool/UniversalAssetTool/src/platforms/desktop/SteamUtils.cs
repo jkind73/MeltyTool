@@ -8,33 +8,33 @@ using Gameloop.Vdf.Linq;
 namespace uni.platforms.desktop;
 
 internal static class SteamUtils {
-  private static string? InstallPath_ { get; } =
+  private static string? InstallPath { get; } =
     RegistryExtensions.GetSoftwareValueEither32Or64Bit(
         @"Valve\Steam",
         "InstallPath") as string;
 
-  private static IReadOnlySystemDirectory? InstallDirectory_ { get; } =
-    InstallPath_ != null
-        ? new FinDirectory(InstallPath_)
+  private static IReadOnlySystemDirectory? InstallDirectory { get; } =
+    InstallPath != null
+        ? new FinDirectory(InstallPath)
         : null;
 
-  private static IReadOnlySystemFile? LibraryFoldersVdf_ { get; } =
-    (InstallDirectory_?.TryToGetExistingFile(
+  private static IReadOnlySystemFile? LibraryFoldersVdf { get; } =
+    (InstallDirectory?.TryToGetExistingFile(
          "config/libraryfolders.vdf",
          out var libraryFoldersVdf) ??
      false)
         ? libraryFoldersVdf
         : null;
 
-  private static ISystemDirectory[] Libraries_ { get; } =
+  private static ISystemDirectory[] Libraries { get; } =
     InitializeLibraries_();
 
   private static ISystemDirectory[] InitializeLibraries_() {
-    if (!(LibraryFoldersVdf_?.Exists ?? false)) {
+    if (!(LibraryFoldersVdf?.Exists ?? false)) {
       return [];
     }
 
-    using var ls = LibraryFoldersVdf_.OpenReadAsText();
+    using var ls = LibraryFoldersVdf.OpenReadAsText();
     var root = VdfConvert.Deserialize(ls);
 
     if (root.Key != "libraryfolders") {
@@ -60,8 +60,8 @@ internal static class SteamUtils {
                .ToArray();
   }
 
-  private static ISystemDirectory[] CommonDirectories_ { get; } =
-    Libraries_
+  private static ISystemDirectory[] CommonDirectories { get; } =
+    Libraries
         .Select(
             dir => dir.TryToGetExistingSubdir("steamapps", out var steamappsDir)
                 ? steamappsDir
@@ -73,7 +73,7 @@ internal static class SteamUtils {
         .ToArray();
 
   public static ISystemDirectory[] GameDirectories { get; }
-    = CommonDirectories_
+    = CommonDirectories
       .SelectMany(common => common.GetExistingSubdirs())
       .ToArray();
 

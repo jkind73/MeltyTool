@@ -3,43 +3,43 @@ using System.Linq;
 
 namespace HaloWarsTools;
 
-public abstract class HWBinaryResource : HWResource {
-  protected HWBinaryResourceChunk[] Chunks { get; private set; }
+public abstract class HwBinaryResource : HwResource {
+  protected HwBinaryResourceChunk[] Chunks { get; private set; }
 
   protected override void Load(byte[] bytes) {
     uint headerSize = BinaryUtils.ReadUInt32BigEndian(bytes, 4);
     ushort numChunks = BinaryUtils.ReadUInt16BigEndian(bytes, 16);
     int chunkHeaderSize = 24;
 
-    var chunks = new HWBinaryResourceChunk[numChunks];
+    var chunks = new HwBinaryResourceChunk[numChunks];
     for (int i = 0; i < chunks.Length; i++) {
       int offset = (int) headerSize + i * chunkHeaderSize;
 
-      chunks[i] = new HWBinaryResourceChunk() {
-          Type = ParseChunkType(
+      chunks[i] = new HwBinaryResourceChunk() {
+          type = ParseChunkType(
               BinaryUtils.ReadUInt64BigEndian(bytes, offset)),
-          Offset = BinaryUtils.ReadUInt32BigEndian(bytes, offset + 8),
-          Size = BinaryUtils.ReadUInt32BigEndian(bytes, offset + 12)
+          offset = BinaryUtils.ReadUInt32BigEndian(bytes, offset + 8),
+          size = BinaryUtils.ReadUInt32BigEndian(bytes, offset + 12)
       };
     }
 
     this.Chunks = chunks;
   }
 
-  protected static HWBinaryResourceChunkType ParseChunkType(ulong type) {
+  protected static HwBinaryResourceChunkType ParseChunkType(ulong type) {
     if (Enum.TryParse(type.ToString(),
-                      out HWBinaryResourceChunkType result)) {
+                      out HwBinaryResourceChunkType result)) {
       return result;
     }
 
-    return HWBinaryResourceChunkType.Unknown;
+    return HwBinaryResourceChunkType.UNKNOWN;
   }
 
-  protected HWBinaryResourceChunk[] GetAllChunksOfType(
-      HWBinaryResourceChunkType type)
-    => this.Chunks.Where(chunk => chunk.Type == type).ToArray();
+  protected HwBinaryResourceChunk[] GetAllChunksOfType(
+      HwBinaryResourceChunkType type)
+    => this.Chunks.Where(chunk => chunk.type == type).ToArray();
 
-  protected HWBinaryResourceChunk GetFirstChunkOfType(
-      HWBinaryResourceChunkType type)
-    => this.Chunks.FirstOrDefault(chunk => chunk.Type == type);
+  protected HwBinaryResourceChunk GetFirstChunkOfType(
+      HwBinaryResourceChunkType type)
+    => this.Chunks.FirstOrDefault(chunk => chunk.type == type);
 }

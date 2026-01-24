@@ -25,7 +25,7 @@ namespace KSoft.Phoenix
 
 		#region PascalString32
 		static readonly Memory.Strings.StringStorage Pascal32Storage =
-					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageLengthPrefix.Int32, Shell.EndianFormat.Big);
+					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.ASCII, Memory.Strings.StringStorageLengthPrefix.INT32, Shell.EndianFormat.BIG);
 		static readonly Text.StringStorageEncoding Pascal32Encoding = new Text.StringStorageEncoding(Pascal32Storage);
 
 		public static IO.EndianStream StreamPascalString32(this IO.EndianStream s, ref string value)
@@ -39,7 +39,7 @@ namespace KSoft.Phoenix
 
 		#region PascalWideString32
 		static readonly Memory.Strings.StringStorage PascalUnicode32Storage =
-					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.Unicode, Memory.Strings.StringStorageLengthPrefix.Int32, Shell.EndianFormat.Big);
+					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.UNICODE, Memory.Strings.StringStorageLengthPrefix.INT32, Shell.EndianFormat.BIG);
 		static readonly Text.StringStorageEncoding PascalUnicode32Encoding = new Text.StringStorageEncoding(PascalUnicode32Storage);
 
 		public static IO.EndianStream StreamPascalWideString32(this IO.EndianStream s, ref string value)
@@ -54,13 +54,13 @@ namespace KSoft.Phoenix
 		public static IO.EndianStream StreamNotNull<T>(this IO.EndianStream s, ref T obj)
 			where T : class, IO.IEndianStreamSerializable, new()
 		{
-			bool not_null = obj != null;
+			bool notNull = obj != null;
 
-			s.Stream(ref not_null);
-			if (s.IsReading && not_null)
+			s.Stream(ref notNull);
+			if (s.IsReading && notNull)
 				obj = new T();
 
-			if (not_null)
+			if (notNull)
 				s.Stream(obj);
 
 			return s;
@@ -141,11 +141,11 @@ namespace KSoft.Phoenix
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (s.IsReading)
 			{
-				string str_value = null;
-				s.ReadCursor(ref str_value);
-				if (str_value.IsNotNullOrEmpty())
+				string strValue = null;
+				s.ReadCursor(ref strValue);
+				if (strValue.IsNotNullOrEmpty())
 				{
-					var value = Text.Util.ByteStringToArray(str_value);
+					var value = Text.Util.ByteStringToArray(strValue);
 					if (value.IsNotNullOrEmpty())
 					{
 						property.SetValue(obj, value, null);
@@ -158,10 +158,10 @@ namespace KSoft.Phoenix
 				var value = (byte[])property.GetValue(obj, null);
 				if (value.IsNotNullOrEmpty())
 				{
-					string str_value = Text.Util.ByteArrayToString(value);
-					if (str_value.IsNotNullOrEmpty())
+					string strValue = Text.Util.ByteArrayToString(value);
+					if (strValue.IsNotNullOrEmpty())
 					{
-						s.WriteCursor(str_value);
+						s.WriteCursor(strValue);
 						executed = true;
 					}
 				}

@@ -47,7 +47,7 @@ namespace KSoft.Phoenix.Engine
 			XmlFileLoadState state;
 			lock (this.XmlFileLoadStatus)
 				if (!this.XmlFileLoadStatus.TryGetValue(file, out state))
-					return XmlFileLoadState.NotLoaded;
+					return XmlFileLoadState.NOT_LOADED;
 
 			return state;
 		}
@@ -126,21 +126,21 @@ namespace KSoft.Phoenix.Engine
 		{
 			string ext = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-			var xml_or_xmb = ext.Equals(Xmb.XmbFile.kFileExt, StringComparison.OrdinalIgnoreCase)
-				? GetXmlOrXmbFileResult.Xmb
-				: GetXmlOrXmbFileResult.Xml;
+			var xmlOrXmb = ext.Equals(Xmb.XmbFile.K_FILE_EXT, StringComparison.OrdinalIgnoreCase)
+				? GetXmlOrXmbFileResult.XMB
+				: GetXmlOrXmbFileResult.XML;
 
-			return this.OpenXmlOrXmbForRead(xml_or_xmb, fileName);
+			return this.OpenXmlOrXmbForRead(xmlOrXmb, fileName);
 		}
 
 		public IO.XmlElementStream OpenXmlOrXmbForRead(GetXmlOrXmbFileResult xmlOrXmb, string fileName)
 		{
 			switch (xmlOrXmb)
 			{
-				case GetXmlOrXmbFileResult.Xml:
+				case GetXmlOrXmbFileResult.XML:
 					return new IO.XmlElementStream(fileName, System.IO.FileAccess.Read);
 
-				case GetXmlOrXmbFileResult.Xmb:
+				case GetXmlOrXmbFileResult.XMB:
 					return this.OpenXmbForRead(fileName);
 			}
 
@@ -148,24 +148,24 @@ namespace KSoft.Phoenix.Engine
 		}
 		public IO.XmlElementStream OpenXmbForRead(string xmbFile)
 		{
-			var va_size = this.TargetsXbox360
-				? Shell.ProcessorSize.x32
-				: Shell.ProcessorSize.x64;
-			var endian_format = Shell.EndianFormat.Big;
+			var vaSize = this.TargetsXbox360
+				? Shell.ProcessorSize.X32
+				: Shell.ProcessorSize.X64;
+			var endianFormat = Shell.EndianFormat.BIG;
 
-			byte[] file_bytes = System.IO.File.ReadAllBytes(xmbFile);
+			byte[] fileBytes = System.IO.File.ReadAllBytes(xmbFile);
 
-			using (var xmb_ms = new System.IO.MemoryStream(file_bytes, false))
-			using (var xmb = new IO.EndianStream(xmb_ms, endian_format, System.IO.FileAccess.Read))
-			using (var xml_ms = new System.IO.MemoryStream(IntegerMath.kMega * 1))
+			using (var xmbMs = new System.IO.MemoryStream(fileBytes, false))
+			using (var xmb = new IO.EndianStream(xmbMs, endianFormat, System.IO.FileAccess.Read))
+			using (var xmlMs = new System.IO.MemoryStream(IntegerMath.K_MEGA * 1))
 			{
 				xmb.StreamMode = System.IO.FileAccess.Read;
 
-				Resource.ResourceUtils.XmbToXml(xmb, xml_ms, va_size);
+				Resource.ResourceUtils.XmbToXml(xmb, xmlMs, vaSize);
 				// need to do this else we'll get a Root element is missing exception
-				xml_ms.Position = 0;
+				xmlMs.Position = 0;
 
-				var xml = new IO.XmlElementStream(xml_ms, System.IO.FileAccess.Read, streamNameOverride: xmbFile);
+				var xml = new IO.XmlElementStream(xmlMs, System.IO.FileAccess.Read, streamNameOverride: xmbFile);
 				return xml;
 			}
 		}
@@ -176,7 +176,7 @@ namespace KSoft.Phoenix.Engine
 				return ObjectDatabaseForFileResult.Null;
 
 			var status = this.GetFileLoadStatus(file);
-			if (status < XmlFileLoadState.Preloaded)
+			if (status < XmlFileLoadState.PRELOADED)
 			{
 				throw new InvalidOperationException(string.Format(
 					"GetObjectDatabase called on {0} when its load status was {1}",
@@ -197,98 +197,98 @@ namespace KSoft.Phoenix.Engine
 		protected virtual KeyValuePair<Phx.ProtoDataObjectDatabase, int> GetObjectDatabaseForFile(XmlFileInfo file)
 		{
 			Phx.ProtoDataObjectDatabase db = null;
-			int specificObjectKind = TypeExtensions.kNone;
+			int specificObjectKind = TypeExtensions.K_NONE;
 
-			if (file == Phx.BGameData.kXmlFileInfo)
+			if (file == Phx.BGameData.KXmlFileInfo)
 			{
 				db = this.Database.GameData.ObjectDatabase;
-				specificObjectKind = PhxUtil.kObjectKindNone;
+				specificObjectKind = PhxUtil.K_OBJECT_KIND_NONE;
 			}
-			else if (file == Phx.HPBarData.kXmlFileInfo)
+			else if (file == Phx.HpBarData.KXmlFileInfo)
 			{
-				db = this.Database.HPBars.ObjectDatabase;
-				specificObjectKind = PhxUtil.kObjectKindNone;
+				db = this.Database.HpBars.ObjectDatabase;
+				specificObjectKind = PhxUtil.K_OBJECT_KIND_NONE;
 			}
-			else if (file == Phx.BAbility.kXmlFileInfo)
-			{
-				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Ability;
-			}
-			else if (file == Phx.BCiv.kXmlFileInfo)
+			else if (file == Phx.BAbility.KXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Civ;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.ABILITY;
 			}
-			else if (file == Phx.BDamageType.kXmlFileInfo)
+			else if (file == Phx.BCiv.KXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.DamageType;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.CIV;
 			}
-			else if (file == Phx.BProtoImpactEffect.kXmlFileInfo)
+			else if (file == Phx.BDamageType.KXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.ImpactEffect;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.DAMAGE_TYPE;
 			}
-			else if (file == Phx.BLeader.kXmlFileInfo)
+			else if (file == Phx.BProtoImpactEffect.KXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Leader;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.IMPACT_EFFECT;
+			}
+			else if (file == Phx.BLeader.KXmlFileInfo)
+			{
+				db = this.Database.ObjectDatabase;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.LEADER;
 			}
 			else if (
-				file == Phx.BProtoObject.kXmlFileInfo ||
-				file == Phx.BProtoObject.kXmlFileInfoUpdate)
+				file == Phx.BProtoObject.KXmlFileInfo ||
+				file == Phx.BProtoObject.KXmlFileInfoUpdate)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Object;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.OBJECT;
 			}
-			else if (file == Phx.BDatabaseBase.kObjectTypesXmlFileInfo)
+			else if (file == Phx.BDatabaseBase.KObjectTypesXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.ObjectType;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.OBJECT_TYPE;
 			}
-			else if (file == Phx.BProtoPower.kXmlFileInfo)
+			else if (file == Phx.BProtoPower.KXmlFileInfo)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Power;
-			}
-			else if (
-				file == Phx.BProtoSquad.kXmlFileInfo ||
-				file == Phx.BProtoSquad.kXmlFileInfoUpdate)
-			{
-				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Squad;
-			}
-			else if (file.Directory == GameDirectory.Tactics)
-			{
-				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Tactic;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.POWER;
 			}
 			else if (
-				file == Phx.BProtoTech.kXmlFileInfo ||
-				file == Phx.BProtoTech.kXmlFileInfoUpdate)
+				file == Phx.BProtoSquad.KXmlFileInfo ||
+				file == Phx.BProtoSquad.KXmlFileInfoUpdate)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.Tech;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.SQUAD;
 			}
-			else if (file == Phx.TerrainTileType.kXmlFileInfo)
+			else if (file.Directory == GameDirectory.TACTICS)
 			{
 				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.TerrainTileType;
-			}
-			else if (file == Phx.BUserClass.kXmlFileInfo)
-			{
-				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.UserClass;
-			}
-			else if (file == Phx.BWeaponType.kXmlFileInfo)
-			{
-				db = this.Database.ObjectDatabase;
-				specificObjectKind = (int)Phx.DatabaseObjectKind.WeaponType;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.TACTIC;
 			}
 			else if (
-				file.Directory == GameDirectory.AbilityScripts ||
-				file.Directory == GameDirectory.PowerScripts ||
-				file.Directory == GameDirectory.TriggerScripts)
+				file == Phx.BProtoTech.KXmlFileInfo ||
+				file == Phx.BProtoTech.KXmlFileInfoUpdate)
+			{
+				db = this.Database.ObjectDatabase;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.TECH;
+			}
+			else if (file == Phx.TerrainTileType.KXmlFileInfo)
+			{
+				db = this.Database.ObjectDatabase;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.TERRAIN_TILE_TYPE;
+			}
+			else if (file == Phx.BUserClass.KXmlFileInfo)
+			{
+				db = this.Database.ObjectDatabase;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.USER_CLASS;
+			}
+			else if (file == Phx.BWeaponType.KXmlFileInfo)
+			{
+				db = this.Database.ObjectDatabase;
+				specificObjectKind = (int)Phx.DatabaseObjectKind.WEAPON_TYPE;
+			}
+			else if (
+				file.Directory == GameDirectory.ABILITY_SCRIPTS ||
+				file.Directory == GameDirectory.POWER_SCRIPTS ||
+				file.Directory == GameDirectory.TRIGGER_SCRIPTS)
 			{
 				throw new NotImplementedException(file.ToString());
 			}
@@ -313,7 +313,7 @@ namespace KSoft.Phoenix.Engine
 		public bool IsNull { get { return this.Database == null; } }
 
 		public static ObjectDatabaseForFileResult Null { get {
-			return new ObjectDatabaseForFileResult(null, null, TypeExtensions.kNone);
+			return new ObjectDatabaseForFileResult(null, null, TypeExtensions.K_NONE);
 		} }
 	};
 }

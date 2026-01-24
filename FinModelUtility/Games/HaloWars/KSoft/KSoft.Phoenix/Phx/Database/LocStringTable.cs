@@ -69,9 +69,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			Contract.Requires(absoluteEndIndex > absoluteStartIndex);
 
-			int expected_start_index = this.StartIndex + this.Count;
-			if (expected_start_index != absoluteStartIndex)
-				throw new ArgumentException(absoluteStartIndex + " != " + expected_start_index, nameof(absoluteStartIndex));
+			int expectedStartIndex = this.StartIndex + this.Count;
+			if (expectedStartIndex != absoluteStartIndex)
+				throw new ArgumentException(absoluteStartIndex + " != " + expectedStartIndex, nameof(absoluteStartIndex));
 
 			int count = (absoluteEndIndex+1) - absoluteStartIndex;
 			var next = this.MakeNextRange(count, reservedFor);
@@ -82,16 +82,16 @@ namespace KSoft.Phoenix.Phx
 
 		internal LocStringTableIndexRange StartSubRange(int count, string reservedFor)
 		{
-			var first_child = new LocStringTableIndexRange(count, reservedFor);
-			first_child.Parent = this;
-			first_child.Depth = this.Depth + 1;
-			first_child.StartIndex = this.StartIndex;
+			var firstChild = new LocStringTableIndexRange(count, reservedFor);
+			firstChild.Parent = this;
+			firstChild.Depth = this.Depth + 1;
+			firstChild.StartIndex = this.StartIndex;
 
 			this.SubRanges = [
-				first_child
+				firstChild
 			];
 
-			return first_child;
+			return firstChild;
 		}
 
 		internal LocStringTableIndexRange EndSubRange()
@@ -105,26 +105,26 @@ namespace KSoft.Phoenix.Phx
 		, IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("StringTable",
-			XML.BCollectionXmlParamsFlags.RequiresDataNamePreloading);
-		public static readonly Engine.XmlFileInfo kXmlFileInfoEnglish = new Engine.XmlFileInfo
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("StringTable",
+			XML.BCollectionXmlParamsFlags.REQUIRES_DATA_NAME_PRELOADING);
+		public static readonly Engine.XmlFileInfo KXmlFileInfoEnglish = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.Data,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "StringTable-en.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfoEnglish = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.Lists,
-			kXmlFileInfoEnglish);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfoEnglish = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.LISTS,
+			KXmlFileInfoEnglish);
 		#endregion
 
 		#region IndexRanges
-		private static LocStringTableIndexRange gIndexRanges;
+		private static LocStringTableIndexRange gIndexRanges_;
 		public static LocStringTableIndexRange IndexRanges { get {
-			if (gIndexRanges == null)
+			if (gIndexRanges_ == null)
 			{
-				gIndexRanges = new LocStringTableIndexRange(1000, "code");
-				gIndexRanges
+				gIndexRanges_ = new LocStringTableIndexRange(1000, "code");
+				gIndexRanges_
 						.StartSubRange(100, "unused1")
 						.MakeNextRange(100, 229, "UI help panel")
 						.MakeNextRange(230, 349, "Unit prereqs")
@@ -156,20 +156,20 @@ namespace KSoft.Phoenix.Phx
 					.MakeNextRange(60000, 65345-1, "nothing3")
 					;
 			}
-			return gIndexRanges;
+			return gIndexRanges_;
 		} }
 
 		public static LocStringTableIndexRange FindRangeDefinition(int index)
 		{
 			Contract.Requires(index >= 0);
 
-			LocStringTableIndexRange found_range = null;
+			LocStringTableIndexRange foundRange = null;
 
 			for (var range = IndexRanges; range != null; )
 			{
 				if (index >= range.StartIndex && index <= range.EndIndex)
 				{
-					found_range = range;
+					foundRange = range;
 
 					if (range.SubRanges.IsNotNullOrEmpty())
 					{
@@ -183,18 +183,18 @@ namespace KSoft.Phoenix.Phx
 				range = range.NextRange;
 			}
 
-			return found_range;
+			return foundRange;
 		}
 		#endregion
 
-		string mLanguage;
+		string mLanguage_;
 		public string Language
 		{
-			get { return this.mLanguage; }
-			set { this.mLanguage = value; }
+			get { return this.mLanguage_; }
+			set { this.mLanguage_ = value; }
 		}
 
-		bool mDoNotUpdateUsedIndices;
+		bool mDoNotUpdateUsedIndices_;
 		public Collections.BitSet UsedIndices { get; private set; }
 			= [];
 
@@ -208,7 +208,7 @@ namespace KSoft.Phoenix.Phx
 			if (item == null)
 				return;
 
-			if (item.ID.IsNone())
+			if (item.Id.IsNone())
 				throw new ArgumentOutOfRangeException(nameof(item));
 
 			index = this.FindInsertIndex(item);
@@ -218,31 +218,31 @@ namespace KSoft.Phoenix.Phx
 
 		private int FindInsertIndex(LocString item)
 		{
-			int id = item.ID;
-			int insert_index = 0;
+			int id = item.Id;
+			int insertIndex = 0;
 
-			foreach (int bit_index in this.UsedIndices.SetBitIndices)
+			foreach (int bitIndex in this.UsedIndices.SetBitIndices)
 			{
-				if (bit_index > id)
+				if (bitIndex > id)
 					break;
-				if (bit_index == id)
+				if (bitIndex == id)
 				{
-					var existing_item = this[insert_index + 1];
+					var existingItem = this[insertIndex + 1];
 					throw new InvalidOperationException(string.Format(
 						"Can't insert {0} as there is already a string with that ID: {1}",
-						item, existing_item));
+						item, existingItem));
 				}
 
-				insert_index++;
+				insertIndex++;
 			}
 
-			return insert_index;
+			return insertIndex;
 		}
 
 		#region UsedIndices updating
 		private void OnStringTableChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
-			if (this.mDoNotUpdateUsedIndices)
+			if (this.mDoNotUpdateUsedIndices_)
 				return;
 
 			switch (e.Action)
@@ -273,18 +273,18 @@ namespace KSoft.Phoenix.Phx
 			if (list == null)
 				throw new ArgumentNullException(nameof(list));
 
-			this.mDoNotUpdateUsedIndices = true;
+			this.mDoNotUpdateUsedIndices_ = true;
 			if (clearFirst)
 				this.UsedIndices.Clear();
 			foreach (LocString str in list)
 			{
-				int id = str.ID;
+				int id = str.Id;
 				if (id < this.UsedIndices.Length)
 				{
 					if (this.UsedIndices[id] == state)
 						throw new ArgumentException(string.Format(
 							"LocString #{0} '{1}' is already {2}",
-							str.ID, str.Text,
+							str.Id, str.Text,
 							state ? "set" : "unset"));
 				}
 				else if (id >= this.UsedIndices.Length)
@@ -295,40 +295,40 @@ namespace KSoft.Phoenix.Phx
 				this.UsedIndices[id] = state;
 			}
 
-			this.mDoNotUpdateUsedIndices = false;
+			this.mDoNotUpdateUsedIndices_ = false;
 		}
 		private void RefreshUsedIndicesForReplace(IList newList, IList oldList)
 		{
 			Contract.Requires<ArgumentNullException>(newList != null && oldList != null);
 			Contract.Requires<ArgumentOutOfRangeException>(newList.Count == oldList.Count);
 
-			this.mDoNotUpdateUsedIndices = true;
+			this.mDoNotUpdateUsedIndices_ = true;
 			for (int x = 0; x < newList.Count; x++)
 			{
-				var new_item = (LocString)newList[x];
-				var old_item = (LocString)oldList[x];
+				var newItem = (LocString)newList[x];
+				var oldItem = (LocString)oldList[x];
 
-				if (new_item == old_item)
+				if (newItem == oldItem)
 				{
 				}
-				else if (new_item != null && old_item != null)
+				else if (newItem != null && oldItem != null)
 				{
-					if (new_item.ID != old_item.ID)
+					if (newItem.Id != oldItem.Id)
 						throw new InvalidOperationException(string.Format(
 							"ID mismatch: {0} != {1}",
-							new_item, old_item));
+							newItem, oldItem));
 				}
-				else if (new_item != null)
+				else if (newItem != null)
 				{
-					this.UsedIndices[new_item.ID] = true;
+					this.UsedIndices[newItem.Id] = true;
 				}
-				else if (old_item != null)
+				else if (oldItem != null)
 				{
-					this.UsedIndices[old_item.ID] = false;
+					this.UsedIndices[oldItem.Id] = false;
 				}
 			}
 
-			this.mDoNotUpdateUsedIndices = false;
+			this.mDoNotUpdateUsedIndices_ = false;
 		}
 		#endregion
 
@@ -339,39 +339,39 @@ namespace KSoft.Phoenix.Phx
 			if (this.UsedIndices.Length == 0)
 				return range.StartIndex;
 
-			int max_index = this.UsedIndices.Length - 1;
+			int maxIndex = this.UsedIndices.Length - 1;
 
-			if (range.StartIndex > max_index)
+			if (range.StartIndex > maxIndex)
 				return range.StartIndex;
 
-			for (int clear_bit_index = range.StartIndex; (clear_bit_index = this.UsedIndices.NextClearBitIndex(clear_bit_index)) > 0; )
+			for (int clearBitIndex = range.StartIndex; (clearBitIndex = this.UsedIndices.NextClearBitIndex(clearBitIndex)) > 0; )
 			{
-				if (clear_bit_index > range.EndIndex)
+				if (clearBitIndex > range.EndIndex)
 					break;
 
-				return clear_bit_index;
+				return clearBitIndex;
 			}
 
-			if (range.EndIndex > max_index)
-				return max_index + 1;
+			if (range.EndIndex > maxIndex)
+				return maxIndex + 1;
 
-			return TypeExtensions.kNone;
+			return TypeExtensions.K_NONE;
 		}
 
 		public int GetLocStringIndex(int id)
 		{
 			if (id < 0)
-				return TypeExtensions.kNone;
+				return TypeExtensions.K_NONE;
 
-			int index = TypeExtensions.kNone;
-			foreach (int bit_index in this.UsedIndices.SetBitIndices)
+			int index = TypeExtensions.K_NONE;
+			foreach (int bitIndex in this.UsedIndices.SetBitIndices)
 			{
 				index++;
 
-				if (bit_index == id)
+				if (bitIndex == id)
 					break;
-				if (bit_index > id)
-					index = TypeExtensions.kNone;
+				if (bitIndex > id)
+					index = TypeExtensions.K_NONE;
 			}
 
 			return index;
@@ -425,19 +425,19 @@ namespace KSoft.Phoenix.Phx
 		{
 			Contract.Requires(range != null);
 
-			int used_count = 0;
+			int usedCount = 0;
 			if (range.StartIndex >= this.UsedIndices.Length)
-				return used_count;
+				return usedCount;
 
-			foreach (int bit_index in this.UsedIndices.SetBitIndicesStartingAt(range.StartIndex))
+			foreach (int bitIndex in this.UsedIndices.SetBitIndicesStartingAt(range.StartIndex))
 			{
-				if (bit_index > range.EndIndex)
+				if (bitIndex > range.EndIndex)
 					break;
 
-				used_count++;
+				usedCount++;
 			}
 
-			return used_count;
+			return usedCount;
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -447,47 +447,47 @@ namespace KSoft.Phoenix.Phx
 		{
 			using (s.EnterCursorBookmark("Language"))
 			{
-				s.StreamAttribute("name", ref this.mLanguage);
+				s.StreamAttribute("name", ref this.mLanguage_);
 
 				if (s.IsReading)
 				{
-					var temp_list = new List<LocString>();
-					bool is_sorted = true;
-					LocString prev_str = null;
+					var tempList = new List<LocString>();
+					bool isSorted = true;
+					LocString prevStr = null;
 					foreach (var n in s.ElementsByName("String"))
 					{
 						using (s.EnterCursorBookmark(n))
 						{
 							var str = new LocString();
 							str.Serialize(s);
-							temp_list.Add(str);
+							tempList.Add(str);
 
-							if (is_sorted && prev_str != null && prev_str.ID >= str.ID)
-								is_sorted = false;
+							if (isSorted && prevStr != null && prevStr.Id >= str.Id)
+								isSorted = false;
 
-							prev_str = str;
+							prevStr = str;
 						}
 					}
 
-					if (!is_sorted)
-						temp_list.Sort((x, y) => x.ID.CompareTo(y.ID));
+					if (!isSorted)
+						tempList.Sort((x, y) => x.Id.CompareTo(y.Id));
 
-					int last_id = temp_list[temp_list.Count - 1].ID;
-					this.UsedIndices.Length = last_id + 1;
+					int lastId = tempList[tempList.Count - 1].Id;
+					this.UsedIndices.Length = lastId + 1;
 
-					this.mDoNotUpdateUsedIndices = true;
-					foreach (var str in temp_list)
+					this.mDoNotUpdateUsedIndices_ = true;
+					foreach (var str in tempList)
 					{
-						int id = str.ID;
+						int id = str.Id;
 						if (this.UsedIndices[id])
 							s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
 								"Duplicate LocString: #{0} '{1}'",
-								str.ID, str.Text)));
+								str.Id, str.Text)));
 
 						this.UsedIndices[id] = true;
 					}
-					this.AddRange(temp_list);
-					this.mDoNotUpdateUsedIndices = false;
+					this.AddRange(tempList);
+					this.mDoNotUpdateUsedIndices_ = false;
 				}
 				else if (s.IsWriting)
 				{

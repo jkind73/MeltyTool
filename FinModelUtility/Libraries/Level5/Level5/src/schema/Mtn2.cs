@@ -97,8 +97,8 @@ public sealed class Mtn2 {
       foreach (var v in hashes) {
         var node = new GenericAnimationTransform();
         node.Hash = v;
-        node.HashType = AnimNodeHashType.CRC32C;
-        this.Anim.TransformNodes.Add(node);
+        node.HashType = AnimNodeHashType.CRC32_C;
+        this.Anim.transformNodes.Add(node);
       }
 
       var offset = 0;
@@ -157,7 +157,7 @@ public sealed class Mtn2 {
 
       var nodeIndex = boneIndex + (flag == 0 ? boneCount : 0);
 
-      var node = this.Anim.TransformNodes[nodeIndex];
+      var node = this.Anim.transformNodes[nodeIndex];
 
       br.Position = (keyDataOffset);
       for (int k = 0; k < keyFrameCount; k++) {
@@ -205,13 +205,13 @@ public sealed class Mtn2 {
           case 1:
             node.AddKey(frame,
                         animdata[0],
-                        AnimationTrackFormat.TranslateX);
+                        AnimationTrackFormat.TRANSLATE_X);
             node.AddKey(frame,
                         animdata[1],
-                        AnimationTrackFormat.TranslateY);
+                        AnimationTrackFormat.TRANSLATE_Y);
             node.AddKey(frame,
                         animdata[2],
-                        AnimationTrackFormat.TranslateZ);
+                        AnimationTrackFormat.TRANSLATE_Z);
             break;
           case 2:
             // TODO: Invert?
@@ -220,14 +220,14 @@ public sealed class Mtn2 {
                                animdata[1],
                                animdata[2],
                                animdata[3]));
-            node.AddKey(frame, e.X, AnimationTrackFormat.RotateX);
-            node.AddKey(frame, e.Y, AnimationTrackFormat.RotateY);
-            node.AddKey(frame, e.Z, AnimationTrackFormat.RotateZ);
+            node.AddKey(frame, e.X, AnimationTrackFormat.ROTATE_X);
+            node.AddKey(frame, e.Y, AnimationTrackFormat.ROTATE_Y);
+            node.AddKey(frame, e.Z, AnimationTrackFormat.ROTATE_Z);
             break;
           case 3:
-            node.AddKey(frame, animdata[0], AnimationTrackFormat.ScaleX);
-            node.AddKey(frame, animdata[1], AnimationTrackFormat.ScaleY);
-            node.AddKey(frame, animdata[2], AnimationTrackFormat.ScaleZ);
+            node.AddKey(frame, animdata[0], AnimationTrackFormat.SCALE_X);
+            node.AddKey(frame, animdata[1], AnimationTrackFormat.SCALE_Y);
+            node.AddKey(frame, animdata[2], AnimationTrackFormat.SCALE_Z);
             break;
           case 9: {
             switch (flag) {

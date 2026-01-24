@@ -15,7 +15,7 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			XML.XmlUtil.Serialize(s, this.Skulls, BProtoSkull.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Skulls, BProtoSkull.KBListXmlParams);
 			//TimeLineEvent BProtoTimeLineEvent
 		}
 		#endregion

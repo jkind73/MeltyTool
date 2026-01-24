@@ -6,17 +6,17 @@ namespace KSoft.Phoenix.Phx
 		: TriggerScriptIdObject
 	{
 		#region Xml constants
-		const string kXmlAttrCommentOut = "CommentOut";
+		const string K_XML_ATTR_COMMENT_OUT_ = "CommentOut";
 		#endregion
 
-		bool mCommentOut;
-		public bool CommentOut { get { return this.mCommentOut; } }
+		bool mCommentOut_;
+		public bool CommentOut { get { return this.mCommentOut_; } }
 
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.Serialize(s);
 
-			s.StreamAttribute(kXmlAttrCommentOut, ref this.mCommentOut);
+			s.StreamAttribute(K_XML_ATTR_COMMENT_OUT_, ref this.mCommentOut_);
 		}
 	};
 }

@@ -20,13 +20,13 @@ namespace KSoft.Shell
 		/// <summary>Least Significant Bit order (lsb)</summary>
 		/// <remarks>Right-to-Left</remarks>
 		/// <see cref="BitConverter.IsLittleEndian"/>
-		Little,
+		LITTLE,
 		/// <summary>Most Significant Bit order (msb)</summary>
 		/// <remarks>Left-to-Right</remarks>
-		Big,
+		BIG,
 
 		/// <remarks>1 bit</remarks>
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	/// <summary>Supported processor instruction set sizes</summary>
@@ -34,15 +34,15 @@ namespace KSoft.Shell
 	public enum ProcessorSize : byte
 	{
 		/// <summary>Processor size used is determined during runtime. Special for managed frameworks like .NET</summary>
-		AnyCPU,
+		ANY_CPU,
 
 		/// <summary>32-bit processor</summary>
-		x32,
+		X32,
 		/// <summary>64-bit processor</summary>
-		x64,
+		X64,
 
 		#region Reserved
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused3,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED3,
 
 #if false
 		/// <summary>128-bit processor</summary>
@@ -55,23 +55,23 @@ namespace KSoft.Shell
 		#endregion
 
 		/// <remarks>2 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	/// <summary>Supported sizes of a processor's logical word</summary>
 	[System.Reflection.Obfuscation(Exclude=true)]
 	public enum ProcessorWordSize : byte
 	{
-		x8,
-		x16,
-		x32,
-		x64,
+		X8,
+		X16,
+		X32,
+		X64,
 
 		#region Reserved
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused4,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused5,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused6,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused7,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED4,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED5,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED6,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED7,
 
 #if false
 		[Obsolete(KSoftConstants.kUnsupportedMsg)] x128,
@@ -80,7 +80,7 @@ namespace KSoft.Shell
 		#endregion
 
 		/// <remarks>3 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	/// <summary>Supported processor instruction set types</summary>
@@ -88,7 +88,7 @@ namespace KSoft.Shell
 	public enum InstructionSet : byte
 	{
 		/// <summary>Intel based</summary>
-		Intel,
+		INTEL,
 		/// <summary>PowerPC based</summary>
 		PPC,
 
@@ -108,17 +108,17 @@ namespace KSoft.Shell
 
 		/// <summary>Microprocessor without Interlocked Pipeline Stages</summary>
 		/// <remarks>http://en.wikipedia.org/wiki/MIPS_architecture</remarks>
-		[Obsolete(KSoftConstants.kUnsupportedMsg)]
+		[Obsolete(KSoftConstants.K_UNSUPPORTED_MSG)]
 		MIPS,
 
 		#region Reserved
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused5,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused6,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused7,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED5,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED6,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED7,
 		#endregion
 
 		/// <remarks>3 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 
@@ -127,43 +127,43 @@ namespace KSoft.Shell
 	public enum PlatformType : uint
 	{
 		/// <summary>Undefined platform!</summary>
-		Undefined,
+		UNDEFINED,
 
 		/// <summary>Microsoft Windows</summary>
-		Windows,
+		WINDOWS,
 
 		/// <summary>Linux based</summary>
-		Linux,
-		Android,
+		LINUX,
+		ANDROID,
 
 		/// <summary>Apple's Macintosh</summary>
-		Mac,
+		MAC,
 		/// <summary>Apple's iPod (a.k.a iPhone OS)</summary>
 		/// <remarks>Currently unsupported</remarks>
-		iOS,
+		I_OS,
 
 		/// <summary>Nintendo non-hand held (e.g., Wii)</summary>
 		/// <remarks>Currently unsupported</remarks>
-		NintendoConsole,
+		NINTENDO_CONSOLE,
 
 		/// <summary>Sony's Playstation</summary>
 		/// <remarks>Currently unsupported</remarks>
-		Playstation,
+		PLAYSTATION,
 
 		/// <summary>Microsoft's Xbox (Original, 360, Durango)</summary>
-		Xbox,
+		XBOX,
 
 		#region Reserved
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused9,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused10,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused11,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused12,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused13,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused14,
-		[Obsolete(KSoftConstants.kReservedMsg)] zUnused15,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED9,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED10,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED11,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED12,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED13,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED14,
+		[Obsolete(KSoftConstants.K_RESERVED_MSG)] Z_UNUSED15,
 		#endregion
 
 		/// <remarks>4 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 }

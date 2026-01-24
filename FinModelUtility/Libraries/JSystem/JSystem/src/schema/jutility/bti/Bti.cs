@@ -52,63 +52,63 @@ public enum JutTransparency : byte {
 [LocalPositions]
 public partial class Bti : IBinaryConvertible {
   [IntegerFormat(SchemaIntegerType.BYTE)]
-  public GxTextureFormat Format;
+  public GxTextureFormat format;
 
-  public JutTransparency AlphaSetting;
-  public ushort Width;
-  public ushort Height;
-  public GxWrapMode WrapS;
-  public GxWrapMode WrapT;
-
-  [IntegerFormat(SchemaIntegerType.BYTE)]
-  public bool PalettesEnabled;
+  public JutTransparency alphaSetting;
+  public ushort width;
+  public ushort height;
+  public GxWrapMode wrapS;
+  public GxWrapMode wrapT;
 
   [IntegerFormat(SchemaIntegerType.BYTE)]
-  public GxPaletteFormat PaletteFormat;
+  public bool palettesEnabled;
+
+  [IntegerFormat(SchemaIntegerType.BYTE)]
+  public GxPaletteFormat paletteFormat;
 
   [WLengthOfSequence(nameof(PaletteEntries))]
-  public ushort NrPaletteEntries;
+  public ushort nrPaletteEntries;
 
   [WPointerToOrNull(nameof(PaletteEntries))]
-  public uint PaletteOffset;
+  public uint paletteOffset;
 
-  public uint BorderColor;
-  public GX_MIN_TEXTURE_FILTER MinFilter;
-  public GX_MAG_TEXTURE_FILTER MagFilter;
+  public uint borderColor;
+  public GxMinTextureFilter minFilter;
+  public GxMagTextureFilter magFilter;
 
-  public sbyte MinLodTimes8;
-  public sbyte MaxLodTimes8;
+  public sbyte minLodTimes8;
+  public sbyte maxLodTimes8;
 
-  public byte NrMipMap;
+  public byte nrMipMap;
 
   [Unknown]
-  public byte Unknown5;
+  public byte unknown5;
 
-  public short LodBiasTimes100;
+  public short lodBiasTimes100;
 
-  [WPointerTo(nameof(Data))]
-  public uint DataOffset;
+  [WPointerTo(nameof(data))]
+  public uint dataOffset;
 
-  [RAtPosition(nameof(DataOffset))]
-  [RSequenceLengthSource(nameof(CompressedBufferSize_))]
-  public byte[] Data;
+  [RAtPosition(nameof(dataOffset))]
+  [RSequenceLengthSource(nameof(CompressedBufferSize))]
+  public byte[] data;
 
-  [RAtPosition(nameof(PaletteOffset))]
-  [RSequenceLengthSource(nameof(NrPaletteEntries))]
+  [RAtPosition(nameof(paletteOffset))]
+  [RSequenceLengthSource(nameof(nrPaletteEntries))]
   public ushort[]? PaletteEntries { get; set; }
 
   public IReadOnlyImage[] ToMipmapImages() {
-    var mipmapImages = new IReadOnlyImage[this.NrMipMap];
+    var mipmapImages = new IReadOnlyImage[this.nrMipMap];
 
-    using var br = new SchemaBinaryReader(this.Data, Endianness.BigEndian);
+    using var br = new SchemaBinaryReader(this.data, Endianness.BigEndian);
 
-    if (this.Format != GxTextureFormat.INDEX4 &&
-        this.Format != GxTextureFormat.INDEX8) {
+    if (this.format != GxTextureFormat.INDEX4 &&
+        this.format != GxTextureFormat.INDEX8) {
       for (var i = 0; i < mipmapImages.Length; ++i) {
         var initialOffset = br.Position;
 
         mipmapImages[i]
-            = new GxImageReader(this.Width >> i, this.Height >> i, this.Format)
+            = new GxImageReader(this.width >> i, this.height >> i, this.format)
                 .ReadImage(br);
 
         var finalOffset = br.Position;
@@ -117,13 +117,13 @@ public partial class Bti : IBinaryConvertible {
         }
       }
     } else {
-      var isIndex4 = this.Format == GxTextureFormat.INDEX4;
+      var isIndex4 = this.format == GxTextureFormat.INDEX4;
 
       for (var m = 0; m < mipmapImages.Length; ++m) {
         var initialOffset = br.Position;
 
-        var width = this.Width >> m;
-        var height = this.Height >> m;
+        var width = this.width >> m;
+        var height = this.height >> m;
 
         var bitmap = new Rgba32Image(isIndex4 ? PixelFormat.P4 : PixelFormat.P8,
                                      width,
@@ -133,7 +133,7 @@ public partial class Bti : IBinaryConvertible {
 
         var indices = new byte[width * height];
         if (isIndex4) {
-          for (var i = 0; i < this.Data.Length; ++i) {
+          for (var i = 0; i < this.data.Length; ++i) {
             var two = br.ReadByte();
 
             var firstIndex = two >> 4;
@@ -153,7 +153,7 @@ public partial class Bti : IBinaryConvertible {
            = this.PaletteEntries
                   .AssertNonnull()
                   .Select(entry => {
-                    switch (this.PaletteFormat) {
+                    switch (this.paletteFormat) {
                       case GxPaletteFormat.PAL_A8_I8: {
                         var alpha = entry & 0xFF;
                         var intensity = entry >> 8;
@@ -209,13 +209,13 @@ public partial class Bti : IBinaryConvertible {
   }
 
   [Skip]
-  private int CompressedBufferSize_ {
+  private int CompressedBufferSize {
     get {
-      int num1 = (int) this.Width + (8 - (int) this.Width % 8) % 8;
-      int num2 = (int) this.Width + (4 - (int) this.Width % 4) % 4;
-      int num3 = (int) this.Height + (8 - (int) this.Height % 8) % 8;
-      int num4 = (int) this.Height + (4 - (int) this.Height % 4) % 4;
-      var firstImageSize = this.Format switch {
+      int num1 = (int) this.width + (8 - (int) this.width % 8) % 8;
+      int num2 = (int) this.width + (4 - (int) this.width % 4) % 4;
+      int num3 = (int) this.height + (8 - (int) this.height % 8) % 8;
+      int num4 = (int) this.height + (4 - (int) this.height % 4) % 4;
+      var firstImageSize = this.format switch {
           GxTextureFormat.I4         => num1 * num3 / 2,
           GxTextureFormat.I8         => num1 * num4,
           GxTextureFormat.A4_I4      => num1 * num4,
@@ -226,12 +226,12 @@ public partial class Bti : IBinaryConvertible {
           GxTextureFormat.INDEX4     => num1 * num3 / 2,
           GxTextureFormat.INDEX8     => num1 * num4,
           GxTextureFormat.INDEX14_X2 => num2 * num4 * 2,
-          GxTextureFormat.S3TC1      => num2 * num4 / 2,
+          GxTextureFormat.S3_TC1      => num2 * num4 / 2,
           _                          => -1
       };
 
       var totalSize = 0;
-      for (var i = 0; i < this.NrMipMap; ++i) {
+      for (var i = 0; i < this.nrMipMap; ++i) {
         totalSize += firstImageSize >> (2 * i);
       }
 

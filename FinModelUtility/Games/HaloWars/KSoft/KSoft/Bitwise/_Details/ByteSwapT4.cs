@@ -455,8 +455,8 @@ namespace KSoft.Bitwise
 		}
 		#endregion
 
-		public const int kSizeOfUInt24 = sizeof(byte) * 3;
-		public const int kSizeOfInt24 = kSizeOfUInt24;
+		public const int K_SIZE_OF_U_INT24 = sizeof(byte) * 3;
+		public const int K_SIZE_OF_INT24 = K_SIZE_OF_U_INT24;
 
 		#region UInt24
 		/// <summary>Swaps a <see cref="UInt32" /> and returns the result</summary>
@@ -493,7 +493,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentOutOfRangeException>(
 				offset >= 0 && offset < buffer.Length);
 			Contract.Requires<ArgumentOutOfRangeException>(
-				offset+kSizeOfInt24 <= buffer.Length);
+				offset+K_SIZE_OF_INT24 <= buffer.Length);
 
 			byte b0, b1, b2;
 			b0 = buffer[offset++];
@@ -504,7 +504,7 @@ namespace KSoft.Bitwise
 			buffer[--offset] = b1;
 			buffer[--offset] = b2;
 
-			return offset + kSizeOfInt24;
+			return offset + K_SIZE_OF_INT24;
 		}
 		/// <summary>Replaces 3 bytes in an array with a integer value</summary>
 		/// <param name="buffer">byte buffer</param>
@@ -523,7 +523,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentOutOfRangeException>(
 				offset >= 0 && offset < buffer.Length);
 			Contract.Requires<ArgumentOutOfRangeException>(
-				offset+kSizeOfInt24 <= buffer.Length);
+				offset+K_SIZE_OF_INT24 <= buffer.Length);
 
 			byte b0, b1, b2;
 			if (BitConverter.IsLittleEndian) {
@@ -591,8 +591,8 @@ namespace KSoft.Bitwise
 		}
 		#endregion
 
-		public const int kSizeOfUInt40 = sizeof(byte) * 5;
-		public const int kSizeOfInt40 = kSizeOfUInt40;
+		public const int K_SIZE_OF_U_INT40 = sizeof(byte) * 5;
+		public const int K_SIZE_OF_INT40 = K_SIZE_OF_U_INT40;
 
 		#region UInt40
 		/// <summary>Swaps a <see cref="UInt64" /> and returns the result</summary>
@@ -633,7 +633,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentOutOfRangeException>(
 				offset >= 0 && offset < buffer.Length);
 			Contract.Requires<ArgumentOutOfRangeException>(
-				offset+kSizeOfInt40 <= buffer.Length);
+				offset+K_SIZE_OF_INT40 <= buffer.Length);
 
 			byte b0, b1, b2, b3, b4;
 			b0 = buffer[offset++];
@@ -648,7 +648,7 @@ namespace KSoft.Bitwise
 			buffer[--offset] = b3;
 			buffer[--offset] = b4;
 
-			return offset + kSizeOfInt40;
+			return offset + K_SIZE_OF_INT40;
 		}
 		/// <summary>Replaces 5 bytes in an array with a integer value</summary>
 		/// <param name="buffer">byte buffer</param>
@@ -667,7 +667,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentOutOfRangeException>(
 				offset >= 0 && offset < buffer.Length);
 			Contract.Requires<ArgumentOutOfRangeException>(
-				offset+kSizeOfInt40 <= buffer.Length);
+				offset+K_SIZE_OF_INT40 <= buffer.Length);
 
 			byte b0, b1, b2, b3, b4;
 			if (BitConverter.IsLittleEndian) {

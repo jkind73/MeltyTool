@@ -19,7 +19,7 @@ public sealed class TextureShaderSourceGlslTests {
             WithUvs = true,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D diffuseTexture;
@@ -47,7 +47,7 @@ public sealed class TextureShaderSourceGlslTests {
             WithUvs = true,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D diffuseTexture;
@@ -75,10 +75,10 @@ public sealed class TextureShaderSourceGlslTests {
             WithUvs = true,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
 
           uniform sampler2D diffuseTexture;
           uniform bool hasSpecular;
@@ -118,7 +118,7 @@ public sealed class TextureShaderSourceGlslTests {
                         options,
                         mm => mm.AddTextureMaterial(
                             mm.CreateTexture(
-                                FinImage.Create1x1FromColor(
+                                FinImage.Create1X1FromColor(
                                     options.TransparencyType switch {
                                         TransparencyType.OPAQUE      => Color.White,
                                         TransparencyType.MASK        => Color.FromArgb(0, 255, 255, 255),

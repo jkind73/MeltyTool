@@ -220,7 +220,7 @@ public sealed class DatSubfile : IBinaryDeserializable {
             mObj.Name = br.ReadStringNT();
           }
 
-          foreach (var (_, tObj) in mObj.TObjsAndOffsets) {
+          foreach (var (_, tObj) in mObj.ObjsAndOffsets) {
             var tObjStringOffset = tObj.StringOffset;
             if (tObjStringOffset != 0) {
               br.Position = tObj.StringOffset;

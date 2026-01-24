@@ -5,27 +5,27 @@ namespace KSoft
 	public static partial class IntegerMath
 	{
 		/// <summary>Represents 1024 bytes, or 1KB</summary>
-		public const int kKilo = 1024;
+		public const int K_KILO = 1024;
 		/// <summary>Represents 1024KB, or 1MB</summary>
-		public const int kMega = 1024 * kKilo;
+		public const int K_MEGA = 1024 * K_KILO;
 		/// <summary>Maximum accepted alignment bit value in integer math functions</summary>
-		public const int kMaxAlignmentBit = 24; // 16MB
+		public const int K_MAX_ALIGNMENT_BIT = 24; // 16MB
 
 		/// <summary>16-bit alignment in log2</summary>
-		public const int kInt16AlignmentBit = 1;
+		public const int K_INT16_ALIGNMENT_BIT = 1;
 		/// <summary>32-bit alignment in log2</summary>
-		public const int kInt32AlignmentBit = 2;
+		public const int K_INT32_ALIGNMENT_BIT = 2;
 		/// <summary>64-bit alignment in log2</summary>
-		public const int kInt64AlignmentBit = 3;
+		public const int K_INT64_ALIGNMENT_BIT = 3;
 		/// <summary>128-bit alignment in log2</summary>
-		public const int k16ByteAlignmentBit = 4;
+		public const int K16_BYTE_ALIGNMENT_BIT = 4;
 		/// <summary>256-bit alignment in log2</summary>
-		public const int k32ByteAlignmentBit = 5;
+		public const int K32_BYTE_ALIGNMENT_BIT = 5;
 
 		/// <summary>1KB alignment in log2</summary>
-		public const int kKiloAlignmentBit = 10;
+		public const int K_KILO_ALIGNMENT_BIT = 10;
 		/// <summary>4KB alignment in log2</summary>
-		public const int kFourKiloAlignmentBit = 12;
+		public const int K_FOUR_KILO_ALIGNMENT_BIT = 12;
 
 
 		/// <summary>Round up <paramref name="value"/> to nearest multiple of <paramref name="mult"/></summary>

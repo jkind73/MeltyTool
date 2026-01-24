@@ -9,28 +9,28 @@ namespace sm64.api;
 
 public static class Sm64LevelImporter {
   public static Level LoadLevel(Sm64LevelSceneFileBundle levelFileBundle) {
-    ROM rom = ROM.Instance;
+    Rom rom = Rom.Instance;
 
-    rom.clearSegments();
-    rom.readFile(levelFileBundle.Sm64Rom.FullPath);
+    rom.ClearSegments();
+    rom.ReadFile(levelFileBundle.Sm64Rom.FullPath);
 
     Globals.objectComboEntries.Clear();
     Globals.behaviorNameEntries.Clear();
-    BehaviorNameFile.parseBehaviorNames(
-        Globals.getDefaultBehaviorNamesPath());
-    ModelComboFile.parseObjectCombos(Globals.getDefaultObjectComboPath());
+    BehaviorNameFile.ParseBehaviorNames(
+        Globals.GetDefaultBehaviorNamesPath());
+    ModelComboFile.ParseObjectCombos(Globals.GetDefaultObjectComboPath());
     var memoryConstants = Globals.MemoryConstants;
-    rom.setSegment(0x15,
+    rom.SetSegment(0x15,
                    memoryConstants.Segment15.Offset,
                    memoryConstants.Segment15.Offset + memoryConstants.Segment15.Length,
                    false,
                    null);
-    rom.setSegment(0x02,
+    rom.SetSegment(0x02,
                    memoryConstants.Segment2.Offset,
                    memoryConstants.Segment2.Offset + memoryConstants.Segment2.Length,
-                   rom.isSegmentMIO0(0x02, null),
-                   rom.Seg02_isFakeMIO0,
-                   rom.Seg02_uncompressedOffset,
+                   rom.IsSegmentMio0(0x02, null),
+                   rom.Seg02IsFakeMio0,
+                   rom.Seg02UncompressedOffset,
                    null);
 
     var sm64Hardware = new N64Hardware<ISm64Memory>();
@@ -39,9 +39,9 @@ public static class Sm64LevelImporter {
     sm64Hardware.Rsp = new Rsp();
 
     var level = new Level((ushort) levelFileBundle.LevelId, 1);
-    LevelScripts.parse(sm64Hardware, ref level, 0x15, 0);
-    level.sortAndAddNoModelEntries();
-    level.CurrentAreaID = level.Areas[0].AreaID;
+    LevelScripts.Parse(sm64Hardware, ref level, 0x15, 0);
+    level.SortAndAddNoModelEntries();
+    level.CurrentAreaId = level.areas[0].AreaId;
 
     return level;
   }

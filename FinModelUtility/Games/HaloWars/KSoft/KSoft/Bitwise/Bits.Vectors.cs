@@ -13,7 +13,7 @@ namespace KSoft
 	{
 		/// <summary>Order in which bits are enumerated (first to last) in bitvectors</summary>
 		/// <remarks>Currently MSB to LSB</remarks>
-		public const Shell.EndianFormat kVectorWordFormat = Shell.EndianFormat.Big;
+		public const Shell.EndianFormat K_VECTOR_WORD_FORMAT = Shell.EndianFormat.BIG;
 
 
 		/// <summary>Calculates how many elements (T) are needed to hold a bit vector of a certain length</summary>

@@ -29,7 +29,7 @@ namespace KSoft
 
 
 
-			for(var radix_in_word = (uint)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
+			for(var radixInWord = (uint)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
 			{
 				char digit = s[pos];
 
@@ -37,7 +37,7 @@ namespace KSoft
 				int x = digits.IndexOf(digit);
 				if (x >= 0 && x < radix)
 				{
-					result *= radix_in_word;
+					result *= radixInWord;
 					result += (uint)x;
 				}
 				else // Character wasn't found in the look-up table, it is invalid
@@ -50,7 +50,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out uint result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out uint result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -60,7 +60,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out uint result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out uint result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -70,7 +70,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out uint result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out uint result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -100,7 +100,7 @@ namespace KSoft
 
 			bool negate = false;
 			// Sign support only exist for decimal and lower bases
-			if (radix <= kBase10 && pos < end)
+			if (radix <= K_BASE10 && pos < end)
 			{
 				char sign = s[pos];
 
@@ -110,7 +110,7 @@ namespace KSoft
 					++pos;
 			}
 
-			for(var radix_in_word = (int)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
+			for(var radixInWord = (int)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
 			{
 				char digit = s[pos];
 
@@ -118,7 +118,7 @@ namespace KSoft
 				int x = digits.IndexOf(digit);
 				if (x >= 0 && x < radix)
 				{
-					result *= radix_in_word;
+					result *= radixInWord;
 					result += (int)x;
 				}
 				else // Character wasn't found in the look-up table, it is invalid
@@ -134,7 +134,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out int result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out int result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -144,7 +144,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out int result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out int result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -154,7 +154,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out int result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out int result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -183,7 +183,7 @@ namespace KSoft
 
 
 
-			for(var radix_in_word = (ulong)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
+			for(var radixInWord = (ulong)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
 			{
 				char digit = s[pos];
 
@@ -191,7 +191,7 @@ namespace KSoft
 				int x = digits.IndexOf(digit);
 				if (x >= 0 && x < radix)
 				{
-					result *= radix_in_word;
+					result *= radixInWord;
 					result += (ulong)x;
 				}
 				else // Character wasn't found in the look-up table, it is invalid
@@ -204,7 +204,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out ulong result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out ulong result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -214,7 +214,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out ulong result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out ulong result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -224,7 +224,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out ulong result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out ulong result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -254,7 +254,7 @@ namespace KSoft
 
 			bool negate = false;
 			// Sign support only exist for decimal and lower bases
-			if (radix <= kBase10 && pos < end)
+			if (radix <= K_BASE10 && pos < end)
 			{
 				char sign = s[pos];
 
@@ -264,7 +264,7 @@ namespace KSoft
 					++pos;
 			}
 
-			for(var radix_in_word = (long)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
+			for(var radixInWord = (long)radix; pos < end && !char.IsWhiteSpace(s[pos]); ++pos)
 			{
 				char digit = s[pos];
 
@@ -272,7 +272,7 @@ namespace KSoft
 				int x = digits.IndexOf(digit);
 				if (x >= 0 && x < radix)
 				{
-					result *= radix_in_word;
+					result *= radixInWord;
 					result += (long)x;
 				}
 				else // Character wasn't found in the look-up table, it is invalid
@@ -288,7 +288,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out long result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out long result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -298,7 +298,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out long result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out long result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -308,7 +308,7 @@ namespace KSoft
 			return s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out long result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out long result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -335,7 +335,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out byte result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out byte result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -345,7 +345,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out byte result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out byte result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -355,7 +355,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out byte result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out byte result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -381,7 +381,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out sbyte result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out sbyte result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -391,7 +391,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out sbyte result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out sbyte result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -401,7 +401,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out sbyte result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out sbyte result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -427,7 +427,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out ushort result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out ushort result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -437,7 +437,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out ushort result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out ushort result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -447,7 +447,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out ushort result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out ushort result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -473,7 +473,7 @@ namespace KSoft
 
 			return success;
 		}
-		public static bool TryParse(string s, out short result, int radix = kBase10, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out short result, int radix = K_BASE10, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(radix >= 2 && radix <= digits.Length);
@@ -483,7 +483,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParse(string s, out short result, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0, string digits = kBase64Digits)
+		public static bool TryParse(string s, out short result, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -493,7 +493,7 @@ namespace KSoft
 			return  s != null && startIndex < s.Length &&
 				TryParseImpl(s, ref result, (int)radix, startIndex, s.Length, digits);
 		}
-		public static bool TryParseRange(string s, out short result, int startIndex, int length, NumeralBase radix = NumeralBase.Decimal, string digits = kBase64Digits)
+		public static bool TryParseRange(string s, out short result, int startIndex, int length, NumeralBase radix = NumeralBase.DECIMAL, string digits = K_BASE_64DIGITS)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(digits));
 			Contract.Requires(IsValidLookupTable(radix, digits));
@@ -511,23 +511,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref byte result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -537,23 +537,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref sbyte result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -563,23 +563,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref ushort result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -589,23 +589,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref short result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -615,23 +615,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref uint result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -641,23 +641,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref int result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -667,23 +667,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref ulong result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -693,23 +693,23 @@ namespace KSoft
 			, Text.IHandleTextParseError parseErrorHandler)
 		{
 			var result = string.IsNullOrEmpty(s)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 
-			if (result != ParseErrorType.NoInput && (startIndex < 0 || startIndex >= s.Length))
-				result = ParseErrorType.InvalidStartIndex;
+			if (result != ParseErrorType.NO_INPUT && (startIndex < 0 || startIndex >= s.Length))
+				result = ParseErrorType.INVALID_START_INDEX;
 
-			if (result == ParseErrorType.None)
-				result = TryParse(s, out value, radix, startIndex, kBase64Digits)
-					? ParseErrorType.None
-					: ParseErrorType.InvalidValue;
+			if (result == ParseErrorType.NONE)
+				result = TryParse(s, out value, radix, startIndex, K_BASE_64DIGITS)
+					? ParseErrorType.NONE
+					: ParseErrorType.INVALID_VALUE;
 
 			return HandleParseError(result, noThrow, s, startIndex, parseErrorHandler);
 		}
 		public static bool ParseString(string s, ref long result, bool noThrow
-			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.Decimal, int startIndex = 0)
+			, Text.IHandleTextParseError parseErrorHandler = null, NumeralBase radix = NumeralBase.DECIMAL, int startIndex = 0)
 		{
-			Contract.Requires(IsValidLookupTable(radix, kBase64Digits));
+			Contract.Requires(IsValidLookupTable(radix, K_BASE_64DIGITS));
 
 			return ParseStringImpl(s, ref result, noThrow, (int)radix, startIndex, parseErrorHandler);
 		}
@@ -732,7 +732,7 @@ namespace KSoft
 			protected byte? ProcessItem(int start, int length)
 			{
 				var result = (byte)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (byte?)null;
@@ -813,7 +813,7 @@ namespace KSoft
 			protected sbyte? ProcessItem(int start, int length)
 			{
 				var result = (sbyte)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (sbyte?)null;
@@ -894,7 +894,7 @@ namespace KSoft
 			protected ushort? ProcessItem(int start, int length)
 			{
 				var result = (ushort)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (ushort?)null;
@@ -975,7 +975,7 @@ namespace KSoft
 			protected short? ProcessItem(int start, int length)
 			{
 				var result = (short)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (short?)null;
@@ -1056,7 +1056,7 @@ namespace KSoft
 			protected uint? ProcessItem(int start, int length)
 			{
 				var result = (uint)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (uint?)null;
@@ -1137,7 +1137,7 @@ namespace KSoft
 			protected int? ProcessItem(int start, int length)
 			{
 				var result = (int)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (int?)null;
@@ -1218,7 +1218,7 @@ namespace KSoft
 			protected ulong? ProcessItem(int start, int length)
 			{
 				var result = (ulong)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (ulong?)null;
@@ -1299,7 +1299,7 @@ namespace KSoft
 			protected long? ProcessItem(int start, int length)
 			{
 				var result = (long)0;
-				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.Radix, start, length, this.mDesc.Digits);
+				bool success = TryParseImpl(this.mValues, ref result, (int) this.mDesc.radix, start, length, this.mDesc.digits);
 				return success
 					? result
 					: (long?)null;

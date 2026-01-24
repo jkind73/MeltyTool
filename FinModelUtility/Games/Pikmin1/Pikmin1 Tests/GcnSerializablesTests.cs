@@ -36,8 +36,8 @@ public sealed class GcnSerializablesTests {
   public void TestCollGrid() {
     var collGrid = new CollGrid();
 
-    collGrid.boundsMin = new Vector3(1, 2, 3);
-    collGrid.boundsMax = new Vector3(4, 5, 6);
+    collGrid.BoundsMin = new Vector3(1, 2, 3);
+    collGrid.BoundsMax = new Vector3(4, 5, 6);
     collGrid.unknown1 = 7;
     collGrid.gridX = 2;
     collGrid.gridY = 3;
@@ -63,12 +63,12 @@ public sealed class GcnSerializablesTests {
 
     joint.parentIdx = 1;
     joint.flags = 2;
-    joint.boundsMin = new Vector3(3.1f, 4.1f, 5.1f);
-    joint.boundsMax = new Vector3(6.1f, 7.1f, 8.1f);
+    joint.BoundsMin = new Vector3(3.1f, 4.1f, 5.1f);
+    joint.BoundsMax = new Vector3(6.1f, 7.1f, 8.1f);
     joint.volumeRadius = 9.1f;
-    joint.scale = new Vector3(10.1f, 11.1f, 12.1f);
-    joint.rotation = new Vector3(13.1f, 14.1f, 15.1f);
-    joint.position = new Vector3(16.1f, 17.1f, 18.1f);
+    joint.Scale = new Vector3(10.1f, 11.1f, 12.1f);
+    joint.Rotation = new Vector3(13.1f, 14.1f, 15.1f);
+    joint.Position = new Vector3(16.1f, 17.1f, 18.1f);
     joint.matpolys = [
         new JointMatPoly {
             matIdx = 19,
@@ -100,7 +100,7 @@ public sealed class GcnSerializablesTests {
         height = 2,
         format = (Texture.TextureFormat) 3,
     };
-    texture.imageData = [5, 6];
+    texture.ImageData = [5, 6];
 
     TestGcnSerializableExisting(texture);
   }
@@ -118,14 +118,14 @@ public sealed class GcnSerializablesTests {
   }
 
   [Test]
-  public void TestVector2i() => TestGcnSerializableSimple(new Vector2i());
+  public void TestVector2I() => TestGcnSerializableSimple(new Vector2I());
 
 
   [Test]
-  public void TestVector3f() => TestGcnSerializableSimple(new Vector3f());
+  public void TestVector3F() => TestGcnSerializableSimple(new Vector3F());
 
   [Test]
-  public void TestVector3i() => TestGcnSerializableSimple(new Vector3i());
+  public void TestVector3I() => TestGcnSerializableSimple(new Vector3I());
 
   [Test]
   public void TestVtxMatrix() => TestGcnSerializableSimple(new VtxMatrix());

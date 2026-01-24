@@ -18,16 +18,16 @@ namespace KSoft.IO
 		where TDoc : class
 		where TCursor : class
 	{
-		TagElementStream<TDoc, TCursor, TName> mStream;
-		TCursor mOldCursor;
+		TagElementStream<TDoc, TCursor, TName> mStream_;
+		TCursor mOldCursor_;
 
 		#region Null
 		TagElementStreamBookmark(
 			[SuppressMessage("Microsoft.Design", "CA1801:ReviewUnusedParameters")]
 			bool dummy)
 		{
-			this.mStream = null;
-			this.mOldCursor = null;
+			this.mStream_ = null;
+			this.mOldCursor_ = null;
 		}
 
 		[SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes")]
@@ -38,7 +38,7 @@ namespace KSoft.IO
 
 		/// <summary>Is this bookmark active?</summary>
 		/// <remarks>The bookmark can start out 'null' or become null after disposal</remarks>
-		public bool IsNotNull { get { return this.mStream != null; } }
+		public bool IsNotNull { get { return this.mStream_ != null; } }
 
 		/// <summary>Saves the stream's cursor so a new one can be specified, but then later restored to the saved cursor, via <see cref="Dispose()"/></summary>
 		/// <param name="stream">The underlying stream for this bookmark</param>
@@ -47,20 +47,20 @@ namespace KSoft.IO
 		{
 			Contract.Requires<ArgumentNullException>(stream != null);
 
-			this.mStream = null;
-			this.mOldCursor = null;
+			this.mStream_ = null;
+			this.mOldCursor_ = null;
 
 			if(elementName != null)
-				(this.mStream = stream).StreamElementBegin(elementName, out this.mOldCursor);
+				(this.mStream_ = stream).StreamElementBegin(elementName, out this.mOldCursor_);
 		}
 
 		/// <summary>Returns the cursor of the underlying stream to the last saved cursor value</summary>
 		public void Dispose()
 		{
-			if (this.mStream != null)
+			if (this.mStream_ != null)
 			{
-				this.mStream.StreamElementEnd(ref this.mOldCursor);
-				this.mStream = null;
+				this.mStream_.StreamElementEnd(ref this.mOldCursor_);
+				this.mStream_ = null;
 			}
 		}
 	};
@@ -74,8 +74,8 @@ namespace KSoft.IO
 		where TDoc : class
 		where TCursor : class
 	{
-		TagElementStream<TDoc, TCursor, TName> mStream;
-		TCursor mOldCursor;
+		TagElementStream<TDoc, TCursor, TName> mStream_;
+		TCursor mOldCursor_;
 
 		/// <summary>Saves the stream's cursor so a new one can be specified, but then later restored to the saved cursor, via <see cref="Dispose()"/></summary>
 		/// <param name="stream">The underlying stream for this bookmark</param>
@@ -83,7 +83,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires<ArgumentNullException>(stream != null);
 
-			(this.mStream = stream).SaveCursor(null, out this.mOldCursor);
+			(this.mStream_ = stream).SaveCursor(null, out this.mOldCursor_);
 		}
 		/// <summary>Saves the stream's cursor and sets <paramref name="newCursor"/> to be the new cursor for the stream</summary>
 		/// <param name="stream">The underlying stream for this bookmark</param>
@@ -93,16 +93,16 @@ namespace KSoft.IO
 			Contract.Requires<ArgumentNullException>(stream != null);
 			Contract.Requires<ArgumentNullException>(newCursor != null);
 
-			(this.mStream = stream).SaveCursor(newCursor, out this.mOldCursor);
+			(this.mStream_ = stream).SaveCursor(newCursor, out this.mOldCursor_);
 		}
 
 		/// <summary>Returns the cursor of the underlying stream to the last saved cursor value</summary>
 		public void Dispose()
 		{
-			if (this.mStream != null)
+			if (this.mStream_ != null)
 			{
-				this.mStream.RestoreCursor(ref this.mOldCursor);
-				this.mStream = null;
+				this.mStream_.RestoreCursor(ref this.mOldCursor_);
+				this.mStream_ = null;
 			}
 		}
 	};

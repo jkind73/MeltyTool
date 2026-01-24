@@ -11,7 +11,7 @@ namespace KSoft.IO
 {
 	/// <summary>Exposes the concept of a virtual buffer inside a stream</summary>
 	/// <remarks>No bytes are IO'd. Purely position based</remarks>
-	[Contracts.ContractClass(typeof(IKSoftStreamWithVirtualBufferContract))]
+	[Contracts.ContractClass(typeof(IkSoftStreamWithVirtualBufferContract))]
 	public interface IKSoftStreamWithVirtualBuffer
 	{
 		Stream BaseStream { get; }
@@ -23,7 +23,7 @@ namespace KSoft.IO
 	};
 
 	[Contracts.ContractClassFor(typeof(IKSoftStreamWithVirtualBuffer))]
-	abstract class IKSoftStreamWithVirtualBufferContract : IKSoftStreamWithVirtualBuffer
+	abstract class IkSoftStreamWithVirtualBufferContract : IKSoftStreamWithVirtualBuffer
 	{
 		public abstract Stream BaseStream { get; }
 

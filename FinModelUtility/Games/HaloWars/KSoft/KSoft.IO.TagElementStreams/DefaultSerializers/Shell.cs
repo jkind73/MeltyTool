@@ -10,23 +10,23 @@ namespace KSoft.IO
 		{
 			bool reading = s.IsReading;
 
-			var inst_set = reading
+			var instSet = reading
 				? 0
 				: value.InstructionSet;
-			var proc_size = reading
+			var procSize = reading
 				? 0
 				: value.ProcessorSize;
-			var byte_order = reading
+			var byteOrder = reading
 				? 0
 				: value.ByteOrder;
 
-			s.StreamAttributeEnum("instructionSet", ref inst_set);
-			s.StreamAttributeEnum("processorSize", ref proc_size);
-			s.StreamAttributeEnum("byteOrder", ref byte_order);
+			s.StreamAttributeEnum("instructionSet", ref instSet);
+			s.StreamAttributeEnum("processorSize", ref procSize);
+			s.StreamAttributeEnum("byteOrder", ref byteOrder);
 
 			if (reading)
 			{
-				value = new Shell.Processor(proc_size, byte_order, inst_set);
+				value = new Shell.Processor(procSize, byteOrder, instSet);
 			}
 		}
 
@@ -37,19 +37,19 @@ namespace KSoft.IO
 		{
 			bool reading = s.IsReading;
 
-			var platform_type = reading
+			var platformType = reading
 				? 0
 				: value.Type;
 			var processor = reading
 				? new Shell.Processor()
 				: value.ProcessorType;
 
-			s.StreamAttributeEnum("platformType", ref platform_type);
+			s.StreamAttributeEnum("platformType", ref platformType);
 			Serialize(s, ref processor);
 
 			if (reading)
 			{
-				value = new Shell.Platform(platform_type, processor);
+				value = new Shell.Platform(platformType, processor);
 			}
 		}
 	};

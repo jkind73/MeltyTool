@@ -4,7 +4,7 @@ public sealed class GenericAnimation {
   public string Name { get; set; }
   public uint NameHash { get; set; }
 
-  public List<GenericAnimationTransform> TransformNodes = [];
+  public List<GenericAnimationTransform> transformNodes = [];
 
   public int FrameCount { get; set; } = 0;
 

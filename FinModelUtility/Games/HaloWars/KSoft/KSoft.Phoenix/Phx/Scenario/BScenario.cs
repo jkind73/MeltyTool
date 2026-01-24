@@ -1,6 +1,6 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.Scenario)]
+	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.SCENARIO)]
 	public sealed class BScenario;
 }

@@ -8,7 +8,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Granny3D
 {
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
 	public struct CharPtr
 	{
 		public IntPtr Address;
@@ -25,15 +25,15 @@ namespace KSoft.Granny3D
 		}
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
-	public struct TPtr<T>
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
+	public struct Ptr<T>
 	{
 		public IntPtr Address;
 
 		public bool IsNull { get { return this.Address == IntPtr.Zero; } }
 		public bool IsNotNull { get { return this.Address != IntPtr.Zero; } }
 
-		public TPtr(IntPtr address)
+		public Ptr(IntPtr address)
 		{
 			this.Address = address;
 		}
@@ -73,7 +73,7 @@ namespace KSoft.Granny3D
 		}
 	};
 
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
 	public struct ArrayPtr
 	{
 		public int Count;
@@ -94,11 +94,11 @@ namespace KSoft.Granny3D
 			return this.Array + offset;
 		}
 	};
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
 	public struct ArrayCharPtr
 	{
 		public int Count;
-		public TPtr<CharPtr> Array;
+		public Ptr<CharPtr> Array;
 
 		public bool IsNull { get { return this.Count == 0 || this.Array.IsNull; } }
 		public bool IsNotNull { get { return this.Count > 0 && this.Array.IsNotNull; } }
@@ -111,11 +111,11 @@ namespace KSoft.Granny3D
 			return this.Array.ToStruct(index);
 		}
 	};
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
 	public struct ArrayPtr<T>
 	{
 		public int Count;
-		public TPtr<T> Array;
+		public Ptr<T> Array;
 
 		public bool IsNull { get { return this.Count == 0 || this.Array.IsNull; } }
 		public bool IsNotNull { get { return this.Count > 0 && this.Array.IsNotNull; } }
@@ -136,7 +136,7 @@ namespace KSoft.Granny3D
 			this.Array.CopyStruct(toIndex, ref s);
 		}
 	};
-	[StructLayout(LayoutKind.Sequential, Pack=Granny2DLL.kAssumedPointerSize)]
+	[StructLayout(LayoutKind.Sequential, Pack=Granny2Dll.K_ASSUMED_POINTER_SIZE)]
 	public struct ArrayOfRefsPtr<T>
 	{
 		public int Count;
@@ -145,7 +145,7 @@ namespace KSoft.Granny3D
 		public bool IsNull { get { return this.Count == 0 || this.Array == IntPtr.Zero; } }
 		public bool IsNotNull { get { return this.Count > 0 && this.Array != IntPtr.Zero; } }
 
-		public TPtr<T> ToStructPtr(int index)
+		public Ptr<T> ToStructPtr(int index)
 		{
 			Contract.Requires<NullReferenceException>(this.IsNotNull);
 			Contract.Requires<ArgumentOutOfRangeException>(index >= 0 && index < this.Count);
@@ -155,7 +155,7 @@ namespace KSoft.Granny3D
 
 			var ptr = Marshal.PtrToStructure<IntPtr>(this.Array + offset);
 
-			return new TPtr<T>(ptr);
+			return new Ptr<T>(ptr);
 		}
 	};
 }

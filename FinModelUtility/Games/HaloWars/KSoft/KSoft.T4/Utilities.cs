@@ -26,16 +26,16 @@ namespace KSoft.T4
 			switch (def.Code)
 			{
 				case TypeCode.Byte:
-					return PrimitiveDefinitions.kSByte;
+					return PrimitiveDefinitions.KSByte;
 
 				case TypeCode.UInt16:
-					return PrimitiveDefinitions.kInt16;
+					return PrimitiveDefinitions.KInt16;
 
 				case TypeCode.UInt32:
-					return PrimitiveDefinitions.kInt32;
+					return PrimitiveDefinitions.KInt32;
 
 				case TypeCode.UInt64:
-					return PrimitiveDefinitions.kInt64;
+					return PrimitiveDefinitions.KInt64;
 
 				default:
 					return null;
@@ -44,7 +44,7 @@ namespace KSoft.T4
 
 		internal static TextTransformationCodeBlockBookmark EnterCodeBlock(
 			this TextTemplating.TextTransformation ttFile,
-			TextTransformationCodeBlockType type = TextTransformationCodeBlockType.NoBrackets, int indentCount = 1)
+			TextTransformationCodeBlockType type = TextTransformationCodeBlockType.NO_BRACKETS, int indentCount = 1)
 		{
 			var bookmark = new TextTransformationCodeBlockBookmark(ttFile, type, indentCount);
 			bookmark.Enter();

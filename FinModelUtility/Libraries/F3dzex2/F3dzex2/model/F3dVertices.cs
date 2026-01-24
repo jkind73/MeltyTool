@@ -27,19 +27,19 @@ public interface IF3dVertices {
 public sealed class F3dVertices(
     IN64Hardware n64Hardware,
     ModelImpl<Normal1Color2UvVertexImpl> model) : IF3dVertices {
-  private const int VERTEX_COUNT = 32;
+  private const int VERTEX_COUNT_ = 32;
 
   private readonly F3dVertex[] vertexDefinitions_ =
-      new F3dVertex[VERTEX_COUNT];
+      new F3dVertex[VERTEX_COUNT_];
 
-  private readonly IVertex?[] vertices_ = new IVertex?[VERTEX_COUNT];
+  private readonly IVertex?[] vertices_ = new IVertex?[VERTEX_COUNT_];
 
   private readonly IReadOnlyBoneWeights?[] boneWeights_
-      = new IReadOnlyBoneWeights?[VERTEX_COUNT];
+      = new IReadOnlyBoneWeights?[VERTEX_COUNT_];
 
-  private readonly Color[] overrideVertexColors_ = new Color[VERTEX_COUNT];
+  private readonly Color[] overrideVertexColors_ = new Color[VERTEX_COUNT_];
 
-  private readonly Matrix4x4[] matrices_ = new Matrix4x4[VERTEX_COUNT];
+  private readonly Matrix4x4[] matrices_ = new Matrix4x4[VERTEX_COUNT_];
 
 
   public void ClearVertices() {

@@ -9,47 +9,47 @@
   ///   copied by value instead of by reference.
   /// </summary>
   public struct TileDescriptor {
-    public bool Enabled;
+    public bool enabled;
     // TODO: Get rid of this field.
-    public int ID;
-    public int DXT;
-    public int Height;
-    public int Width;
-    public int LoadWidth;
-    public int LoadHeight;
-    public double TextureHRatio;
-    public double TextureWRatio;
-    public uint TexBytes;
-    public int Address;
-    public int ImageBank;
-    public ushort TmemOffset;
-    public byte Palette;
-    public int PaletteBank;
-    public int Offset;
-    public int PaletteOffset;
+    public int id;
+    public int dxt;
+    public int height;
+    public int width;
+    public int loadWidth;
+    public int loadHeight;
+    public double textureHRatio;
+    public double textureWRatio;
+    public uint texBytes;
+    public int address;
+    public int imageBank;
+    public ushort tmemOffset;
+    public byte palette;
+    public int paletteBank;
+    public int offset;
+    public int paletteOffset;
     // TODO: Delete this.
-    public int JankFormat;
-    public ColorFormat ColorFormat;
-    public BitSize BitSize;
-    public int CMS;
-    public int CMT;
-    public double S_Scale;
-    public double T_Scale;
-    public double ShiftS;
-    public double ShiftT;
-    public double TShiftS;
-    public double TShiftT;
-    public int OriginalMaskS;
-    public int OriginalMaskT;
-    public int MaskS;
-    public int MaskT;
-    public int LineSize;
-    public int ULS;
-    public int ULT;
-    public int LRS;
-    public int LRT;
-    public uint OGLTexObj;
-    public Color4UByte[] Palette32;
+    public int jankFormat;
+    public ColorFormat colorFormat;
+    public BitSize bitSize;
+    public int cms;
+    public int cmt;
+    public double sScale;
+    public double scale;
+    public double shiftS;
+    public double shiftT;
+    public double shiftS;
+    public double shiftT;
+    public int originalMaskS;
+    public int originalMaskT;
+    public int maskS;
+    public int maskT;
+    public int lineSize;
+    public int uls;
+    public int ult;
+    public int lrs;
+    public int lrt;
+    public uint oglTexObj;
+    public Color4UByte[] palette32;
 
     public long Uuid {
       get {
@@ -57,14 +57,14 @@
         // OpenGl; they require unique texture instances.
 
         // The lower-right coords are each 3 bytes (12 bits) long.
-        long lrs = this.LRS;
-        long lrt = this.LRT;
+        long lrs = this.lrs;
+        long lrt = this.lrt;
 
         // The clamp flag values are 2 bits long.
-        long cms = this.CMS;
-        long cmt = this.CMT;
+        long cms = this.cms;
+        long cmt = this.cmt;
 
-        long uuid = this.Address;
+        long uuid = this.address;
         uuid |= lrs << (32 + 4 + 12);
         uuid |= lrt << (32 + 4);
         uuid |= cms << (32 + 2);

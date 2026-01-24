@@ -19,11 +19,11 @@ public static class GlfwConstants {
         DepthBits = 32,
     };
 
-    if (GlConstants.Compatibility) {
+    if (GlConstants.COMPATIBILITY) {
       nativeWindowSettings.Profile = ContextProfile.Compatability;
     }
 
-    if (GlConstants.Debug) {
+    if (GlConstants.DEBUG) {
       nativeWindowSettings.Flags = ContextFlags.Debug;
     }
 

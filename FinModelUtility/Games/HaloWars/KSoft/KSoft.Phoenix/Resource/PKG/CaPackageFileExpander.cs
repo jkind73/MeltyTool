@@ -6,22 +6,22 @@ namespace KSoft.Phoenix.Resource.PKG
 	public enum CaPackageFileExpanderOptions
 	{
 		/// <summary>Only the PKG's file listing (.xml) is generated</summary>
-		OnlyDumpListing,
+		ONLY_DUMP_LISTING,
 		/// <summary>Files that already exist in the output directory will be skipped</summary>
-		DontOverwriteExistingFiles,
-		DontLoadEntirePkgIntoMemory,
+		DONT_OVERWRITE_EXISTING_FILES,
+		DONT_LOAD_ENTIRE_PKG_INTO_MEMORY,
 
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	public sealed class CaPackageFileExpander
 		: CaPackageFileUtil
 	{
-		Stream mPkgBaseStream;
-		IO.EndianStream mPkgStream;
+		Stream mPkgBaseStream_;
+		IO.EndianStream mPkgStream_;
 
 		/// <see cref="CaPackageFileExpanderOptions"/>
-		public Collections.BitVector32 ExpanderOptions;
+		public Collections.BitVector32 expanderOptions;
 
 		public CaPackageFileExpander(string pkgPath)
 		{
@@ -32,8 +32,8 @@ namespace KSoft.Phoenix.Resource.PKG
 		{
 			base.Dispose();
 
-			Util.DisposeAndNull(ref this.mPkgBaseStream);
-			Util.DisposeAndNull(ref this.mPkgStream);
+			Util.DisposeAndNull(ref this.mPkgBaseStream_);
+			Util.DisposeAndNull(ref this.mPkgStream_);
 		}
 
 		#region Reading
@@ -58,17 +58,17 @@ namespace KSoft.Phoenix.Resource.PKG
 				this.ProgressOutput.WriteLine("Opening and reading PKG file {0}...",
 				                              this.mSourceFile);
 
-			if (this.ExpanderOptions.Test(CaPackageFileExpanderOptions.DontLoadEntirePkgIntoMemory))
-				this.mPkgBaseStream = File.OpenRead(this.mSourceFile);
+			if (this.expanderOptions.Test(CaPackageFileExpanderOptions.DONT_LOAD_ENTIRE_PKG_INTO_MEMORY))
+				this.mPkgBaseStream_ = File.OpenRead(this.mSourceFile);
 			else
 			{
-				byte[] ecf_bytes = File.ReadAllBytes(this.mSourceFile);
+				byte[] ecfBytes = File.ReadAllBytes(this.mSourceFile);
 
-				this.mPkgBaseStream = new MemoryStream(ecf_bytes, writable: false);
+				this.mPkgBaseStream_ = new MemoryStream(ecfBytes, writable: false);
 			}
 
-			this.mPkgStream = new IO.EndianStream(this.mPkgBaseStream, Shell.EndianFormat.Little, this, permissions: FileAccess.Read);
-			this.mPkgStream.StreamMode = FileAccess.Read;
+			this.mPkgStream_ = new IO.EndianStream(this.mPkgBaseStream_, Shell.EndianFormat.LITTLE, this, permissions: FileAccess.Read);
+			this.mPkgStream_.StreamMode = FileAccess.Read;
 
 			return this.ReadPkgFromStream();
 		}
@@ -77,7 +77,7 @@ namespace KSoft.Phoenix.Resource.PKG
 		{
 			bool result = true;
 
-			result = CaPackageFile.VerifyIsPkg(this.mPkgStream.Reader);
+			result = CaPackageFile.VerifyIsPkg(this.mPkgStream_.Reader);
 			if (!result)
 			{
 				if (this.VerboseOutput != null)
@@ -86,7 +86,7 @@ namespace KSoft.Phoenix.Resource.PKG
 			else
 			{
 				this.mPkgFile = new CaPackageFile();
-				this.mPkgFile.Serialize(this.mPkgStream);
+				this.mPkgFile.Serialize(this.mPkgStream_);
 			}
 
 			return result;
@@ -119,7 +119,7 @@ namespace KSoft.Phoenix.Resource.PKG
 				result = false;
 			}
 
-			if (result && !this.ExpanderOptions.Test(CaPackageFileExpanderOptions.OnlyDumpListing))
+			if (result && !this.expanderOptions.Test(CaPackageFileExpanderOptions.ONLY_DUMP_LISTING))
 			{
 				if (this.ProgressOutput != null)
 					this.ProgressOutput.WriteLine("Expanding PKG to {0}...", workPath);
@@ -139,14 +139,14 @@ namespace KSoft.Phoenix.Resource.PKG
 					this.ProgressOutput.WriteLine("Done");
 			}
 
-			this.mPkgStream.Close();
+			this.mPkgStream_.Close();
 
 			return result;
 		}
 
 		void SaveListing(string workPath, string listingName)
 		{
-			string listing_filename = Path.Combine(workPath, listingName);
+			string listingFilename = Path.Combine(workPath, listingName);
 
 			using (var xml = IO.XmlElementStream.CreateForWrite("PkgFile", this))
 			{
@@ -155,7 +155,7 @@ namespace KSoft.Phoenix.Resource.PKG
 
 				this.PkgDefinition.Serialize(xml);
 
-				xml.Document.Save(listing_filename + CaPackageFileDefinition.kFileExtension);
+				xml.Document.Save(listingFilename + CaPackageFileDefinition.K_FILE_EXTENSION);
 			}
 		}
 
@@ -163,7 +163,7 @@ namespace KSoft.Phoenix.Resource.PKG
 		{
 			foreach (var entry in this.mPkgFile.FileEntries)
 			{
-				this.PkgDefinition.FileNames.Add(entry.Name);
+				this.PkgDefinition.FileNames.Add(entry.name);
 			}
 		}
 
@@ -179,8 +179,8 @@ namespace KSoft.Phoenix.Resource.PKG
 				{
 					throw new Exception(string.Format(
 						"ExpandEntriesToFiles failed on {0} in {1}",
-						entry.Name,
-						this.mPkgStream.StreamName
+						entry.name,
+						this.mPkgStream_.StreamName
 					), e);
 				}
 			}
@@ -188,23 +188,23 @@ namespace KSoft.Phoenix.Resource.PKG
 
 		void ExpandEntryToFile(string workPath, CaPackageEntry entry)
 		{
-			string file_path = Path.Combine(workPath, entry.Name);
+			string filePath = Path.Combine(workPath, entry.name);
 
-			if (!this.ExpanderOptions.Test(CaPackageFileExpanderOptions.DontOverwriteExistingFiles))
+			if (!this.expanderOptions.Test(CaPackageFileExpanderOptions.DONT_OVERWRITE_EXISTING_FILES))
 			{
-				if (File.Exists(file_path))
+				if (File.Exists(filePath))
 				{
 					if (this.VerboseOutput != null)
-						this.VerboseOutput.WriteLine("\tSkipping chunk, output file already exists: {0}", file_path);
+						this.VerboseOutput.WriteLine("\tSkipping chunk, output file already exists: {0}", filePath);
 
 					return;
 				}
 			}
 
-			using (var fs = File.OpenWrite(file_path))
+			using (var fs = File.OpenWrite(filePath))
 			{
-				var entry_bytes = this.mPkgFile.ReadEntryBytes(this.mPkgStream, entry);
-				fs.Write(entry_bytes, 0, entry_bytes.Length);
+				var entryBytes = this.mPkgFile.ReadEntryBytes(this.mPkgStream_, entry);
+				fs.Write(entryBytes, 0, entryBytes.Length);
 			}
 		}
 		#endregion

@@ -12,11 +12,11 @@ namespace KSoft.Collections
 
 		public BListExplicitIndexParams() { }
 
-		public BListExplicitIndexParams(int initialCapacity = TypeExtensions.kNone) : base()
+		public BListExplicitIndexParams(int initialCapacity = TypeExtensions.K_NONE) : base()
 		{
-			this.Flags.Clear();
+			this.flags.Clear();
 			if (initialCapacity > 0)
-				this.InitialCapacity = initialCapacity;
+				this.initialCapacity = initialCapacity;
 		}
 	};
 }

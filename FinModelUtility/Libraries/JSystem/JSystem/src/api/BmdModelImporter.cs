@@ -33,13 +33,13 @@ using schema.binary;
 
 namespace jsystem.api;
 
-using MkdsNode = MA.Node;
+using MkdsNode = Ma.Node;
 
 public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
   public IModel Import(BmdModelFileBundle modelFileBundle) {
     var logger = Logging.Create<BmdModelImporter>();
 
-    var bmd = new BMD(modelFileBundle.BmdFile.ReadAllBytes());
+    var bmd = new Bmd(modelFileBundle.BmdFile.ReadAllBytes());
 
     List<(string, IBcx)>? pathsAndBcxs;
     try {
@@ -95,7 +95,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
     return model;
   }
 
-  private (MkdsNode, IBone)[] ConvertBones_(IModel model, BMD bmd) {
+  private (MkdsNode, IBone)[] ConvertBones_(IModel model, Bmd bmd) {
     var joints = bmd.GetJoints();
 
     var jointsAndBones = new (MkdsNode, IBone)[joints.Length];
@@ -144,7 +144,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
   private void ConvertAnimations_(
       IModel model,
-      BMD bmd,
+      Bmd bmd,
       IList<(string, IBcx)>? pathsAndBcxs,
       float frameRate,
       (MkdsNode, IBone)[] jointsAndBones) {
@@ -161,7 +161,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
       // Writes translation/rotation/scale for each joint.
       foreach (var (joint, bone) in jointsAndBones) {
-        var jointIndex = bmd.JNT1.Data.StringTable[joint.Name];
+        var jointIndex = bmd.Jnt1.Data.StringTable[joint.Name];
 
         if (FinConstants.ALLOW_INVALID_JOINT_INDICES &&
             (jointIndex < 0 || jointIndex >= bcx.Anx1.Joints.Length)) {
@@ -180,7 +180,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
             bcxJoint.Values.Translations[2].Length);
         for (var i = 0; i < bcxJoint.Values.Translations.Length; ++i) {
           foreach (var key in bcxJoint.Values.Translations[i]) {
-            if (key is Bck.ANK1Section.AnimatedJoint.JointAnim.Key bckKey) {
+            if (key is Bck.Ank1Section.AnimatedJoint.JointAnim.Key bckKey) {
               positions.Axes[i]
                        .Add(new KeyframeWithTangents<float>(
                                 bckKey.Frame,
@@ -202,7 +202,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
             bcxJoint.Values.Rotations[2].Length);
         for (var i = 0; i < bcxJoint.Values.Rotations.Length; ++i) {
           foreach (var key in bcxJoint.Values.Rotations[i]) {
-            if (key is Bck.ANK1Section.AnimatedJoint.JointAnim.Key bckKey) {
+            if (key is Bck.Ank1Section.AnimatedJoint.JointAnim.Key bckKey) {
               rotations.Axes[i]
                        .SetKeyframe(bckKey.Frame,
                                     bckKey.Value,
@@ -223,7 +223,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
             bcxJoint.Values.Scales[2].Length);
         for (var i = 0; i < bcxJoint.Values.Scales.Length; ++i) {
           foreach (var key in bcxJoint.Values.Scales[i]) {
-            if (key is Bck.ANK1Section.AnimatedJoint.JointAnim.Key bckKey) {
+            if (key is Bck.Ank1Section.AnimatedJoint.JointAnim.Key bckKey) {
               scales.Axes[i]
                     .Add(new KeyframeWithTangents<float>(
                              bckKey.Frame,
@@ -244,19 +244,19 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
   private void ConvertMesh_(
       ModelImpl model,
-      BMD bmd,
+      Bmd bmd,
       (MkdsNode, IBone)[] jointsAndBones,
       BmdMaterialManager materialManager) {
     var finSkin = model.Skin;
 
     var joints = bmd.GetJoints();
 
-    var vertexPositions = bmd.VTX1.Positions;
-    var vertexNormals = bmd.VTX1.Normals;
-    var vertexColors = bmd.VTX1.Colors;
-    var vertexUvs = bmd.VTX1.TexCoords;
-    var entries = bmd.INF1.Data.Entries;
-    var batches = bmd.SHP1.Batches;
+    var vertexPositions = bmd.vtx1.positions;
+    var vertexNormals = bmd.vtx1.normals;
+    var vertexColors = bmd.vtx1.colors;
+    var vertexUvs = bmd.vtx1.texCoords;
+    var entries = bmd.Inf1.Data.Entries;
+    var batches = bmd.shp1.batches;
 
     var scheduledDrawOnWayDownPrimitives = new List<IPrimitive>();
     var scheduledDrawOnWayUpPrimitives = new List<IPrimitive>();
@@ -293,8 +293,8 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
         case Inf1EntryType.MATERIAL:
           currentMaterial = materialManager.Get(entry.Index);
           currentMaterialEntry =
-              bmd.MAT3.MaterialEntries[
-                  bmd.MAT3.MaterialEntryIndieces[entry.Index]];
+              bmd.mat3.materialEntries[
+                  bmd.mat3.materialEntryIndieces[entry.Index]];
           break;
 
         case Inf1EntryType.SHAPE:
@@ -306,25 +306,25 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
           // TODO: Pass matrix type into joint (how?)
           // TODO: Implement this instead of hardcoding billboards for Pikmin 2
-          var matrixType = batch.MatrixType;
+          var matrixType = batch.matrixType;
 
-          foreach (var packet in batch.Packets) {
+          foreach (var packet in batch.packets) {
             // Updates contents of matrix table
-            for (var i = 0; i < packet.MatrixTable.Length; ++i) {
-              var matrixTableIndex = packet.MatrixTable[i];
+            for (var i = 0; i < packet.matrixTable.Length; ++i) {
+              var matrixTableIndex = packet.matrixTable[i];
 
               // Max value means keep old value.
               if (matrixTableIndex == ushort.MaxValue) {
                 continue;
               }
 
-              var drw1 = bmd.DRW1.Data;
+              var drw1 = bmd.Drw1.Data;
               var isWeighted = drw1.IsWeighted[matrixTableIndex];
               var drw1Index = drw1.Data[matrixTableIndex];
 
               BoneWeight[] weights;
               if (isWeighted) {
-                var weightedIndices = bmd.EVP1.Data.WeightedIndices[drw1Index];
+                var weightedIndices = bmd.evp1.Data.WeightedIndices[drw1Index];
                 weights = new BoneWeight[weightedIndices.Indices.Length];
                 for (var w = 0; w < weightedIndices.Indices.Length; ++w) {
                   var jointIndex = weightedIndices.Indices[w];
@@ -336,7 +336,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
                   var skinToBoneMatrix =
                       ConvertSchemaToFin_(
-                          bmd.EVP1.Data.InverseBindMatrices[jointIndex]);
+                          bmd.evp1.Data.InverseBindMatrices[jointIndex]);
 
                   var bone = jointsAndBones[jointIndex].Item2;
                   weights[w] = new BoneWeight(bone, skinToBoneMatrix, weight);
@@ -352,7 +352,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
                 var bone = jointsAndBones[jointIndex].Item2;
                 weights = [
-                    new BoneWeight(bone, FinMatrix4x4Util.IDENTITY, 1)
+                    new BoneWeight(bone, FinMatrix4X4Util.Identity, 1)
                 ];
               }
 
@@ -362,25 +362,25 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
                       weights);
             }
 
-            foreach (var primitive in packet.Primitives) {
-              var points = primitive.Points;
+            foreach (var primitive in packet.primitives) {
+              var points = primitive.points;
               var pointsCount = points.Length;
               var vertices = new IVertex[pointsCount];
 
               for (var p = 0; p < pointsCount; ++p) {
                 var point = points[p];
 
-                var position = vertexPositions[point.PosIndex];
+                var position = vertexPositions[point.posIndex];
                 var vertex =
                     finSkin.AddVertex(position.X, position.Y, position.Z);
                 vertices[p] = vertex;
 
-                var normalIndex = point.NormalIndex;
+                var normalIndex = point.normalIndex;
                 if (normalIndex != null) {
                   vertex.SetLocalNormal(vertexNormals[normalIndex.Value]);
                 }
 
-                var matrixIndex = point.MatrixIndex;
+                var matrixIndex = point.matrixIndex;
                 if (matrixIndex != null) {
                   var weights = weightsTable[matrixIndex];
                   if (weights != null) {
@@ -388,7 +388,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
                   }
                 }
 
-                var colorIndices = point.ColorIndices;
+                var colorIndices = point.colorIndices;
                 for (var c = 0; c < 2; ++c) {
                   var colorIndex = colorIndices[c];
                   if (colorIndex != null) {
@@ -401,7 +401,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
                   }
                 }
 
-                var texCoordIndices = point.TexCoordIndices;
+                var texCoordIndices = point.texCoordIndices;
                 for (var i = 0; i < 8; ++i) {
                   var texCoordIndex = texCoordIndices[i];
                   if (texCoordIndex != null) {
@@ -410,7 +410,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
                 }
               }
 
-              var gxPrimitiveType = primitive.Type;
+              var gxPrimitiveType = primitive.type;
 
               Asserts.Nonnull(currentMaterial);
 
@@ -452,8 +452,8 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
     DoneRendering: ;
   }
 
-  private static IFinMatrix4x4 ConvertSchemaToFin_(Matrix3x4f schemaMatrix) {
-    var finMatrix = new FinMatrix4x4().SetIdentity();
+  private static IFinMatrix4X4 ConvertSchemaToFin_(Matrix3X4F schemaMatrix) {
+    var finMatrix = new FinMatrix4X4().SetIdentity();
 
     for (var r = 0; r < 3; ++r) {
       for (var c = 0; c < 4; ++c) {

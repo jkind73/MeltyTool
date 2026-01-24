@@ -25,8 +25,8 @@ public abstract partial class FileTreeView<TFiles> {
       }
 
     private void InitDirectory_() {
-        this.treeNode.ClosedImage = Icons.folderClosedImage;
-        this.treeNode.OpenImage = Icons.folderOpenImage;
+        this.treeNode.ClosedImage = Icons.FOLDER_CLOSED_IMAGE;
+        this.treeNode.OpenImage = Icons.FOLDER_OPEN_IMAGE;
       }
 
     public IFileHierarchyDirectory? Directory { get; set; }

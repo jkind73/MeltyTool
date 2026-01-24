@@ -5,16 +5,16 @@ namespace KSoft.Wwise.SoundBank
 		: IO.IEndianStreamSerializable
 	{
 		/// <summary>Size of this struct on disk</summary>
-		internal const uint kSizeOf = 5;
+		internal const uint K_SIZE_OF = 5;
 
-		public uint ID;
-		public sbyte Weight;
+		public uint id;
+		public sbyte weight;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.ID);
-			s.Stream(ref this.Weight);
+			s.Stream(ref this.id);
+			s.Stream(ref this.weight);
 		}
 		#endregion
 	};

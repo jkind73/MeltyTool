@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using KSoft.Reflection;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
@@ -18,45 +19,45 @@ namespace KSoft.IO
 		/// <summary>
 		/// <see cref="EnumBitStreamer{T}"/> makes use of the typeof(BitStream), so why not statically define it instead of executing typeof every time?
 		/// </summary>
-		protected static readonly Type kBitStreamType;
+		protected static readonly Type KBitStreamType;
 
 		#region Stream\Swap Methods
 		// I could have made this readonly as well, but then I would have to move the init code from InitializeMethodDictionaries to the cctor
-		static Dictionary<TypeCode, MethodInfo> kReadMethods, kWriteMethods, kBitSwapMethods;
+		static Dictionary<TypeCode, MethodInfo> kReadMethods_, kWriteMethods_, kBitSwapMethods_;
 
-		/// <summary>Initialize <see cref="kReadMethods"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.kSupportedTypeCodes"/></summary>
+		/// <summary>Initialize <see cref="kReadMethods_"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.KSupportedTypeCodes"/></summary>
 		static void InitializeReadMethods()
 		{
-			foreach (TypeCode c in EnumUtils.kSupportedTypeCodes)
+			foreach (TypeCode c in EnumUtils.KSupportedTypeCodes)
 			{
-				var mi = kBitStreamType.GetMethod("Read" + c.ToString());
-				kReadMethods.Add(c, mi);
+				var mi = KBitStreamType.GetMethod("Read" + c.ToString());
+				kReadMethods_.Add(c, mi);
 			}
 		}
-		/// <summary>Initialize <see cref="kWriteMethods"/> with the write methods for the supported underlying enum types <see cref="EnumUtils.kSupportedTypeCodes"/></summary>
+		/// <summary>Initialize <see cref="kWriteMethods_"/> with the write methods for the supported underlying enum types <see cref="EnumUtils.KSupportedTypeCodes"/></summary>
 		static void InitializeWriteMethods()
 		{
 			// Avoid having to allocate a new array every iteration
 			Type[] types = [null, null];
 			types[1] = typeof(int); // bitCount
-			foreach (Type t in EnumUtils.kSupportedTypes)
+			foreach (Type t in EnumUtils.KSupportedTypes)
 			{
 				types[0] = t;
 
 				// GetMethod doesn't have a params overload :(
-				var mi = kBitStreamType.GetMethod("Write", types);
-				kWriteMethods.Add(Type.GetTypeCode(t), mi);
+				var mi = KBitStreamType.GetMethod("Write", types);
+				kWriteMethods_.Add(Type.GetTypeCode(t), mi);
 			}
 		}
-		/// <summary>Initialize <see cref="kBitSwapMethods"/> with the BitSwap methods for the supported (unsigned) underlying enum types <see cref="EnumUtils.kSupportedTypeCodes"/></summary>
+		/// <summary>Initialize <see cref="kBitSwapMethods_"/> with the BitSwap methods for the supported (unsigned) underlying enum types <see cref="EnumUtils.KSupportedTypeCodes"/></summary>
 		static void InitializeBitSwapMethods()
 		{
-			var Bits_type = typeof(Bits);
+			var bitsType = typeof(Bits);
 
 			// Avoid having to allocate a new array every iteration
 			Type[] types = [null, null];
 			types[1] = typeof(int); // startBitIndex
-			foreach (Type t in EnumUtils.kSupportedTypes)
+			foreach (Type t in EnumUtils.KSupportedTypes)
 			{
 				if (Type.GetTypeCode(t).IsSigned())
 					continue;
@@ -64,21 +65,21 @@ namespace KSoft.IO
 				types[0] = t;
 
 				// GetMethod doesn't have a params overload :(
-				var mi = Bits_type.GetMethod("BitSwap", types);
-				kBitSwapMethods.Add(Type.GetTypeCode(t), mi);
+				var mi = bitsType.GetMethod("BitSwap", types);
+				kBitSwapMethods_.Add(Type.GetTypeCode(t), mi);
 			}
 		}
 
 		static void InitializeMethodDictionaries()
 		{
-			int capacity = EnumUtils.kSupportedTypeCodes.Length;
-			int unsigned_capacity = capacity >> 1; // number of unsigned types should be half the total types
+			int capacity = EnumUtils.KSupportedTypeCodes.Length;
+			int unsignedCapacity = capacity >> 1; // number of unsigned types should be half the total types
 
 			// #NOTE: The EnumComparer<TypeCode> may not be needed for .NET 4 environments:
 			// http://www.codeproject.com/Messages/3968802/Re-What-about-Net-4-0.aspx
-			kReadMethods = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
-			kWriteMethods = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
-			kBitSwapMethods = new Dictionary<TypeCode, MethodInfo>(unsigned_capacity, EnumComparer<TypeCode>.Instance);
+			kReadMethods_ = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
+			kWriteMethods_ = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
+			kBitSwapMethods_ = new Dictionary<TypeCode, MethodInfo>(unsignedCapacity, EnumComparer<TypeCode>.Instance);
 
 			InitializeReadMethods();
 			InitializeWriteMethods();
@@ -89,7 +90,7 @@ namespace KSoft.IO
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static EnumBitStreamerBase()
 		{
-			kBitStreamType = typeof(BitStream);
+			KBitStreamType = typeof(BitStream);
 
 			InitializeMethodDictionaries();
 		}
@@ -104,21 +105,21 @@ namespace KSoft.IO
 			where TStreamType : struct
 		{
 			/// <summary><typeparamref name="TStreamType"/>'s Read method in <see cref="IO.BitStream"/></summary>
-			public static readonly MethodInfo kRead;
+			public static readonly MethodInfo KRead;
 			/// <summary><typeparamref name="TStreamType"/>'s Write method in <see cref="IO.BitStream"/></summary>
-			public static readonly MethodInfo kWrite;
+			public static readonly MethodInfo KWrite;
 			/// <summary><typeparamref name="TStreamType"/>'s BitSwap method in <see cref="KSoft.Bits"/></summary>
 			/// <remarks>Will be null for signed types</remarks>
-			public static readonly MethodInfo kBitSwap;
+			public static readonly MethodInfo KBitSwap;
 
 			[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 			static StreamType()
 			{
 				TypeCode c = Type.GetTypeCode(typeof(TStreamType));
 
-				kRead = kReadMethods[c];
-				kWrite = kWriteMethods[c];
-				kBitSwapMethods.TryGetValue(c, out kBitSwap);
+				KRead = kReadMethods_[c];
+				KWrite = kWriteMethods_[c];
+				kBitSwapMethods_.TryGetValue(c, out KBitSwap);
 			}
 		};
 	};

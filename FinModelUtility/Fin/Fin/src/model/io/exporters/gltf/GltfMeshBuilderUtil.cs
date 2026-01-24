@@ -8,7 +8,7 @@ using IGltfMeshBuilder
 namespace fin.model.io.exporters.gltf;
 
 public static class GltfMeshBuilderUtil {
-  private static readonly object?[] meshBuilderParams_ = [null];
+  private static readonly object?[] MESH_BUILDER_PARAMS_ = [null];
 
   public static IGltfMeshBuilder CreateMeshBuilder(
       bool hasNormals,
@@ -26,6 +26,6 @@ public static class GltfMeshBuilderUtil {
             [geometryType, materialType, skinningType]);
 
     var constructor = meshBuilderType.GetConstructors().Single();
-    return (IGltfMeshBuilder) constructor.Invoke(meshBuilderParams_);
+    return (IGltfMeshBuilder) constructor.Invoke(MESH_BUILDER_PARAMS_);
   }
 }

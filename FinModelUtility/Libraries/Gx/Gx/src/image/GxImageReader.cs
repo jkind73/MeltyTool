@@ -59,7 +59,7 @@ public sealed class GxImageReader : IImageReader {
             width,
             height,
             new Ar88Gb88TileReader()),
-        GxTextureFormat.S3TC1 => new Dxt1ImageReader(width, height),
+        GxTextureFormat.S3_TC1 => new Dxt1ImageReader(width, height),
         _                     => throw new ArgumentOutOfRangeException(nameof(format), format, null)
     };
   }

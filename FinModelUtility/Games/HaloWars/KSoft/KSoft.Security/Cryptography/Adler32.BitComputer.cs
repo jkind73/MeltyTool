@@ -12,19 +12,19 @@ namespace KSoft.Security.Cryptography
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct BitComputer
 		{
-			uint s1, s2;
+			uint s1_, s2_;
 
 			public BitComputer(uint adler32)
 			{
-				this.s1 = adler32 & 0xFFFF;
-				this.s2 = adler32 >> 16;
+				this.s1_ = adler32 & 0xFFFF;
+				this.s2_ = adler32 >> 16;
 			}
 
 			public static BitComputer New { get { return new BitComputer(1); } }
 
 			public uint ComputeFinish()
 			{
-				return Adler32.ComputeFinish(this.s1, this.s2);
+				return Adler32.ComputeFinish(this.s1_, this.s2_);
 			}
 
 			public void Compute(byte[] buffer, int offset, int length)
@@ -36,96 +36,96 @@ namespace KSoft.Security.Cryptography
 				int buflen = length;
 				for (int blocklen; buflen > 0; buflen -= blocklen)
 				{
-					blocklen = buflen < kBlockMax
+					blocklen = buflen < K_BLOCK_MAX_
 						? buflen
-						: kBlockMax;
+						: K_BLOCK_MAX_;
 
 					int x;
 					for (x = 0; x + 7 < blocklen; x += 8, offset += 8)
 					{
-						this.s1 += buffer[offset + 0];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 1];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 2];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 3];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 4];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 5];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 6];
-						this.s2 += this.s1;
-						this.s1 += buffer[offset + 7];
-						this.s2 += this.s1;
+						this.s1_ += buffer[offset + 0];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 1];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 2];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 3];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 4];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 5];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 6];
+						this.s2_ += this.s1_;
+						this.s1_ += buffer[offset + 7];
+						this.s2_ += this.s1_;
 					}
 
 					for (; x < blocklen; x++, offset++)
 					{
-						this.s1 += buffer[offset];
-						this.s2 += this.s1;
+						this.s1_ += buffer[offset];
+						this.s2_ += this.s1_;
 					}
 
-					this.s1 %= kAdlerMod;
-					this.s2 %= kAdlerMod;
+					this.s1_ %= K_ADLER_MOD_;
+					this.s2_ %= K_ADLER_MOD_;
 				}
 			}
 
 			#region Compute 16-bits
-			public void ComputeLE(ushort value)
+			public void ComputeLe(ushort value)
 			{
-				ComputeUpdate((value & 0x00FFU) >> 0, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0xFF00U) >> 8, ref this.s1, ref this.s2);
+				ComputeUpdate((value & 0x00FFU) >> 0, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0xFF00U) >> 8, ref this.s1_, ref this.s2_);
 			}
-			public void ComputeBE(ushort value)
+			public void ComputeBe(ushort value)
 			{
-				ComputeUpdate((value & 0xFF00U) >> 8, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x00FFU) >> 0, ref this.s1, ref this.s2);
+				ComputeUpdate((value & 0xFF00U) >> 8, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x00FFU) >> 0, ref this.s1_, ref this.s2_);
 			}
 			#endregion
 
 			#region Compute 32-bits
-			public void ComputeLE(uint value)
+			public void ComputeLe(uint value)
 			{
-				ComputeUpdate((value & 0x000000FFU) >> 0, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0xFF000000U) >> 24, ref this.s1, ref this.s2);
+				ComputeUpdate((value & 0x000000FFU) >> 0, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0xFF000000U) >> 24, ref this.s1_, ref this.s2_);
 			}
-			public void ComputeBE(uint value)
+			public void ComputeBe(uint value)
 			{
-				ComputeUpdate((value & 0xFF000000U) >> 24, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.s1, ref this.s2);
-				ComputeUpdate((value & 0x000000FFU) >> 0, ref this.s1, ref this.s2);
+				ComputeUpdate((value & 0xFF000000U) >> 24, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.s1_, ref this.s2_);
+				ComputeUpdate((value & 0x000000FFU) >> 0, ref this.s1_, ref this.s2_);
 			}
 			#endregion
 
 			#region Compute 64-bits
-			public void ComputeLE(ulong value)
+			public void ComputeLe(ulong value)
 			{
 				uint lo = Bits.GetLowBits(value);
 				uint hi = Bits.GetHighBits(value);
-				uint _value;
+				uint value;
 
-				_value = lo;
-				this.ComputeLE(_value);
+				value = lo;
+				this.ComputeLe(value);
 
-				_value = hi;
-				this.ComputeLE(_value);
+				value = hi;
+				this.ComputeLe(value);
 			}
-			public void ComputeBE(ulong value)
+			public void ComputeBe(ulong value)
 			{
 				uint lo = Bits.GetLowBits(value);
 				uint hi = Bits.GetHighBits(value);
-				uint _value;
+				uint value;
 
-				_value = hi;
-				this.ComputeBE(_value);
+				value = hi;
+				this.ComputeBe(value);
 
-				_value = lo;
-				this.ComputeBE(_value);
+				value = lo;
+				this.ComputeBe(value);
 			}
 			#endregion
 		};

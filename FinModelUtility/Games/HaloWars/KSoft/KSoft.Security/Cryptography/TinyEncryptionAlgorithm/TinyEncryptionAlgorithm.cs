@@ -2,7 +2,7 @@
 namespace KSoft.Security.Cryptography
 {
 	/// <summary>T(iny) E(ncryption) (A)lgorithm</summary>
-	public static class TEA
+	public static class Tea
 	{
 		/// <summary>Encrypt routine</summary>
 		/// <param name="v"></param>

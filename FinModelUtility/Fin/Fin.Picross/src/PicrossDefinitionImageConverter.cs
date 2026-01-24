@@ -5,8 +5,8 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace fin.picross;
 
-public sealed class PicrossDefinitionImageConverter {
-  public IImage ConvertToImage(IReadOnlyPicrossDefinition picrossDefinition) {
+public static class PicrossDefinitionImageConverter {
+  public static IImage ConvertToImage(IReadOnlyPicrossDefinition picrossDefinition) {
     var width = picrossDefinition.Width;
     var height = picrossDefinition.Height;
 

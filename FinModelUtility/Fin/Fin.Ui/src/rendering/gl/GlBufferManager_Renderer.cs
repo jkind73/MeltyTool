@@ -19,12 +19,12 @@ public partial interface IGlBufferManager {
 public interface IGlBufferRenderer : IRenderable;
 
 public sealed partial class GlBufferManager {
-  private const DrawElementsType INDEX_TYPE = DrawElementsType.UnsignedInt;
+  private const DrawElementsType INDEX_TYPE_ = DrawElementsType.UnsignedInt;
 
   public IGlBufferRenderer[] CreateRenderers(
       IReadOnlyList<MergedPrimitive> mergedPrimitives) {
     var restartIndex =
-        (int) (INDEX_TYPE switch {
+        (int) (INDEX_TYPE_ switch {
             DrawElementsType.UnsignedByte => byte.MaxValue,
             DrawElementsType.UnsignedShort => ushort.MaxValue,
             DrawElementsType.UnsignedInt => uint.MaxValue,
@@ -173,7 +173,7 @@ public sealed partial class GlBufferManager {
         GL.DrawElements(
             this.beginMode_,
             vertexCount,
-            INDEX_TYPE,
+            INDEX_TYPE_,
             new IntPtr(sizeof(int) * vertexOffset));
       } else {
         GL.DrawArrays(

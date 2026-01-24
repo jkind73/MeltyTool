@@ -71,9 +71,9 @@ public static class QuaternionUtil {
     var qy2 = q.Y * q.Y;
 
     // roll / x
-    var sinr_cosp = 2 * (q.W * q.X + q.Y * q.Z);
-    var cosr_cosp = 1 - 2 * (q.X * q.X + qy2);
-    angles.X = FinTrig.Atan2(sinr_cosp, cosr_cosp);
+    var sinrCosp = 2 * (q.W * q.X + q.Y * q.Z);
+    var cosrCosp = 1 - 2 * (q.X * q.X + qy2);
+    angles.X = FinTrig.Atan2(sinrCosp, cosrCosp);
 
     // pitch / y
     var sinp = (float) (2 * (q.W * q.Y - q.Z * q.X));
@@ -84,9 +84,9 @@ public static class QuaternionUtil {
     }
 
     // yaw / z
-    var siny_cosp = 2 * (q.W * q.Z + q.X * q.Y);
-    var cosy_cosp = 1 - 2 * (qy2 + q.Z * q.Z);
-    angles.Z = FinTrig.Atan2(siny_cosp, cosy_cosp);
+    var sinyCosp = 2 * (q.W * q.Z + q.X * q.Y);
+    var cosyCosp = 1 - 2 * (qy2 + q.Z * q.Z);
+    angles.Z = FinTrig.Atan2(sinyCosp, cosyCosp);
 
     return angles;
   }

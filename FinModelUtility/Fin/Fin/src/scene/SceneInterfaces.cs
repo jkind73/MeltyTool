@@ -13,12 +13,12 @@ using readOnly;
 
 namespace fin.scene;
 
-public interface ISceneFileBundle : I3dFileBundle {
+public interface ISceneFileBundle : I3DFileBundle {
   FileBundleType IFileBundle.Type => FileBundleType.SCENE;
 }
 
 public interface ISceneImporter<in TSceneFileBundle>
-    : I3dImporter<IScene, TSceneFileBundle>
+    : I3DImporter<IScene, TSceneFileBundle>
     where TSceneFileBundle : ISceneFileBundle;
 
 // Scene

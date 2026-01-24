@@ -1,18 +1,18 @@
 ﻿
 namespace KSoft.Phoenix.HaloWars
 {
-	public enum BHUDItem
+	public enum BhudItem
 	{
-		Minimap,
-		Resources,
-		Time,
-		PowerStatus,
-		Units,
-		DpadHelp,
-		ButtonHelp,
-		Reticle,
-		Score,
-		UnitStats,
-		CircleMenuExtraInfo,
+		MINIMAP,
+		RESOURCES,
+		TIME,
+		POWER_STATUS,
+		UNITS,
+		DPAD_HELP,
+		BUTTON_HELP,
+		RETICLE,
+		SCORE,
+		UNIT_STATS,
+		CIRCLE_MENU_EXTRA_INFO,
 	};
 }

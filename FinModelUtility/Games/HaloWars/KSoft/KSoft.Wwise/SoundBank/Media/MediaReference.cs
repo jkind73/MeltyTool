@@ -3,7 +3,7 @@ namespace KSoft.Wwise.SoundBank
 {
 	struct MediaReference
 	{
-		public AkMediaHeader Media;
-		public uint BankId;
+		public AkMediaHeader media;
+		public uint bankId;
 	};
 }

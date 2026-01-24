@@ -35,7 +35,7 @@ namespace sm64 {
     public void AddDl(uint address,
                       int currentDepth = 0) {
       var displayList = new F3dParser().Parse(this.sm64Hardware_.Memory, address);
-      this.Current2.Matrix = this.Node?.matrix.Impl ?? Matrix4x4.Identity;
+      this.Current2.Matrix = this.Node?.Matrix.Impl ?? Matrix4x4.Identity;
       this.Current2.AddDl(displayList);
     }
   }

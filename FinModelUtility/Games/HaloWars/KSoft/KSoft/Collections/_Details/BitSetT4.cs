@@ -8,9 +8,9 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	using StateFilterEnumerator = IReadOnlyBitSetEnumerators.StateFilterEnumerator;
+	using StateFilterEnumerator = ReadOnlyBitSetEnumerators.StateFilterEnumerator;
 
-	using StateFilterEnumeratorWrapper = EnumeratorWrapper<int, IReadOnlyBitSetEnumerators.StateFilterEnumerator>;
+	using StateFilterEnumeratorWrapper = EnumeratorWrapper<int, ReadOnlyBitSetEnumerators.StateFilterEnumerator>;
 
 	partial class BitSet
 	{
@@ -67,40 +67,40 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var from_word_mask = kVectorElementSectionBitMask(startBitIndex);
-			var last_word_mask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
+			var fromWordMask = KVectorElementSectionBitMask(startBitIndex);
+			var lastWordMask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
 
-			int last_bit_index = (startBitIndex+bitCount) - 1;
-			var from_word_index = kVectorIndexInT(startBitIndex);
-			var last_word_index = kVectorIndexInT(last_bit_index);
+			int lastBitIndex = (startBitIndex+bitCount) - 1;
+			var fromWordIndex = KVectorIndexInT(startBitIndex);
+			var lastWordIndex = KVectorIndexInT(lastBitIndex);
 
 			// target bits are only in one word...
-			if (from_word_index == last_word_index)
+			if (fromWordIndex == lastWordIndex)
 			{
-				var mask = from_word_mask;// & last_word_mask;
-				this.RecalculateCardinalityUndoRound(from_word_index);
-				Bitwise.Flags.Remove(ref this.mArray[from_word_index], mask);
-				this.RecalculateCardinalityRound(from_word_index);
+				var mask = fromWordMask;// & last_word_mask;
+				this.RecalculateCardinalityUndoRound(fromWordIndex);
+				Bitwise.Flags.Remove(ref this.mArray_[fromWordIndex], mask);
+				this.RecalculateCardinalityRound(fromWordIndex);
 				return;
 			}
 			// or the target bits are in multiple words...
 
 			// handle the first word
-			this.RecalculateCardinalityUndoRound(from_word_index);
-			Bitwise.Flags.Remove(ref this.mArray[from_word_index], from_word_mask);
-			this.RecalculateCardinalityRound(from_word_index);
+			this.RecalculateCardinalityUndoRound(fromWordIndex);
+			Bitwise.Flags.Remove(ref this.mArray_[fromWordIndex], fromWordMask);
+			this.RecalculateCardinalityRound(fromWordIndex);
 
 			// handle any words in between
-			for (int x = from_word_index+1; x < last_word_index; x++)
+			for (int x = fromWordIndex+1; x < lastWordIndex; x++)
 			{
 				this.RecalculateCardinalityUndoRound(x);
-				this.mArray[x] = kWordAllBitsClear;
+				this.mArray_[x] = K_WORD_ALL_BITS_CLEAR_;
 			}
 
 			// handle the last word
-			this.RecalculateCardinalityUndoRound(last_word_index);
-			Bitwise.Flags.Remove(ref this.mArray[last_word_index], last_word_mask);
-			this.RecalculateCardinalityRound(last_word_index);
+			this.RecalculateCardinalityUndoRound(lastWordIndex);
+			Bitwise.Flags.Remove(ref this.mArray_[lastWordIndex], lastWordMask);
+			this.RecalculateCardinalityRound(lastWordIndex);
 		}
 
 		public void SetBits(int startBitIndex, int bitCount)
@@ -111,41 +111,41 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var from_word_mask = kVectorElementSectionBitMask(startBitIndex);
-			var last_word_mask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
+			var fromWordMask = KVectorElementSectionBitMask(startBitIndex);
+			var lastWordMask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
 
-			int last_bit_index = (startBitIndex+bitCount) - 1;
-			var from_word_index = kVectorIndexInT(startBitIndex);
-			var last_word_index = kVectorIndexInT(last_bit_index);
+			int lastBitIndex = (startBitIndex+bitCount) - 1;
+			var fromWordIndex = KVectorIndexInT(startBitIndex);
+			var lastWordIndex = KVectorIndexInT(lastBitIndex);
 
 			// target bits are only in one word...
-			if (from_word_index == last_word_index)
+			if (fromWordIndex == lastWordIndex)
 			{
-				var mask = from_word_mask;// & last_word_mask;
-				this.RecalculateCardinalityUndoRound(from_word_index);
-				Bitwise.Flags.Add(ref this.mArray[from_word_index], mask);
-				this.RecalculateCardinalityRound(from_word_index);
+				var mask = fromWordMask;// & last_word_mask;
+				this.RecalculateCardinalityUndoRound(fromWordIndex);
+				Bitwise.Flags.Add(ref this.mArray_[fromWordIndex], mask);
+				this.RecalculateCardinalityRound(fromWordIndex);
 				return;
 			}
 			// or the target bits are in multiple words...
 
 			// handle the first word
-			this.RecalculateCardinalityUndoRound(from_word_index);
-			Bitwise.Flags.Add(ref this.mArray[from_word_index], from_word_mask);
-			this.RecalculateCardinalityRound(from_word_index);
+			this.RecalculateCardinalityUndoRound(fromWordIndex);
+			Bitwise.Flags.Add(ref this.mArray_[fromWordIndex], fromWordMask);
+			this.RecalculateCardinalityRound(fromWordIndex);
 
 			// handle any words in between
-			for (int x = from_word_index+1; x < last_word_index; x++)
+			for (int x = fromWordIndex+1; x < lastWordIndex; x++)
 			{
 				this.RecalculateCardinalityUndoRound(x);
-				this.mArray[x] = kWordAllBitsSet;
-				this.Cardinality += kWordBitCount;
+				this.mArray_[x] = K_WORD_ALL_BITS_SET_;
+				this.Cardinality += K_WORD_BIT_COUNT_;
 			}
 
 			// handle the last word
-			this.RecalculateCardinalityUndoRound(last_word_index);
-			Bitwise.Flags.Add(ref this.mArray[last_word_index], last_word_mask);
-			this.RecalculateCardinalityRound(last_word_index);
+			this.RecalculateCardinalityUndoRound(lastWordIndex);
+			Bitwise.Flags.Add(ref this.mArray_[lastWordIndex], lastWordMask);
+			this.RecalculateCardinalityRound(lastWordIndex);
 		}
 
 		public void ToggleBits(int startBitIndex, int bitCount)
@@ -156,41 +156,41 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var from_word_mask = kVectorElementSectionBitMask(startBitIndex);
-			var last_word_mask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
+			var fromWordMask = KVectorElementSectionBitMask(startBitIndex);
+			var lastWordMask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
 
-			int last_bit_index = (startBitIndex+bitCount) - 1;
-			var from_word_index = kVectorIndexInT(startBitIndex);
-			var last_word_index = kVectorIndexInT(last_bit_index);
+			int lastBitIndex = (startBitIndex+bitCount) - 1;
+			var fromWordIndex = KVectorIndexInT(startBitIndex);
+			var lastWordIndex = KVectorIndexInT(lastBitIndex);
 
 			// target bits are only in one word...
-			if (from_word_index == last_word_index)
+			if (fromWordIndex == lastWordIndex)
 			{
-				var mask = from_word_mask;// & last_word_mask;
-				this.RecalculateCardinalityUndoRound(from_word_index);
-				Bitwise.Flags.Toggle(ref this.mArray[from_word_index], mask);
-				this.RecalculateCardinalityRound(from_word_index);
+				var mask = fromWordMask;// & last_word_mask;
+				this.RecalculateCardinalityUndoRound(fromWordIndex);
+				Bitwise.Flags.Toggle(ref this.mArray_[fromWordIndex], mask);
+				this.RecalculateCardinalityRound(fromWordIndex);
 				return;
 			}
 			// or the target bits are in multiple words...
 
 			// handle the first word
-			this.RecalculateCardinalityUndoRound(from_word_index);
-			Bitwise.Flags.Toggle(ref this.mArray[from_word_index], from_word_mask);
-			this.RecalculateCardinalityRound(from_word_index);
+			this.RecalculateCardinalityUndoRound(fromWordIndex);
+			Bitwise.Flags.Toggle(ref this.mArray_[fromWordIndex], fromWordMask);
+			this.RecalculateCardinalityRound(fromWordIndex);
 
 			// handle any words in between
-			for (int x = from_word_index+1; x < last_word_index; x++)
+			for (int x = fromWordIndex+1; x < lastWordIndex; x++)
 			{
 				this.RecalculateCardinalityUndoRound(x);
-				Bitwise.Flags.Toggle(ref this.mArray[x], this.mArray[x]);
+				Bitwise.Flags.Toggle(ref this.mArray_[x], this.mArray_[x]);
 				this.RecalculateCardinalityRound(x);
 			}
 
 			// handle the last word
-			this.RecalculateCardinalityUndoRound(last_word_index);
-			Bitwise.Flags.Toggle(ref this.mArray[last_word_index], last_word_mask);
-			this.RecalculateCardinalityRound(last_word_index);
+			this.RecalculateCardinalityUndoRound(lastWordIndex);
+			Bitwise.Flags.Toggle(ref this.mArray_[lastWordIndex], lastWordMask);
+			this.RecalculateCardinalityRound(lastWordIndex);
 		}
 
 		[Contracts.Pure]
@@ -199,34 +199,34 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return false;
 
-			var from_word_mask = kVectorElementSectionBitMask(startBitIndex);
-			var last_word_mask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
+			var fromWordMask = KVectorElementSectionBitMask(startBitIndex);
+			var lastWordMask = GetCabooseRetainedBitsMask(startBitIndex+bitCount);
 
-			int last_bit_index = (startBitIndex+bitCount) - 1;
-			var from_word_index = kVectorIndexInT(startBitIndex);
-			var last_word_index = kVectorIndexInT(last_bit_index);
+			int lastBitIndex = (startBitIndex+bitCount) - 1;
+			var fromWordIndex = KVectorIndexInT(startBitIndex);
+			var lastWordIndex = KVectorIndexInT(lastBitIndex);
 
 			// target bits are only in one word...
-			if (from_word_index == last_word_index)
+			if (fromWordIndex == lastWordIndex)
 			{
-				var mask = from_word_mask;// & last_word_mask;
-				return Bitwise.Flags.TestAny(this.mArray[from_word_index], mask);
+				var mask = fromWordMask;// & last_word_mask;
+				return Bitwise.Flags.TestAny(this.mArray_[fromWordIndex], mask);
 			}
 			// or the target bits are in multiple words...
 
 			// handle the first word
-			if (Bitwise.Flags.TestAny(this.mArray[from_word_index], from_word_mask))
+			if (Bitwise.Flags.TestAny(this.mArray_[fromWordIndex], fromWordMask))
 				return true;
 
 			// handle any words in between
-			for (int x = from_word_index+1; x < last_word_index; x++)
+			for (int x = fromWordIndex+1; x < lastWordIndex; x++)
 			{
-				if (this.mArray[x] > kWordAllBitsClear)
+				if (this.mArray_[x] > K_WORD_ALL_BITS_CLEAR_)
 					return true;
 			}
 
 			// handle the last word
-			return Bitwise.Flags.TestAny(this.mArray[last_word_index], last_word_mask);
+			return Bitwise.Flags.TestAny(this.mArray_[lastWordIndex], lastWordMask);
 		}
 
 	};

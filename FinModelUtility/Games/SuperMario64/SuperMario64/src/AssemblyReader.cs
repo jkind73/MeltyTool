@@ -1,123 +1,123 @@
 ﻿namespace sm64.src {
   class AssemblyReader {
-    public List<JAL_CALL> findJALsInFunction(uint RAMFunc, uint RAMtoROM) {
-      List<JAL_CALL> calls = [];
-      List<Instruction> inst = this.ReadFunction(RAMFunc, RAMtoROM);
+    public List<JalCall> FindJaLsInFunction(uint ramFunc, uint raMtoRom) {
+      List<JalCall> calls = [];
+      List<Instruction> inst = this.ReadFunction(ramFunc, raMtoRom);
       uint a0 = 0, a1 = 0, a2 = 0, a3 = 0;
-      uint jal_addr = 0;
+      uint jalAddr = 0;
       bool addNextTime = false;
       for (int i = 0; i < inst.Count; i++) {
-        bool addJAL = addNextTime;
+        bool addJal = addNextTime;
         switch (inst[i].opCode) {
-          case OPCODE.LUI:
-            if (inst[i].gp_dest == GP_REGISTER.A0)
+          case Opcode.LUI:
+            if (inst[i].gpDest == GpRegister.A0)
               a0 = (uint) (inst[i].immediate << 16);
-            else if (inst[i].gp_dest == GP_REGISTER.A1)
+            else if (inst[i].gpDest == GpRegister.A1)
               a1 = (uint) (inst[i].immediate << 16);
-            else if (inst[i].gp_dest == GP_REGISTER.A2)
+            else if (inst[i].gpDest == GpRegister.A2)
               a2 = (uint) (inst[i].immediate << 16);
-            else if (inst[i].gp_dest == GP_REGISTER.A3)
+            else if (inst[i].gpDest == GpRegister.A3)
               a3 = (uint) (inst[i].immediate << 16);
             break;
-          case OPCODE.ADDIU:
-            if (inst[i].gp_dest == GP_REGISTER.A0 &&
-                inst[i].gp_1 == GP_REGISTER.A0)
+          case Opcode.ADDIU:
+            if (inst[i].gpDest == GpRegister.A0 &&
+                inst[i].gp1 == GpRegister.A0)
               a0 += (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A1 &&
-                     inst[i].gp_1 == GP_REGISTER.A1)
+            else if (inst[i].gpDest == GpRegister.A1 &&
+                     inst[i].gp1 == GpRegister.A1)
               a1 += (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A2 &&
-                     inst[i].gp_1 == GP_REGISTER.A2)
+            else if (inst[i].gpDest == GpRegister.A2 &&
+                     inst[i].gp1 == GpRegister.A2)
               a2 += (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A3 &&
-                     inst[i].gp_1 == GP_REGISTER.A3)
+            else if (inst[i].gpDest == GpRegister.A3 &&
+                     inst[i].gp1 == GpRegister.A3)
               a3 += (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A0 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A0 &&
+                     inst[i].gp1 == GpRegister.R0)
               a0 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A1 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A1 &&
+                     inst[i].gp1 == GpRegister.R0)
               a1 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A2 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A2 &&
+                     inst[i].gp1 == GpRegister.R0)
               a2 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A3 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A3 &&
+                     inst[i].gp1 == GpRegister.R0)
               a3 = (uint) inst[i].immediate;
             else {
-              if (inst[i].gp_dest == GP_REGISTER.A0)
+              if (inst[i].gpDest == GpRegister.A0)
                 a0 = (uint) (inst[i].immediate +
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              else if (inst[i].gp_dest == GP_REGISTER.A1)
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              else if (inst[i].gpDest == GpRegister.A1)
                 a1 = (uint) (inst[i].immediate +
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              else if (inst[i].gp_dest == GP_REGISTER.A2)
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              else if (inst[i].gpDest == GpRegister.A2)
                 a2 = (uint) (inst[i].immediate +
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              else if (inst[i].gp_dest == GP_REGISTER.A3)
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              else if (inst[i].gpDest == GpRegister.A3)
                 a3 = (uint) (inst[i].immediate +
-                             this.gp_register_values[(int) inst[i].gp_1]);
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
             }
 
             break;
-          case OPCODE.ORI:
-            if (inst[i].gp_dest == GP_REGISTER.A0 &&
-                inst[i].gp_1 == GP_REGISTER.A0)
+          case Opcode.ORI:
+            if (inst[i].gpDest == GpRegister.A0 &&
+                inst[i].gp1 == GpRegister.A0)
               a0 |= (ushort) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A1 &&
-                     inst[i].gp_1 == GP_REGISTER.A1)
+            else if (inst[i].gpDest == GpRegister.A1 &&
+                     inst[i].gp1 == GpRegister.A1)
               a1 |= (ushort) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A2 &&
-                     inst[i].gp_1 == GP_REGISTER.A2)
+            else if (inst[i].gpDest == GpRegister.A2 &&
+                     inst[i].gp1 == GpRegister.A2)
               a2 |= (ushort) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A3 &&
-                     inst[i].gp_1 == GP_REGISTER.A3)
+            else if (inst[i].gpDest == GpRegister.A3 &&
+                     inst[i].gp1 == GpRegister.A3)
               a3 |= (ushort) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A0 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A0 &&
+                     inst[i].gp1 == GpRegister.R0)
               a0 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A1 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A1 &&
+                     inst[i].gp1 == GpRegister.R0)
               a1 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A2 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A2 &&
+                     inst[i].gp1 == GpRegister.R0)
               a2 = (uint) inst[i].immediate;
-            else if (inst[i].gp_dest == GP_REGISTER.A3 &&
-                     inst[i].gp_1 == GP_REGISTER.R0)
+            else if (inst[i].gpDest == GpRegister.A3 &&
+                     inst[i].gp1 == GpRegister.R0)
               a3 = (uint) inst[i].immediate;
             else {
-              if (inst[i].gp_dest == GP_REGISTER.A0) {
-                uint immediate_unsigned = (uint) inst[i].immediate;
-                a0 = (uint) (immediate_unsigned |
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              } else if (inst[i].gp_dest == GP_REGISTER.A1) {
-                uint immediate_unsigned = (uint) inst[i].immediate;
-                a1 = (uint) (immediate_unsigned |
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              } else if (inst[i].gp_dest == GP_REGISTER.A2) {
-                uint immediate_unsigned = (uint) inst[i].immediate;
-                a2 = (uint) (immediate_unsigned |
-                             this.gp_register_values[(int) inst[i].gp_1]);
-              } else if (inst[i].gp_dest == GP_REGISTER.A3) {
-                uint immediate_unsigned = (uint) inst[i].immediate;
-                a3 = (uint) (immediate_unsigned |
-                             this.gp_register_values[(int) inst[i].gp_1]);
+              if (inst[i].gpDest == GpRegister.A0) {
+                uint immediateUnsigned = (uint) inst[i].immediate;
+                a0 = (uint) (immediateUnsigned |
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              } else if (inst[i].gpDest == GpRegister.A1) {
+                uint immediateUnsigned = (uint) inst[i].immediate;
+                a1 = (uint) (immediateUnsigned |
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              } else if (inst[i].gpDest == GpRegister.A2) {
+                uint immediateUnsigned = (uint) inst[i].immediate;
+                a2 = (uint) (immediateUnsigned |
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
+              } else if (inst[i].gpDest == GpRegister.A3) {
+                uint immediateUnsigned = (uint) inst[i].immediate;
+                a3 = (uint) (immediateUnsigned |
+                             this.gpRegisterValues_[(int) inst[i].gp1]);
               }
             }
             break;
-          case OPCODE.JAL:
-            jal_addr = inst[i].jump_to_func;
+          case Opcode.JAL:
+            jalAddr = inst[i].jumpToFunc;
             addNextTime = true;
             break;
         }
 
-        if (addJAL) {
-          JAL_CALL newCall = new JAL_CALL();
+        if (addJal) {
+          JalCall newCall = new JalCall();
           newCall.a0 = a0;
           newCall.a1 = a1;
           newCall.a2 = a2;
           newCall.a3 = a3;
-          newCall.JAL_ADDRESS = jal_addr;
+          newCall.jalAddress = jalAddr;
           calls.Add(newCall);
           //Console.WriteLine(newCall.ToString());
           addNextTime = false;
@@ -127,27 +127,27 @@
       return calls;
     }
 
-    public List<Instruction> ReadFunction(uint RAMAddr, uint RAMtoROM) {
+    public List<Instruction> ReadFunction(uint ramAddr, uint raMtoRom) {
       List<Instruction> instructions = [];
-      ROM rom = ROM.Instance;
-      uint ROM_OFFSET = RAMAddr - RAMtoROM;
-      uint offset = ROM_OFFSET;
+      Rom rom = Rom.Instance;
+      uint romOffset = ramAddr - raMtoRom;
+      uint offset = romOffset;
       int end = 0x8000;
       while (end > 0) {
-        Instruction cur = this.parseInstruction(rom.readWordUnsigned(offset));
+        Instruction cur = this.ParseInstruction_(rom.ReadWordUnsigned(offset));
         offset += 4;
         end--;
-        if (cur.opCode == OPCODE.JR && cur.gp_1 == GP_REGISTER.RA)
+        if (cur.opCode == Opcode.JR && cur.gp1 == GpRegister.RA)
           end = 1;
         instructions.Add(cur);
       }
       return instructions;
     }
 
-    private Instruction parseInstruction(uint data) {
+    private Instruction ParseInstruction_(uint data) {
       Instruction inst = new Instruction();
       if (data == 0) {
-        inst.opCode = OPCODE.NOP;
+        inst.opCode = Opcode.NOP;
         return inst;
       }
 
@@ -157,41 +157,41 @@
           func = data & 0x3F;
           switch (func) {
             case 0x08:
-              inst.opCode = OPCODE.JR;
-              inst.gp_1 = (GP_REGISTER) ((data >> 21) & 0x1F);
+              inst.opCode = Opcode.JR;
+              inst.gp1 = (GpRegister) ((data >> 21) & 0x1F);
               break;
             default:
-              inst.opCode = OPCODE.DO_NOT_CARE;
+              inst.opCode = Opcode.DO_NOT_CARE;
               break;
           }
           break;
         case 0x03:
-          inst.opCode = OPCODE.JAL;
-          inst.jump_to_func = 0x80000000 + ((data & 0x3FFFFFF) << 2);
+          inst.opCode = Opcode.JAL;
+          inst.jumpToFunc = 0x80000000 + ((data & 0x3FFFFFF) << 2);
           break;
         case 0x09:
-          inst.opCode = OPCODE.ADDIU;
-          inst.gp_dest = (GP_REGISTER) ((data >> 16) & 0x1F);
-          inst.gp_1 = (GP_REGISTER) ((data >> 21) & 0x1F);
+          inst.opCode = Opcode.ADDIU;
+          inst.gpDest = (GpRegister) ((data >> 16) & 0x1F);
+          inst.gp1 = (GpRegister) ((data >> 21) & 0x1F);
           inst.immediate = (short) (data & 0xFFFF);
-          this.gp_register_values[(int) inst.gp_dest] = this.gp_register_values[(int) inst.gp_1] + inst.immediate;
+          this.gpRegisterValues_[(int) inst.gpDest] = this.gpRegisterValues_[(int) inst.gp1] + inst.immediate;
           break;
         case 0x0D:
-          inst.opCode = OPCODE.ORI;
-          inst.gp_dest = (GP_REGISTER) ((data >> 16) & 0x1F);
-          inst.gp_1 = (GP_REGISTER) ((data >> 21) & 0x1F);
+          inst.opCode = Opcode.ORI;
+          inst.gpDest = (GpRegister) ((data >> 16) & 0x1F);
+          inst.gp1 = (GpRegister) ((data >> 21) & 0x1F);
           inst.immediate = (short) (data & 0xFFFF);
 
-          this.gp_register_values[(int) inst.gp_dest] = this.gp_register_values[(int) inst.gp_1] | (long) inst.immediate;
+          this.gpRegisterValues_[(int) inst.gpDest] = this.gpRegisterValues_[(int) inst.gp1] | (long) inst.immediate;
           break;
         case 0x0F:
-          inst.opCode = OPCODE.LUI;
-          inst.gp_dest = (GP_REGISTER) ((data >> 16) & 0x1F);
+          inst.opCode = Opcode.LUI;
+          inst.gpDest = (GpRegister) ((data >> 16) & 0x1F);
           inst.immediate = (short) (data & 0xFFFF);
-          this.gp_register_values[(int) inst.gp_dest] = (long) inst.immediate << 16;
+          this.gpRegisterValues_[(int) inst.gpDest] = (long) inst.immediate << 16;
           break;
         default:
-          inst.opCode = OPCODE.DO_NOT_CARE;
+          inst.opCode = Opcode.DO_NOT_CARE;
           break;
       }
 
@@ -199,10 +199,10 @@
     }
 
 
-    long[] gp_register_values = new long[0x32];
+    long[] gpRegisterValues_ = new long[0x32];
 
     // General-Purpose Registers
-    public enum GP_REGISTER {
+    public enum GpRegister {
       R0, // Constant 0
       AT, // Used for psuedo-instructions
       V0,
@@ -238,7 +238,7 @@
     }
 
     // Floating-Point Registers
-    public enum FP_REGISTER {
+    public enum FpRegister {
       F0,
       F1,
       F2,
@@ -273,7 +273,7 @@
       F31 // Saved
     }
 
-    public enum OPCODE {
+    public enum Opcode {
       LUI,
       ADDIU,
       ORI,
@@ -283,11 +283,11 @@
       DO_NOT_CARE
     }
 
-    public sealed class JAL_CALL {
-      public uint JAL_ADDRESS = 0, a0 = 0, a1 = 0, a2 = 0, a3 = 0;
+    public sealed class JalCall {
+      public uint jalAddress = 0, a0 = 0, a1 = 0, a2 = 0, a3 = 0;
 
       public override string ToString() {
-        return this.JAL_ADDRESS.ToString("X8") + "("
+        return this.jalAddress.ToString("X8") + "("
                                                +
                                                this.a0.ToString("X8") + ", "
                                                +
@@ -300,27 +300,27 @@
     }
 
     public sealed class Instruction {
-      public OPCODE opCode;
-      public GP_REGISTER gp_1, gp_dest;
+      public Opcode opCode;
+      public GpRegister gp1, gpDest;
       public short immediate = 0;
-      public uint jump_to_func = 0;
+      public uint jumpToFunc = 0;
 
       public override string ToString() {
         switch (this.opCode) {
-          case OPCODE.JR:
-            return "JR " + this.gp_1.ToString();
-          case OPCODE.LUI:
+          case Opcode.JR:
+            return "JR " + this.gp1.ToString();
+          case Opcode.LUI:
             return "LUI " +
-                   this.gp_dest.ToString() + " 0x" +
+                   this.gpDest.ToString() + " 0x" +
                    this.immediate.ToString("X4");
-          case OPCODE.ADDIU:
+          case Opcode.ADDIU:
             return "ADDIU " +
-                   this.gp_dest.ToString() + " " +
-                   this.gp_1.ToString() +
+                   this.gpDest.ToString() + " " +
+                   this.gp1.ToString() +
                    " 0x" +
                    this.immediate.ToString("X4");
-          case OPCODE.JAL:
-            return "JAL 0x" + this.jump_to_func.ToString("X8");
+          case Opcode.JAL:
+            return "JAL 0x" + this.jumpToFunc.ToString("X8");
         }
         return this.opCode.ToString();
       }

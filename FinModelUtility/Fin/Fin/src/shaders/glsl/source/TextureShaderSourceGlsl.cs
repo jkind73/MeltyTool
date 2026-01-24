@@ -37,14 +37,14 @@ public sealed class TextureShaderSourceGlsl : IShaderSourceGlsl {
     this.hasLighting_ = !material.IgnoreLights && hasNormals;
 
     var sb = new IndentedStringBuilder();
-    sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
+    sb.AppendLine($"#version {GlslConstants.FragmentShaderVersion}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
 
     if (this.hasLighting_) {
       sb.AppendLine(
           $"""
 
-           {GlslUtil.LIGHT_HEADER}
+           {GlslUtil.LightHeader}
            """);
     }
 

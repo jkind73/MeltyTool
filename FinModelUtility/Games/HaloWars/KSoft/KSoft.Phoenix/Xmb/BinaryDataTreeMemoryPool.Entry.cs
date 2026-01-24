@@ -88,7 +88,7 @@ namespace KSoft.Phoenix.Xmb
 			}
 			#endregion
 
-			public BinaryDataTreeVariantType Type { get { return this.TypeDesc.Type; } }
+			public BinaryDataTreeVariantType Type { get { return this.TypeDesc.type; } }
 			public bool IsUnicode { get { return this.TypeDesc.IsUnicode; } }
 			public bool UseDirectEncoding { get { return this.TypeDesc.SizeOf <= sizeof(uint) && this.ArrayLength <= 1; } }
 
@@ -96,18 +96,18 @@ namespace KSoft.Phoenix.Xmb
 			{
 				switch (this.Type)
 				{
-				case BinaryDataTreeVariantType.Null:
+				case BinaryDataTreeVariantType.NULL:
 					return 0;
 
-				case BinaryDataTreeVariantType.Bool:
-				case BinaryDataTreeVariantType.Int:
-				case BinaryDataTreeVariantType.Float:
-				case BinaryDataTreeVariantType.String:
-					int array_length = this.ArrayLength > 1
+				case BinaryDataTreeVariantType.BOOL:
+				case BinaryDataTreeVariantType.INT:
+				case BinaryDataTreeVariantType.FLOAT:
+				case BinaryDataTreeVariantType.STRING:
+					int arrayLength = this.ArrayLength > 1
 						? this.ArrayLength
 						: 1;
 					int size = this.TypeDesc.SizeOf;
-					return (uint)(size * array_length);
+					return (uint)(size * arrayLength);
 
 				default: throw new KSoft.Debug.UnreachableException(this.Type.ToString());
 				}
@@ -117,10 +117,10 @@ namespace KSoft.Phoenix.Xmb
 			{
 				this.PrePadSize = 0;
 
-				int alignment_bit = System.Math.Max(this.TypeDesc.AlignmentBit, IntegerMath.kInt32AlignmentBit);
+				int alignmentBit = System.Math.Max(this.TypeDesc.AlignmentBit, IntegerMath.K_INT32_ALIGNMENT_BIT);
 
-				if (this.Type != BinaryDataTreeVariantType.String)
-					this.PrePadSize = (byte)IntegerMath.PaddingRequired(alignment_bit, offset);
+				if (this.Type != BinaryDataTreeVariantType.STRING)
+					this.PrePadSize = (byte)IntegerMath.PaddingRequired(alignmentBit, offset);
 
 				if (willWriteSizeToo)
 					this.PrePadSize += sizeof(uint);
@@ -147,13 +147,13 @@ namespace KSoft.Phoenix.Xmb
 			{
 				switch (this.Type)
 				{
-				case BinaryDataTreeVariantType.Bool:
+				case BinaryDataTreeVariantType.BOOL:
 					this.ReadBool(s); break;
-				case BinaryDataTreeVariantType.Int:
+				case BinaryDataTreeVariantType.INT:
 					this.ReadInt(s); break;
-				case BinaryDataTreeVariantType.Float:
+				case BinaryDataTreeVariantType.FLOAT:
 					this.ReadFloat(s); break;
-				case BinaryDataTreeVariantType.String:
+				case BinaryDataTreeVariantType.STRING:
 					this.ReadString(s); break;
 
 				default: throw new KSoft.Debug.UnreachableException(this.Type.ToString());
@@ -356,7 +356,7 @@ namespace KSoft.Phoenix.Xmb
 
 				switch (this.Type)
 				{
-				case BinaryDataTreeVariantType.Int:	s.Write(this.Int); break;
+				case BinaryDataTreeVariantType.INT:	s.Write(this.Int); break;
 #if false
 				case BinaryDataTreeVariantType.Single: s.Write(Single); break;
 				case BinaryDataTreeVariantType.Double: s.Write(Double); break;

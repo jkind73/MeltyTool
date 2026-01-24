@@ -23,7 +23,7 @@ public sealed class F3dOpcodeParser : IOpcodeParser {
     return opcodeCommand;
   }
 
-  public DisplayListType Type => DisplayListType.FAST3D;
+  public DisplayListType Type => DisplayListType.FAST_3D;
 
   private IOpcodeCommand ParseOpcodeCommand_(IReadOnlyN64Memory n64Memory,
                                              IDisplayListReader dlr,

@@ -9,43 +9,43 @@ using BProtoObjectTrainLimit = System.Int32; // idk, 4 bytes
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class cSaveMarker
+	partial class CSaveMarker
 	{
 		public const ushort
-			ProtoObject = 0x2710
+			PROTO_OBJECT = 0x2710
 			;
 	};
 
 	sealed class BProtoObject
 		: BProtoObjectBase
 	{
-		const int kTrainLimitsMaxCount = 0x64;
+		const int K_TRAIN_LIMITS_MAX_COUNT_ = 0x64;
 
-		public BProtoObjectID ProtoID;
-		public BProtoObjectTrainLimit[] TrainLimits;
-		public BHardpoint[] Hardpoints;
+		public BProtoObjectID protoId;
+		public BProtoObjectTrainLimit[] trainLimits;
+		public BHardpoint[] hardpoints;
 
-		public int ProtoVisualIndex;
-		public float DesiredVelocity, MaxVelocity;
-		public float Hitpoints, Shieldpoints;
-		public float LOS;
-		public int SimLOS;
+		public int protoVisualIndex;
+		public float desiredVelocity, maxVelocity;
+		public float hitpoints, shieldpoints;
+		public float los;
+		public int simLos;
 
-		public float Bounty;
-		public BTactic Tactic;
-		public float AmmoMax, AmmoRegenRate, RateAmount;
-		public int MaxContained, DisplayNameIndex, CircleMenuIconID;
-		public int DeathSpawnSquad;
-		public byte[] CommandDisabled; // utbitvector; count=4
-		public byte[] CommandSelectable; // utbitvector; count=4
-		public bool AbilityDisabled,
-			AutoCloak, CloakMove, CloakAttack,
-			UniqueInstance;
+		public float bounty;
+		public BTactic tactic;
+		public float ammoMax, ammoRegenRate, rateAmount;
+		public int maxContained, displayNameIndex, circleMenuIconId;
+		public int deathSpawnSquad;
+		public byte[] commandDisabled; // utbitvector; count=4
+		public byte[] commandSelectable; // utbitvector; count=4
+		public bool abilityDisabled,
+			autoCloak, cloakMove, cloakAttack,
+			uniqueInstance;
 
 		public void CommandDisabledNone()
 		{
-			for (int x = 0; x < this.CommandDisabled.Length; x++)
-				this.CommandDisabled[x] = 0;
+			for (int x = 0; x < this.commandDisabled.Length; x++)
+				this.commandDisabled[x] = 0;
 		}
 
 		#region IEndianStreamSerializable Members
@@ -54,29 +54,29 @@ namespace KSoft.Phoenix.Runtime
 			base.Serialize(s);
 			var sg = s.Owner as BSaveGame;
 
-			s.Stream(ref this.ProtoID);
-			BSaveGame.StreamArray(s, ref this.TrainLimits);
-			Contract.Assert(this.TrainLimits.Length <= kTrainLimitsMaxCount);
-			BSaveGame.StreamArray(s, ref this.Hardpoints);
-			Contract.Assert(this.Hardpoints.Length <= BHardpoint.kMaxCount);
-			sg.StreamBCost(s, ref this.Cost);
-			s.Stream(ref this.ProtoVisualIndex);
-			s.Stream(ref this.DesiredVelocity); s.Stream(ref this.MaxVelocity);
-			s.Stream(ref this.Hitpoints); s.Stream(ref this.Shieldpoints);
-			s.Stream(ref this.LOS);
-			s.Stream(ref this.SimLOS);
-			s.Stream(ref this.BuildPoints);
-			s.Stream(ref this.Bounty);
-			s.StreamNotNull(ref this.Tactic);
-			s.Stream(ref this.AmmoMax); s.Stream(ref this.AmmoRegenRate); s.Stream(ref this.RateAmount);
-			s.Stream(ref this.MaxContained); s.Stream(ref this.DisplayNameIndex); s.Stream(ref this.CircleMenuIconID);
-			s.Stream(ref this.DeathSpawnSquad);
-			BSaveGame.StreamArray(s, ref this.CommandDisabled);
-			BSaveGame.StreamArray(s, ref this.CommandSelectable);
-			s.Stream(ref this.Available); s.Stream(ref this.Forbid); s.Stream(ref this.AbilityDisabled);
-			s.Stream(ref this.AutoCloak); s.Stream(ref this.CloakMove); s.Stream(ref this.CloakAttack);
-			s.Stream(ref this.UniqueInstance);
-			s.StreamSignature(cSaveMarker.ProtoObject);
+			s.Stream(ref this.protoId);
+			BSaveGame.StreamArray(s, ref this.trainLimits);
+			Contract.Assert(this.trainLimits.Length <= K_TRAIN_LIMITS_MAX_COUNT_);
+			BSaveGame.StreamArray(s, ref this.hardpoints);
+			Contract.Assert(this.hardpoints.Length <= BHardpoint.K_MAX_COUNT);
+			sg.StreamBCost(s, ref this.cost);
+			s.Stream(ref this.protoVisualIndex);
+			s.Stream(ref this.desiredVelocity); s.Stream(ref this.maxVelocity);
+			s.Stream(ref this.hitpoints); s.Stream(ref this.shieldpoints);
+			s.Stream(ref this.los);
+			s.Stream(ref this.simLos);
+			s.Stream(ref this.buildPoints);
+			s.Stream(ref this.bounty);
+			s.StreamNotNull(ref this.tactic);
+			s.Stream(ref this.ammoMax); s.Stream(ref this.ammoRegenRate); s.Stream(ref this.rateAmount);
+			s.Stream(ref this.maxContained); s.Stream(ref this.displayNameIndex); s.Stream(ref this.circleMenuIconId);
+			s.Stream(ref this.deathSpawnSquad);
+			BSaveGame.StreamArray(s, ref this.commandDisabled);
+			BSaveGame.StreamArray(s, ref this.commandSelectable);
+			s.Stream(ref this.available); s.Stream(ref this.forbid); s.Stream(ref this.abilityDisabled);
+			s.Stream(ref this.autoCloak); s.Stream(ref this.cloakMove); s.Stream(ref this.cloakAttack);
+			s.Stream(ref this.uniqueInstance);
+			s.StreamSignature(CSaveMarker.PROTO_OBJECT);
 		}
 		#endregion
 

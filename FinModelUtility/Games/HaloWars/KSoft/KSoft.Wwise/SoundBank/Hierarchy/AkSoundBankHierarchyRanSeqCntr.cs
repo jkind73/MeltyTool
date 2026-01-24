@@ -4,45 +4,45 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankHierarchyRanSeqCntr
 		: AkSoundBankHierarchyObjectBase
 	{
-		public CAkParameterNodeBase ParameterNode = new CAkParameterNodeBase();
-		public AkPlaylistItem[] Playlist;
+		public CAkParameterNodeBase parameterNode = new CAkParameterNodeBase();
+		public AkPlaylistItem[] playlist;
 
 	void SerializeReverseHack2008(IO.EndianStream s)
 		{
-			const long k_seek_amount = -(sizeof(uint) + AkPlaylistItem.kSizeOf);
-			int item_count = 1;
+			const long kSeekAmount = -(sizeof(uint) + AkPlaylistItem.K_SIZE_OF);
+			int itemCount = 1;
 			long terminator = s.BaseStream.Position + 0x74;
-			bool read_playlist = false;
+			bool readPlaylist = false;
 
 			s.Seek(s.VirtualBufferStart + s.VirtualBufferLength);
 			do{
-				s.Seek(k_seek_amount, System.IO.SeekOrigin.Current);
-				if (s.Reader.ReadInt32() == item_count)
+				s.Seek(kSeekAmount, System.IO.SeekOrigin.Current);
+				if (s.Reader.ReadInt32() == itemCount)
 				{
-					read_playlist = true;
+					readPlaylist = true;
 					break;
 				}
 
-				item_count++;
+				itemCount++;
 			}while(s.BaseStream.Position > terminator);
 
-			if (read_playlist)
+			if (readPlaylist)
 			{
-				this.Playlist = new AkPlaylistItem[item_count];
-				s.StreamArray(this.Playlist);
+				this.playlist = new AkPlaylistItem[itemCount];
+				s.StreamArray(this.playlist);
 			}
 		}
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			uint gen_ver = (s.Owner as AkSoundBank).GeneratorVersion;
+			uint genVer = (s.Owner as AkSoundBank).GeneratorVersion;
 
-			if (gen_ver == AkVersion.k2008.BankGenerator)
+			if (genVer == AkVersion.K2008.BANK_GENERATOR)
 				this.SerializeReverseHack2008(s);
 			else
 			{
-				s.Stream(this.ParameterNode);
+				s.Stream(this.parameterNode);
 				// 0x18
 				s.Pad16(); // LoopCount
 				s.Pad32(); // float TransitionTime

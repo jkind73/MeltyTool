@@ -81,7 +81,7 @@ public sealed class GxDisplayListReader {
 
         foreach (var (vertexAttribute, vertexFormat, colorComponentType) in
                  vertexDescriptor) {
-          if (vertexAttribute == GxVertexAttribute.Color0 &&
+          if (vertexAttribute == GxVertexAttribute.COLOR0 &&
               vertexFormat == GxAttributeType.DIRECT) {
             Asserts.True(colorComponentType.HasValue);
             vertex.Color0IndexOrValue = GxAttributeUtil.ReadColor(
@@ -90,7 +90,7 @@ public sealed class GxDisplayListReader {
             continue;
           }
 
-          if (vertexAttribute == GxVertexAttribute.Color1 &&
+          if (vertexAttribute == GxVertexAttribute.COLOR1 &&
               vertexFormat == GxAttributeType.DIRECT) {
             Asserts.True(colorComponentType.HasValue);
             vertex.Color1IndexOrValue = GxAttributeUtil.ReadColor(
@@ -107,16 +107,16 @@ public sealed class GxDisplayListReader {
           };
 
           switch (vertexAttribute) {
-            case GxVertexAttribute.PosMatIdx: {
+            case GxVertexAttribute.POS_MAT_IDX: {
               Asserts.Equal(0, value % 3);
               vertex.JointIndex = (ushort) (value / 3);
               break;
             }
-            case GxVertexAttribute.Position: {
+            case GxVertexAttribute.POSITION: {
               vertex.PositionIndex = value;
               break;
             }
-            case GxVertexAttribute.Normal: {
+            case GxVertexAttribute.NORMAL: {
               vertex.NormalIndex = value;
               break;
             }
@@ -124,43 +124,43 @@ public sealed class GxDisplayListReader {
               vertex.NbtIndex = value;
               break;
             }
-            case GxVertexAttribute.Color0: {
+            case GxVertexAttribute.COLOR0: {
               vertex.Color0IndexOrValue = value;
               break;
             }
-            case GxVertexAttribute.Color1: {
+            case GxVertexAttribute.COLOR1: {
               vertex.Color1IndexOrValue = value;
               break;
             }
-            case GxVertexAttribute.Tex0Coord: {
+            case GxVertexAttribute.TEX0_COORD: {
               vertex.TexCoord0Index = value;
               break;
             }
-            case GxVertexAttribute.Tex1Coord: {
+            case GxVertexAttribute.TEX1_COORD: {
               vertex.TexCoord1Index = value;
               break;
             }
-            case GxVertexAttribute.Tex2Coord: {
+            case GxVertexAttribute.TEX2_COORD: {
               vertex.TexCoord2Index = value;
               break;
             }
-            case GxVertexAttribute.Tex3Coord: {
+            case GxVertexAttribute.TEX3_COORD: {
               vertex.TexCoord3Index = value;
               break;
             }
-            case GxVertexAttribute.Tex4Coord: {
+            case GxVertexAttribute.TEX4_COORD: {
               vertex.TexCoord4Index = value;
               break;
             }
-            case GxVertexAttribute.Tex5Coord: {
+            case GxVertexAttribute.TEX5_COORD: {
               vertex.TexCoord5Index = value;
               break;
             }
-            case GxVertexAttribute.Tex6Coord: {
+            case GxVertexAttribute.TEX6_COORD: {
               vertex.TexCoord6Index = value;
               break;
             }
-            case GxVertexAttribute.Tex7Coord: {
+            case GxVertexAttribute.TEX7_COORD: {
               vertex.TexCoord7Index = value;
               break;
             }

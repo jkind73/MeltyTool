@@ -226,7 +226,7 @@ public sealed class MfsTreeFile(
     //Recursively copy blocks
     do {
       var blockdata
-          = disk.ReadLBA(Leo.RamStartLBA[volume.DiskType] + nextblock);
+          = disk.ReadLba(Leo.RAM_START_LBA[volume.DiskType] + nextblock);
       int blocksize = blockdata.Length;
 
       var dst = filedata.AsSpan((int) offset, (int) Math.Min(blocksize, size));
@@ -236,7 +236,7 @@ public sealed class MfsTreeFile(
       size -= (uint) Math.Min(blocksize, size);
 
       nextblock = volume.FatEntries[nextblock];
-    } while (nextblock != (ushort) Mfs.FAT.LastFileBlock);
+    } while (nextblock != (ushort) Mfs.Fat.LAST_FILE_BLOCK);
 
     return new MemoryStream(filedata);
   }

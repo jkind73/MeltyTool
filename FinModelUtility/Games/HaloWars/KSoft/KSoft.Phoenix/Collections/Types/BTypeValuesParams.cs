@@ -8,11 +8,11 @@ namespace KSoft.Collections
 		: BListExplicitIndexParams<T>
 	{
 		/// <summary>Get the source IProtoEnum from an engine's main database</summary>
-		public readonly Func<Phx.BDatabaseBase, IProtoEnum> kGetProtoEnumFromDB;
+		public readonly Func<Phx.BDatabaseBase, IProtoEnum> kGetProtoEnumFromDb;
 
 		public BTypeValuesParams(Func<Phx.BDatabaseBase, IProtoEnum> protoEnumGetter)
 		{
-			this.kGetProtoEnumFromDB = protoEnumGetter;
+			this.kGetProtoEnumFromDb = protoEnumGetter;
 		}
 	};
 }

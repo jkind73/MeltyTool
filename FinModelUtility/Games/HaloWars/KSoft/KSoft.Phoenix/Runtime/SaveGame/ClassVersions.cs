@@ -1,68 +1,68 @@
 ﻿
 namespace KSoft.Phoenix.Runtime
 {
-	static class kClassVersions
+	static class KClassVersions
 	{
-		public const uint BSaveGame = 0xE;
+		public const uint B_SAVE_GAME = 0xE;
 
 		public const uint
-			BAction=0x34,		BActionManager=3,	BAI=5,				BAIGlobals = 3,		BAIDifficultySetting=1,
-			BAIManager=3,		BAIMission=4,		BAIMissionScore=1,	BAIMissionTarget=2, BAIMissionTargetWrapper=2,
-			BAIPowerMission=3,	BAIScoreModifier=1,	BAISquadAnalysis=1,	BAITopic=2,			BArmy=1,
-			BBid=1,				BBidManager=1,		BChatManager=2,		BConvexHull=1,		BCost=1,
-			BCustomCommand=1,	BDamageTracker=1,	BDopple=1,			BEntity=2,			BEntityFilter=1,
+			B_ACTION=0x34,		B_ACTION_MANAGER=3,	BAI=5,				BAI_GLOBALS = 3,		BAI_DIFFICULTY_SETTING=1,
+			BAI_MANAGER=3,		BAI_MISSION=4,		BAI_MISSION_SCORE=1,	BAI_MISSION_TARGET=2, BAI_MISSION_TARGET_WRAPPER=2,
+			BAI_POWER_MISSION=3,	BAI_SCORE_MODIFIER=1,	BAI_SQUAD_ANALYSIS=1,	BAI_TOPIC=2,			B_ARMY=1,
+			B_BID=1,				B_BID_MANAGER=1,		B_CHAT_MANAGER=2,		B_CONVEX_HULL=1,		B_COST=1,
+			B_CUSTOM_COMMAND=1,	B_DAMAGE_TRACKER=1,	B_DOPPLE=1,			B_ENTITY=2,			B_ENTITY_FILTER=1,
 				
-			BEntityFilterSet=1,	BFatalityManager=2,	BFormation2=1,		BGeneralEventManager=1, BHintEngine=1,
-			BHintManager=1,		BKB=1,				BKBBase=2,			BKBBaseQuery=1,			BKBSquad=2,
-			BKBSquadFilter=1,	BKBSquadFilterSet=1,BKBSquadQuery=1,	BObject=8,				BObjectAnimationState=1,
-			BObjectiveManager=1,BPath=1,			BPathingLimiter=2,	BPiecewiseDataPoint=1,	BPiecewiseFunc=1,
-			BPlatoon=3,			BPlayer=9,			BPower=0x16,		BPowerEntry=1,			BPowerEntryItem=1,
+			B_ENTITY_FILTER_SET=1,	B_FATALITY_MANAGER=2,	B_FORMATION2=1,		B_GENERAL_EVENT_MANAGER=1, B_HINT_ENGINE=1,
+			B_HINT_MANAGER=1,		BKB=1,				BKB_BASE=2,			BKB_BASE_QUERY=1,			BKB_SQUAD=2,
+			BKB_SQUAD_FILTER=1,	BKB_SQUAD_FILTER_SET=1,BKB_SQUAD_QUERY=1,	B_OBJECT=8,				B_OBJECT_ANIMATION_STATE=1,
+			B_OBJECTIVE_MANAGER=1,B_PATH=1,			B_PATHING_LIMITER=2,	B_PIECEWISE_DATA_POINT=1,	B_PIECEWISE_FUNC=1,
+			B_PLATOON=3,			B_PLAYER=9,			B_POWER=0x16,		B_POWER_ENTRY=1,			B_POWER_ENTRY_ITEM=1,
 				
-			BPowerManager=1,BPowerUser=9,	BProjectile=4,		BProtoAction=2,			BProtoObject=3,
-			BProtoSquad=3,	BProtoTech=1,	BSaveDB=9,			BSavePlayer=1,			BSaveTeam=1,
-			BSaveUser=3,	BScoreManager=4,BSelectionAbility=1,BSimOrder=2,			BSimOrderEntry=2,
-			BSimTarget=1,	BSquad=6,		BSquadAI=4,			BSquadPlotterResult=1,	BStatsManager=1,
-			BTactic=2,		BTeam=2,		BTrigger=1,			BTriggerCondition=2,	BTriggerEffect=2,
+			B_POWER_MANAGER=1,B_POWER_USER=9,	B_PROJECTILE=4,		B_PROTO_ACTION=2,			B_PROTO_OBJECT=3,
+			B_PROTO_SQUAD=3,	B_PROTO_TECH=1,	B_SAVE_DB=9,			B_SAVE_PLAYER=1,			B_SAVE_TEAM=1,
+			B_SAVE_USER=3,	B_SCORE_MANAGER=4,B_SELECTION_ABILITY=1,B_SIM_ORDER=2,			B_SIM_ORDER_ENTRY=2,
+			B_SIM_TARGET=1,	B_SQUAD=6,		B_SQUAD_AI=4,			B_SQUAD_PLOTTER_RESULT=1,	B_STATS_MANAGER=1,
+			B_TACTIC=2,		B_TEAM=2,		B_TRIGGER=1,			B_TRIGGER_CONDITION=2,	B_TRIGGER_EFFECT=2,
 				
-			BTriggerGroup=1,	BTriggerManager=1,	BTriggerScript=2,			BTriggerScriptExternals=1,	BTriggerVar=3,
-			BUICallouts=1,		BUIManager=4,		BUnit=7,					BUser=5,					BVisibleMap=1,
-			BWeapon=3,			BWorld=0xE,			BStoredAnimEventManager=2,	BAIGroup=3,					BAIGroupTask=2,
-			BAIMissionCache=4,	BAITeleporterZone=1,BAIPlayerModifier=1,		BEntityScheduler=2,			BCollectiblesManager=1,
-			BVisual=1,			BVisualItem=3,		BVisualAnimationData=2,		BGrannyInstance=3,			BTimerManager=1,
+			B_TRIGGER_GROUP=1,	B_TRIGGER_MANAGER=1,	B_TRIGGER_SCRIPT=2,			B_TRIGGER_SCRIPT_EXTERNALS=1,	B_TRIGGER_VAR=3,
+			BUI_CALLOUTS=1,		BUI_MANAGER=4,		B_UNIT=7,					B_USER=5,					B_VISIBLE_MAP=1,
+			B_WEAPON=3,			B_WORLD=0xE,			B_STORED_ANIM_EVENT_MANAGER=2,	BAI_GROUP=3,					BAI_GROUP_TASK=2,
+			BAI_MISSION_CACHE=4,	BAI_TELEPORTER_ZONE=1,BAI_PLAYER_MODIFIER=1,		B_ENTITY_SCHEDULER=2,			B_COLLECTIBLES_MANAGER=1,
+			B_VISUAL=1,			B_VISUAL_ITEM=3,		B_VISUAL_ANIMATION_DATA=2,		B_GRANNY_INSTANCE=3,			B_TIMER_MANAGER=1,
 
-			BUIWidgets=2,	BUIObjectiveProgressControl=1,	BUITalkingHeadControl=1,	BSquadActionEntry=2
+			BUI_WIDGETS=2,	BUI_OBJECTIVE_PROGRESS_CONTROL=1,	BUI_TALKING_HEAD_CONTROL=1,	B_SQUAD_ACTION_ENTRY=2
 			;
 
 		#region IEndianStreamSerializable Members
 		public static void Serialize(IO.EndianStream s)
 		{
-			s.StreamVersion(BAction);			s.StreamVersion(BActionManager);	s.StreamVersion(BAI);				s.StreamVersion(BAIGlobals);		s.StreamVersion(BAIDifficultySetting);
-			s.StreamVersion(BAIManager);		s.StreamVersion(BAIMission);		s.StreamVersion(BAIMissionScore);	s.StreamVersion(BAIMissionTarget);	s.StreamVersion(BAIMissionTargetWrapper);
-			s.StreamVersion(BAIPowerMission);	s.StreamVersion(BAIScoreModifier);	s.StreamVersion(BAISquadAnalysis);	s.StreamVersion(BAITopic);			s.StreamVersion(BArmy);
-			s.StreamVersion(BBid);				s.StreamVersion(BBidManager);		s.StreamVersion(BChatManager);		s.StreamVersion(BConvexHull);		s.StreamVersion(BCost);
-			s.StreamVersion(BCustomCommand);	s.StreamVersion(BDamageTracker);	s.StreamVersion(BDopple);			s.StreamVersion(BEntity);			s.StreamVersion(BEntityFilter);
+			s.StreamVersion(B_ACTION);			s.StreamVersion(B_ACTION_MANAGER);	s.StreamVersion(BAI);				s.StreamVersion(BAI_GLOBALS);		s.StreamVersion(BAI_DIFFICULTY_SETTING);
+			s.StreamVersion(BAI_MANAGER);		s.StreamVersion(BAI_MISSION);		s.StreamVersion(BAI_MISSION_SCORE);	s.StreamVersion(BAI_MISSION_TARGET);	s.StreamVersion(BAI_MISSION_TARGET_WRAPPER);
+			s.StreamVersion(BAI_POWER_MISSION);	s.StreamVersion(BAI_SCORE_MODIFIER);	s.StreamVersion(BAI_SQUAD_ANALYSIS);	s.StreamVersion(BAI_TOPIC);			s.StreamVersion(B_ARMY);
+			s.StreamVersion(B_BID);				s.StreamVersion(B_BID_MANAGER);		s.StreamVersion(B_CHAT_MANAGER);		s.StreamVersion(B_CONVEX_HULL);		s.StreamVersion(B_COST);
+			s.StreamVersion(B_CUSTOM_COMMAND);	s.StreamVersion(B_DAMAGE_TRACKER);	s.StreamVersion(B_DOPPLE);			s.StreamVersion(B_ENTITY);			s.StreamVersion(B_ENTITY_FILTER);
 				
-			s.StreamVersion(BEntityFilterSet);	s.StreamVersion(BFatalityManager);	s.StreamVersion(BFormation2);		s.StreamVersion(BGeneralEventManager);	s.StreamVersion(BHintEngine);
-			s.StreamVersion(BHintManager);		s.StreamVersion(BKB);				s.StreamVersion(BKBBase);			s.StreamVersion(BKBBaseQuery);			s.StreamVersion(BKBSquad);
-			s.StreamVersion(BKBSquadFilter);	s.StreamVersion(BKBSquadFilterSet);	s.StreamVersion(BKBSquadQuery);		s.StreamVersion(BObject);				s.StreamVersion(BObjectAnimationState);
-			s.StreamVersion(BObjectiveManager);	s.StreamVersion(BPath);				s.StreamVersion(BPathingLimiter);	s.StreamVersion(BPiecewiseDataPoint);	s.StreamVersion(BPiecewiseFunc);
-			s.StreamVersion(BPlatoon);			s.StreamVersion(BPlayer);			s.StreamVersion(BPower);			s.StreamVersion(BPowerEntry);			s.StreamVersion(BPowerEntryItem);
+			s.StreamVersion(B_ENTITY_FILTER_SET);	s.StreamVersion(B_FATALITY_MANAGER);	s.StreamVersion(B_FORMATION2);		s.StreamVersion(B_GENERAL_EVENT_MANAGER);	s.StreamVersion(B_HINT_ENGINE);
+			s.StreamVersion(B_HINT_MANAGER);		s.StreamVersion(BKB);				s.StreamVersion(BKB_BASE);			s.StreamVersion(BKB_BASE_QUERY);			s.StreamVersion(BKB_SQUAD);
+			s.StreamVersion(BKB_SQUAD_FILTER);	s.StreamVersion(BKB_SQUAD_FILTER_SET);	s.StreamVersion(BKB_SQUAD_QUERY);		s.StreamVersion(B_OBJECT);				s.StreamVersion(B_OBJECT_ANIMATION_STATE);
+			s.StreamVersion(B_OBJECTIVE_MANAGER);	s.StreamVersion(B_PATH);				s.StreamVersion(B_PATHING_LIMITER);	s.StreamVersion(B_PIECEWISE_DATA_POINT);	s.StreamVersion(B_PIECEWISE_FUNC);
+			s.StreamVersion(B_PLATOON);			s.StreamVersion(B_PLAYER);			s.StreamVersion(B_POWER);			s.StreamVersion(B_POWER_ENTRY);			s.StreamVersion(B_POWER_ENTRY_ITEM);
 				
-			s.StreamVersion(BPowerManager);	s.StreamVersion(BPowerUser);	s.StreamVersion(BProjectile);		s.StreamVersion(BProtoAction);			s.StreamVersion(BProtoObject);
-			s.StreamVersion(BProtoSquad);	s.StreamVersion(BProtoTech);	s.StreamVersion(BSaveDB);			s.StreamVersion(BSavePlayer);			s.StreamVersion(BSaveTeam);
-			s.StreamVersion(BSaveUser);		s.StreamVersion(BScoreManager);	s.StreamVersion(BSelectionAbility);	s.StreamVersion(BSimOrder);				s.StreamVersion(BSimOrderEntry);
-			s.StreamVersion(BSimTarget);	s.StreamVersion(BSquad);		s.StreamVersion(BSquadAI);			s.StreamVersion(BSquadPlotterResult);	s.StreamVersion(BStatsManager);
-			s.StreamVersion(BTactic);		s.StreamVersion(BTeam);			s.StreamVersion(BTrigger);			s.StreamVersion(BTriggerCondition);		s.StreamVersion(BTriggerEffect);
+			s.StreamVersion(B_POWER_MANAGER);	s.StreamVersion(B_POWER_USER);	s.StreamVersion(B_PROJECTILE);		s.StreamVersion(B_PROTO_ACTION);			s.StreamVersion(B_PROTO_OBJECT);
+			s.StreamVersion(B_PROTO_SQUAD);	s.StreamVersion(B_PROTO_TECH);	s.StreamVersion(B_SAVE_DB);			s.StreamVersion(B_SAVE_PLAYER);			s.StreamVersion(B_SAVE_TEAM);
+			s.StreamVersion(B_SAVE_USER);		s.StreamVersion(B_SCORE_MANAGER);	s.StreamVersion(B_SELECTION_ABILITY);	s.StreamVersion(B_SIM_ORDER);				s.StreamVersion(B_SIM_ORDER_ENTRY);
+			s.StreamVersion(B_SIM_TARGET);	s.StreamVersion(B_SQUAD);		s.StreamVersion(B_SQUAD_AI);			s.StreamVersion(B_SQUAD_PLOTTER_RESULT);	s.StreamVersion(B_STATS_MANAGER);
+			s.StreamVersion(B_TACTIC);		s.StreamVersion(B_TEAM);			s.StreamVersion(B_TRIGGER);			s.StreamVersion(B_TRIGGER_CONDITION);		s.StreamVersion(B_TRIGGER_EFFECT);
 				
-			s.StreamVersion(BTriggerGroup);		s.StreamVersion(BTriggerManager);	s.StreamVersion(BTriggerScript);			s.StreamVersion(BTriggerScriptExternals);	s.StreamVersion(BTriggerVar);
-			s.StreamVersion(BUICallouts);		s.StreamVersion(BUIManager);		s.StreamVersion(BUnit);						s.StreamVersion(BUser);						s.StreamVersion(BVisibleMap);
-			s.StreamVersion(BWeapon);			s.StreamVersion(BWorld);			s.StreamVersion(BStoredAnimEventManager);	s.StreamVersion(BAIGroup);					s.StreamVersion(BAIGroupTask);
-			s.StreamVersion(BAIMissionCache);	s.StreamVersion(BAITeleporterZone);	s.StreamVersion(BAIPlayerModifier);			s.StreamVersion(BEntityScheduler);			s.StreamVersion(BCollectiblesManager);
-			s.StreamVersion(BVisual);			s.StreamVersion(BVisualItem);		s.StreamVersion(BVisualAnimationData);		s.StreamVersion(BGrannyInstance);			s.StreamVersion(BTimerManager);
+			s.StreamVersion(B_TRIGGER_GROUP);		s.StreamVersion(B_TRIGGER_MANAGER);	s.StreamVersion(B_TRIGGER_SCRIPT);			s.StreamVersion(B_TRIGGER_SCRIPT_EXTERNALS);	s.StreamVersion(B_TRIGGER_VAR);
+			s.StreamVersion(BUI_CALLOUTS);		s.StreamVersion(BUI_MANAGER);		s.StreamVersion(B_UNIT);						s.StreamVersion(B_USER);						s.StreamVersion(B_VISIBLE_MAP);
+			s.StreamVersion(B_WEAPON);			s.StreamVersion(B_WORLD);			s.StreamVersion(B_STORED_ANIM_EVENT_MANAGER);	s.StreamVersion(BAI_GROUP);					s.StreamVersion(BAI_GROUP_TASK);
+			s.StreamVersion(BAI_MISSION_CACHE);	s.StreamVersion(BAI_TELEPORTER_ZONE);	s.StreamVersion(BAI_PLAYER_MODIFIER);			s.StreamVersion(B_ENTITY_SCHEDULER);			s.StreamVersion(B_COLLECTIBLES_MANAGER);
+			s.StreamVersion(B_VISUAL);			s.StreamVersion(B_VISUAL_ITEM);		s.StreamVersion(B_VISUAL_ANIMATION_DATA);		s.StreamVersion(B_GRANNY_INSTANCE);			s.StreamVersion(B_TIMER_MANAGER);
 
-			s.StreamVersion(BUIWidgets);	s.StreamVersion(BUIObjectiveProgressControl);	s.StreamVersion(BUITalkingHeadControl);	s.StreamVersion(BSquadActionEntry);
+			s.StreamVersion(BUI_WIDGETS);	s.StreamVersion(BUI_OBJECTIVE_PROGRESS_CONTROL);	s.StreamVersion(BUI_TALKING_HEAD_CONTROL);	s.StreamVersion(B_SQUAD_ACTION_ENTRY);
 
-			s.StreamSignature(cSaveMarker.Versions);
+			s.StreamSignature(CSaveMarker.VERSIONS);
 		}
 		#endregion
 	};

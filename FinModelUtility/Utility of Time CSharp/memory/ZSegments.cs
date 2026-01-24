@@ -88,7 +88,7 @@ namespace UoT.memory {
         var fileName = zSegment.FileName;
         var segment = zSegment.Segment;
 
-        BZFile file;
+        BzFile file;
         if (fileName.StartsWith("object_")) {
           var obj = new ZObject(segment);
           file = obj;
@@ -110,9 +110,9 @@ namespace UoT.memory {
           var map = new ZMap(segment) { Scene = scene };
           file = map;
 
-          var mapCount = scene.Maps?.Length ?? 0;
-          Array.Resize(ref scene.Maps, mapCount + 1);
-          scene.Maps[mapCount] = map;
+          var mapCount = scene.maps?.Length ?? 0;
+          Array.Resize(ref scene.maps, mapCount + 1);
+          scene.maps[mapCount] = map;
         } else {
           var other = new ZOtherData(segment);
           file = other;

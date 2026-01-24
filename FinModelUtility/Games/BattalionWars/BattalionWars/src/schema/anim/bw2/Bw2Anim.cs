@@ -113,26 +113,26 @@ public sealed class Bw2Anim : IAnim, IBinaryDeserializable {
       IBwAnimBone animBone,
       SchemaBinaryReader br,
       Span<double> outValues) {
-    var first_uint = br.ReadUInt32();
+    var firstUint = br.ReadUInt32();
     br.Position -= 2;
-    var second_ushort = br.ReadUInt16();
+    var secondUshort = br.ReadUInt16();
 
     outValues[0] =
         (WeirdFloatMath.InterpretAsDouble(
              WeirdFloatMath.Concat44(0x43300000,
-                                     (uint) (first_uint >> 0x15))) -
+                                     (uint) (firstUint >> 0x15))) -
          WeirdFloatMath.C_4503599627370496) *
         animBone.XPosDelta + animBone.XPosMin;
     outValues[1] =
         (WeirdFloatMath.InterpretAsDouble(
              WeirdFloatMath.Concat44(0x43300000,
-                                     (uint) ((first_uint >> 10) & 0x7ff))) -
+                                     (uint) ((firstUint >> 10) & 0x7ff))) -
          WeirdFloatMath.C_4503599627370496) *
         animBone.YPosDelta + animBone.YPosMin;
     outValues[2] =
         (WeirdFloatMath.InterpretAsDouble(
              WeirdFloatMath.Concat44(0x43300000,
-                                     (uint) (second_ushort & 0x3ff))) -
+                                     (uint) (secondUshort & 0x3ff))) -
          WeirdFloatMath.C_4503599627370496) *
         animBone.ZPosDelta + animBone.ZPosMin;
   }
@@ -142,51 +142,51 @@ public sealed class Bw2Anim : IAnim, IBinaryDeserializable {
     Span<ushort> shorts = stackalloc ushort[4];
     br.ReadUInt16s(shorts);
 
-    var first_ushort = shorts[0];
-    var second_ushort = shorts[1];
-    var third_ushort = shorts[2];
-    var fourth_ushort = shorts[3];
+    var firstUshort = shorts[0];
+    var secondUshort = shorts[1];
+    var thirdUshort = shorts[2];
+    var fourthUshort = shorts[3];
 
-    const double DOUBLE_80600f40 = 4.503601774854144E15;
-    const double FLOAT_80603708 = 3.0517578E-5;
+    const double double80600F40 = 4.503601774854144E15;
+    const double float80603708 = 3.0517578E-5;
 
     var outX = (float) (WeirdFloatMath.InterpretAsDouble(
                             WeirdFloatMath.Concat44(0x43300000,
-                                                    ((first_ushort & 0x3fffU) <<
+                                                    ((firstUshort & 0x3fffU) <<
                                                         1) ^
                                                     0x80000000)) -
-                        DOUBLE_80600f40) * FLOAT_80603708;
+                        double80600F40) * float80603708;
     var outY = (float) (WeirdFloatMath.InterpretAsDouble(
                             WeirdFloatMath.Concat44(0x43300000,
-                                                    (uint) ((second_ushort &
+                                                    (uint) ((secondUshort &
                                                             0x3fff) <<
                                                         1) ^
                                                     0x80000000)) -
-                        DOUBLE_80600f40)
-               * FLOAT_80603708;
+                        double80600F40)
+               * float80603708;
     var outZ = (float) (WeirdFloatMath.InterpretAsDouble(
                             WeirdFloatMath.Concat44(0x43300000,
-                                                    third_ushort & 0x7fffU ^
+                                                    thirdUshort & 0x7fffU ^
                                                     0x80000000)) -
-                        DOUBLE_80600f40) * FLOAT_80603708;
+                        double80600F40) * float80603708;
     var outW = (float) (WeirdFloatMath.InterpretAsDouble(
                             WeirdFloatMath.Concat44(0x43300000,
-                                                    fourth_ushort & 0x7fffU ^
+                                                    fourthUshort & 0x7fffU ^
                                                     0x80000000)) -
-                        DOUBLE_80600f40) * FLOAT_80603708;
-    if (((int) first_ushort & 0x4000U) != 0) {
+                        double80600F40) * float80603708;
+    if (((int) firstUshort & 0x4000U) != 0) {
       outX = -outX;
     }
 
-    if (((int) (short) (second_ushort << 1) & 0x8000U) != 0) {
+    if (((int) (short) (secondUshort << 1) & 0x8000U) != 0) {
       outY = -outY;
     }
 
-    if (((int) third_ushort & 0x8000U) != 0) {
+    if (((int) thirdUshort & 0x8000U) != 0) {
       outZ = -outZ;
     }
 
-    if (((int) fourth_ushort & 0x8000U) != 0) {
+    if (((int) fourthUshort & 0x8000U) != 0) {
       outW = -outW;
     }
 
@@ -195,6 +195,6 @@ public sealed class Bw2Anim : IAnim, IBinaryDeserializable {
     outValues[2] = outZ;
     outValues[3] = outW;
 
-    return (-(second_ushort >> 0xf & 1) >> 0x1f) != 0;
+    return (-(secondUshort >> 0xf & 1) >> 0x1f) != 0;
   }
 }

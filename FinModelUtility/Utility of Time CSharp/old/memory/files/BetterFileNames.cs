@@ -2,12 +2,12 @@
 
 namespace UoT {
   public static class BetterFileNames {
-    private static readonly IDictionary<string, string> impl_ =
+    private static readonly IDictionary<string, string> IMPL_ =
         new Dictionary<string, string>();
 
     // TODO: Add ability to sort into categories too?
     static BetterFileNames() {
-      Add(
+      Add_(
           ("object_am", "Armos"),
           ("object_Bb", "Bubble"),
           ("object_bdan_objects", "Misc. Inside Jabu-Jabu's Belly"),
@@ -103,7 +103,7 @@ namespace UoT {
           ("object_zo", "Zora")
       );
 
-      Add(
+      Add_(
           ("bdan_scene", "Inside Jabu-Jabu's Belly"),
           ("Bmori1_scene", "Forest Temple"),
           ("bowling_scene", "Bombchu Bowling Alley"),
@@ -142,13 +142,13 @@ namespace UoT {
     }
 
     public static string Get(string filename) {
-      impl_.TryGetValue(filename, out var betterFilename);
+      IMPL_.TryGetValue(filename, out var betterFilename);
       return betterFilename ?? filename;
     }
 
-    private static void Add(params (string, string)[] pairs) {
+    private static void Add_(params (string, string)[] pairs) {
       foreach (var pair in pairs) {
-        impl_.Add(pair.Item1, pair.Item2);
+        IMPL_.Add(pair.Item1, pair.Item2);
       }
     }
   }

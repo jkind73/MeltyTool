@@ -7,12 +7,12 @@
 [Serializable]
 #endif
 public class ImaginaryPathVerifier {
-  private static readonly char[] AdditionalInvalidPathChars = { '*', '?' };
+  private static readonly char[] ADDITIONAL_INVALID_PATH_CHARS_ = { '*', '?' };
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
 
   // Windows supports extended-length paths with a `\\?\` prefix, to work around low path length limits.
   // Ref: https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation?tabs=registry
-  private const string WINDOWS_EXTENDED_LENGTH_PATH_PREFIX = @"\\?\";
+  private const string WINDOWS_EXTENDED_LENGTH_PATH_PREFIX_ = @"\\?\";
 
   /// <summary>
   /// Creates a new verifier instance.
@@ -41,29 +41,29 @@ public class ImaginaryPathVerifier {
       throw CommonExceptions.PathIsNotOfALegalForm(paramName);
     }
 
-    if (ImaginaryUnixSupport.IsWindowsPlatform() && !IsValidUseOfVolumeSeparatorChar(path)) {
+    if (ImaginaryUnixSupport.IsWindowsPlatform() && !IsValidUseOfVolumeSeparatorChar_(path)) {
       throw CommonExceptions.InvalidUseOfVolumeSeparator();
     }
 
-    if (ExtractFileName(path)
+    if (this.ExtractFileName_(path)
             .IndexOfAny(this.imaginaryFileDataAccessor_.Path
                             .GetInvalidFileNameChars()) >
         -1) {
       throw CommonExceptions.IllegalCharactersInPath();
     }
 
-    var filePath = ExtractFilePath(path);
+    var filePath = this.ExtractFilePath_(path);
 
     if (HasIllegalCharacters(filePath, checkAdditional: false)) {
       throw CommonExceptions.IllegalCharactersInPath();
     }
   }
 
-  private static bool IsValidUseOfVolumeSeparatorChar(string path) {
+  private static bool IsValidUseOfVolumeSeparatorChar_(string path) {
     if (ImaginaryUnixSupport.IsWindowsPlatform() &&
-        path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX)) {
+        path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX_)) {
       // Skip over the `\\?\` prefix if there is one.
-      path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
+      path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX_.Length);
     }
 
     var lastVolSepIndex = path.LastIndexOf(Path.VolumeSeparatorChar);
@@ -71,7 +71,7 @@ public class ImaginaryPathVerifier {
            lastVolSepIndex == 1 && path[0] == ImaginaryFileSystem.DRIVE_CHAR;
   }
 
-  private string ExtractFileName(string fullFileName) {
+  private string ExtractFileName_(string fullFileName) {
     return fullFileName.Split(
                            this.imaginaryFileDataAccessor_.Path
                                .DirectorySeparatorChar,
@@ -80,7 +80,7 @@ public class ImaginaryPathVerifier {
                        .Last();
   }
 
-  private string ExtractFilePath(string fullFileName) {
+  private string ExtractFilePath_(string fullFileName) {
     var extractFilePath = fullFileName.Split(
         this.imaginaryFileDataAccessor_.Path.DirectorySeparatorChar,
         this.imaginaryFileDataAccessor_.Path.AltDirectorySeparatorChar);
@@ -105,11 +105,11 @@ public class ImaginaryPathVerifier {
       // windows path prefixes (`\\?\`). If we're dealing with such a path, check for invalid
       // characters after the prefix.
       if (ImaginaryUnixSupport.IsWindowsPlatform() &&
-          path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX)) {
-        path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX.Length);
+          path.StartsWith(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX_)) {
+        path = path.Substring(WINDOWS_EXTENDED_LENGTH_PATH_PREFIX_.Length);
       }
 
-      return path.IndexOfAny(invalidPathChars.Concat(AdditionalInvalidPathChars)
+      return path.IndexOfAny(invalidPathChars.Concat(ADDITIONAL_INVALID_PATH_CHARS_)
                                              .ToArray()) >=
              0;
     }
@@ -149,15 +149,15 @@ public class ImaginaryPathVerifier {
       throw new ArgumentNullException(nameof(name));
     }
 
-    const string DRIVE_SEPARATOR = @":\";
+    const string driveSeparator = @":\";
 
     if (name.Length == 1 ||
         (name.Length == 2 && name[1] == ':') ||
         (name.Length == 3 &&
          this.imaginaryFileDataAccessor_.StringOperations.EndsWith(
              name,
-             DRIVE_SEPARATOR))) {
-      name = name[0] + DRIVE_SEPARATOR;
+             driveSeparator))) {
+      name = name[0] + driveSeparator;
     } else {
       CheckInvalidPathChars(name);
       name = this.imaginaryFileDataAccessor_.Path.GetPathRoot(name);

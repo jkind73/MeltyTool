@@ -30,39 +30,39 @@ namespace KSoft.Phoenix.XML
 	internal class BTypeNamesXmlSerializer
 		: BListXmlSerializerBase<string>
 	{
-		BListXmlParams mParams;
-		Collections.BTypeNames mList;
+		BListXmlParams mParams_;
+		Collections.BTypeNames mList_;
 
-		public override BListXmlParams Params { get { return this.mParams; } }
-		public override Collections.BListBase<string> List { get { return this.mList; } }
+		public override BListXmlParams Params { get { return this.mParams_; } }
+		public override Collections.BListBase<string> List { get { return this.mList_; } }
 
 		public BTypeNamesXmlSerializer(BListXmlParams @params, Collections.BTypeNames list)
 		{
 			Contract.Requires<ArgumentNullException>(@params != null);
 			Contract.Requires<ArgumentNullException>(list != null);
 
-			this.mParams = @params;
-			this.mList = list;
+			this.mParams_ = @params;
+			this.mList_ = list;
 		}
 
 		#region IXmlElementStreamable Members
 		protected override void Read<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, int iteration)
 		{
 			string name = null;
-			this.mParams.StreamDataName(s, ref name);
+			this.mParams_.StreamDataName(s, ref name);
 
-			this.mList.AddItem(name);
+			this.mList_.AddItem(name);
 		}
 		protected override void Write<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, string name)
 		{
-			this.mParams.StreamDataName(s, ref name);
+			this.mParams_.StreamDataName(s, ref name);
 		}
 
 		protected override void WriteNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs)
 		{
 			base.WriteNodes(s, xs);
 
-			ProtoEnumUndefinedMembers.Write(s, this.mParams, this.mList.UndefinedInterface);
+			ProtoEnumUndefinedMembers.Write(s, this.mParams_, this.mList_.UndefinedInterface);
 		}
 		#endregion
 	};

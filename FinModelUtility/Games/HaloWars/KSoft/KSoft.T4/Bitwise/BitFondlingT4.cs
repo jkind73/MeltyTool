@@ -6,28 +6,28 @@ namespace KSoft.T4.Bitwise
 	{
 		#region Bit pattern constants
 		/// <summary>0101 0101</summary>
-		const byte kMaskEvenBits = 0x55;
+		const byte K_MASK_EVEN_BITS_ = 0x55;
 		/// <summary>1010 1010</summary>
-		const byte kMaskOddBits = unchecked((byte)~kMaskEvenBits);
+		const byte K_MASK_ODD_BITS_ = unchecked((byte)~K_MASK_EVEN_BITS_);
 
 		/// <summary>0011 0011</summary>
-		const byte kMaskConsecutivePairsLsb = 0x33;
+		const byte K_MASK_CONSECUTIVE_PAIRS_LSB_ = 0x33;
 		/// <summary>1100 1100</summary>
-		const byte kMaskConsecutivePairsMsb = unchecked((byte)~kMaskConsecutivePairsLsb);
+		const byte K_MASK_CONSECUTIVE_PAIRS_MSB_ = unchecked((byte)~K_MASK_CONSECUTIVE_PAIRS_LSB_);
 
 		/// <summary>0000 1111</summary>
-		const byte kMaskNibbleLsb = 0x0F;
+		const byte K_MASK_NIBBLE_LSB_ = 0x0F;
 		/// <summary>1111 0000</summary>
-		const byte kMaskNibbleMsb = unchecked((byte)~kMaskNibbleLsb);
+		const byte K_MASK_NIBBLE_MSB_ = unchecked((byte)~K_MASK_NIBBLE_LSB_);
 		#endregion
 
 		public abstract class BitFondleCodeGenerator
 			: BitUtilCodeGenerator
 		{
 			/// <summary>Name of the input parameter of the method we're generating code for</summary>
-			protected const string kBitsParamName = "bits";
+			protected const string K_BITS_PARAM_NAME = "bits";
 			/// <summary>Name of the local variable we're using to fondle the bits of the input parameter</summary>
-			protected const string kFondleVarName = "x";
+			protected const string K_FONDLE_VAR_NAME = "x";
 
 			protected BitFondleCodeGenerator(TextTemplating.TextTransformation ttFile, NumberCodeDefinition def)
 				: base(ttFile, def)
@@ -37,11 +37,11 @@ namespace KSoft.T4.Bitwise
 			/// <summary>Declares and initializes the variable (of the underlying number type) used for bit fondling</summary>
 			protected override void GeneratePrologue()
 			{
-				this.File.Write(this.Def.SizeOfInBits == PrimitiveDefinitions.kUInt64.SizeOfInBits
-					                ? PrimitiveDefinitions.kUInt64.Keyword
-					                : PrimitiveDefinitions.kUInt32.Keyword);
+				this.File.Write(this.Def.SizeOfInBits == PrimitiveDefinitions.KUInt64.SizeOfInBits
+					                ? PrimitiveDefinitions.KUInt64.Keyword
+					                : PrimitiveDefinitions.KUInt32.Keyword);
 
-				this.File.WriteLine(" {0} = {1};", kFondleVarName, kBitsParamName);
+				this.File.WriteLine(" {0} = {1};", K_FONDLE_VAR_NAME, K_BITS_PARAM_NAME);
 			}
 
 			/// <summary>Given a bit pattern mask at the byte level, build the mask suitable for the underlying number type</summary>
@@ -51,9 +51,9 @@ namespace KSoft.T4.Bitwise
 			{
 				var sb = new System.Text.StringBuilder("0x");
 
-				var mask_str = byteMask.ToString("X2", UtilT4.InvariantCultureInfo);
+				var maskStr = byteMask.ToString("X2", UtilT4.InvariantCultureInfo);
 				for (int x = 0; x < this.Def.SizeOfInBytes; x++)
-					sb.Append(mask_str);
+					sb.Append(maskStr);
 
 				return sb.ToString();
 			}
@@ -63,18 +63,18 @@ namespace KSoft.T4.Bitwise
 			/// <returns>hexadecimal literal code string suitable for masking integers of the underlying number type</returns>
 			string BuildWordMaskForInteger(int wordSize, bool lhs)
 			{
-				var mask_str = new string('F', wordSize);
-				var zero_str = new string('0', wordSize);
+				var maskStr = new string('F', wordSize);
+				var zeroStr = new string('0', wordSize);
 
 				// mask is for the left-hand-side/most-significant bits
 				if (lhs)
-					mask_str = mask_str + zero_str;
+					maskStr = maskStr + zeroStr;
 				else // rhs/lsb
-					mask_str = zero_str + mask_str;
+					maskStr = zeroStr + maskStr;
 
 				var sb = new System.Text.StringBuilder("0x");
 				for (int x = 0; x < this.Def.SizeOfInBytes; x += wordSize)
-					sb.Append(mask_str);
+					sb.Append(maskStr);
 
 				return sb.ToString();
 			}
@@ -93,68 +93,68 @@ namespace KSoft.T4.Bitwise
 			protected override void GenerateXmlDoc()
 			{
 				this.File.WriteXmlDocSummary("Get the bit-reversed equivalent of an unsigned integer");
-				this.File.WriteXmlDocParameter(kBitsParamName,
+				this.File.WriteXmlDocParameter(K_BITS_PARAM_NAME,
 				                               "Integer to bit-reverse");
 				this.File.WriteXmlDocReturns("");
 			}
 			protected override void GenerateMethodSignature()
 			{
-				string param_bits = string.Format(UtilT4.InvariantCultureInfo,
+				string paramBits = string.Format(UtilT4.InvariantCultureInfo,
 					"{0} {1}",
-					this.Def.Keyword, kBitsParamName);
+					this.Def.Keyword, K_BITS_PARAM_NAME);
 
 				this.File.WriteLine("[Contracts.Pure]");
 				this.File.WriteLine("public static {0} {1}({2})",
 				                    this.Def.Keyword,
 				                    "BitReverse",
-				                    param_bits);
+				                    paramBits);
 			}
 			protected override void GenerateEpilogue()
 			{
 				this.File.Write("return ");
 
-				if (this.Def.SizeOfInBits < PrimitiveDefinitions.kUInt32.SizeOfInBits)
+				if (this.Def.SizeOfInBits < PrimitiveDefinitions.KUInt32.SizeOfInBits)
 					this.File.Write("({0})", this.Def.Keyword);
 
-				this.File.Write(kFondleVarName);
+				this.File.Write(K_FONDLE_VAR_NAME);
 				this.File.WriteLine(";");
 			}
 
-			void GenerateOperationCode(string maskLHS, string maskRHS, int shiftAmount, string doc)
+			void GenerateOperationCode(string maskLhs, string maskRhs, int shiftAmount, string doc)
 			{
 				this.File.Write("{0} = (({0} & {1}) >> {3,2}) | (({0} & {2}) << {3,2});",
-				                kFondleVarName,
-				                maskLHS,
-				                maskRHS,
+				                K_FONDLE_VAR_NAME,
+				                maskLhs,
+				                maskRhs,
 				                shiftAmount);
 				if (doc != null)
 					this.File.WriteLine(" // {0}", doc);
 				else
 					this.File.WriteLine("");
 			}
-			void GenerateBitOperationCode(byte byteMaskLHS, byte byteMaskRHS, int shiftAmount, string doc = null)
+			void GenerateBitOperationCode(byte byteMaskLhs, byte byteMaskRhs, int shiftAmount, string doc = null)
 			{
-				this.GenerateOperationCode(this.BuildBitMaskForInteger(byteMaskLHS),
-				                           this.BuildBitMaskForInteger(byteMaskRHS),
+				this.GenerateOperationCode(this.BuildBitMaskForInteger(byteMaskLhs),
+				                           this.BuildBitMaskForInteger(byteMaskRhs),
 					shiftAmount, doc);
 			}
 			void GenerateWordOperationCode(int wordSize, string doc = null)
 			{
-				string mask_lhs = this.BuildWordMaskForIntegerMsb(wordSize);
-				string mask_rhs = this.BuildWordMaskForIntegerLsb(wordSize);
+				string maskLhs = this.BuildWordMaskForIntegerMsb(wordSize);
+				string maskRhs = this.BuildWordMaskForIntegerLsb(wordSize);
 
 				this.GenerateOperationCode(
-					mask_lhs,
-					mask_rhs,
-					(wordSize * kBitsPerByte) / 2, doc);
+					maskLhs,
+					maskRhs,
+					(wordSize * K_BITS_PER_BYTE) / 2, doc);
 			}
 			protected override void GenerateCode()
 			{
-				this.GenerateBitOperationCode(kMaskOddBits, kMaskEvenBits, 1,
+				this.GenerateBitOperationCode(K_MASK_ODD_BITS_, K_MASK_EVEN_BITS_, 1,
 				                              "swap odd and even bits");
-				this.GenerateBitOperationCode(kMaskConsecutivePairsMsb, kMaskConsecutivePairsLsb, 2,
+				this.GenerateBitOperationCode(K_MASK_CONSECUTIVE_PAIRS_MSB_, K_MASK_CONSECUTIVE_PAIRS_LSB_, 2,
 				                              "swap consecutive pairs");
-				this.GenerateBitOperationCode(kMaskNibbleMsb, kMaskNibbleLsb, 4,
+				this.GenerateBitOperationCode(K_MASK_NIBBLE_MSB_, K_MASK_NIBBLE_LSB_, 4,
 				                              "swap nibbles");
 
 				if (this.Def.SizeOfInBytes >= sizeof(ushort))
@@ -184,62 +184,62 @@ namespace KSoft.T4.Bitwise
 			protected override void GenerateXmlDoc()
 			{
 				this.File.WriteXmlDocSummary("Count the number of 'on' bits in an unsigned integer");
-				this.File.WriteXmlDocParameter(kBitsParamName,
+				this.File.WriteXmlDocParameter(K_BITS_PARAM_NAME,
 				                               "Integer whose bits to count");
 				this.File.WriteXmlDocReturns("");
 			}
 			protected override void GenerateMethodSignature()
 			{
-				string param_bits = string.Format(UtilT4.InvariantCultureInfo,
+				string paramBits = string.Format(UtilT4.InvariantCultureInfo,
 					"{0} {1}",
-					this.Def.Keyword, kBitsParamName);
+					this.Def.Keyword, K_BITS_PARAM_NAME);
 
 				this.File.WriteLine("[Contracts.Pure]");
 				this.File.WriteLine("public static {0} {1}({2})",
-				                    PrimitiveDefinitions.kInt32.Keyword,
+				                    PrimitiveDefinitions.KInt32.Keyword,
 				                    "BitCount",
-				                    param_bits);
+				                    paramBits);
 			}
 			protected override void GenerateEpilogue()
 			{
 				this.File.WriteLine("return ({0}){1};",
-				                    PrimitiveDefinitions.kInt32.Keyword,
-				                    kFondleVarName);
+				                    PrimitiveDefinitions.KInt32.Keyword,
+				                    K_FONDLE_VAR_NAME);
 			}
 
-			void GenerateOperationCode(string maskLHS, string maskRHS, int shiftAmount, string doc)
+			void GenerateOperationCode(string maskLhs, string maskRhs, int shiftAmount, string doc)
 			{
 				this.File.Write("{0} = (({0} & {1}) >> {3,2}) + ({0} & {2});",
-				                kFondleVarName,
-				                maskLHS,
-				                maskRHS,
+				                K_FONDLE_VAR_NAME,
+				                maskLhs,
+				                maskRhs,
 				                shiftAmount);
 				if (doc != null)
 					this.File.WriteLine(" // {0}", doc);
 				else
 					this.File.NewLine();
 			}
-			void GenerateBitOperationCode(byte byteMaskLHS, byte byteMaskRHS, int shiftAmount, string doc = null)
+			void GenerateBitOperationCode(byte byteMaskLhs, byte byteMaskRhs, int shiftAmount, string doc = null)
 			{
-				this.GenerateOperationCode(this.BuildBitMaskForInteger(byteMaskLHS),
-				                           this.BuildBitMaskForInteger(byteMaskRHS),
+				this.GenerateOperationCode(this.BuildBitMaskForInteger(byteMaskLhs),
+				                           this.BuildBitMaskForInteger(byteMaskRhs),
 					shiftAmount, doc);
 			}
 			void GenerateWordOperationCode(int wordSize, string doc = null)
 			{
-				string mask_lhs = this.BuildWordMaskForIntegerMsb(wordSize);
-				string mask_rhs = this.BuildWordMaskForIntegerLsb(wordSize);
+				string maskLhs = this.BuildWordMaskForIntegerMsb(wordSize);
+				string maskRhs = this.BuildWordMaskForIntegerLsb(wordSize);
 
 				this.GenerateOperationCode(
-					mask_lhs,
-					mask_rhs,
-					(wordSize * kBitsPerByte) / 2, doc);
+					maskLhs,
+					maskRhs,
+					(wordSize * K_BITS_PER_BYTE) / 2, doc);
 			}
 			protected override void GenerateCode()
 			{
-				this.GenerateBitOperationCode(kMaskOddBits, kMaskEvenBits, 1);
-				this.GenerateBitOperationCode(kMaskConsecutivePairsMsb, kMaskConsecutivePairsLsb, 2);
-				this.GenerateBitOperationCode(kMaskNibbleMsb, kMaskNibbleLsb, 4);
+				this.GenerateBitOperationCode(K_MASK_ODD_BITS_, K_MASK_EVEN_BITS_, 1);
+				this.GenerateBitOperationCode(K_MASK_CONSECUTIVE_PAIRS_MSB_, K_MASK_CONSECUTIVE_PAIRS_LSB_, 2);
+				this.GenerateBitOperationCode(K_MASK_NIBBLE_MSB_, K_MASK_NIBBLE_LSB_, 4);
 
 				if (this.Def.SizeOfInBytes >= sizeof(ushort))
 					this.GenerateWordOperationCode(sizeof(ushort));
@@ -270,30 +270,30 @@ namespace KSoft.T4.Bitwise
 			{
 				// v = v - ((v >> 1) & (T)~(T)0/3);
 				this.File.WriteLine("{0} =  {0} - (({0} >> 1) & {1});",
-				                    kFondleVarName,
-				                    this.BuildBitMaskForInteger(kMaskEvenBits));
+				                    K_FONDLE_VAR_NAME,
+				                    this.BuildBitMaskForInteger(K_MASK_EVEN_BITS_));
 			}
 			void GenerateCodeStep2()
 			{
 				// v = (v & (T)~(T)0/15*3) + ((v >> 2) & (T)~(T)0/15*3);
 				this.File.WriteLine("{0} = ({0} & {1}) + (({0} >> 2) & {1});",
-				                    kFondleVarName,
-				                    this.BuildBitMaskForInteger(kMaskConsecutivePairsLsb));
+				                    K_FONDLE_VAR_NAME,
+				                    this.BuildBitMaskForInteger(K_MASK_CONSECUTIVE_PAIRS_LSB_));
 			}
 			void GenerateCodeStep3()
 			{
 				// v = (v + (v >> 4)) & (T)~(T)0/255*15;
 				this.File.WriteLine("{0} =  {0} + ({0} >> 4) & {1};",
-				                    kFondleVarName,
-				                    this.BuildBitMaskForInteger(kMaskNibbleLsb));
+				                    K_FONDLE_VAR_NAME,
+				                    this.BuildBitMaskForInteger(K_MASK_NIBBLE_LSB_));
 			}
 			void GenerateCodeFinalCount()
 			{
 				// c = (T)(v * ((T)~(T)0/255)) >> (sizeof(T) - 1) * CHAR_BIT;
 				this.File.WriteLine("{0} = ({0} * {1}) >> {2};",
-				                    kFondleVarName,
+				                    K_FONDLE_VAR_NAME,
 				                    this.BuildBitMaskForInteger(0x01),
-				                    this.Def.SizeOfInBits - kBitsPerByte);
+				                    this.Def.SizeOfInBits - K_BITS_PER_BYTE);
 			}
 			protected override void GenerateCode()
 			{

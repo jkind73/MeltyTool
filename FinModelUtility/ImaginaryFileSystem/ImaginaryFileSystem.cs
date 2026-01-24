@@ -10,17 +10,17 @@ namespace System.IO.Abstractions.TestingHelpers;
 public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   public const char DRIVE_CHAR = '_';
 
-  private const string DEFAULT_CURRENT_DIRECTORY = @"_:\";
+  private const string DEFAULT_CURRENT_DIRECTORY_ = @"_:\";
   public const string TEMP_DIRECTORY = @"_:\temp\";
 
-  private readonly IDictionary<string, FileSystemEntry> files;
-  private readonly IDictionary<string, ImaginaryDriveData> drives;
+  private readonly IDictionary<string, FileSystemEntry> files_;
+  private readonly IDictionary<string, ImaginaryDriveData> drives_;
   private readonly ImaginaryPathVerifier imaginaryPathVerifier_;
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
-  private Func<DateTime> dateTimeProvider = defaultDateTimeProvider;
-  private static Func<DateTime> defaultDateTimeProvider = () => DateTime.UtcNow;
+  private Func<DateTime> dateTimeProvider_ = defaultDateTimeProvider_;
+  private static Func<DateTime> defaultDateTimeProvider_ = () => DateTime.UtcNow;
 
   /// <inheritdoc />
   public ImaginaryFileSystem() : this(null) { }
@@ -44,7 +44,7 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
     options ??= new ImaginaryFileSystemOptions();
     var currentDirectory = options.CurrentDirectory;
     if (string.IsNullOrEmpty(currentDirectory)) {
-      currentDirectory = ImaginaryUnixSupport.Path(DEFAULT_CURRENT_DIRECTORY);
+      currentDirectory = ImaginaryUnixSupport.Path(DEFAULT_CURRENT_DIRECTORY_);
     } else if (!System.IO.Path.IsPathRooted(currentDirectory)) {
       throw new ArgumentException("Current directory needs to be rooted.",
                                   nameof(currentDirectory));
@@ -54,9 +54,9 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
 
     StringOperations = new StringOperations(ImaginaryUnixSupport.IsUnixPlatform());
     this.imaginaryPathVerifier_ = new ImaginaryPathVerifier(this);
-    this.files
+    this.files_
         = new Dictionary<string, FileSystemEntry>(StringOperations.Comparer);
-    drives = new Dictionary<string, ImaginaryDriveData>(StringOperations.Comparer);
+    this.drives_ = new Dictionary<string, ImaginaryDriveData>(StringOperations.Comparer);
 
     Path = new ImaginaryPath(this, defaultTempDirectory);
     File = new ImaginaryFile(this);
@@ -127,11 +127,11 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <param name="dateTimeProvider">The function that returns the current <see cref="DateTime"/>.</param>
   /// <returns></returns>
   public ImaginaryFileSystem MockTime(Func<DateTime> dateTimeProvider) {
-    this.dateTimeProvider = dateTimeProvider ?? defaultDateTimeProvider;
+    this.dateTimeProvider_ = dateTimeProvider ?? defaultDateTimeProvider_;
     return this;
   }
 
-  private string FixPath(string path, bool checkCaps = false) {
+  private string FixPath_(string path, bool checkCaps = false) {
     if (path == null) {
       throw new ArgumentNullException(nameof(path),
                                       StringResources.Manager.GetString(
@@ -144,12 +144,12 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
     var fullPath = Path.GetFullPath(pathSeparatorFixed);
 
     return checkCaps
-        ? GetPathWithCorrectDirectoryCapitalization(fullPath)
+        ? this.GetPathWithCorrectDirectoryCapitalization_(fullPath)
         : fullPath;
   }
 
   //If C:\foo exists, ensures that trying to save a file to "C:\FOO\file.txt" instead saves it to "C:\foo\file.txt".
-  private string GetPathWithCorrectDirectoryCapitalization(string fullPath) {
+  private string GetPathWithCorrectDirectoryCapitalization_(string fullPath) {
     string[] splitPath = fullPath.Split(Path.DirectorySeparatorChar);
     string leftHalf = fullPath;
     string rightHalf = "";
@@ -163,10 +163,10 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
           ? leftHalf.Substring(0, lastSeparator)
           : leftHalf;
 
-      if (DirectoryExistsWithoutFixingPath(leftHalf)) {
+      if (this.DirectoryExistsWithoutFixingPath_(leftHalf)) {
         string baseDirectory;
-        lock (files) {
-          baseDirectory = files[leftHalf].Path;
+        lock (this.files_) {
+          baseDirectory = this.files_[leftHalf].Path;
         }
 
         return baseDirectory + Path.DirectorySeparatorChar + rightHalf;
@@ -179,16 +179,16 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public ImaginaryFileData AdjustTimes(ImaginaryFileData fileData,
                                   TimeAdjustments timeAdjustments) {
-    var now = dateTimeProvider();
-    if (timeAdjustments.HasFlag(TimeAdjustments.CreationTime)) {
+    var now = this.dateTimeProvider_();
+    if (timeAdjustments.HasFlag(TimeAdjustments.CREATION_TIME)) {
       fileData.CreationTime = now;
     }
 
-    if (timeAdjustments.HasFlag(TimeAdjustments.LastAccessTime)) {
+    if (timeAdjustments.HasFlag(TimeAdjustments.LAST_ACCESS_TIME)) {
       fileData.LastAccessTime = now;
     }
 
-    if (timeAdjustments.HasFlag(TimeAdjustments.LastWriteTime)) {
+    if (timeAdjustments.HasFlag(TimeAdjustments.LAST_WRITE_TIME)) {
       fileData.LastWriteTime = now;
     }
 
@@ -197,29 +197,29 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
 
   /// <inheritdoc />
   public ImaginaryFileData GetFile(string path) {
-    path = FixPath(path).TrimSlashes();
-    return GetFileWithoutFixingPath(path);
+    path = this.FixPath_(path).TrimSlashes();
+    return this.GetFileWithoutFixingPath_(path);
   }
 
   /// <inheritdoc />
   public ImaginaryDriveData GetDrive(string name) {
     name = this.ImaginaryPathVerifier.NormalizeDriveName(name);
-    lock (drives) {
-      return drives.TryGetValue(name, out var result) ? result : null;
+    lock (this.drives_) {
+      return this.drives_.TryGetValue(name, out var result) ? result : null;
     }
   }
 
-  private void SetEntry(string path, ImaginaryFileData imaginaryFile) {
-    path = FixPath(path, true).TrimSlashes();
+  private void SetEntry_(string path, ImaginaryFileData imaginaryFile) {
+    path = this.FixPath_(path, true).TrimSlashes();
 
-    lock (files) {
-      files[path] = new FileSystemEntry { Path = path, Data = imaginaryFile };
+    lock (this.files_) {
+      this.files_[path] = new FileSystemEntry { Path = path, Data = imaginaryFile };
     }
 
-    lock (drives) {
+    lock (this.drives_) {
       if (this.ImaginaryPathVerifier.TryNormalizeDriveName(path, out string driveLetter)) {
-        if (!drives.ContainsKey(driveLetter)) {
-          drives[driveLetter] = new ImaginaryDriveData();
+        if (!this.drives_.ContainsKey(driveLetter)) {
+          this.drives_[driveLetter] = new ImaginaryDriveData();
         }
       }
     }
@@ -229,7 +229,7 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   public void AddFile(string path,
                       ImaginaryFileData imaginaryFile,
                       bool verifyAccess = true) {
-    var fixedPath = FixPath(path, true);
+    var fixedPath = this.FixPath_(path, true);
 
     imaginaryFile ??= new ImaginaryFileData(string.Empty);
     var file = GetFile(fixedPath);
@@ -251,13 +251,13 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
     var directoryPath = Path.GetDirectoryName(fixedPath);
     if (directoryPath == null) {
       AddDrive(fixedPath, new ImaginaryDriveData());
-    } else if (!DirectoryExistsWithoutFixingPath(directoryPath)) {
+    } else if (!this.DirectoryExistsWithoutFixingPath_(directoryPath)) {
       AddDirectory(directoryPath);
     }
 
     imaginaryFile.FileVersionInfo ??= new ImaginaryFileVersionInfo(fixedPath);
 
-    SetEntry(fixedPath, imaginaryFile);
+    this.SetEntry_(fixedPath, imaginaryFile);
   }
 
   /// <summary>
@@ -310,7 +310,7 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
 
   /// <inheritdoc />
   public void AddDirectory(string path) {
-    var fixedPath = FixPath(path, true);
+    var fixedPath = this.FixPath_(path, true);
     var separator = Path.DirectorySeparatorChar.ToString();
 
     if (FileExists(fixedPath) && FileIsReadOnly(fixedPath)) {
@@ -342,15 +342,15 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
                                           lastIndex + 1)) >
            -1) {
       var segment = fixedPath.Substring(0, lastIndex + 1);
-      if (!DirectoryExistsWithoutFixingPath(segment)) {
-        SetEntry(segment, new ImaginaryDirectoryData());
+      if (!this.DirectoryExistsWithoutFixingPath_(segment)) {
+        this.SetEntry_(segment, new ImaginaryDirectoryData());
       }
     }
 
     var s = StringOperations.EndsWith(fixedPath, separator)
         ? fixedPath
         : fixedPath + separator;
-    SetEntry(s, new ImaginaryDirectoryData());
+    this.SetEntry_(s, new ImaginaryDirectoryData());
   }
 
   /// <inheritdoc />
@@ -395,35 +395,35 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public void AddDrive(string name, ImaginaryDriveData imaginaryDrive) {
     name = this.ImaginaryPathVerifier.NormalizeDriveName(name);
-    lock (drives) {
-      drives[name] = imaginaryDrive;
+    lock (this.drives_) {
+      this.drives_[name] = imaginaryDrive;
     }
   }
 
   /// <inheritdoc />
   public void MoveDirectory(string sourcePath, string destPath) {
-    sourcePath = FixPath(sourcePath);
-    destPath = FixPath(destPath);
+    sourcePath = this.FixPath_(sourcePath);
+    destPath = this.FixPath_(destPath);
 
     var sourcePathSequence = sourcePath.Split(
         new[] { Path.DirectorySeparatorChar },
         StringSplitOptions.RemoveEmptyEntries);
 
-    lock (files) {
-      var affectedPaths = files.Keys
-                               .Where(p => PathStartsWith(
-                                          p,
-                                          sourcePathSequence))
-                               .ToList();
+    lock (this.files_) {
+      var affectedPaths = this.files_.Keys
+                              .Where(p => PathStartsWith(
+                                         p,
+                                         sourcePathSequence))
+                              .ToList();
 
       foreach (var path in affectedPaths) {
         var newPath = Path.Combine(destPath,
                                    path.Substring(sourcePath.Length)
                                        .TrimStart(Path.DirectorySeparatorChar));
-        var entry = files[path];
+        var entry = this.files_[path];
         entry.Path = newPath;
-        files[newPath] = entry;
-        files.Remove(path);
+        this.files_[newPath] = entry;
+        this.files_.Remove(path);
       }
     }
 
@@ -446,9 +446,9 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
 
   /// <inheritdoc />
   public void RemoveFile(string path, bool verifyAccess = true) {
-    path = FixPath(path);
+    path = this.FixPath_(path);
 
-    lock (files) {
+    lock (this.files_) {
       if (FileExists(path) &&
           verifyAccess &&
           (FileIsReadOnly(path) ||
@@ -456,7 +456,7 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
         throw CommonExceptions.AccessDenied(path);
       }
 
-      files.Remove(path);
+      this.files_.Remove(path);
     }
   }
 
@@ -466,18 +466,18 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
       return false;
     }
 
-    path = FixPath(path).TrimSlashes();
+    path = this.FixPath_(path).TrimSlashes();
 
-    lock (files) {
-      return files.ContainsKey(path);
+    lock (this.files_) {
+      return this.files_.ContainsKey(path);
     }
   }
 
   /// <inheritdoc />
   public IEnumerable<string> AllPaths {
     get {
-      lock (files) {
-        return files.Keys.ToArray();
+      lock (this.files_) {
+        return this.files_.Keys.ToArray();
       }
     }
   }
@@ -485,8 +485,8 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public IEnumerable<string> AllNodes {
     get {
-      lock (files) {
-        return AllPaths.Where(path => !IsStartOfAnotherPath(path)).ToArray();
+      lock (this.files_) {
+        return AllPaths.Where(path => !this.IsStartOfAnotherPath_(path)).ToArray();
       }
     }
   }
@@ -494,10 +494,10 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public IEnumerable<string> AllFiles {
     get {
-      lock (files) {
-        return files.Where(f => !f.Value.Data.IsDirectory)
-                    .Select(f => f.Key)
-                    .ToArray();
+      lock (this.files_) {
+        return this.files_.Where(f => !f.Value.Data.IsDirectory)
+                   .Select(f => f.Key)
+                   .ToArray();
       }
     }
   }
@@ -505,10 +505,10 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public IEnumerable<string> AllDirectories {
     get {
-      lock (files) {
-        return files.Where(f => f.Value.Data.IsDirectory)
-                    .Select(f => f.Key)
-                    .ToArray();
+      lock (this.files_) {
+        return this.files_.Where(f => f.Value.Data.IsDirectory)
+                   .Select(f => f.Key)
+                   .ToArray();
       }
     }
   }
@@ -516,35 +516,35 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
   /// <inheritdoc />
   public IEnumerable<string> AllDrives {
     get {
-      lock (drives) {
-        return drives.Keys.ToArray();
+      lock (this.drives_) {
+        return this.drives_.Keys.ToArray();
       }
     }
   }
 
   [OnDeserializing]
   private void OnDeserializing(StreamingContext c) {
-    dateTimeProvider = defaultDateTimeProvider;
+    this.dateTimeProvider_ = defaultDateTimeProvider_;
   }
 
   private bool AnyFileIsReadOnly(string path) {
     return Directory.GetFiles(path).Any(file => FileIsReadOnly(file));
   }
 
-  private bool IsStartOfAnotherPath(string path) {
+  private bool IsStartOfAnotherPath_(string path) {
     return AllPaths.Any(otherPath
                             => otherPath.StartsWith(path) && otherPath != path);
   }
 
-  private ImaginaryFileData GetFileWithoutFixingPath(string path) {
-    lock (files) {
-      return files.TryGetValue(path, out var result) ? result.Data : null;
+  private ImaginaryFileData GetFileWithoutFixingPath_(string path) {
+    lock (this.files_) {
+      return this.files_.TryGetValue(path, out var result) ? result.Data : null;
     }
   }
 
-  private bool DirectoryExistsWithoutFixingPath(string path) {
-    lock (files) {
-      return files.TryGetValue(path, out var result) && result.Data.IsDirectory;
+  private bool DirectoryExistsWithoutFixingPath_(string path) {
+    lock (this.files_) {
+      return this.files_.TryGetValue(path, out var result) && result.Data.IsDirectory;
     }
   }
 

@@ -9,7 +9,7 @@ namespace UoT {
   public sealed class LinkAnimetion(
       ushort frameCount,
       IList<LinkAnimetionTrack> tracks,
-      IList<Vec3s> positions,
+      IList<Vec3S> positions,
       IList<FacialState> facialStates)
       : IAnimation {
     public required uint Offset { get; init; }
@@ -17,7 +17,7 @@ namespace UoT {
     public ushort FrameCount { get; set; } = frameCount;
 
     public int PositionCount => positions.Count;
-    public Vec3s GetPosition(int i) => positions[i];
+    public Vec3S GetPosition(int i) => positions[i];
 
     public int TrackCount => tracks.Count;
     public IAnimationTrack GetTrack(int i) => tracks[i];

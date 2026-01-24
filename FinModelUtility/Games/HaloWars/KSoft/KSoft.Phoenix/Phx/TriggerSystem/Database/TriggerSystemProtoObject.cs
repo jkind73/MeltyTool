@@ -10,37 +10,37 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		const string kXmlAttrDbId = "DBID";
-		const string kXmlAttrVersion = "Version";
+		const string K_XML_ATTR_DB_ID_ = "DBID";
+		const string K_XML_ATTR_VERSION_ = "Version";
 		#endregion
 
-		int mDbId = TypeExtensions.kNone;
-		public int DbId { get { return this.mDbId; } }
+		int mDbId_ = TypeExtensions.K_NONE;
+		public int DbId { get { return this.mDbId_; } }
 
-		int mVersion = TypeExtensions.kNone;
-		public int Version { get { return this.mVersion; } }
+		int mVersion_ = TypeExtensions.K_NONE;
+		public int Version { get { return this.mVersion_; } }
 
 		public Collections.BListExplicitIndex<BTriggerParam> Params { get; private set; }
 
 		protected TriggerSystemProtoObject()
 		{
-			this.Params = new Collections.BListExplicitIndex<BTriggerParam>(BTriggerParam.kBListExplicitIndexParams);
+			this.Params = new Collections.BListExplicitIndex<BTriggerParam>(BTriggerParam.KBListExplicitIndexParams);
 		}
 		protected TriggerSystemProtoObject(BTriggerSystem root, TriggerScriptObjectWithArgs instance)
 		{
 			this.Name = instance.Name;
 
-			this.mDbId = instance.DbId;
-			this.mVersion = instance.Version;
+			this.mDbId_ = instance.DbId;
+			this.mVersion_ = instance.Version;
 			this.Params = BTriggerParam.BuildDefinition(root, instance.Args);
 		}
 
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttribute(kXmlAttrDbId, ref this.mDbId);
-			s.StreamAttribute(kXmlAttrVersion, ref this.mVersion);
+			s.StreamAttribute(K_XML_ATTR_DB_ID_, ref this.mDbId_);
+			s.StreamAttribute(K_XML_ATTR_VERSION_, ref this.mVersion_);
 
-			XML.XmlUtil.Serialize(s, this.Params, BTriggerParam.kBListExplicitIndexXmlParams);
+			XML.XmlUtil.Serialize(s, this.Params, BTriggerParam.KBListExplicitIndexXmlParams);
 		}
 
 		static bool ContainsUserClassTypeVar(BTriggerSystem ts, TriggerScriptObjectWithArgs obj)
@@ -49,7 +49,7 @@ namespace KSoft.Phoenix.Phx
 			{
 				if (arg.IsInvalid)
 					continue;
-				if (arg.GetVarType(ts) == BTriggerVarType.UserClassType)
+				if (arg.GetVarType(ts) == BTriggerVarType.USER_CLASS_TYPE)
 					return true;
 			}
 			return false;
@@ -77,12 +77,12 @@ namespace KSoft.Phoenix.Phx
 			int diff = 0;
 			for (int x = 0; x < this.Params.Count; x++)
 			{
-				int sig = this.Params[x].SigID;
-				int obj_sig = obj.Args[x].SigID;
+				int sig = this.Params[x].SigId;
+				int objSig = obj.Args[x].SigId;
 				sig = sig < 0 ? 0 : sig;
-				obj_sig = obj_sig < 0 ? 0 : obj_sig;
+				objSig = objSig < 0 ? 0 : objSig;
 
-				diff += sig - obj_sig;
+				diff += sig - objSig;
 			}
 
 			return diff;

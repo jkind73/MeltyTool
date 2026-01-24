@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using KSoft.Shell;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
@@ -17,47 +18,47 @@ namespace KSoft.Memory.Strings
 		System.Collections.IComparer, IComparable
 	{
 		#region WidthType
-		StringStorageWidthType mWidthType;
+		StringStorageWidthType mWidthType_;
 		/// <summary>Character serialization width/encoding type</summary>
-		public StringStorageWidthType WidthType { get { return this.mWidthType; } }
+		public StringStorageWidthType WidthType { get { return this.mWidthType_; } }
 		#endregion
 
 		#region Type
-		StringStorageType mType;
+		StringStorageType mType_;
 		/// <summary>Character serialization format method</summary>
-		public StringStorageType Type { get { return this.mType; } }
+		public StringStorageType Type { get { return this.mType_; } }
 		#endregion
 
 		#region ByteOrder
-		Shell.EndianFormat mByteOrder;
+		Shell.EndianFormat mByteOrder_;
 		/// <summary>Endian byte order of the character storage</summary>
 		/// <remarks>Affects both the wide-characters and any length prefixes written</remarks>
-		public Shell.EndianFormat ByteOrder { get { return this.mByteOrder; } }
+		public Shell.EndianFormat ByteOrder { get { return this.mByteOrder_; } }
 		#endregion
 
 		#region LengthPrefix
-		StringStorageLengthPrefix mLengthPrefix;
+		StringStorageLengthPrefix mLengthPrefix_;
 		/// <summary>Length prefix size</summary>
-		public StringStorageLengthPrefix LengthPrefix { get { return this.mLengthPrefix; } }
+		public StringStorageLengthPrefix LengthPrefix { get { return this.mLengthPrefix_; } }
 
-		public bool HasLengthPrefix { get { return this.mType.UsesLengthPrefix(); } }
+		public bool HasLengthPrefix { get { return this.mType_.UsesLengthPrefix(); } }
 		#endregion
 
 		#region FixedLength
-		short mFixedLength;
+		short mFixedLength_;
 		/// <summary>Fixed string serialization length</summary>
 		/// <remarks>Set to '0' when no specified fixed length</remarks>
-		public short FixedLength { get { return this.mFixedLength; } }
+		public short FixedLength { get { return this.mFixedLength_; } }
 
 		/// <summary>Does the storage use a fixed length character array</summary>
 		/// <remarks>
 		/// Ignored in <see cref="StringStorageType.Clr"/> cases
 		///
-		/// For <see cref="StringStorageType.CharArray"/> cases, the full fixed length
-		/// buffer can be used, but for <see cref="StringStorageType.CString"/> cases
+		/// For <see cref="StringStorageType.CHAR_ARRAY"/> cases, the full fixed length
+		/// buffer can be used, but for <see cref="StringStorageType.C_STRING"/> cases
 		/// the <see cref="FixedLength"/> will be 1 less due to null termination
 		/// </remarks>
-		public bool IsFixedLength { get { return this.mFixedLength != 0 && !this.HasLengthPrefix; } }
+		public bool IsFixedLength { get { return this.mFixedLength_ != 0 && !this.HasLengthPrefix; } }
 
 	#endregion
 
@@ -68,27 +69,27 @@ namespace KSoft.Memory.Strings
 	/// <param name="byteOrder"></param>
 	/// <param name="fixedLength">The storage fixed length (in characters) of this string definition</param>
 	public StringStorage(StringStorageWidthType widthType, StringStorageType type,
-			Shell.EndianFormat byteOrder = Shell.EndianFormat.Little, short fixedLength = 0)
+			Shell.EndianFormat byteOrder = Shell.EndianFormat.LITTLE, short fixedLength = 0)
 		{
 			Contract.Requires(!type.UsesLengthPrefix(), "Use ctor with StringStorageLengthPrefix instead");
 			Contract.Requires(fixedLength >= 0);
 			Contract.Requires(fixedLength == 0 || !widthType.IsVariableWidth(),
 				"Can't use a variable width encoding with fixed buffers!");
 
-			this.mWidthType = widthType;
-			this.mType = type;
-			this.mByteOrder = byteOrder;
-			this.mLengthPrefix = StringStorageLengthPrefix.None;
-			this.mFixedLength = fixedLength;
+			this.mWidthType_ = widthType;
+			this.mType_ = type;
+			this.mByteOrder_ = byteOrder;
+			this.mLengthPrefix_ = StringStorageLengthPrefix.NONE;
+			this.mFixedLength_ = fixedLength;
 
-			this.kHashCode = CalculateHashCode(this.mWidthType, this.mType, this.mByteOrder, this.mLengthPrefix, this.mFixedLength);
+			this.kHashCode_ = CalculateHashCode(this.mWidthType_, this.mType_, this.mByteOrder_, this.mLengthPrefix_, this.mFixedLength_);
 		}
-		/// <summary>Construct a new string storage definition (in <see cref="Shell.EndianFormat.Little"/> byte order)</summary>
+		/// <summary>Construct a new string storage definition (in <see cref="EndianFormat.LITTLE"/> byte order)</summary>
 		/// <param name="widthType">Width size of a single character of this string definition</param>
 		/// <param name="type">Storage method for this string definition</param>
 		/// <param name="fixedLength">The storage fixed length (in characters) of this string definition</param>
 		public StringStorage(StringStorageWidthType widthType, StringStorageType type, short fixedLength) :
-			this(widthType, type, Shell.EndianFormat.Little, fixedLength)
+			this(widthType, type, Shell.EndianFormat.LITTLE, fixedLength)
 		{
 			Contract.Requires(!type.UsesLengthPrefix(), "Use ctor with StringStorageLengthPrefix instead");
 			Contract.Requires(fixedLength >= 0);
@@ -100,15 +101,15 @@ namespace KSoft.Memory.Strings
 		/// <param name="prefix">Length prefix size</param>
 		/// <param name="byteOrder"></param>
 		public StringStorage(StringStorageWidthType widthType, StringStorageLengthPrefix prefix,
-			Shell.EndianFormat byteOrder = Shell.EndianFormat.Little)
+			Shell.EndianFormat byteOrder = Shell.EndianFormat.LITTLE)
 		{
-			this.mWidthType = widthType;
-			this.mType = StringStorageType.Pascal;
-			this.mByteOrder = byteOrder;
-			this.mLengthPrefix = prefix;
-			this.mFixedLength = 0;
+			this.mWidthType_ = widthType;
+			this.mType_ = StringStorageType.PASCAL;
+			this.mByteOrder_ = byteOrder;
+			this.mLengthPrefix_ = prefix;
+			this.mFixedLength_ = 0;
 
-			this.kHashCode = CalculateHashCode(this.mWidthType, this.mType, this.mByteOrder, this.mLengthPrefix, this.mFixedLength);
+			this.kHashCode_ = CalculateHashCode(this.mWidthType_, this.mType_, this.mByteOrder_, this.mLengthPrefix_, this.mFixedLength_);
 		}
 		#endregion
 
@@ -153,19 +154,19 @@ namespace KSoft.Memory.Strings
 
 			return (int)encoder.GetHandle32();
 		}
-		readonly int kHashCode;
+		readonly int kHashCode_;
 		/// <summary>Returns the hash code for this instance</summary>
 		/// <returns>All of this definition's fields bit-encoded into an integer</returns>
-		public override int GetHashCode()	{ return this.kHashCode; }
+		public override int GetHashCode()	{ return this.kHashCode_; }
 		#endregion
 
 		#region IEquatable<StringStorage> Members
 		/// <summary>Compares this to another <see cref="StringStorage"/> object testing their underlying fields for equality</summary>
 		/// <param name="obj">other <see cref="StringStorage"/> object</param>
 		/// <returns>true if both this object and <paramref name="obj"/> are equal</returns>
-		public bool Equals(StringStorage other)					{ return this.kHashCode == other.kHashCode; }
+		public bool Equals(StringStorage other)					{ return this.kHashCode_ == other.kHashCode_; }
 
-		public bool Equals(StringStorage x, StringStorage y)	{ return x.kHashCode == y.kHashCode; }
+		public bool Equals(StringStorage x, StringStorage y)	{ return x.kHashCode_ == y.kHashCode_; }
 
 		public int GetHashCode(StringStorage obj)				{ return obj.GetHashCode(); }
 
@@ -203,21 +204,21 @@ namespace KSoft.Memory.Strings
 		/// </remarks>
 		public int CompareTo(StringStorage other)
 		{
-			if (this.mType == other.mType)
+			if (this.mType_ == other.mType_)
 			{
-				if (this.mWidthType == other.mWidthType)
-					if (this.mByteOrder == other.mByteOrder)
-						if (this.mLengthPrefix == other.mLengthPrefix)
-							return this.mFixedLength - other.mFixedLength;
+				if (this.mWidthType_ == other.mWidthType_)
+					if (this.mByteOrder_ == other.mByteOrder_)
+						if (this.mLengthPrefix_ == other.mLengthPrefix_)
+							return this.mFixedLength_ - other.mFixedLength_;
 						else
-							return ((int) this.mLengthPrefix) - ((int)other.mLengthPrefix);
+							return ((int) this.mLengthPrefix_) - ((int)other.mLengthPrefix_);
 					else
-						return ((int) this.mByteOrder) - ((int)other.mByteOrder);
+						return ((int) this.mByteOrder_) - ((int)other.mByteOrder_);
 				else
-					return ((int) this.mWidthType) - ((int)other.mWidthType);
+					return ((int) this.mWidthType_) - ((int)other.mWidthType_);
 			}
 			else
-				return ((int) this.mType) - ((int)other.mType);
+				return ((int) this.mType_) - ((int)other.mType_);
 		}
 
 		/// <summary></summary>
@@ -240,65 +241,65 @@ namespace KSoft.Memory.Strings
 
 
 		#region CString
-		static readonly StringStorage kCStringAscii = new StringStorage(StringStorageWidthType.Ascii, StringStorageType.CString);
+		static readonly StringStorage KCStringAscii = new StringStorage(StringStorageWidthType.ASCII, StringStorageType.C_STRING);
 		/// <summary>Get a storage definition for a regular CString format ASCII string</summary>
-		public static StringStorage CStringAscii { get { return kCStringAscii; } }
+		public static StringStorage CStringAscii { get { return KCStringAscii; } }
 
-		static readonly StringStorage kCStringUTF8 = new StringStorage(StringStorageWidthType.UTF8, StringStorageType.CString);
+		static readonly StringStorage KCStringUtf8 = new StringStorage(StringStorageWidthType.UTF8, StringStorageType.C_STRING);
 		/// <summary>Get a storage definition for a regular CString format ASCII string</summary>
-		public static StringStorage CStringUtf8 { get { return kCStringUTF8; } }
+		public static StringStorage CStringUtf8 { get { return KCStringUtf8; } }
 
-		static readonly StringStorage kCStringUnicode = new StringStorage(StringStorageWidthType.Unicode, StringStorageType.CString);
+		static readonly StringStorage KCStringUnicode = new StringStorage(StringStorageWidthType.UNICODE, StringStorageType.C_STRING);
 		/// <summary>Get a storage definition for a CString format Unicode string</summary>
-		public static StringStorage CStringUnicode { get { return kCStringUnicode; } }
+		public static StringStorage CStringUnicode { get { return KCStringUnicode; } }
 
-		static readonly StringStorage kCStringUnicodeBE = new StringStorage(StringStorageWidthType.Unicode, StringStorageType.CString, Shell.EndianFormat.Big);
+		static readonly StringStorage KCStringUnicodeBe = new StringStorage(StringStorageWidthType.UNICODE, StringStorageType.C_STRING, Shell.EndianFormat.BIG);
 		/// <summary>Get a storage definition for a CString format Unicode string (big endian)</summary>
-		public static StringStorage CStringUnicodeBigEndian { get { return kCStringUnicodeBE; } }
+		public static StringStorage CStringUnicodeBigEndian { get { return KCStringUnicodeBe; } }
 		#endregion
 
 		#region String
-		static readonly StringStorage kStringAscii = new StringStorage(StringStorageWidthType.Ascii, StringStorageType.CharArray);
+		static readonly StringStorage KStringAscii = new StringStorage(StringStorageWidthType.ASCII, StringStorageType.CHAR_ARRAY);
 		/// <summary>Get a storage definition for a string of ASCII characters</summary>
-		/// <remarks>This is a <see cref="StringStorageType.CharArray"/> which doesn't specify a fixed length.</remarks>
-		public static StringStorage AsciiString { get { return kStringAscii; } }
+		/// <remarks>This is a <see cref="StringStorageType.CHAR_ARRAY"/> which doesn't specify a fixed length.</remarks>
+		public static StringStorage AsciiString { get { return KStringAscii; } }
 
-		static readonly StringStorage kStringUTF8 = new StringStorage(StringStorageWidthType.UTF8, StringStorageType.CharArray);
+		static readonly StringStorage KStringUtf8 = new StringStorage(StringStorageWidthType.UTF8, StringStorageType.CHAR_ARRAY);
 		/// <summary>Get a storage definition for a string of ASCII characters</summary>
-		/// <remarks>This is a <see cref="StringStorageType.CharArray"/> which doesn't specify a fixed length.</remarks>
-		public static StringStorage Utf8String { get { return kStringUTF8; } }
+		/// <remarks>This is a <see cref="StringStorageType.CHAR_ARRAY"/> which doesn't specify a fixed length.</remarks>
+		public static StringStorage Utf8String { get { return KStringUtf8; } }
 
-		static readonly StringStorage kStringUnicode = new StringStorage(StringStorageWidthType.Unicode, StringStorageType.CharArray);
+		static readonly StringStorage KStringUnicode = new StringStorage(StringStorageWidthType.UNICODE, StringStorageType.CHAR_ARRAY);
 		/// <summary>Get a storage definition for a string of Unicode characters</summary>
-		/// <remarks>This is a <see cref="StringStorageType.CharArray"/> which doesn't specify a fixed length.</remarks>
-		public static StringStorage UnicodeString { get { return kStringUnicode; } }
+		/// <remarks>This is a <see cref="StringStorageType.CHAR_ARRAY"/> which doesn't specify a fixed length.</remarks>
+		public static StringStorage UnicodeString { get { return KStringUnicode; } }
 
-		static readonly StringStorage kStringUnicodeBE = new StringStorage(StringStorageWidthType.Unicode, StringStorageType.CharArray, Shell.EndianFormat.Big);
+		static readonly StringStorage KStringUnicodeBe = new StringStorage(StringStorageWidthType.UNICODE, StringStorageType.CHAR_ARRAY, Shell.EndianFormat.BIG);
 		/// <summary>Get a storage definition for a string of Unicode characters (big endian)</summary>
-		/// <remarks>This is a <see cref="StringStorageType.CharArray"/> which doesn't specify a fixed length.</remarks>
-		public static StringStorage UnicodeStringBigEndian { get { return kStringUnicodeBE; } }
+		/// <remarks>This is a <see cref="StringStorageType.CHAR_ARRAY"/> which doesn't specify a fixed length.</remarks>
+		public static StringStorage UnicodeStringBigEndian { get { return KStringUnicodeBe; } }
 		#endregion
 
-		internal static readonly StringStorage[] kStorageTypesList = [
+		internal static readonly StringStorage[] KStorageTypesList = [
 			// Ascii
-			kCStringAscii,
-			/* Clr */ new StringStorage(StringStorageWidthType.Ascii, StringStorageLengthPrefix.Int7),
-			kStringAscii,
+			KCStringAscii,
+			/* Clr */ new StringStorage(StringStorageWidthType.ASCII, StringStorageLengthPrefix.INT7),
+			KStringAscii,
 
 			// Unicode
-			kCStringUnicode,
-			/* Clr */ new StringStorage(StringStorageWidthType.Unicode, StringStorageLengthPrefix.Int7),
-			kStringUnicode,
+			KCStringUnicode,
+			/* Clr */ new StringStorage(StringStorageWidthType.UNICODE, StringStorageLengthPrefix.INT7),
+			KStringUnicode,
 
 			// UTF8
-			kCStringUTF8,
-			/* Clr */ new StringStorage(StringStorageWidthType.UTF8, StringStorageLengthPrefix.Int7),
-			kStringUTF8,
+			KCStringUtf8,
+			/* Clr */ new StringStorage(StringStorageWidthType.UTF8, StringStorageLengthPrefix.INT7),
+			KStringUtf8,
 
 			// Unicode-BE
-			kCStringUnicodeBE,
-			/* Clr */ new StringStorage(StringStorageWidthType.Unicode, StringStorageLengthPrefix.Int7, Shell.EndianFormat.Big),
-			kStringUnicodeBE
+			KCStringUnicodeBe,
+			/* Clr */ new StringStorage(StringStorageWidthType.UNICODE, StringStorageLengthPrefix.INT7, Shell.EndianFormat.BIG),
+			KStringUnicodeBe
 		];
 	};
 }

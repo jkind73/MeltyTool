@@ -22,7 +22,7 @@ public sealed class GlStandardMaterialShader(
     var diffuseGlTexture =
         diffuseFinTexture != null
             ? GlTexture.FromTexture(diffuseFinTexture)
-            : GlMaterialConstants.NULL_WHITE_TEXTURE;
+            : GlMaterialConstants.NullWhiteTexture;
     this.SetUpTexture("diffuseTexture",
                       0,
                       diffuseFinTexture,
@@ -31,7 +31,7 @@ public sealed class GlStandardMaterialShader(
     var normalFinTexture = material.NormalTexture;
     var normalGlTexture = normalFinTexture != null
         ? GlTexture.FromTexture(normalFinTexture)
-        : GlMaterialConstants.NULL_GRAY_TEXTURE;
+        : GlMaterialConstants.NullGrayTexture;
     this.SetUpTexture("normalTexture",
                       1,
                       normalFinTexture,
@@ -40,7 +40,7 @@ public sealed class GlStandardMaterialShader(
     var ambientOcclusionFinTexture = material.AmbientOcclusionTexture;
     var ambientOcclusionGlTexture = ambientOcclusionFinTexture != null
         ? GlTexture.FromTexture(ambientOcclusionFinTexture)
-        : GlMaterialConstants.NULL_WHITE_TEXTURE;
+        : GlMaterialConstants.NullWhiteTexture;
     this.SetUpTexture("ambientOcclusionTexture",
                       2,
                       ambientOcclusionFinTexture,
@@ -49,7 +49,7 @@ public sealed class GlStandardMaterialShader(
     var emissiveFinTexture = material.EmissiveTexture;
     var emissiveGlTexture = emissiveFinTexture != null
         ? GlTexture.FromTexture(emissiveFinTexture)
-        : GlMaterialConstants.NULL_BLACK_TEXTURE;
+        : GlMaterialConstants.NullBlackTexture;
     this.SetUpTexture("emissiveTexture",
                       3,
                       emissiveFinTexture,
@@ -58,7 +58,7 @@ public sealed class GlStandardMaterialShader(
     var specularFinTexture = material.SpecularTexture;
     var specularGlTexture = specularFinTexture != null
         ? GlTexture.FromTexture(specularFinTexture)
-        : GlMaterialConstants.NULL_WHITE_TEXTURE;
+        : GlMaterialConstants.NullWhiteTexture;
     this.SetUpTexture("specularTexture",
                       4,
                       specularFinTexture,

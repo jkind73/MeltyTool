@@ -109,11 +109,11 @@ namespace UoT.model {
           var animation = new NormalAnimation {
               Offset = (uint) i,
               FrameCount = frameCount,
-              TrackOffset = (uint) originalRotationIndicesOffset,
-              AngleCount = (uint) angleCount
+              trackOffset = (uint) originalRotationIndicesOffset,
+              angleCount = (uint) angleCount
           };
 
-          animation.Angles = rotationValuesEr.ReadUInt16s(animation.AngleCount);
+          animation.angles = rotationValuesEr.ReadUInt16s(animation.angleCount);
 
           // Translation is at the start.
           rotationIndicesEr.Position = originalRotationIndicesOffset;
@@ -133,19 +133,19 @@ namespace UoT.model {
                   limit,
                   animation);
 
-          animation.Positions = new Vec3s[animation.FrameCount];
+          animation.positions = new Vec3S[animation.FrameCount];
           for (var pi = 0; pi < animation.FrameCount; ++pi) {
-            animation.Positions[pi] = new Vec3s {
+            animation.positions[pi] = new Vec3S {
                 X = this.ConvertUShortToShort_(xList[Math.Min(pi, xList.Length - 1)]),
                 Y = this.ConvertUShortToShort_(yList[Math.Min(pi, yList.Length - 1)]),
                 Z = this.ConvertUShortToShort_(zList[Math.Min(pi, zList.Length - 1)]),
             };
           }
 
-          animation.Tracks = new NormalAnimationTrack[trackCount];
+          animation.tracks = new NormalAnimationTrack[trackCount];
 
           for (var i1 = 0; i1 < trackCount; ++i1) {
-            var track = animation.Tracks[i1] = new NormalAnimationTrack();
+            var track = animation.tracks[i1] = new NormalAnimationTrack();
             track.Frames =
                 ReadFrames_(rotationIndicesEr.ReadUInt16(), limit, animation);
           }
@@ -174,13 +174,13 @@ namespace UoT.model {
       // Constant
       if (tTrack < limit) {
         frames = new ushort[1];
-        frames[0] = animation.Angles[tTrack];
+        frames[0] = animation.angles[tTrack];
       } else {
         // Keyframes
         frames = new ushort[animation.FrameCount];
         for (var i2 = 0; i2 < animation.FrameCount; ++i2) {
           try {
-            frames[i2] = animation.Angles[tTrack + i2];
+            frames[i2] = animation.angles[tTrack + i2];
           } catch {
             return null;
           }
@@ -229,7 +229,7 @@ namespace UoT.model {
 
         // Starts parsing animation from this spot.
         var tracks = new LinkAnimetionTrack[(int) (trackCount - 1L + 1)];
-        var positions = new Vec3s[frameCount];
+        var positions = new Vec3S[frameCount];
         var facialStates = new FacialState[frameCount];
 
         for (int t = 0, loopTo = (int) (trackCount - 1L);
@@ -243,7 +243,7 @@ namespace UoT.model {
         for (int f = 0; f < frameCount; f++) {
           var frameOffset = animationEr.Position = (uint) (originalAnimationOffset + f * frameSize);
 
-          positions[f] = new Vec3s {
+          positions[f] = new Vec3S {
               X = animationEr.ReadInt16(),
               Y = animationEr.ReadInt16(),
               Z = animationEr.ReadInt16(),

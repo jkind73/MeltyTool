@@ -16,7 +16,7 @@ namespace KSoft.IO
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
 		public VersionMismatchException(string dataDescription, uint expected, uint found)
-			: base(string.Format(Util.InvariantCultureInfo, kDescFormat, dataDescription, expected, found, VersionCompareDesc(expected, found)))
+			: base(string.Format(Util.InvariantCultureInfo, K_DESC_FORMAT_, dataDescription, expected, found, VersionCompareDesc(expected, found)))
 		{
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
@@ -28,7 +28,7 @@ namespace KSoft.IO
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
 		public VersionMismatchException(string dataDescription, int expected, int found)
-			: base(string.Format(Util.InvariantCultureInfo, kDescFormat, dataDescription, expected, found, VersionCompareDesc(expected, found)))
+			: base(string.Format(Util.InvariantCultureInfo, K_DESC_FORMAT_, dataDescription, expected, found, VersionCompareDesc(expected, found)))
 		{
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
@@ -108,7 +108,7 @@ namespace KSoft.IO
 			, uint expectedMin
 			, uint expectedMax
 			, uint found)
-			: base(string.Format(Util.InvariantCultureInfo, kDescFormat, dataDescription, expectedMin, expectedMax, found, VersionCompareDesc(expectedMin, expectedMax, found)))
+			: base(string.Format(Util.InvariantCultureInfo, K_DESC_FORMAT_, dataDescription, expectedMin, expectedMax, found, VersionCompareDesc(expectedMin, expectedMax, found)))
 		{
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
@@ -118,7 +118,7 @@ namespace KSoft.IO
 			, int expectedMin
 			, int expectedMax
 			, int found)
-			: base(string.Format(Util.InvariantCultureInfo, kDescFormat, dataDescription, expectedMin, expectedMax, found, VersionCompareDesc(expectedMin, expectedMax, found)))
+			: base(string.Format(Util.InvariantCultureInfo, K_DESC_FORMAT_, dataDescription, expectedMin, expectedMax, found, VersionCompareDesc(expectedMin, expectedMax, found)))
 		{
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}

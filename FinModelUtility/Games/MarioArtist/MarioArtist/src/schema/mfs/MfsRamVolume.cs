@@ -49,7 +49,7 @@ public sealed partial class MfsRamVolume : IBinaryDeserializable {
   private void ReadEntries_(IBinaryReader br) {
     var mfsEntries = new LinkedList<IMfsEntry>();
 
-    var entryLimit = Mfs.EntryLimit[this.DiskType];
+    var entryLimit = Mfs.ENTRY_LIMIT[this.DiskType];
     for (int i = 0; i < entryLimit; ++i) {
       var baseOffset = br.Position = 0x16B0 + (i * 0x30);
       var firstByte = br.ReadByte();

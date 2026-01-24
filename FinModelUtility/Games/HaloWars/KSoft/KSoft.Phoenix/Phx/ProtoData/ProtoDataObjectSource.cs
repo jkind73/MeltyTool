@@ -13,7 +13,7 @@ namespace KSoft.Phoenix.Phx
 
 		public ProtoDataObjectSource(ProtoDataObjectSourceKind kind, Engine.XmlFileInfo fileReference)
 		{
-			Contract.Requires(kind != ProtoDataObjectSourceKind.None);
+			Contract.Requires(kind != ProtoDataObjectSourceKind.NONE);
 			Contract.Requires(!kind.RequiresFileReference() || fileReference != null);
 
 			this.SourceKind = kind;
@@ -34,14 +34,14 @@ namespace KSoft.Phoenix.Phx
 		{
 			switch (this.SourceKind)
 			{
-				case ProtoDataObjectSourceKind.Database:
+				case ProtoDataObjectSourceKind.DATABASE:
 					return new ProtoDataObjectDatabase(engine.Database, typeof(DatabaseObjectKind));
 
-				case ProtoDataObjectSourceKind.GameData:
+				case ProtoDataObjectSourceKind.GAME_DATA:
 					return new ProtoDataObjectDatabase(engine.Database.GameData, typeof(GameDataObjectKind));
 
-				case ProtoDataObjectSourceKind.HPData:
-					return new ProtoDataObjectDatabase(engine.Database.HPBars, typeof(HPBarDataObjectKind));
+				case ProtoDataObjectSourceKind.HP_DATA:
+					return new ProtoDataObjectDatabase(engine.Database.HpBars, typeof(HpBarDataObjectKind));
 
 				default:
 					throw new System.NotImplementedException(string.Format(

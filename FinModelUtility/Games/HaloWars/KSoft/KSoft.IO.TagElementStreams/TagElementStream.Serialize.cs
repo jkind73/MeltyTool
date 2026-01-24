@@ -69,13 +69,13 @@ namespace KSoft.IO
 			if (this.IsReading)
 			{
 				long time64 = 0;
-				this.ReadCursor(ref time64, NumeralBase.Hex);
+				this.ReadCursor(ref time64, NumeralBase.HEX);
 				timestamp = Util.ConvertDateTimeFromUnixTime(time64);
 			}
 			else if (this.IsWriting)
 			{
 				long time64 = Util.ConvertDateTimeToUnixTime(timestamp);
-				this.WriteCursor(time64, NumeralBase.Hex);
+				this.WriteCursor(time64, NumeralBase.HEX);
 			}
 		}
 		#endregion
@@ -180,13 +180,13 @@ namespace KSoft.IO
 			if (this.IsReading)
 			{
 				long time64 = 0;
-				this.ReadElement(name, ref time64, NumeralBase.Hex);
+				this.ReadElement(name, ref time64, NumeralBase.HEX);
 				timestamp = Util.ConvertDateTimeFromUnixTime(time64);
 			}
 			else if (this.IsWriting)
 			{
 				long time64 = Util.ConvertDateTimeToUnixTime(timestamp);
-				this.WriteElement(name, time64, NumeralBase.Hex);
+				this.WriteElement(name, time64, NumeralBase.HEX);
 			}
 		}
 		#endregion
@@ -293,7 +293,7 @@ namespace KSoft.IO
 			if (this.IsReading)
 			{
 				long time64 = 0;
-				executed = this.ReadElementOpt(name, ref time64, NumeralBase.Hex);
+				executed = this.ReadElementOpt(name, ref time64, NumeralBase.HEX);
 				timestamp = Util.ConvertDateTimeFromUnixTime(time64);
 			}
 			else if (this.IsWriting)
@@ -302,7 +302,7 @@ namespace KSoft.IO
 				if (executed)
 				{
 					long time64 = Util.ConvertDateTimeToUnixTime(timestamp);
-					this.WriteElement(name, time64, NumeralBase.Hex);
+					this.WriteElement(name, time64, NumeralBase.HEX);
 				}
 			}
 			return executed;
@@ -361,13 +361,13 @@ namespace KSoft.IO
 			if (this.IsReading)
 			{
 				long time64=0;
-				this.ReadAttribute(name, ref time64, NumeralBase.Hex);
+				this.ReadAttribute(name, ref time64, NumeralBase.HEX);
 				timestamp = Util.ConvertDateTimeFromUnixTime(time64);
 			}
 			else if (this.IsWriting)
 			{
 				long time64 = Util.ConvertDateTimeToUnixTime(timestamp);
-				this.WriteAttribute(name, time64, NumeralBase.Hex);
+				this.WriteAttribute(name, time64, NumeralBase.HEX);
 			}
 		}
 		#endregion
@@ -442,7 +442,7 @@ namespace KSoft.IO
 			if (this.IsReading)
 			{
 				long time64 = 0;
-				executed = this.ReadAttributeOpt(name, ref time64, NumeralBase.Hex);
+				executed = this.ReadAttributeOpt(name, ref time64, NumeralBase.HEX);
 				timestamp = Util.ConvertDateTimeFromUnixTime(time64);
 			}
 			else if (this.IsWriting)
@@ -451,7 +451,7 @@ namespace KSoft.IO
 				if (executed)
 				{
 					long time64 = Util.ConvertDateTimeToUnixTime(timestamp);
-					this.WriteAttribute(name, time64, NumeralBase.Hex);
+					this.WriteAttribute(name, time64, NumeralBase.HEX);
 				}
 			}
 			return executed;
@@ -479,7 +479,7 @@ namespace KSoft.IO
 
 			bool reading = this.IsReading;
 			var integer = reading
-				? TypeExtensions.kNone
+				? TypeExtensions.K_NONE
 				: integerResolver(ctxt, id);
 
 			this.StreamAttribute(name, ref integer);
@@ -540,7 +540,7 @@ namespace KSoft.IO
 
 			bool reading = this.IsReading;
 			var integer = reading
-				? TypeExtensions.kNone
+				? TypeExtensions.K_NONE
 				: integerResolver(ctxt, id);
 
 			bool executed = this.StreamAttributeOpt(name, ref integer, predicate);
@@ -874,15 +874,15 @@ namespace KSoft.IO
 
 		[SuppressMessage("Microsoft.Design", "CA1308:NormalizeStringsToUppercase")]
 		public void StreamString(TName name, ref string value, bool toLower,
-			TagElementNodeType type = TagElementNodeType.Attribute, bool intern = false)
+			TagElementNodeType type = TagElementNodeType.ATTRIBUTE, bool intern = false)
 		{
 			Contract.Requires(type.RequiresName() == (name != null));
 
-				 if (type == TagElementNodeType.Element)
+				 if (type == TagElementNodeType.ELEMENT)
 					 this.StreamElement(name, ref value);
-			else if (type == TagElementNodeType.Attribute)
+			else if (type == TagElementNodeType.ATTRIBUTE)
 				this.StreamAttribute(name, ref value);
-			else if (type == TagElementNodeType.Text)
+			else if (type == TagElementNodeType.TEXT)
 				this.StreamCursor(ref value);
 
 			if (this.IsReading)
@@ -893,14 +893,14 @@ namespace KSoft.IO
 		}
 		[SuppressMessage("Microsoft.Design", "CA1308:NormalizeStringsToUppercase")]
 		public bool StreamStringOpt(TName name, ref string value, bool toLower,
-			TagElementNodeType type = TagElementNodeType.Attribute, bool intern = false)
+			TagElementNodeType type = TagElementNodeType.ATTRIBUTE, bool intern = false)
 		{
 			Contract.Requires(type.RequiresName() == (name != null));
 
 			bool result = true;
-				 if (type == TagElementNodeType.Element)	result = this.StreamElementOpt(name, ref value, Predicates.IsNotNullOrEmpty);
-			else if (type == TagElementNodeType.Attribute)	result = this.StreamAttributeOpt(name, ref value, Predicates.IsNotNullOrEmpty);
-			else if (type == TagElementNodeType.Text)
+				 if (type == TagElementNodeType.ELEMENT)	result = this.StreamElementOpt(name, ref value, Predicates.IsNotNullOrEmpty);
+			else if (type == TagElementNodeType.ATTRIBUTE)	result = this.StreamAttributeOpt(name, ref value, Predicates.IsNotNullOrEmpty);
+			else if (type == TagElementNodeType.TEXT)
 				this.StreamCursor(ref value);
 
 			if (this.IsReading && result)

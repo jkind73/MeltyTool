@@ -20,15 +20,15 @@ namespace KSoft.Values
 	public abstract class GroupTagContainerAttribute : Attribute
 	{
 		/// <summary>Default property name used when looking up the "main" group collection</summary>
-		public const string kDefaultName = "Groups";
+		public const string K_DEFAULT_NAME = "Groups";
 
 		#region Ctor
-		Type mHost;
+		Type mHost_;
 		protected GroupTagContainerAttribute(Type container)
 		{
 			Contract.Requires(container != null);
 
-			this.mHost = container;
+			this.mHost_ = container;
 
 			this.FindStaticGroupsProperty();
 			this.FindAllStaticGroupFields();
@@ -39,7 +39,7 @@ namespace KSoft.Values
 			Contract.Requires(container != null);
 			Contract.Requires(!string.IsNullOrEmpty(collectionName));
 
-			this.mHost = container;
+			this.mHost_ = container;
 
 			this.FindStaticGroupsProperty(collectionName);
 			this.FindAllStaticGroupFields();
@@ -50,29 +50,29 @@ namespace KSoft.Values
 		protected GroupTagCollection TagCollection { get; private set; }
 		void FindStaticGroupsProperty(string collectionName = null)
 		{
-			if (string.IsNullOrEmpty(collectionName)) collectionName = kDefaultName;
+			if (string.IsNullOrEmpty(collectionName)) collectionName = K_DEFAULT_NAME;
 
-			var pi = this.mHost.GetProperty(collectionName, BindingFlags.Public | BindingFlags.Static);
+			var pi = this.mHost_.GetProperty(collectionName, BindingFlags.Public | BindingFlags.Static);
 			if (pi == null) throw new ArgumentException(
 				string.Format(Util.InvariantCultureInfo,
 					"[{0}] doesn't have a static collection property named '{1}'",
-					this.mHost.FullName, collectionName),
+					this.mHost_.FullName, collectionName),
 					nameof(collectionName));
 
 			this.TagCollection = pi.GetValue(null, null) as GroupTagCollection;
 		}
 
-		private IEnumerable<KeyValuePair<string, GroupTagCollection>> mAllCollections;
+		private IEnumerable<KeyValuePair<string, GroupTagCollection>> mAllCollections_;
 		void FindAllStaticGroupFields()
 		{
-			var pis = this.mHost.GetProperties(BindingFlags.Public | BindingFlags.Static);
+			var pis = this.mHost_.GetProperties(BindingFlags.Public | BindingFlags.Static);
 
 			var tagc = from p in pis
 					   where p.PropertyType.IsSubclassOf(typeof(GroupTagCollection))
 					   //select p.GetValue(null, null) as GroupTagCollection;
 					   select new KeyValuePair<string, GroupTagCollection>(p.Name, p.GetValue(null, null) as GroupTagCollection);
 
-			this.mAllCollections = tagc;
+			this.mAllCollections_ = tagc;
 		}
 		#endregion
 
@@ -108,7 +108,7 @@ namespace KSoft.Values
 			if (attr.Length != 1)
 				throw new ArgumentException(string.Format(Util.InvariantCultureInfo, "[{0}] doesn't have a ", container.FullName), nameof(container));
 
-			return (attr[0] as GroupTagContainerAttribute).mAllCollections;
+			return (attr[0] as GroupTagContainerAttribute).mAllCollections_;
 		}
 	};
 }

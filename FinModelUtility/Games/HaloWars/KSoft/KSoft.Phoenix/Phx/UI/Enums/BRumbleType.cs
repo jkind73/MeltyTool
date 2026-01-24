@@ -3,15 +3,15 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BRumbleType
 	{
-		None,
-		Fixed,
-		SineWave,
-		IntervalBurst,
-		RandomNoise,
-		Incline,
-		Decline,
-		BumpLRL,
+		NONE,
+		FIXED,
+		SINE_WAVE,
+		INTERVAL_BURST,
+		RANDOM_NOISE,
+		INCLINE,
+		DECLINE,
+		BUMP_LRL,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 }

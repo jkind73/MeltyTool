@@ -170,14 +170,14 @@ namespace KSoft.IO
 			this.Document = new Xml.XmlDocumentWithLocation();
 			try
 			{
-				var xml_reader_settings = new XmlReaderSettings
+				var xmlReaderSettings = new XmlReaderSettings
 				{
 					 XmlResolver = null,
 					 DtdProcessing = DtdProcessing.Ignore
 				};
-				using (var xml_reader = XmlReader.Create(this.StreamName = filename, xml_reader_settings))
+				using (var xmlReader = XmlReader.Create(this.StreamName = filename, xmlReaderSettings))
 				{
-					this.Document.Load(xml_reader);
+					this.Document.Load(xmlReader);
 				}
 			}
 			catch (Exception ex)

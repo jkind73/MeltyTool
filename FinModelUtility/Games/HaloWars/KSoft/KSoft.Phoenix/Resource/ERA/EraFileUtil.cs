@@ -12,12 +12,12 @@ namespace KSoft.Phoenix.Resource
 
 	public enum EraFileUtilOptions
 	{
-		DumpDebugInfo,
-		SkipVerification,
+		DUMP_DEBUG_INFO,
+		SKIP_VERIFICATION,
 		/// <summary>Built for 64-bit builds</summary>
-		x64,
+		X64,
 
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	public abstract class EraFileUtil
@@ -27,9 +27,9 @@ namespace KSoft.Phoenix.Resource
 		// variants have an ".bin" extension. The Crypt() API wants a naked filename (not dir or extension data).
 
 		/// <summary>DO NOT USE UNLESS YOU ARE KSoft.Phoenix</summary>
-		public const string kExtensionEncrypted = EraFile.kExtensionEncrypted;
+		public const string K_EXTENSION_ENCRYPTED = EraFile.K_EXTENSION_ENCRYPTED;
 		/// <summary>DO NOT USE UNLESS YOU ARE KSoft.Phoenix</summary>
-		public const string kExtensionDecrypted = EraFile.kExtensionDecrypted;
+		public const string K_EXTENSION_DECRYPTED = EraFile.K_EXTENSION_DECRYPTED;
 
 		/*protected*/ internal EraFile mEraFile;
 		protected string mSourceFile; // filename of the source file which the util stems from (.era, .xml)
@@ -38,7 +38,7 @@ namespace KSoft.Phoenix.Resource
 		public TextWriter DebugOutput { get; set; }
 
 		/// <see cref="EraFileUtilOptions"/>
-		public Collections.BitVector32 Options = new Collections.BitVector32();
+		public Collections.BitVector32 options = new Collections.BitVector32();
 
 		protected EraFileUtil()
 		{
@@ -72,42 +72,42 @@ namespace KSoft.Phoenix.Resource
 			if (string.IsNullOrWhiteSpace(outputPath))
 				outputPath = path;
 
-			string input_file = Path.Combine(path, eraName) + EraFile.kExtensionEncrypted;
-			string output_file = Path.Combine(outputPath, eraName) + EraFile.kExtensionEncrypted;
+			string inputFile = Path.Combine(path, eraName) + EraFile.K_EXTENSION_ENCRYPTED;
+			string outputFile = Path.Combine(outputPath, eraName) + EraFile.K_EXTENSION_ENCRYPTED;
 
 			// If we're encrypting, the input file will be a .bin, else the output file will be a .bin
 			switch(transformType)
 			{
-			case CryptographyTransformType.Decrypt:
-				output_file += EraFile.kExtensionDecrypted;
+			case CryptographyTransformType.DECRYPT:
+				outputFile += EraFile.K_EXTENSION_DECRYPTED;
 				break;
 
-			case CryptographyTransformType.Encrypt:
-				input_file += EraFile.kExtensionDecrypted;
+			case CryptographyTransformType.ENCRYPT:
+				inputFile += EraFile.K_EXTENSION_DECRYPTED;
 				break;
 
 			default:
 				throw new KSoft.Debug.UnreachableException(transformType.ToString());
 			}
 
-			if (!File.Exists(input_file))
-				throw new FileNotFoundException("ERA file for cryptography operation does not exist", input_file);
+			if (!File.Exists(inputFile))
+				throw new FileNotFoundException("ERA file for cryptography operation does not exist", inputFile);
 
 			if (verboseOutput != null)
 			{
-				verboseOutput.WriteLine("Input:  {0}", input_file);
-				verboseOutput.WriteLine("Output: {0}", output_file);
+				verboseOutput.WriteLine("Input:  {0}", inputFile);
+				verboseOutput.WriteLine("Output: {0}", outputFile);
 			}
 
-			using (var er_fs = File.OpenRead(input_file))
-			using (var er = new IO.EndianReader(er_fs, Shell.EndianFormat.Big))
-			using (var ew_fs = new FileStream(output_file, FileMode.Create, FileAccess.Write))
-			using (var ew = new IO.EndianWriter(ew_fs, Shell.EndianFormat.Big))
+			using (var erFs = File.OpenRead(inputFile))
+			using (var er = new IO.EndianReader(erFs, Shell.EndianFormat.BIG))
+			using (var ewFs = new FileStream(outputFile, FileMode.Create, FileAccess.Write))
+			using (var ew = new IO.EndianWriter(ewFs, Shell.EndianFormat.BIG))
 			{
 				CryptStream(er, ew, transformType);
 			}
 
-			return output_file;
+			return outputFile;
 		}
 
 		public static void CryptStream(IO.EndianReader input, IO.EndianWriter output, CryptographyTransformType transformType)
@@ -117,16 +117,16 @@ namespace KSoft.Phoenix.Resource
 			// This should be OK because PhxTEA is buffered
 			//Contract.Requires(input.BaseStream != output.BaseStream);
 
-			var tea = new Security.Cryptography.PhxTEA(input, output);
-			tea.InitializeKey(Security.Cryptography.PhxTEA.kKeyEra);
+			var tea = new Security.Cryptography.PhxTea(input, output);
+			tea.InitializeKey(Security.Cryptography.PhxTea.KKeyEra);
 
 			switch (transformType)
 			{
-			case CryptographyTransformType.Decrypt:
+			case CryptographyTransformType.DECRYPT:
 				tea.Decrypt();
 				break;
 
-			case CryptographyTransformType.Encrypt:
+			case CryptographyTransformType.ENCRYPT:
 				tea.Encrypt();
 				break;
 			}

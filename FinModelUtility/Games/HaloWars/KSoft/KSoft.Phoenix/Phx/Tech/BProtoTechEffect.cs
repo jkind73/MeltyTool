@@ -11,67 +11,67 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Effect")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Effect")
 		{
-			Flags = 0
+			flags = 0
 		};
 		#endregion
 
-		BProtoTechEffectType mType;
-		public BProtoTechEffectType Type { get { return this.mType; } }
+		BProtoTechEffectType mType_;
+		public BProtoTechEffectType Type { get { return this.mType_; } }
 
-		DataUnion mDU;
+		DataUnion mDu_;
 
 		#region ObjectData
-		bool mAllActions;
+		bool mAllActions_;
 
-		string mAction;
+		string mAction_;
 
-		public BObjectDataType SubType { get { return this.mDU.SubType; } }
+		public BObjectDataType SubType { get { return this.mDu_.SubType; } }
 
 		// Amount can be negative, so use NaN as the 'invalid' value instead
-		float mAmount = PhxUtil.kInvalidSingleNaN;
+		float mAmount_ = PhxUtil.K_INVALID_SINGLE_NA_N;
 
-		BObjectDataRelative mRelativity = BObjectDataRelative.Invalid;
+		BObjectDataRelative mRelativity_ = BObjectDataRelative.INVALID;
 
 		#region Command
 		public BProtoObjectCommandType CommandType { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.Data);
-			Contract.Requires(this.SubType == BObjectDataType.CommandEnable || this.SubType == BObjectDataType.CommandSelectable);
-			return this.mDU.CommandType;
+			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
+			Contract.Requires(this.SubType == BObjectDataType.COMMAND_ENABLE || this.SubType == BObjectDataType.COMMAND_SELECTABLE);
+			return this.mDu_.CommandType;
 		} }
 
-		public int CommandDataID { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.Data);
-			Contract.Requires(this.SubType == BObjectDataType.CommandEnable || this.SubType == BObjectDataType.CommandSelectable);
-			return this.mDU.CommandData;
+		public int CommandDataId { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
+			Contract.Requires(this.SubType == BObjectDataType.COMMAND_ENABLE || this.SubType == BObjectDataType.COMMAND_SELECTABLE);
+			return this.mDu_.CommandData;
 		} }
 		public BSquadMode CommandDataSquadMode { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.Data);
-			Contract.Requires(this.SubType == BObjectDataType.CommandEnable || this.SubType == BObjectDataType.CommandSelectable);
-			return this.mDU.CommandDataSM;
+			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
+			Contract.Requires(this.SubType == BObjectDataType.COMMAND_ENABLE || this.SubType == BObjectDataType.COMMAND_SELECTABLE);
+			return this.mDu_.CommandDataSM;
 		} }
 
 		public DatabaseObjectKind CommandDataObjectKind { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.Data);
-			Contract.Requires(this.SubType == BObjectDataType.CommandEnable || this.SubType == BObjectDataType.CommandSelectable);
-			switch (this.mDU.CommandType)
+			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
+			Contract.Requires(this.SubType == BObjectDataType.COMMAND_ENABLE || this.SubType == BObjectDataType.COMMAND_SELECTABLE);
+			switch (this.mDu_.CommandType)
 			{
-			case BProtoObjectCommandType.Research:		return DatabaseObjectKind.Tech;
-			case BProtoObjectCommandType.TrainUnit:
-			case BProtoObjectCommandType.Build:			return DatabaseObjectKind.Object;
-			case BProtoObjectCommandType.TrainSquad:
-			case BProtoObjectCommandType.BuildOther:	return DatabaseObjectKind.Squad;
-			case BProtoObjectCommandType.Ability:		return DatabaseObjectKind.Ability;
-			case BProtoObjectCommandType.Power:			return DatabaseObjectKind.Power;
+			case BProtoObjectCommandType.RESEARCH:		return DatabaseObjectKind.TECH;
+			case BProtoObjectCommandType.TRAIN_UNIT:
+			case BProtoObjectCommandType.BUILD:			return DatabaseObjectKind.OBJECT;
+			case BProtoObjectCommandType.TRAIN_SQUAD:
+			case BProtoObjectCommandType.BUILD_OTHER:	return DatabaseObjectKind.SQUAD;
+			case BProtoObjectCommandType.ABILITY:		return DatabaseObjectKind.ABILITY;
+			case BProtoObjectCommandType.POWER:			return DatabaseObjectKind.POWER;
 
-			default: throw new KSoft.Debug.UnreachableException(this.mDU.CommandType.ToString());
+			default: throw new KSoft.Debug.UnreachableException(this.mDu_.CommandType.ToString());
 			}
 		} }
 		#endregion
 		#endregion
 
-		public BProtoTechEffectSetAgeLevel SetAgeLevel { get { return this.mDU.SetAgeLevel; } }
+		public BProtoTechEffectSetAgeLevel SetAgeLevel { get { return this.mDu_.SetAgeLevel; } }
 
 		public Collections.BListArray<BProtoTechEffectTarget> Targets { get; private set; }
 		public bool HasTargets { get { return this.Targets != null && this.Targets.Count != 0; } }
@@ -80,19 +80,19 @@ namespace KSoft.Phoenix.Phx
 		{
 			this.Targets = new Collections.BListArray<BProtoTechEffectTarget>();
 
-			this.mDU.Initialize();
+			this.mDu_.Initialize();
 		}
 
 		#region ITagElementStreamable<string> Members
 		public DatabaseObjectKind TransformProtoObjectKind { get {
 			switch (this.Type)
 			{
-				case BProtoTechEffectType.TransformProtoUnit:
-					return DatabaseObjectKind.Unit;
-				case BProtoTechEffectType.TransformProtoSquad:
-					return DatabaseObjectKind.Squad;
+				case BProtoTechEffectType.TRANSFORM_PROTO_UNIT:
+					return DatabaseObjectKind.UNIT;
+				case BProtoTechEffectType.TRANSFORM_PROTO_SQUAD:
+					return DatabaseObjectKind.SQUAD;
 				default:
-					return DatabaseObjectKind.None;
+					return DatabaseObjectKind.NONE;
 			}
 		} }
 
@@ -101,150 +101,150 @@ namespace KSoft.Phoenix.Phx
 			where TCursor : class
 		{
 			// Unused - SubTypes (with data) which no techs in HW1 made use of
-			switch (this.mDU.SubType)
+			switch (this.mDu_.SubType)
 			{
 			#region Unused
-			case BObjectDataType.RateAmount:
-			case BObjectDataType.RateMultiplier:
-				xs.StreamTypeName(s, "Rate", ref this.mDU.ID, GameDataObjectKind.Rate, false, XML.XmlUtil.kSourceAttr);
+			case BObjectDataType.RATE_AMOUNT:
+			case BObjectDataType.RATE_MULTIPLIER:
+				xs.StreamTypeName(s, "Rate", ref this.mDu_.ID, GameDataObjectKind.RATE, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 			#endregion
 
-			case BObjectDataType.CommandEnable:
-			case BObjectDataType.CommandSelectable: // Unused
-				this.mDU.StreamCommand(s, xs);
+			case BObjectDataType.COMMAND_ENABLE:
+			case BObjectDataType.COMMAND_SELECTABLE: // Unused
+				this.mDu_.StreamCommand(s, xs);
 				break;
 
-			case BObjectDataType.Cost:
-				this.mDU.StreamCost(s, xs);
+			case BObjectDataType.COST:
+				this.mDu_.StreamCost(s, xs);
 				break;
 
 			#region Unused
-			case BObjectDataType.DamageModifier:
-				this.mDU.StreamDamageModifier(s, xs);
+			case BObjectDataType.DAMAGE_MODIFIER:
+				this.mDu_.StreamDamageModifier(s, xs);
 				break;
 			#endregion
 
-			case BObjectDataType.PopCap:
-			case BObjectDataType.PopMax:
+			case BObjectDataType.POP_CAP:
+			case BObjectDataType.POP_MAX:
 				// #NOTE engine parses this as "PopType", but its parser ignores case
-				xs.StreamTypeName(s, "popType", ref this.mDU.ID, GameDataObjectKind.Pop, false, XML.XmlUtil.kSourceAttr);
+				xs.StreamTypeName(s, "popType", ref this.mDu_.ID, GameDataObjectKind.POP, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 
 			#region Unused
-			case BObjectDataType.UnitTrainLimit:
-				this.mDU.StreamTrainLimit(s, xs, DatabaseObjectKind.Object);
+			case BObjectDataType.UNIT_TRAIN_LIMIT:
+				this.mDu_.StreamTrainLimit(s, xs, DatabaseObjectKind.OBJECT);
 				break;
-			case BObjectDataType.SquadTrainLimit:
-				this.mDU.StreamTrainLimit(s, xs, DatabaseObjectKind.Squad);
+			case BObjectDataType.SQUAD_TRAIN_LIMIT:
+				this.mDu_.StreamTrainLimit(s, xs, DatabaseObjectKind.SQUAD);
 				break;
 			#endregion
 
-			case BObjectDataType.PowerRechargeTime:
-			case BObjectDataType.PowerUseLimit:
-			case BObjectDataType.PowerLevel:
+			case BObjectDataType.POWER_RECHARGE_TIME:
+			case BObjectDataType.POWER_USE_LIMIT:
+			case BObjectDataType.POWER_LEVEL:
 				// #NOTE engine parses this as "Power", but its parser ignores case
-				xs.StreamDBID(s, "power", ref this.mDU.ID, DatabaseObjectKind.Power, false, XML.XmlUtil.kSourceAttr);
+				xs.StreamDbid(s, "power", ref this.mDu_.ID, DatabaseObjectKind.POWER, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
- 			case BObjectDataType.ImpactEffect:
+ 			case BObjectDataType.IMPACT_EFFECT:
 				// #NOTE engine parses this as "ImpactEffect", but its parser ignores case
-				xs.StreamDBID(s, "impactEffect", ref this.mDU.ID, DatabaseObjectKind.ImpactEffect, false, XML.XmlUtil.kSourceAttr);
+				xs.StreamDbid(s, "impactEffect", ref this.mDu_.ID, DatabaseObjectKind.IMPACT_EFFECT, false, XML.XmlUtil.K_SOURCE_ATTR);
  				break;
 
 			#region Unused
-			case BObjectDataType.DisplayNameID:
-				xs.StreamStringID(s, "StringID", ref this.mDU.ID, XML.XmlUtil.kSourceAttr);
+			case BObjectDataType.DISPLAY_NAME_ID:
+				xs.StreamStringId(s, "StringID", ref this.mDu_.ID, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 			#endregion
 
-			case BObjectDataType.Icon:
+			case BObjectDataType.ICON:
 			// #NOTE engine actually doesn't explicitly handle this case when loading, but it is supported at runtime for Squads
-			case BObjectDataType.AltIcon:
-				this.mDU.StreamIcon(s, xs);
+			case BObjectDataType.ALT_ICON:
+				this.mDu_.StreamIcon(s, xs);
 				break;
 
-			case BObjectDataType.TurretYawRate:
- 			case BObjectDataType.TurretPitchRate:
+			case BObjectDataType.TURRET_YAW_RATE:
+ 			case BObjectDataType.TURRET_PITCH_RATE:
 				// #TODO need to validate this type so that Targets.Count==1, TargetType=ProtoUnit, and resolve the Hardpoint name
-				s.StreamStringOpt("Hardpoint", ref this.mDU.TurretRate_HardpointName, false);
+				s.StreamStringOpt("Hardpoint", ref this.mDu_.TurretRate_HardpointName, false);
  				break;
 
-			case BObjectDataType.AbilityRecoverTime:
-				xs.StreamDBID(s, "Ability", ref this.mDU.ID, DatabaseObjectKind.Ability, false, XML.XmlUtil.kSourceAttr);
+			case BObjectDataType.ABILITY_RECOVER_TIME:
+				xs.StreamDbid(s, "Ability", ref this.mDu_.ID, DatabaseObjectKind.ABILITY, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 
-			case BObjectDataType.HPBar:
+			case BObjectDataType.HP_BAR:
 				// #TODO need to make an BProtoHPBar reference
-				s.StreamStringOpt("hpbar", ref this.mDU.HPBar_Name, false);
+				s.StreamStringOpt("hpbar", ref this.mDu_.HPBar_Name, false);
 				break;
 
 			#region Unused
-			case BObjectDataType.DeathSpawn:
-				xs.StreamDBID(s, "squadName", ref this.mDU.ID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceAttr);
+			case BObjectDataType.DEATH_SPAWN:
+				xs.StreamDbid(s, "squadName", ref this.mDu_.ID, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 			#endregion
 
 			#region Object effects
 			// although some apply to squads too
-			case BObjectDataType.Enable: // Amount>0
-			case BObjectDataType.Shieldpoints:
-			case BObjectDataType.Hitpoints:
-			case BObjectDataType.AmmoMax:
+			case BObjectDataType.ENABLE: // Amount>0
+			case BObjectDataType.SHIELDPOINTS:
+			case BObjectDataType.HITPOINTS:
+			case BObjectDataType.AMMO_MAX:
 			case BObjectDataType.LOS:
-			case BObjectDataType.MaximumVelocity:
+			case BObjectDataType.MAXIMUM_VELOCITY:
 			#region Weapon effects
-			case BObjectDataType.MaximumRange:
-			case BObjectDataType.Damage:
-			case BObjectDataType.MinRange:
-			case BObjectDataType.AOERadius:
-			case BObjectDataType.AOEPrimaryTargetFactor:
-			case BObjectDataType.AOEDistanceFactor:
-			case BObjectDataType.AOEDamageFactor:
-			case BObjectDataType.Accuracy:
-			case BObjectDataType.MaxDeviation:
-			case BObjectDataType.MovingMaxDeviation:
-			case BObjectDataType.DataAccuracyDistanceFactor:
-			case BObjectDataType.AccuracyDeviationFactor:
-			case BObjectDataType.MaxVelocityLead:
-			case BObjectDataType.MaxDamagePerRam:
-			case BObjectDataType.ReflectDamageFactor:
-			case BObjectDataType.AirBurstSpan:
-			case BObjectDataType.DOTrate:
-			case BObjectDataType.DOTduration:
-			case BObjectDataType.Stasis:
+			case BObjectDataType.MAXIMUM_RANGE:
+			case BObjectDataType.DAMAGE:
+			case BObjectDataType.MIN_RANGE:
+			case BObjectDataType.AOE_RADIUS:
+			case BObjectDataType.AOE_PRIMARY_TARGET_FACTOR:
+			case BObjectDataType.AOE_DISTANCE_FACTOR:
+			case BObjectDataType.AOE_DAMAGE_FACTOR:
+			case BObjectDataType.ACCURACY:
+			case BObjectDataType.MAX_DEVIATION:
+			case BObjectDataType.MOVING_MAX_DEVIATION:
+			case BObjectDataType.DATA_ACCURACY_DISTANCE_FACTOR:
+			case BObjectDataType.ACCURACY_DEVIATION_FACTOR:
+			case BObjectDataType.MAX_VELOCITY_LEAD:
+			case BObjectDataType.MAX_DAMAGE_PER_RAM:
+			case BObjectDataType.REFLECT_DAMAGE_FACTOR:
+			case BObjectDataType.AIR_BURST_SPAN:
+			case BObjectDataType.DO_TRATE:
+			case BObjectDataType.DO_TDURATION:
+			case BObjectDataType.STASIS:
 
-			case BObjectDataType.Projectile:
+			case BObjectDataType.PROJECTILE:
 			#endregion
 			#region ProtoAction effects
-			case BObjectDataType.WorkRate:
-			case BObjectDataType.ActionEnable:
-			case BObjectDataType.BoardTime:
+			case BObjectDataType.WORK_RATE:
+			case BObjectDataType.ACTION_ENABLE:
+			case BObjectDataType.BOARD_TIME:
 			#endregion
-			case BObjectDataType.BuildPoints:
-			case BObjectDataType.AutoCloak: // Amount>0
-			case BObjectDataType.MoveWhileCloaked: // Amount>0
-			case BObjectDataType.AttackWhileCloaked: // Amount>0
-			case BObjectDataType.Bounty:
-			case BObjectDataType.MaxContained:
-			case BObjectDataType.AbilityDisabled: // Amount>0
-			case BObjectDataType.AmmoRegenRate:
-			case BObjectDataType.ShieldRegenRate:
-			case BObjectDataType.ShieldRegenDelay:
+			case BObjectDataType.BUILD_POINTS:
+			case BObjectDataType.AUTO_CLOAK: // Amount>0
+			case BObjectDataType.MOVE_WHILE_CLOAKED: // Amount>0
+			case BObjectDataType.ATTACK_WHILE_CLOAKED: // Amount>0
+			case BObjectDataType.BOUNTY:
+			case BObjectDataType.MAX_CONTAINED:
+			case BObjectDataType.ABILITY_DISABLED: // Amount>0
+			case BObjectDataType.AMMO_REGEN_RATE:
+			case BObjectDataType.SHIELD_REGEN_RATE:
+			case BObjectDataType.SHIELD_REGEN_DELAY:
 			#endregion
 			#region Squad effects
-			case BObjectDataType.Level:
-			case BObjectDataType.TechLevel:
+			case BObjectDataType.LEVEL:
+			case BObjectDataType.TECH_LEVEL:
 			#endregion
-			case BObjectDataType.ResearchPoints: // Tech and TechAll only
+			case BObjectDataType.RESEARCH_POINTS: // Tech and TechAll only
 			#region Player effects
-			case BObjectDataType.ResourceTrickleRate:
-			case BObjectDataType.BountyResource: // Amount!=0, uses Cost
-			case BObjectDataType.RepairCost:
-			case BObjectDataType.RepairTime:
-			case BObjectDataType.WeaponPhysicsMultiplier:
+			case BObjectDataType.RESOURCE_TRICKLE_RATE:
+			case BObjectDataType.BOUNTY_RESOURCE: // Amount!=0, uses Cost
+			case BObjectDataType.REPAIR_COST:
+			case BObjectDataType.REPAIR_TIME:
+			case BObjectDataType.WEAPON_PHYSICS_MULTIPLIER:
 			#endregion
 			default:
-				this.mDU.StreamCost(s, xs, isResourceOptional: true);
+				this.mDu_.StreamCost(s, xs, isResourceOptional: true);
 				break;
 			}
 		}
@@ -254,60 +254,60 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnum("type", ref this.mType);
+			s.StreamAttributeEnum("type", ref this.mType_);
 
-			bool stream_targets = false;
-			switch (this.mType)
+			bool streamTargets = false;
+			switch (this.mType_)
 			{
-			case BProtoTechEffectType.Data:
+			case BProtoTechEffectType.DATA:
 				// #NOTE engine parses these as AllActions,Action,SubType,Amount,Relativity
 
 				// e.g., SubType==Icon and these won't be used...TODO: is Icon the only one?
-				s.StreamAttributeOpt("amount", ref this.mAmount, PhxPredicates.IsNotInvalidNaN);
-				s.StreamAttributeEnum("subtype", ref this.mDU.SubType);
+				s.StreamAttributeOpt("amount", ref this.mAmount_, PhxPredicates.IsNotInvalidNaN);
+				s.StreamAttributeEnum("subtype", ref this.mDu_.SubType);
 				// #NOTE the engine treats AllActions being present as 'true', no matter its actual value
-				s.StreamAttributeOpt("allactions", ref this.mAllActions, Predicates.IsTrue);
-				s.StreamStringOpt("action", ref this.mAction, false, intern: true);
-				s.StreamAttributeEnumOpt("relativity", ref this.mRelativity, x => x != BObjectDataRelative.Invalid);
+				s.StreamAttributeOpt("allactions", ref this.mAllActions_, Predicates.IsTrue);
+				s.StreamStringOpt("action", ref this.mAction_, false, intern: true);
+				s.StreamAttributeEnumOpt("relativity", ref this.mRelativity_, x => x != BObjectDataRelative.INVALID);
 				this.StreamXmlObjectData(s, xs);
-				stream_targets = true;
+				streamTargets = true;
 				break;
-			case BProtoTechEffectType.TransformUnit:
-			case BProtoTechEffectType.Build:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDU.ToTypeID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
+			case BProtoTechEffectType.TRANSFORM_UNIT:
+			case BProtoTechEffectType.BUILD:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDu_.ToTypeID, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
-			case BProtoTechEffectType.TransformProtoUnit:
-			case BProtoTechEffectType.TransformProtoSquad:
-				xs.StreamDBID(s, "FromType", ref this.mDU.FromTypeID, this.TransformProtoObjectKind, false, XML.XmlUtil.kSourceAttr);
-				xs.StreamDBID(s, "ToType", ref this.mDU.ToTypeID, this.TransformProtoObjectKind, false, XML.XmlUtil.kSourceAttr);
+			case BProtoTechEffectType.TRANSFORM_PROTO_UNIT:
+			case BProtoTechEffectType.TRANSFORM_PROTO_SQUAD:
+				xs.StreamDbid(s, "FromType", ref this.mDu_.FromTypeID, this.TransformProtoObjectKind, false, XML.XmlUtil.K_SOURCE_ATTR);
+				xs.StreamDbid(s, "ToType", ref this.mDu_.ToTypeID, this.TransformProtoObjectKind, false, XML.XmlUtil.K_SOURCE_ATTR);
 				break;
 			#region Unused
-			case BProtoTechEffectType.SetAge:
-				s.StreamCursorEnum(ref this.mDU.SetAgeLevel);
+			case BProtoTechEffectType.SET_AGE:
+				s.StreamCursorEnum(ref this.mDu_.SetAgeLevel);
 				break;
 			#endregion
-			case BProtoTechEffectType.GodPower:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDU.ID, DatabaseObjectKind.Power, false, XML.XmlUtil.kSourceCursor);
-				s.StreamAttribute("amount", ref this.mAmount);
+			case BProtoTechEffectType.GOD_POWER:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDu_.ID, DatabaseObjectKind.POWER, false, XML.XmlUtil.K_SOURCE_CURSOR);
+				s.StreamAttribute("amount", ref this.mAmount_);
 				break;
 			#region Unused
-			case BProtoTechEffectType.TechStatus:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDU.ID, DatabaseObjectKind.Tech, false, XML.XmlUtil.kSourceCursor);
+			case BProtoTechEffectType.TECH_STATUS:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDu_.ID, DatabaseObjectKind.TECH, false, XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
-			case BProtoTechEffectType.Ability:
-				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDU.ID, DatabaseObjectKind.Ability, false, XML.XmlUtil.kSourceCursor);
+			case BProtoTechEffectType.ABILITY:
+				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDu_.ID, DatabaseObjectKind.ABILITY, false, XML.XmlUtil.K_SOURCE_CURSOR);
 				break;
- 			case BProtoTechEffectType.SharedLOS: // no extra parsed data
+ 			case BProtoTechEffectType.SHARED_LOS: // no extra parsed data
  				break;
-			case BProtoTechEffectType.AttachSquad:
-				xs.StreamDBID(s, "squadType", ref this.mDU.ID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceAttr);
-				stream_targets = true;
+			case BProtoTechEffectType.ATTACH_SQUAD:
+				xs.StreamDbid(s, "squadType", ref this.mDu_.ID, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_ATTR);
+				streamTargets = true;
 				break;
 			#endregion
 			}
 
-			if (stream_targets)
-				XML.XmlUtil.Serialize(s, this.Targets, BProtoTechEffectTarget.kBListXmlParams);
+			if (streamTargets)
+				XML.XmlUtil.Serialize(s, this.Targets, BProtoTechEffectTarget.KBListXmlParams);
 		}
 		#endregion
 	};

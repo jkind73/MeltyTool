@@ -3,13 +3,13 @@
 namespace sysdolphin.schema;
 
 public sealed class Dat : IBinaryDeserializable {
-  private const bool IGNORE_ERROR_SUBFILES = true;
+  private const bool IGNORE_ERROR_SUBFILES_ = true;
 
   public LinkedList<DatSubfile> Subfiles { get; } = [];
 
   public void Read(IBinaryReader br) {
     do {
-      if (!IGNORE_ERROR_SUBFILES) {
+      if (!IGNORE_ERROR_SUBFILES_) {
         var offset = br.Position;
         br.PushLocalSpace();
         var subfile = br.ReadNew<DatSubfile>();

@@ -54,12 +54,12 @@ namespace KSoft.Text
 		}
 		#endregion
 
-		static DefaultTextParseErrorHandler gDefaultTextParseErrorHandler;
+		static DefaultTextParseErrorHandler gDefaultTextParseErrorHandler_;
 		public static IHandleTextParseError DefaultTextParseErrorHandler { get {
-			if (gDefaultTextParseErrorHandler == null)
-				gDefaultTextParseErrorHandler = new DefaultTextParseErrorHandler();
+			if (gDefaultTextParseErrorHandler_ == null)
+				gDefaultTextParseErrorHandler_ = new DefaultTextParseErrorHandler();
 
-			return gDefaultTextParseErrorHandler;
+			return gDefaultTextParseErrorHandler_;
 		} }
 	};
 }

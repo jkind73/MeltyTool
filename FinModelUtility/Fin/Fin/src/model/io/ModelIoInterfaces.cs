@@ -7,7 +7,7 @@ using fin.io.bundles;
 
 namespace fin.model.io;
 
-public interface IModelFileBundle : I3dFileBundle {
+public interface IModelFileBundle : I3DFileBundle {
   FileBundleType IFileBundle.Type => FileBundleType.MODEL;
 }
 

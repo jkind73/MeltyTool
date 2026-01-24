@@ -143,23 +143,23 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     skinChosenPart.ChosenColor0.Color = skinColor;
 
     br.Position = 0xb840;
-    var headChosenPart0s = br.ReadNews<ChosenPart0>(5);
-    var headChosenPart0sById = headChosenPart0s.ToDictionary(p => p.Id);
-    var headUnkSection5s = br.ReadNews<UnkSection5>(8);
+    var headChosenPart0S = br.ReadNews<ChosenPart0>(5);
+    var headChosenPart0SById = headChosenPart0S.ToDictionary(p => p.Id);
+    var headUnkSection5S = br.ReadNews<UnkSection5>(8);
 
     br.Position = 0xbd08;
-    var bodyChosenPart0s = br.ReadNews<ChosenPart0>(8);
-    var bodyChosenPart0sById = bodyChosenPart0s.ToDictionary(p => p.Id);
-    bodyChosenPart0sById[0] = skinChosenPart;
-    var bodyUnkSection5s = br.ReadNews<UnkSection5>(19);
+    var bodyChosenPart0S = br.ReadNews<ChosenPart0>(8);
+    var bodyChosenPart0SById = bodyChosenPart0S.ToDictionary(p => p.Id);
+    bodyChosenPart0SById[0] = skinChosenPart;
+    var bodyUnkSection5S = br.ReadNews<UnkSection5>(19);
 
     br.Position = 0xc6c8;
     var headChosenPart1Count = br.ReadInt32();
-    var headChosenPart1s = br.ReadNews<ChosenPart1>(headChosenPart1Count);
+    var headChosenPart1S = br.ReadNews<ChosenPart1>(headChosenPart1Count);
 
     br.Position = 0xeb00;
     var bodyChosenPart1Count = br.ReadInt32();
-    var bodyChosenPart1s = br.ReadNews<ChosenPart1>(bodyChosenPart1Count);
+    var bodyChosenPart1S = br.ReadNews<ChosenPart1>(bodyChosenPart1Count);
 
     br.Position = 0xd530;
     var headMeshDefinitions = br.ReadNews<MeshDefinition>(0x20);
@@ -210,7 +210,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         }
 
         var scaledJointMatrix =
-            SystemMatrix4x4Util.FromTrs(jointTranslation * neckScale,
+            SystemMatrix4X4Util.FromTrs(jointTranslation * neckScale,
                                         forwardRotation,
                                         neckScale);
 
@@ -405,24 +405,24 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                                  .SelectMany(p => p.Material?.Textures ?? [])
                                  .ToHashSet();
 
-    var headChosenPart0Tuples = headUnkSection5s
+    var headChosenPart0Tuples = headUnkSection5S
         .Select((unkSection5, unkSection5I) => {
           var segment = headSegment;
           return (segment, unkSection5, headMeshDefinitions,
-                  headChosenPart0sById, unkSection5I);
+                  headChosenPart0sById: headChosenPart0SById, unkSection5I);
         });
-    var bodyChosenPart0Tuples = bodyUnkSection5s
+    var bodyChosenPart0Tuples = bodyUnkSection5S
         .Select((unkSection5, unkSection5I) => {
           var segment = bodySegment;
           return (segment, unkSection5, bodyMeshDefinitions,
-                  bodyChosenPart0sById, unkSection5I);
+                  bodyChosenPart0sById: bodyChosenPart0SById, unkSection5I);
         });
 
     var headAndBodyChosenPart0Tuples =
         headChosenPart0Tuples
             .Concat(bodyChosenPart0Tuples)
             .SelectMany(t => {
-              var (segment, unkSection5, meshDefinitions, chosenPart0sById,
+              var (segment, unkSection5, meshDefinitions, chosenPart0SById,
                   unkSection5I) = t;
 
               return unkSection5
@@ -431,7 +431,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                        var meshDefinitionI = 4 * unkSection5I + subUnkSection5I;
                        var meshDefinition = meshDefinitions[meshDefinitionI];
 
-                       var chosenPart = chosenPart0sById.GetValueOrDefault(
+                       var chosenPart = chosenPart0SById.GetValueOrDefault(
                            subUnkSection5.ChosenPartId,
                            skinChosenPart);
 
@@ -450,12 +450,12 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           chosenPart0Tuple);
     }
 
-    var headChosenPart1Tuples = headChosenPart1s.Select(chosenPart => {
+    var headChosenPart1Tuples = headChosenPart1S.Select(chosenPart => {
       var segment = headSegment;
       return (segment, chosenPart,
               finBonesAndJoints[(uint) JointIndex.BODY_HEAD_ADAPTER].Item1, true);
     });
-    var bodyChosenPart1Tuples = bodyChosenPart1s.Select(chosenPart => {
+    var bodyChosenPart1Tuples = bodyChosenPart1S.Select(chosenPart => {
       var segment = bodySegment;
       return (segment, chosenPart,
               finBonesAndJoints[(uint) JointIndex.BODY_ROOT].Item1, false);
@@ -920,7 +920,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
 [BinarySchema]
 public sealed partial class Vertex : IBinaryDeserializable {
-  public Vector3s Position { get; } = new();
+  public Vector3S Position { get; } = new();
 
   private ushort padding_ = 0;
 

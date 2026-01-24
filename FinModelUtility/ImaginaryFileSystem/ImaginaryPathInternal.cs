@@ -6,20 +6,20 @@ using LinkDotNet.StringBuilder;
 namespace System.IO.Abstractions.TestingHelpers;
 
 internal static class ImaginaryPathInternal {
-  internal const char DirectorySeparatorChar = '\\';
-  internal const char AltDirectorySeparatorChar = '/';
-  internal const char VolumeSeparatorChar = ':';
+  internal const char DIRECTORY_SEPARATOR_CHAR_ = '\\';
+  internal const char ALT_DIRECTORY_SEPARATOR_CHAR_ = '/';
+  internal const char VOLUME_SEPARATOR_CHAR_ = ':';
 
   // \\?\, \\.\, \??\
-  internal const int DevicePrefixLength = 4;
+  internal const int DEVICE_PREFIX_LENGTH_ = 4;
 
   // \\
-  internal const int UncPrefixLength = 2;
+  internal const int UNC_PREFIX_LENGTH_ = 2;
 
   // \\?\UNC\, \\.\UNC\
-  internal const int UncExtendedPrefixLength = 8;
+  internal const int UNC_EXTENDED_PREFIX_LENGTH_ = 8;
 
-  internal const int MaxShortPath = 260;
+  internal const int MAX_SHORT_PATH_ = 260;
 
   /// <summary>
   /// Returns true if the path uses any of the DOS device path syntaxes. ("\\.\", "\\?\", or "\??\")
@@ -29,7 +29,7 @@ internal static class ImaginaryPathInternal {
     // "\??\" for internal usage correctly. "\??\" is recognized and handled, "/??/" is not.
     return IsExtended(path) ||
            (
-               path.Length >= DevicePrefixLength &&
+               path.Length >= DEVICE_PREFIX_LENGTH_ &&
                IsDirectorySeparator(path[0]) &&
                IsDirectorySeparator(path[1]) &&
                (path[2] == '.' || path[2] == '?') &&
@@ -40,8 +40,8 @@ internal static class ImaginaryPathInternal {
   /// <summary>
   /// Returns true if the path is a device UNC (\\?\UNC\, \\.\UNC\)
   /// </summary>
-  internal static bool IsDeviceUNC(ReadOnlySpan<char> path) {
-    return path.Length >= UncExtendedPrefixLength &&
+  internal static bool IsDeviceUnc(ReadOnlySpan<char> path) {
+    return path.Length >= UNC_EXTENDED_PREFIX_LENGTH_ &&
            IsDevice(path) &&
            IsDirectorySeparator(path[7]) &&
            path[4] == 'U' &&
@@ -54,7 +54,7 @@ internal static class ImaginaryPathInternal {
   /// </summary>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   internal static bool IsDirectorySeparator(char c)
-    => c is DirectorySeparatorChar or AltDirectorySeparatorChar;
+    => c is DIRECTORY_SEPARATOR_CHAR_ or ALT_DIRECTORY_SEPARATOR_CHAR_;
 
   /// <summary>
   /// Returns true if the path is effectively empty for the current OS.
@@ -82,7 +82,7 @@ internal static class ImaginaryPathInternal {
   internal static bool IsExtended(ReadOnlySpan<char> path) {
     // While paths like "//?/C:/" will work, they're treated the same as "\\.\" paths.
     // Skipping of normalization will *only* occur if back slashes ('\') are used.
-    return path.Length >= DevicePrefixLength &&
+    return path.Length >= DEVICE_PREFIX_LENGTH_ &&
            path[0] == '\\' &&
            (path[1] == '\\' || path[1] == '?') &&
            path[2] == '?' &&
@@ -97,7 +97,7 @@ internal static class ImaginaryPathInternal {
     int i = 0;
 
     bool deviceSyntax = IsDevice(path);
-    bool deviceUnc = deviceSyntax && IsDeviceUNC(path);
+    bool deviceUnc = deviceSyntax && IsDeviceUnc(path);
 
     if ((!deviceSyntax || deviceUnc) &&
         pathLength > 0 &&
@@ -107,7 +107,7 @@ internal static class ImaginaryPathInternal {
         // UNC (\\?\UNC\ or \\), scan past server\share
 
         // Start past the prefix ("\\" or "\\?\UNC\")
-        i = deviceUnc ? UncExtendedPrefixLength : UncPrefixLength;
+        i = deviceUnc ? UNC_EXTENDED_PREFIX_LENGTH_ : UNC_PREFIX_LENGTH_;
 
         // Skip two separators at most
         int n = 2;
@@ -120,18 +120,18 @@ internal static class ImaginaryPathInternal {
     } else if (deviceSyntax) {
       // Device path (e.g. "\\?\.", "\\.\")
       // Skip any characters following the prefix that aren't a separator
-      i = DevicePrefixLength;
+      i = DEVICE_PREFIX_LENGTH_;
       while (i < pathLength && !IsDirectorySeparator(path[i]))
         i++;
 
       // If there is another separator take it, as long as we have had at least one
       // non-separator after the prefix (e.g. don't take "\\?\\", but take "\\?\a\")
       if (i < pathLength &&
-          i > DevicePrefixLength &&
+          i > DEVICE_PREFIX_LENGTH_ &&
           IsDirectorySeparator(path[i]))
         i++;
     } else if (pathLength >= 2 &&
-               path[1] == VolumeSeparatorChar &&
+               path[1] == VOLUME_SEPARATOR_CHAR_ &&
                IsValidDriveChar(path[0])) {
       // Valid drive specified path ("C:", "D:", etc.)
       i = 2;
@@ -195,7 +195,7 @@ internal static class ImaginaryPathInternal {
     for (int i = 0; i < path.Length; i++) {
       current = path[i];
       if (IsDirectorySeparator(current) &&
-          (current != DirectorySeparatorChar
+          (current != DIRECTORY_SEPARATOR_CHAR_
            // Check for sequential separators past the first position (we need to keep initial two for UNC/extended)
            ||
            (i > 0 &&
@@ -209,12 +209,12 @@ internal static class ImaginaryPathInternal {
     if (normalized)
       return path;
 
-    var builder = new ValueStringBuilder(stackalloc char[MaxShortPath]);
+    var builder = new ValueStringBuilder(stackalloc char[MAX_SHORT_PATH_]);
 
     int start = 0;
     if (IsDirectorySeparator(path[start])) {
       start++;
-      builder.Append(DirectorySeparatorChar);
+      builder.Append(DIRECTORY_SEPARATOR_CHAR_);
     }
 
     for (int i = start; i < path.Length; i++) {
@@ -228,7 +228,7 @@ internal static class ImaginaryPathInternal {
         }
 
         // Ensure it is the primary separator
-        current = DirectorySeparatorChar;
+        current = DIRECTORY_SEPARATOR_CHAR_;
       }
 
       builder.Append(current);

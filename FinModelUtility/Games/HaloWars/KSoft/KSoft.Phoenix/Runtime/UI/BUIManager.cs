@@ -3,29 +3,29 @@ namespace KSoft.Phoenix.Runtime
 {
 	// Since BWorld serialization hasn't been finished, this code hasn't even been tested
 
-	sealed class BUIManager
+	sealed class BuiManager
 		: IO.IEndianStreamSerializable
 	{
-		public BTimerManager TimerManager = new BTimerManager();
-		public BUICallouts UICallouts = new BUICallouts();
-		public BUIWidget UIWidgets = new BUIWidget();
-		public bool WidgetsVisible, TalkingHeadShown, ObjectiveTrackerShown,
-			TimerShown, ObjectiveWidgetsShown, HintsVisible,
-			MinimapVisible, UnitStatsVisible, ReticleVisible,
-			ResourcePanelVisible, DpadPanelVisible, GameTimeVisible;
-		public float MinimapRotationOffset;
+		public BTimerManager timerManager = new BTimerManager();
+		public BuiCallouts uiCallouts = new BuiCallouts();
+		public BuiWidget uiWidgets = new BuiWidget();
+		public bool widgetsVisible, talkingHeadShown, objectiveTrackerShown,
+			timerShown, objectiveWidgetsShown, hintsVisible,
+			minimapVisible, unitStatsVisible, reticleVisible,
+			resourcePanelVisible, dpadPanelVisible, gameTimeVisible;
+		public float minimapRotationOffset;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(this.TimerManager);
-			s.Stream(this.UICallouts);
-			s.Stream(this.UIWidgets);
-			s.Stream(ref this.WidgetsVisible); s.Stream(ref this.TalkingHeadShown); s.Stream(ref this.ObjectiveTrackerShown);
-			s.Stream(ref this.TimerShown); s.Stream(ref this.ObjectiveWidgetsShown); s.Stream(ref this.HintsVisible);
-			s.Stream(ref this.MinimapVisible); s.Stream(ref this.UnitStatsVisible); s.Stream(ref this.ReticleVisible);
-			s.Stream(ref this.ResourcePanelVisible); s.Stream(ref this.DpadPanelVisible); s.Stream(ref this.GameTimeVisible);
-			s.Stream(ref this.MinimapRotationOffset);
+			s.Stream(this.timerManager);
+			s.Stream(this.uiCallouts);
+			s.Stream(this.uiWidgets);
+			s.Stream(ref this.widgetsVisible); s.Stream(ref this.talkingHeadShown); s.Stream(ref this.objectiveTrackerShown);
+			s.Stream(ref this.timerShown); s.Stream(ref this.objectiveWidgetsShown); s.Stream(ref this.hintsVisible);
+			s.Stream(ref this.minimapVisible); s.Stream(ref this.unitStatsVisible); s.Stream(ref this.reticleVisible);
+			s.Stream(ref this.resourcePanelVisible); s.Stream(ref this.dpadPanelVisible); s.Stream(ref this.gameTimeVisible);
+			s.Stream(ref this.minimapRotationOffset);
 		}
 		#endregion
 	};

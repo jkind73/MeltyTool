@@ -28,9 +28,9 @@ public sealed class SkeletonRenderer
     : ISkeletonRenderer {
   private static readonly IModelRenderer BONE_RENDERER_;
 
-  private static readonly Color UNSELECTED_BONE = Color.Blue;
-  private static readonly Color SELECTED_BONE = Color.White;
-  private static readonly Color SELECTED_CHILD = Color.CornflowerBlue;
+  private static readonly Color UNSELECTED_BONE_ = Color.Blue;
+  private static readonly Color SELECTED_BONE_ = Color.White;
+  private static readonly Color SELECTED_CHILD_ = Color.CornflowerBlue;
 
   static SkeletonRenderer() {
     var model = ModelImpl.CreateForViewer();
@@ -172,10 +172,10 @@ public sealed class SkeletonRenderer
     if (skeleton.Root != bone) {
       GlTransform.Scale(this.scaleByBone_[bone]);
       GlUtil.SetBlendColor(bone == this.SelectedBone
-                               ? SELECTED_BONE
+                               ? SELECTED_BONE_
                                : this.selectedChildren_.Contains(bone)
-                                   ? SELECTED_CHILD
-                                   : UNSELECTED_BONE);
+                                   ? SELECTED_CHILD_
+                                   : UNSELECTED_BONE_);
       BONE_RENDERER_.Render();
     }
 

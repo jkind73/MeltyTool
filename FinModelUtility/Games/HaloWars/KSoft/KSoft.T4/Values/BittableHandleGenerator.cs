@@ -7,27 +7,27 @@ namespace KSoft.T4.Values
 	public enum BittableHandleKind
 	{
 		/// <summary>Handle is otherwise opaque</summary>
-		Undefined,
+		UNDEFINED,
 		/// <summary>Handle represents a value where NONE (-1) is the 'invalid' sentinel</summary>
-		Noneable,
+		NONEABLE,
 		/// <summary>Handle represents a value where NULL (0) is the 'invalid' sentinel</summary>
-		Nullable,
+		NULLABLE,
 		/// <summary>Handle is a wrapper for a void* value</summary>
-		IntPtrWrapper,
+		INT_PTR_WRAPPER,
 	};
 
 	public sealed class BittableHandleGenerator
 	{
 		#region Constants
-		const string kNoneValueCodeName = "KSoft.TypeExtensions.kNone";
-		const string kNoneFieldName = "None";
+		const string K_NONE_VALUE_CODE_NAME_ = "KSoft.TypeExtensions.kNone";
+		const string K_NONE_FIELD_NAME_ = "None";
 
-		const string kNullFieldName = "Null";
+		const string K_NULL_FIELD_NAME_ = "Null";
 		#endregion
 
-		readonly TextTemplating.TextTransformation mFile;
-		readonly string mUnderlyingTypeName;
-		readonly string mStructName;
+		readonly TextTemplating.TextTransformation mFile_;
+		readonly string mUnderlyingTypeName_;
+		readonly string mStructName_;
 
 		public string BackingFieldName { get; set; }
 
@@ -51,7 +51,7 @@ namespace KSoft.T4.Values
 
 			this.IsPartial = true;
 
-			this.Kind = BittableHandleKind.Undefined;
+			this.Kind = BittableHandleKind.UNDEFINED;
 
 			this.SupportsIComparable = true;
 			this.SupportsIEquatable = true;
@@ -63,9 +63,9 @@ namespace KSoft.T4.Values
 			string underlyingTypeName, string structName)
 			: this()
 		{
-			this.mFile = ttFile;
-			this.mUnderlyingTypeName = underlyingTypeName;
-			this.mStructName = structName;
+			this.mFile_ = ttFile;
+			this.mUnderlyingTypeName_ = underlyingTypeName;
+			this.mStructName_ = structName;
 		}
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods")]
 		public BittableHandleGenerator(TextTemplating.TextTransformation ttFile,
@@ -81,7 +81,7 @@ namespace KSoft.T4.Values
 		{
 			return new BittableHandleGenerator(ttFile, "IntPtr", structName)
 			{
-				Kind = BittableHandleKind.IntPtrWrapper,
+				Kind = BittableHandleKind.INT_PTR_WRAPPER,
 
 				SupportsIComparable = false,
 
@@ -107,13 +107,13 @@ namespace KSoft.T4.Values
 				? "partial "
 				: "";
 
-			this.mFile.WriteLine("{0} {1} struct {2}", visibility, partial, this.mStructName);
+			this.mFile_.WriteLine("{0} {1} struct {2}", visibility, partial, this.mStructName_);
 		}
 		#region GenerateDeclInheritance
 		// Curiously recurring template pattern
-		string BuildDeclInheritanceTextCRTP(string genericClassName)
+		string BuildDeclInheritanceTextCrtp(string genericClassName)
 		{
-			return string.Format(UtilT4.InvariantCultureInfo, "{0}<{1}>", genericClassName, this.mStructName);
+			return string.Format(UtilT4.InvariantCultureInfo, "{0}<{1}>", genericClassName, this.mStructName_);
 		}
 		int WriteDeclInheritanceEntry(int position, bool entryExists, string entryText)
 		{
@@ -123,7 +123,7 @@ namespace KSoft.T4.Values
 					? ","
 					: ":";
 
-				this.mFile.WriteLine("{0} {1}", prefix, entryText);
+				this.mFile_.WriteLine("{0} {1}", prefix, entryText);
 				position++;
 			}
 
@@ -131,24 +131,24 @@ namespace KSoft.T4.Values
 		}
 		void WriteDeclInheritance()
 		{
-			int entry_pos = 0;
+			int entryPos = 0;
 			// indent the inheritance entries +1 more than the type decl (ie, public struct...)
-			using (this.mFile.EnterCodeBlock())
+			using (this.mFile_.EnterCodeBlock())
 			{
-				entry_pos = this.WriteDeclInheritanceEntry(entry_pos,
+				entryPos = this.WriteDeclInheritanceEntry(entryPos,
 				                                           this.SupportsIComparable,
-				                                           this.BuildDeclInheritanceTextCRTP("IComparable"));
+				                                           this.BuildDeclInheritanceTextCrtp("IComparable"));
 
-				entry_pos = this.WriteDeclInheritanceEntry(entry_pos,
+				entryPos = this.WriteDeclInheritanceEntry(entryPos,
 				                                           this.SupportsIEquatable,
-				                                           this.BuildDeclInheritanceTextCRTP("IEquatable"));
+				                                           this.BuildDeclInheritanceTextCrtp("IEquatable"));
 			}
 		}
 		#endregion
 		public void GenerateDecl()
 		{
 			// indent the decl by 1. it is assumed the decl is nested in a single namespace declaration (like this codegen class)
-			using (this.mFile.EnterCodeBlock())
+			using (this.mFile_.EnterCodeBlock())
 			{
 				this.WriteDeclAttributes();
 				this.WriteDeclHeader();
@@ -159,11 +159,11 @@ namespace KSoft.T4.Values
 
 		public void GenerateBackingFieldDecl()
 		{
-			this.mFile.WriteLine("{0} {1};",
-			                     this.mUnderlyingTypeName,
+			this.mFile_.WriteLine("{0} {1};",
+			                     this.mUnderlyingTypeName_,
 			                     this.BackingFieldName);
 
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 		}
 
 		// Use non-default CtorFromValue... inputs when the 'value' is of a different bit size than the underlying type
@@ -171,59 +171,59 @@ namespace KSoft.T4.Values
 		public void GenerateCtorFromValueMethod()
 		{
 			if (this.CtorFromValueTypeName == null)
-				this.CtorFromValueTypeName = this.mUnderlyingTypeName;
+				this.CtorFromValueTypeName = this.mUnderlyingTypeName_;
 
-			this.mFile.WriteLine("public {0}({1} {2})",
-			                     this.mStructName,
+			this.mFile_.WriteLine("public {0}({1} {2})",
+			                     this.mStructName_,
 			                     this.CtorFromValueTypeName,
 			                     this.CtorFromValueParamName);
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("{0} = ({1}){2};",
+				this.mFile_.WriteLine("{0} = ({1}){2};",
 				                     this.BackingFieldName,
-				                     this.mUnderlyingTypeName,
+				                     this.mUnderlyingTypeName_,
 				                     this.CtorFromValueParamName);
 			}
 
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 		}
 
 		#region Generate cast to and from methods
 		void WriteCastToUnderlyingTypeMethod()
 		{
-			const string k_param_name = "handle";
+			const string kParamName = "handle";
 
-			this.mFile.WriteLine("public static implicit operator {0}({1} {2})",
-			                     this.mUnderlyingTypeName,
-			                     this.mStructName, k_param_name);
+			this.mFile_.WriteLine("public static implicit operator {0}({1} {2})",
+			                     this.mUnderlyingTypeName_,
+			                     this.mStructName_, kParamName);
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("return {0}.{1}",
-				                     k_param_name,
+				this.mFile_.WriteLine("return {0}.{1}",
+				                     kParamName,
 				                     this.BackingFieldName);
 			}
 		}
 		void WriteCastFromUnderlyingTypeMethod()
 		{
-			const string k_param_name = "value";
+			const string kParamName = "value";
 
-			this.mFile.WriteLine("public static implicit operator {0}({1} {2})",
-			                     this.mStructName,
-			                     this.mUnderlyingTypeName, k_param_name);
+			this.mFile_.WriteLine("public static implicit operator {0}({1} {2})",
+			                     this.mStructName_,
+			                     this.mUnderlyingTypeName_, kParamName);
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("return new {0}({1});",
-				                     this.mStructName, k_param_name);
+				this.mFile_.WriteLine("return new {0}({1});",
+				                     this.mStructName_, kParamName);
 			}
 		}
 		public void GenerateStockCastMethods()
 		{
 			this.WriteCastToUnderlyingTypeMethod();
 			this.WriteCastFromUnderlyingTypeMethod();
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 		}
 		#endregion
 
@@ -233,15 +233,15 @@ namespace KSoft.T4.Values
 			Debug.Assert(this.SupportsIEquatable,
 				"Trying to generate handle without IEquatable support, but with equality operators (this is non-optimal)",
 				"in {0}",
-				this.mStructName);
+				this.mStructName_);
 
-			this.mFile.WriteLine("public static bool operator {0}({1} x, {1} y)",
+			this.mFile_.WriteLine("public static bool operator {0}({1} x, {1} y)",
 			                     operatorSymbol,
-			                     this.mStructName);
+			                     this.mStructName_);
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("return x.Equals(y) {0} true",
+				this.mFile_.WriteLine("return x.Equals(y) {0} true",
 				                     operatorSymbol);
 			}
 		}
@@ -249,60 +249,60 @@ namespace KSoft.T4.Values
 		{
 			this.WriteEqualityOperatorMethod("==");
 			this.WriteEqualityOperatorMethod("!=");
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 		}
 		#endregion
 
 		#region Generate NONE utilities
-		void WriteNoneField(string fieldName = kNoneFieldName)
+		void WriteNoneField(string fieldName = K_NONE_FIELD_NAME_)
 		{
-			this.mFile.WriteLine("public static readonly {0} {1} = new {0}({2});",
-			                     this.mStructName, fieldName, kNoneValueCodeName);
+			this.mFile_.WriteLine("public static readonly {0} {1} = new {0}({2});",
+			                     this.mStructName_, fieldName, K_NONE_VALUE_CODE_NAME_);
 		}
 		void WriteNoneableProperties()
 		{
-			this.mFile.WriteLine("public bool IsNone { get { return {0} == {1}; } }",
-			                     this.BackingFieldName, kNoneValueCodeName);
+			this.mFile_.WriteLine("public bool IsNone { get { return {0} == {1}; } }",
+			                     this.BackingFieldName, K_NONE_VALUE_CODE_NAME_);
 
-			this.mFile.WriteLine("public bool IsNotNone { get { return {0} != {1}; } }",
-			                     this.BackingFieldName, kNoneValueCodeName);
+			this.mFile_.WriteLine("public bool IsNotNone { get { return {0} != {1}; } }",
+			                     this.BackingFieldName, K_NONE_VALUE_CODE_NAME_);
 		}
-		public void GenereateNoneableMembers(string noneFieldName = kNoneFieldName)
+		public void GenereateNoneableMembers(string noneFieldName = K_NONE_FIELD_NAME_)
 		{
-			if (this.Kind == BittableHandleKind.Noneable)
+			if (this.Kind == BittableHandleKind.NONEABLE)
 			{
 				this.WriteNoneField(noneFieldName);
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 
 				this.WriteNoneableProperties();
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 			}
 		}
 		#endregion
 
 		#region Generate NULL utilities
-		void WriteNullField(string fieldName = kNullFieldName)
+		void WriteNullField(string fieldName = K_NULL_FIELD_NAME_)
 		{
-			this.mFile.WriteLine("public static readonly {0} {1} = new {0}( 0 );",
-			                     this.mStructName, fieldName);
+			this.mFile_.WriteLine("public static readonly {0} {1} = new {0}( 0 );",
+			                     this.mStructName_, fieldName);
 		}
 		void WriteNullableProperties()
 		{
-			this.mFile.WriteLine("public bool IsNull { get { return {0} == 0; } }",
+			this.mFile_.WriteLine("public bool IsNull { get { return {0} == 0; } }",
 			                     this.BackingFieldName);
 
-			this.mFile.WriteLine("public bool IsNotNull { get { return {0} != 0; } }",
+			this.mFile_.WriteLine("public bool IsNotNull { get { return {0} != 0; } }",
 			                     this.BackingFieldName);
 		}
-		public void GenereateNullableMembers(string nullFieldName = kNullFieldName)
+		public void GenereateNullableMembers(string nullFieldName = K_NULL_FIELD_NAME_)
 		{
-			if (this.Kind == BittableHandleKind.Nullable)
+			if (this.Kind == BittableHandleKind.NULLABLE)
 			{
 				this.WriteNullField(nullFieldName);
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 
 				this.WriteNullableProperties();
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 			}
 		}
 		#endregion
@@ -310,38 +310,38 @@ namespace KSoft.T4.Values
 		#region Generate object overrides
 		void WriteGetHashCodeOverride()
 		{
-			this.mFile.WriteLine("public override int GetHashCode()");
+			this.mFile_.WriteLine("public override int GetHashCode()");
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("{0}.GetHashCode();",
+				this.mFile_.WriteLine("{0}.GetHashCode();",
 				                     this.BackingFieldName);
 			}
 		}
 		void WriteEqualsOverride()
 		{
-			this.mFile.WriteLine("public override bool Equals(object obj)");
+			this.mFile_.WriteLine("public override bool Equals(object obj)");
 
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
-				this.mFile.WriteLine("if (!(obj is {0}))",
-				                     this.mStructName);
-				using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+				this.mFile_.WriteLine("if (!(obj is {0}))",
+				                     this.mStructName_);
+				using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 				{
-					this.mFile.WriteLine("return false;");
+					this.mFile_.WriteLine("return false;");
 				}
 
-				this.mFile.WriteLine("return Equals( ({0})obj );",
-				                     this.mStructName);
+				this.mFile_.WriteLine("return Equals( ({0})obj );",
+				                     this.mStructName_);
 			}
 		}
 		public void GenerateObjectMethodOverrides()
 		{
 			this.WriteGetHashCodeOverride();
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 
 			this.WriteEqualsOverride();
-			this.mFile.NewLine();
+			this.mFile_.NewLine();
 		}
 		#endregion
 
@@ -349,51 +349,51 @@ namespace KSoft.T4.Values
 		#region IComparable<struct> Members
 		void GenerateIComparableImpl()
 		{
-			const string k_interface_name = "IComparable";
+			const string kInterfaceName = "IComparable";
 
-			this.mFile.WriteLine("#region {0}<{1}> Members",
-			                     k_interface_name,
-			                     this.mStructName);
+			this.mFile_.WriteLine("#region {0}<{1}> Members",
+			                     kInterfaceName,
+			                     this.mStructName_);
 			{
-				const string k_return_type = "int";
+				const string kReturnType = "int";
 
-				this.mFile.WriteLine("public {0} {1}({2} other)",
-				                     k_return_type, "ComapreTo",
-				                     this.mStructName);
+				this.mFile_.WriteLine("public {0} {1}({2} other)",
+				                     kReturnType, "ComapreTo",
+				                     this.mStructName_);
 
-				using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+				using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 				{
-					this.mFile.WriteLine("return ({0})({1} - other.{1});",
-					                     k_return_type,
+					this.mFile_.WriteLine("return ({0})({1} - other.{1});",
+					                     kReturnType,
 					                     this.BackingFieldName);
 				}
 			}
-			this.mFile.WriteLine("#endregion");
+			this.mFile_.WriteLine("#endregion");
 		}
 		#endregion
 
 		#region IEquatable<struct> Members
 		void GenerateIEquatableImpl()
 		{
-			const string k_interface_name = "IEquatable";
+			const string kInterfaceName = "IEquatable";
 
-			this.mFile.WriteLine("#region {0}<{1}> Members",
-			                     k_interface_name,
-			                     this.mStructName);
+			this.mFile_.WriteLine("#region {0}<{1}> Members",
+			                     kInterfaceName,
+			                     this.mStructName_);
 			{
-				const string k_return_type = "bool";
+				const string kReturnType = "bool";
 
-				this.mFile.WriteLine("public {0} {1}({2} other)",
-				                     k_return_type, "Equals",
-				                     this.mStructName);
+				this.mFile_.WriteLine("public {0} {1}({2} other)",
+				                     kReturnType, "Equals",
+				                     this.mStructName_);
 
-				using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+				using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 				{
-					this.mFile.WriteLine("return {0} == other.{0};",
+					this.mFile_.WriteLine("return {0} == other.{0};",
 					                     this.BackingFieldName);
 				}
 			}
-			this.mFile.WriteLine("#endregion");
+			this.mFile_.WriteLine("#endregion");
 		}
 		#endregion
 
@@ -402,32 +402,32 @@ namespace KSoft.T4.Values
 			if (this.SupportsIComparable)
 			{
 				this.GenerateIComparableImpl();
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 			}
 
 			if (this.SupportsIEquatable)
 			{
 				this.GenerateIEquatableImpl();
-				this.mFile.NewLine();
+				this.mFile_.NewLine();
 			}
 		}
 		#endregion
 
 		public void GenerateDefaultBody()
 		{
-			using (this.mFile.EnterCodeBlock(TextTransformationCodeBlockType.BracketsStatement))
+			using (this.mFile_.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS_STATEMENT))
 			{
 				switch (this.Kind)
 				{
-				case BittableHandleKind.Noneable:
+				case BittableHandleKind.NONEABLE:
 					this.WriteNoneField();
 					break;
-				case BittableHandleKind.Nullable:
+				case BittableHandleKind.NULLABLE:
 					this.WriteNullField();
 					break;
 				}
-				if (this.Kind != BittableHandleKind.Undefined)
-					this.mFile.NewLine();
+				if (this.Kind != BittableHandleKind.UNDEFINED)
+					this.mFile_.NewLine();
 
 				this.GenerateBackingFieldDecl();
 
@@ -438,15 +438,15 @@ namespace KSoft.T4.Values
 
 				switch (this.Kind)
 				{
-				case BittableHandleKind.Noneable:
+				case BittableHandleKind.NONEABLE:
 					this.WriteNoneableProperties();
 					break;
-				case BittableHandleKind.Nullable:
+				case BittableHandleKind.NULLABLE:
 					this.WriteNullableProperties();
 					break;
 				}
-				if (this.Kind != BittableHandleKind.Undefined)
-					this.mFile.NewLine();
+				if (this.Kind != BittableHandleKind.UNDEFINED)
+					this.mFile_.NewLine();
 
 				this.GenerateObjectMethodOverrides();
 

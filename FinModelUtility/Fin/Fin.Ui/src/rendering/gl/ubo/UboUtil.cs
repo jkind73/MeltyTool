@@ -9,7 +9,7 @@ namespace fin.ui.rendering.gl.ubo;
 public static class UboUtil {
   public const int SIZE_OF_VECTOR3 = 4 * 3;
   public const int SIZE_OF_VECTOR4 = 4 * 4;
-  public const int SIZE_OF_MATRIX4X4 = 4 * 4 * 4;
+  public const int SIZE_OF_MATRIX4_X4 = 4 * 4 * 4;
 
   public static void AppendBool(Span<byte> buffer,
                                 ref int offset,
@@ -54,20 +54,20 @@ public static class UboUtil {
     offset += SIZE_OF_VECTOR4;
   }
 
-  public static void AppendMatrix4x4(Span<byte> buffer,
+  public static void AppendMatrix4X4(Span<byte> buffer,
                                      ref int offset,
                                      Matrix4x4 matrix4X4) {
-    buffer.Slice(offset, SIZE_OF_MATRIX4X4).Cast<byte, Matrix4x4>()[0]
+    buffer.Slice(offset, SIZE_OF_MATRIX4_X4).Cast<byte, Matrix4x4>()[0]
         = matrix4X4;
-    offset += SIZE_OF_MATRIX4X4;
+    offset += SIZE_OF_MATRIX4_X4;
   }
 
-  public static void AppendMatrix4x4s(Span<byte> buffer,
+  public static void AppendMatrix4X4S(Span<byte> buffer,
                                       ref int offset,
                                       ReadOnlySpan<Matrix4x4> matrix4X4S) {
     matrix4X4S.CopyTo(
-        buffer.Slice(offset, matrix4X4S.Length * SIZE_OF_MATRIX4X4)
+        buffer.Slice(offset, matrix4X4S.Length * SIZE_OF_MATRIX4_X4)
               .Cast<byte, Matrix4x4>());
-    offset += matrix4X4S.Length * SIZE_OF_MATRIX4X4;
+    offset += matrix4X4S.Length * SIZE_OF_MATRIX4_X4;
   }
 }

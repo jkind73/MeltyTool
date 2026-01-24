@@ -13,7 +13,7 @@ public sealed class Primitive : IBinaryConvertible {
   public DataType dataType;
   public ushort indicesCount;
   public uint[] indices;
-  public ushort offset { get; set; }
+  public ushort Offset { get; set; }
 
   public void Read(IBinaryReader br) {
       br.AssertString("prm" + AsciiUtil.GetChar(0x20));
@@ -27,7 +27,7 @@ public sealed class Primitive : IBinaryConvertible {
 
       this.indicesCount = br.ReadUInt16();
 
-      this.offset = br.ReadUInt16();
+      this.Offset = br.ReadUInt16();
     }
 
   public void Write(IBinaryWriter bw)

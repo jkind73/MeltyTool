@@ -8,7 +8,7 @@ using sm64.Scripts;
 
 namespace sm64 {
   public sealed class Object3D {
-    public enum FLAGS {
+    public enum Flags {
       POSITION_X = 0x1,
       POSITION_Y = 0x2,
       POSITION_Z = 0x4,
@@ -29,295 +29,295 @@ namespace sm64 {
       ALLFLAGS = 0x1FFFF
     }
 
-    public enum FROM_LS_CMD {
+    public enum FromLsCmd {
       CMD_24,
       CMD_39,
-      CMD_2E_8,
-      CMD_2E_10,
-      CMD_2E_12
+      CMD_2_E_8,
+      CMD_2_E_10,
+      CMD_2_E_12
     }
 
-    private const ushort NUM_OF_CATERGORIES = 7;
+    private const ushort NUM_OF_CATERGORIES_ = 7;
 
-    bool isBehaviorReadOnly = false;
-    bool isModelIDReadOnly = false;
-    bool isTempHidden = false;
+    bool isBehaviorReadOnly_ = false;
+    bool isModelIdReadOnly_ = false;
+    bool isTempHidden_ = false;
 
     public Object3D() {
-      this.m_data = new ObjectData();
+      this.mData_ = new ObjectData();
     }
 
     public Object3D(
         string address,
         ObjectData objectData
     ) {
-      this.m_data = objectData;
+      this.mData_ = objectData;
       this.Address = address;
       this.UpdateProperties();
     }
 
     public void ReplaceData(ObjectData newData) {
-      this.m_data = newData;
+      this.mData_ = newData;
       this.UpdateProperties();
     }
 
-    private ObjectData m_data = new ObjectData();
+    private ObjectData mData_ = new ObjectData();
 
     [Browsable(false)]
     public ObjectData Data {
-      get => this.m_data;
+      get => this.mData_;
     }
 
     [Browsable(false)]
-    public bool canEditModelID {
-      get { return !this.isModelIDReadOnly; }
+    public bool CanEditModelId {
+      get { return !this.isModelIdReadOnly_; }
     }
 
     [Browsable(false)]
-    public bool canEditBehavior {
-      get { return !this.isBehaviorReadOnly; }
+    public bool CanEditBehavior {
+      get { return !this.isBehaviorReadOnly_; }
     }
 
     [Browsable(false)]
-    public FROM_LS_CMD createdFromLevelScriptCommand { get; set; }
+    public FromLsCmd CreatedFromLevelScriptCommand { get; set; }
 
-    [CustomSortedCategory("Info", 1, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Info", 1, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [Description("Name of the object combo")]
     [DisplayName("Combo Name")]
     [ReadOnly(true)]
     public string Title { get; set; }
 
-    [CustomSortedCategory("Info", 1, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Info", 1, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [Description("Location inside the ROM file")]
     [DisplayName("Address")]
     [ReadOnly(true)]
     public string Address { get; set; }
 
-    [CustomSortedCategory("Model", 2, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Model", 2, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [Description("Model identifer used by the object")]
     [DisplayName("Model ID")]
-    public byte ModelID {
-      get { return this.m_data.ModelId; }
-      set { this.m_data.ModelId = value; }
+    public byte ModelId {
+      get { return this.mData_.ModelId; }
+      set { this.mData_.ModelId = value; }
     }
 
-    [CustomSortedCategory("Model", 2, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Model", 2, NUM_OF_CATERGORIES_)]
     [Browsable(false)]
     [Description("Model identifer used by the object")]
     [DisplayName("Model ID")]
     [ReadOnly(true)]
-    public byte ModelID_ReadOnly {
-      get { return this.m_data.ModelId; }
+    public byte ModelIdReadOnly {
+      get { return this.mData_.ModelId; }
     }
 
-    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("X")]
-    public short xPos {
-      get { return this.m_data.X; }
-      set { this.m_data.X = value; }
+    public short XPos {
+      get { return this.mData_.X; }
+      set { this.mData_.X = value; }
     }
 
-    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Y")]
-    public short yPos {
-      get { return this.m_data.Y; }
-      set { this.m_data.Y = value; }
+    public short YPos {
+      get { return this.mData_.Y; }
+      set { this.mData_.Y = value; }
     }
 
-    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Position", 3, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Z")]
-    public short zPos {
-      get { return this.m_data.Z; }
-      set { this.m_data.Z = value; }
+    public short ZPos {
+      get { return this.mData_.Z; }
+      set { this.mData_.Z = value; }
     }
 
-    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("RX")]
-    public short xRot {
-      get { return this.m_data.RX; }
-      set { this.m_data.RX = value; }
+    public short XRot {
+      get { return this.mData_.Rx; }
+      set { this.mData_.Rx = value; }
     }
 
-    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("RY")]
-    public short yRot {
-      get { return this.m_data.RY; }
-      set { this.m_data.RY = value; }
+    public short YRot {
+      get { return this.mData_.Ry; }
+      set { this.mData_.Ry = value; }
     }
 
-    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Rotation", 4, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("RZ")]
-    public short zRot {
-      get { return this.m_data.RZ; }
-      set { this.m_data.RZ = value; }
+    public short ZRot {
+      get { return this.mData_.Rz; }
+      set { this.mData_.Rz = value; }
     }
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Behavior")]
     public string Behavior {
-      get => "0x" + this.m_data.Behaviour.ToString("X8");
+      get => "0x" + this.mData_.Behaviour.ToString("X8");
       set {
-        this.m_data.Behaviour =
+        this.mData_.Behaviour =
             uint.Parse(value[2..], NumberStyles.HexNumber);
       }
     }
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(false)]
     [DisplayName("Behavior")]
     [ReadOnly(true)]
-    public string Behavior_ReadOnly => this.Behavior;
+    public string BehaviorReadOnly => this.Behavior;
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Beh. Name")]
     [ReadOnly(true)]
-    public string Behavior_Name => Globals
-                                   .getBehaviorNameEntryFromSegAddress(this.m_data.Behaviour)
+    public string BehaviorName => Globals
+                                   .GetBehaviorNameEntryFromSegAddress(this.mData_.Behaviour)
                                    .Name;
 
-    public new string ToString() => this.Behavior_Name;
+    public new string ToString() => this.BehaviorName;
 
     // default names
-    private const string BP1DNAME = "B.Param 1";
-    private const string BP2DNAME = "B.Param 2";
-    private const string BP3DNAME = "B.Param 3";
-    private const string BP4DNAME = "B.Param 4";
+    private const string BP_1DNAME_ = "B.Param 1";
+    private const string BP_2DNAME_ = "B.Param 2";
+    private const string BP_3DNAME_ = "B.Param 3";
+    private const string BP_4DNAME_ = "B.Param 4";
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
-    [DisplayName(BP1DNAME)]
+    [DisplayName(BP_1DNAME_)]
     [Description("")]
     public byte BehaviorParameter1 {
-      get { return this.m_data.BehaviourArgs[0]; }
-      set { this.m_data.BehaviourArgs[0] = value; }
+      get { return this.mData_.BehaviourArgs[0]; }
+      set { this.mData_.BehaviourArgs[0] = value; }
     }
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
-    [DisplayName(BP2DNAME)]
+    [DisplayName(BP_2DNAME_)]
     [Description("")]
     public byte BehaviorParameter2 {
-      get { return this.m_data.BehaviourArgs[1]; }
-      set { this.m_data.BehaviourArgs[1] = value; }
+      get { return this.mData_.BehaviourArgs[1]; }
+      set { this.mData_.BehaviourArgs[1] = value; }
     }
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
-    [DisplayName(BP3DNAME)]
+    [DisplayName(BP_3DNAME_)]
     [Description("")]
     public byte BehaviorParameter3 {
-      get { return this.m_data.BehaviourArgs[2]; }
-      set { this.m_data.BehaviourArgs[2] = value; }
+      get { return this.mData_.BehaviourArgs[2]; }
+      set { this.mData_.BehaviourArgs[2] = value; }
     }
 
-    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Behavior", 5, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
-    [DisplayName(BP4DNAME)]
+    [DisplayName(BP_4DNAME_)]
     [Description("")]
     public byte BehaviorParameter4 {
-      get { return this.m_data.BehaviourArgs[3]; }
-      set { this.m_data.BehaviourArgs[3] = value; }
+      get { return this.mData_.BehaviourArgs[3]; }
+      set { this.mData_.BehaviourArgs[3] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("All Acts")]
     public bool AllActs {
-      get { return this.m_data.AllActs; }
-      set { this.m_data.AllActs = value; }
+      get { return this.mData_.AllActs; }
+      set { this.mData_.AllActs = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 1")]
     public bool Act1 {
-      get { return this.m_data.Acts[0]; }
-      set { this.m_data.Acts[0] = value; }
+      get { return this.mData_.Acts[0]; }
+      set { this.mData_.Acts[0] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 2")]
     public bool Act2 {
-      get { return this.m_data.Acts[1]; }
-      set { this.m_data.Acts[1] = value; }
+      get { return this.mData_.Acts[1]; }
+      set { this.mData_.Acts[1] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 3")]
     public bool Act3 {
-      get { return this.m_data.Acts[2]; }
-      set { this.m_data.Acts[2] = value; }
+      get { return this.mData_.Acts[2]; }
+      set { this.mData_.Acts[2] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 4")]
     public bool Act4 {
-      get { return this.m_data.Acts[3]; }
-      set { this.m_data.Acts[3] = value; }
+      get { return this.mData_.Acts[3]; }
+      set { this.mData_.Acts[3] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 5")]
     public bool Act5 {
-      get { return this.m_data.Acts[4]; }
-      set { this.m_data.Acts[4] = value; }
+      get { return this.mData_.Acts[4]; }
+      set { this.mData_.Acts[4] = value; }
     }
 
-    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Acts", 6, NUM_OF_CATERGORIES_)]
     [Browsable(true)]
     [DisplayName("Act 6")]
     public bool Act6 {
-      get { return this.m_data.Acts[5]; }
-      set { this.m_data.Acts[5] = value; }
+      get { return this.mData_.Acts[5]; }
+      set { this.mData_.Acts[5] = value; }
     }
 
-    private ulong Flags = 0;
+    private ulong flags_ = 0;
 
-    private bool isReadOnly = false;
+    private bool isReadOnly_ = false;
 
-    [CustomSortedCategory("Misc", NUM_OF_CATERGORIES, NUM_OF_CATERGORIES)]
+    [CustomSortedCategory("Misc", NUM_OF_CATERGORIES_, NUM_OF_CATERGORIES_)]
     [DisplayName("Read-Only")]
     [Browsable(false)]
     public bool IsReadOnly {
-      get { return this.isReadOnly; }
+      get { return this.isReadOnly_; }
     }
 
     /**************************************************************************************/
 
     [Browsable(false)]
-    public Level level { get; set; }
+    public Level Level { get; set; }
 
-    private ObjectComboEntry objectComboEntry;
-    private ushort presetID;
+    private ObjectComboEntry objectComboEntry_;
+    private ushort presetId_;
 
-    public int getROMAddress() {
+    public int GetRomAddress() {
       return int.Parse(this.Address[2..], NumberStyles.HexNumber);
     }
 
-    public uint getROMUnsignedAddress() {
+    public uint GetRomUnsignedAddress() {
       return uint.Parse(this.Address[2..], NumberStyles.HexNumber);
     }
 
-    public void setPresetID(ushort ID) {
-      this.presetID = ID;
+    public void SetPresetId(ushort id) {
+      this.presetId_ = id;
     }
 
-    public byte getActMask() {
+    public byte GetActMask() {
       byte actMask = 0;
       if (this.Act1) actMask |= 0x1;
       if (this.Act2) actMask |= 0x2;
@@ -328,34 +328,34 @@ namespace sm64 {
       return actMask;
     }
 
-    public void setBehaviorFromAddress(uint address) {
-      this.m_data.Behaviour = address;
+    public void SetBehaviorFromAddress(uint address) {
+      this.mData_.Behaviour = address;
     }
 
-    public uint getBehaviorAddress() => this.m_data.Behaviour;
+    public uint GetBehaviorAddress() => this.mData_.Behaviour;
 
     public List<ScriptDumpCommandInfo> ParseBehavior() {
       var script = new List<ScriptDumpCommandInfo>();
-      BehaviorScripts.parse(ref script, this.getBehaviorAddress());
+      BehaviorScripts.Parse(ref script, this.GetBehaviorAddress());
       return script;
     }
 
     public void MakeBehaviorReadOnly(bool isReadOnly) {
-      this.isBehaviorReadOnly = isReadOnly;
+      this.isBehaviorReadOnly_ = isReadOnly;
     }
 
     public void MakeModelIDReadOnly(bool isReadOnly) {
-      this.isModelIDReadOnly = isReadOnly;
+      this.isModelIdReadOnly_ = isReadOnly;
     }
 
     public void MakeReadOnly() {
       TypeDescriptor.AddAttributes(
           this,
           [new ReadOnlyAttribute(true)]);
-      this.isReadOnly = true;
+      this.isReadOnly_ = true;
     }
 
-    private void HideShowProperty(string property, bool show) {
+    private void HideShowProperty_(string property, bool show) {
       PropertyDescriptor descriptor =
           TypeDescriptor.GetProperties(this.GetType())[property];
       BrowsableAttribute attrib =
@@ -370,28 +370,28 @@ namespace sm64 {
         isBrow.SetValue(attrib, show);
     }
 
-    private bool isHidden(FLAGS flag) {
-      return (this.Flags & (ulong) flag) == (ulong) flag;
+    private bool IsHidden_(Flags flag) {
+      return (this.flags_ & (ulong) flag) == (ulong) flag;
     }
 
-    private void updateProperty(string property, FLAGS flag) {
-      if (this.isHidden(flag))
-        this.HideShowProperty(property, false);
+    private void UpdateProperty_(string property, Flags flag) {
+      if (this.IsHidden_(flag))
+        this.HideShowProperty_(property, false);
       else
-        this.HideShowProperty(property, true);
+        this.HideShowProperty_(property, true);
     }
 
     private void updateReadOnlyProperty(string property, bool isReadOnly) {
       if (isReadOnly) {
-        this.HideShowProperty(property, false);
-        this.HideShowProperty(property + "_ReadOnly", true);
+        this.HideShowProperty_(property, false);
+        this.HideShowProperty_(property + "_ReadOnly", true);
       } else {
-        this.HideShowProperty(property, true);
-        this.HideShowProperty(property + "_ReadOnly", false);
+        this.HideShowProperty_(property, true);
+        this.HideShowProperty_(property + "_ReadOnly", false);
       }
     }
 
-    private void ChangePropertyName(string property, string name) {
+    private void ChangePropertyName_(string property, string name) {
       PropertyDescriptor descriptor =
           TypeDescriptor.GetProperties(this.GetType())[property];
       DisplayNameAttribute attrib =
@@ -406,7 +406,7 @@ namespace sm64 {
         isBrow.SetValue(attrib, name);
     }
 
-    private string? GetPropertyDisplayName(string property) {
+    private string? GetPropertyDisplayName_(string property) {
       PropertyDescriptor descriptor =
           TypeDescriptor.GetProperties(this.GetType())[property];
       DisplayNameAttribute attrib =
@@ -421,7 +421,7 @@ namespace sm64 {
     }
 
     private void
-        ChangePropertyDescription(string property, string description) {
+        ChangePropertyDescription_(string property, string description) {
       PropertyDescriptor descriptor =
           TypeDescriptor.GetProperties(this.GetType())[property];
       DescriptionAttribute attrib =
@@ -435,150 +435,150 @@ namespace sm64 {
         isBrow.SetValue(attrib, description);
     }
 
-    private void UpdatePropertyName(string property,
-                                    string oce_name,
+    private void UpdatePropertyName_(string property,
+                                    string oceName,
                                     string otherName) {
-      if (oce_name != null && !oce_name.Equals(""))
-        this.ChangePropertyName(property, oce_name);
+      if (oceName != null && !oceName.Equals(""))
+        this.ChangePropertyName_(property, oceName);
       else
-        this.ChangePropertyName(property, otherName);
+        this.ChangePropertyName_(property, otherName);
     }
 
-    private void UpdatePropertyDescription(string property, string oce_desc) {
-      if (oce_desc != null && !oce_desc.Equals(""))
-        this.ChangePropertyDescription(property, oce_desc);
+    private void UpdatePropertyDescription_(string property, string oceDesc) {
+      if (oceDesc != null && !oceDesc.Equals(""))
+        this.ChangePropertyDescription_(property, oceDesc);
       else
-        this.ChangePropertyDescription(property, "");
+        this.ChangePropertyDescription_(property, "");
     }
 
-    private void UpdateObjectComboNames() {
-      if (this.objectComboEntry != null) {
-        this.UpdatePropertyName("BehaviorParameter1",
-                                this.objectComboEntry.BP1_NAME,
-                                BP1DNAME);
-        this.UpdatePropertyName("BehaviorParameter2",
-                                this.objectComboEntry.BP2_NAME,
-                                BP2DNAME);
-        this.UpdatePropertyName("BehaviorParameter3",
-                                this.objectComboEntry.BP3_NAME,
-                                BP3DNAME);
-        this.UpdatePropertyName("BehaviorParameter4",
-                                this.objectComboEntry.BP4_NAME,
-                                BP4DNAME);
-        this.UpdatePropertyDescription("BehaviorParameter1",
-                                       this.objectComboEntry.BP1_DESCRIPTION);
-        this.UpdatePropertyDescription("BehaviorParameter2",
-                                       this.objectComboEntry.BP2_DESCRIPTION);
-        this.UpdatePropertyDescription("BehaviorParameter3",
-                                       this.objectComboEntry.BP3_DESCRIPTION);
-        this.UpdatePropertyDescription("BehaviorParameter4",
-                                       this.objectComboEntry.BP4_DESCRIPTION);
+    private void UpdateObjectComboNames_() {
+      if (this.objectComboEntry_ != null) {
+        this.UpdatePropertyName_("BehaviorParameter1",
+                                this.objectComboEntry_.Bp1Name,
+                                BP_1DNAME_);
+        this.UpdatePropertyName_("BehaviorParameter2",
+                                this.objectComboEntry_.Bp2Name,
+                                BP_2DNAME_);
+        this.UpdatePropertyName_("BehaviorParameter3",
+                                this.objectComboEntry_.Bp3Name,
+                                BP_3DNAME_);
+        this.UpdatePropertyName_("BehaviorParameter4",
+                                this.objectComboEntry_.Bp4Name,
+                                BP_4DNAME_);
+        this.UpdatePropertyDescription_("BehaviorParameter1",
+                                       this.objectComboEntry_.Bp1Description);
+        this.UpdatePropertyDescription_("BehaviorParameter2",
+                                       this.objectComboEntry_.Bp2Description);
+        this.UpdatePropertyDescription_("BehaviorParameter3",
+                                       this.objectComboEntry_.Bp3Description);
+        this.UpdatePropertyDescription_("BehaviorParameter4",
+                                       this.objectComboEntry_.Bp4Description);
       } else {
-        this.ChangePropertyName("BehaviorParameter1", BP1DNAME);
-        this.ChangePropertyName("BehaviorParameter2", BP2DNAME);
-        this.ChangePropertyName("BehaviorParameter3", BP3DNAME);
-        this.ChangePropertyName("BehaviorParameter4", BP4DNAME);
-        this.ChangePropertyDescription("BehaviorParameter1", "");
-        this.ChangePropertyDescription("BehaviorParameter2", "");
-        this.ChangePropertyDescription("BehaviorParameter3", "");
-        this.ChangePropertyDescription("BehaviorParameter4", "");
+        this.ChangePropertyName_("BehaviorParameter1", BP_1DNAME_);
+        this.ChangePropertyName_("BehaviorParameter2", BP_2DNAME_);
+        this.ChangePropertyName_("BehaviorParameter3", BP_3DNAME_);
+        this.ChangePropertyName_("BehaviorParameter4", BP_4DNAME_);
+        this.ChangePropertyDescription_("BehaviorParameter1", "");
+        this.ChangePropertyDescription_("BehaviorParameter2", "");
+        this.ChangePropertyDescription_("BehaviorParameter3", "");
+        this.ChangePropertyDescription_("BehaviorParameter4", "");
       }
     }
 
     public void UpdateProperties() {
-      this.updateProperty("xPos", FLAGS.POSITION_X);
-      this.updateProperty("yPos", FLAGS.POSITION_Y);
-      this.updateProperty("zPos", FLAGS.POSITION_Z);
-      this.updateProperty("xRot", FLAGS.ROTATION_X);
-      this.updateProperty("yRot", FLAGS.ROTATION_Y);
-      this.updateProperty("zRot", FLAGS.ROTATION_Z);
-      this.updateProperty("Act1", FLAGS.ACT1);
-      this.updateProperty("Act2", FLAGS.ACT2);
-      this.updateProperty("Act3", FLAGS.ACT3);
-      this.updateProperty("Act4", FLAGS.ACT4);
-      this.updateProperty("Act5", FLAGS.ACT5);
-      this.updateProperty("Act6", FLAGS.ACT6);
-      this.updateProperty("AllActs", FLAGS.ALLACTS);
-      this.updateProperty("BehaviorParameter1", FLAGS.BPARAM_1);
-      this.updateProperty("BehaviorParameter2", FLAGS.BPARAM_2);
-      this.updateProperty("BehaviorParameter3", FLAGS.BPARAM_3);
-      this.updateProperty("BehaviorParameter4", FLAGS.BPARAM_4);
-      this.updateReadOnlyProperty("Behavior", this.isBehaviorReadOnly);
-      this.updateReadOnlyProperty("ModelID", this.isModelIDReadOnly);
-      this.UpdateObjectComboNames();
+      this.UpdateProperty_("xPos", Flags.POSITION_X);
+      this.UpdateProperty_("yPos", Flags.POSITION_Y);
+      this.UpdateProperty_("zPos", Flags.POSITION_Z);
+      this.UpdateProperty_("xRot", Flags.ROTATION_X);
+      this.UpdateProperty_("yRot", Flags.ROTATION_Y);
+      this.UpdateProperty_("zRot", Flags.ROTATION_Z);
+      this.UpdateProperty_("Act1", Flags.ACT1);
+      this.UpdateProperty_("Act2", Flags.ACT2);
+      this.UpdateProperty_("Act3", Flags.ACT3);
+      this.UpdateProperty_("Act4", Flags.ACT4);
+      this.UpdateProperty_("Act5", Flags.ACT5);
+      this.UpdateProperty_("Act6", Flags.ACT6);
+      this.UpdateProperty_("AllActs", Flags.ALLACTS);
+      this.UpdateProperty_("BehaviorParameter1", Flags.BPARAM_1);
+      this.UpdateProperty_("BehaviorParameter2", Flags.BPARAM_2);
+      this.UpdateProperty_("BehaviorParameter3", Flags.BPARAM_3);
+      this.UpdateProperty_("BehaviorParameter4", Flags.BPARAM_4);
+      this.updateReadOnlyProperty("Behavior", this.isBehaviorReadOnly_);
+      this.updateReadOnlyProperty("ModelID", this.isModelIdReadOnly_);
+      this.UpdateObjectComboNames_();
     }
 
-    FLAGS tempHideFlags;
+    Flags tempHideFlags_;
 
-    bool isBehaviorReadOnly_tempTrigger = false,
-         isModelIDReadOnly_tempTrigger = false;
+    bool isBehaviorReadOnlyTempTrigger_ = false,
+         isModelIdReadOnlyTempTrigger_ = false;
 
-    public void HideFieldsTemporarly(FLAGS showFlags) {
-      this.tempHideFlags = (~showFlags & ~(FLAGS) this.Flags) & FLAGS.ALLFLAGS;
+    public void HideFieldsTemporarly(Flags showFlags) {
+      this.tempHideFlags_ = (~showFlags & ~(Flags) this.flags_) & Flags.ALLFLAGS;
       //Console.WriteLine(Convert.ToString((int)Flags, 2).PadLeft(32, '0'));
       //Console.WriteLine(Convert.ToString((int)tempHideFlags, 2).PadLeft(32, '0'));
 
-      this.isTempHidden = true;
-      if (!this.isBehaviorReadOnly) {
-        this.isBehaviorReadOnly_tempTrigger = true;
-        this.isBehaviorReadOnly = true;
+      this.isTempHidden_ = true;
+      if (!this.isBehaviorReadOnly_) {
+        this.isBehaviorReadOnlyTempTrigger_ = true;
+        this.isBehaviorReadOnly_ = true;
       }
-      if (!this.isModelIDReadOnly) {
-        this.isModelIDReadOnly_tempTrigger = true;
-        this.isModelIDReadOnly = true;
+      if (!this.isModelIdReadOnly_) {
+        this.isModelIdReadOnlyTempTrigger_ = true;
+        this.isModelIdReadOnly_ = true;
       }
 
-      this.HideProperty(this.tempHideFlags);
+      this.HideProperty(this.tempHideFlags_);
       this.UpdateProperties();
     }
 
     public void RevealTemporaryHiddenFields() {
-      if (this.isTempHidden) {
-        if (this.isBehaviorReadOnly_tempTrigger) {
-          this.isBehaviorReadOnly_tempTrigger = false;
-          this.isBehaviorReadOnly = false;
+      if (this.isTempHidden_) {
+        if (this.isBehaviorReadOnlyTempTrigger_) {
+          this.isBehaviorReadOnlyTempTrigger_ = false;
+          this.isBehaviorReadOnly_ = false;
         }
-        if (this.isModelIDReadOnly_tempTrigger) {
-          this.isModelIDReadOnly_tempTrigger = false;
-          this.isModelIDReadOnly = false;
+        if (this.isModelIdReadOnlyTempTrigger_) {
+          this.isModelIdReadOnlyTempTrigger_ = false;
+          this.isModelIdReadOnly_ = false;
         }
 
-        this.UnhideProperty(this.tempHideFlags);
+        this.UnhideProperty(this.tempHideFlags_);
         this.UpdateProperties();
-        this.isTempHidden = false;
-        this.tempHideFlags = 0;
+        this.isTempHidden_ = false;
+        this.tempHideFlags_ = 0;
       }
     }
 
-    public FLAGS getFlagFromDisplayName(string? displayName) {
-      if (displayName == this.GetPropertyDisplayName("xPos"))
-        return FLAGS.POSITION_X;
-      if (displayName == this.GetPropertyDisplayName("yPos"))
-        return FLAGS.POSITION_Y;
-      if (displayName == this.GetPropertyDisplayName("zPos"))
-        return FLAGS.POSITION_Z;
-      if (displayName == this.GetPropertyDisplayName("xRot"))
-        return FLAGS.ROTATION_X;
-      if (displayName == this.GetPropertyDisplayName("yRot"))
-        return FLAGS.ROTATION_Y;
-      if (displayName == this.GetPropertyDisplayName("zRot"))
-        return FLAGS.ROTATION_Z;
-      if (displayName == this.GetPropertyDisplayName("Act1")) return FLAGS.ACT1;
-      if (displayName == this.GetPropertyDisplayName("Act2")) return FLAGS.ACT2;
-      if (displayName == this.GetPropertyDisplayName("Act3")) return FLAGS.ACT3;
-      if (displayName == this.GetPropertyDisplayName("Act4")) return FLAGS.ACT4;
-      if (displayName == this.GetPropertyDisplayName("Act5")) return FLAGS.ACT5;
-      if (displayName == this.GetPropertyDisplayName("Act6")) return FLAGS.ACT6;
-      if (displayName == this.GetPropertyDisplayName("AllActs"))
-        return FLAGS.ALLACTS;
-      if (displayName == this.GetPropertyDisplayName("BehaviorParameter1"))
-        return FLAGS.BPARAM_1;
-      if (displayName == this.GetPropertyDisplayName("BehaviorParameter2"))
-        return FLAGS.BPARAM_2;
-      if (displayName == this.GetPropertyDisplayName("BehaviorParameter3"))
-        return FLAGS.BPARAM_3;
-      if (displayName == this.GetPropertyDisplayName("BehaviorParameter4"))
-        return FLAGS.BPARAM_4;
+    public Flags GetFlagFromDisplayName(string? displayName) {
+      if (displayName == this.GetPropertyDisplayName_("xPos"))
+        return Flags.POSITION_X;
+      if (displayName == this.GetPropertyDisplayName_("yPos"))
+        return Flags.POSITION_Y;
+      if (displayName == this.GetPropertyDisplayName_("zPos"))
+        return Flags.POSITION_Z;
+      if (displayName == this.GetPropertyDisplayName_("xRot"))
+        return Flags.ROTATION_X;
+      if (displayName == this.GetPropertyDisplayName_("yRot"))
+        return Flags.ROTATION_Y;
+      if (displayName == this.GetPropertyDisplayName_("zRot"))
+        return Flags.ROTATION_Z;
+      if (displayName == this.GetPropertyDisplayName_("Act1")) return Flags.ACT1;
+      if (displayName == this.GetPropertyDisplayName_("Act2")) return Flags.ACT2;
+      if (displayName == this.GetPropertyDisplayName_("Act3")) return Flags.ACT3;
+      if (displayName == this.GetPropertyDisplayName_("Act4")) return Flags.ACT4;
+      if (displayName == this.GetPropertyDisplayName_("Act5")) return Flags.ACT5;
+      if (displayName == this.GetPropertyDisplayName_("Act6")) return Flags.ACT6;
+      if (displayName == this.GetPropertyDisplayName_("AllActs"))
+        return Flags.ALLACTS;
+      if (displayName == this.GetPropertyDisplayName_("BehaviorParameter1"))
+        return Flags.BPARAM_1;
+      if (displayName == this.GetPropertyDisplayName_("BehaviorParameter2"))
+        return Flags.BPARAM_2;
+      if (displayName == this.GetPropertyDisplayName_("BehaviorParameter3"))
+        return Flags.BPARAM_3;
+      if (displayName == this.GetPropertyDisplayName_("BehaviorParameter4"))
+        return Flags.BPARAM_4;
       return 0;
     }
 
@@ -590,31 +590,31 @@ namespace sm64 {
     }
 
     public void DontShowActs() {
-      this.Flags |= (ulong) (
-                         FLAGS.ACT1 | FLAGS.ACT2 | FLAGS.ACT3 |
-                         FLAGS.ACT4 | FLAGS.ACT5 | FLAGS.ACT6 |
-                         FLAGS.ALLACTS);
+      this.flags_ |= (ulong) (
+                         Flags.ACT1 | Flags.ACT2 | Flags.ACT3 |
+                         Flags.ACT4 | Flags.ACT5 | Flags.ACT6 |
+                         Flags.ALLACTS);
     }
 
     public void ShowHideActs(bool hide) {
       if (hide)
-        this.Flags |= (ulong) (FLAGS.ACT1 | FLAGS.ACT2 |
-                               FLAGS.ACT3 | FLAGS.ACT4 | FLAGS.ACT5 | FLAGS.ACT6);
+        this.flags_ |= (ulong) (Flags.ACT1 | Flags.ACT2 |
+                               Flags.ACT3 | Flags.ACT4 | Flags.ACT5 | Flags.ACT6);
       else
-        this.Flags &= ~(ulong) (FLAGS.ACT1 | FLAGS.ACT2 |
-                                FLAGS.ACT3 | FLAGS.ACT4 | FLAGS.ACT5 | FLAGS.ACT6);
+        this.flags_ &= ~(ulong) (Flags.ACT1 | Flags.ACT2 |
+                                Flags.ACT3 | Flags.ACT4 | Flags.ACT5 | Flags.ACT6);
       this.UpdateProperties();
     }
 
-    public void HideProperty(FLAGS flag) {
-      this.Flags |= (ulong) flag;
+    public void HideProperty(Flags flag) {
+      this.flags_ |= (ulong) flag;
     }
 
-    public void UnhideProperty(FLAGS flag) {
-      this.Flags &= ~(ulong) flag;
+    public void UnhideProperty(Flags flag) {
+      this.flags_ &= ~(ulong) flag;
     }
 
-    public void renameObjectCombo(string newName) {
+    public void RenameObjectCombo(string newName) {
       string oldComboName = this.Title;
       this.Title = newName;
       bool undefinedToDefined = oldComboName.StartsWith("Undefined Combo (")
@@ -622,46 +622,46 @@ namespace sm64 {
 
       if (!undefinedToDefined) // simple re-define
       {
-        if (this.objectComboEntry != null)
-          this.objectComboEntry.Name = newName;
+        if (this.objectComboEntry_ != null)
+          this.objectComboEntry_.Name = newName;
       } else {
         uint modelAddress = 0;
-        ObjectComboEntry newOCE =
+        ObjectComboEntry newOce =
             new ObjectComboEntry(newName,
-                                 this.ModelID, modelAddress,
-                                 this.getBehaviorAddress());
-        this.objectComboEntry = newOCE;
-        Globals.objectComboEntries.Add(newOCE);
-        this.level.LevelObjectCombos.Add(newOCE);
+                                 this.ModelId, modelAddress,
+                                 this.GetBehaviorAddress());
+        this.objectComboEntry_ = newOce;
+        Globals.objectComboEntries.Add(newOce);
+        this.Level.levelObjectCombos.Add(newOce);
       }
 
-      ModelComboFile.writeObjectCombosFile(Globals.getDefaultObjectComboPath());
+      ModelComboFile.WriteObjectCombosFile(Globals.GetDefaultObjectComboPath());
     }
 
-    public string getObjectComboName() {
-      uint behaviorAddr = this.getBehaviorAddress();
+    public string GetObjectComboName() {
+      uint behaviorAddr = this.GetBehaviorAddress();
       uint modelSegmentAddress = 0;
       for (int i = 0; i < Globals.objectComboEntries.Count; i++) {
         ObjectComboEntry entry = Globals.objectComboEntries[i];
         modelSegmentAddress = 0;
-        if (entry.ModelID == this.ModelID && entry.Behavior == behaviorAddr
+        if (entry.ModelId == this.ModelId && entry.Behavior == behaviorAddr
                                           && entry.ModelSegmentAddress ==
                                           modelSegmentAddress) {
-          this.objectComboEntry = entry;
+          this.objectComboEntry_ = entry;
           this.Title = entry.Name;
           return entry.Name;
         }
       }
 
-      this.objectComboEntry = null;
+      this.objectComboEntry_ = null;
       this.Title = "Undefined Combo (0x" +
-                   this.m_data.ModelId.ToString("X2") + ", 0x" +
+                   this.mData_.ModelId.ToString("X2") + ", 0x" +
                    behaviorAddr.ToString("X8") + ")";
       return this.Title;
     }
 
-    public bool isPropertyShown(FLAGS flag) {
-      return !this.isHidden(flag);
+    public bool IsPropertyShown(Flags flag) {
+      return !this.IsHidden_(flag);
     }
   }
 }

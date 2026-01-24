@@ -9,11 +9,11 @@ namespace KSoft.IO
 		/// <returns>True if any alignment had to be performed, false if otherwise</returns>
 		public bool AlignToBoundry(int alignmentBit)
 		{
-			int align_size = IntegerMath.PaddingRequired(alignmentBit, (uint) this.BaseStream.Position);
+			int alignSize = IntegerMath.PaddingRequired(alignmentBit, (uint) this.BaseStream.Position);
 
-			if (align_size > 0)
+			if (alignSize > 0)
 			{
-				this.BaseStream.Seek(align_size, SeekOrigin.Current);
+				this.BaseStream.Seek(alignSize, SeekOrigin.Current);
 				return true;
 			}
 
@@ -26,13 +26,13 @@ namespace KSoft.IO
 			{
 				// If we're not the owner, don't let BinaryReader dispose it
 				if (!this.BaseStreamOwner)
-					kSetBaseStream(this, null);
+					KSetBaseStream(this, null);
 			}
 
 			this.Owner = null;
 			this.StreamName = null;
-			this.mStringEncoding = null;
-			this.mVAT = null;
+			this.mStringEncoding_ = null;
+			this.mVat_ = null;
 
 			base.Dispose(disposing);
 		}
@@ -45,11 +45,11 @@ namespace KSoft.IO
 		/// <returns>True if any alignment had to be performed, false if otherwise</returns>
 		public bool AlignToBoundry(int alignmentBit)
 		{
-			int align_size = IntegerMath.PaddingRequired(alignmentBit, (uint) this.BaseStream.Position);
+			int alignSize = IntegerMath.PaddingRequired(alignmentBit, (uint) this.BaseStream.Position);
 
-			if (align_size > 0)
+			if (alignSize > 0)
 			{
-				while (align_size-- > 0)
+				while (alignSize-- > 0)
 					this.BaseStream.WriteByte(byte.MinValue);
 				return true;
 			}
@@ -67,8 +67,8 @@ namespace KSoft.IO
 
 			this.Owner = null;
 			this.StreamName = null;
-			this.mStringEncoding = null;
-			this.mVAT = null;
+			this.mStringEncoding_ = null;
+			this.mVat_ = null;
 
 			base.Dispose(disposing);
 		}

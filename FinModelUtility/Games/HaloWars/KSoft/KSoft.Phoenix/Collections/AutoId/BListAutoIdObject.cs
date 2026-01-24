@@ -6,14 +6,14 @@ namespace KSoft.Collections
 		: ObjectModel.BasicViewModel
 		, IListAutoIdObject
 	{
-		private string mName = Phoenix.Phx.BDatabaseBase.kInvalidString;
+		private string mName_ = Phoenix.Phx.BDatabaseBase.K_INVALID_STRING;
 		[Browsable(false)]
 		public string Name
 		{
-			get { return this.mName; }
+			get { return this.mName_; }
 			protected set
 			{
-				if (this.SetFieldObj(ref this.mName, value))
+				if (this.SetFieldObj(ref this.mName_, value))
 				{
 					this.OnPropertyChanged(nameof(IListAutoIdObject.Data));
 				}
@@ -21,16 +21,16 @@ namespace KSoft.Collections
 		}
 
 		#region IListAutoIdObject Members
-		private int mAutoId;
+		private int mAutoId_;
 		public int AutoId
 		{
-			get { return this.mAutoId; }
-			set { this.SetFieldVal(ref this.mAutoId, value); }
+			get { return this.mAutoId_; }
+			set { this.SetFieldVal(ref this.mAutoId_, value); }
 		}
 
 		string IListAutoIdObject.Data
 		{
-			get { return this.mName; }
+			get { return this.mName_; }
 			set { this.Name = value; }
 		}
 
@@ -39,6 +39,6 @@ namespace KSoft.Collections
 			where TCursor : class;
 		#endregion
 
-		public override string ToString() { return this.mName; }
+		public override string ToString() { return this.mName_; }
 	};
 }

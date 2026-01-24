@@ -26,19 +26,19 @@ namespace KSoft.Shell
 		// which, being a value type cctor, may not run when we want it
 		static class Constants
 		{
-			public static readonly BitFieldTraits kProcessorBitField =
+			public static readonly BitFieldTraits KProcessorBitField =
 				new BitFieldTraits(Processor.BitCount);
-			public static readonly BitFieldTraits kPlatformTypeBitField =
-				new BitFieldTraits(BitEncoders.PlatformType.BitCountTrait, kProcessorBitField);
+			public static readonly BitFieldTraits KPlatformTypeBitField =
+				new BitFieldTraits(BitEncoders.PlatformType.BitCountTrait, KProcessorBitField);
 
-			public static readonly BitFieldTraits kLastBitField =
-				kPlatformTypeBitField;
+			public static readonly BitFieldTraits KLastBitField =
+				KPlatformTypeBitField;
 		};
 
 		/// <summary>Number of bits required to represent a bit-encoded representation of this value type</summary>
 		/// <remarks>10 bits at last count</remarks>
-		public static int BitCount { get => Constants.kLastBitField.FieldsBitCount; }
-		public static uint Bitmask { get => Constants.kLastBitField.FieldsBitmask.u32; }
+		public static int BitCount { get => Constants.KLastBitField.FieldsBitCount; }
+		public static uint Bitmask { get => Constants.KLastBitField.FieldsBitmask.u32; }
 		#endregion
 
 		#region Internal Value
@@ -77,11 +77,11 @@ namespace KSoft.Shell
 		#region Value properties
 		/// <summary>This platform's type</summary>
 		public PlatformType Type { get {
-			return BitEncoders.PlatformType.BitDecode(this.mHandle, Constants.kPlatformTypeBitField.BitIndex);
+			return BitEncoders.PlatformType.BitDecode(this.mHandle, Constants.KPlatformTypeBitField.BitIndex);
 		} }
 		/// <summary>This platform's normal processor type</summary>
 		public Processor ProcessorType { get {
-			return new Processor(this.mHandle, Constants.kProcessorBitField);
+			return new Processor(this.mHandle, Constants.KProcessorBitField);
 		} }
 		#endregion
 
@@ -126,10 +126,10 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int System.Collections.IComparer.Compare(object x, object y)
 		{
-			Debug.TypeCheck.CastValue(x, out Platform _x);
-			Debug.TypeCheck.CastValue(y, out Platform _y);
+			Debug.TypeCheck.CastValue(x, out Platform x);
+			Debug.TypeCheck.CastValue(y, out Platform y);
 
-			return StaticCompare(_x, _y);
+			return StaticCompare(x, y);
 		}
 		#endregion
 
@@ -143,9 +143,9 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			Debug.TypeCheck.CastValue(obj, out Platform _obj);
+			Debug.TypeCheck.CastValue(obj, out Platform obj);
 
-			return StaticCompare(this, _obj);
+			return StaticCompare(this, obj);
 		}
 		#endregion
 
@@ -165,12 +165,12 @@ namespace KSoft.Shell
 		#region Util
 		static int StaticCompare(Platform lhs, Platform rhs)
 		{
-			Contract.Assert(Processor.BitCount < Bits.kInt32BitCount,
+			Contract.Assert(Processor.BitCount < Bits.K_INT32_BIT_COUNT,
 				"Handle bits needs to be <= 31 (ie, sans sign bit) in order for this implementation of CompareTo to reasonably work");
 
-			int lhs_data = (int)lhs.mHandle;
-			int rhs_data = (int)rhs.mHandle;
-			int result = lhs_data - rhs_data;
+			int lhsData = (int)lhs.mHandle;
+			int rhsData = (int)rhs.mHandle;
+			int result = lhsData - rhsData;
 
 			return result;
 		}
@@ -193,49 +193,49 @@ namespace KSoft.Shell
 			'WIWI' - Nintendo Wii
 			'CUBE' - GameCube
 		*/
-		static readonly Platform kUndefined = new Platform(PlatformType.Undefined, Processor.Undefined);
+		static readonly Platform kUndefined = new Platform(PlatformType.UNDEFINED, Processor.Undefined);
 		/// <summary>Undefined platform</summary>
 		/// <remarks>Only use for comparison operations, don't query Processor properties. Results will be...undefined</remarks>
 		public static Platform Undefined { get { return kUndefined; } }
 
 		#region Windows
-		static readonly Platform kWin32 = new Platform(PlatformType.Windows, Processor.Intelx86);
+		static readonly Platform kWin32 = new Platform(PlatformType.WINDOWS, Processor.Intelx86);
 		/// <summary>Microsoft Windows 32-bit platform</summary>
 		public static Platform Win32 { get { return kWin32; } }
 
-		static readonly Platform kWin64 = new Platform(PlatformType.Windows, Processor.Intelx64);
+		static readonly Platform kWin64 = new Platform(PlatformType.WINDOWS, Processor.Intelx64);
 		/// <summary>Microsoft Windows 64-bit platform</summary>
 		public static Platform Win64 { get { return kWin64; } }
 		#endregion
 
 		#region Xbox
-		static readonly Platform kXbox1 = new Platform(PlatformType.Xbox, Processor.Intelx86);
+		static readonly Platform kXbox1 = new Platform(PlatformType.XBOX, Processor.Intelx86);
 		/// <summary>Microsoft Xbox (Original) platform</summary>
 		public static Platform Xbox1 { get { return kXbox1; } }
 
-		static readonly Platform kXbox360 = new Platform(PlatformType.Xbox, Processor.PowerPcXenon);
+		static readonly Platform kXbox360 = new Platform(PlatformType.XBOX, Processor.PowerPcXenon);
 		/// <summary>Microsoft Xbox 360 platform</summary>
 		public static Platform Xbox360 { get { return kXbox360; } }
 
-		static readonly Platform kXboxDurango = new Platform(PlatformType.Xbox, Processor.Intelx64);
+		static readonly Platform kXboxDurango = new Platform(PlatformType.XBOX, Processor.Intelx64);
 		/// <summary>Microsoft Xbox One platform</summary>
 		public static Platform XboxDurango { get { return kXboxDurango; } }
 		#endregion
 
 		#region Mac
-		static readonly Platform kMac32 = new Platform(PlatformType.Mac, Processor.PowerPc32);
+		static readonly Platform kMac32 = new Platform(PlatformType.MAC, Processor.PowerPc32);
 		/// <summary>Apple's Macintosh PowerPC 32-bit platform</summary>
 		public static Platform Mac32 { get { return kMac32; } }
 
-		static readonly Platform kMac64 = new Platform(PlatformType.Mac, Processor.PowerPc64);
+		static readonly Platform kMac64 = new Platform(PlatformType.MAC, Processor.PowerPc64);
 		/// <summary>Apple's Macintosh PowerPC 64-bit platform</summary>
 		public static Platform Mac64 { get { return kMac64; } }
 
-		static readonly Platform kMacIntel32 = new Platform(PlatformType.Mac, Processor.Intelx86);
+		static readonly Platform kMacIntel32 = new Platform(PlatformType.MAC, Processor.Intelx86);
 		/// <summary>Apple's Macintosh for Intel 32-bit platform</summary>
 		public static Platform MacIntel32 { get { return kMacIntel32; } }
 
-		static readonly Platform kMacIntel64 = new Platform(PlatformType.Mac, Processor.Intelx64);
+		static readonly Platform kMacIntel64 = new Platform(PlatformType.MAC, Processor.Intelx64);
 		/// <summary>Apple's Macintosh for Intel 64-bit platform</summary>
 		public static Platform MacIntel64 { get { return kMacIntel64; } }
 		#endregion
@@ -243,22 +243,22 @@ namespace KSoft.Shell
 		#region Operating Environment
 		static class OperatingEnvironment
 		{
-			internal static readonly bool kIsMonoRuntime;
-			internal static readonly Platform kEnvironment;
+			internal static readonly bool KIsMonoRuntime;
+			internal static readonly Platform KEnvironment;
 
 			[SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations")]
 			[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 			static OperatingEnvironment()
 			{
-				kIsMonoRuntime = System.Type.GetType("Mono.Runtime") != null;
+				KIsMonoRuntime = System.Type.GetType("Mono.Runtime") != null;
 
 				// #REVIEW: .NET 4 upgrade:
 				// System.Environment.Is64BitProcess and Is64BitOperatingSystem
 				ProcessorSize size;
 				switch (IntPtr.Size) // HACK: the only way I've read on how to detect the processor size (assuming you compile with AnyCPU)
 				{
-					case 4: size = ProcessorSize.x32; break;
-					case 8: size = ProcessorSize.x64; break;
+					case 4: size = ProcessorSize.X32; break;
+					case 8: size = ProcessorSize.X64; break;
 
 					default:
 						throw new Debug.UnreachableException(string.Format(Util.InvariantCultureInfo,
@@ -272,8 +272,8 @@ namespace KSoft.Shell
 					case PlatformID.Win32NT:
 						switch (size)
 						{
-							case ProcessorSize.x32: kEnvironment = Win32; break;
-							case ProcessorSize.x64: kEnvironment = Win64; break;
+							case ProcessorSize.X32: KEnvironment = Win32; break;
+							case ProcessorSize.X64: KEnvironment = Win64; break;
 						}
 						break;
 
@@ -282,16 +282,16 @@ namespace KSoft.Shell
 					case PlatformID.MacOSX:
 						switch (size)
 						{
-							case ProcessorSize.x32: kEnvironment = Mac32; break;
-							case ProcessorSize.x64: kEnvironment = Mac64; break;
+							case ProcessorSize.X32: KEnvironment = Mac32; break;
+							case ProcessorSize.X64: KEnvironment = Mac64; break;
 						}
 						break;
 
 					case PlatformID.Xbox:
 						switch (size)
 						{
-							case ProcessorSize.x32: kEnvironment = Xbox360; break;
-							case ProcessorSize.x64: kEnvironment = XboxDurango; break;
+							case ProcessorSize.X32: KEnvironment = Xbox360; break;
+							case ProcessorSize.X64: KEnvironment = XboxDurango; break;
 						}
 						break;
 
@@ -306,9 +306,9 @@ namespace KSoft.Shell
 		};
 
 		/// <summary>Is the current .NET runtime Mono based, or Microsoft?</summary>
-		public static bool IsMonoRuntime  { get => OperatingEnvironment.kIsMonoRuntime; }
+		public static bool IsMonoRuntime  { get => OperatingEnvironment.KIsMonoRuntime; }
 		/// <summary>Get the library's platform definition for the current operating environment</summary>
-		public static Platform Environment { get => OperatingEnvironment.kEnvironment; }
+		public static Platform Environment { get => OperatingEnvironment.KEnvironment; }
 		#endregion
 	};
 }

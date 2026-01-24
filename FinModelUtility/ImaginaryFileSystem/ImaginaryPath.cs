@@ -11,7 +11,7 @@ namespace System.IO.Abstractions.TestingHelpers;
 #endif
 public class ImaginaryPath : PathWrapper {
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
-  private readonly string defaultTempDirectory;
+  private readonly string defaultTempDirectory_;
 
   /// <inheritdoc />
   public ImaginaryPath(IImaginaryFileDataAccessor imaginaryFileDataAccessor) : this(
@@ -25,7 +25,7 @@ public class ImaginaryPath : PathWrapper {
     this.imaginaryFileDataAccessor_ = imaginaryFileDataAccessor ??
                                       throw new ArgumentNullException(
                                           nameof(imaginaryFileDataAccessor));
-    this.defaultTempDirectory = !string.IsNullOrEmpty(defaultTempDirectory)
+    this.defaultTempDirectory_ = !string.IsNullOrEmpty(defaultTempDirectory)
         ? defaultTempDirectory
         : base.GetTempPath();
   }
@@ -58,7 +58,7 @@ public class ImaginaryPath : PathWrapper {
             ImaginaryPathInternal.IsDirectorySeparator(path[0])) ||
            (length >= 2 &&
             ImaginaryPathInternal.IsValidDriveChar(path[0]) &&
-            path[1] == ImaginaryPathInternal.VolumeSeparatorChar);
+            path[1] == ImaginaryPathInternal.VOLUME_SEPARATOR_CHAR_);
   }
 
   /// <inheritdoc />
@@ -93,10 +93,10 @@ public class ImaginaryPath : PathWrapper {
       path = this.imaginaryFileDataAccessor_.Directory.GetCurrentDirectory() +
              DirectorySeparatorChar +
              path;
-      pathSegments = GetSegments(path);
+      pathSegments = this.GetSegments_(path);
     } else if (isUnc) {
       // unc path
-      pathSegments = GetSegments(path);
+      pathSegments = this.GetSegments_(path);
       if (pathSegments.Length < 2) {
         throw CommonExceptions.InvalidUncPath(nameof(path));
       }
@@ -108,11 +108,11 @@ public class ImaginaryPath : PathWrapper {
                    root)) {
       // absolute path on the current drive or volume
       pathSegments
-          = GetSegments(GetPathRoot(this.imaginaryFileDataAccessor_.Directory
-                                        .GetCurrentDirectory()),
-                        path);
+          = this.GetSegments_(GetPathRoot(this.imaginaryFileDataAccessor_.Directory
+                                              .GetCurrentDirectory()),
+                              path);
     } else {
-      pathSegments = GetSegments(path);
+      pathSegments = this.GetSegments_(path);
     }
 
     // unc paths need at least two segments, the others need one segment
@@ -166,7 +166,7 @@ public class ImaginaryPath : PathWrapper {
     return fullPath;
   }
 
-  private string[] GetSegments(params string[] paths) {
+  private string[] GetSegments_(params string[] paths) {
     return paths
            .SelectMany(path => path.Split(new[] { DirectorySeparatorChar },
                                           StringSplitOptions
@@ -189,7 +189,7 @@ public class ImaginaryPath : PathWrapper {
   }
 
   /// <inheritdoc />
-  public override string GetTempPath() => defaultTempDirectory;
+  public override string GetTempPath() => this.defaultTempDirectory_;
 
 #if FEATURE_ADVANCED_PATH_OPERATIONS
     /// <inheritdoc />

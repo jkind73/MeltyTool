@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using KSoft.Reflection;
 using Contracts = System.Diagnostics.Contracts;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
@@ -18,47 +19,47 @@ namespace KSoft.IO
 	/// <summary>Don't use me unless you're <see cref="EnumBinaryStreamer{TEnum,TStreamType}"/>. I am a util class</summary>
 	public abstract class EnumBinaryStreamerBase
 	{
-		protected static readonly Type kBinaryReaderType;
-		protected static readonly Type kBinaryWriterType;
+		protected static readonly Type KBinaryReaderType;
+		protected static readonly Type KBinaryWriterType;
 
 		#region Stream Methods
 		// I could have made this readonly as well, but then I would have to move the init code from InitializeMethodDictionaries to the cctor
-		static Dictionary<TypeCode, MethodInfo> kReadMethods, kWriteMethods;
+		static Dictionary<TypeCode, MethodInfo> kReadMethods_, kWriteMethods_;
 
-		/// <summary>Initialize <see cref="kReadMethods"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.kSupportedTypeCodes"/></summary>
+		/// <summary>Initialize <see cref="kReadMethods_"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.KSupportedTypeCodes"/></summary>
 		static void InitializeReadMethods()
 		{
-			var methods = kBinaryReaderType.GetMethods();
-			foreach (TypeCode c in EnumUtils.kSupportedTypeCodes)
+			var methods = KBinaryReaderType.GetMethods();
+			foreach (TypeCode c in EnumUtils.KSupportedTypeCodes)
 			{
-				var mi = kBinaryReaderType.GetMethod("Read" + c.ToString());
-				kReadMethods.Add(c, mi);
+				var mi = KBinaryReaderType.GetMethod("Read" + c.ToString());
+				kReadMethods_.Add(c, mi);
 			}
 		}
-		/// <summary>Initialize <see cref="kWriteMethods"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.kSupportedTypeCodes"/></summary>
+		/// <summary>Initialize <see cref="kWriteMethods_"/> with the read methods for the supported underlying enum types <see cref="EnumUtils.KSupportedTypeCodes"/></summary>
 		static void InitializeWriteMethods()
 		{
-			var methods = kBinaryWriterType.GetMethods();
+			var methods = KBinaryWriterType.GetMethods();
 			// Avoid having to allocate a new array every iteration
 			Type[] types = [null];
-			foreach (Type t in EnumUtils.kSupportedTypes)
+			foreach (Type t in EnumUtils.KSupportedTypes)
 			{
 				types[0] = t;
 
 				// GetMethod doesn't have a params overload :(
-				var mi = kBinaryWriterType.GetMethod("Write", types);
-				kWriteMethods.Add(Type.GetTypeCode(t), mi);
+				var mi = KBinaryWriterType.GetMethod("Write", types);
+				kWriteMethods_.Add(Type.GetTypeCode(t), mi);
 			}
 		}
 
 		static void InitializeMethodDictionaries()
 		{
-			int capacity = EnumUtils.kSupportedTypeCodes.Length;
+			int capacity = EnumUtils.KSupportedTypeCodes.Length;
 
 			// #NOTE: The EnumComparer<TypeCode> may not be needed for .NET 4 environments:
 			// http://www.codeproject.com/Messages/3968802/Re-What-about-Net-4-0.aspx
-			kReadMethods = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
-			kWriteMethods = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
+			kReadMethods_ = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
+			kWriteMethods_ = new Dictionary<TypeCode, MethodInfo>(capacity, EnumComparer<TypeCode>.Instance);
 
 			InitializeReadMethods();
 			InitializeWriteMethods();
@@ -68,8 +69,8 @@ namespace KSoft.IO
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static EnumBinaryStreamerBase()
 		{
-			kBinaryReaderType = typeof(BinaryReader);
-			kBinaryWriterType = typeof(BinaryWriter);
+			KBinaryReaderType = typeof(BinaryReader);
+			KBinaryWriterType = typeof(BinaryWriter);
 
 			InitializeMethodDictionaries();
 		}
@@ -84,17 +85,17 @@ namespace KSoft.IO
 			where TStreamType : struct
 		{
 			/// <summary><typeparamref name="TStreamType"/>'s Read method in <see cref="BinaryReader"/></summary>
-			public static readonly MethodInfo kRead;
+			public static readonly MethodInfo KRead;
 			/// <summary><typeparamref name="TStreamType"/>'s Write method in <see cref="BinaryWriter"/></summary>
-			public static readonly MethodInfo kWrite;
+			public static readonly MethodInfo KWrite;
 
 			[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 			static StreamType()
 			{
 				TypeCode c = Type.GetTypeCode(typeof(TStreamType));
 
-				kRead = kReadMethods[c];
-				kWrite = kWriteMethods[c];
+				KRead = kReadMethods_[c];
+				KWrite = kWriteMethods_[c];
 			}
 		};
 	};
@@ -104,7 +105,7 @@ namespace KSoft.IO
 	/// Interface for using an <see cref="EnumBinaryStreamer{TEnum,TStreamType}"/>'s functionality via an instance object
 	/// </summary>
 	/// <typeparam name="TEnum">Enum type to stream</typeparam>
-	[Contracts.ContractClass(typeof(IEnumBinaryStreamerContract<>))]
+	[Contracts.ContractClass(typeof(EnumBinaryStreamerContract<>))]
 	public interface IEnumBinaryStreamer<TEnum>
 		where TEnum : struct
 	{
@@ -123,7 +124,7 @@ namespace KSoft.IO
 		void Write(BinaryWriter s, TEnum value);
 	};
 	[Contracts.ContractClassFor(typeof(IEnumBinaryStreamer<>))]
-	abstract class IEnumBinaryStreamerContract<TEnum> : IEnumBinaryStreamer<TEnum>
+	abstract class EnumBinaryStreamerContract<TEnum> : IEnumBinaryStreamer<TEnum>
 		where TEnum : struct
 	{
 		public TEnum Read(BinaryReader s)
@@ -152,14 +153,14 @@ namespace KSoft.IO
 	/// Interface for using an <see cref="EnumBinaryStreamer{TEnum,TStreamType}"/>'s functionality via an instance object
 	/// </summary>
 	/// <typeparam name="TEnum">Enum type to stream</typeparam>
-	[Contracts.ContractClass(typeof(IEnumEndianStreamerContract<>))]
+	[Contracts.ContractClass(typeof(EnumEndianStreamerContract<>))]
 	public interface IEnumEndianStreamer<TEnum> : IEnumBinaryStreamer<TEnum>
 		where TEnum : struct
 	{
 		void Stream(EndianStream s, ref TEnum value);
 	};
 	[Contracts.ContractClassFor(typeof(IEnumEndianStreamer<>))]
-	abstract class IEnumEndianStreamerContract<TEnum> : IEnumEndianStreamer<TEnum>
+	abstract class EnumEndianStreamerContract<TEnum> : IEnumEndianStreamer<TEnum>
 		where TEnum : struct
 	{
 		public abstract TEnum Read(BinaryReader s);
@@ -224,22 +225,22 @@ namespace KSoft.IO
 		class MethodGenerationArgs
 		{
 			/// <summary>Integer-type to stream the enum value as</summary>
-			public readonly Type StreamType;
+			public readonly Type streamType;
 			/// <summary>Enum type to stream</summary>
-			public readonly Type EnumType;
-			/// <summary><see cref="EnumType"/>'s integer type used to represent its raw value</summary>
-			public readonly Type UnderlyingType;
-			/// <summary>True when <see cref="UnderlyingType"/> != <see cref="StreamType"/></summary>
-			public readonly bool UnderlyingTypeNeedsConversion;
-			public readonly bool UseUnderlyingType;
+			public readonly Type enumType;
+			/// <summary><see cref="enumType"/>'s integer type used to represent its raw value</summary>
+			public readonly Type underlyingType;
+			/// <summary>True when <see cref="underlyingType"/> != <see cref="streamType"/></summary>
+			public readonly bool underlyingTypeNeedsConversion;
+			public readonly bool useUnderlyingType;
 
 			void AssertStreamTypeIsValid()
 			{
-				var tc = Type.GetTypeCode(this.StreamType);
+				var tc = Type.GetTypeCode(this.streamType);
 
 				if (!EnumUtils.TypeIsSupported(tc))
 				{
-					var message = string.Format(Util.InvariantCultureInfo, "{0} is an invalid stream type", this.StreamType);
+					var message = string.Format(Util.InvariantCultureInfo, "{0} is an invalid stream type", this.streamType);
 
 					throw new NotSupportedException(message);
 				}
@@ -247,27 +248,27 @@ namespace KSoft.IO
 
 			public MethodGenerationArgs()
 			{
-				this.EnumType = typeof(TEnum);
-				this.StreamType = typeof(TStreamType);
-				this.UnderlyingType = Enum.GetUnderlyingType(this.EnumType);
+				this.enumType = typeof(TEnum);
+				this.streamType = typeof(TStreamType);
+				this.underlyingType = Enum.GetUnderlyingType(this.enumType);
 
 				// Check if the user wants us to always use the underlying type
-				this.UseUnderlyingType = this.StreamType == typeof(EnumBinaryStreamerUseUnderlyingType);
-				if (this.UseUnderlyingType)
-					this.StreamType = this.UnderlyingType;
+				this.useUnderlyingType = this.streamType == typeof(EnumBinaryStreamerUseUnderlyingType);
+				if (this.useUnderlyingType)
+					this.streamType = this.underlyingType;
 
-				EnumUtils.AssertTypeIsEnum(this.EnumType);
-				EnumUtils.AssertUnderlyingTypeIsSupported(this.EnumType, this.UnderlyingType);
+				EnumUtils.AssertTypeIsEnum(this.enumType);
+				EnumUtils.AssertUnderlyingTypeIsSupported(this.enumType, this.underlyingType);
 				this.AssertStreamTypeIsValid();
 
-				this.UnderlyingTypeNeedsConversion = this.UnderlyingType != this.StreamType;
+				this.underlyingTypeNeedsConversion = this.underlyingType != this.streamType;
 			}
 		};
 
 		/// <summary>Auto-generated method for reading enum values</summary>
-		static readonly ReadDelegate kRead;
+		static readonly ReadDelegate KRead;
 		/// <summary>Auto-generated method for writing enum values</summary>
-		static readonly Action<BinaryWriter, TEnum> kWrite;
+		static readonly Action<BinaryWriter, TEnum> KWrite;
 
 		/// <summary>Object for referencing the streamer functionality as an instance instead of as a type</summary>
 		public static readonly IEnumEndianStreamer<TEnum> Instance;
@@ -276,30 +277,30 @@ namespace KSoft.IO
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static EnumBinaryStreamer()
 		{
-			var generation_args = new MethodGenerationArgs();
-			MethodInfo read_method_info, write_method_info;
+			var generationArgs = new MethodGenerationArgs();
+			MethodInfo readMethodInfo, writeMethodInfo;
 			#region Get read/write method info
-			if (generation_args.UseUnderlyingType)
+			if (generationArgs.useUnderlyingType)
 			{
 				// Since we use a type-parameter hack to imply we want to use the underlying type
 				// for the TStreamType, we have to use reflection to instantiate StreamType<>
 				// using kUnderlyingType, which kStreamType is set to up above
-				var stream_type_gen_class = typeof(StreamType<>);
-				var stream_type_class = stream_type_gen_class.MakeGenericType(generation_args.StreamType);
-				read_method_info = stream_type_class.GetField("kRead").GetValue(null) as MethodInfo;
-				write_method_info = stream_type_class.GetField("kWrite").GetValue(null) as MethodInfo;
+				var streamTypeGenClass = typeof(StreamType<>);
+				var streamTypeClass = streamTypeGenClass.MakeGenericType(generationArgs.streamType);
+				readMethodInfo = streamTypeClass.GetField("kRead").GetValue(null) as MethodInfo;
+				writeMethodInfo = streamTypeClass.GetField("kWrite").GetValue(null) as MethodInfo;
 			}
 			else
 			{
 				// If we don't use the type-parameter hack and instead are explicitly given the
 				// integer type, we can safely instantiate StreamType<> without reflection
-				read_method_info = StreamType<TStreamType>.kRead;
-				write_method_info = StreamType<TStreamType>.kWrite;
+				readMethodInfo = StreamType<TStreamType>.KRead;
+				writeMethodInfo = StreamType<TStreamType>.KWrite;
 			}
 			#endregion
 
-			kRead = GenerateReadMethod(generation_args, read_method_info);
-			kWrite = GenerateWriteMethod(generation_args, write_method_info);
+			KRead = GenerateReadMethod(generationArgs, readMethodInfo);
+			KWrite = GenerateWriteMethod(generationArgs, writeMethodInfo);
 
 			Instance = new EnumBinaryStreamer<TEnum, TStreamType>();
 		}
@@ -327,29 +328,29 @@ namespace KSoft.IO
 		static ReadDelegate GenerateReadMethod(MethodGenerationArgs args, MethodInfo readMethodInfo)
 		{
 			// Get a "ref type" of the enum we're dealing with so we can define the enum value as an 'out' parameter
-			var enum_ref = args.EnumType.MakeByRefType();
+			var enumRef = args.enumType.MakeByRefType();
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the generated method's parameters
-			var param_s =		Expr.Parameter(kBinaryReaderType, "s");					// BinaryReader s
-			var param_v =		Expr.Parameter(enum_ref, "v");							// ref TEnum v
+			var paramS =		Expr.Parameter(KBinaryReaderType, "s");					// BinaryReader s
+			var paramV =		Expr.Parameter(enumRef, "v");							// ref TEnum v
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the Read call
-			var call_read =		Expr.Call(param_s, readMethodInfo);						// i.e., 's.Read<Type>()'
-			var read_result =	args.UnderlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're reading,
-									Expr.Convert(call_read, args.UnderlyingType) :		// we need to cast the Read result from TStreamType to UnderlyingType
-									(Expr)call_read;
+			var callRead =		Expr.Call(paramS, readMethodInfo);						// i.e., 's.Read<Type>()'
+			var readResult =	args.underlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're reading,
+									Expr.Convert(callRead, args.underlyingType) :		// we need to cast the Read result from TStreamType to UnderlyingType
+									(Expr)callRead;
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the member assignment
-			var param_v_member =Expr.PropertyOrField(param_v, EnumUtils.kMemberName);	// i.e., 'v.value__'
+			var paramVMember =Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// i.e., 'v.value__'
 			// i.e., 'v.value__ = s.Read<Type>()' or 'v.value__ = (UnderlyingType)s.Read<Type>()'
-			var assign =		Expr.Assign(param_v_member, read_result);
+			var assign =		Expr.Assign(paramVMember, readResult);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Generate a method based on the expression tree we've built
-			var lambda =		Expr.Lambda<ReadDelegate>(assign, param_s, param_v);
+			var lambda =		Expr.Lambda<ReadDelegate>(assign, paramS, paramV);
 			return lambda.Compile();
 		}
 
@@ -371,24 +372,24 @@ namespace KSoft.IO
 		{
 			//////////////////////////////////////////////////////////////////////////
 			// Define the generated method's parameters
-			var param_s =		Expr.Parameter(kBinaryWriterType, "s");					// BinaryWriter s
-			var param_v =		Expr.Parameter(args.EnumType, "v");						// TEnum v
+			var paramS =		Expr.Parameter(KBinaryWriterType, "s");					// BinaryWriter s
+			var paramV =		Expr.Parameter(args.enumType, "v");						// TEnum v
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the member access
-			var param_v_member =Expr.PropertyOrField(param_v, EnumUtils.kMemberName);	// i.e., 'v.value__'
-			var write_param =	args.UnderlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're writing,
-									Expr.Convert(param_v_member, args.StreamType) :		// we need to cast the Write param from UnderlyingType to TStreamType
-									(Expr)param_v_member;
+			var paramVMember =Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// i.e., 'v.value__'
+			var writeParam =	args.underlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're writing,
+									Expr.Convert(paramVMember, args.streamType) :		// we need to cast the Write param from UnderlyingType to TStreamType
+									(Expr)paramVMember;
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the Write call
 			// i.e., 's.Write(v.value__)' or 's.Write((TStreamType)v.value__)'
-			var call_write =	Expr.Call(param_s, writeMethodInfo, write_param);
+			var callWrite =	Expr.Call(paramS, writeMethodInfo, writeParam);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Generate a method based on the expression tree we've built
-			var lambda = Expr.Lambda<Action<BinaryWriter, TEnum>>(call_write, param_s, param_v);
+			var lambda = Expr.Lambda<Action<BinaryWriter, TEnum>>(callWrite, paramS, paramV);
 			return lambda.Compile();
 		}
 		#endregion
@@ -399,18 +400,18 @@ namespace KSoft.IO
 		/// <returns>Value read from the stream</returns>
 		public static TEnum Read(BinaryReader s)
 		{
-			kRead(s, out TEnum value);
+			KRead(s, out TEnum value);
 
 			return value;
 		}
 		/// <summary>Stream a <typeparamref name="TEnum"/> value from a <see cref="BinaryReader"/></summary>
 		/// <param name="s">Reader we're streaming from</param>
 		/// <param name="value">Value read from the stream</param>
-		public static void Read(BinaryReader s, out TEnum value)	{ kRead(s, out value); }
+		public static void Read(BinaryReader s, out TEnum value)	{ KRead(s, out value); }
 		/// <summary>Stream a <typeparamref name="TEnum"/> value to a <see cref="BinaryWriter"/></summary>
 		/// <param name="s">Writer we're streaming to</param>
 		/// <param name="value"></param>
-		public static void Write(BinaryWriter s, TEnum value)		{ kWrite(s, value); }
+		public static void Write(BinaryWriter s, TEnum value)		{ KWrite(s, value); }
 
 		/// <summary>Serialize a <typeparamref name="TEnum"/> value using an <see cref="IO.EndianStream"/></summary>
 		/// <param name="s">Stream we're using for serialization</param>

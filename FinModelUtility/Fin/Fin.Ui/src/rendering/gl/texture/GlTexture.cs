@@ -39,9 +39,9 @@ public record GlTextureParams {
 public sealed class GlTexture : IGlTexture {
   // Intentionally separates params from texture, so we can share a single GL
   // texture between multiple Fin textures.
-  private static readonly Dictionary<GlTextureParams, GlTexture> cache_ = new();
+  private static readonly Dictionary<GlTextureParams, GlTexture> CACHE_ = new();
 
-  private const int UNDEFINED_ID = -1;
+  private const int UNDEFINED_ID_ = -1;
   private readonly GlTextureParams? params_;
 
   public static GlTexture FromTexture(IReadOnlyTexture texture) {
@@ -63,9 +63,9 @@ public sealed class GlTexture : IGlTexture {
         ThreePointFiltering = texture.ThreePointFiltering,
     };
 
-    if (!cache_.TryGetValue(prms, out var glTexture)) {
+    if (!CACHE_.TryGetValue(prms, out var glTexture)) {
       glTexture = new GlTexture(prms);
-      cache_[prms] = glTexture;
+      CACHE_[prms] = glTexture;
     }
 
     return glTexture;
@@ -183,7 +183,7 @@ public sealed class GlTexture : IGlTexture {
     }
   }
 
-  private static readonly MemoryPool<byte> pool_ = MemoryPool<byte>.Shared;
+  private static readonly MemoryPool<byte> POOL_ = MemoryPool<byte>.Shared;
 
   private void LoadMipmapImagesIntoTexture_(
       IReadOnlyList<IReadOnlyImage> mipmapImages) {
@@ -250,7 +250,7 @@ public sealed class GlTexture : IGlTexture {
         break;
       }*/
       default: {
-        using var rentedBytes = pool_.Rent(4 * imageWidth * imageHeight);
+        using var rentedBytes = POOL_.Rent(4 * imageWidth * imageHeight);
         image.Access(getHandler => {
           var pixelBytes = rentedBytes.Memory.Span;
           for (var y = 0; y < imageHeight; y++) {
@@ -322,16 +322,16 @@ public sealed class GlTexture : IGlTexture {
 
     this.IsDisposed = true;
     if (this.params_ != null) {
-      cache_.Remove(this.params_);
+      CACHE_.Remove(this.params_);
     }
 
     var id = this.Id;
     GL.DeleteTextures(1, ref id);
 
-    this.Id = UNDEFINED_ID;
+    this.Id = UNDEFINED_ID_;
   }
 
-  public int Id { get; private set; } = UNDEFINED_ID;
+  public int Id { get; private set; } = UNDEFINED_ID_;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public void Bind(int textureIndex = 0)

@@ -11,8 +11,8 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		internal const string kXmlAttrName = "name";
-		internal const string kXmlAttrNameN = "Name";
+		internal const string K_XML_ATTR_NAME = "name";
+		internal const string K_XML_ATTR_NAME_N = "Name";
 		#endregion
 
 		#region UserInterfaceTextData

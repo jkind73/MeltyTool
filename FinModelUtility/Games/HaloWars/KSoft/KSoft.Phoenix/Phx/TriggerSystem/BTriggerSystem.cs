@@ -2,19 +2,19 @@
 
 namespace KSoft.Phoenix.Phx
 {
-	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.TriggerScript)]
+	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.TRIGGER_SCRIPT)]
 	public sealed class BTriggerSystem
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public const string kXmlRootName = "TriggerSystem";
+		public const string K_XML_ROOT_NAME = "TriggerSystem";
 
-		const string kXmlAttrType = "Type";
-		const string kXmlAttrNextTriggerVar = "NextTriggerVarID";
-		const string kXmlAttrNextTrigger = "NextTriggerID";
-		const string kXmlAttrNextCondition = "NextConditionID";
-		const string kXmlAttrNextEffect = "NextEffectID";
-		const string kXmlAttrExternal = "External";
+		const string K_XML_ATTR_TYPE_ = "Type";
+		const string K_XML_ATTR_NEXT_TRIGGER_VAR_ = "NextTriggerVarID";
+		const string K_XML_ATTR_NEXT_TRIGGER_ = "NextTriggerID";
+		const string K_XML_ATTR_NEXT_CONDITION_ = "NextConditionID";
+		const string K_XML_ATTR_NEXT_EFFECT_ = "NextEffectID";
+		const string K_XML_ATTR_EXTERNAL_ = "External";
 		#endregion
 
 		#region File Util
@@ -22,9 +22,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			switch (type)
 			{
-				case BTriggerScriptType.TriggerScript: return ".triggerscript";
-				case BTriggerScriptType.Ability: return ".ability";
-				case BTriggerScriptType.Power: return ".power";
+				case BTriggerScriptType.TRIGGER_SCRIPT: return ".triggerscript";
+				case BTriggerScriptType.ABILITY: return ".ability";
+				case BTriggerScriptType.POWER: return ".power";
 
 				default: throw new KSoft.Debug.UnreachableException(type.ToString());
 			}
@@ -33,9 +33,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			switch (type)
 			{
-				case BTriggerScriptType.TriggerScript: return "*.triggerscript";
-				case BTriggerScriptType.Ability: return "*.ability";
-				case BTriggerScriptType.Power: return "*.power";
+				case BTriggerScriptType.TRIGGER_SCRIPT: return "*.triggerscript";
+				case BTriggerScriptType.ABILITY: return "*.ability";
+				case BTriggerScriptType.POWER: return "*.power";
 
 				default: throw new KSoft.Debug.UnreachableException(type.ToString());
 			}
@@ -44,16 +44,16 @@ namespace KSoft.Phoenix.Phx
 
 		public BTriggerSystem Owner { get; private set; }
 
-		string mName;
-		public string Name { get { return this.mName; } }
-		public override string ToString() { return this.mName; }
+		string mName_;
+		public string Name { get { return this.mName_; } }
+		public override string ToString() { return this.mName_; }
 
-		BTriggerScriptType mType;
-		int mNextTriggerVarID = TypeExtensions.kNone;
-		int mNextTriggerID = TypeExtensions.kNone;
-		int mNextConditionID = TypeExtensions.kNone;
-		int mNextEffectID = TypeExtensions.kNone;
-		bool mExternal;
+		BTriggerScriptType mType_;
+		int mNextTriggerVarId_ = TypeExtensions.K_NONE;
+		int mNextTriggerId_ = TypeExtensions.K_NONE;
+		int mNextConditionId_ = TypeExtensions.K_NONE;
+		int mNextEffectId_ = TypeExtensions.K_NONE;
+		bool mExternal_;
 
 		public Collections.BListAutoId<BTriggerGroup> Groups { get; private set; } = new Collections.BListAutoId<BTriggerGroup>();
 
@@ -63,9 +63,9 @@ namespace KSoft.Phoenix.Phx
 		public BTriggerEditorData EditorData { get; private set; }
 
 		#region Database interfaces
-		Dictionary<int, BTriggerGroup> mDbiGroups;
-		Dictionary<int, BTriggerVar> mDbiVars;
-		Dictionary<int, BTrigger> mDbiTriggers;
+		Dictionary<int, BTriggerGroup> mDbiGroups_;
+		Dictionary<int, BTriggerVar> mDbiVars_;
+		Dictionary<int, BTrigger> mDbiTriggers_;
 
 		static void BuildDictionary<T>(out Dictionary<int, T> dic, Collections.BListAutoId<T> list)
 			where T : TriggerScriptIdObject, new()
@@ -73,13 +73,13 @@ namespace KSoft.Phoenix.Phx
 			dic = new Dictionary<int, T>(list.Count);
 
 			foreach (var item in list)
-				dic.Add(item.ID, item);
+				dic.Add(item.Id, item);
 		}
 
-		public BTriggerVar GetVar(int var_id)
+		public BTriggerVar GetVar(int varId)
 		{
 			BTriggerVar var;
-			this.mDbiVars.TryGetValue(var_id, out var);
+			this.mDbiVars_.TryGetValue(varId, out var);
 
 			return var;
 		}
@@ -92,23 +92,23 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttribute(DatabaseNamedObject.kXmlAttrNameN, ref this.mName);
-			s.StreamAttributeEnum(kXmlAttrType, ref this.mType);
-			s.StreamAttribute(kXmlAttrNextTriggerVar, ref this.mNextTriggerVarID);
-			s.StreamAttribute(kXmlAttrNextTrigger, ref this.mNextTriggerID);
-			s.StreamAttribute(kXmlAttrNextCondition, ref this.mNextConditionID);
-			s.StreamAttribute(kXmlAttrNextEffect, ref this.mNextEffectID);
-			s.StreamAttribute(kXmlAttrExternal, ref this.mExternal);
+			s.StreamAttribute(DatabaseNamedObject.K_XML_ATTR_NAME_N, ref this.mName_);
+			s.StreamAttributeEnum(K_XML_ATTR_TYPE_, ref this.mType_);
+			s.StreamAttribute(K_XML_ATTR_NEXT_TRIGGER_VAR_, ref this.mNextTriggerVarId_);
+			s.StreamAttribute(K_XML_ATTR_NEXT_TRIGGER_, ref this.mNextTriggerId_);
+			s.StreamAttribute(K_XML_ATTR_NEXT_CONDITION_, ref this.mNextConditionId_);
+			s.StreamAttribute(K_XML_ATTR_NEXT_EFFECT_, ref this.mNextEffectId_);
+			s.StreamAttribute(K_XML_ATTR_EXTERNAL_, ref this.mExternal_);
 
 			using (s.EnterUserDataBookmark(this))
 			{
-				XML.XmlUtil.Serialize(s, this.Groups, BTriggerGroup.kBListXmlParams);
-				if (s.IsReading) BuildDictionary(out this.mDbiGroups, this.Groups);
+				XML.XmlUtil.Serialize(s, this.Groups, BTriggerGroup.KBListXmlParams);
+				if (s.IsReading) BuildDictionary(out this.mDbiGroups_, this.Groups);
 
-				XML.XmlUtil.Serialize(s, this.Vars, BTriggerVar.kBListXmlParams);
-				if (s.IsReading) BuildDictionary(out this.mDbiVars, this.Vars);
-				XML.XmlUtil.Serialize(s, this.Triggers, BTrigger.kBListXmlParams);
-				if (s.IsReading) BuildDictionary(out this.mDbiTriggers, this.Triggers);
+				XML.XmlUtil.Serialize(s, this.Vars, BTriggerVar.KBListXmlParams);
+				if (s.IsReading) BuildDictionary(out this.mDbiVars_, this.Vars);
+				XML.XmlUtil.Serialize(s, this.Triggers, BTrigger.KBListXmlParams);
+				if (s.IsReading) BuildDictionary(out this.mDbiTriggers_, this.Triggers);
 			}
 
 			if(s.IsReading)

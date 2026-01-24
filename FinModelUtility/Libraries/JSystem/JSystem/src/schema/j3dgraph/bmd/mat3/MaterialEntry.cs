@@ -49,10 +49,10 @@ public sealed partial class MaterialEntry : IBinaryConvertible {
   [Unknown]
   public ushort[] Unknown2 { get; } = new ushort[12];
 
-  public short FogInfoIndex;
-  public short AlphaCompareIndex;
-  public short BlendModeIndex;
+  public short fogInfoIndex;
+  public short alphaCompareIndex;
+  public short blendModeIndex;
 
   [Unknown]
-  public short UnknownIndex;
+  public short unknownIndex;
 }

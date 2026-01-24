@@ -8,26 +8,26 @@ namespace KSoft.Text
 	partial class StringStorageEncoding
 	{
 		#region CalculateByteCount
-		/// <summary>Calculate how many additional bytes are needed to encode a raw <see cref="StringStorageType.CString"/> string</summary>
+		/// <summary>Calculate how many additional bytes are needed to encode a raw <see cref="StringStorageType.C_STRING"/> string</summary>
 		/// <param name="byteCount">Base characters byte count</param>
-		/// <returns>Total byte count needed for encoding a <see cref="StringStorageType.CString"/> string</returns>
+		/// <returns>Total byte count needed for encoding a <see cref="StringStorageType.C_STRING"/> string</returns>
 		int CalcByteCountCString(int byteCount)
 		{
-			return byteCount + this.mNullCharacterSize;
+			return byteCount + this.mNullCharacterSize_;
 		}
-		/// <summary>Calculate how many additional bytes are needed to encode a raw <see cref="StringStorageType.Pascal"/> string</summary>
+		/// <summary>Calculate how many additional bytes are needed to encode a raw <see cref="StringStorageType.PASCAL"/> string</summary>
 		/// <param name="byteCount">Base characters byte count</param>
-		/// <returns>Total byte count needed for encoding a <see cref="StringStorageType.Pascal"/> string</returns>
+		/// <returns>Total byte count needed for encoding a <see cref="StringStorageType.PASCAL"/> string</returns>
 		int CalcByteCountPascal(int byteCount)
 		{
-			switch (this.mStorage.LengthPrefix)
+			switch (this.mStorage_.LengthPrefix)
 			{
-				case StringStorageLengthPrefix.Int7: return byteCount + Bitwise.Encoded7BitInt.CalculateSize(byteCount);
-				case StringStorageLengthPrefix.Int8: return byteCount + sizeof(byte);
-				case StringStorageLengthPrefix.Int16:return byteCount + sizeof(short);
-				case StringStorageLengthPrefix.Int32:return byteCount + sizeof(int);
+				case StringStorageLengthPrefix.INT7: return byteCount + Bitwise.Encoded7BitInt.CalculateSize(byteCount);
+				case StringStorageLengthPrefix.INT8: return byteCount + sizeof(byte);
+				case StringStorageLengthPrefix.INT16:return byteCount + sizeof(short);
+				case StringStorageLengthPrefix.INT32:return byteCount + sizeof(int);
 				default:
-					throw new Debug.UnreachableException(this.mStorage.LengthPrefix.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.LengthPrefix.ToString());
 			}
 		}
 
@@ -36,17 +36,17 @@ namespace KSoft.Text
 	/// <returns>Total byte count needed for encoding a string</returns>
 	int CalculateByteCount(int byteCount)
 		{
-			if (this.mStorage.IsFixedLength)
-				return this.mFixedLengthByteLength;
+			if (this.mStorage_.IsFixedLength)
+				return this.mFixedLengthByteLength_;
 
-			switch (this.mStorage.Type)
+			switch (this.mStorage_.Type)
 			{
-				case StringStorageType.CString: byteCount = this.CalcByteCountCString(byteCount); break;
-				case StringStorageType.Pascal:  byteCount = this.CalcByteCountPascal(byteCount); break;
+				case StringStorageType.C_STRING: byteCount = this.CalcByteCountCString(byteCount); break;
+				case StringStorageType.PASCAL:  byteCount = this.CalcByteCountPascal(byteCount); break;
 				// CharArray doesn't do anything anyway
-				case StringStorageType.CharArray:	/*byteCount = CalcByteCountCharArray(byteCount);*/ break;
+				case StringStorageType.CHAR_ARRAY:	/*byteCount = CalcByteCountCharArray(byteCount);*/ break;
 				default:
-					throw new Debug.UnreachableException(this.mStorage.Type.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.Type.ToString());
 			}
 
 			return byteCount;
@@ -57,45 +57,45 @@ namespace KSoft.Text
 		/// <param name="charCount"></param>
 		void ClampCharCount(ref int charCount)
 		{
-			if (!this.mStorage.IsFixedLength)
+			if (!this.mStorage_.IsFixedLength)
 				return;
 
-			switch (this.mStorage.Type)
+			switch (this.mStorage_.Type)
 			{
-				case StringStorageType.CString:
-					int fixed_length = this.mStorage.FixedLength - 1; // don't include null char
+				case StringStorageType.C_STRING:
+					int fixedLength = this.mStorage_.FixedLength - 1; // don't include null char
 
-					if (charCount > fixed_length) charCount = fixed_length;
+					if (charCount > fixedLength) charCount = fixedLength;
 					break;
-				case StringStorageType.CharArray:
-					if (charCount > this.mStorage.FixedLength) charCount = this.mStorage.FixedLength;
+				case StringStorageType.CHAR_ARRAY:
+					if (charCount > this.mStorage_.FixedLength) charCount = this.mStorage_.FixedLength;
 					break;
 				default:
-					throw new Debug.UnreachableException(this.mStorage.Type.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.Type.ToString());
 			}
 		}
 
 		#region Encode StringStorageType Data Prefix
 		int EncStringStorageTypePrefixPascalData(int charCount, byte[] bytes, int byteIndex)
 		{
-			int prefix_bytes;
-			switch (this.mStorage.LengthPrefix)
+			int prefixBytes;
+			switch (this.mStorage_.LengthPrefix)
 			{
-				case StringStorageLengthPrefix.Int7:	Bitwise.Encoded7BitInt.Write(bytes, byteIndex, charCount);
-					prefix_bytes = Bitwise.Encoded7BitInt.CalculateSize(charCount); break;
-				case StringStorageLengthPrefix.Int8:	bytes[byteIndex] = (byte)charCount;
-					prefix_bytes = sizeof(byte); break;
-				case StringStorageLengthPrefix.Int16:	Bitwise.ByteSwap.ReplaceBytes(bytes, byteIndex, (short)charCount);
+				case StringStorageLengthPrefix.INT7:	Bitwise.Encoded7BitInt.Write(bytes, byteIndex, charCount);
+					prefixBytes = Bitwise.Encoded7BitInt.CalculateSize(charCount); break;
+				case StringStorageLengthPrefix.INT8:	bytes[byteIndex] = (byte)charCount;
+					prefixBytes = sizeof(byte); break;
+				case StringStorageLengthPrefix.INT16:	Bitwise.ByteSwap.ReplaceBytes(bytes, byteIndex, (short)charCount);
 														Bitwise.ByteSwap.SwapInt16(bytes, byteIndex);
-					prefix_bytes = sizeof(short); break;
-				case StringStorageLengthPrefix.Int32:	Bitwise.ByteSwap.ReplaceBytes(bytes, byteIndex, charCount);
+					prefixBytes = sizeof(short); break;
+				case StringStorageLengthPrefix.INT32:	Bitwise.ByteSwap.ReplaceBytes(bytes, byteIndex, charCount);
 														Bitwise.ByteSwap.SwapInt32(bytes, byteIndex);
-					prefix_bytes = sizeof(int); break;
+					prefixBytes = sizeof(int); break;
 				default:
-					throw new Debug.UnreachableException(this.mStorage.LengthPrefix.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.LengthPrefix.ToString());
 			}
 
-			return prefix_bytes;
+			return prefixBytes;
 		}
 		/// <summary>Encode any prefix related data for the <see cref="StringStorageType"/> into a byte array</summary>
 		/// <param name="chars">The character array containing the set of characters to encode</param>
@@ -111,15 +111,15 @@ namespace KSoft.Text
 			int charIndex,
 			int charCount, byte[] bytes, int byteIndex)
 		{
-			switch (this.mStorage.Type)
+			switch (this.mStorage_.Type)
 			{
 				// No prefix for CString
-				case StringStorageType.CString:		return 0;
-				case StringStorageType.Pascal:		return this.EncStringStorageTypePrefixPascalData(charCount, bytes, byteIndex);
+				case StringStorageType.C_STRING:		return 0;
+				case StringStorageType.PASCAL:		return this.EncStringStorageTypePrefixPascalData(charCount, bytes, byteIndex);
 				// CharArray doesn't do anything anyway
-				case StringStorageType.CharArray:	return 0;
+				case StringStorageType.CHAR_ARRAY:	return 0;
 				default:
-					throw new Debug.UnreachableException(this.mStorage.Type.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.Type.ToString());
 			}
 		}
 		#endregion
@@ -127,10 +127,10 @@ namespace KSoft.Text
 		#region Encode StringStorageType Data Postfix
 		int EncStringStoragePostfixCStringData(byte[] bytes, int byteIndex)
 		{
-			for (int x = byteIndex; x < this.mNullCharacterSize; x++)
+			for (int x = byteIndex; x < this.mNullCharacterSize_; x++)
 				bytes[x] = 0;
 
-			return this.mNullCharacterSize; // number of bytes written into [bytes]
+			return this.mNullCharacterSize_; // number of bytes written into [bytes]
 		}
 		/// <summary>Encode any additional <see cref="StringStorageType"/> related data into a byte array</summary>
 		/// <param name="chars">The character array containing the set of characters to encode</param>
@@ -148,15 +148,15 @@ namespace KSoft.Text
 			int charCount,
 			byte[] bytes, int byteIndex)
 		{
-			switch (this.mStorage.Type)
+			switch (this.mStorage_.Type)
 			{
-				case StringStorageType.CString:		return this.EncStringStoragePostfixCStringData(bytes, byteIndex);
+				case StringStorageType.C_STRING:		return this.EncStringStoragePostfixCStringData(bytes, byteIndex);
 				// No postfix for Pascal
-				case StringStorageType.Pascal:		return 0;
+				case StringStorageType.PASCAL:		return 0;
 				// CharArray doesn't do anything anyway
-				case StringStorageType.CharArray:	return 0;
+				case StringStorageType.CHAR_ARRAY:	return 0;
 				default:
-					throw new Debug.UnreachableException(this.mStorage.Type.ToString());
+					throw new Debug.UnreachableException(this.mStorage_.Type.ToString());
 			}
 		}
 		#endregion
@@ -164,11 +164,11 @@ namespace KSoft.Text
 		/// <summary>Converts a set of characters into a sequence of bytes.</summary>
 		class Encoder : System.Text.Encoder
 		{
-			StringStorageEncoding mEncoding;
-			System.Text.Encoder mEnc;
+			StringStorageEncoding mEncoding_;
+			System.Text.Encoder mEnc_;
 			public Encoder(StringStorageEncoding enc) {
-				this.mEncoding = enc;
-				this.mEnc = enc.mBaseEncoding.GetEncoder(); }
+				this.mEncoding_ = enc;
+				this.mEnc_ = enc.mBaseEncoding_.GetEncoder(); }
 
 			/// <summary>
 			/// Calculates the number of bytes produced by encoding a set of characters from the specified character array.
@@ -182,11 +182,11 @@ namespace KSoft.Text
 			/// <seealso cref="System.Text.Encoder.GetByteCount(Char[], Int32, Int32, Boolean) "/>
 			public override int GetByteCount(char[] chars, int index, int count, bool flush)
 			{
-				int byte_count = this.mEnc.GetByteCount(chars, index, count, this.mEncoding.DontAlwaysFlush ? flush : true);
+				int byteCount = this.mEnc_.GetByteCount(chars, index, count, this.mEncoding_.DontAlwaysFlush ? flush : true);
 
-				byte_count = this.mEncoding.CalculateByteCount(byte_count); // Add our String Storage calculations
+				byteCount = this.mEncoding_.CalculateByteCount(byteCount); // Add our String Storage calculations
 
-				return byte_count;
+				return byteCount;
 			}
 
 			/// <summary>
@@ -204,19 +204,19 @@ namespace KSoft.Text
 			public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex, bool flush)
 			{
 				// Add our String Storage calculations
-				int bytes_written = this.mEncoding.EncodeStringStorageTypePrefixData(chars, charCount, charCount, bytes, byteIndex);
+				int bytesWritten = this.mEncoding_.EncodeStringStorageTypePrefixData(chars, charCount, charCount, bytes, byteIndex);
 
-				bytes_written += this.mEnc.GetBytes(chars, charIndex, charCount, bytes, byteIndex + bytes_written, this.mEncoding.DontAlwaysFlush ? flush : true);
+				bytesWritten += this.mEnc_.GetBytes(chars, charIndex, charCount, bytes, byteIndex + bytesWritten, this.mEncoding_.DontAlwaysFlush ? flush : true);
 
 				// Add our String Storage calculations
-				bytes_written += this.mEncoding.EncodeStringStorageTypePostfixData(chars, charIndex, charCount, bytes, bytes_written);
+				bytesWritten += this.mEncoding_.EncodeStringStorageTypePostfixData(chars, charIndex, charCount, bytes, bytesWritten);
 
-				return bytes_written;
+				return bytesWritten;
 			}
 
 			/// <summary>Sets the encoder back to its initial state</summary>
 			public override void Reset()	{
-				this.mEnc.Reset(); }
+				this.mEnc_.Reset(); }
 		};
 
 		#region WriteString

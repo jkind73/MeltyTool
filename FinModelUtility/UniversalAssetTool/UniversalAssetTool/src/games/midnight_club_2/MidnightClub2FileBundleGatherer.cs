@@ -15,7 +15,7 @@ public sealed class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleG
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingSubdir(
+    if (!DirectoryConstants.romsDirectory.TryToGetExistingSubdir(
             Path.Join("midnight_club_2", ExtractorUtil.EXTRACTED),
             out var extractedDir)) {
       return;

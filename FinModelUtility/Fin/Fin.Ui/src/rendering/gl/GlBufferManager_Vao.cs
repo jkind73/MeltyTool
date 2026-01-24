@@ -11,15 +11,15 @@ namespace fin.ui.rendering.gl;
 
 public sealed partial class GlBufferManager {
   private sealed class VertexArrayObject : IDisposable {
-    private readonly IReadOnlyModel model;
-    private readonly IModelRequirements modelRequirements;
-    private readonly BufferUsageHint bufferType;
+    private readonly IReadOnlyModel model_;
+    private readonly IModelRequirements modelRequirements_;
+    private readonly BufferUsageHint bufferType_;
 
     private const int POSITION_SIZE_ = 3;
     private const int NORMAL_SIZE_ = 3;
     private const int TANGENT_SIZE_ = 4;
-    private const int BONE_ID_SIZE = 4;
-    private const int BONE_WEIGHT_SIZE = 4;
+    private const int BONE_ID_SIZE_ = 4;
+    private const int BONE_WEIGHT_SIZE_ = 4;
     private const int UV_SIZE_ = 2;
     private const int COLOR_SIZE_ = 4;
 
@@ -42,9 +42,9 @@ public sealed partial class GlBufferManager {
     public VertexArrayObject(IReadOnlyModel model,
                              IModelRequirements modelRequirements,
                              BufferUsageHint bufferType) {
-      this.model = model;
-      this.modelRequirements = ModelRequirements.FromModel(model);
-      this.bufferType = bufferType;
+      this.model_ = model;
+      this.modelRequirements_ = ModelRequirements.FromModel(model);
+      this.bufferType_ = bufferType;
 
       this.vertices_ = model.Skin.Vertices;
       this.vertexAccessor_ =
@@ -115,15 +115,15 @@ public sealed partial class GlBufferManager {
 
     public void UpdateBuffer() {
       var boneTransformManager = new BoneTransformManager();
-      boneTransformManager.CalculateStaticMatricesForRendering(model);
+      boneTransformManager.CalculateStaticMatricesForRendering(this.model_);
 
-      var usedBoneIndexMap = model.Skin.BonesUsedByVertices
-                                  .Select((bone, index) => (index, bone))
-                                  .ToDictionary(
-                                      pair => (IReadOnlyBone) pair.bone,
-                                      pair => pair.index);
+      var usedBoneIndexMap = this.model_.Skin.BonesUsedByVertices
+                                 .Select((bone, index) => (index, bone))
+                                 .ToDictionary(
+                                     pair => (IReadOnlyBone) pair.bone,
+                                     pair => pair.index);
 
-      var numBones = (int) modelRequirements.NumBones;
+      var numBones = (int) this.modelRequirements_.NumBones;
       for (var i = 0; i < this.vertices_.Count; ++i) {
         this.vertexAccessor_.Target(this.vertices_[i]);
         var vertex = this.vertexAccessor_;
@@ -214,7 +214,7 @@ public sealed partial class GlBufferManager {
                                POSITION_SIZE_ *
                                this.positionData_.Length),
                     this.positionData_,
-                    bufferType);
+                    this.bufferType_);
       GL.EnableVertexAttribArray(vertexAttribPosition);
       GL.VertexAttribPointer(
           vertexAttribPosition,
@@ -234,7 +234,7 @@ public sealed partial class GlBufferManager {
                                  NORMAL_SIZE_ *
                                  this.normalData_.Length),
                       this.normalData_,
-                      bufferType);
+                      this.bufferType_);
         GL.EnableVertexAttribArray(vertexAttribNormal);
         GL.VertexAttribPointer(
             vertexAttribNormal,
@@ -255,7 +255,7 @@ public sealed partial class GlBufferManager {
                                  TANGENT_SIZE_ *
                                  this.tangentData_.Length),
                       this.tangentData_,
-                      bufferType);
+                      this.bufferType_);
         GL.EnableVertexAttribArray(vertexAttribTangent);
         GL.VertexAttribPointer(
             vertexAttribTangent,
@@ -275,7 +275,7 @@ public sealed partial class GlBufferManager {
                       new IntPtr(sizeof(int) *
                                  this.boneIdsData_.Length),
                       this.boneIdsData_,
-                      bufferType);
+                      this.bufferType_);
         GL.EnableVertexAttribArray(vertexAttribBoneIds);
         GL.VertexAttribIPointer(
             vertexAttribBoneIds,
@@ -292,7 +292,7 @@ public sealed partial class GlBufferManager {
                       new IntPtr(sizeof(float) *
                                  this.boneWeightsData_.Length),
                       this.boneWeightsData_,
-                      bufferType);
+                      this.bufferType_);
         GL.EnableVertexAttribArray(vertexAttribBoneWeights);
         GL.VertexAttribPointer(
             vertexAttribBoneWeights,
@@ -311,7 +311,7 @@ public sealed partial class GlBufferManager {
           GL.BufferData(BufferTarget.ArrayBuffer,
                         new IntPtr(sizeof(float) * this.uvData_[i].Length),
                         this.uvData_[i],
-                        bufferType);
+                        this.bufferType_);
           GL.EnableVertexAttribArray(vertexAttribUv);
           GL.VertexAttribPointer(
               vertexAttribUv,
@@ -333,7 +333,7 @@ public sealed partial class GlBufferManager {
           GL.BufferData(BufferTarget.ArrayBuffer,
                         new IntPtr(sizeof(float) * this.colorData_[i].Length),
                         this.colorData_[i],
-                        bufferType);
+                        this.bufferType_);
           GL.EnableVertexAttribArray(vertexAttribColor);
           GL.VertexAttribPointer(
               vertexAttribColor,

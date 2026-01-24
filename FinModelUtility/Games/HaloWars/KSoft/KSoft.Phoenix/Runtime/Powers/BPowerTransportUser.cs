@@ -7,24 +7,24 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerTransportUser
 		: BPowerUser
 	{
-		public BPowerHelperHudSounds HudSounds = new BPowerHelperHudSounds();
-		public BEntityID[] SquadsToTransport;
-		public BEntityID[] TargetedSquads;
-		public int LOSMode;
-		public bool GotPickupLocation;
-		public BVector PickupLocation;
+		public BPowerHelperHudSounds hudSounds = new BPowerHelperHudSounds();
+		public BEntityID[] squadsToTransport;
+		public BEntityID[] targetedSquads;
+		public int losMode;
+		public bool gotPickupLocation;
+		public BVector pickupLocation;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(this.HudSounds);
-			BSaveGame.StreamArray(s, ref this.SquadsToTransport);
-			BSaveGame.StreamArray(s, ref this.TargetedSquads);
-			s.Stream(ref this.LOSMode);
-			s.Stream(ref this.GotPickupLocation);
-			s.StreamV(ref this.PickupLocation);
+			s.Stream(this.hudSounds);
+			BSaveGame.StreamArray(s, ref this.squadsToTransport);
+			BSaveGame.StreamArray(s, ref this.targetedSquads);
+			s.Stream(ref this.losMode);
+			s.Stream(ref this.gotPickupLocation);
+			s.StreamV(ref this.pickupLocation);
 		}
 		#endregion
 	};

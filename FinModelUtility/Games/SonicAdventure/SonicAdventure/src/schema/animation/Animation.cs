@@ -30,7 +30,7 @@ public sealed partial class AnimationData(uint keyedPointer, uint key)
   public static AnimationData New(uint keyedPointer, uint key)
     => new(keyedPointer, key);
 
-  private uint frameDataOffset_ { get; set; }
+  private uint FrameDataOffset { get; set; }
   public uint FrameCount { get; set; }
   public ushort Flags { get; set; }
   public ushort PointerFrameCountPairCount { get; set; }

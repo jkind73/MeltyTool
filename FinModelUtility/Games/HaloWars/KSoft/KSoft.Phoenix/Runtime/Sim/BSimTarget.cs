@@ -8,20 +8,20 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BSimTarget
 		: IO.IEndianStreamSerializable
 	{
-		public BVector Position;
-		public BEntityID ID;
-		public float Range;
-		public BAbilityID AbilityID;
-		public bool PositionValid, RangeValid, AbilityIDValid;
+		public BVector position;
+		public BEntityID id;
+		public float range;
+		public BAbilityID abilityId;
+		public bool positionValid, rangeValid, abilityIdValid;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.StreamV(ref this.Position);
-			s.Stream(ref this.ID);
-			s.Stream(ref this.Range);
-			s.Stream(ref this.AbilityID);
-			s.Stream(ref this.PositionValid); s.Stream(ref this.RangeValid); s.Stream(ref this.AbilityIDValid);
+			s.StreamV(ref this.position);
+			s.Stream(ref this.id);
+			s.Stream(ref this.range);
+			s.Stream(ref this.abilityId);
+			s.Stream(ref this.positionValid); s.Stream(ref this.rangeValid); s.Stream(ref this.abilityIdValid);
 		}
 		#endregion
 	};

@@ -5,47 +5,47 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "Sound",
+			elementName = "Sound",
 		};
 		#endregion
 
 		#region Sound
-		string mSound;
+		string mSound_;
 		public string Sound
 		{
-			get { return this.mSound; }
-			set { this.mSound = value; }
+			get { return this.mSound_; }
+			set { this.mSound_ = value; }
 		}
 		#endregion
 
 		#region Type
-		BObjectSoundType mType = BObjectSoundType.None;
+		BObjectSoundType mType_ = BObjectSoundType.NONE;
 		public BObjectSoundType Type
 		{
-			get { return this.mType; }
-			set { this.mType = value; }
+			get { return this.mType_; }
+			set { this.mType_ = value; }
 		}
 		#endregion
 
 		#region SquadID
-		int mSquadID = TypeExtensions.kNone;
+		int mSquadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoSquadReference]
-		public int SquadID
+		public int SquadId
 		{
-			get { return this.mSquadID; }
-			set { this.mSquadID = value; }
+			get { return this.mSquadId_; }
+			set { this.mSquadId_ = value; }
 		}
 		#endregion
 
 		#region Action
-		string mAction;
+		string mAction_;
 		[Meta.BProtoActionReference]
 		public string Action
 		{
-			get { return this.mAction; }
-			set { this.mAction = value; }
+			get { return this.mAction_; }
+			set { this.mAction_ = value; }
 		}
 		#endregion
 
@@ -56,12 +56,12 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamCursor(ref this.mSound);
+			s.StreamCursor(ref this.mSound_);
 
-			if (s.StreamAttributeEnumOpt("Type", ref this.mType, e => e != BObjectSoundType.None))
+			if (s.StreamAttributeEnumOpt("Type", ref this.mType_, e => e != BObjectSoundType.NONE))
 			{
-				xs.StreamDBID(s, "Squad", ref this.mSquadID, DatabaseObjectKind.Squad, xmlSource: XML.XmlUtil.kSourceAttr);
-				s.StreamAttributeOpt("Action", ref this.mAction, Predicates.IsNotNullOrEmpty);
+				xs.StreamDbid(s, "Squad", ref this.mSquadId_, DatabaseObjectKind.SQUAD, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+				s.StreamAttributeOpt("Action", ref this.mAction_, Predicates.IsNotNullOrEmpty);
 			}
 		}
 		#endregion

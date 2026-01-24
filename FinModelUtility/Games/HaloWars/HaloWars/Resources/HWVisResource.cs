@@ -15,14 +15,14 @@ using fin.util.asserts;
 
 namespace HaloWarsTools;
 
-public sealed class HWVisResource : HWXmlResource {
+public sealed class HwVisResource : HwXmlResource {
   public SceneImpl Scene { get; private set; }
-  public HWModel[] Models { get; private set; }
+  public HwModel[] Models { get; private set; }
 
-  public static HWVisResource
-      FromFile(HWContext context, string filename) {
-    return (HWVisResource) GetOrCreateFromFile(
-        context, filename, HWResourceType.Vis);
+  public static HwVisResource
+      FromFile(HwContext context, string filename) {
+    return (HwVisResource) GetOrCreateFromFile(
+        context, filename, HwResourceType.VIS);
   }
 
   protected override void Load(byte[] bytes) {
@@ -30,8 +30,8 @@ public sealed class HWVisResource : HWXmlResource {
     this.Models = this.ImportModels_();
   }
 
-  private HWModel[] ImportModels_() {
-    var models = new List<HWModel>();
+  private HwModel[] ImportModels_() {
+    var models = new List<HwModel>();
 
     this.Scene = new SceneImpl {
         // TODO: Fix this
@@ -130,7 +130,7 @@ public sealed class HWVisResource : HWXmlResource {
 
         // TODO: Sometimes models are missing, why is this??
         try {
-          var ugx = HWUgxResource.FromFile(this.Context,
+          var ugx = HwUgxResource.FromFile(this.Context,
                                            file,
                                            flipFaces);
           var model = ugx.Mesh;

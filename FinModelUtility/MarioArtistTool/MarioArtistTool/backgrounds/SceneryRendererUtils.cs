@@ -42,7 +42,7 @@ public static class SceneryRendererUtils {
     }
 
     material.CullingMode = CullingMode.SHOW_BOTH;
-    material.DepthCompareType = DepthCompareType.Always;
+    material.DepthCompareType = DepthCompareType.ALWAYS;
     material.DepthMode = DepthMode.NONE;
 
     var scale = 1f;

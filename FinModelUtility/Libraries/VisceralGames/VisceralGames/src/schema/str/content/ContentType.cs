@@ -23,7 +23,7 @@
 namespace visceral.schema.str.content;
 
 public enum ContentType : uint {
-  Header = 0x53484452,         // SHDR
-  Data = 0x53444154,           // SDAT
-  CompressedData = 0x5270616B, // Rpak
+  HEADER = 0x53484452,         // SHDR
+  DATA = 0x53444154,           // SDAT
+  COMPRESSED_DATA = 0x5270616B, // Rpak
 }

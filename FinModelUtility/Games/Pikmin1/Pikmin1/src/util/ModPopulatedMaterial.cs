@@ -17,19 +17,19 @@ namespace pikmin1.util {
     public ModPopulatedMaterial(int materialIndex,
                                 Material material,
                                 int tevInfoIndex,
-                                TEVInfo tevInfo) {
+                                TevInfo tevInfo) {
       if (materialIndex == 45) {
         ;
       }
 
       // TODO: Where does this come from?
-      this.CullMode = GxCullMode.Back;
+      this.CullMode = GxCullMode.BACK;
 
       this.KonstColors =
           tevInfo.KonstColors.Select(FinColor.ToSystemColor).ToArray();
       this.ColorRegisters =
           tevInfo.ColorRegisters
-                 .Select(reg => reg.Color)
+                 .Select(reg => reg.color)
                  .Select((rgba, i) => (IColorRegister) new GxColorRegister {
                      // TODO: Support nonclipped colors
                      Color = rgba.ToColor(),
@@ -47,7 +47,7 @@ namespace pikmin1.util {
 
         var materialColor = (materialIndex,
                              FinColor.ToSystemColor(
-                                 material.ColorInfo.DiffuseColour));
+                                 material.colorInfo.DiffuseColour));
         var ambientColor
             = (materialIndex,
                FinColor.ToSystemColor(FinColor.FromIntensityFloat(.1f)));
@@ -55,46 +55,46 @@ namespace pikmin1.util {
         this.AmbientColors = [ambientColor, unkAmbColor];
       }
 
-      this.TevStageInfos = tevInfo.TevStages.Select(tevStage => {
+      this.TevStageInfos = tevInfo.tevStages.Select(tevStage => {
                                     var colorCombiner = tevStage.ColorCombiner;
                                     var alphaCombiner = tevStage.AlphaCombiner;
 
                                     return new TevStagePropsImpl {
-                                        color_a = colorCombiner.colorA,
-                                        color_b = colorCombiner.colorB,
-                                        color_c = colorCombiner.colorC,
-                                        color_d = colorCombiner.colorD,
-                                        color_op = colorCombiner.colorOp,
-                                        color_bias = colorCombiner.colorBias,
-                                        color_scale = colorCombiner.colorScale,
-                                        color_clamp = colorCombiner.colorClamp,
-                                        color_regid
+                                        ColorA = colorCombiner.colorA,
+                                        ColorB = colorCombiner.colorB,
+                                        ColorC = colorCombiner.colorC,
+                                        ColorD = colorCombiner.colorD,
+                                        ColorOp = colorCombiner.colorOp,
+                                        ColorBias = colorCombiner.colorBias,
+                                        ColorScale = colorCombiner.colorScale,
+                                        ColorClamp = colorCombiner.colorClamp,
+                                        ColorRegid
                                             = colorCombiner.colorRegister,
 
-                                        alpha_a = alphaCombiner.alphaA,
-                                        alpha_b = alphaCombiner.alphaB,
-                                        alpha_c = alphaCombiner.alphaC,
-                                        alpha_d = alphaCombiner.alphaD,
-                                        alpha_op = alphaCombiner.alphaOp,
-                                        alpha_bias = alphaCombiner.alphaBias,
-                                        alpha_scale = alphaCombiner.alphaScale,
-                                        alpha_clamp = alphaCombiner.alphaClamp,
-                                        alpha_regid
+                                        AlphaA = alphaCombiner.alphaA,
+                                        AlphaB = alphaCombiner.alphaB,
+                                        AlphaC = alphaCombiner.alphaC,
+                                        AlphaD = alphaCombiner.alphaD,
+                                        AlphaOp = alphaCombiner.alphaOp,
+                                        AlphaBias = alphaCombiner.alphaBias,
+                                        AlphaScale = alphaCombiner.alphaScale,
+                                        AlphaClamp = alphaCombiner.alphaClamp,
+                                        AlphaRegid
                                             = alphaCombiner.alphaRegister
                                     };
                                   })
                                   .ToArray();
 
-      this.TevOrderInfos = tevInfo.TevStages.Select(tevStage => {
+      this.TevOrderInfos = tevInfo.tevStages.Select(tevStage => {
                                     var texMap = tevStage.TexMap;
                                     var texCoordId
                                         = GxTexCoord.GX_TEXCOORD_NULL;
                                     var texGenData
-                                        = material.texInfo.TexGenData;
+                                        = material.texInfo.texGenData;
                                     if ((sbyte) texMap >= 0 &&
                                         (sbyte) texMap < texGenData.Length) {
                                       texCoordId = material.texInfo
-                                          .TexGenData[(int) texMap].TexCoordId;
+                                          .texGenData[(int) texMap].texCoordId;
                                     }
 
                                     if (tevStage.TexCoord !=
@@ -120,41 +120,41 @@ namespace pikmin1.util {
           = GetColorChannelControls_(material.LightingInfo);
 
       {
-        this.TextureIndices = material.texInfo.TexturesInMaterial
-                                      .Select(tex => (short) tex.TexAttrIndex)
+        this.TextureIndices = material.texInfo.texturesInMaterial
+                                      .Select(tex => (short) tex.texAttrIndex)
                                       .ToArray();
         this.TexCoordGens
             = material
               .texInfo
-              .TexGenData
+              .texGenData
               .Select(tex => {
-                var texMatrix = tex.TexMatrix switch {
-                    10 => GxTexMatrix.Identity,
+                var texMatrix = tex.texMatrix switch {
+                    10 => GxTexMatrix.IDENTITY,
                     >= 0 and < 8
-                        => (GxTexMatrix) ((int) GxTexMatrix.TexMtx0 +
-                                          3 * tex.TexMatrix),
+                        => (GxTexMatrix) ((int) GxTexMatrix.TEX_MTX0 +
+                                          3 * tex.texMatrix),
                 };
                 return new TexCoordGenImpl(
-                    GxTexGenType.Matrix2x4,
+                    GxTexGenType.MATRIX2_X4,
                     tex.TexGenSrc,
                     texMatrix);
               })
               .ToArray();
         this.TextureMatrices
-            = material.texInfo.TexturesInMaterial.Select(
+            = material.texInfo.texturesInMaterial.Select(
                           t => new TextureMatrixInfoImpl(
-                              GxTexGenType.Matrix2x4,
+                              GxTexGenType.MATRIX2_X4,
                               new Vector3 {
                                   X = t.Center.X,
                                   Y = t.Center.Y
                               },
                               t.Scale,
                               t.Translation,
-                              (short) (t.Rotation / MathF.PI * 32768f)
+                              (short) (t.rotation / MathF.PI * 32768f)
                           ))
                       .ToArray();
         this.TextureWrapModeOverrides
-            = material.texInfo.TexturesInMaterial
+            = material.texInfo.texturesInMaterial
                       .Select(tex => (tex.WrapModeS, tex.WrapModeT))
                       .ToArray();
       }
@@ -207,7 +207,7 @@ namespace pikmin1.util {
                                          out IBlendFunction blendFunction,
                                          out IAlphaCompare alphaCompare,
                                          out IDepthFunction depthFunction) {
-      if (peInfo.Flags.CheckFlag(PeInfoFlags.ENABLED)) {
+      if (peInfo.flags.CheckFlag(PeInfoFlags.ENABLED)) {
         blendFunction = new BlendFunctionImpl {
             BlendMode = peInfo.BlendMode,
             SrcFactor = peInfo.SrcFactor,
@@ -237,15 +237,15 @@ namespace pikmin1.util {
             LogicOp = GxLogicOp.CLEAR,
         };
         alphaCompare = new AlphaCompareImpl {
-            Func0 = GxCompareType.Always,
+            Func0 = GxCompareType.ALWAYS,
             Reference0 = 0,
-            MergeFunc = GxAlphaOp.Or,
-            Func1 = GxCompareType.Always,
+            MergeFunc = GxAlphaOp.OR,
+            Func1 = GxCompareType.ALWAYS,
             Reference1 = 0,
         };
         depthFunction = new DepthFunctionImpl {
             Enable = true,
-            Func = GxCompareType.LEqual,
+            Func = GxCompareType.L_EQUAL,
             WriteNewValueIntoDepthBuffer = false
         };
         return;
@@ -259,15 +259,15 @@ namespace pikmin1.util {
             LogicOp = GxLogicOp.COPY,
         };
         alphaCompare = new AlphaCompareImpl {
-            Func0 = GxCompareType.Always,
+            Func0 = GxCompareType.ALWAYS,
             Reference0 = 0,
-            MergeFunc = GxAlphaOp.Or,
-            Func1 = GxCompareType.Always,
+            MergeFunc = GxAlphaOp.OR,
+            Func1 = GxCompareType.ALWAYS,
             Reference1 = 0,
         };
         depthFunction = new DepthFunctionImpl {
             Enable = true,
-            Func = GxCompareType.LEqual,
+            Func = GxCompareType.L_EQUAL,
             WriteNewValueIntoDepthBuffer = true,
         };
         return;
@@ -281,15 +281,15 @@ namespace pikmin1.util {
             LogicOp = GxLogicOp.COPY,
         };
         alphaCompare = new AlphaCompareImpl {
-            Func0 = GxCompareType.GEqual,
+            Func0 = GxCompareType.G_EQUAL,
             Reference0 = .5f,
-            MergeFunc = GxAlphaOp.And,
-            Func1 = GxCompareType.LEqual,
+            MergeFunc = GxAlphaOp.AND,
+            Func1 = GxCompareType.L_EQUAL,
             Reference1 = 1,
         };
         depthFunction = new DepthFunctionImpl {
             Enable = true,
-            Func = GxCompareType.LEqual,
+            Func = GxCompareType.L_EQUAL,
             WriteNewValueIntoDepthBuffer = true,
         };
         return;
@@ -304,15 +304,15 @@ namespace pikmin1.util {
           LogicOp = GxLogicOp.COPY,
       };
       alphaCompare = new AlphaCompareImpl {
-          Func0 = GxCompareType.Always,
+          Func0 = GxCompareType.ALWAYS,
           Reference0 = 0,
-          MergeFunc = GxAlphaOp.Or,
-          Func1 = GxCompareType.Always,
+          MergeFunc = GxAlphaOp.OR,
+          Func1 = GxCompareType.ALWAYS,
           Reference1 = 0,
       };
       depthFunction = new DepthFunctionImpl {
           Enable = true,
-          Func = GxCompareType.LEqual,
+          Func = GxCompareType.L_EQUAL,
           WriteNewValueIntoDepthBuffer = false,
       };
     }
@@ -323,18 +323,18 @@ namespace pikmin1.util {
 
       // In the game, it only ever uses lights 0 and 1.
       // In the game, it uses a different light mask for the alpha channel.
-      var litMask = GxLightMask.Light0 |
-                    GxLightMask.Light1 |
-                    GxLightMask.Light2;
+      var litMask = GxLightMask.LIGHT0 |
+                    GxLightMask.LIGHT1 |
+                    GxLightMask.LIGHT2;
 
       if (lightingInfo == null) {
         ccc0 = ccc1 = new ColorChannelControlImpl {
             LightingEnabled = true,
-            AmbientSrc = GxColorSrc.Register,
-            MaterialSrc = GxColorSrc.Register,
+            AmbientSrc = GxColorSrc.REGISTER,
+            MaterialSrc = GxColorSrc.REGISTER,
             LitMask = litMask,
-            DiffuseFunction = GxDiffuseFunction.Clamp,
-            AttenuationFunction = GxAttenuationFunction.None,
+            DiffuseFunction = GxDiffuseFunction.CLAMP,
+            AttenuationFunction = GxAttenuationFunction.NONE,
         };
       } else {
         ccc0 = new ColorChannelControlImpl {
@@ -344,8 +344,8 @@ namespace pikmin1.util {
             LitMask = litMask,
             DiffuseFunction = lightingInfo.DiffuseFunctionForColor0,
             AttenuationFunction = lightingInfo.LightingEnabledForColor0
-                ? GxAttenuationFunction.Spot
-                : GxAttenuationFunction.None,
+                ? GxAttenuationFunction.SPOT
+                : GxAttenuationFunction.NONE,
         };
         ccc1 = new ColorChannelControlImpl {
             LightingEnabled = lightingInfo.LightingEnabledForAlpha0,
@@ -354,38 +354,38 @@ namespace pikmin1.util {
             LitMask = litMask,
             DiffuseFunction = lightingInfo.DiffuseFunctionForAlpha0,
             AttenuationFunction = lightingInfo.LightingEnabledForAlpha0
-                ? GxAttenuationFunction.Spot
-                : GxAttenuationFunction.None,
+                ? GxAttenuationFunction.SPOT
+                : GxAttenuationFunction.NONE,
         };
       }
 
       if (lightingInfo is not { LightingEnabledForColor1: true }) {
         ccc2 = ccc3 = new ColorChannelControlImpl {
             LightingEnabled = false,
-            AmbientSrc = GxColorSrc.Register,
-            MaterialSrc = GxColorSrc.Register,
-            DiffuseFunction = GxDiffuseFunction.None,
-            AttenuationFunction = GxAttenuationFunction.None,
+            AmbientSrc = GxColorSrc.REGISTER,
+            MaterialSrc = GxColorSrc.REGISTER,
+            DiffuseFunction = GxDiffuseFunction.NONE,
+            AttenuationFunction = GxAttenuationFunction.NONE,
             VertexColorIndex = 0,
         };
       } else {
         var colorAlpha1LitMask = (GxLightMask) 0x80;
         ccc2 = new ColorChannelControlImpl {
             LightingEnabled = true,
-            MaterialSrc = GxColorSrc.Register,
-            AmbientSrc = GxColorSrc.Register,
+            MaterialSrc = GxColorSrc.REGISTER,
+            AmbientSrc = GxColorSrc.REGISTER,
             LitMask = colorAlpha1LitMask,
             DiffuseFunction = lightingInfo.DiffuseFunctionForColor1,
-            AttenuationFunction = GxAttenuationFunction.Spec,
+            AttenuationFunction = GxAttenuationFunction.SPEC,
             VertexColorIndex = 0,
         };
         ccc3 = new ColorChannelControlImpl {
             LightingEnabled = false,
-            MaterialSrc = GxColorSrc.Register,
-            AmbientSrc = GxColorSrc.Register,
+            MaterialSrc = GxColorSrc.REGISTER,
+            AmbientSrc = GxColorSrc.REGISTER,
             LitMask = colorAlpha1LitMask,
-            DiffuseFunction = GxDiffuseFunction.Clamp,
-            AttenuationFunction = GxAttenuationFunction.None,
+            DiffuseFunction = GxDiffuseFunction.CLAMP,
+            AttenuationFunction = GxAttenuationFunction.NONE,
             VertexColorIndex = 0,
         };
       }

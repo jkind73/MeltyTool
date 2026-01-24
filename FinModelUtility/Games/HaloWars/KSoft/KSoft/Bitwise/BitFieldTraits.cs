@@ -12,31 +12,31 @@ namespace KSoft.Bitwise
 	[SuppressMessage("Microsoft.Design", "CA1815")]
 	public struct BitFieldTraits
 	{
-		public const int kMaxBitCount = Bits.kInt64BitCount;
+		public const int K_MAX_BIT_COUNT = Bits.K_INT64_BIT_COUNT;
 
 		public static readonly BitFieldTraits Empty = new BitFieldTraits();
 
 		#region Fields
-		readonly byte mBitCount;
-		readonly byte mBitIndex;
-		readonly bool mIs32Bit; // false, Is64Bit
+		readonly byte mBitCount_;
+		readonly byte mBitIndex_;
+		readonly bool mIs32Bit_; // false, Is64Bit
 		#endregion
 
 		/// <summary>The number of bits this field consumes</summary>
 		public int BitCount { get {
-			Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= kMaxBitCount);
+			Contract.Ensures(Contract.Result<int>() > 0 && Contract.Result<int>() <= K_MAX_BIT_COUNT);
 
-			return this.mBitCount;
+			return this.mBitCount_;
 		} }
 		/// <summary>The bit offset where this field begins</summary>
 		public int BitIndex { get {
-			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() < kMaxBitCount);
+			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() < K_MAX_BIT_COUNT);
 
-			return this.mBitIndex;
+			return this.mBitIndex_;
 		} }
 
 		/// <summary>Does this bit-field require 32-bit words for operations?</summary>
-		public bool Is32Bit { get { return this.mIs32Bit; } }
+		public bool Is32Bit { get { return this.mIs32Bit_; } }
 		/// <summary>Does this bit-field require 64-bit words for operations?</summary>
 		public bool Is64Bit { get { return !this.Is32Bit; } }
 
@@ -69,7 +69,7 @@ namespace KSoft.Bitwise
 		public bool IsEmpty { get { return this.BitCount == 0; } }
 
 		public int NextFieldBitIndex { get {
-			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() <= kMaxBitCount);
+			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() <= K_MAX_BIT_COUNT);
 
 			return this.BitIndex + this.BitCount;
 		} }
@@ -77,7 +77,7 @@ namespace KSoft.Bitwise
 		/// <summary>Get the total number of bits consumed by this field and all the bits before <see cref="BitIndex"/></summary>
 		/// <remarks>Mainly a utility for exposing a total "BitCount" for a handle composed of bit-fields</remarks>
 		public int FieldsBitCount { get {
-			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() <= kMaxBitCount);
+			Contract.Ensures(Contract.Result<int>() >= 0 && Contract.Result<int>() <= K_MAX_BIT_COUNT);
 
 			return this.BitIndex + this.BitCount;
 		} }
@@ -86,13 +86,13 @@ namespace KSoft.Bitwise
 		public IntegerUnion FieldsBitmask { get {
 			var bitmask = new IntegerUnion();
 
-			var fields_bit_count = this.FieldsBitCount;
-			bool fields_are_32_bit = fields_bit_count <= Bits.kInt32BitCount;
+			var fieldsBitCount = this.FieldsBitCount;
+			bool fieldsAre32Bit = fieldsBitCount <= Bits.K_INT32_BIT_COUNT;
 
-			if (fields_are_32_bit)
-				bitmask.u32 = Bits.BitCountToMask32(fields_bit_count);
+			if (fieldsAre32Bit)
+				bitmask.u32 = Bits.BitCountToMask32(fieldsBitCount);
 			else
-				bitmask.u64 = Bits.BitCountToMask64(fields_bit_count);
+				bitmask.u64 = Bits.BitCountToMask64(fieldsBitCount);
 
 			return bitmask;
 		} }
@@ -102,9 +102,9 @@ namespace KSoft.Bitwise
 			[SuppressMessage("Microsoft.Design", "CA1801:ReviewUnusedParameters")]
 			bool dummy, int bitCount, int bitIndex)
 		{
-			this.mBitCount = (byte)bitCount;
-			this.mBitIndex = (byte)bitIndex;
-			this.mIs32Bit = bitCount <= Bits.kInt32BitCount;
+			this.mBitCount_ = (byte)bitCount;
+			this.mBitIndex_ = (byte)bitIndex;
+			this.mIs32Bit_ = bitCount <= Bits.K_INT32_BIT_COUNT;
 
 			Contract.Assert(this.Is32Bit || this.Is64Bit);
 		}
@@ -112,21 +112,21 @@ namespace KSoft.Bitwise
 		public BitFieldTraits(int bitCount)
 			: this(false, bitCount, 0)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= kMaxBitCount);
+			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= K_MAX_BIT_COUNT);
 		}
 		public BitFieldTraits(int bitCount, int bitIndex)
 			: this(false, bitCount, bitIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= kMaxBitCount);
+			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= K_MAX_BIT_COUNT);
 			// less than: b/c bitIndex be one less than the highest bit (else there's no way the field can exist!)
-			Contract.Requires<ArgumentOutOfRangeException>(bitIndex >= 0 && bitIndex < kMaxBitCount);
-			Contract.Requires<ArgumentException>((bitIndex+bitCount) <= kMaxBitCount);
+			Contract.Requires<ArgumentOutOfRangeException>(bitIndex >= 0 && bitIndex < K_MAX_BIT_COUNT);
+			Contract.Requires<ArgumentException>((bitIndex+bitCount) <= K_MAX_BIT_COUNT);
 		}
 		public BitFieldTraits(int bitCount, BitFieldTraits prev)
 			: this(false, bitCount, prev.NextFieldBitIndex)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= kMaxBitCount);
-			Contract.Requires<ArgumentException>((prev.NextFieldBitIndex+bitCount) <= kMaxBitCount);
+			Contract.Requires<ArgumentOutOfRangeException>(bitCount > 0 && bitCount <= K_MAX_BIT_COUNT);
+			Contract.Requires<ArgumentException>((prev.NextFieldBitIndex+bitCount) <= K_MAX_BIT_COUNT);
 		}
 		#endregion
 

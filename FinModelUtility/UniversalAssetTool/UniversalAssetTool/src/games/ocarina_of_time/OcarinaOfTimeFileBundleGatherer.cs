@@ -18,7 +18,7 @@ public sealed class OcarinaOfTimeFileBundleGatherer : INamedAnnotatedFileBundleG
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingFile(
+    if (!DirectoryConstants.romsDirectory.TryToGetExistingFile(
             "ocarina_of_time.z64",
             out var ocarinaOfTimeRom)) {
       return;

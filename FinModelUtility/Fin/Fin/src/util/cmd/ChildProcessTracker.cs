@@ -18,8 +18,8 @@ public static class ChildProcessTracker {
   /// first, that's fine, too.</summary>
   /// <param name="process"></param>
   public static void AddProcess(Process process) {
-    if (s_jobHandle != IntPtr.Zero) {
-      bool success = AssignProcessToJobObject(s_jobHandle, process.Handle);
+    if (S_JOB_HANDLE_ != IntPtr.Zero) {
+      bool success = AssignProcessToJobObject(S_JOB_HANDLE_, process.Handle);
       if (!success && !process.HasExited)
         throw new Win32Exception();
     }
@@ -38,24 +38,24 @@ public static class ChildProcessTracker {
     //  If it's not null, it has to be unique. Use SysInternals' Handle command-line
     //  utility: handle -a ChildProcessTracker
     string jobName = "ChildProcessTracker" + Process.GetCurrentProcess().Id;
-    s_jobHandle = CreateJobObject(IntPtr.Zero, jobName);
+    S_JOB_HANDLE_ = CreateJobObject(IntPtr.Zero, jobName);
 
-    var info = new JOBOBJECT_BASIC_LIMIT_INFORMATION();
+    var info = new JobobjectBasicLimitInformation();
 
     // This is the key flag. When our process is killed, Windows will automatically
     //  close the job handle, and when that happens, we want the child processes to
     //  be killed, too.
-    info.LimitFlags = JOBOBJECTLIMIT.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
+    info.LimitFlags = Jobobjectlimit.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
 
-    var extendedInfo = new JOBOBJECT_EXTENDED_LIMIT_INFORMATION();
+    var extendedInfo = new JobobjectExtendedLimitInformation();
     extendedInfo.BasicLimitInformation = info;
 
-    int length = Marshal.SizeOf(typeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+    int length = Marshal.SizeOf(typeof(JobobjectExtendedLimitInformation));
     IntPtr extendedInfoPtr = Marshal.AllocHGlobal(length);
     try {
       Marshal.StructureToPtr(extendedInfo, extendedInfoPtr, false);
 
-      if (!SetInformationJobObject(s_jobHandle, JobObjectInfoType.ExtendedLimitInformation,
+      if (!SetInformationJobObject(S_JOB_HANDLE_, JobObjectInfoType.EXTENDED_LIMIT_INFORMATION,
           extendedInfoPtr, (uint)length)) {
         throw new Win32Exception();
       }
@@ -77,24 +77,24 @@ public static class ChildProcessTracker {
   // Windows will automatically close any open job handles when our process terminates.
   //  This can be verified by using SysInternals' Handle utility. When the job handle
   //  is closed, the child processes will be killed.
-  private static readonly IntPtr s_jobHandle;
+  private static readonly IntPtr S_JOB_HANDLE_;
 }
 
 public enum JobObjectInfoType {
-  AssociateCompletionPortInformation = 7,
-  BasicLimitInformation = 2,
-  BasicUIRestrictions = 4,
-  EndOfJobTimeInformation = 6,
-  ExtendedLimitInformation = 9,
-  SecurityLimitInformation = 5,
-  GroupInformation = 11
+  ASSOCIATE_COMPLETION_PORT_INFORMATION = 7,
+  BASIC_LIMIT_INFORMATION = 2,
+  BASIC_UI_RESTRICTIONS = 4,
+  END_OF_JOB_TIME_INFORMATION = 6,
+  EXTENDED_LIMIT_INFORMATION = 9,
+  SECURITY_LIMIT_INFORMATION = 5,
+  GROUP_INFORMATION = 11
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct JOBOBJECT_BASIC_LIMIT_INFORMATION {
+public struct JobobjectBasicLimitInformation {
   public Int64 PerProcessUserTimeLimit;
   public Int64 PerJobUserTimeLimit;
-  public JOBOBJECTLIMIT LimitFlags;
+  public Jobobjectlimit LimitFlags;
   public UIntPtr MinimumWorkingSetSize;
   public UIntPtr MaximumWorkingSetSize;
   public UInt32 ActiveProcessLimit;
@@ -104,12 +104,12 @@ public struct JOBOBJECT_BASIC_LIMIT_INFORMATION {
 }
 
 [Flags]
-public enum JOBOBJECTLIMIT : uint {
+public enum Jobobjectlimit : uint {
   JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x2000
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct IO_COUNTERS {
+public struct IoCounters {
   public UInt64 ReadOperationCount;
   public UInt64 WriteOperationCount;
   public UInt64 OtherOperationCount;
@@ -119,9 +119,9 @@ public struct IO_COUNTERS {
 }
 
 [StructLayout(LayoutKind.Sequential)]
-public struct JOBOBJECT_EXTENDED_LIMIT_INFORMATION {
-  public JOBOBJECT_BASIC_LIMIT_INFORMATION BasicLimitInformation;
-  public IO_COUNTERS IoInfo;
+public struct JobobjectExtendedLimitInformation {
+  public JobobjectBasicLimitInformation BasicLimitInformation;
+  public IoCounters IoInfo;
   public UIntPtr ProcessMemoryLimit;
   public UIntPtr JobMemoryLimit;
   public UIntPtr PeakProcessMemoryUsed;

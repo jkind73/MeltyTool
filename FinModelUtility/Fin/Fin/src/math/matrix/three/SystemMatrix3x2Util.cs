@@ -9,7 +9,7 @@ using fin.util.hash;
 
 namespace fin.math.matrix.three;
 
-public static class SystemMatrix3x2Util {
+public static class SystemMatrix3X2Util {
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static unsafe bool IsRoughly(this Matrix3x2 lhs, Matrix3x2 rhs) {
     float* lhsPtr = &lhs.M11;

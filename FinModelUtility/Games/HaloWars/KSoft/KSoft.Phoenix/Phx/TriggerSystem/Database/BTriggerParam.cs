@@ -8,38 +8,38 @@ namespace KSoft.Phoenix.Phx
 		, IComparable<BTriggerParam>
 		, IEqualityComparer<BTriggerParam>
 	{
-		static readonly BTriggerParam kInvalid = new BTriggerParam();
-		public bool IsInvalid { get { return ReferenceEquals(this, kInvalid); } }
+		static readonly BTriggerParam KInvalid = new BTriggerParam();
+		public bool IsInvalid { get { return ReferenceEquals(this, KInvalid); } }
 
 		#region Xml constants
-		public static readonly Collections.BListExplicitIndexParams<BTriggerParam> kBListExplicitIndexParams = new
+		public static readonly Collections.BListExplicitIndexParams<BTriggerParam> KBListExplicitIndexParams = new
 			Collections.BListExplicitIndexParams<BTriggerParam>(10)
 			{
-				kTypeGetInvalid = () => kInvalid
+				kTypeGetInvalid = () => KInvalid
 			};
-		public static readonly XML.BListExplicitIndexXmlParams<BTriggerParam> kBListExplicitIndexXmlParams = new
-			XML.BListExplicitIndexXmlParams<BTriggerParam>(/*null*/"Param", kXmlAttrSigId);
+		public static readonly XML.BListExplicitIndexXmlParams<BTriggerParam> KBListExplicitIndexXmlParams = new
+			XML.BListExplicitIndexXmlParams<BTriggerParam>(/*null*/"Param", K_XML_ATTR_SIG_ID_);
 
-		const string kXmlAttrType = "Type";
-		const string kXmlAttrSigId = "SigID";
-		const string kXmlAttrOptional = "Optional";
+		const string K_XML_ATTR_TYPE_ = "Type";
+		const string K_XML_ATTR_SIG_ID_ = "SigID";
+		const string K_XML_ATTR_OPTIONAL_ = "Optional";
 		#endregion
 
 		#region Properties
-		BTriggerParamType mType = BTriggerParamType.Invalid;
-		public BTriggerParamType Type { get { return this.mType; } }
+		BTriggerParamType mType_ = BTriggerParamType.INVALID;
+		public BTriggerParamType Type { get { return this.mType_; } }
 
-		string mName;
-		public string Name { get { return this.mName; } }
+		string mName_;
+		public string Name { get { return this.mName_; } }
 
-		int mSigID = TypeExtensions.kNone;
-		public int SigID { get { return this.mSigID; } }
+		int mSigId_ = TypeExtensions.K_NONE;
+		public int SigId { get { return this.mSigId_; } }
 
-		BTriggerVarType mVarType = BTriggerVarType.None;
-		public BTriggerVarType VarType { get { return this.mVarType; } }
+		BTriggerVarType mVarType_ = BTriggerVarType.NONE;
+		public BTriggerVarType VarType { get { return this.mVarType_; } }
 
-		bool mOptional;
-		public bool Optional { get { return this.mOptional; } }
+		bool mOptional_;
+		public bool Optional { get { return this.mOptional_; } }
 		#endregion
 
 		#region ITagElementStreamable<string> Members
@@ -48,37 +48,37 @@ namespace KSoft.Phoenix.Phx
 			where TCursor : class
 		{
 			//if (s.IsReading) s.ReadCursorName(ref mType);
-			s.StreamAttributeEnum(kXmlAttrType, ref this.mType);
-			s.StreamAttribute(kXmlAttrSigId, ref this.mSigID);
-			s.StreamAttribute(DatabaseNamedObject.kXmlAttrNameN, ref this.mName);
-			s.StreamAttributeOpt(kXmlAttrOptional, ref this.mOptional, Predicates.IsTrue);
-			s.StreamCursorEnum(ref this.mVarType);
+			s.StreamAttributeEnum(K_XML_ATTR_TYPE_, ref this.mType_);
+			s.StreamAttribute(K_XML_ATTR_SIG_ID_, ref this.mSigId_);
+			s.StreamAttribute(DatabaseNamedObject.K_XML_ATTR_NAME_N, ref this.mName_);
+			s.StreamAttributeOpt(K_XML_ATTR_OPTIONAL_, ref this.mOptional_, Predicates.IsTrue);
+			s.StreamCursorEnum(ref this.mVarType_);
 		}
 		#endregion
 
 		#region IComparable<BTriggerParam> Members
 		public int CompareTo(BTriggerParam other)
 		{
-			return this.mSigID - other.mSigID;
+			return this.mSigId_ - other.mSigId_;
 		}
 		#endregion
 
 		#region IEqualityComparer<BTriggerParam> Members
 		public bool Equals(BTriggerParam x, BTriggerParam y)
 		{
-			return x.mSigID == y.mSigID;
+			return x.mSigId_ == y.mSigId_;
 		}
 
 		public int GetHashCode(BTriggerParam obj)
 		{
-			return this.mSigID;
+			return this.mSigId_;
 		}
 		#endregion
 
 		public static Collections.BListExplicitIndex<BTriggerParam> BuildDefinition(
 			BTriggerSystem root, Collections.BListExplicitIndex<BTriggerArg> args)
 		{
-			var p = new Collections.BListExplicitIndex<BTriggerParam>(kBListExplicitIndexParams);
+			var p = new Collections.BListExplicitIndex<BTriggerParam>(KBListExplicitIndexParams);
 			p.ResizeCount(args.Count);
 
 			foreach (var arg in args)
@@ -86,13 +86,13 @@ namespace KSoft.Phoenix.Phx
 				if (arg.IsInvalid) continue;
 
 				var param = new BTriggerParam();
-				param.mType = arg.Type;
-				param.mName = arg.Name;
-				param.mSigID = arg.SigID;
-				param.mOptional = arg.Optional;
-				param.mVarType = arg.GetVarType(root);
+				param.mType_ = arg.Type;
+				param.mName_ = arg.Name;
+				param.mSigId_ = arg.SigId;
+				param.mOptional_ = arg.Optional;
+				param.mVarType_ = arg.GetVarType(root);
 
-				p[param.mSigID-1] = param;
+				p[param.mSigId_-1] = param;
 			}
 
 			p.OptimizeStorage();

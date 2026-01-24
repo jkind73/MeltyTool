@@ -5,54 +5,54 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "HitZone",
+			elementName = "HitZone",
 		};
 		#endregion
 
 		#region AttachmentName
-		string mAttachmentName;
+		string mAttachmentName_;
 		public string AttachmentName
 		{
-			get { return this.mAttachmentName; }
-			set { this.mAttachmentName = value; }
+			get { return this.mAttachmentName_; }
+			set { this.mAttachmentName_ = value; }
 		}
 		#endregion
 
 		#region Hitpoints
-		float mHitpoints = PhxUtil.kInvalidSingle;
+		float mHitpoints_ = PhxUtil.K_INVALID_SINGLE;
 		public float Hitpoints
 		{
-			get { return this.mHitpoints; }
-			set { this.mHitpoints = value; }
+			get { return this.mHitpoints_; }
+			set { this.mHitpoints_ = value; }
 		}
 		#endregion
 
 		#region Shieldpoints
-		float mShieldpoints = PhxUtil.kInvalidSingle;
+		float mShieldpoints_ = PhxUtil.K_INVALID_SINGLE;
 		public float Shieldpoints
 		{
-			get { return this.mShieldpoints; }
-			set { this.mShieldpoints = value; }
+			get { return this.mShieldpoints_; }
+			set { this.mShieldpoints_ = value; }
 		}
 		#endregion
 
 		#region Active
-		float mActive;
+		float mActive_;
 		public float Active
 		{
-			get { return this.mActive; }
-			set { this.mActive = value; }
+			get { return this.mActive_; }
+			set { this.mActive_ = value; }
 		}
 		#endregion
 
 		#region HasShields
-		float mHasShields;
+		float mHasShields_;
 		public float HasShields
 		{
-			get { return this.mHasShields; }
-			set { this.mHasShields = value; }
+			get { return this.mHasShields_; }
+			set { this.mHasShields_ = value; }
 		}
 		#endregion
 
@@ -61,9 +61,9 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamCursor(ref this.mAttachmentName);
-			s.StreamElementOpt("Hitpoints", ref this.mHitpoints, PhxPredicates.IsNotInvalid);
-			s.StreamElementOpt("Shieldpoints", ref this.mShieldpoints, PhxPredicates.IsNotInvalid);
+			s.StreamCursor(ref this.mAttachmentName_);
+			s.StreamElementOpt("Hitpoints", ref this.mHitpoints_, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("Shieldpoints", ref this.mShieldpoints_, PhxPredicates.IsNotInvalid);
 		}
 		#endregion
 	};

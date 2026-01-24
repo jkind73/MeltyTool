@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.Engine
 {
 	public enum ContentStorage
 	{
-		UpdateOrGame,
+		UPDATE_OR_GAME,
 
-		Game, // game://
-		Update, // update://
-		Images, // img://
+		GAME, // game://
+		UPDATE, // update://
+		IMAGES, // img://
 	};
 }

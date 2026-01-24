@@ -73,9 +73,9 @@ public sealed class CmbCombinerGenerator {
                               => combiner.colorSources.Concat(
                                   combiner.alphaSources))
               .Any(source
-                       => source is TexCombinerSource.FragmentPrimaryColor
+                       => source is TexCombinerSource.FRAGMENT_PRIMARY_COLOR
                                     or TexCombinerSource
-                                        .FragmentSecondaryColor);
+                                        .FRAGMENT_SECONDARY_COLOR);
       var dependsOnLights =
           this.cmbMaterial_.isVertexLightingEnabled || usesShaderLighting;
       var needsToAddLightingToVertexColor =
@@ -90,24 +90,24 @@ public sealed class CmbCombinerGenerator {
         this.specularLightAlpha_ = this.equations_.CreateScalarConstant(1);
       } else {
         // TODO: Is this lighting calculation right??
-        var ambientRgba = this.cmbMaterial_.ambientColor;
+        var ambientRgba = this.cmbMaterial_.AmbientColor;
         var ambientColor =
             new ColorConstant(ambientRgba.Rf, ambientRgba.Gf, ambientRgba.Bf);
         var ambientAlpha = new ScalarConstant(ambientRgba.Af);
 
-        var diffuseRgba = this.cmbMaterial_.diffuseRgba;
+        var diffuseRgba = this.cmbMaterial_.DiffuseRgba;
         var diffuseColor =
             new ColorConstant(diffuseRgba.Rf, diffuseRgba.Gf, diffuseRgba.Bf);
         var diffuseAlpha = new ScalarConstant(diffuseRgba.Af);
 
-        var specularRgba0 = this.cmbMaterial_.specular0Color;
+        var specularRgba0 = this.cmbMaterial_.Specular0Color;
         var specularColor0 =
             new ColorConstant(specularRgba0.Rf,
                               specularRgba0.Gf,
                               specularRgba0.Bf);
         var specularAlpha0 = new ScalarConstant(specularRgba0.Af);
 
-        var specularRgba1 = this.cmbMaterial_.specular1Color;
+        var specularRgba1 = this.cmbMaterial_.Specular1Color;
         var specularColor1 =
             new ColorConstant(specularRgba1.Rf,
                               specularRgba1.Gf,
@@ -174,7 +174,7 @@ public sealed class CmbCombinerGenerator {
   public void AddCombiner_(Combiner cmbCombiner) {
       this.constColorIndex_ = cmbCombiner.constColorIndex;
       this.constColor_ =
-          this.cmbMaterial_.constantColors[this.constColorIndex_];
+          this.cmbMaterial_.ConstantColors[this.constColorIndex_];
 
       // Combine values
       var colorSources =
@@ -201,13 +201,13 @@ public sealed class CmbCombinerGenerator {
 
       // Get buffer
       var newPreviousColorBuffer = cmbCombiner.bufferColor switch {
-          TexBufferSource.PreviousBuffer => this.previousColorBuffer_,
-          TexBufferSource.Previous       => this.previousColor_,
+          TexBufferSource.PREVIOUS_BUFFER => this.previousColorBuffer_,
+          TexBufferSource.PREVIOUS       => this.previousColor_,
           _                              => throw new ArgumentOutOfRangeException()
       };
       var newPreviousAlphaBuffer = cmbCombiner.bufferAlpha switch {
-          TexBufferSource.PreviousBuffer => this.previousAlphaBuffer_,
-          TexBufferSource.Previous       => this.previousAlpha_,
+          TexBufferSource.PREVIOUS_BUFFER => this.previousAlphaBuffer_,
+          TexBufferSource.PREVIOUS       => this.previousAlpha_,
           _                              => throw new ArgumentOutOfRangeException()
       };
 
@@ -225,11 +225,11 @@ public sealed class CmbCombinerGenerator {
       (TexCombinerSource combinerSource, TexCombinerColorOp colorOp) input) {
       var (combinerSource, colorOp) = input;
 
-      if (colorOp is TexCombinerColorOp.Color
-                     or TexCombinerColorOp.OneMinusColor) {
+      if (colorOp is TexCombinerColorOp.COLOR
+                     or TexCombinerColorOp.ONE_MINUS_COLOR) {
         var colorValue = this.GetColorValue_(combinerSource);
 
-        if (colorOp is TexCombinerColorOp.OneMinusColor) {
+        if (colorOp is TexCombinerColorOp.ONE_MINUS_COLOR) {
           colorValue = this.cOps_.Subtract(this.cOps_.One, colorValue);
         }
 
@@ -250,27 +250,27 @@ public sealed class CmbCombinerGenerator {
 
   private IColorValue GetColorValue_(TexCombinerSource combinerSource)
     => combinerSource switch {
-        TexCombinerSource.Texture0 => this.equations_.CreateOrGetColorInput(
+        TexCombinerSource.TEXTURE0 => this.equations_.CreateOrGetColorInput(
             FixedFunctionSource.TEXTURE_COLOR_0),
-        TexCombinerSource.Texture1 => this.equations_.CreateOrGetColorInput(
+        TexCombinerSource.TEXTURE1 => this.equations_.CreateOrGetColorInput(
             FixedFunctionSource.TEXTURE_COLOR_1),
-        TexCombinerSource.Texture2 => this.equations_.CreateOrGetColorInput(
+        TexCombinerSource.TEXTURE2 => this.equations_.CreateOrGetColorInput(
             FixedFunctionSource.TEXTURE_COLOR_2),
-        TexCombinerSource.Texture3 => this.equations_.CreateOrGetColorInput(
+        TexCombinerSource.TEXTURE3 => this.equations_.CreateOrGetColorInput(
             FixedFunctionSource.TEXTURE_COLOR_3),
-        TexCombinerSource.Constant =>
+        TexCombinerSource.CONSTANT =>
             this.registers_.GetOrCreateColorRegister(
                 $"3dsColor{this.constColorIndex_}",
                 this.equations_.CreateColorConstant(
                     this.constColor_.Rf,
                     this.constColor_.Gf,
                     this.constColor_.Bf)),
-        TexCombinerSource.PrimaryColor   => this.primaryColor_,
-        TexCombinerSource.Previous       => this.previousColor_,
-        TexCombinerSource.PreviousBuffer => this.previousColorBuffer_,
-        TexCombinerSource.FragmentPrimaryColor => this
+        TexCombinerSource.PRIMARY_COLOR   => this.primaryColor_,
+        TexCombinerSource.PREVIOUS       => this.previousColor_,
+        TexCombinerSource.PREVIOUS_BUFFER => this.previousColorBuffer_,
+        TexCombinerSource.FRAGMENT_PRIMARY_COLOR => this
             .ambientAndDiffuseLightColor_,
-        TexCombinerSource.FragmentSecondaryColor => this.specularLightColor_,
+        TexCombinerSource.FRAGMENT_SECONDARY_COLOR => this.specularLightColor_,
         _                                        => throw new ArgumentOutOfRangeException(nameof(combinerSource), combinerSource, null)
     };
 
@@ -290,29 +290,29 @@ public sealed class CmbCombinerGenerator {
         };
       } else {
         channelValue = combinerSource switch {
-            TexCombinerSource.Texture0 =>
+            TexCombinerSource.TEXTURE0 =>
                 this.equations_.CreateOrGetScalarInput(
                     FixedFunctionSource.TEXTURE_ALPHA_0),
-            TexCombinerSource.Texture1 =>
+            TexCombinerSource.TEXTURE1 =>
                 this.equations_.CreateOrGetScalarInput(
                     FixedFunctionSource.TEXTURE_ALPHA_1),
-            TexCombinerSource.Texture2 =>
+            TexCombinerSource.TEXTURE2 =>
                 this.equations_.CreateOrGetScalarInput(
                     FixedFunctionSource.TEXTURE_ALPHA_2),
-            TexCombinerSource.Texture3 =>
+            TexCombinerSource.TEXTURE3 =>
                 this.equations_.CreateOrGetScalarInput(
                     FixedFunctionSource.TEXTURE_ALPHA_3),
-            TexCombinerSource.Constant =>
+            TexCombinerSource.CONSTANT =>
                 this.registers_.GetOrCreateScalarRegister(
                     $"3dsAlpha{this.constColorIndex_}",
                     this.equations_.CreateScalarConstant(
                         this.constColor_.Af)),
-            TexCombinerSource.PrimaryColor   => this.primaryAlpha_,
-            TexCombinerSource.Previous       => this.previousAlpha_,
-            TexCombinerSource.PreviousBuffer => this.previousAlphaBuffer_,
-            TexCombinerSource.FragmentPrimaryColor => this
+            TexCombinerSource.PRIMARY_COLOR   => this.primaryAlpha_,
+            TexCombinerSource.PREVIOUS       => this.previousAlpha_,
+            TexCombinerSource.PREVIOUS_BUFFER => this.previousAlphaBuffer_,
+            TexCombinerSource.FRAGMENT_PRIMARY_COLOR => this
                 .ambientAndDiffuseLightAlpha_,
-            TexCombinerSource.FragmentSecondaryColor =>
+            TexCombinerSource.FRAGMENT_SECONDARY_COLOR =>
                 this.specularLightAlpha_,
         };
       }
@@ -334,14 +334,14 @@ public sealed class CmbCombinerGenerator {
   private (Channel, bool) GetChannelAndIsOneMinus_(
       TexCombinerAlphaOp scalarOp)
     => scalarOp switch {
-        TexCombinerAlphaOp.Red           => (Channel.R, false),
-        TexCombinerAlphaOp.OneMinusRed   => (Channel.R, true),
-        TexCombinerAlphaOp.Green         => (Channel.G, false),
-        TexCombinerAlphaOp.OneMinusGreen => (Channel.G, true),
-        TexCombinerAlphaOp.Blue          => (Channel.B, false),
-        TexCombinerAlphaOp.OneMinusBlue  => (Channel.B, true),
-        TexCombinerAlphaOp.Alpha         => (Channel.A, false),
-        TexCombinerAlphaOp.OneMinusAlpha => (Channel.A, true),
+        TexCombinerAlphaOp.RED           => (Channel.R, false),
+        TexCombinerAlphaOp.ONE_MINUS_RED   => (Channel.R, true),
+        TexCombinerAlphaOp.GREEN         => (Channel.G, false),
+        TexCombinerAlphaOp.ONE_MINUS_GREEN => (Channel.G, true),
+        TexCombinerAlphaOp.BLUE          => (Channel.B, false),
+        TexCombinerAlphaOp.ONE_MINUS_BLUE  => (Channel.B, true),
+        TexCombinerAlphaOp.ALPHA         => (Channel.A, false),
+        TexCombinerAlphaOp.ONE_MINUS_ALPHA => (Channel.A, true),
     };
 
   private TValue Combine_<TValue, TConstant>(
@@ -353,22 +353,22 @@ public sealed class CmbCombinerGenerator {
       where TConstant : IConstant<TValue>, TValue {
       // TODO: Implement dot-product ones
       var combinedValue = combineMode switch {
-          TexCombineMode.Replace => sources[0],
-          TexCombineMode.Modulate => fixedFunctionOps.Multiply(
+          TexCombineMode.REPLACE => sources[0],
+          TexCombineMode.MODULATE => fixedFunctionOps.Multiply(
               sources[0],
               sources[1]),
-          TexCombineMode.Add => fixedFunctionOps.Add(sources[0], sources[1]),
-          TexCombineMode.AddSigned => fixedFunctionOps.Subtract(
+          TexCombineMode.ADD => fixedFunctionOps.Add(sources[0], sources[1]),
+          TexCombineMode.ADD_SIGNED => fixedFunctionOps.Subtract(
               fixedFunctionOps.Add(sources[0], sources[1]),
               fixedFunctionOps.Half),
-          TexCombineMode.Subtract => fixedFunctionOps.Subtract(
+          TexCombineMode.SUBTRACT => fixedFunctionOps.Subtract(
               sources[0],
               sources[1]),
-          TexCombineMode.MultAdd => fixedFunctionOps.Add(
+          TexCombineMode.MULT_ADD => fixedFunctionOps.Add(
               fixedFunctionOps.Multiply(sources[0], sources[1]),
               sources[2]),
-          TexCombineMode.AddMult => this.AddMult_(fixedFunctionOps, sources),
-          TexCombineMode.Interpolate => fixedFunctionOps.Add(
+          TexCombineMode.ADD_MULT => this.AddMult_(fixedFunctionOps, sources),
+          TexCombineMode.INTERPOLATE => fixedFunctionOps.Add(
               fixedFunctionOps.Multiply(sources[0],
                                         fixedFunctionOps.Subtract(
                                             fixedFunctionOps.One,
@@ -378,11 +378,11 @@ public sealed class CmbCombinerGenerator {
       };
 
       return combineScale switch {
-          TexCombineScale.One => combinedValue,
-          TexCombineScale.Two => fixedFunctionOps.MultiplyWithConstant(
+          TexCombineScale.ONE => combinedValue,
+          TexCombineScale.TWO => fixedFunctionOps.MultiplyWithConstant(
               combinedValue,
               2),
-          TexCombineScale.Four => fixedFunctionOps.MultiplyWithConstant(
+          TexCombineScale.FOUR => fixedFunctionOps.MultiplyWithConstant(
               combinedValue,
               4),
           _ => throw new ArgumentOutOfRangeException(nameof(combineScale), combineScale, null)

@@ -233,8 +233,8 @@ public sealed class Sm64dsModelImporter : IModelImporter<Sm64dsModelFileBundle> 
               finVertices.AddLast(finVertex);
               break;
             }
-            case Vertex0x28Opcode vertex0x28Opcode: {
-              position += vertex0x28Opcode.DeltaPosition;
+            case Vertex0X28Opcode vertex0X28Opcode: {
+              position += vertex0X28Opcode.DeltaPosition;
 
               var finVertex = finSkin.AddVertex(position * scaleFactor);
               if (color != null) {

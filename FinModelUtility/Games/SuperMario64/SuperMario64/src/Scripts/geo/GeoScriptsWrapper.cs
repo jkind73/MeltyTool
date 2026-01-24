@@ -3,7 +3,7 @@ using sm64.memory;
 
 namespace sm64.Scripts {
   public interface IGeoScripts {
-    void parse(
+    void Parse(
         IReadOnlySm64Memory n64Memory,
         Model3DLods mdlLods,
         ref Level lvl,
@@ -14,13 +14,13 @@ namespace sm64.Scripts {
   public sealed class GeoScriptsWrapper : IGeoScripts {
     private readonly IGeoScripts geoScriptsImplementation_ = new GeoScriptsV2();
 
-    public void parse(
+    public void Parse(
         IReadOnlySm64Memory n64Memory,
         Model3DLods mdlLods,
         ref Level lvl,
         byte seg,
         uint off)
-      => this.geoScriptsImplementation_.parse(n64Memory,
+      => this.geoScriptsImplementation_.Parse(n64Memory,
                                               mdlLods,
                                               ref lvl,
                                               seg,

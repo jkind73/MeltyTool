@@ -19,7 +19,7 @@ public sealed class ProfilerStats : IProfilerStats {
   private static int gpuBindShaderQueryId_;
   private static int gpuUpdateUniformQueryId_;
 
-  public static ProfilerStats INSTANCE { get; } = new();
+  public static ProfilerStats Instance { get; } = new();
 
   public static void InitGl() {
     gpuBackgroundQueryId_ = GL.GenQuery();

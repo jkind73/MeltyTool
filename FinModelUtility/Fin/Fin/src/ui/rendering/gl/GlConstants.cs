@@ -1,8 +1,8 @@
 ﻿namespace fin.ui.rendering.gl;
 
 public static class GlConstants {
-  public const bool Compatibility = false;
-  public const bool Debug
+  public const bool COMPATIBILITY = false;
+  public const bool DEBUG
 #if DEBUG
       = true;
 #else

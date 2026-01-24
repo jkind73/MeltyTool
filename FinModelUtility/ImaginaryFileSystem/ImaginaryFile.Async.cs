@@ -27,7 +27,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken
                                                = default) =>
-      AppendAllLinesAsync(path, contents, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      AppendAllLinesAsync(path, contents, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
   /// <inheritdoc />
   public override Task AppendAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken
@@ -41,7 +41,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task AppendAllTextAsync(string path, string contents, CancellationToken cancellationToken
                                               = default) =>
-      AppendAllTextAsync(path, contents, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      AppendAllTextAsync(path, contents, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
 
   /// <inheritdoc />
@@ -80,7 +80,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task<string[]> ReadAllLinesAsync(string path, CancellationToken cancellationToken
                                                        = default) =>
-      ReadAllLinesAsync(path, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      ReadAllLinesAsync(path, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
   /// <inheritdoc />
 
@@ -94,7 +94,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task<string> ReadAllTextAsync(string path, CancellationToken cancellationToken
                                                     = default) =>
-      ReadAllTextAsync(path, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      ReadAllTextAsync(path, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
 
   /// <inheritdoc />
@@ -109,7 +109,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override IAsyncEnumerable<string> ReadLinesAsync(string path, CancellationToken cancellationToken
       = default) =>
-      ReadLinesAsync(path, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      ReadLinesAsync(path, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
   /// <inheritdoc />
   public override async IAsyncEnumerable<string> ReadLinesAsync(string path, Encoding encoding,
@@ -144,7 +144,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, CancellationToken cancellationToken
                                               = default) =>
-      WriteAllLinesAsync(path, contents, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      WriteAllLinesAsync(path, contents, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
   /// <inheritdoc />
   public override Task WriteAllLinesAsync(string path, IEnumerable<string> contents, Encoding encoding, CancellationToken cancellationToken
@@ -158,7 +158,7 @@ partial class ImaginaryFile
   /// <inheritdoc />
   public override Task WriteAllTextAsync(string path, string contents, CancellationToken cancellationToken
                                              = default) =>
-      WriteAllTextAsync(path, contents, ImaginaryFileData.DefaultEncoding, cancellationToken);
+      WriteAllTextAsync(path, contents, ImaginaryFileData.DEFAULT_ENCODING, cancellationToken);
 
   /// <inheritdoc />
   public override Task WriteAllTextAsync(string path, string contents, Encoding encoding, CancellationToken cancellationToken

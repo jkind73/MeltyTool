@@ -14,17 +14,17 @@ namespace KSoft.DDS
 
 		public void Dispose()
 		{
-			if (this.IsNull || DirectXTexDLL.EntryPointsNotFound)
+			if (this.IsNull || DirectXTexDll.EntryPointsNotFound)
 				return;
 
 			try
 			{
-				DirectXTexDLL.DirectXTex_BlobFree(this);
+				DirectXTexDll.DirectXTex_BlobFree(this);
 				this.Pointer = IntPtr.Zero;
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDLL.HandleEntryPointNotFound(ex);
+				DirectXTexDll.HandleEntryPointNotFound(ex);
 			}
 		}
 
@@ -33,53 +33,53 @@ namespace KSoft.DDS
 			try
 			{
 				DirectXTexBlob blob;
-				var hresult = DirectXTexDLL.DirectXTex_BlobNew(out blob);
-				DirectXTexDLL.ThrowIfFailed(hresult);
+				var hresult = DirectXTexDll.DirectXTex_BlobNew(out blob);
+				DirectXTexDll.ThrowIfFailed(hresult);
 				return blob;
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDLL.HandleEntryPointNotFound(ex);
+				DirectXTexDll.HandleEntryPointNotFound(ex);
 			}
 
 			return new DirectXTexBlob();
 		}
 
 		public IntPtr Buffer { get {
-			if (this.IsNull || DirectXTexDLL.EntryPointsNotFound)
+			if (this.IsNull || DirectXTexDll.EntryPointsNotFound)
 				return IntPtr.Zero;
 
 			try
 			{
 				IntPtr bufferPointer;
 				uint bufferSize;
-				var hresult = DirectXTexDLL.DirectXTex_BlobGetBuffer(this, out bufferPointer, out bufferSize);
-				DirectXTexDLL.ThrowIfFailed(hresult);
+				var hresult = DirectXTexDll.DirectXTex_BlobGetBuffer(this, out bufferPointer, out bufferSize);
+				DirectXTexDll.ThrowIfFailed(hresult);
 				return bufferPointer;
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDLL.HandleEntryPointNotFound(ex);
+				DirectXTexDll.HandleEntryPointNotFound(ex);
 			}
 
 			return IntPtr.Zero;
 		} }
 
 		public uint BufferSize { get {
-			if (this.IsNull || DirectXTexDLL.EntryPointsNotFound)
+			if (this.IsNull || DirectXTexDll.EntryPointsNotFound)
 				return 0;
 
 			try
 			{
 				IntPtr bufferPointer;
 				uint bufferSize;
-				var hresult = DirectXTexDLL.DirectXTex_BlobGetBuffer(this, out bufferPointer, out bufferSize);
-				DirectXTexDLL.ThrowIfFailed(hresult);
+				var hresult = DirectXTexDll.DirectXTex_BlobGetBuffer(this, out bufferPointer, out bufferSize);
+				DirectXTexDll.ThrowIfFailed(hresult);
 				return bufferSize;
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDLL.HandleEntryPointNotFound(ex);
+				DirectXTexDll.HandleEntryPointNotFound(ex);
 			}
 
 			return 0;

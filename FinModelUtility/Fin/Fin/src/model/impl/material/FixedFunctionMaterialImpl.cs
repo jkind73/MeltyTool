@@ -74,12 +74,12 @@ public partial class ModelImpl<TVertex> {
     public AlphaOp AlphaOp { get; private set; }
 
     public AlphaCompareType AlphaCompareType0 { get; private set; } =
-      AlphaCompareType.Always;
+      AlphaCompareType.ALWAYS;
 
     public float AlphaReference0 { get; private set; }
 
     public AlphaCompareType AlphaCompareType1 { get; private set; } =
-      AlphaCompareType.Always;
+      AlphaCompareType.ALWAYS;
 
     public float AlphaReference1 { get; private set; }
 

@@ -14,17 +14,17 @@ namespace KSoft.Values
 	/// <summary>Group Tag identifier definition using 32-bit storage space</summary>
 	public sealed class GroupTagData32 : GroupTagData
 	{
-		internal const int kExpectedTagLength = sizeof(TagWord);
+		internal const int K_EXPECTED_TAG_LENGTH = sizeof(TagWord);
 
 		#region Null
 		/// <summary>Represents a null value for <see cref="GroupTagData32"/> objects</summary>
 		public static readonly GroupTagData32 Null = new GroupTagData32();
-		GroupTagData32() : base(kExpectedTagLength)
+		GroupTagData32() : base(K_EXPECTED_TAG_LENGTH)
 		{
-			this.mID = TagWord.MaxValue;
+			this.mId_ = TagWord.MaxValue;
 		}
 		#endregion
-		public static readonly IEqualityComparer<GroupTagData> kEqualityComparer = Null;
+		public static readonly IEqualityComparer<GroupTagData> KEqualityComparer = Null;
 
 #if false // ObjectInvariant moot, as all non-user properties are readonly
 		[Contracts.ContractInvariantMethod]
@@ -36,38 +36,38 @@ namespace KSoft.Values
 
 
 		#region ID
-		readonly TagWord mID;
+		readonly TagWord mId_;
 		/// <summary>The four character code translated into a unsigned integer</summary>
-		public TagWord ID { get { return this.mID; } }
+		public TagWord Id { get { return this.mId_; } }
 		#endregion
 
 		#region Ctor
 		/// <summary>Initialize a 32-bit group tag</summary>
 		/// <param name="groupTag">Four character code string</param>
 		/// <param name="name">Name of this group tag</param>
-		public GroupTagData32(string groupTag, string name) : base(groupTag, name, kExpectedTagLength)
+		public GroupTagData32(string groupTag, string name) : base(groupTag, name, K_EXPECTED_TAG_LENGTH)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(groupTag));
 			Contract.Requires(!string.IsNullOrEmpty(name));
-			Contract.Requires(groupTag.Length == kExpectedTagLength);
+			Contract.Requires(groupTag.Length == K_EXPECTED_TAG_LENGTH);
 
-			Contract.Assume(this.Tag.Length == kExpectedTagLength);
+			Contract.Assume(this.Tag.Length == K_EXPECTED_TAG_LENGTH);
 
-			this.mID = ToUInt(this.Tag);
+			this.mId_ = ToUInt(this.Tag);
 		}
 		/// <summary>Initialize a 32-bit group tag with a <see cref="Guid"/></summary>
 		/// <param name="groupTag">Four character code string</param>
 		/// <param name="name">Name of this group tag</param>
 		/// <param name="uuid">Guid for this group tag</param>
-		public GroupTagData32(string groupTag, string name, KGuid uuid) : base(groupTag, name, uuid, kExpectedTagLength)
+		public GroupTagData32(string groupTag, string name, KGuid uuid) : base(groupTag, name, uuid, K_EXPECTED_TAG_LENGTH)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(groupTag));
 			Contract.Requires(!string.IsNullOrEmpty(name));
-			Contract.Requires(groupTag.Length == kExpectedTagLength);
+			Contract.Requires(groupTag.Length == K_EXPECTED_TAG_LENGTH);
 
-			Contract.Assume(this.Tag.Length == kExpectedTagLength);
+			Contract.Assume(this.Tag.Length == K_EXPECTED_TAG_LENGTH);
 
-			this.mID = ToUInt(this.Tag);
+			this.mId_ = ToUInt(this.Tag);
 		}
 		#endregion
 
@@ -79,14 +79,14 @@ namespace KSoft.Values
 		public override bool Equals(object obj)
 		{
 			if(obj is GroupTagData32)
-				return this.mID == (obj as GroupTagData32).mID;
+				return this.mId_ == (obj as GroupTagData32).mId_;
 
 			return false;
 		}
 
 		/// <summary>Returns the hash code for this instance</summary>
 		/// <returns>This object's group tag</returns>
-		public override int GetHashCode() { return (int) this.mID; }
+		public override int GetHashCode() { return (int) this.mId_; }
 		#endregion
 
 		#region Operators
@@ -98,7 +98,7 @@ namespace KSoft.Values
 		{
 			Contract.Requires(value != null);
 
-			return value.mID;
+			return value.mId_;
 		}
 		#endregion
 
@@ -111,14 +111,14 @@ namespace KSoft.Values
 		public override bool IsNull	=> ReferenceEquals(this, Null);
 
 		#region IEquatable & IEqualityComparer Members
-		/// <summary>Compares this to another <see cref="GroupTagData32"/> object testing their <see cref="ID"/> fields for equality
+		/// <summary>Compares this to another <see cref="GroupTagData32"/> object testing their <see cref="Id"/> fields for equality
 		/// </summary>
 		/// <param name="other">other <see cref="GroupTagData32"/> object</param>
 		/// <returns>true if both this object and <paramref name="obj"/> are equal</returns>
 		public override bool Equals(GroupTagData obj)
 		{
 			if (obj is GroupTagData32 g)
-				return this.mID == g.mID;
+				return this.mId_ == g.mId_;
 
 			return false;
 		}
@@ -131,7 +131,7 @@ namespace KSoft.Values
 		public override void Read(IO.EndianReader s)	=> s.Seek(sizeof(TagWord), System.IO.SeekOrigin.Current);
 		/// <summary>Writes this tag group's four character code</summary>
 		/// <param name="s"></param>
-		public override void Write(IO.EndianWriter s)	=> s.WriteTag32(this.mID);
+		public override void Write(IO.EndianWriter s)	=> s.WriteTag32(this.mId_);
 		#endregion
 
 
@@ -142,12 +142,12 @@ namespace KSoft.Values
 		public static char[] Swap(char[] tag)
 		{
 			Contract.Requires(tag != null);
-			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= kExpectedTagLength);
+			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= K_EXPECTED_TAG_LENGTH);
 
 			Contract.Ensures(Contract.Result<char[]>() != null);
-			Contract.Ensures(Contract.Result<char[]>().Length == kExpectedTagLength);
+			Contract.Ensures(Contract.Result<char[]>().Length == K_EXPECTED_TAG_LENGTH);
 
-			char[] swap = new char[kExpectedTagLength];
+			char[] swap = new char[K_EXPECTED_TAG_LENGTH];
 			swap[0] = tag[3];
 			swap[1] = tag[2];
 			swap[2] = tag[1];
@@ -163,8 +163,8 @@ namespace KSoft.Values
 		public static bool Test(char[] tag1, char[] tag2)
 		{
 			Contract.Requires(tag1 != null && tag2 != null);
-			Contract.Requires<ArgumentOutOfRangeException>(tag1.Length >= kExpectedTagLength);
-			Contract.Requires<ArgumentOutOfRangeException>(tag2.Length >= kExpectedTagLength);
+			Contract.Requires<ArgumentOutOfRangeException>(tag1.Length >= K_EXPECTED_TAG_LENGTH);
+			Contract.Requires<ArgumentOutOfRangeException>(tag2.Length >= K_EXPECTED_TAG_LENGTH);
 
 			if (tag1[0] == tag2[0] &&
 				tag1[1] == tag2[1] &&
@@ -183,7 +183,7 @@ namespace KSoft.Values
 		public static TagWord ToUInt(char[] tag)
 		{
 			Contract.Requires(tag != null);
-			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= kExpectedTagLength);
+			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= K_EXPECTED_TAG_LENGTH);
 
 			var value = (TagWord)(
 					((byte)tag[0] << 24) |
@@ -205,7 +205,7 @@ namespace KSoft.Values
 		public static TagWord ToUInt(string tag)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(tag));
-			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= kExpectedTagLength);
+			Contract.Requires<ArgumentOutOfRangeException>(tag.Length >= K_EXPECTED_TAG_LENGTH);
 
 			var value = (TagWord)(
 					((byte)tag[0] << 24) |
@@ -230,7 +230,7 @@ namespace KSoft.Values
 			Contract.Requires(tag == null || tag.Length >= 4);
 
 			Contract.Ensures(Contract.Result<char[]>() != null);
-			Contract.Ensures(Contract.Result<char[]>().Length >= kExpectedTagLength);
+			Contract.Ensures(Contract.Result<char[]>().Length >= K_EXPECTED_TAG_LENGTH);
 
 			if (tag == null)
 				tag = new char[4];
@@ -277,7 +277,7 @@ namespace KSoft.Values
 		{
 			Contract.Requires(!string.IsNullOrEmpty(groupTag));
 			Contract.Requires(!string.IsNullOrEmpty(name));
-			Contract.Requires(groupTag.Length == GroupTagData32.kExpectedTagLength);
+			Contract.Requires(groupTag.Length == GroupTagData32.K_EXPECTED_TAG_LENGTH);
 
 			this.GroupTag = new GroupTagData32(groupTag, name, new KGuid(uuid));
 		}

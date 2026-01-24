@@ -192,10 +192,10 @@ public static class DxtDecoder {
         a /= a;
 
         // Processes gamma before tone-mapping below.
-        hdr[offset++] = GammaToLinear(r);
-        hdr[offset++] = GammaToLinear(g);
-        hdr[offset++] = GammaToLinear(b);
-        hdr[offset++] = GammaToLinear(a);
+        hdr[offset++] = GammaToLinear_(r);
+        hdr[offset++] = GammaToLinear_(g);
+        hdr[offset++] = GammaToLinear_(b);
+        hdr[offset++] = GammaToLinear_(a);
       }
     }
 
@@ -209,7 +209,7 @@ public static class DxtDecoder {
       max = MathF.Max(max, hdr.Impl.Max());
     }
 
-    return ConvertHdrMipmapsToBitmap(hdrMipMap, max);
+    return ConvertHdrMipmapsToBitmap_(hdrMipMap, max);
   }
 
 
@@ -226,34 +226,34 @@ public static class DxtDecoder {
     }
 
     var positiveX = hdrCubeMap.PositiveX != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.PositiveX,
             max)
         : null;
     var negativeX = hdrCubeMap.NegativeX != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.NegativeX,
             max)
         : null;
 
     var positiveY = hdrCubeMap.PositiveY != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.PositiveY,
             max)
         : null;
     var negativeY = hdrCubeMap.NegativeY != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.NegativeY,
             max)
         : null;
 
     var positiveZ = hdrCubeMap.PositiveZ != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.PositiveZ,
             max)
         : null;
     var negativeZ = hdrCubeMap.NegativeZ != null
-        ? ConvertHdrMipmapsToBitmap(
+        ? ConvertHdrMipmapsToBitmap_(
             hdrCubeMap.NegativeZ,
             max)
         : null;
@@ -268,7 +268,7 @@ public static class DxtDecoder {
     };
   }
 
-  private static IMipMap<IImage> ConvertHdrMipmapsToBitmap(
+  private static IMipMap<IImage> ConvertHdrMipmapsToBitmap_(
       IMipMap<IList<float>> hdrMipMap,
       float max)
     => new MipMap<IImage>(
@@ -278,7 +278,7 @@ public static class DxtDecoder {
                        var height = hdr.Height;
                        return (IMipMapLevel<IImage>) new
                            MipMapLevel<IImage>(
-                               ConvertHdrToBitmap(hdr.Impl,
+                               ConvertHdrToBitmap_(hdr.Impl,
                                                   width,
                                                   height,
                                                   max),
@@ -287,7 +287,7 @@ public static class DxtDecoder {
                      })
                  .ToList());
 
-  private static IImage ConvertHdrToBitmap(
+  private static IImage ConvertHdrToBitmap_(
       IList<float> hdr,
       int width,
       int height,
@@ -315,10 +315,10 @@ public static class DxtDecoder {
     return bitmap;
   }
 
-  private static float GammaToLinear(float gamma)
+  private static float GammaToLinear_(float gamma)
     => MathF.Pow(gamma, 1 / 2.2f);
 
-  public static IImage DecompressDxt5a(
+  public static IImage DecompressDxt5A(
       byte[] src,
       int srcOffset,
       int width,
@@ -332,7 +332,7 @@ public static class DxtDecoder {
     var monoTable = new byte[8];
     var rIndices = new byte[16];
 
-    var bitmap = new L8Image(PixelFormat.DXT5A, width, height);
+    var bitmap = new L8Image(PixelFormat.DXT5_A, width, height);
     using var imageLock = bitmap.Lock();
     var ptr = imageLock.Pixels;
 

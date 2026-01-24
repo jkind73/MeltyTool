@@ -12,19 +12,19 @@ namespace KSoft.Phoenix.Resource.ECF
 {
 	public enum EcfFileBuilderOptions
 	{
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	public sealed class EcfFileBuilder
 		: EcfFileUtil
 	{
 		/// <see cref="EcfFileBuilderOptions"/>
-		public Collections.BitVector32 BuilderOptions;
+		public Collections.BitVector32 builderOptions;
 
 		public EcfFileBuilder(string listingPath)
 		{
-			if (Path.GetExtension(listingPath) != EcfFileDefinition.kFileExtension)
-				listingPath += EcfFileDefinition.kFileExtension;
+			if (Path.GetExtension(listingPath) != EcfFileDefinition.K_FILE_EXTENSION)
+				listingPath += EcfFileDefinition.K_FILE_EXTENSION;
 
 			this.mSourceFile = listingPath;
 		}
@@ -104,53 +104,53 @@ namespace KSoft.Phoenix.Resource.ECF
 		{
 			this.EcfDefinition.WorkingDirectory = workPath;
 
-			string ecf_name = this.EcfDefinition.EcfName;
-			if (ecf_name.IsNotNullOrEmpty())
+			string ecfName = this.EcfDefinition.EcfName;
+			if (ecfName.IsNotNullOrEmpty())
 			{
-				ecf_name = Path.GetFileNameWithoutExtension(this.mSourceFile);
+				ecfName = Path.GetFileNameWithoutExtension(this.mSourceFile);
 			}
 
-			string ecf_filename = Path.Combine(outputPath, ecf_name);
+			string ecfFilename = Path.Combine(outputPath, ecfName);
 			#if false // I'm no longer doing this since we don't strip the file ext off listing when expanding
 			// #TODO I bet a user could forget to include the preceding dot
 			if (EcfDefinition.EcfFileExtension.IsNotNullOrEmpty())
 				ecf_filename += EcfDefinition.EcfFileExtension;
 			#endif
 
-			if (File.Exists(ecf_filename))
+			if (File.Exists(ecfFilename))
 			{
-				var attrs = File.GetAttributes(ecf_filename);
+				var attrs = File.GetAttributes(ecfFilename);
 				if (attrs.HasFlag(FileAttributes.ReadOnly))
-					throw new IOException("ECF file is readonly, can't build: " + ecf_filename);
+					throw new IOException("ECF file is readonly, can't build: " + ecfFilename);
 			}
 
 			this.mEcfFile = new EcfFile();
 			this.mEcfFile.SetupHeaderAndChunks(this.EcfDefinition);
 
-			const FA k_mode = FA.Write;
-			const int k_initial_buffer_size = 8 * IntegerMath.kMega; // 8MB
+			const FA kMode = FA.Write;
+			const int kInitialBufferSize = 8 * IntegerMath.K_MEGA; // 8MB
 
 			if (this.ProgressOutput != null)
-				this.ProgressOutput.WriteLine("Building {0} to {1}...", ecf_name, outputPath);
+				this.ProgressOutput.WriteLine("Building {0} to {1}...", ecfName, outputPath);
 
 			if (this.ProgressOutput != null)
 				this.ProgressOutput.WriteLine("\tAllocating memory...");
 			bool result = true;
-			using (var ms = new MemoryStream(k_initial_buffer_size))
-			using (var ecf_memory = new IO.EndianStream(ms, Shell.EndianFormat.Big, this, permissions: k_mode))
+			using (var ms = new MemoryStream(kInitialBufferSize))
+			using (var ecfMemory = new IO.EndianStream(ms, Shell.EndianFormat.BIG, this, permissions: kMode))
 			{
-				ecf_memory.StreamMode = k_mode;
-				ecf_memory.VirtualAddressTranslationInitialize(Shell.ProcessorSize.x32);
+				ecfMemory.StreamMode = kMode;
+				ecfMemory.VirtualAddressTranslationInitialize(Shell.ProcessorSize.X32);
 
-				long preamble_size = this.mEcfFile.CalculateHeaderAndChunkEntriesSize();
-				ms.SetLength(preamble_size);
-				ms.Seek(preamble_size, SeekOrigin.Begin);
+				long preambleSize = this.mEcfFile.CalculateHeaderAndChunkEntriesSize();
+				ms.SetLength(preambleSize);
+				ms.Seek(preambleSize, SeekOrigin.Begin);
 
 				// now we can start embedding the files
 				if (this.ProgressOutput != null)
 					this.ProgressOutput.WriteLine("\tPacking chunks...");
 
-				result = result && this.PackChunks(ecf_memory);
+				result = result && this.PackChunks(ecfMemory);
 
 				if (result)
 				{
@@ -159,19 +159,19 @@ namespace KSoft.Phoenix.Resource.ECF
 
 					// seek back to the start of the ECF and write out the finalized header and chunk descriptors
 					ms.Seek(0, SeekOrigin.Begin);
-					this.mEcfFile.Serialize(ecf_memory);
+					this.mEcfFile.Serialize(ecfMemory);
 
-					Contract.Assert(ecf_memory.BaseStream.Position == preamble_size,
+					Contract.Assert(ecfMemory.BaseStream.Position == preambleSize,
 						"Written ECF header size is NOT EQUAL what we calculated");
 
 					// Update sizes and checksums
 					ms.Seek(0, SeekOrigin.Begin);
-					this.mEcfFile.SerializeBegin(ecf_memory, isFinalizing: true);
-					this.mEcfFile.SerializeEnd(ecf_memory);
+					this.mEcfFile.SerializeBegin(ecfMemory, isFinalizing: true);
+					this.mEcfFile.SerializeEnd(ecfMemory);
 
 					// finally, bake the ECF memory stream into a file
 
-					using (var fs = new FileStream(ecf_filename, FileMode.Create, FA.Write))
+					using (var fs = new FileStream(ecfFilename, FileMode.Create, FA.Write))
 						ms.WriteTo(fs);
 				}
 			}
@@ -204,11 +204,11 @@ namespace KSoft.Phoenix.Resource.ECF
 		{
 			bool success = true;
 
-			var raw_chunk = this.mEcfFile.GetChunk(chunk.RawChunkIndex);
+			var rawChunk = this.mEcfFile.GetChunk(chunk.rawChunkIndex);
 
-			using (var chunk_ms = this.EcfDefinition.GetChunkFileDataStream(chunk))
+			using (var chunkMs = this.EcfDefinition.GetChunkFileDataStream(chunk))
 			{
-				raw_chunk.BuildBuffer(ecfStream, chunk_ms);
+				rawChunk.BuildBuffer(ecfStream, chunkMs);
 			}
 
 			return success;

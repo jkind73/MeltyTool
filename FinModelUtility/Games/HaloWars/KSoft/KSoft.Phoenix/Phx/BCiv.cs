@@ -6,165 +6,165 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseNamedObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Civ")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Civ")
 		{
-			DataName = "Name",
-			Flags = XML.BCollectionXmlParamsFlags.UseElementForData
+			dataName = "Name",
+			flags = XML.BCollectionXmlParamsFlags.USE_ELEMENT_FOR_DATA
 		};
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.Data,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Civs.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.ProtoData,
-			kXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.PROTO_DATA,
+			KXmlFileInfo);
 		#endregion
 
 		#region IsExcludedFromAlpha
-		int mAlpha = TypeExtensions.kNone;
+		int mAlpha_ = TypeExtensions.K_NONE;
 		public bool IsExcludedFromAlpha
 		{
-			get { return this.mAlpha == 0; }
-			set { this.mAlpha = value ? 0 : TypeExtensions.kNone; }
+			get { return this.mAlpha_ == 0; }
+			set { this.mAlpha_ = value ? 0 : TypeExtensions.K_NONE; }
 		}
 		#endregion
 
 		#region TechID
-		int mTechID = TypeExtensions.kNone;
+		int mTechId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoTechReference]
-		public int TechID
+		public int TechId
 		{
-			get { return this.mTechID; }
-			set { this.mTechID = value; }
+			get { return this.mTechId_; }
+			set { this.mTechId_ = value; }
 		}
 		#endregion
 
 		#region CommandAckObjectID
-		int mCommandAckObjectID = TypeExtensions.kNone;
+		int mCommandAckObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int CommandAckObjectID
+		public int CommandAckObjectId
 		{
-			get { return this.mCommandAckObjectID; }
-			set { this.mCommandAckObjectID = value; }
+			get { return this.mCommandAckObjectId_; }
+			set { this.mCommandAckObjectId_ = value; }
 		}
 		#endregion
 
 		#region RallyPointObjectID
-		int mRallyPointObjectID = TypeExtensions.kNone;
+		int mRallyPointObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int RallyPointObjectID
+		public int RallyPointObjectId
 		{
-			get { return this.mRallyPointObjectID; }
-			set { this.mRallyPointObjectID = value; }
+			get { return this.mRallyPointObjectId_; }
+			set { this.mRallyPointObjectId_ = value; }
 		}
 		#endregion
 
 		#region LocalRallyPointObjectID
-		int mLocalRallyPointObjectID = TypeExtensions.kNone;
+		int mLocalRallyPointObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int LocalRallyPointObjectID
+		public int LocalRallyPointObjectId
 		{
-			get { return this.mLocalRallyPointObjectID; }
-			set { this.mLocalRallyPointObjectID = value; }
+			get { return this.mLocalRallyPointObjectId_; }
+			set { this.mLocalRallyPointObjectId_ = value; }
 		}
 		#endregion
 
 		#region TransportObjectID
-		int mTransportObjectID = TypeExtensions.kNone;
+		int mTransportObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int TransportObjectID
+		public int TransportObjectId
 		{
-			get { return this.mTransportObjectID; }
-			set { this.mTransportObjectID = value; }
+			get { return this.mTransportObjectId_; }
+			set { this.mTransportObjectId_ = value; }
 		}
 		#endregion
 
 		#region TransportTriggerObjectID
-		int mTransportTriggerObjectID = TypeExtensions.kNone;
+		int mTransportTriggerObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int TransportTriggerObjectID
+		public int TransportTriggerObjectId
 		{
-			get { return this.mTransportTriggerObjectID; }
-			set { this.mTransportTriggerObjectID = value; }
+			get { return this.mTransportTriggerObjectId_; }
+			set { this.mTransportTriggerObjectId_ = value; }
 		}
 		#endregion
 
 		#region HullExpansionRadius
-		float mHullExpansionRadius;
+		float mHullExpansionRadius_;
 		public float HullExpansionRadius
 		{
-			get { return this.mHullExpansionRadius; }
-			set { this.mHullExpansionRadius = value; }
+			get { return this.mHullExpansionRadius_; }
+			set { this.mHullExpansionRadius_ = value; }
 		}
 		#endregion
 
 		#region TerrainPushOffRadius
-		float mTerrainPushOffRadius;
+		float mTerrainPushOffRadius_;
 		public float TerrainPushOffRadius
 		{
-			get { return this.mTerrainPushOffRadius; }
-			set { this.mTerrainPushOffRadius = value; }
+			get { return this.mTerrainPushOffRadius_; }
+			set { this.mTerrainPushOffRadius_ = value; }
 		}
 		#endregion
 
 		#region BuildingMagnetRange
-		float mBuildingMagnetRange;
+		float mBuildingMagnetRange_;
 		public float BuildingMagnetRange
 		{
-			get { return this.mBuildingMagnetRange; }
-			set { this.mBuildingMagnetRange = value; }
+			get { return this.mBuildingMagnetRange_; }
+			set { this.mBuildingMagnetRange_ = value; }
 		}
 		#endregion
 
 		#region SoundBank
-		string mSoundBank;
+		string mSoundBank_;
 		// .bnk
 		public string SoundBank
 		{
-			get { return this.mSoundBank; }
-			set { this.mSoundBank = value; }
+			get { return this.mSoundBank_; }
+			set { this.mSoundBank_ = value; }
 		}
 		#endregion
 
 		#region LeaderMenuNameID
-		int mLeaderMenuNameID = TypeExtensions.kNone;
+		int mLeaderMenuNameId_ = TypeExtensions.K_NONE;
 		[Meta.LocStringReference]
-		public int LeaderMenuNameID
+		public int LeaderMenuNameId
 		{
-			get { return this.mLeaderMenuNameID; }
-			set { this.mLeaderMenuNameID = value; }
+			get { return this.mLeaderMenuNameId_; }
+			set { this.mLeaderMenuNameId_ = value; }
 		}
 		#endregion
 
 		#region PowerFromHero
-		bool mPowerFromHero;
+		bool mPowerFromHero_;
 		public bool PowerFromHero
 		{
-			get { return this.mPowerFromHero; }
-			set { this.mPowerFromHero = value; }
+			get { return this.mPowerFromHero_; }
+			set { this.mPowerFromHero_ = value; }
 		}
 		#endregion
 
 		#region UIControlBackground
-		string mUIControlBackground;
+		string mUiControlBackground_;
 		[Meta.TextureReference]
-		public string UIControlBackground
+		public string UiControlBackground
 		{
-			get { return this.mUIControlBackground; }
-			set { this.mUIControlBackground = value; }
+			get { return this.mUiControlBackground_; }
+			set { this.mUiControlBackground_ = value; }
 		}
 		#endregion
 
 		// Empty Civs just have a name
 		[Browsable(false)]
-		public bool IsEmpty { get { return this.mTechID.IsNotNone(); } }
+		public bool IsEmpty { get { return this.mTechId_.IsNotNone(); } }
 
 		public BCiv()
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDisplayNameID = true;
+			textData.HasDisplayNameId = true;
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -174,20 +174,20 @@ namespace KSoft.Phoenix.Phx
 
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeOpt("Alpha", ref this.mAlpha, Predicates.IsNotNone);
-			xs.StreamDBID(s, "CivTech", ref this.mTechID, DatabaseObjectKind.Tech);
-			xs.StreamDBID(s, "CommandAckObject", ref this.mCommandAckObjectID, DatabaseObjectKind.Object);
-			xs.StreamDBID(s, "RallyPointObject", ref this.mRallyPointObjectID, DatabaseObjectKind.Object);
-			xs.StreamDBID(s, "LocalRallyPointObject", ref this.mLocalRallyPointObjectID, DatabaseObjectKind.Object);
-			xs.StreamDBID(s, "Transport", ref this.mTransportObjectID, DatabaseObjectKind.Object);
-			xs.StreamDBID(s, "TransportTrigger", ref this.mTransportTriggerObjectID, DatabaseObjectKind.Object);
-			s.StreamElementOpt("ExpandHull", ref this.mHullExpansionRadius, Predicates.IsNotZero);
-			s.StreamElementOpt("TerrainPushOff", ref this.mTerrainPushOffRadius, Predicates.IsNotZero);
-			s.StreamElementOpt("BuildingMagnetRange", ref this.mBuildingMagnetRange, Predicates.IsNotZero);
-			s.StreamStringOpt("SoundBank", ref this.mSoundBank, toLower: false, type: XML.XmlUtil.kSourceElement);
-			xs.StreamStringID(s, "LeaderMenuNameID", ref this.mLeaderMenuNameID);
-			s.StreamElementOpt("PowerFromHero", ref this.mPowerFromHero, Predicates.IsTrue);
-			s.StreamStringOpt("UIControlBackground", ref this.mUIControlBackground, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamAttributeOpt("Alpha", ref this.mAlpha_, Predicates.IsNotNone);
+			xs.StreamDbid(s, "CivTech", ref this.mTechId_, DatabaseObjectKind.TECH);
+			xs.StreamDbid(s, "CommandAckObject", ref this.mCommandAckObjectId_, DatabaseObjectKind.OBJECT);
+			xs.StreamDbid(s, "RallyPointObject", ref this.mRallyPointObjectId_, DatabaseObjectKind.OBJECT);
+			xs.StreamDbid(s, "LocalRallyPointObject", ref this.mLocalRallyPointObjectId_, DatabaseObjectKind.OBJECT);
+			xs.StreamDbid(s, "Transport", ref this.mTransportObjectId_, DatabaseObjectKind.OBJECT);
+			xs.StreamDbid(s, "TransportTrigger", ref this.mTransportTriggerObjectId_, DatabaseObjectKind.OBJECT);
+			s.StreamElementOpt("ExpandHull", ref this.mHullExpansionRadius_, Predicates.IsNotZero);
+			s.StreamElementOpt("TerrainPushOff", ref this.mTerrainPushOffRadius_, Predicates.IsNotZero);
+			s.StreamElementOpt("BuildingMagnetRange", ref this.mBuildingMagnetRange_, Predicates.IsNotZero);
+			s.StreamStringOpt("SoundBank", ref this.mSoundBank_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
+			xs.StreamStringId(s, "LeaderMenuNameID", ref this.mLeaderMenuNameId_);
+			s.StreamElementOpt("PowerFromHero", ref this.mPowerFromHero_, Predicates.IsTrue);
+			s.StreamStringOpt("UIControlBackground", ref this.mUiControlBackground_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
 		}
 		#endregion
 	};

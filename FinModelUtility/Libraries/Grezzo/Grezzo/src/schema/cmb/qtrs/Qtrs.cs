@@ -6,5 +6,5 @@ namespace grezzo.schema.cmb.qtrs;
 [BinarySchema]
 public sealed partial class Qtrs : IBinaryConvertible {
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public BoundingBox[] boundingBoxes { get; private set; }
+  public BoundingBox[] BoundingBoxes { get; private set; }
 }

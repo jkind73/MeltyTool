@@ -8,7 +8,7 @@ public sealed class CisoStream : Stream {
   private readonly Stream impl_;
   private readonly long offset_ = 0x8000;
   private readonly bool[] blockMap_;
-  private const long ROM_SIZE = 1_459_978_240;
+  private const long ROM_SIZE_ = 1_459_978_240;
 
   private readonly uint blockSize_;
 
@@ -106,7 +106,7 @@ public sealed class CisoStream : Stream {
   public override bool CanRead => this.impl_.CanRead;
   public override bool CanSeek => this.impl_.CanSeek;
   public override bool CanWrite => false;
-  public override long Length => ROM_SIZE;
+  public override long Length => ROM_SIZE_;
 
   public override long Position { get; set; }
 }

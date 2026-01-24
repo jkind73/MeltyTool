@@ -20,7 +20,7 @@ public static class AppBuilderUtil {
                              GlProfileType.OpenGLES,
                              3,
                              1,
-                             GlConstants.Compatibility)
+                             GlConstants.COMPATIBILITY)
                      ],
                  })
                  .With(new Win32PlatformOptions {

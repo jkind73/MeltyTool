@@ -11,52 +11,52 @@ namespace KSoft.IO
 {
 	partial class BitStream
 	{
-		/// <summary>Number of bytes in <see cref="mCache"/></summary>
-		const int kWordByteCount = sizeof(TWord);
-		/// <summary>Number of bits in <see cref="mCache"/></summary>
-		const int kWordBitCount = sizeof(TWord) * Bits.kByteBitCount;
+		/// <summary>Number of bytes in <see cref="mCache_"/></summary>
+		const int K_WORD_BYTE_COUNT_ = sizeof(TWord);
+		/// <summary>Number of bits in <see cref="mCache_"/></summary>
+		const int K_WORD_BIT_COUNT_ = sizeof(TWord) * Bits.K_BYTE_BIT_COUNT;
 		/// <summary>Bit count to bit-mask look up table</summary>
-		static readonly TWord[] kBitmaskLUT;
+		static readonly TWord[] KBitmaskLut;
 
 		static void InitializeBitmaskLookUpTable(out TWord[] table)
 		{
 			bool success = Bits.GetBitConstants(typeof(TWord),
-				out int word_byte_count, out int word_bit_count, out int word_bit_shift, out int word_bit_mod);
+				out int wordByteCount, out int wordBitCount, out int wordBitShift, out int wordBitMod);
 			Contract.Assert(success, "TWord is an invalid type for BitStream");
 
-			Bits.BitmaskLookUpTableGenerate(kWordBitCount, out table);
+			Bits.BitmaskLookUpTableGenerate(K_WORD_BIT_COUNT_, out table);
 		}
 
 
 		/// <summary>The bit cache we use for streaming to/from <see cref="BaseStream"/></summary>
-		TWord mCache;
+		TWord mCache_;
 
 		// #REVIEW: change mIoBuffer to be kWordByteCount and do an entire Read/Write() instead of looping?
 		// #REVIEW: maybe change the ReadWord implementation to not automatically populate the next word...
 		#region Cache operations
-		/// <summary>Fill the cache with <see cref="kWordByteCount"/> or fewer bytes bytes</summary>
+		/// <summary>Fill the cache with <see cref="K_WORD_BYTE_COUNT_"/> or fewer bytes bytes</summary>
 		void FillCache()
 		{
-			this.mCache = 0;
-			this.mCacheBitIndex = 0;
-			this.mCacheBitsStreamedCount = 0;
+			this.mCache_ = 0;
+			this.mCacheBitIndex_ = 0;
+			this.mCacheBitsStreamedCount_ = 0;
 
-			int byte_count = kWordByteCount-1; // number of bytes to try and read
-			int shift = kWordBitCount-Bits.kByteBitCount; // start shifting to the MSB
+			int byteCount = K_WORD_BYTE_COUNT_-1; // number of bytes to try and read
+			int shift = K_WORD_BIT_COUNT_-Bits.K_BYTE_BIT_COUNT; // start shifting to the MSB
 			while (	!this.IsEndOfStream &&
-					byte_count >= 0 &&
-					this.BaseStream.Read(this.mIoBuffer, 0, sizeof(byte)) != 0 )
+					byteCount >= 0 &&
+					this.BaseStream.Read(this.mIoBuffer_, 0, sizeof(byte)) != 0 )
 			{
-				this.mCache |= ((TWord) this.mIoBuffer[0]) << shift;
-				--byte_count;
-				shift -= Bits.kByteBitCount;
-				this.mCacheBitsStreamedCount += Bits.kByteBitCount;
+				this.mCache_ |= ((TWord) this.mIoBuffer_[0]) << shift;
+				--byteCount;
+				shift -= Bits.K_BYTE_BIT_COUNT;
+				this.mCacheBitsStreamedCount_ += Bits.K_BYTE_BIT_COUNT;
 			}
 
-			if (byte_count != -1 && this.ThrowOnOverflow.CanRead())
+			if (byteCount != -1 && this.ThrowOnOverflow.CanRead())
 				throw new System.IO.EndOfStreamException("Tried to read more bits than the stream has/can see");
 		}
-		/// <summary>Flush the cache to <see cref="BaseStream"/> with <see cref="kWordByteCount"/> or fewer bytes bytes</summary>
+		/// <summary>Flush the cache to <see cref="BaseStream"/> with <see cref="K_WORD_BYTE_COUNT_"/> or fewer bytes bytes</summary>
 		void FlushCache()
 		{
 			#if !CONTRACTS_FULL_SHIM // can't do this with our shim! ValueAtReturn sets out param to default ON ENTRY
@@ -64,31 +64,31 @@ namespace KSoft.IO
 			Contract.Ensures(Contract.ValueAtReturn(out mCacheBitIndex) == 0);
 			#endif
 
-			if (this.mCacheBitIndex == 0) // no bits to flush!
+			if (this.mCacheBitIndex_ == 0) // no bits to flush!
 			{
-				Contract.Assert(this.mCache == 0, "Why is there data in the cache?");
+				Contract.Assert(this.mCache_ == 0, "Why is there data in the cache?");
 				return;
 			}
 
-			this.mCacheBitsStreamedCount = 0;
+			this.mCacheBitsStreamedCount_ = 0;
 
-			int byte_count = (this.mCacheBitIndex-1) >> Bits.kByteBitShift; // number of bytes to try and write
-			int shift = kWordBitCount-Bits.kByteBitCount; // start shifting from the MSB
+			int byteCount = (this.mCacheBitIndex_-1) >> Bits.K_BYTE_BIT_SHIFT; // number of bytes to try and write
+			int shift = K_WORD_BIT_COUNT_-Bits.K_BYTE_BIT_COUNT; // start shifting from the MSB
 			while (	/*!IsEndOfStream &&*/
-					byte_count >= 0)
+					byteCount >= 0)
 			{
-				this.mIoBuffer[0] = (byte)(this.mCache >> shift);
-				this.BaseStream.Write(this.mIoBuffer, 0, sizeof(byte));
-				--byte_count;
-				shift -= Bits.kByteBitCount;
-				this.mCacheBitsStreamedCount += Bits.kByteBitCount;
+				this.mIoBuffer_[0] = (byte)(this.mCache_ >> shift);
+				this.BaseStream.Write(this.mIoBuffer_, 0, sizeof(byte));
+				--byteCount;
+				shift -= Bits.K_BYTE_BIT_COUNT;
+				this.mCacheBitsStreamedCount_ += Bits.K_BYTE_BIT_COUNT;
 			}
 
-			if (byte_count != -1 && this.ThrowOnOverflow.CanWrite())
+			if (byteCount != -1 && this.ThrowOnOverflow.CanWrite())
 				throw new System.IO.EndOfStreamException("Tried to write more bits than the stream has/can see");
 
-			this.mCache = 0;
-			this.mCacheBitIndex = 0;
+			this.mCache_ = 0;
+			this.mCacheBitIndex_ = 0;
 		}
 
 		/// <remarks>Don't call me unless you are ReadWord</remarks>
@@ -96,33 +96,33 @@ namespace KSoft.IO
 		TWord ExtractWordFromCache(int bitCount)
 		{
 			// amount to shift the bits extracted from mCache
-			int shift = kWordBitCount - (this.mCacheBitIndex + bitCount);
-			TWord word_mask = kBitmaskLUT[bitCount];
+			int shift = K_WORD_BIT_COUNT_ - (this.mCacheBitIndex_ + bitCount);
+			TWord wordMask = KBitmaskLut[bitCount];
 
-			TWord word = this.mCache;
+			TWord word = this.mCache_;
 			word >>= shift;
-			word &= word_mask;
+			word &= wordMask;
 
 			return word;
 		}
 		/// <remarks>Don't call me unless you are WriteWord</remarks>
 		void PutWordInCache(TWord word, int bitCount)
 		{
-			Contract.Ensures(Contract.OldValue(this.mCacheBitIndex) == this.mCacheBitIndex);
+			Contract.Ensures(Contract.OldValue(this.mCacheBitIndex_) == this.mCacheBitIndex_);
 
 			// amount to shift word before appending it to mCache bits
-			int shift = (kWordBitCount - this.mCacheBitIndex) - bitCount;
-			TWord word_mask = kBitmaskLUT[bitCount];
+			int shift = (K_WORD_BIT_COUNT_ - this.mCacheBitIndex_) - bitCount;
+			TWord wordMask = KBitmaskLut[bitCount];
 
-			word &= word_mask;
+			word &= wordMask;
 			word <<= shift;
-			this.mCache |= word;
+			this.mCache_ |= word;
 		}
 		#endregion
 
 		public bool ReadBoolean()
 		{
-			this.ReadWord(out TWord word, Bits.kBooleanBitCount);
+			this.ReadWord(out TWord word, Bits.K_BOOLEAN_BIT_COUNT);
 
 			return 1 == word;
 		}

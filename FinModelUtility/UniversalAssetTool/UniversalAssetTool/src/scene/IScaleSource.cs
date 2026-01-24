@@ -56,7 +56,7 @@ public sealed class GameConfigScaleSource : IScaleSource {
                                             out float scale) {
     var gameName = (fileBundle as IAnnotatedFileBundle)?.GameName;
     if (gameName != null &&
-        DirectoryConstants.GAME_CONFIG_DIRECTORY.TryToGetExistingFile(
+        DirectoryConstants.GameConfigDirectory.TryToGetExistingFile(
             $"{gameName}.json",
             out var gameConfigFile)) {
       var gameConfig = gameConfigFile.Deserialize<GameConfig>();

@@ -8,16 +8,16 @@ using OpenTK.Graphics.OpenGL4;
 namespace fin.ui.rendering.gl;
 
 public partial class GlShaderProgram {
-  public IShaderUniform<Matrix3x2> GetUniformMat3x2(string name) {
+  public IShaderUniform<Matrix3x2> GetUniformMat3X2(string name) {
     if (!this.cachedUniformsByName_.TryGetValue(name, out var uniform)) {
       this.cachedUniformsByName_[name] = uniform =
-          new Mat3x2ShaderUniform(this.GetUniformLocation_(name));
+          new Mat3X2ShaderUniform(this.GetUniformLocation_(name));
     }
 
     return Asserts.AsA<IShaderUniform<Matrix3x2>>(uniform);
   }
 
-  private class Mat3x2ShaderUniform(int location)
+  private class Mat3X2ShaderUniform(int location)
       : BShaderUniform, IShaderUniform<Matrix3x2> {
     private Matrix3x2 value_;
 

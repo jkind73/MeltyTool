@@ -5,10 +5,10 @@ using System.Runtime.CompilerServices;
 namespace HaloWarsTools;
 
 public sealed class LazyValueCache {
-  private Dictionary<string, dynamic> CachedValues = new();
+  private Dictionary<string, dynamic> cachedValues_ = new();
 
   public bool Contains(string key) {
-    return this.CachedValues.ContainsKey(key);
+    return this.cachedValues_.ContainsKey(key);
   }
 
   // Lazy property loading system. Anything can call Get<T> with a loader function. The first time
@@ -22,7 +22,7 @@ public sealed class LazyValueCache {
       throw new Exception($"No key passed to {nameof(LazyValueCache)}.{nameof(this.Get)} call");
     }
 
-    if (!this.CachedValues.TryGetValue(key, out dynamic value)) {
+    if (!this.cachedValues_.TryGetValue(key, out dynamic value)) {
       value = loadFunction();
       Set<T>(key, value);
     }
@@ -31,6 +31,6 @@ public sealed class LazyValueCache {
   }
 
   public void Set<T>(string key, T value) {
-    this.CachedValues.Add(key, value);
+    this.cachedValues_.Add(key, value);
   }
 }

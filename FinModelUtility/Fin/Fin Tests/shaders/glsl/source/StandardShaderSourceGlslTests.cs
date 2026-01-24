@@ -18,7 +18,7 @@ public sealed class StandardShaderSourceGlslTests {
         default,
         (m, t) => { },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           out vec4 fragColor;
@@ -36,7 +36,7 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => { },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           out vec4 fragColor;
@@ -52,7 +52,7 @@ public sealed class StandardShaderSourceGlslTests {
         new MockMaterialOptions { WithColors = true, },
         (m, t) => { },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           out vec4 fragColor;
@@ -74,7 +74,7 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => m.DiffuseTexture = t,
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D diffuseTexture;
@@ -101,7 +101,7 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => m.EmissiveTexture = t,
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D emissiveTexture;
@@ -127,10 +127,10 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => { },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
 
           uniform bool hasSpecular;
           uniform float shininess;
@@ -165,10 +165,10 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => m.DiffuseTexture = t,
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
 
           uniform sampler2D diffuseTexture;
           uniform bool hasSpecular;
@@ -208,10 +208,10 @@ public sealed class StandardShaderSourceGlslTests {
         },
         (m, t) => m.EmissiveTexture = t,
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
 
           uniform sampler2D emissiveTexture;
           uniform bool hasSpecular;
@@ -252,7 +252,7 @@ public sealed class StandardShaderSourceGlslTests {
                         options,
                         mm => {
                           var texture = mm.CreateTexture(
-                              FinImage.Create1x1FromColor(options.TransparencyType switch {
+                              FinImage.Create1X1FromColor(options.TransparencyType switch {
                                   TransparencyType.OPAQUE      => Color.White,
                                   TransparencyType.MASK        => Color.FromArgb(0, 255, 255, 255),
                                   TransparencyType.TRANSPARENT => Color.FromArgb(128, 255, 255, 255),

@@ -11,7 +11,7 @@ public static class ExtractorUtil {
 
   public static ISystemDirectory GetOrCreateRomDirectory(
       ReadOnlySpan<char> romName)
-    => DirectoryConstants.ROMS_DIRECTORY.GetOrCreateSubdir(romName);
+    => DirectoryConstants.romsDirectory.GetOrCreateSubdir(romName);
 
   public static void GetOrCreateRomDirectoriesWithPrereqsAndCache(
       ReadOnlySpan<char> romName,
@@ -81,7 +81,7 @@ public static class ExtractorUtil {
   public static ISystemDirectory GetOutputDirectoryForFileBundle(
       IAnnotatedFileBundle annotatedFileBundle)
     => new FinFile(Path.Join(
-                       DirectoryConstants.OUT_DIRECTORY.FullPath,
+                       DirectoryConstants.outDirectory.FullPath,
                        annotatedFileBundle.GameAndLocalPath)).AssertGetParent();
 }
 

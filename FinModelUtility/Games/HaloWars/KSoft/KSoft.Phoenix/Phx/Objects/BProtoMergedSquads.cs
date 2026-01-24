@@ -8,18 +8,18 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "MergedSquads",
+			elementName = "MergedSquads",
 		};
 		#endregion
 
-		BProtoSquadID mToMergeSquadID = TypeExtensions.kNone;
+		BProtoSquadID mToMergeSquadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoSquadReference]
-		public BProtoSquadID ToMergeSquadID
+		public BProtoSquadID ToMergeSquadId
 		{
-			get { return this.mToMergeSquadID; }
-			set { this.mToMergeSquadID = value; }
+			get { return this.mToMergeSquadId_; }
+			set { this.mToMergeSquadId_ = value; }
 		}
 
 		[Meta.BProtoSquadReference]
@@ -32,8 +32,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mToMergeSquadID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceCursor);
-			s.StreamElements("MergedSquad", this.BaseSquadIDs, xs, XML.BXmlSerializerInterface.StreamSquadID);
+			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mToMergeSquadId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			s.StreamElements("MergedSquad", this.BaseSquadIDs, xs, XML.BXmlSerializerInterface.StreamSquadId);
 		}
 		#endregion
 	};

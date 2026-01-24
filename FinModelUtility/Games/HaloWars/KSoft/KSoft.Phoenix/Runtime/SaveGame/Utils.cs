@@ -15,21 +15,21 @@ namespace KSoft.Phoenix.Runtime
 	struct BVectorInt32
 		: IO.IEndianStreamSerializable
 	{
-		public int X, Y, Z, W;
+		public int x, y, z, w;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.X); s.Stream(ref this.Y); s.Stream(ref this.Z); s.Stream(ref this.W);
+			s.Stream(ref this.x); s.Stream(ref this.y); s.Stream(ref this.z); s.Stream(ref this.w);
 		}
 		#endregion
 	};
 
-	partial class cSaveMarker
+	partial class CSaveMarker
 	{
-		public const int IteratorEndInt32 = int.MaxValue; // INT_MAX
-		public const ushort IteratorEndUInt16 = ushort.MaxValue; // UINT16_MAX / -1
-		public const ushort IteratorEndUInt8 = byte.MaxValue; // UINT8_MAX / -1
+		public const int ITERATOR_END_INT32 = int.MaxValue; // INT_MAX
+		public const ushort ITERATOR_END_U_INT16 = ushort.MaxValue; // UINT16_MAX / -1
+		public const ushort ITERATOR_END_U_INT8 = byte.MaxValue; // UINT8_MAX / -1
 	};
 	partial class BSaveGame
 	{
@@ -38,7 +38,7 @@ namespace KSoft.Phoenix.Runtime
 		/// <typeparam name="T">Object type</typeparam>
 		/// <param name="s"></param>
 		/// <param name="array">Allocated on read</param>
-		/// <param name="isIterated"><see cref="cSaveMarker.IteratorEndInt32"/> is written after the collection data</param>
+		/// <param name="isIterated"><see cref="CSaveMarker.ITERATOR_END_INT32"/> is written after the collection data</param>
 		/// <param name="maxCount"></param>
 		/// <returns></returns>
 		public static IO.EndianStream StreamCollection<T>(IO.EndianStream s, List<T> c,
@@ -66,7 +66,7 @@ namespace KSoft.Phoenix.Runtime
 			}
 
 			if (isIterated)
-				s.StreamSignature(cSaveMarker.IteratorEndInt32);
+				s.StreamSignature(CSaveMarker.ITERATOR_END_INT32);
 
 			return s;
 		}
@@ -295,7 +295,7 @@ namespace KSoft.Phoenix.Runtime
 		/// <typeparam name="T">Object type</typeparam>
 		/// <param name="s"></param>
 		/// <param name="array">Allocated on read</param>
-		/// <param name="isIterated"><see cref="cSaveMarker.IteratorEndUInt16"/> is written after the array data</param>
+		/// <param name="isIterated"><see cref="CSaveMarker.ITERATOR_END_U_INT16"/> is written after the array data</param>
 		/// <param name="maxCount"></param>
 		/// <returns></returns>
 		public static IO.EndianStream StreamArray16<T>(IO.EndianStream s, ref T[] array,
@@ -321,7 +321,7 @@ namespace KSoft.Phoenix.Runtime
 			}
 
 			if (isIterated)
-				s.StreamSignature(cSaveMarker.IteratorEndUInt16);
+				s.StreamSignature(CSaveMarker.ITERATOR_END_U_INT16);
 
 			return s;
 		}
@@ -458,14 +458,14 @@ namespace KSoft.Phoenix.Runtime
 		/// <returns></returns>
 		public static IO.EndianStream StreamFreeListItemPtr(IO.EndianStream s, ref int ptr)
 		{
-			bool in_use = s.IsReading ? false : ptr.IsNotNone();
-			s.Stream(ref in_use);
+			bool inUse = s.IsReading ? false : ptr.IsNotNone();
+			s.Stream(ref inUse);
 
 			// only stream the index value if not NONE
-			if (in_use)
+			if (inUse)
 				s.Stream(ref ptr);
 			else
-				ptr = TypeExtensions.kNone;
+				ptr = TypeExtensions.K_NONE;
 
 			return s;
 		}
@@ -474,7 +474,7 @@ namespace KSoft.Phoenix.Runtime
 			Func<T> initializer,
 			Action<T, int> setId,
 			Func<T, int> getId,
-			int invalidId = TypeExtensions.kNone)
+			int invalidId = TypeExtensions.K_NONE)
 			where T : class
 		{
 			Contract.Requires(initializer != null);

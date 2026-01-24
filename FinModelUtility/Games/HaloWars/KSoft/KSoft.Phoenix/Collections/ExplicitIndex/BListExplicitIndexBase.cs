@@ -40,10 +40,10 @@ namespace KSoft.Collections
 
 		public override void Clear()
 		{
-			int original_count = this.Count;
+			int originalCount = this.Count;
 			base.Clear();
 
-			this.ResizeCount(original_count);
+			this.ResizeCount(originalCount);
 		}
 
 		internal void InitializeItem(int index)

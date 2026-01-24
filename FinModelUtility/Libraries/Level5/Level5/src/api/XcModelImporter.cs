@@ -260,7 +260,7 @@ public sealed class XcModelImporter : IModelImporter<XcModelFileBundle> {
               }
             }
 
-            foreach (var transformNode in anim.TransformNodes) {
+            foreach (var transformNode in anim.transformNodes) {
               if (!finBoneByHash.TryGetValue(transformNode.Hash,
                                               out var finBone)) {
                 continue;

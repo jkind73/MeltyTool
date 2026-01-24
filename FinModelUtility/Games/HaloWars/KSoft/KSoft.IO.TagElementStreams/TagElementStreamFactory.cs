@@ -45,19 +45,19 @@ namespace KSoft.IO
 				this.GetExtension = handler;
 
 				#region Register Text
-				var extension_format = this.BaseFormat;
-				string extension = this.GetExtension(extension_format);
+				var extensionFormat = this.BaseFormat;
+				string extension = this.GetExtension(extensionFormat);
 				if (extension != null)
-					gRegisteredFileExtensions.Add(extension, extension_format);
+					gRegisteredFileExtensions_.Add(extension, extensionFormat);
 				#endregion
 				#region Register Binary
-				extension_format |= TagElementStreamFormat.Binary;
+				extensionFormat |= TagElementStreamFormat.BINARY;
 				// #TODO: not all binary formats are implemented yet, and will throw an exception
-				try { extension = this.GetExtension(extension_format); }
+				try { extension = this.GetExtension(extensionFormat); }
 				catch (NotImplementedException) { extension = null; }
 
 				if (extension != null)
-					gRegisteredFileExtensions.Add(extension, extension_format);
+					gRegisteredFileExtensions_.Add(extension, extensionFormat);
 				#endregion
 
 				return this;
@@ -72,22 +72,22 @@ namespace KSoft.IO
 			}
 		};
 
-		static Dictionary<TagElementStreamFormat, RegisteredFormat> gRegisteredFormats;
-		static Dictionary<string, TagElementStreamFormat> gRegisteredFileExtensions;
+		static Dictionary<TagElementStreamFormat, RegisteredFormat> gRegisteredFormats_;
+		static Dictionary<string, TagElementStreamFormat> gRegisteredFileExtensions_;
 
 		public static RegisteredFormat Register(TagElementStreamFormat baseFormat, string name = null)
 		{
-			Contract.Requires<ArgumentException>(baseFormat != TagElementStreamFormat.Undefined);
+			Contract.Requires<ArgumentException>(baseFormat != TagElementStreamFormat.UNDEFINED);
 			Contract.Requires<ArgumentException>(baseFormat.GetTypeFlags() == 0,
 				"Format should exclude any type flags when registering");
-			Contract.Requires<ArgumentException>((baseFormat >= TagElementStreamFormat.kCustomStart || baseFormat <= TagElementStreamFormat.kCustomEnd) || !string.IsNullOrEmpty(name),
+			Contract.Requires<ArgumentException>((baseFormat >= TagElementStreamFormat.K_CUSTOM_START || baseFormat <= TagElementStreamFormat.K_CUSTOM_END) || !string.IsNullOrEmpty(name),
 				"Custom formats require an explicit name");
 
 			if (string.IsNullOrEmpty(name))
 				name = baseFormat.ToString();
 
 			var registration = new RegisteredFormat(name, baseFormat);
-			gRegisteredFormats.Add(baseFormat, registration);
+			gRegisteredFormats_.Add(baseFormat, registration);
 
 			return registration;
 		}
@@ -96,12 +96,12 @@ namespace KSoft.IO
 		{
 			Contract.Requires(!string.IsNullOrEmpty(operation));
 
-			var base_format = format.GetBaseFormat();
+			var baseFormat = format.GetBaseFormat();
 
-			if (!gRegisteredFormats.TryGetValue(base_format, out RegisteredFormat registration))
+			if (!gRegisteredFormats_.TryGetValue(baseFormat, out RegisteredFormat registration))
 				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
 					"Format {0} ({1}) is not registered, can't {2}",
-					base_format, format, operation));
+					baseFormat, format, operation));
 
 			return registration;
 		}
@@ -110,7 +110,7 @@ namespace KSoft.IO
 		#region Xml
 		static string XmlGetExtension(TagElementStreamFormat format)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Xml);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.XML);
 
 			if (format.IsText())
 				return ".xml";
@@ -122,7 +122,7 @@ namespace KSoft.IO
 		static dynamic XmlOpenFromStream(TagElementStreamFormat format, Stream sourceStream,
 			FileAccess permissions, object owner)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Xml);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.XML);
 
 			if (format.IsText())
 			{
@@ -141,7 +141,7 @@ namespace KSoft.IO
 		#region Json
 		static string JsonGetExtension(TagElementStreamFormat format)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Json);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.JSON);
 
 			if (format.IsText())
 				return ".json";
@@ -153,7 +153,7 @@ namespace KSoft.IO
 		static dynamic JsonOpenFromStream(TagElementStreamFormat format, Stream sourceStream,
 			FileAccess permissions, object owner)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Json);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.JSON);
 
 			if (format.IsText())
 				throw new NotImplementedException();
@@ -167,7 +167,7 @@ namespace KSoft.IO
 		#region Yaml
 		static string YamlGetExtension(TagElementStreamFormat format)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Yaml);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.YAML);
 
 			if (format.IsText())
 				return ".yaml";
@@ -179,7 +179,7 @@ namespace KSoft.IO
 		static dynamic YamlOpenFromStream(TagElementStreamFormat format, Stream sourceStream,
 			FileAccess permissions, object owner)
 		{
-			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.Yaml);
+			Contract.Requires(format.GetBaseFormat() == TagElementStreamFormat.YAML);
 
 			if (format.IsText())
 				throw new NotImplementedException();
@@ -193,18 +193,18 @@ namespace KSoft.IO
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static TagElementStreamFactory()
 		{
-			gRegisteredFormats = new Dictionary<TagElementStreamFormat, RegisteredFormat>();
-			gRegisteredFileExtensions = new Dictionary<string, TagElementStreamFormat>();
+			gRegisteredFormats_ = new Dictionary<TagElementStreamFormat, RegisteredFormat>();
+			gRegisteredFileExtensions_ = new Dictionary<string, TagElementStreamFormat>();
 
-			Register(TagElementStreamFormat.Xml)
+			Register(TagElementStreamFormat.XML)
 				.RegisterExtension	(XmlGetExtension)
 				.RegisterOpen		(XmlOpenFromStream);
 
-			Register(TagElementStreamFormat.Json)
+			Register(TagElementStreamFormat.JSON)
 				.RegisterExtension	(JsonGetExtension)
 				.RegisterOpen		(JsonOpenFromStream);
 
-			Register(TagElementStreamFormat.Yaml)
+			Register(TagElementStreamFormat.YAML)
 				.RegisterExtension	(YamlGetExtension)
 				.RegisterOpen		(YamlOpenFromStream);
 		}
@@ -231,7 +231,7 @@ namespace KSoft.IO
 					"'{0}' doesn't have a valid file extension",
 					filename));
 
-			if (!gRegisteredFileExtensions.TryGetValue(extension, out TagElementStreamFormat format))
+			if (!gRegisteredFileExtensions_.TryGetValue(extension, out TagElementStreamFormat format))
 				throw new ArgumentException(string.Format(Util.InvariantCultureInfo,
 					"No TagElementStream is registered to handle '{0}' files",
 					extension));

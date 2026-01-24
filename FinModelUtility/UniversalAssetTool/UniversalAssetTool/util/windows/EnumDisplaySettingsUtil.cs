@@ -5,7 +5,7 @@ namespace uni.util.windows;
 public static class EnumDisplaySettingsUtil {
   public static DisplaySettings GetCurrentDisplaySettings() {
     DisplaySettings displaySettings = default;
-    EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS, ref displaySettings);
+    EnumDisplaySettings(null, ENUM_CURRENT_SETTINGS_, ref displaySettings);
     return displaySettings;
   }
 
@@ -26,27 +26,27 @@ public static class EnumDisplaySettingsUtil {
       int modeNum,
       ref DisplaySettings displaySettings);
 
-  const int ENUM_CURRENT_SETTINGS = -1;
+  const int ENUM_CURRENT_SETTINGS_ = -1;
 
   /// <summary>Specifies the angle of the screen.</summary>
   public enum ScreenOrientation {
     /// <summary>The screen is oriented at 0 degrees.</summary>
-    Angle0,
+    ANGLE0,
 
     /// <summary>The screen is oriented at 90 degrees.</summary>
-    Angle90,
+    ANGLE90,
 
     /// <summary>The screen is oriented at 180 degrees.</summary>
-    Angle180,
+    ANGLE180,
 
     /// <summary>The screen is oriented at 270 degrees.</summary>
-    Angle270,
+    ANGLE270,
   }
 
   [StructLayout(LayoutKind.Sequential)]
   public struct DisplaySettings {
-    private const int CCHDEVICENAME = 0x20;
-    private const int CCHFORMNAME = 0x20;
+    private const int CCHDEVICENAME_ = 0x20;
+    private const int CCHFORMNAME_ = 0x20;
 
     [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 0x20)]
     public string dmDeviceName;

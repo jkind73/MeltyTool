@@ -14,7 +14,7 @@ namespace KSoft.IO
 		public override ushort ReadUInt16()
 		{
 			var value = base.ReadUInt16();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt16(value);
 		}
@@ -25,7 +25,7 @@ namespace KSoft.IO
 		public override short ReadInt16()
 		{
 			var value = base.ReadInt16();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt16(value);
 		}
@@ -36,7 +36,7 @@ namespace KSoft.IO
 		public override uint ReadUInt32()
 		{
 			var value = base.ReadUInt32();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt32(value);
 		}
@@ -47,7 +47,7 @@ namespace KSoft.IO
 		public override int ReadInt32()
 		{
 			var value = base.ReadInt32();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt32(value);
 		}
@@ -58,7 +58,7 @@ namespace KSoft.IO
 		public override ulong ReadUInt64()
 		{
 			var value = base.ReadUInt64();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt64(value);
 		}
@@ -69,7 +69,7 @@ namespace KSoft.IO
 		public override long ReadInt64()
 		{
 			var value = base.ReadInt64();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt64(value);
 		}
@@ -80,7 +80,7 @@ namespace KSoft.IO
 		public override float ReadSingle()
 		{
 			var value = base.ReadSingle();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapSingle(value);
 		}
@@ -91,7 +91,7 @@ namespace KSoft.IO
 		public override double ReadDouble()
 		{
 			var value = base.ReadDouble();
-			return !this.mRequiresByteSwap
+			return !this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapDouble(value);
 		}
@@ -308,7 +308,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(ushort)"/>
 		public override void Write(ushort value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt16(value));
 		}
@@ -318,7 +318,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(short)"/>
 		public override void Write(short value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt16(value));
 		}
@@ -328,7 +328,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(uint)"/>
 		public override void Write(uint value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt32(value));
 		}
@@ -338,7 +338,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(int)"/>
 		public override void Write(int value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt32(value));
 		}
@@ -348,7 +348,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(ulong)"/>
 		public override void Write(ulong value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapUInt64(value));
 		}
@@ -358,7 +358,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(long)"/>
 		public override void Write(long value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapInt64(value));
 		}
@@ -368,7 +368,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(float)"/>
 		public override void Write(float value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapSingle(value));
 		}
@@ -378,7 +378,7 @@ namespace KSoft.IO
 		/// <seealso cref="System.IO.BinaryWriter.Write(double)"/>
 		public override void Write(double value)
 		{
-			base.Write(!this.mRequiresByteSwap
+			base.Write(!this.mRequiresByteSwap_
 				? value
 				: Bitwise.ByteSwap.SwapDouble(value));
 		}

@@ -7,69 +7,69 @@ using hw.schema.xtt;
 namespace HaloWarsTools;
 // TODO put value cache in HWContext
 
-public enum HWResourceType {
-  None,
-  Xtt, // Terrain Mesh/Albedo
-  Xtd, // Terrain Opacity/AO
-  Scn, // Scenario
-  Sc2, // Scenario
-  Sc3, // Scenario
-  Gls, // Scenario Lighting
-  Ugx, // Mesh
-  Vis  // Visual Representation
+public enum HwResourceType {
+  NONE,
+  XTT, // Terrain Mesh/Albedo
+  XTD, // Terrain Opacity/AO
+  SCN, // Scenario
+  SC2, // Scenario
+  SC3, // Scenario
+  GLS, // Scenario Lighting
+  UGX, // Mesh
+  VIS  // Visual Representation
 }
 
-public sealed class HWResourceTypeDefinition(
-    HWResourceType type,
+public sealed class HwResourceTypeDefinition(
+    HwResourceType type,
     Type resourceClass) {
-  public HWResourceType Type = type;
-  public Type Class = resourceClass;
+  public HwResourceType type = type;
+  public Type @class = resourceClass;
 }
 
-public abstract class HWResource {
-  private static LazyValueCache StaticValuesCache = new LazyValueCache();
+public abstract class HwResource {
+  private static LazyValueCache staticValuesCache_ = new LazyValueCache();
 
-  private static Dictionary<string, HWResourceTypeDefinition>
-      TypeDefinitions =
-          new Dictionary<string, HWResourceTypeDefinition>() {
+  private static Dictionary<string, HwResourceTypeDefinition>
+      typeDefinitions_ =
+          new Dictionary<string, HwResourceTypeDefinition>() {
               {
                   ".xtt",
-                  new HWResourceTypeDefinition(
-                      HWResourceType.Xtt, typeof(Xtt))
+                  new HwResourceTypeDefinition(
+                      HwResourceType.XTT, typeof(Xtt))
               }, {
                   ".xtd",
-                  new HWResourceTypeDefinition(
-                      HWResourceType.Xtd, typeof(HWXtdResource))
+                  new HwResourceTypeDefinition(
+                      HwResourceType.XTD, typeof(HwXtdResource))
               },
               /*{".scn", new HWResourceTypeDefinition(HWResourceType.Scn, typeof(HWScnResource))},
               {".sc2", new HWResourceTypeDefinition(HWResourceType.Sc2, typeof(HWSc2Resource))},
               {".sc3", new HWResourceTypeDefinition(HWResourceType.Sc3, typeof(HWSc3Resource))},
               {".gls", new HWResourceTypeDefinition(HWResourceType.Gls, typeof(HWGlsResource))},*/
-              {".ugx", new HWResourceTypeDefinition(HWResourceType.Ugx, typeof(HWUgxResource))},
-              {".vis", new HWResourceTypeDefinition(HWResourceType.Vis, typeof(HWVisResource))},
+              {".ugx", new HwResourceTypeDefinition(HwResourceType.UGX, typeof(HwUgxResource))},
+              {".vis", new HwResourceTypeDefinition(HwResourceType.VIS, typeof(HwVisResource))},
           };
 
-  protected static Dictionary<HWResourceType, string> TypeExtensions =>
-      StaticValuesCache.Get(() => {
-        var dictionary = new Dictionary<HWResourceType, string>();
-        foreach (var kvp in TypeDefinitions) {
-          dictionary.Add(kvp.Value.Type, kvp.Key);
+  protected static Dictionary<HwResourceType, string> TypeExtensions =>
+      staticValuesCache_.Get(() => {
+        var dictionary = new Dictionary<HwResourceType, string>();
+        foreach (var kvp in typeDefinitions_) {
+          dictionary.Add(kvp.Value.type, kvp.Key);
         }
         return dictionary;
       });
 
   protected abstract void Load(byte[] bytes);
 
-  public HWContext Context { get; protected set; }
+  public HwContext Context { get; protected set; }
   public string RelativePath { get; protected set; }
   public string AbsolutePath => this.Context.GetAbsoluteScratchPath(this.RelativePath);
-  public HWResourceType Type;
+  public HwResourceType type;
 
-  protected static HWResource GetOrCreateFromFile(HWContext? context,
+  protected static HwResource GetOrCreateFromFile(HwContext? context,
                                                   string filename,
-                                                  HWResourceType
+                                                  HwResourceType
                                                       expectedType =
-                                                      HWResourceType.None) {
+                                                      HwResourceType.NONE) {
     // Set the extension based on the resource type if the filename doesn't have one
     if (string.IsNullOrEmpty(Path.GetExtension(filename)) &&
         TypeExtensions.TryGetValue(expectedType,
@@ -83,15 +83,15 @@ public abstract class HWResource {
     return resource;
   }
 
-  protected static HWResource
-      CreateResource(HWContext? context, string filename) {
+  protected static HwResource
+      CreateResource(HwContext? context, string filename) {
     string extension = Path.GetExtension(filename).ToLowerInvariant();
 
-    if (TypeDefinitions.TryGetValue(extension,
-                                    out HWResourceTypeDefinition
+    if (typeDefinitions_.TryGetValue(extension,
+                                    out HwResourceTypeDefinition
                                         definition)) {
-      if (Activator.CreateInstance(definition.Class) is HWResource resource) {
-        resource.Type = definition.Type;
+      if (Activator.CreateInstance(definition.@class) is HwResource resource) {
+        resource.type = definition.type;
         resource.Context = context;
         resource.RelativePath = filename;
         return resource;

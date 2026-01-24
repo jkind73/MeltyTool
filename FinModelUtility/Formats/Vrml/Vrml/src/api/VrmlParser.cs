@@ -79,7 +79,7 @@ public partial class VrmlParser {
     return output;
   }
 
-  private static readonly IImmutableSet<string> UNSUPPORTED_NODES
+  private static readonly IImmutableSet<string> UNSUPPORTED_NODES_
       = new[] {
               "BackgroundColor", "ColorInterpolator", "Fog", "Info",
               "NavigationInfo", "PerspectiveCamera", "PROTO", "ProximitySensor",
@@ -151,7 +151,7 @@ public partial class VrmlParser {
       nodeType = tr.ReadWord();
     }
 
-    if (UNSUPPORTED_NODES.Contains(nodeType)) {
+    if (UNSUPPORTED_NODES_.Contains(nodeType)) {
       tr.ReadUpToAndPastTerminator(["{"]);
       var level = 1;
       while (level > 0 && !tr.Eof) {

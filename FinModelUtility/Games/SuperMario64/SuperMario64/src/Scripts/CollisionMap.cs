@@ -9,10 +9,10 @@ namespace sm64.Scripts {
     public int id = 0;
     public List<uint> indicesList;
     public uint[] indices;
-    public int ibo { get; set; }
+    public int Ibo { get; set; }
 
-    public CollisionTriangleList(int ID) {
-      this.id = ID;
+    public CollisionTriangleList(int id) {
+      this.id = id;
       this.indicesList = [];
     }
 
@@ -22,19 +22,19 @@ namespace sm64.Scripts {
       this.indicesList.Add(c);
     }
 
-    public uint getTriangleCount() {
+    public uint GetTriangleCount() {
       return (uint) this.indices.Length / 3;
     }
 
-    public void buildList() {
+    public void BuildList() {
       this.indices = this.indicesList.ToArray();
     }
   }
 
   public sealed class CollisionMap {
-    private int vbo;
+    private int vbo_;
 
-    private List<Vector3> vertices = [];
+    private List<Vector3> vertices_ = [];
 
     //private Vector3[] vertices = null;
     public List<CollisionTriangleList> triangles =
@@ -43,7 +43,7 @@ namespace sm64.Scripts {
     public Vector3[] verts;
 
     public void AddVertex(Vector3 newVert) {
-      this.vertices.Add(newVert);
+      this.vertices_.Add(newVert);
     }
 
     public void AddTriangle(uint a, uint b, uint c) {
@@ -51,19 +51,19 @@ namespace sm64.Scripts {
         this.triangles[this.triangles.Count - 1].AddTriangle(a, b, c);
     }
 
-    public void NewTriangleList(int ID) {
-      this.triangles.Add(new CollisionTriangleList(ID));
+    public void NewTriangleList(int id) {
+      this.triangles.Add(new CollisionTriangleList(id));
     }
 
-    public uint getTriangleCount() {
-      uint tri_count = 0;
+    public uint GetTriangleCount() {
+      uint triCount = 0;
       foreach (CollisionTriangleList tri in this.triangles)
-        tri_count += tri.getTriangleCount();
-      return tri_count;
+        triCount += tri.GetTriangleCount();
+      return triCount;
     }
 
 
-    public static float barryCentric(Vector3 p1,
+    public static float BarryCentric(Vector3 p1,
                                      Vector3 p2,
                                      Vector3 p3,
                                      Vector3 pos) {
@@ -90,42 +90,42 @@ namespace sm64.Scripts {
       if ((s < 0) != (t < 0))
         return false;
 
-      var A = -p1.Y * p2.X + p0.Y * (p2.X - p1.X) + p0.X * (p1.Y - p2.Y) +
+      var a = -p1.Y * p2.X + p0.Y * (p2.X - p1.X) + p0.X * (p1.Y - p2.Y) +
               p1.X * p2.Y;
-      if (A < 0.0) {
+      if (a < 0.0) {
         s = -s;
         t = -t;
-        A = -A;
+        a = -a;
       }
 
-      return s > 0 && t > 0 && (s + t) <= A;
+      return s > 0 && t > 0 && (s + t) <= a;
     }
 
-    private struct tempTriangle {
+    private struct TempTriangle {
       public Vector3 a, b, c;
     }
 
-    public short dropToGround(Vector3 pos) {
+    public short DropToGround(Vector3 pos) {
       List<float> found = [];
       for (int i = 0; i < this.triangles.Count; i++) {
         CollisionTriangleList list = this.triangles[i];
         for (int j = 0; j < list.indices.Length; j += 3) {
-          tempTriangle temp;
+          TempTriangle temp;
           int index1 = (int) list.indices[j + 0];
           int index2 = (int) list.indices[j + 1];
           int index3 = (int) list.indices[j + 2];
-          int numVertices = this.vertices.Count;
+          int numVertices = this.vertices_.Count;
           if (index1 >= numVertices || index2 >= numVertices ||
               index3 >= numVertices)
             continue;
-          temp.a = this.vertices[index1];
-          temp.b = this.vertices[index2];
-          temp.c = this.vertices[index3];
+          temp.a = this.vertices_[index1];
+          temp.b = this.vertices_[index2];
+          temp.c = this.vertices_[index3];
           if (PointInTriangle(pos.Xz(),
                               temp.a.Xz(),
                               temp.b.Xz(),
                               temp.c.Xz())) {
-            found.Add(barryCentric(temp.a, temp.b, temp.c, pos));
+            found.Add(BarryCentric(temp.a, temp.b, temp.c, pos));
           }
         }
       }
@@ -133,25 +133,25 @@ namespace sm64.Scripts {
       if (found.Count == 0)
         return (short) pos.Y;
 
-      int closest_index = 0;
-      float closest_abs = 9999999.0f;
+      int closestIndex = 0;
+      float closestAbs = 9999999.0f;
       // Console.WriteLine("Found " + found.Count + " triangles under position");
       for (int i = 0; i < found.Count; i++) {
         float abs = Math.Abs(pos.Y - found[i]);
-        if (abs < closest_abs) {
-          closest_abs = abs;
-          closest_index = i;
+        if (abs < closestAbs) {
+          closestAbs = abs;
+          closestIndex = i;
         }
       }
 
-      return (short) found[closest_index];
+      return (short) found[closestIndex];
     }
 
-    public void buildCollisionMap() {
-      this.verts = this.vertices.ToArray();
+    public void BuildCollisionMap() {
+      this.verts = this.vertices_.ToArray();
 
-      this.vbo = GL.GenBuffer();
-      GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo);
+      this.vbo_ = GL.GenBuffer();
+      GL.BindBuffer(BufferTarget.ArrayBuffer, this.vbo_);
       GL.BufferData(
           BufferTarget.ArrayBuffer,
           (IntPtr) (3 * sizeof(float) * this.verts.Length),
@@ -160,9 +160,9 @@ namespace sm64.Scripts {
       );
 
       for (int i = 0; i < this.triangles.Count; i++) {
-        this.triangles[i].buildList();
-        this.triangles[i].ibo = GL.GenBuffer();
-        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.triangles[i].ibo);
+        this.triangles[i].BuildList();
+        this.triangles[i].Ibo = GL.GenBuffer();
+        GL.BindBuffer(BufferTarget.ElementArrayBuffer, this.triangles[i].Ibo);
         GL.BufferData(
             BufferTarget.ElementArrayBuffer,
             (IntPtr) (sizeof(uint) * this.triangles[i].indices.Length),

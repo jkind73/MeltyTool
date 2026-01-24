@@ -3,13 +3,13 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum TriggerScriptObjectKind
 	{
-		None = PhxUtil.kObjectKindNone,
+		NONE = PhxUtil.K_OBJECT_KIND_NONE,
 
-		Group,
-		Var,
-		Trigger,
-		Condition,
-		Effect,
-		TemplateMapping,
+		GROUP,
+		VAR,
+		TRIGGER,
+		CONDITION,
+		EFFECT,
+		TEMPLATE_MAPPING,
 	};
 }

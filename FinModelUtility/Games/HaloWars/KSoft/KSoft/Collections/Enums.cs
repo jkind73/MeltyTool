@@ -6,41 +6,41 @@ namespace KSoft.Collections
 	public enum SortDirection : byte
 	{
 		/// <summary>Sort data from least to greatest</summary>
-		Ascending,
+		ASCENDING,
 		/// <summary>Sort data from greatest to least</summary>
-		Descending,
+		DESCENDING,
 
 		[System.Reflection.Obfuscation(Exclude=true)]
-		[System.Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf
+		[System.Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF
 	};
 
 	[System.Flags]
 	[SuppressMessage("Microsoft.Design", "CA1714:FlagsEnumsShouldHavePluralNames")]
 	public enum TreeTraversalDirection : byte
 	{
-		PreOrder	= 1,	// Root, Left, Right
-		InOrder		= 2,	// Left, Root, Right
-		PostOrder	= 3,	// Left, Right, Root
+		PRE_ORDER	= 1,	// Root, Left, Right
+		IN_ORDER		= 2,	// Left, Root, Right
+		POST_ORDER	= 3,	// Left, Right, Root
 
-		Left		= 1 << 2,
-		Root		= 1 << 3,
-		Right		= 1 << 4,
+		LEFT		= 1 << 2,
+		ROOT		= 1 << 3,
+		RIGHT		= 1 << 4,
 
-		kOrderMask	= (1 << 2) - 1,
-		kDirMask	= (1 << 5) - 1 - kOrderMask,
+		K_ORDER_MASK	= (1 << 2) - 1,
+		K_DIR_MASK	= (1 << 5) - 1 - K_ORDER_MASK,
 
 		[System.Reflection.Obfuscation(Exclude=true)]
-		[System.Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kAll = kOrderMask | kDirMask
+		[System.Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_ALL = K_ORDER_MASK | K_DIR_MASK
 	};
 
 	[System.Flags]
 	public enum TreeTraversalOrders : byte
 	{
-		PreOrder = 1 << 0,
-		InOrder = 1 << 1,
-		PostOrder = 1 << 2,
+		PRE_ORDER = 1 << 0,
+		IN_ORDER = 1 << 1,
+		POST_ORDER = 1 << 2,
 
 		[System.Reflection.Obfuscation(Exclude=true)]
-		kAll = PreOrder | InOrder | PostOrder
+		K_ALL = PRE_ORDER | IN_ORDER | POST_ORDER
 	};
 }

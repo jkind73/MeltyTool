@@ -6,15 +6,15 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		const string kXmlAttrId = "ID"; // EditorID
+		const string K_XML_ATTR_ID_ = "ID"; // EditorID
 		#endregion
 
-		int mID = TypeExtensions.kNone;
-		public int ID { get { return this.mID; } }
+		int mId_ = TypeExtensions.K_NONE;
+		public int Id { get { return this.mId_; } }
 
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttribute(kXmlAttrId, ref this.mID);
+			s.StreamAttribute(K_XML_ATTR_ID_, ref this.mId_);
 		}
 	};
 }

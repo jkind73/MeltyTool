@@ -5,69 +5,69 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseNamedObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "Skull",
-			DataName = kXmlAttrName,
+			elementName = "Skull",
+			dataName = K_XML_ATTR_NAME,
 		};
 		#endregion
 
 		#region ObjectDBID
-		int mObjectDBID = TypeExtensions.kNone;
+		int mObjectDbid_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int ObjectDBID
+		public int ObjectDbid
 		{
-			get { return this.mObjectDBID; }
-			set { this.mObjectDBID = value; }
+			get { return this.mObjectDbid_; }
+			set { this.mObjectDbid_ = value; }
 		}
 		#endregion
 
 		public Collections.BListArray<BCollectibleSkullEffect> Effects { get; private set; }
 
 		#region DisplayImageOn
-		string mDisplayImageOn;
+		string mDisplayImageOn_;
 		[Meta.TextureReference]
 		public string DisplayImageOn
 		{
-			get { return this.mDisplayImageOn; }
-			set { this.mDisplayImageOn = value; }
+			get { return this.mDisplayImageOn_; }
+			set { this.mDisplayImageOn_ = value; }
 		}
 		#endregion
 
 		#region DisplayImageOff
-		string mDisplayImageOff;
+		string mDisplayImageOff_;
 		[Meta.TextureReference]
 		public string DisplayImageOff
 		{
-			get { return this.mDisplayImageOff; }
-			set { this.mDisplayImageOff = value; }
+			get { return this.mDisplayImageOff_; }
+			set { this.mDisplayImageOff_ = value; }
 		}
 		#endregion
 
 		#region DisplayImageLocked
-		string mDisplayImageLocked;
+		string mDisplayImageLocked_;
 		[Meta.TextureReference]
 		public string DisplayImageLocked
 		{
-			get { return this.mDisplayImageLocked; }
-			set { this.mDisplayImageLocked = value; }
+			get { return this.mDisplayImageLocked_; }
+			set { this.mDisplayImageLocked_ = value; }
 		}
 		#endregion
 
 		#region Hidden
-		bool mHidden;
+		bool mHidden_;
 		public bool Hidden
 		{
-			get { return this.mHidden; }
-			set { this.mHidden = value; }
+			get { return this.mHidden_; }
+			set { this.mHidden_ = value; }
 		}
 		#endregion
 
 		public BProtoSkull()
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDescriptionID = true;
-			textData.HasDisplayNameID = true;
+			textData.HasDescriptionId = true;
+			textData.HasDisplayNameId = true;
 
 			this.Effects = new Collections.BListArray<BCollectibleSkullEffect>();
 		}
@@ -77,12 +77,12 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttribute("objectdbid", ref this.mObjectDBID);
-			XML.XmlUtil.Serialize(s, this.Effects, BCollectibleSkullEffect.kBListXmlParams);
-			s.StreamElementOpt("DisplayImageOn", ref this.mDisplayImageOn, Predicates.IsNotNullOrEmpty);
-			s.StreamElementOpt("DisplayImageOff", ref this.mDisplayImageOff, Predicates.IsNotNullOrEmpty);
-			s.StreamElementOpt("DisplayImageLocked", ref this.mDisplayImageLocked, Predicates.IsNotNullOrEmpty);
-			s.StreamElementNamedFlag("Hidden", ref this.mHidden);
+			s.StreamAttribute("objectdbid", ref this.mObjectDbid_);
+			XML.XmlUtil.Serialize(s, this.Effects, BCollectibleSkullEffect.KBListXmlParams);
+			s.StreamElementOpt("DisplayImageOn", ref this.mDisplayImageOn_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("DisplayImageOff", ref this.mDisplayImageOff_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("DisplayImageLocked", ref this.mDisplayImageLocked_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementNamedFlag("Hidden", ref this.mHidden_);
 		}
 		#endregion
 	};

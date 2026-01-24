@@ -39,11 +39,11 @@ namespace KSoft
 	public sealed class EnumComparer<TEnum> : Reflection.EnumUtilBase<TEnum>, IComparer<TEnum>, IEqualityComparer<TEnum>
 		where TEnum : struct, IComparable, IConvertible, IFormattable
 	{
-		const string kCompareMethodName = "CompareTo";
+		const string K_COMPARE_METHOD_NAME_ = "CompareTo";
 
-		static readonly Func<TEnum, TEnum, bool> kEqualsMethod;
-		static readonly Func<TEnum, int> kGetHashCodeMethod;
-		static readonly Func<TEnum, TEnum, int> kCompareMethod;
+		static readonly Func<TEnum, TEnum, bool> KEqualsMethod;
+		static readonly Func<TEnum, int> KGetHashCodeMethod;
+		static readonly Func<TEnum, TEnum, int> KCompareMethod;
 
 		/// <summary>The singleton accessor.</summary>
 		public static readonly EnumComparer<TEnum> Instance;
@@ -52,12 +52,12 @@ namespace KSoft
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static EnumComparer()
 		{
-			Reflection.EnumUtils.AssertTypeIsEnum(kEnumType);
-			Reflection.EnumUtils.AssertUnderlyingTypeIsSupported(kEnumType, kUnderlyingType);
+			Reflection.EnumUtils.AssertTypeIsEnum(KEnumType);
+			Reflection.EnumUtils.AssertUnderlyingTypeIsSupported(KEnumType, KUnderlyingType);
 
-			kGetHashCodeMethod = GenerateGetHashCodeMethod();
-			kEqualsMethod = GenerateEqualsMethod();
-			kCompareMethod = GenerateCompareMethod();
+			KGetHashCodeMethod = GenerateGetHashCodeMethod();
+			KEqualsMethod = GenerateEqualsMethod();
+			KCompareMethod = GenerateCompareMethod();
 			Instance = new EnumComparer<TEnum>();
 		}
 
@@ -73,7 +73,7 @@ namespace KSoft
 		/// <returns>
 		/// true if the specified objects are equal; otherwise, false.
 		/// </returns>
-		public bool Equals(TEnum x, TEnum y)	{ return kEqualsMethod(x, y); }
+		public bool Equals(TEnum x, TEnum y)	{ return KEqualsMethod(x, y); }
 
 		/// <summary>Returns a hash code for the specified object.</summary>
 		/// <param name="obj">The <see cref="System.Object"/> for which a hash code is to be returned.</param>
@@ -81,7 +81,7 @@ namespace KSoft
 		/// <exception cref="System.ArgumentNullException">
 		/// The type of <paramref name="obj"/> is a reference type and <paramref name="obj"/> is null.
 		/// </exception>
-		public int GetHashCode(TEnum obj)		{ return kGetHashCodeMethod(obj); }
+		public int GetHashCode(TEnum obj)		{ return KGetHashCodeMethod(obj); }
 
 		/// <summary>Generates a comparison method similar to this:
 		/// <code>
@@ -94,8 +94,8 @@ namespace KSoft
 		/// <returns>The generated method.</returns>
 		static Func<TEnum, TEnum, bool> GenerateEqualsMethod()
 		{
-			var xParam =			Expression.Parameter(kEnumType, "x");
-			var yParam =			Expression.Parameter(kEnumType, "y");
+			var xParam =			Expression.Parameter(KEnumType, "x");
+			var yParam =			Expression.Parameter(KEnumType, "y");
 			var equalExpression =	Expression.Equal(xParam, yParam);
 
 			var lambda = Expression.Lambda<Func<TEnum, TEnum, bool>>(equalExpression, xParam, yParam);
@@ -113,9 +113,9 @@ namespace KSoft
 		/// <returns>The generated method.</returns>
 		static Func<TEnum, int> GenerateGetHashCodeMethod()
 		{
-			var objParam =				Expression.Parameter(kEnumType, "obj");
-			var convertExpression =		Expression.Convert(objParam, kUnderlyingType);
-			var getHashCodeMethod =		kUnderlyingType.GetMethod("GetHashCode");
+			var objParam =				Expression.Parameter(KEnumType, "obj");
+			var convertExpression =		Expression.Convert(objParam, KUnderlyingType);
+			var getHashCodeMethod =		KUnderlyingType.GetMethod("GetHashCode");
 			var getHashCodeExpression = Expression.Call(convertExpression, getHashCodeMethod);
 
 			var lambda = Expression.Lambda<Func<TEnum, int>>(getHashCodeExpression, objParam);
@@ -126,7 +126,7 @@ namespace KSoft
 		#region IComparer<TEnum> Members
 		public int Compare(TEnum x, TEnum y)
 		{
-			return kCompareMethod(x, y);
+			return KCompareMethod(x, y);
 		}
 
 		/// <summary>Generates a comparison method similar to this:
@@ -143,9 +143,9 @@ namespace KSoft
 		{
 			var xParam =			Expression.Parameter(Reflection.EnumUtil<TEnum>.EnumType, "x");
 			var yParam =			Expression.Parameter(Reflection.EnumUtil<TEnum>.EnumType, "y");
-			var xAsInt =			Expression.Convert(xParam, kUnderlyingType);
-			var yAsInt =			Expression.Convert(yParam, kUnderlyingType);
-			var compareExpression = Expression.Call(xAsInt, kCompareMethodName, null, yAsInt);
+			var xAsInt =			Expression.Convert(xParam, KUnderlyingType);
+			var yAsInt =			Expression.Convert(yParam, KUnderlyingType);
+			var compareExpression = Expression.Call(xAsInt, K_COMPARE_METHOD_NAME_, null, yAsInt);
 
 			var lambda = Expression.Lambda<Func<TEnum, TEnum, int>>(compareExpression, xParam, yParam);
 			return lambda.Compile();

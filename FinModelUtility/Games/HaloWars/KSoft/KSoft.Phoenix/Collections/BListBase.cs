@@ -28,17 +28,17 @@ namespace KSoft.Collections
 		, IEnumerable<T>
 	{
 		#region kValueEqualityComparer
-		private static IEqualityComparer<T> gValueEqualityComparer;
-		protected static IEqualityComparer<T> kValueEqualityComparer { get {
-			if (gValueEqualityComparer == null)
-				gValueEqualityComparer = EqualityComparer<T>.Default;
+		private static IEqualityComparer<T> gValueEqualityComparer_;
+		protected static IEqualityComparer<T> KValueEqualityComparer { get {
+			if (gValueEqualityComparer_ == null)
+				gValueEqualityComparer_ = EqualityComparer<T>.Default;
 
-			return gValueEqualityComparer;
+			return gValueEqualityComparer_;
 		} }
 		#endregion
 
 		#region kEqualityComparer
-		protected sealed class _EqualityComparer
+		protected sealed class EqualityComparer
 			: IEqualityComparer<BListBase<T>>
 		{
 			#region IEqualityComparer<BListBase<T>> Members
@@ -47,7 +47,7 @@ namespace KSoft.Collections
 				bool equals = x.Count == y.Count;
 				if (equals)
 				{
-					var comparer = kValueEqualityComparer;
+					var comparer = KValueEqualityComparer;
 					for (int i = 0; i < x.Count && equals; i++)
 						equals &= comparer.Equals(x[i], y[i]);
 				}
@@ -58,7 +58,7 @@ namespace KSoft.Collections
 			public int GetHashCode(BListBase<T> obj)
 			{
 				int hash = 0;
-				var comparer = kValueEqualityComparer;
+				var comparer = KValueEqualityComparer;
 				foreach (var o in obj)
 					hash ^= comparer.GetHashCode(o);
 
@@ -66,12 +66,12 @@ namespace KSoft.Collections
 			}
 			#endregion
 		};
-		private static _EqualityComparer gEqualityComparer;
-		protected static _EqualityComparer kEqualityComparer { get {
-			if (gEqualityComparer == null)
-				gEqualityComparer = new _EqualityComparer();
+		private static EqualityComparer gEqualityComparer_;
+		protected static EqualityComparer KEqualityComparer { get {
+			if (gEqualityComparer_ == null)
+				gEqualityComparer_ = new EqualityComparer();
 
-			return gEqualityComparer;
+			return gEqualityComparer_;
 		} }
 		#endregion
 
@@ -84,13 +84,13 @@ namespace KSoft.Collections
 		/// <summary>Parameters that dictate the functionality of this list</summary>
 		public BListParams Params { get; private set; }
 
-		protected BListBase(int capacity = BCollectionParams.kDefaultCapacity)
+		protected BListBase(int capacity = BCollectionParams.K_DEFAULT_CAPACITY)
 		{
 			this.mList = new ObservableCollection<T>(/*capacity*/);
 			this.Capacity = capacity;
 		}
 		protected BListBase(BListParams @params)
-			: this(@params != null ? @params.InitialCapacity : BCollectionParams.kDefaultCapacity)
+			: this(@params != null ? @params.initialCapacity : BCollectionParams.K_DEFAULT_CAPACITY)
 		{
 			this.Params = @params;
 		}
@@ -157,12 +157,12 @@ namespace KSoft.Collections
 		#region IEqualityComparer<BListBase<T>> Members
 		public bool Equals(BListBase<T> x, BListBase<T> y)
 		{
-			return kEqualityComparer.Equals(x, y);
+			return KEqualityComparer.Equals(x, y);
 		}
 
 		public int GetHashCode(BListBase<T> obj)
 		{
-			return kEqualityComparer.GetHashCode(obj);
+			return KEqualityComparer.GetHashCode(obj);
 		}
 		#endregion
 

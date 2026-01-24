@@ -178,7 +178,7 @@ public static class SceneExtensions {
       light.Strength = individualStrength;
 
 
-      var defaultAttenuation = new Vector3f { X = 1.075f };
+      var defaultAttenuation = new Vector3F { X = 1.075f };
       light.SetAttenuationFunction(AttenuationFunction.SPECULAR);
       light.SetCosineAttenuation(defaultAttenuation);
       light.SetDistanceAttenuation(defaultAttenuation);
@@ -193,7 +193,7 @@ public static class SceneExtensions {
           Y = (float) (.5f * Math.Sin(angleInRadians)),
           Z = -.6f,
       });
-      light.SetNormal(new Vector3f {
+      light.SetNormal(new Vector3F {
           X = lightNormal.X,
           Y = lightNormal.Y,
           Z = lightNormal.Z

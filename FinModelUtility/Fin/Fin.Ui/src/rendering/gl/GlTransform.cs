@@ -17,25 +17,25 @@ public enum TransformMatrixMode {
 }
 
 public static class GlTransform {
-  private static readonly Matrix4x4Stack modelMatrix_ = new();
-  private static readonly Matrix4x4Stack viewMatrix_ = new();
-  private static readonly Matrix4x4Stack projectionMatrix_ = new();
+  private static readonly Matrix4X4Stack MODEL_MATRIX_ = new();
+  private static readonly Matrix4X4Stack VIEW_MATRIX_ = new();
+  private static readonly Matrix4X4Stack PROJECTION_MATRIX_ = new();
 
-  private static Matrix4x4Stack currentMatrix_ = modelMatrix_;
+  private static Matrix4X4Stack currentMatrix_ = MODEL_MATRIX_;
 
   public static Matrix4x4 ModelMatrix {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    get => modelMatrix_.Top;
+    get => MODEL_MATRIX_.Top;
   }
 
   public static Matrix4x4 ViewMatrix {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    get => viewMatrix_.Top;
+    get => VIEW_MATRIX_.Top;
   }
 
   public static Matrix4x4 ProjectionMatrix {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    get => projectionMatrix_.Top;
+    get => PROJECTION_MATRIX_.Top;
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,7 +46,7 @@ public static class GlTransform {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  public static unsafe void UniformMatrix4s(int location,
+  public static unsafe void UniformMatrix4S(int location,
                                             ReadOnlySpan<Matrix4x4> matrices) {
     fixed (float* ptr = &(matrices[0].M11)) {
       GL.UniformMatrix4(location, matrices.Length, false, ptr);
@@ -61,9 +61,9 @@ public static class GlTransform {
 
   public static void MatrixMode(TransformMatrixMode mode)
     => currentMatrix_ = mode switch {
-        TransformMatrixMode.MODEL => modelMatrix_,
-        TransformMatrixMode.VIEW => viewMatrix_,
-        TransformMatrixMode.PROJECTION => projectionMatrix_,
+        TransformMatrixMode.MODEL => MODEL_MATRIX_,
+        TransformMatrixMode.VIEW => VIEW_MATRIX_,
+        TransformMatrixMode.PROJECTION => PROJECTION_MATRIX_,
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
     };
 
@@ -83,7 +83,7 @@ public static class GlTransform {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Translate(float x, float y, float z)
-    => MultMatrix(SystemMatrix4x4Util.FromTranslation(x, y, z));
+    => MultMatrix(SystemMatrix4X4Util.FromTranslation(x, y, z));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Translate(in Vector3 xyz)
@@ -92,15 +92,15 @@ public static class GlTransform {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(float x, float y, float z)
-    => MultMatrix(SystemMatrix4x4Util.FromScale(x, y, z));
+    => MultMatrix(SystemMatrix4X4Util.FromScale(x, y, z));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(float scale)
-    => MultMatrix(SystemMatrix4x4Util.FromScale(scale, scale, scale));
+    => MultMatrix(SystemMatrix4X4Util.FromScale(scale, scale, scale));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Scale(Vector3 scale)
-    => MultMatrix(SystemMatrix4x4Util.FromScale(scale));
+    => MultMatrix(SystemMatrix4X4Util.FromScale(scale));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Rotate(double degrees, double x, double y, double z)

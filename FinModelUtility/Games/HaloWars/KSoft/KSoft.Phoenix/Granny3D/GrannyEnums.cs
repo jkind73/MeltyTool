@@ -2,95 +2,95 @@
 
 namespace KSoft.Granny3D
 {
-	public enum granny_member_type
+	public enum GrannyMemberType
 	{
-		EndMember,
+		END_MEMBER,
 
-		InlineMember,
-		ReferenceMember,
-		ReferenceToArrayMember,
-		ArrayOfReferencesMember,
-		VariantReferenceMember,
-		SwitchableTypeMember,
-		ReferenceToVariantArrayMember,
-		StringMember,
-		TransformMember,
-		Real32Member,
-		Int8Member,
-		UInt8Member,
-		BinormalInt8Member,
-		NormalUInt8Member,
-		Int16Member,
-		UInt16Member,
-		BinormalInt16Member,
-		NormalUInt16Member,
-		Int32Member,
-		UInt32Member,
+		INLINE_MEMBER,
+		REFERENCE_MEMBER,
+		REFERENCE_TO_ARRAY_MEMBER,
+		ARRAY_OF_REFERENCES_MEMBER,
+		VARIANT_REFERENCE_MEMBER,
+		SWITCHABLE_TYPE_MEMBER,
+		REFERENCE_TO_VARIANT_ARRAY_MEMBER,
+		STRING_MEMBER,
+		TRANSFORM_MEMBER,
+		REAL32_MEMBER,
+		INT8_MEMBER,
+		U_INT8_MEMBER,
+		BINORMAL_INT8_MEMBER,
+		NORMAL_U_INT8_MEMBER,
+		INT16_MEMBER,
+		U_INT16_MEMBER,
+		BINORMAL_INT16_MEMBER,
+		NORMAL_U_INT16_MEMBER,
+		INT32_MEMBER,
+		U_INT32_MEMBER,
 
-		Bool32Member = Int32Member,
+		BOOL32_MEMBER = INT32_MEMBER,
 	};
 
 	[Flags]
-	public enum granny_transform_flags
+	public enum GrannyTransformFlags
 	{
-		HasPosition = 1<<0,
-		HasOrientation = 1<<1,
-		HasScaleShear = 1<<2,
+		HAS_POSITION = 1<<0,
+		HAS_ORIENTATION = 1<<1,
+		HAS_SCALE_SHEAR = 1<<2,
 	};
 	[Flags]
-	public enum granny_transform_file_flags
+	public enum GrannyTransformFileFlags
 	{
-		RenormalizeNormals = 1<<0,
-		ReorderTriangleIndices = 1<<1,
+		RENORMALIZE_NORMALS = 1<<0,
+		REORDER_TRIANGLE_INDICES = 1<<1,
 	};
 
-	public enum granny_texture_type
+	public enum GrannyTextureType
 	{
-		ColorMapTextureType,
-		CubeMapTextureType,
+		COLOR_MAP_TEXTURE_TYPE,
+		CUBE_MAP_TEXTURE_TYPE,
 	};
 
-	public enum granny_texture_encoding
+	public enum GrannyTextureEncoding
 	{
-		UserTextureEncoding,
-		RawTextureEncoding,
-		S3TCTextureEncoding,
-		BinkTextureEncoding,
+		USER_TEXTURE_ENCODING,
+		RAW_TEXTURE_ENCODING,
+		S3_TC_TEXTURE_ENCODING,
+		BINK_TEXTURE_ENCODING,
 	};
 
-	public enum granny_material_texture_type
+	public enum GrannyMaterialTextureType
 	{
-		UnknownTextureType,
-		AmbientColorTexture,
-		DiffuseColorTexture,
-		SpecularColorTexture,
-		SelfIlluminationTexture,
-		OpacityTexture,
-		BumpHeightTexture,
-		ReflectionTexture,
-		RefractionTexture,
-		DisplacementTexture,
+		UNKNOWN_TEXTURE_TYPE,
+		AMBIENT_COLOR_TEXTURE,
+		DIFFUSE_COLOR_TEXTURE,
+		SPECULAR_COLOR_TEXTURE,
+		SELF_ILLUMINATION_TEXTURE,
+		OPACITY_TEXTURE,
+		BUMP_HEIGHT_TEXTURE,
+		REFLECTION_TEXTURE,
+		REFRACTION_TEXTURE,
+		DISPLACEMENT_TEXTURE,
 	};
 
 	[Flags]
-	public enum granny_track_group_flags
+	public enum GrannyTrackGroupFlags
 	{
-		AccumulationExtracted = 1<<0,
-		TrackGroupIsSorted = 1<<1,
-		AccumulationIsVDA = 1<<2,
+		ACCUMULATION_EXTRACTED = 1<<0,
+		TRACK_GROUP_IS_SORTED = 1<<1,
+		ACCUMULATION_IS_VDA = 1<<2,
 	};
 
-	public enum granny_deformation_type
+	public enum GrannyDeformationType
 	{
-		DeformPosition = 1,
-		DeformPositionNormal,
-		DeformPositionNormalTangent,
-		DeformPositionNormalTangentBinormal,
+		DEFORM_POSITION = 1,
+		DEFORM_POSITION_NORMAL,
+		DEFORM_POSITION_NORMAL_TANGENT,
+		DEFORM_POSITION_NORMAL_TANGENT_BINORMAL,
 	};
 
-	public enum granny_deformer_tail_flags
+	public enum GrannyDeformerTailFlags
 	{
-		DontAllowUncopiedTail,
-		AllowUncopiedTail,
+		DONT_ALLOW_UNCOPIED_TAIL,
+		ALLOW_UNCOPIED_TAIL,
 	};
 }

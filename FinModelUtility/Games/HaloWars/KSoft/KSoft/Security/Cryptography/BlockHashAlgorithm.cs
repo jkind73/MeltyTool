@@ -10,15 +10,15 @@ namespace KSoft.Security.Cryptography
 	public abstract class BlockHashAlgorithm
 		: HashAlgorithm
 	{
-		byte[] mBlockBuffer;
+		byte[] mBlockBuffer_;
 
 		protected long TotalBytesProcessed { get; private set; }
 
 		/// <summary>The size in bytes of an individual block.</summary>
-		public int BlockSize { get { return this.mBlockBuffer.Length; } }
+		public int BlockSize { get { return this.mBlockBuffer_.Length; } }
 		/// <summary>The number of bytes currently in the buffer waiting to be processed.</summary>
 		public int BlockBytesRemaining { get; private set; }
-		internal byte[] InternalBlockBuffer { get { return this.mBlockBuffer; } }
+		internal byte[] InternalBlockBuffer { get { return this.mBlockBuffer_; } }
 
 		/// <summary>Initializes a new instance of the BlockHashAlgorithm class.</summary>
 		/// <param name="blockSize">The size in bytes of an individual block.</param>
@@ -26,7 +26,7 @@ namespace KSoft.Security.Cryptography
 		{
 			this.HashSizeValue = hashSize;
 
-			this.mBlockBuffer = new byte[blockSize];
+			this.mBlockBuffer_ = new byte[blockSize];
 		}
 
 		/// <summary>Process a block of data.</summary>
@@ -47,7 +47,7 @@ namespace KSoft.Security.Cryptography
 		/// this function or you could risk garbage being carried over from one calculation to the next.</remarks>
 		public override void Initialize()
 		{
-			Array.Clear(this.mBlockBuffer, 0, this.mBlockBuffer.Length);
+			Array.Clear(this.mBlockBuffer_, 0, this.mBlockBuffer_.Length);
 			this.BlockBytesRemaining = 0;
 			this.TotalBytesProcessed = 0;
 		}
@@ -64,7 +64,7 @@ namespace KSoft.Security.Cryptography
 				if (count + this.BlockBytesRemaining < this.BlockSize)
 				{
 					// Still don't have enough for a full block, just store it.
-					Array.Copy(array, startIndex, this.mBlockBuffer, this.BlockBytesRemaining, count);
+					Array.Copy(array, startIndex, this.mBlockBuffer_, this.BlockBytesRemaining, count);
 					this.BlockBytesRemaining += count;
 					return;
 				}
@@ -72,8 +72,8 @@ namespace KSoft.Security.Cryptography
 				{
 					// Fill out the buffer to make a full block, and then process it.
 					int i = this.BlockSize - this.BlockBytesRemaining;
-					Array.Copy(array, startIndex, this.mBlockBuffer, this.BlockBytesRemaining, i);
-					this.ProcessBlock(this.mBlockBuffer, 0, 1);
+					Array.Copy(array, startIndex, this.mBlockBuffer_, this.BlockBytesRemaining, i);
+					this.ProcessBlock(this.mBlockBuffer_, 0, 1);
 					this.TotalBytesProcessed += this.BlockSize;
 					this.BlockBytesRemaining = 0;
 					startIndex += i;
@@ -92,7 +92,7 @@ namespace KSoft.Security.Cryptography
 			int bytesLeft = count % this.BlockSize;
 			if (bytesLeft != 0)
 			{
-				Array.Copy(array, ((count - bytesLeft) + startIndex), this.mBlockBuffer, 0, bytesLeft);
+				Array.Copy(array, ((count - bytesLeft) + startIndex), this.mBlockBuffer_, 0, bytesLeft);
 				this.BlockBytesRemaining = bytesLeft;
 			}
 		}
@@ -101,7 +101,7 @@ namespace KSoft.Security.Cryptography
 		/// <returns>The final hash value.</returns>
 		protected override byte[] HashFinal()
 		{
-			return this.ProcessFinalBlock(this.mBlockBuffer, 0, this.BlockBytesRemaining);
+			return this.ProcessFinalBlock(this.mBlockBuffer_, 0, this.BlockBytesRemaining);
 		}
 		#endregion
 	};

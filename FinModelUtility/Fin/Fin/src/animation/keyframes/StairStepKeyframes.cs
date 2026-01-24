@@ -21,7 +21,7 @@ public sealed class StairStepKeyframes<T>(
   public ISharedInterpolationConfig SharedConfig => sharedConfig;
 
   public IndividualInterpolationConfig<T> IndividualConfig
-    => individualConfig ?? IndividualInterpolationConfig<T>.DEFAULT;
+    => individualConfig ?? IndividualInterpolationConfig<T>.Default;
 
   public IReadOnlyList<Keyframe<T>> Definitions => this.impl_;
   public bool HasAnyData => this.Definitions.Count > 0;

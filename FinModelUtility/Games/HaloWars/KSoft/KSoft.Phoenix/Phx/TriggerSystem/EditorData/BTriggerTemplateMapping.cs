@@ -6,11 +6,11 @@ namespace KSoft.Phoenix.Phx
 
 	#region Xml constants
 
-	public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+	public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			RootName = "TriggerMappings",
-			ElementName = "TriggerTemplateMapping",
-			DataName = DatabaseNamedObject.kXmlAttrNameN,
+			rootName = "TriggerMappings",
+			elementName = "TriggerTemplateMapping",
+			dataName = DatabaseNamedObject.K_XML_ATTR_NAME_N,
 		};
 
 		// ID, Image, X, Y, SizeX, SizeY, GroupID, CommentOut, Obsolete, DoNotUse

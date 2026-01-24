@@ -1,13 +1,13 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	/*public*/ sealed class BTriggerUIGroups
+	/*public*/ sealed class BTriggerUiGroups
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			RootName = "Groups",
-			ElementName = "GroupUI",
+			rootName = "Groups",
+			elementName = "GroupUI",
 		};
 	#endregion
   };

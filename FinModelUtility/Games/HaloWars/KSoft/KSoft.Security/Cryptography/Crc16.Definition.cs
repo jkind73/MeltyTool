@@ -10,24 +10,24 @@ namespace KSoft.Security.Cryptography
 	{
 		public sealed class Definition
 		{
-			readonly ushort mPolynomial;
-			readonly ushort[] mCrcTable;
-			readonly ushort mInitialValue;
-			readonly ushort mXorIn;
-			readonly ushort mXorOut;
+			readonly ushort mPolynomial_;
+			readonly ushort[] mCrcTable_;
+			readonly ushort mInitialValue_;
+			readonly ushort mXorIn_;
+			readonly ushort mXorOut_;
 
-			public ushort Polynomial { get { return this.mPolynomial; } }
+			public ushort Polynomial { get { return this.mPolynomial_; } }
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-			public ushort[] CrcTable { get { return this.mCrcTable; } }
-			public ushort InitialValue { get { return this.mInitialValue; } }
-			public ushort XorIn { get { return this.mXorIn; } }
-			public ushort XorOut { get { return this.mXorOut; } }
+			public ushort[] CrcTable { get { return this.mCrcTable_; } }
+			public ushort InitialValue { get { return this.mInitialValue_; } }
+			public ushort XorIn { get { return this.mXorIn_; } }
+			public ushort XorOut { get { return this.mXorOut_; } }
 
 			static ushort[] BuildCrcTable(uint polynomial)
 			{
-				var crc_table = new ushort[kCrcTableSize];
+				var crcTable = new ushort[K_CRC_TABLE_SIZE];
 
-				for (uint index = 0; index < crc_table.Length; index++)
+				for (uint index = 0; index < crcTable.Length; index++)
 				{
 					uint crc = index << 8;
 					for (uint j = 0; j < 8; j++)
@@ -37,25 +37,25 @@ namespace KSoft.Security.Cryptography
 						else
 							crc <<= 1;
 					}
-					crc_table[index] = (ushort)crc;
+					crcTable[index] = (ushort)crc;
 				}
 
-				Contract.Assert(crc_table[1] != 0);
-				Contract.Assert(crc_table[crc_table.Length-1] != 0);
+				Contract.Assert(crcTable[1] != 0);
+				Contract.Assert(crcTable[crcTable.Length-1] != 0);
 
-				return crc_table;
+				return crcTable;
 			}
 
-			public Definition(ushort polynomial = kDefaultPolynomial, ushort initialValue = ushort.MaxValue, ushort xorIn = 0, ushort xorOut = 0, params ushort[] crcTable)
+			public Definition(ushort polynomial = K_DEFAULT_POLYNOMIAL, ushort initialValue = ushort.MaxValue, ushort xorIn = 0, ushort xorOut = 0, params ushort[] crcTable)
 			{
-				Contract.Requires(crcTable.IsNullOrEmpty() || crcTable.Length == kCrcTableSize);
+				Contract.Requires(crcTable.IsNullOrEmpty() || crcTable.Length == K_CRC_TABLE_SIZE);
 
-				this.mPolynomial = polynomial;
-				this.mInitialValue = initialValue;
-				this.mXorIn = xorIn;
-				this.mXorOut = xorOut;
+				this.mPolynomial_ = polynomial;
+				this.mInitialValue_ = initialValue;
+				this.mXorIn_ = xorIn;
+				this.mXorOut_ = xorOut;
 
-				this.mCrcTable = crcTable.IsNullOrEmpty()
+				this.mCrcTable_ = crcTable.IsNullOrEmpty()
 					? BuildCrcTable(this.Polynomial)
 					: crcTable;
 			}

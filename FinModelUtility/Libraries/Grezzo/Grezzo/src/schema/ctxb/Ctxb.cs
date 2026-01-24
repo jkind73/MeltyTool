@@ -47,7 +47,7 @@ public sealed partial class CtxbTexChunk : IBinaryConvertible {
 public sealed partial class CtxbTexEntry : IBinaryConvertible {
   [WLengthOfSequence(nameof(Data))]
   private uint dataLength_;
-  public ushort mimapCount { get; private set; }
+  public ushort MimapCount { get; private set; }
 
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool IsEtc1 { get; private set; }
@@ -65,10 +65,10 @@ public sealed partial class CtxbTexEntry : IBinaryConvertible {
   private uint padding_;
 
   [Skip]
-  private bool includeExtraPadding_ 
+  private bool IncludeExtraPadding 
     => CmbHeader.Version >= Version.LUIGIS_MANSION_3D;
 
-  [RIfBoolean(nameof(includeExtraPadding_))]
+  [RIfBoolean(nameof(IncludeExtraPadding))]
   [SequenceLengthSource(56)]
   private byte[]? extraPadding_;
 

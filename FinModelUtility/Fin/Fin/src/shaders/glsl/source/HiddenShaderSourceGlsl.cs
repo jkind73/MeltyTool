@@ -4,14 +4,14 @@ public sealed class HiddenShaderSourceGlsl : IShaderSourceGlsl {
   public string VertexShaderSource
 
     => $$"""
-         #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+         #version {{GlslConstants.FragmentShaderVersion}}
 
          void main() {}
          """;
 
   public string FragmentShaderSource
     => $$"""
-         #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+         #version {{GlslConstants.FragmentShaderVersion}}
          {{GlslConstants.FLOAT_PRECISION}}
          
          void main() {

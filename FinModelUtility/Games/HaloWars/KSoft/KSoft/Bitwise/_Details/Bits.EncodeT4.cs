@@ -24,7 +24,7 @@ namespace KSoft
 		public static uint BitEncodeEnum(uint value, uint bits, int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return Bitwise.Flags.Add(bits & ~(bitMask << bitIndex), // clear the bit-space
@@ -42,14 +42,14 @@ namespace KSoft
 		public static void BitEncodeEnum(uint value, ref uint bits, ref int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bit_count = BitCount(bitMask);
-			Contract.Assert((bitIndex + bit_count) <= kInt32BitCount);
+			int bitCount = BitCount(bitMask);
+			Contract.Assert((bitIndex + bitCount) <= K_INT32_BIT_COUNT);
 
 			bits = BitEncodeEnum(value, bits, bitIndex, bitMask);
-			bitIndex += bit_count;
+			bitIndex += bitCount;
 		}
 
 		/// <summary>Bit encode an enumeration value into an unsigned integer</summary>
@@ -66,7 +66,7 @@ namespace KSoft
 		public static ulong BitEncodeEnum(ulong value, ulong bits, int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return Bitwise.Flags.Add(bits & ~(bitMask << bitIndex), // clear the bit-space
@@ -84,14 +84,14 @@ namespace KSoft
 		public static void BitEncodeEnum(ulong value, ref ulong bits, ref int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bit_count = BitCount(bitMask);
-			Contract.Assert((bitIndex + bit_count) <= kInt64BitCount);
+			int bitCount = BitCount(bitMask);
+			Contract.Assert((bitIndex + bitCount) <= K_INT64_BIT_COUNT);
 
 			bits = BitEncodeEnum(value, bits, bitIndex, bitMask);
-			bitIndex += bit_count;
+			bitIndex += bitCount;
 		}
 
 		#endregion
@@ -111,7 +111,7 @@ namespace KSoft
 		public static uint BitEncodeFlags(uint value, uint bits, int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return Bitwise.Flags.Add(bits,
@@ -129,14 +129,14 @@ namespace KSoft
 		public static void BitEncodeFlags(uint value, ref uint bits, ref int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bit_count = BitCount(bitMask);
-			Contract.Assert((bitIndex + bit_count) <= kInt32BitCount);
+			int bitCount = BitCount(bitMask);
+			Contract.Assert((bitIndex + bitCount) <= K_INT32_BIT_COUNT);
 
 			bits = BitEncodeFlags(value, bits, bitIndex, bitMask);
-			bitIndex += bit_count;
+			bitIndex += bitCount;
 		}
 
 		/// <summary>Bit encode a flags value into an unsigned integer</summary>
@@ -153,7 +153,7 @@ namespace KSoft
 		public static ulong BitEncodeFlags(ulong value, ulong bits, int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return Bitwise.Flags.Add(bits,
@@ -171,14 +171,14 @@ namespace KSoft
 		public static void BitEncodeFlags(ulong value, ref ulong bits, ref int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bit_count = BitCount(bitMask);
-			Contract.Assert((bitIndex + bit_count) <= kInt64BitCount);
+			int bitCount = BitCount(bitMask);
+			Contract.Assert((bitIndex + bitCount) <= K_INT64_BIT_COUNT);
 
 			bits = BitEncodeFlags(value, bits, bitIndex, bitMask);
-			bitIndex += bit_count;
+			bitIndex += bitCount;
 		}
 
 		#endregion
@@ -198,7 +198,7 @@ namespace KSoft
 		public static uint BitEncode(uint value, uint bits, int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			// Use the bit mask's invert so we can get all of the non-value bits
@@ -220,7 +220,7 @@ namespace KSoft
 		public static void BitEncode(uint value, ref uint bits, ref int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			// Use the bit mask's invert so we can get all of the non-value bits
@@ -260,7 +260,7 @@ namespace KSoft
 		public static ulong BitEncode(ulong value, ulong bits, int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			// Use the bit mask's invert so we can get all of the non-value bits
@@ -282,7 +282,7 @@ namespace KSoft
 		public static void BitEncode(ulong value, ref ulong bits, ref int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			// Use the bit mask's invert so we can get all of the non-value bits

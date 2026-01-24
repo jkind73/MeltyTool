@@ -6,11 +6,11 @@ namespace KSoft.T4
 {
 	public enum TagElementStreamSubjectType
 	{
-		Cursor,
-		Element,
-		ElementOpt,
-		Attribute,
-		AttributeOpt,
+		CURSOR,
+		ELEMENT,
+		ELEMENT_OPT,
+		ATTRIBUTE,
+		ATTRIBUTE_OPT,
 	};
 
 	public static class TagElementStreamsT4
@@ -28,33 +28,33 @@ namespace KSoft.T4
 				this.SupportsOptional = supportsOpt;
 			}
 		};
-		static readonly OperationDefinition kCursorOp = new OperationDefinition(TagElementStreamSubjectType.Cursor, false);
-		static readonly OperationDefinition kElementOp = new OperationDefinition(TagElementStreamSubjectType.Element);
-		static readonly OperationDefinition kAttributeOp = new OperationDefinition(TagElementStreamSubjectType.Attribute);
+		static readonly OperationDefinition KCursorOp = new OperationDefinition(TagElementStreamSubjectType.CURSOR, false);
+		static readonly OperationDefinition KElementOp = new OperationDefinition(TagElementStreamSubjectType.ELEMENT);
+		static readonly OperationDefinition KAttributeOp = new OperationDefinition(TagElementStreamSubjectType.ATTRIBUTE);
 
 		public static IEnumerable<OperationDefinition> Operations { get {
-			yield return kCursorOp;
-			yield return kElementOp;
-			yield return kAttributeOp;
+			yield return KCursorOp;
+			yield return KElementOp;
+			yield return KAttributeOp;
 		} }
 
 		public static IEnumerable<PrimitiveCodeDefinition> SerializableTypesMisc { get {
-			yield return PrimitiveDefinitions.kString;
-			yield return PrimitiveDefinitions.kChar;
-			yield return PrimitiveDefinitions.kBool;
+			yield return PrimitiveDefinitions.KString;
+			yield return PrimitiveDefinitions.KChar;
+			yield return PrimitiveDefinitions.KBool;
 
-			yield return PrimitiveDefinitions.kSingle;
-			yield return PrimitiveDefinitions.kDouble;
+			yield return PrimitiveDefinitions.KSingle;
+			yield return PrimitiveDefinitions.KDouble;
 		} }
 
 		public static IEnumerable<NumberCodeDefinition> SerializableTypesIntegers { get {
-			foreach (var num_type in PrimitiveDefinitions.Numbers)
-				if (num_type.IsInteger)
-					yield return num_type;
+			foreach (var numType in PrimitiveDefinitions.Numbers)
+				if (numType.IsInteger)
+					yield return numType;
 		} }
 
 		public static IEnumerable<PrimitiveCodeDefinition> SerializableTypesSpecial { get {
-			yield return PrimitiveDefinitions.kKGuid;
+			yield return PrimitiveDefinitions.KKGuid;
 		} }
 
 		public static void GenerateObjectPropertyStreamMethod(TextTemplating.TextTransformation ttFile,
@@ -68,20 +68,20 @@ namespace KSoft.T4
 			ttFile.PushIndent("\t");
 			ttFile.PushIndent("\t");
 
-			bool is_opt =
-				subject == TagElementStreamSubjectType.ElementOpt ||
-				subject == TagElementStreamSubjectType.AttributeOpt
+			bool isOpt =
+				subject == TagElementStreamSubjectType.ELEMENT_OPT ||
+				subject == TagElementStreamSubjectType.ATTRIBUTE_OPT
 				;
 
-			string method_name = subject.ToString();
+			string methodName = subject.ToString();
 			ttFile.WriteLine(
 				"public {5} Stream{0}<T>({2} T theObj, Exprs.Expression<Func<T, {1} >> propExpr {3} {4})",
-				method_name,
+				methodName,
 				codeDef.Keyword,
 				hasTNameParam.UseStringOrEmpty("TName name,"),
-				is_opt.UseStringOrEmpty(", Predicate<{0}> predicate = null", codeDef.Keyword),
+				isOpt.UseStringOrEmpty(", Predicate<{0}> predicate = null", codeDef.Keyword),
 				codeDef.IsInteger.UseStringOrEmpty(", NumeralBase numBase=kDefaultRadix"),
-				!is_opt ? "void" : "bool"
+				!isOpt ? "void" : "bool"
 			);
 
 			ttFile.WriteLine("{");
@@ -93,7 +93,7 @@ namespace KSoft.T4
 				ttFile.WriteLine("");
 			}
 
-			if (is_opt)
+			if (isOpt)
 			{
 				ttFile.WriteLine("if (predicate == null)");
 				using (var cb1 = ttFile.EnterCodeBlock())
@@ -105,18 +105,18 @@ namespace KSoft.T4
 
 			ttFile.WriteLine("var property = Reflection.Util.PropertyFromExpr(propExpr);");
 			ttFile.WriteLine("if (IsReading)");
-			using (var cb1 = ttFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+			using (var cb1 = ttFile.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 			{
 				ttFile.WriteLine("var value = default( {0} );", codeDef.Keyword);
 				ttFile.WriteLine("{1}Read{0}({2} ref value {3});",
-					method_name,
-					is_opt.UseStringOrEmpty("executed = "),
+					methodName,
+					isOpt.UseStringOrEmpty("executed = "),
 					hasTNameParam.UseStringOrEmpty("name,"),
 					codeDef.IsInteger.UseStringOrEmpty(", numBase")
 				);
-				if (is_opt)
+				if (isOpt)
 					ttFile.WriteLine("if (executed)");
-				using (var cb2 = ttFile.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
+				using (var cb2 = ttFile.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
 					ttFile.WriteLine("property.SetValue(theObj, value, null);");
 			}
 
@@ -124,17 +124,17 @@ namespace KSoft.T4
 			using (var cb1 = ttFile.EnterCodeBlock())
 			{
 				ttFile.WriteLine("{2}Write{0}{3}({4} ({1})property.GetValue(theObj, null) {5}{6});",
-					method_name,									// 0
+					methodName,									// 0
 					codeDef.Keyword,								// 1
-					is_opt.UseStringOrEmpty("executed = "),			// 2
-					is_opt.UseStringOrEmpty("OnTrue"),				// 3
+					isOpt.UseStringOrEmpty("executed = "),			// 2
+					isOpt.UseStringOrEmpty("OnTrue"),				// 3
 					hasTNameParam.UseStringOrEmpty("name,"),		// 4
-					is_opt.UseStringOrEmpty(", predicate"),			// 5
+					isOpt.UseStringOrEmpty(", predicate"),			// 5
 					codeDef.IsInteger.UseStringOrEmpty(", numBase")	// 6
 				);
 			};
 
-			if (is_opt)
+			if (isOpt)
 			{
 				ttFile.NewLine();
 				ttFile.WriteLine("return executed;");

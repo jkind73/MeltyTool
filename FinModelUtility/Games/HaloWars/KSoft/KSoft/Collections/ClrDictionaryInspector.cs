@@ -15,55 +15,55 @@ namespace KSoft.Collections
 	public sealed class ClrDictionaryInspector<TKey, TValue>
 	{
 		#region Dictionary field names
-		const string kDicBucketsName = "buckets";
-		const string kDicEntriesName = "entries";
-		const string kDicCountName = "count";
-		const string kDicVersionName = "version";
-		const string kDicFreeListName = "freeList";
-		const string kDicFreeCountName = "freeCount";
+		const string K_DIC_BUCKETS_NAME_ = "buckets";
+		const string K_DIC_ENTRIES_NAME_ = "entries";
+		const string K_DIC_COUNT_NAME_ = "count";
+		const string K_DIC_VERSION_NAME_ = "version";
+		const string K_DIC_FREE_LIST_NAME_ = "freeList";
+		const string K_DIC_FREE_COUNT_NAME_ = "freeCount";
 		#endregion
 		#region Dictionary.Entry field names
-		const string kEntryTypeName = "Entry";
-		const string kEntryHashCodeName = "hashCode";
-		const string kEntryNextEntryIndexName = "next";
-		const string kEntryKeyName = "key";
-		const string kEntryValueName = "value";
+		const string K_ENTRY_TYPE_NAME_ = "Entry";
+		const string K_ENTRY_HASH_CODE_NAME_ = "hashCode";
+		const string K_ENTRY_NEXT_ENTRY_INDEX_NAME_ = "next";
+		const string K_ENTRY_KEY_NAME_ = "key";
+		const string K_ENTRY_VALUE_NAME_ = "value";
 		#endregion
 
 		[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 		[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct DicEntry
 		{
-			public int HashCode; // only the lower 31 bits of the actual hash code
-			public int NextEntryIndex;
-			public TKey Key;
-			public TValue Value;
+			public int hashCode; // only the lower 31 bits of the actual hash code
+			public int nextEntryIndex;
+			public TKey key;
+			public TValue value;
 
-			public bool IsFree { get => this.HashCode.IsNone(); }
-			public bool IsLast { get => this.NextEntryIndex.IsNone(); }
+			public bool IsFree { get => this.hashCode.IsNone(); }
+			public bool IsLast { get => this.nextEntryIndex.IsNone(); }
 
 			public DicEntry GetNext(ClrDictionaryInspector<TKey, TValue> inspector)
 			{
 				Contract.Requires<ArgumentNullException>(inspector != null);
 				Contract.Requires<InvalidOperationException>(!this.IsLast);
 
-				return inspector.Entries[this.NextEntryIndex];
+				return inspector.Entries[this.nextEntryIndex];
 			}
 		};
 
 		#region Dictionary getters
-		static readonly Func<Dictionary<TKey, TValue>, int[]> kGetDicBuckets;
-		static readonly Func<Dictionary<TKey, TValue>, Array> kGetDicEntries;
-		static readonly Func<Dictionary<TKey, TValue>, int> kGetDicCount;
-		static readonly Func<Dictionary<TKey, TValue>, int> kGetDicVersion;
-		static readonly Func<Dictionary<TKey, TValue>, int> kGetDicFreeList;
-		static readonly Func<Dictionary<TKey, TValue>, int> kGetDicFreeCount;
+		static readonly Func<Dictionary<TKey, TValue>, int[]> KGetDicBuckets;
+		static readonly Func<Dictionary<TKey, TValue>, Array> KGetDicEntries;
+		static readonly Func<Dictionary<TKey, TValue>, int> KGetDicCount;
+		static readonly Func<Dictionary<TKey, TValue>, int> KGetDicVersion;
+		static readonly Func<Dictionary<TKey, TValue>, int> KGetDicFreeList;
+		static readonly Func<Dictionary<TKey, TValue>, int> KGetDicFreeCount;
 		#endregion
 		#region Dictionary.Entry getters
-		static readonly Func<object, int> kGetEntryHashCode;
-		static readonly Func<object, int> kGetEntryNextEntryIndex;
-		static readonly Func<object, TKey> kGetEntryKey;
-		static readonly Func<object, TValue> kGetEntryValue;
+		static readonly Func<object, int> KGetEntryHashCode;
+		static readonly Func<object, int> KGetEntryNextEntryIndex;
+		static readonly Func<object, TKey> KGetEntryKey;
+		static readonly Func<object, TValue> KGetEntryValue;
 		#endregion
 
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
@@ -77,90 +77,90 @@ namespace KSoft.Collections
 			}
 
 			// "If a nested type is generic, this method returns its generic type definition. This is true even if the enclosing generic type is a closed constructed type."
-			var dic_entry_type = typeof(Dictionary<TKey, TValue>)
-				.GetNestedType(kEntryTypeName, Reflect.BindingFlags.NonPublic)
+			var dicEntryType = typeof(Dictionary<TKey, TValue>)
+				.GetNestedType(K_ENTRY_TYPE_NAME_, Reflect.BindingFlags.NonPublic)
 				.MakeGenericType(typeof(TKey), typeof(TValue));
-			Contract.Assert(dic_entry_type != null);
+			Contract.Assert(dicEntryType != null);
 
 			#region Dictionary getters
-			kGetDicBuckets =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int[]>(kDicBucketsName);
-			kGetDicEntries =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, Array>(kDicEntriesName);
-			kGetDicCount =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(kDicCountName);
-			kGetDicVersion =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(kDicVersionName);
-			kGetDicFreeList =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(kDicFreeListName);
-			kGetDicFreeCount =
-				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(kDicFreeCountName);
+			KGetDicBuckets =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int[]>(K_DIC_BUCKETS_NAME_);
+			KGetDicEntries =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, Array>(K_DIC_ENTRIES_NAME_);
+			KGetDicCount =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(K_DIC_COUNT_NAME_);
+			KGetDicVersion =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(K_DIC_VERSION_NAME_);
+			KGetDicFreeList =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(K_DIC_FREE_LIST_NAME_);
+			KGetDicFreeCount =
+				Reflection.Util.GenerateMemberGetter<Dictionary<TKey, TValue>, int>(K_DIC_FREE_COUNT_NAME_);
 			#endregion
 			#region Dictionary.Entry getters
-			kGetEntryHashCode =
-				Reflection.Util.GenerateMemberGetter<int>(dic_entry_type, kEntryHashCodeName);
-			kGetEntryNextEntryIndex =
-				Reflection.Util.GenerateMemberGetter<int>(dic_entry_type, kEntryNextEntryIndexName);
-			kGetEntryKey =
-				Reflection.Util.GenerateMemberGetter<TKey>(dic_entry_type, kEntryKeyName);
-			kGetEntryValue =
-				Reflection.Util.GenerateMemberGetter<TValue>(dic_entry_type, kEntryValueName);
+			KGetEntryHashCode =
+				Reflection.Util.GenerateMemberGetter<int>(dicEntryType, K_ENTRY_HASH_CODE_NAME_);
+			KGetEntryNextEntryIndex =
+				Reflection.Util.GenerateMemberGetter<int>(dicEntryType, K_ENTRY_NEXT_ENTRY_INDEX_NAME_);
+			KGetEntryKey =
+				Reflection.Util.GenerateMemberGetter<TKey>(dicEntryType, K_ENTRY_KEY_NAME_);
+			KGetEntryValue =
+				Reflection.Util.GenerateMemberGetter<TValue>(dicEntryType, K_ENTRY_VALUE_NAME_);
 			#endregion
 		}
 
-		readonly Dictionary<TKey, TValue> mDic;
-		readonly int mExpectedVersion;
-		DicEntry[] mEntries;
+		readonly Dictionary<TKey, TValue> mDic_;
+		readonly int mExpectedVersion_;
+		DicEntry[] mEntries_;
 
 		public ClrDictionaryInspector(Dictionary<TKey, TValue> dic)
 		{
 			Contract.Requires<ArgumentNullException>(dic != null);
 
-			this.mDic = dic;
-			this.mExpectedVersion = this.Version;
+			this.mDic_ = dic;
+			this.mExpectedVersion_ = this.Version;
 		}
 
 		[Contracts.ContractInvariantMethod]
 		void ObjectInvariant()
 		{
-			Contract.Invariant(this.Version == this.mExpectedVersion,
+			Contract.Invariant(this.Version == this.mExpectedVersion_,
 				"Tried to inspect a dictionary that has been modified since the inspector was created");
 		}
 
 		void InitializeEntries()
 		{
-			this.mEntries = new DicEntry[this.Buckets.Count];
-			var array = kGetDicEntries(this.mDic);
+			this.mEntries_ = new DicEntry[this.Buckets.Count];
+			var array = KGetDicEntries(this.mDic_);
 
 			for (int x = 0; x < array.Length; x++)
 			{
 				var entry = array.GetValue(x);
 
-				this.mEntries[x] = new DicEntry()
+				this.mEntries_[x] = new DicEntry()
 				{
-					HashCode = kGetEntryHashCode(entry),
-					NextEntryIndex = kGetEntryNextEntryIndex(entry),
-					Key = kGetEntryKey(entry),
-					Value = kGetEntryValue(entry),
+					hashCode = KGetEntryHashCode(entry),
+					nextEntryIndex = KGetEntryNextEntryIndex(entry),
+					key = KGetEntryKey(entry),
+					value = KGetEntryValue(entry),
 				};
 			}
 		}
 
 		public IReadOnlyList<int> Buckets { get {
-			var buckets = kGetDicBuckets(this.mDic);
+			var buckets = KGetDicBuckets(this.mDic_);
 
 			return buckets ?? [];
 		} }
 		public IReadOnlyList<DicEntry> Entries { get {
-			if (this.mEntries == null)
+			if (this.mEntries_ == null)
 				this.InitializeEntries();
 
-			return this.mEntries;
+			return this.mEntries_;
 		} }
-		public int Count { get => kGetDicCount(this.mDic); }
-		private int Version { get => kGetDicVersion(this.mDic); }
-		public int FreeList { get => kGetDicFreeList(this.mDic); }
-		public int FreeCount { get => kGetDicFreeCount(this.mDic); }
+		public int Count { get => KGetDicCount(this.mDic_); }
+		private int Version { get => KGetDicVersion(this.mDic_); }
+		public int FreeList { get => KGetDicFreeList(this.mDic_); }
+		public int FreeCount { get => KGetDicFreeCount(this.mDic_); }
 
 		public IEnumerable<int> BucketsInUse { get => this.Buckets.Where(b => b >= 0); }
 
@@ -168,14 +168,14 @@ namespace KSoft.Collections
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(bucketIndex >= 0 && bucketIndex < this.Buckets.Count);
 
-			for (int x = this.Buckets[bucketIndex]; x >= 0; x = this.Entries[x].NextEntryIndex)
+			for (int x = this.Buckets[bucketIndex]; x >= 0; x = this.Entries[x].nextEntryIndex)
 				yield return this.Entries[x];
 		}
 
 		public IEnumerable<DicEntry> EntryCollisions(TKey key)
 		{
-			int hash_code = this.mDic.Comparer.GetHashCode(key) & 0x7FFFFFFF;
-			int target_bucket = hash_code % this.Buckets.Count;
+			int hashCode = this.mDic_.Comparer.GetHashCode(key) & 0x7FFFFFFF;
+			int targetBucket = hashCode % this.Buckets.Count;
 
 #if false // result as entry indices
 			for (int x = Buckets[target_bucket]; x >= 0; x = Entries[x].NextEntryIndex)
@@ -188,8 +188,8 @@ namespace KSoft.Collections
 #endif
 
 			return
-				from e in this.GetEntriesInBucket(target_bucket)
-				where e.HashCode == hash_code && !this.mDic.Comparer.Equals(e.Key, key)
+				from e in this.GetEntriesInBucket(targetBucket)
+				where e.hashCode == hashCode && !this.mDic_.Comparer.Equals(e.key, key)
 				select e;
 		}
 	};

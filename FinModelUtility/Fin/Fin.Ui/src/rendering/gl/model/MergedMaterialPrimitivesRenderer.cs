@@ -249,7 +249,7 @@ public partial class ModelRenderer {
       GlUtil.SetDepth(
           this.Material?.DepthMode ?? DepthMode.READ_AND_WRITE,
           this.Material?.DepthCompareType ??
-          DepthCompareType.LEqual);
+          DepthCompareType.L_EQUAL);
       GlUtil.SetChannelUpdateMask(this.Material?.UpdateColorChannel ?? true,
                                   this.Material?.UpdateAlphaChannel ?? false);
 

@@ -80,11 +80,11 @@ public sealed class DlModelBuilder {
           if (!TmemUtil.AreColorFormatAndBitsPerTexelValid(
                   imageParams.ColorFormat,
                   imageParams.BitsPerTexel)) {
-            return FinImage.Create1x1FromColor(Color.Magenta);
+            return FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           if (imageParams.IsInvalid) {
-            return FinImage.Create1x1FromColor(
+            return FinImage.Create1X1FromColor(
                 this.vertices_.OverrideVertexColor);
           }
 
@@ -157,7 +157,7 @@ public sealed class DlModelBuilder {
                     imageParams.Height);
           }
 
-          return FinImage.Create1x1FromColor(Color.Magenta);
+          return FinImage.Create1X1FromColor(Color.Magenta);
         });
 
     var textureByImageAndParams
@@ -463,7 +463,7 @@ public sealed class DlModelBuilder {
               } else if (
                   srcColor == dstColor &&
                   srcFactor == BlenderA.G_BL_A_IN &&
-                  dstFactor == BlenderB.G_BL_1MA) {
+                  dstFactor == BlenderB.G_BL_1_MA) {
                 finMaterial.SetBlending(BlendEquation.ADD,
                                         BlendFactor.ONE,
                                         BlendFactor.ZERO,
@@ -806,7 +806,7 @@ public sealed class DlModelBuilder {
 
   private CullingMode GetCullingMode_(DisplayListType displayListType)
     => displayListType switch {
-        DisplayListType.F3DZEX2 => this.n64Hardware_.Rsp.GeometryMode
+        DisplayListType.F_3DZEX2 => this.n64Hardware_.Rsp.GeometryMode
                                        .GetCullingModeEx2(),
         _ => this.n64Hardware_.Rsp.GeometryMode.GetCullingModeNonEx2()
     };
@@ -830,7 +830,7 @@ public sealed class DlModelBuilder {
       BlenderB paramB,
       BlendFactor srcParam) {
     return paramB switch {
-        BlenderB.G_BL_1MA => srcParam switch {
+        BlenderB.G_BL_1_MA => srcParam switch {
             BlendFactor.SRC_ALPHA => BlendFactor.ONE_MINUS_SRC_ALPHA,
             BlendFactor.ONE       => BlendFactor.ZERO,
             _                     => BlendFactor.ONE

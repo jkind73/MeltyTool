@@ -28,15 +28,15 @@ namespace KSoft.Phoenix.XML
 		BListExplicitIndexXmlSerializerBase<float>
 	{
 		// Just an alias for less typing and code
-		static BTypeValuesXmlParams<float> kParams { get { return Phx.BResource.kBListTypeValuesXmlParams_Cost; } }
+		static BTypeValuesXmlParams<float> KParams { get { return Phx.BResource.KBListTypeValuesXmlParamsCost; } }
 
-		Collections.BTypeValuesSingle mList;
+		Collections.BTypeValuesSingle mList_;
 
-		public override Collections.BListExplicitIndexBase<float> ListExplicitIndex { get { return this.mList; } }
+		public override Collections.BListExplicitIndexBase<float> ListExplicitIndex { get { return this.mList_; } }
 
-		public BCostTypeValuesSingleAttrHackXmlSerializer(Collections.BTypeValuesSingle list) : base(kParams)
+		public BCostTypeValuesSingleAttrHackXmlSerializer(Collections.BTypeValuesSingle list) : base(KParams)
 		{
-			this.mList = list;
+			this.mList_ = list;
 		}
 
 		#region IXmlElementStreamable Members
@@ -47,7 +47,7 @@ namespace KSoft.Phoenix.XML
 
 		protected override void ReadNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs)
 		{
-			var penum = this.mList.TypeValuesParams.kGetProtoEnumFromDB(xs.Database);
+			var penum = this.mList_.TypeValuesParams.kGetProtoEnumFromDb(xs.Database);
 
 			foreach (var attrName in s.AttributeNames)
 			{
@@ -56,24 +56,24 @@ namespace KSoft.Phoenix.XML
 				int index = penum.GetMemberId(attrName);
 				if (index.IsNone()) continue;
 
-				this.mList.InitializeItem(index);
-				float value = PhxUtil.kInvalidSingle;
+				this.mList_.InitializeItem(index);
+				float value = PhxUtil.K_INVALID_SINGLE;
 				s.ReadAttribute(attrName, ref value);
-				this.mList[index] = value;
+				this.mList_[index] = value;
 			}
 		}
 		protected override void WriteNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs)
 		{
-			var tvp = this.mList.TypeValuesParams;
+			var tvp = this.mList_.TypeValuesParams;
 
-			var penum = tvp.kGetProtoEnumFromDB(xs.Database);
-			float k_invalid = tvp.kTypeGetInvalid();
+			var penum = tvp.kGetProtoEnumFromDb(xs.Database);
+			float kInvalid = tvp.kTypeGetInvalid();
 
-			for (int x = 0; x < this.mList.Count; x++)
+			for (int x = 0; x < this.mList_.Count; x++)
 			{
-				float data = this.mList[x];
+				float data = this.mList_[x];
 
-				if (tvp.kComparer.Compare(data, k_invalid) != 0)
+				if (tvp.kComparer.Compare(data, kInvalid) != 0)
 				{
 					string name = penum.GetMemberName(x);
 					s.WriteAttribute(name, data);

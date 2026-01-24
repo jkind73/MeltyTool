@@ -1,31 +1,31 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public sealed class BSweetSpotIKNode
+	public sealed class BSweetSpotIkNode
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "SweetSpotIK",
+			elementName = "SweetSpotIK",
 		};
 		#endregion
 
 		#region Name
-		string mName;
+		string mName_;
 		public string Name
 		{
-			get { return this.mName; }
-			set { this.mName = value; }
+			get { return this.mName_; }
+			set { this.mName_ = value; }
 		}
 		#endregion
 
 		#region LinkCount
-		int mLinkCount;
+		int mLinkCount_;
 		public int LinkCount
 		{
-			get { return this.mLinkCount; }
-			set { this.mLinkCount = value; }
+			get { return this.mLinkCount_; }
+			set { this.mLinkCount_ = value; }
 		}
 
 		public bool LinkCountIsValid { get { return this.LinkCount >= byte.MinValue && this.LinkCount <= byte.MaxValue; } }
@@ -36,8 +36,8 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamCursor(ref this.mName);
-			s.StreamAttribute("linkCount", ref this.mLinkCount);
+			s.StreamCursor(ref this.mName_);
+			s.StreamAttribute("linkCount", ref this.mLinkCount_);
 		}
 		#endregion
 	};

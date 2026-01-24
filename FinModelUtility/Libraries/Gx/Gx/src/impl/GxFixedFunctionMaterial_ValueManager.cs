@@ -91,7 +91,7 @@ public partial class GxFixedFunctionMaterial {
       var indexOrNull = this.textureIndex_;
 
       IColorValue texture;
-      if (indexOrNull == null && !STRICT) {
+      if (indexOrNull == null && !STRICT_) {
         texture = this.colorUndefined_;
       } else {
         Asserts.Nonnull(indexOrNull);
@@ -114,7 +114,7 @@ public partial class GxFixedFunctionMaterial {
       var indexOrNull = this.textureIndex_;
 
       IColorValue texture;
-      if (indexOrNull == null && !STRICT) {
+      if (indexOrNull == null && !STRICT_) {
         texture = this.colorUndefined_;
       } else {
         Asserts.Nonnull(indexOrNull);
@@ -137,7 +137,7 @@ public partial class GxFixedFunctionMaterial {
       var indexOrNull = this.textureIndex_;
 
       IScalarValue texture;
-      if (indexOrNull == null && !STRICT) {
+      if (indexOrNull == null && !STRICT_) {
         texture = this.alphaUndefined_;
       } else {
         Asserts.Nonnull(indexOrNull);
@@ -258,8 +258,8 @@ public partial class GxFixedFunctionMaterial {
     // https://github.com/magcius/bmdview/blob/master/tev.markdown#gx_settevkcolorsel
     public IColorValue GetKonstColor_(GxKonstColorSel sel) {
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_1,
-                                GxKonstColorSel.KCSel_1_8,
+                                GxKonstColorSel.KC_SEL_1,
+                                GxKonstColorSel.KC_SEL_1_8,
                                 out var fracIndex)) {
         var numerator = 8 - fracIndex;
         var intensity = numerator / 8f;
@@ -267,8 +267,8 @@ public partial class GxFixedFunctionMaterial {
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_K0,
-                                GxKonstColorSel.KCSel_K3,
+                                GxKonstColorSel.KC_SEL_K0,
+                                GxKonstColorSel.KC_SEL_K3,
                                 out var rgbIndex)) {
         var konstRgb = this.konstColorImpls_[rgbIndex];
         return this.equations_.CreateColorConstant(
@@ -278,32 +278,32 @@ public partial class GxFixedFunctionMaterial {
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_K0_R,
-                                GxKonstColorSel.KCSel_K3_R,
+                                GxKonstColorSel.KC_SEL_K0_R,
+                                GxKonstColorSel.KC_SEL_K3_R,
                                 out var rIndex)) {
         var konstR = this.konstColorImpls_[rIndex];
         return this.equations_.CreateColorConstant(konstR.R / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_K0_G,
-                                GxKonstColorSel.KCSel_K3_G,
+                                GxKonstColorSel.KC_SEL_K0_G,
+                                GxKonstColorSel.KC_SEL_K3_G,
                                 out var gIndex)) {
         var konstG = this.konstColorImpls_[gIndex];
         return this.equations_.CreateColorConstant(konstG.G / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_K0_B,
-                                GxKonstColorSel.KCSel_K3_B,
+                                GxKonstColorSel.KC_SEL_K0_B,
+                                GxKonstColorSel.KC_SEL_K3_B,
                                 out var bIndex)) {
         var konstB = this.konstColorImpls_[bIndex];
         return this.equations_.CreateColorConstant(konstB.B / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstColorSel.KCSel_K0_A,
-                                GxKonstColorSel.KCSel_K3_A,
+                                GxKonstColorSel.KC_SEL_K0_A,
+                                GxKonstColorSel.KC_SEL_K3_A,
                                 out var aIndex)) {
         var konstA = this.konstColorImpls_[aIndex];
         return this.equations_.CreateColorConstant(konstA.A / 255f);
@@ -314,8 +314,8 @@ public partial class GxFixedFunctionMaterial {
 
     public IScalarValue GetKonstAlpha_(GxKonstAlphaSel sel) {
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstAlphaSel.KASel_1,
-                                GxKonstAlphaSel.KASel_1_8,
+                                GxKonstAlphaSel.KA_SEL_1,
+                                GxKonstAlphaSel.KA_SEL_1_8,
                                 out var fracIndex)) {
         var numerator = 8 - fracIndex;
         var intensity = numerator / 8f;
@@ -323,32 +323,32 @@ public partial class GxFixedFunctionMaterial {
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstAlphaSel.KASel_K0_R,
-                                GxKonstAlphaSel.KASel_K3_R,
+                                GxKonstAlphaSel.KA_SEL_K0_R,
+                                GxKonstAlphaSel.KA_SEL_K3_R,
                                 out var rIndex)) {
         var konstR = this.konstColorImpls_[rIndex];
         return this.equations_.CreateScalarConstant(konstR.R / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstAlphaSel.KASel_K0_G,
-                                GxKonstAlphaSel.KASel_K3_G,
+                                GxKonstAlphaSel.KA_SEL_K0_G,
+                                GxKonstAlphaSel.KA_SEL_K3_G,
                                 out var gIndex)) {
         var konstG = this.konstColorImpls_[gIndex];
         return this.equations_.CreateScalarConstant(konstG.G / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstAlphaSel.KASel_K0_B,
-                                GxKonstAlphaSel.KASel_K3_B,
+                                GxKonstAlphaSel.KA_SEL_K0_B,
+                                GxKonstAlphaSel.KA_SEL_K3_B,
                                 out var bIndex)) {
         var konstB = this.konstColorImpls_[bIndex];
         return this.equations_.CreateScalarConstant(konstB.B / 255f);
       }
 
       if (this.TryGetEnumIndex_(sel,
-                                GxKonstAlphaSel.KASel_K0_A,
-                                GxKonstAlphaSel.KASel_K3_A,
+                                GxKonstAlphaSel.KA_SEL_K0_A,
+                                GxKonstAlphaSel.KA_SEL_K3_A,
                                 out var aIndex)) {
         var konstA = this.konstColorImpls_[aIndex];
         return this.equations_.CreateScalarConstant(
@@ -404,7 +404,7 @@ public partial class GxFixedFunctionMaterial {
                     color.A / 255f)));
       }
 
-      if (!STRICT) {
+      if (!STRICT_) {
         return this.colorUndefined_;
       }
 
@@ -444,7 +444,7 @@ public partial class GxFixedFunctionMaterial {
                 color.A / 255f));
       }
 
-      if (!STRICT) {
+      if (!STRICT_) {
         return this.alphaUndefined_;
       }
 

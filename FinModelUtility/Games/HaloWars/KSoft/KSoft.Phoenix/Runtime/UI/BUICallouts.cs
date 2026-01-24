@@ -5,69 +5,69 @@ using BEntityID = System.Int32;
 
 namespace KSoft.Phoenix.Runtime
 {
-	static partial class cSaveMarker
+	static partial class CSaveMarker
 	{
 		public const ushort 
-			UICallouts1 = 0x2710,
-			UICallouts2 = 0x2711,
-			UICallout = 0x2712
+			UI_CALLOUTS1 = 0x2710,
+			UI_CALLOUTS2 = 0x2711,
+			UI_CALLOUT = 0x2712
 			;
 	};
 
-	sealed class BUICallouts
+	sealed class BuiCallouts
 		: IO.IEndianStreamSerializable
 	{
-		const byte cNumCallouts = 5;
+		const byte C_NUM_CALLOUTS_ = 5;
 
-		public sealed class BUICallout
+		public sealed class BuiCallout
 			: IO.IEndianStreamSerializable
 		{
-			public int ID;
-			public uint Type;
-			public BVector Location;
-			public BEntityID EntityID, CalloutEntityID;
-			public int LocStringIndex, UICalloutID, X, Y;
-			public bool Visible;
+			public int id;
+			public uint type;
+			public BVector location;
+			public BEntityID entityId, calloutEntityId;
+			public int locStringIndex, uiCalloutId, x, y;
+			public bool visible;
 
-			internal BVector Position; // Not actually part of this struct
+			internal BVector position; // Not actually part of this struct
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.ID);
-				s.Stream(ref this.Type);
-				s.StreamV(ref this.Location);
-				s.Stream(ref this.EntityID); s.Stream(ref this.CalloutEntityID);
-				s.Stream(ref this.LocStringIndex); s.Stream(ref this.UICalloutID); s.Stream(ref this.X); s.Stream(ref this.Y);
-				s.Stream(ref this.Visible);
-				s.StreamSignature(cSaveMarker.UICallout);
+				s.Stream(ref this.id);
+				s.Stream(ref this.type);
+				s.StreamV(ref this.location);
+				s.Stream(ref this.entityId); s.Stream(ref this.calloutEntityId);
+				s.Stream(ref this.locStringIndex); s.Stream(ref this.uiCalloutId); s.Stream(ref this.x); s.Stream(ref this.y);
+				s.Stream(ref this.visible);
+				s.StreamSignature(CSaveMarker.UI_CALLOUT);
 
-				s.StreamV(ref this.Position);
+				s.StreamV(ref this.position);
 			}
 			#endregion
 		};
-		static readonly CondensedListInfo kCalloutsListInfo = new CondensedListInfo()
+		static readonly CondensedListInfo KCalloutsListInfo = new CondensedListInfo()
 		{
 			SerializeCapacity=true,
 			IndexSize=sizeof(short),
 		};
 
-		public List<CondensedListItem16<BUICallout>> Callouts = [];
-		public int[] CalloutWidgets = new int[cNumCallouts];
-		public int NextCalloutID;
-		public bool PanelVisible, CalloutsVisible;
+		public List<CondensedListItem16<BuiCallout>> callouts = [];
+		public int[] calloutWidgets = new int[C_NUM_CALLOUTS_];
+		public int nextCalloutId;
+		public bool panelVisible, calloutsVisible;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamList(s, this.Callouts, kCalloutsListInfo);
-			s.StreamSignature(cSaveMarker.UICallouts1);
-			s.StreamSignature(cNumCallouts);
-			for (int x = 0; x < this.CalloutWidgets.Length; x++)
-				s.Stream(ref this.CalloutWidgets[x]);
-			s.Stream(ref this.NextCalloutID);
-			s.Stream(ref this.PanelVisible); s.Stream(ref this.CalloutsVisible);
-			s.StreamSignature(cSaveMarker.UICallouts2);
+			BSaveGame.StreamList(s, this.callouts, KCalloutsListInfo);
+			s.StreamSignature(CSaveMarker.UI_CALLOUTS1);
+			s.StreamSignature(C_NUM_CALLOUTS_);
+			for (int x = 0; x < this.calloutWidgets.Length; x++)
+				s.Stream(ref this.calloutWidgets[x]);
+			s.Stream(ref this.nextCalloutId);
+			s.Stream(ref this.panelVisible); s.Stream(ref this.calloutsVisible);
+			s.StreamSignature(CSaveMarker.UI_CALLOUTS2);
 		}
 		#endregion
 	};

@@ -40,7 +40,7 @@ public sealed partial class FsysExtractor {
       { 26, "bin" },
   };
 
-  public bool TryToExtractFilesFrom(ISystemFile file) {
+  public static bool TryToExtractFilesFrom(ISystemFile file) {
     var directory = file.AssertGetParent()
                         .GetOrCreateSubdir(file.NameWithoutExtension);
     if (!directory.IsEmpty) {
@@ -151,12 +151,12 @@ public sealed partial class FsysExtractor {
 
     uint flag = 0;
 
-    var N = 4096;
-    var F = 18;
-    var THRESHOLD = 2;
+    var n = 4096;
+    var f = 18;
+    var threshold = 2;
 
-    var text_buf = new byte[N + F - 1];
-    var text_buf_pos = N - F;
+    var textBuf = new byte[n + f - 1];
+    var textBufPos = n - f;
 
     while (dstPos < outSize) {
       if ((flag & 0x100) == 0) {
@@ -166,17 +166,17 @@ public sealed partial class FsysExtractor {
 
       if (flag.GetBit(0)) {
         var value = br.ReadByte();
-        text_buf[text_buf_pos] = dst[dstPos++] = value;
-        text_buf_pos = (text_buf_pos + 1) % N;
+        textBuf[textBufPos] = dst[dstPos++] = value;
+        textBufPos = (textBufPos + 1) % n;
       } else {
         var byte1 = br.ReadByte();
         var byte2 = br.ReadByte();
         var ofs = ((byte2 & 0xF0) << 4) | byte1;
-        var copy_size = (byte2 & 0xF) + THRESHOLD + 1;
-        for (var i = 0; i < copy_size; i++) {
-          dst[dstPos++] = text_buf[text_buf_pos] = text_buf[ofs];
-          ofs = (ofs + 1) % N;
-          text_buf_pos = (text_buf_pos + 1) % N;
+        var copySize = (byte2 & 0xF) + threshold + 1;
+        for (var i = 0; i < copySize; i++) {
+          dst[dstPos++] = textBuf[textBufPos] = textBuf[ofs];
+          ofs = (ofs + 1) % n;
+          textBufPos = (textBufPos + 1) % n;
         }
       }
 

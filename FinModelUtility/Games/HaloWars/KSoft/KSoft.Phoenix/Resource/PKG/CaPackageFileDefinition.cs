@@ -6,12 +6,12 @@ namespace KSoft.Phoenix.Resource.PKG
 	public sealed class CaPackageFileDefinition
 		: IO.ITagElementStringNameStreamable
 	{
-		public const string kFileExtension = ".pkgdef";
+		public const string K_FILE_EXTENSION = ".pkgdef";
 
 		/// <summary>This should be the source file's name or a user defined name</summary>
 		public string PkgName { get; private set; }
 
-		public long Alignment;
+		public long alignment;
 
 		public List<string> FileNames { get; private set; }
 			= [];
@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.Resource.PKG
 			using (s.EnterUserDataBookmark(this))
 			{
 				s.StreamAttributeOpt("name", this, obj => this.PkgName, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("alignment", this, obj => this.Alignment, Predicates.IsNotZero);
+				s.StreamAttributeOpt("alignment", this, obj => this.alignment, Predicates.IsNotZero);
 
 				using (var bm = s.EnterCursorBookmarkOpt("Files", this.FileNames, Predicates.HasItems))
 					s.StreamElements("File", this.FileNames);
@@ -47,7 +47,7 @@ namespace KSoft.Phoenix.Resource.PKG
 			, bool alwaysUseXmlOverXmb = false
 			, TextWriter verboseOutput = null)
 		{
-			bool made_changes = false;
+			bool madeChanges = false;
 
 			this.FileNames.Sort(string.CompareOrdinal);
 
@@ -77,7 +77,7 @@ namespace KSoft.Phoenix.Resource.PKG
 				filename = Util.PrependDirectorySeparatorChar(filename);
 			}
 
-			return made_changes;
+			return madeChanges;
 		}
 
 		private static bool TryToReferenceXmlOverXmbFile(string workPath
@@ -87,17 +87,17 @@ namespace KSoft.Phoenix.Resource.PKG
 			if (!ResourceUtils.IsXmbFile(fileName))
 				return false;
 
-			string xml_name = fileName;
-			ResourceUtils.RemoveXmbExtension(ref xml_name);
+			string xmlName = fileName;
+			ResourceUtils.RemoveXmbExtension(ref xmlName);
 
 			// does the XML file exist?
-			string xml_path = Path.Combine(workPath, xml_name);
-			if (!File.Exists(xml_path))
+			string xmlPath = Path.Combine(workPath, xmlName);
+			if (!File.Exists(xmlPath))
 				return false;
 
 			if (verboseOutput != null)
 				verboseOutput.WriteLine("\tReplacing XMB ref with {0}",
-					xml_name);
+					xmlName);
 
 			// #TODO
 

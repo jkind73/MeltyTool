@@ -4,47 +4,47 @@ namespace KSoft.T4
 {
 	enum TextTransformationCodeBlockType
 	{
-		NoBrackets,
-		Brackets,
+		NO_BRACKETS,
+		BRACKETS,
 		/// <summary>Mainly for a class definition statement</summary>
-		BracketsStatement,
+		BRACKETS_STATEMENT,
 	};
 	struct TextTransformationCodeBlockBookmark
 		: IDisposable
 	{
-		internal const string kIndent = "\t";
+		internal const string K_INDENT = "\t";
 
-		readonly Microsoft.VisualStudio.TextTemplating.TextTransformation mFile;
-		readonly TextTransformationCodeBlockType mType;
-		readonly int mIndentCount;
+		readonly Microsoft.VisualStudio.TextTemplating.TextTransformation mFile_;
+		readonly TextTransformationCodeBlockType mType_;
+		readonly int mIndentCount_;
 
 		public TextTransformationCodeBlockBookmark(Microsoft.VisualStudio.TextTemplating.TextTransformation file,
 			TextTransformationCodeBlockType type, int indentCount = 1)
 		{
-			this.mFile = file;
-			this.mType = type;
-			this.mIndentCount = indentCount;
+			this.mFile_ = file;
+			this.mType_ = type;
+			this.mIndentCount_ = indentCount;
 		}
 
 		internal void Enter()
 		{
-			if (this.mType == TextTransformationCodeBlockType.Brackets ||
-			    this.mType == TextTransformationCodeBlockType.BracketsStatement)
-				this.mFile.WriteLine("{");
+			if (this.mType_ == TextTransformationCodeBlockType.BRACKETS ||
+			    this.mType_ == TextTransformationCodeBlockType.BRACKETS_STATEMENT)
+				this.mFile_.WriteLine("{");
 
-			for (int x = 0; x < this.mIndentCount; x++)
-				this.mFile.PushIndent(kIndent);
+			for (int x = 0; x < this.mIndentCount_; x++)
+				this.mFile_.PushIndent(K_INDENT);
 		}
 
 		public void Dispose()
 		{
-			for (int x = 0; x < this.mIndentCount; x++)
-				this.mFile.PopIndent();
+			for (int x = 0; x < this.mIndentCount_; x++)
+				this.mFile_.PopIndent();
 
-			if (this.mType == TextTransformationCodeBlockType.Brackets)
-				this.mFile.WriteLine("}");
-			else if (this.mType == TextTransformationCodeBlockType.BracketsStatement)
-				this.mFile.WriteLine("};");
+			if (this.mType_ == TextTransformationCodeBlockType.BRACKETS)
+				this.mFile_.WriteLine("}");
+			else if (this.mType_ == TextTransformationCodeBlockType.BRACKETS_STATEMENT)
+				this.mFile_.WriteLine("};");
 		}
 	};
 }

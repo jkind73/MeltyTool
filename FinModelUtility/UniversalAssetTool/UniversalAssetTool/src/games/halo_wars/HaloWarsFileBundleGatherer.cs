@@ -29,7 +29,7 @@ public sealed class HaloWarsFileBundleGatherer : INamedAnnotatedFileBundleGather
     var scratchDirectory =
         ExtractorUtil.GetOrCreateExtractedDirectory("halo_wars");
 
-    var context = new HWContext(haloWarsSteamDirectory.FullPath,
+    var context = new HwContext(haloWarsSteamDirectory.FullPath,
                                 scratchDirectory.FullPath);
     // Expand all compressed/encrypted game files. This also handles the .xmb -> .xml conversion
     context.ExpandAllEraFiles();

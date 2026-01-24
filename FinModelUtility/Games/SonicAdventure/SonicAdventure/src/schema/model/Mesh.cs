@@ -50,7 +50,7 @@ public sealed partial class Mesh(uint keyedPointer, uint key) : IKeyedInstance<M
   public Argb32[]? VertexColors { get; private set; }
 
   [Skip]
-  public Vector2s[]? Uvs { get; private set; }
+  public Vector2S[]? Uvs { get; private set; }
 
   [ReadLogic]
   private void ReadPolys_(IBinaryReader br) {
@@ -80,6 +80,6 @@ public sealed partial class Mesh(uint keyedPointer, uint key) : IKeyedInstance<M
     this.Uvs = br.ReadAtPointerOrNull(
         this.uvsOffset_,
         key,
-        () => br.ReadNews<Vector2s>(vertexCount));
+        () => br.ReadNews<Vector2S>(vertexCount));
   }
 }

@@ -6,17 +6,17 @@ namespace KSoft.Wwise.SoundBank
 
 	partial class AkSoundBankObjectBase
 	{
-		static readonly Values.GroupTagData32 kStringMappingSignature =
+		static readonly Values.GroupTagData32 KStringMappingSignature =
 					new Values.GroupTagData32("STID", "audiokinetic_string_mapping"); // BankStrMapChunkID
 
-		static readonly AkSoundBankStringMapping kBankNamesMappingObject = new AkSoundBankStringMapping();
+		static readonly AkSoundBankStringMapping KBankNamesMappingObject = new AkSoundBankStringMapping();
 
-		static AkSoundBankObjectBase NewSTID(uint generatorVersion)
+		static AkSoundBankObjectBase NewStid(uint generatorVersion)
 		{
-			if (AkVersion.BankHasOldSTID(generatorVersion))
+			if (AkVersion.BankHasOldStid(generatorVersion))
 				return new AkSoundBankStringMapping2007();
 
-			return kBankNamesMappingObject;
+			return KBankNamesMappingObject;
 		}
 	};
 
@@ -26,24 +26,24 @@ namespace KSoft.Wwise.SoundBank
 		[System.Reflection.Obfuscation(Exclude=true)]
 		internal enum StringType : uint
 		{
-			None,
-			Bank,
+			NONE,
+			BANK,
 
-			OldEvents = 1,
-			Old2, // states?
-			Old3, // skip
-			Old4,
-			Old5, // switches?
-			Old6, // skip
-			Old7,
-			Old8,
-			Old9,
-			Old10, // skip
-			Old11,
+			OLD_EVENTS = 1,
+			OLD2, // states?
+			OLD3, // skip
+			OLD4,
+			OLD5, // switches?
+			OLD6, // skip
+			OLD7,
+			OLD8,
+			OLD9,
+			OLD10, // skip
+			OLD11,
 		};
 
 		[StructLayout(LayoutKind.Explicit)]
-		protected struct AKBKHashHeader
+		protected struct AkbkHashHeader
 			: IO.IEndianStreamSerializable
 		{
 			[FieldOffset(0)] public StringType Type;
@@ -59,7 +59,7 @@ namespace KSoft.Wwise.SoundBank
 			#endregion
 		};
 
-		protected static long EndOfStream(IO.EndianStream s, AKBKHashHeader header)
+		protected static long EndOfStream(IO.EndianStream s, AkbkHashHeader header)
 		{
 			return s.BaseStream.Position + header.Size;
 		}

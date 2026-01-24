@@ -53,7 +53,7 @@ public partial class ExportAssetButton : UserControl {
     var startLocation
         = this.lastDirectory_ ??
           await storageProvider.TryGetFolderFromPathAsync(
-              DirectoryConstants.OUT_DIRECTORY.FullPath);
+              DirectoryConstants.outDirectory.FullPath);
     var defaultExtension = this.lastExtension_ ?? ".fbx";
 
     var mainFile = modelFileBundle.MainFile;

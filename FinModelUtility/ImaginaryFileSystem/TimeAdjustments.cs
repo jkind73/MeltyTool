@@ -8,25 +8,25 @@ public enum TimeAdjustments {
   /// <summary>
   /// Adjusts no times on the <see cref="ImaginaryFileData"/>
   /// </summary>
-  None = 0,
+  NONE = 0,
 
   /// <summary>
   /// Adjusts the <see cref="ImaginaryFileData.CreationTime"/>
   /// </summary>
-  CreationTime = 1 << 0,
+  CREATION_TIME = 1 << 0,
 
   /// <summary>
   /// Adjusts the <see cref="ImaginaryFileData.LastAccessTime"/>
   /// </summary>
-  LastAccessTime = 1 << 1,
+  LAST_ACCESS_TIME = 1 << 1,
 
   /// <summary>
   /// Adjusts the <see cref="ImaginaryFileData.LastWriteTime"/>
   /// </summary>
-  LastWriteTime = 1 << 2,
+  LAST_WRITE_TIME = 1 << 2,
 
   /// <summary>
   /// Adjusts all times on the <see cref="ImaginaryFileData"/>
   /// </summary>
-  All = ~0
+  ALL = ~0
 }

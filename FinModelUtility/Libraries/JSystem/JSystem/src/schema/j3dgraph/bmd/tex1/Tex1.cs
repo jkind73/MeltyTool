@@ -20,21 +20,21 @@ public partial class Tex1 : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class Tex1Data : IBinaryConvertible {
-  [WLengthOfSequence(nameof(TextureHeaders))]
+  [WLengthOfSequence(nameof(textureHeaders))]
   private ushort textureCount_;
 
   private readonly ushort padding_ = ushort.MaxValue;
 
-  [WPointerTo(nameof(TextureHeaders))]
+  [WPointerTo(nameof(textureHeaders))]
   private uint textureHeaderOffset_;
 
-  [WPointerTo(nameof(StringTable))]
+  [WPointerTo(nameof(stringTable))]
   private uint stringTableOffset_;
 
   [RSequenceLengthSource(nameof(textureCount_))]
   [RAtPosition(nameof(textureHeaderOffset_))]
-  public Bti[] TextureHeaders;
+  public Bti[] textureHeaders;
 
   [RAtPosition(nameof(stringTableOffset_))]
-  public readonly StringTable StringTable = new();
+  public readonly StringTable stringTable = new();
 }

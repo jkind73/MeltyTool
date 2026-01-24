@@ -7,7 +7,7 @@ using fin.io;
 namespace fin.common;
 
 public static class DirectoryConstants {
-  public static ISystemDirectory BASE_DIRECTORY { get; } =
+  public static ISystemDirectory BaseDirectory { get; } =
     GetBaseDirectory_();
 
   private static ISystemDirectory GetBaseDirectory_() {
@@ -38,22 +38,22 @@ public static class DirectoryConstants {
     throw new DirectoryNotFoundException("Failed to find the base directory.");
   }
 
-  public static ISystemDirectory GAME_CONFIG_DIRECTORY { get; } =
-    BASE_DIRECTORY.AssertGetExistingSubdir("config");
+  public static ISystemDirectory GameConfigDirectory { get; } =
+    BaseDirectory.AssertGetExistingSubdir("config");
 
-  public static ISystemFile CONFIG_FILE { get; } =
-    BASE_DIRECTORY.AssertGetExistingFile("config.json");
+  public static ISystemFile ConfigFile { get; } =
+    BaseDirectory.AssertGetExistingFile("config.json");
 
 
-  public static ISystemDirectory ROMS_DIRECTORY =
-      BASE_DIRECTORY.AssertGetExistingSubdir("roms");
+  public static ISystemDirectory romsDirectory =
+      BaseDirectory.AssertGetExistingSubdir("roms");
 
-  public static ISystemDirectory TOOLS_DIRECTORY =
-      BASE_DIRECTORY.AssertGetExistingSubdir("tools");
+  public static ISystemDirectory toolsDirectory =
+      BaseDirectory.AssertGetExistingSubdir("tools");
 
-  public static ISystemDirectory DLL_DIRECTORY =
-      TOOLS_DIRECTORY.AssertGetExistingSubdir("dll");
+  public static ISystemDirectory dllDirectory =
+      toolsDirectory.AssertGetExistingSubdir("dll");
 
-  public static ISystemDirectory OUT_DIRECTORY =
-      BASE_DIRECTORY.AssertGetExistingSubdir("out");
+  public static ISystemDirectory outDirectory =
+      BaseDirectory.AssertGetExistingSubdir("out");
 }

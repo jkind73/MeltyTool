@@ -10,11 +10,11 @@ namespace uni.games.super_smash_bros_melee;
 
 public sealed class SuperSmashBrosMeleeFileBundleGatherer
     : BGameCubeFileBundleGatherer {
-  private const string STAGE_PREFIX = "Gr";
-  private const string TROPHY_PREFIX = "Ty";
+  private const string STAGE_PREFIX_ = "Gr";
+  private const string TROPHY_PREFIX_ = "Ty";
 
-  private const string CHARACTER_PREFIX = "Pl";
-  private const string ANIMATION_SUFFIX = "AJ";
+  private const string CHARACTER_PREFIX_ = "Pl";
+  private const string ANIMATION_SUFFIX_ = "AJ";
 
   public override string Name => "super_smash_bros_melee";
 
@@ -37,17 +37,17 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
     foreach (var datFile in fileHierarchy.Root.FilesWithExtension(".dat")) {
       var datNameWithoutExtension = datFile.NameWithoutExtension;
 
-      if (datNameWithoutExtension.StartsWith(STAGE_PREFIX)) {
+      if (datNameWithoutExtension.StartsWith(STAGE_PREFIX_)) {
         stageFiles.AddLast(datFile);
         continue;
       }
 
-      if (datNameWithoutExtension.StartsWith(TROPHY_PREFIX)) {
+      if (datNameWithoutExtension.StartsWith(TROPHY_PREFIX_)) {
         trophyFiles.AddLast(datFile);
         continue;
       }
 
-      if (datNameWithoutExtension.StartsWith(CHARACTER_PREFIX)) {
+      if (datNameWithoutExtension.StartsWith(CHARACTER_PREFIX_)) {
         plFilesByNameWithoutExtension.Add(datNameWithoutExtension.ToString(),
                                           datFile);
       }
@@ -63,7 +63,7 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
     foreach (var (plNameWithoutExtension, plFile) in
              plFilesByNameWithoutExtension) {
       if (!plFilesByNameWithoutExtension.TryGetValue(
-              $"{plNameWithoutExtension}{ANIMATION_SUFFIX}",
+              $"{plNameWithoutExtension}{ANIMATION_SUFFIX_}",
               out var animationFile)) {
         continue;
       }
@@ -85,7 +85,7 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
 
       foreach (var modelFile in
                plFilesStartingWithName
-                   .Where(pair => !pair.Key.EndsWith(ANIMATION_SUFFIX))
+                   .Where(pair => !pair.Key.EndsWith(ANIMATION_SUFFIX_))
                    .Select(pair => pair.Value)) {
         organizer.Add(new MeleeModelFileBundle {
             PrimaryDatFile = modelFile,

@@ -36,7 +36,7 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
 
     var lazyModelDictionary = new LazyDictionary<ushort, IModel?>(
         sm64ModelId => {
-          if (sm64Level.ModelIDs.TryGetValue(sm64ModelId,
+          if (sm64Level.modelIDs.TryGetValue(sm64ModelId,
                                              out var sm64Model)) {
             return sm64Model.HighestLod2.Model;
           }
@@ -44,7 +44,7 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
           return null;
         });
 
-    foreach (var sm64Area in sm64Level.Areas) {
+    foreach (var sm64Area in sm64Level.areas) {
       AddAreaToScene_(
           finScene,
           lazyModelDictionary,
@@ -62,8 +62,8 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
     AddAreaModelToScene_(finArea, sm64Area);
 
     var objects =
-        sm64Area.Objects.Concat(sm64Area.MacroObjects)
-                .Concat(sm64Area.SpecialObjects)
+        sm64Area.objects.Concat(sm64Area.macroObjects)
+                .Concat(sm64Area.specialObjects)
                 .ToArray();
 
     foreach (var obj in objects) {
@@ -73,23 +73,23 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
 
   private static void AddAreaModelToScene_(ISceneArea finArea, Area sm64Area)
     => finArea.AddRootNode()
-              .AddSceneModel(sm64Area.AreaModel.HighestLod2.Model);
+              .AddSceneModel(sm64Area.areaModel.HighestLod2.Model);
 
   private static void AddAreaObjectToScene_(
       ISceneArea finArea,
       LazyDictionary<ushort, IModel?> lazyModelDictionary,
       Object3D sm64Object) {
-    var finModel = lazyModelDictionary[sm64Object.ModelID];
+    var finModel = lazyModelDictionary[sm64Object.ModelId];
     if (finModel == null) {
       return;
     }
 
     var finObject = finArea.AddRootNode();
     finObject.AddSceneModel(finModel);
-    finObject.SetPosition(sm64Object.xPos, sm64Object.yPos, sm64Object.zPos);
-    finObject.SetRotationDegrees(sm64Object.xRot,
-                                 sm64Object.yRot,
-                                 sm64Object.zRot);
+    finObject.SetPosition(sm64Object.XPos, sm64Object.YPos, sm64Object.ZPos);
+    finObject.SetRotationDegrees(sm64Object.XRot,
+                                 sm64Object.YRot,
+                                 sm64Object.ZRot);
 
     var scale = 1f;
     var billboard = false;
@@ -101,7 +101,7 @@ public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBu
         scale = rawScale / 100f;
       }
 
-      if (script.Command == BehaviorCommand.billboard) {
+      if (script.Command == BehaviorCommand.BILLBOARD) {
         billboard = true;
       }
     }

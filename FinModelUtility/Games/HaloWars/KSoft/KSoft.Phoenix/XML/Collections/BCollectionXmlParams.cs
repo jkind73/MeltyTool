@@ -5,32 +5,32 @@ namespace KSoft.Phoenix.XML
 	public abstract class BCollectionXmlParams
 	{
 		/// <summary>Root element name in the XML</summary>
-		public /*readonly*/ string RootName;
+		public /*readonly*/ string rootName;
 		/// <summary>Name of the elements, that appear under the root element, and host our values</summary>
-		public /*readonly*/ string ElementName;
+		public /*readonly*/ string elementName;
 
-		/// <summary>Do we explicitly filter the XML tags to match <see cref="ElementName"/>?</summary>
-		public bool UseElementName { get { return this.ElementName != null; } }
+		/// <summary>Do we explicitly filter the XML tags to match <see cref="elementName"/>?</summary>
+		public bool UseElementName { get { return this.elementName != null; } }
 
 		#region Flags
-		public /*readonly*/ BCollectionXmlParamsFlags Flags;
+		public /*readonly*/ BCollectionXmlParamsFlags flags;
 
 		[Contracts.Pure]
-		protected bool HasFlag(BCollectionXmlParamsFlags flag) { return (this.Flags & flag) == flag; }
+		protected bool HasFlag(BCollectionXmlParamsFlags flag) { return (this.flags & flag) == flag; }
 
 		public void SetForceNoRootElementStreaming(bool isSet)
 		{
 			if (isSet)
-				this.Flags |= BCollectionXmlParamsFlags.ForceNoRootElementStreaming;
+				this.flags |= BCollectionXmlParamsFlags.FORCE_NO_ROOT_ELEMENT_STREAMING;
 			else
-				this.Flags &= ~BCollectionXmlParamsFlags.ForceNoRootElementStreaming;
+				this.flags &= ~BCollectionXmlParamsFlags.FORCE_NO_ROOT_ELEMENT_STREAMING;
 		}
 		#endregion
 
 		public string GetOptionalRootName()
 		{
-			if (!this.HasFlag(BCollectionXmlParamsFlags.ForceNoRootElementStreaming))
-				return this.RootName;
+			if (!this.HasFlag(BCollectionXmlParamsFlags.FORCE_NO_ROOT_ELEMENT_STREAMING))
+				return this.rootName;
 
 			return null;
 		}
@@ -40,8 +40,8 @@ namespace KSoft.Phoenix.XML
 		/// <param name="elementName"></param>
 		protected BCollectionXmlParams(string elementName)
 		{
-			this.RootName = elementName + "s";
-			this.ElementName = elementName;
+			this.rootName = elementName + "s";
+			this.elementName = elementName;
 		}
 
 		#region IO.TagElementStream util

@@ -32,7 +32,7 @@ public partial class ImportAssetButton : UserControl {
     }
 
     var romsDirectory = await storageProvider.TryGetFolderFromPathAsync(
-        DirectoryConstants.ROMS_DIRECTORY.FullPath);
+        DirectoryConstants.romsDirectory.FullPath);
 
     var selectedStorageFiles
         = await storageProvider

@@ -12,57 +12,57 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum DatabaseLoadState
 	{
-		NotLoaded,
-		Failed,
-		Preloading,
-		Preloaded,
-		Loading,
-		Loaded,
+		NOT_LOADED,
+		FAILED,
+		PRELOADING,
+		PRELOADED,
+		LOADING,
+		LOADED,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
-	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.Database)]
+	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.DATABASE)]
 	public abstract partial class BDatabaseBase
 		: ObjectModel.BasicViewModel
 		, IDisposable
 		, IO.ITagElementStringNameStreamable
 		, IProtoDataObjectDatabaseProvider
 	{
-		public const string kInvalidString = "BORK BORK BORK";
+		public const string K_INVALID_STRING = "BORK BORK BORK";
 
 		public ProtoDataObjectDatabase ObjectDatabase { get; private set; }
 
 		#region Xml constants
-		internal static readonly XML.BListXmlParams kObjectTypesXmlParams = new XML.BListXmlParams("ObjectType");
-		internal static readonly Engine.XmlFileInfo kObjectTypesXmlFileInfo = new Engine.XmlFileInfo
+		internal static readonly XML.BListXmlParams KObjectTypesXmlParams = new XML.BListXmlParams("ObjectType");
+		internal static readonly Engine.XmlFileInfo KObjectTypesXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Phoenix.Engine.GameDirectory.Data,
+			Directory = Phoenix.Engine.GameDirectory.DATA,
 			FileName = "ObjectTypes.xml",
-			RootName = kObjectTypesXmlParams.RootName
+			RootName = KObjectTypesXmlParams.rootName
 		};
-		internal static readonly Engine.ProtoDataXmlFileInfo kObjectTypesProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Phoenix.Engine.XmlFilePriority.Lists,
-			kObjectTypesXmlFileInfo);
+		internal static readonly Engine.ProtoDataXmlFileInfo KObjectTypesProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Phoenix.Engine.XmlFilePriority.LISTS,
+			KObjectTypesXmlFileInfo);
 		#endregion
 
 		#region LoadState
-		DatabaseLoadState mLoadState = DatabaseLoadState.NotLoaded;
+		DatabaseLoadState mLoadState_ = DatabaseLoadState.NOT_LOADED;
 		public DatabaseLoadState LoadState
 		{
 			get
 			{
-				lock (this.mLoadStateLockee)
-					return this.mLoadState;
+				lock (this.mLoadStateLockee_)
+					return this.mLoadState_;
 			}
 			set
 			{
-				lock (this.mLoadStateLockee)
-					this.SetFieldEnum(ref this.mLoadState, value);
+				lock (this.mLoadStateLockee_)
+					this.SetFieldEnum(ref this.mLoadState_, value);
 			}
 		}
 
-		object mLoadStateLockee = new object();
+		object mLoadStateLockee_ = new object();
 		#endregion
 
 		public Engine.PhxEngine Engine { get; private set; }
@@ -79,7 +79,7 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BitSet ReferencedStringIds { get; private set; }
 			= new Collections.BitSet(ushort.MaxValue, fixedLength: false);
 
-		internal void AddStringIDReference(int id)
+		internal void AddStringIdReference(int id)
 		{
 			if (this.ReferencedStringIds.Length < id)
 			{
@@ -93,8 +93,8 @@ namespace KSoft.Phoenix.Phx
 
 		public BGameData GameData { get; private set; }
 			 = new BGameData();
-		public HPBarData HPBars { get; private set; }
-			 = new HPBarData();
+		public HpBarData HpBars { get; private set; }
+			 = new HpBarData();
 
 		#region DatabaseObjectKind lists
 		// #NOTE place new DatabaseObjectKind code here
@@ -110,15 +110,15 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BListAutoId<		BAbility> Abilities { get; private set; }
 			 = new Collections.BListAutoId<	BAbility>();
 		public Collections.BListAutoId<		BProtoObject> Objects { get; private set; }
-			= new Collections.BListAutoId<	BProtoObject>(BProtoObject.kBListParams);
+			= new Collections.BListAutoId<	BProtoObject>(BProtoObject.KBListParams);
 		public Collections.BListAutoId<		BProtoSquad> Squads { get; private set; }
-			= new Collections.BListAutoId<	BProtoSquad>(BProtoSquad.kBListParams);
+			= new Collections.BListAutoId<	BProtoSquad>(BProtoSquad.KBListParams);
 		public Collections.BListAutoId<		BProtoPower> Powers { get; private set; }
 			= new Collections.BListAutoId<	BProtoPower>();
 		public Collections.BListAutoId<		BTacticData> Tactics { get; private set; }
 			= new Collections.BListAutoId<	BTacticData>();
 		public Collections.BListAutoId<		BProtoTech> Techs { get; private set; }
-			= new Collections.BListAutoId<	BProtoTech>(BProtoTech.kBListParams);
+			= new Collections.BListAutoId<	BProtoTech>(BProtoTech.KBListParams);
 		public Collections.BListAutoId<		TerrainTileType> TerrainTileTypes { get; private set; }
 			= new Collections.BListAutoId<	TerrainTileType>();
 		public Collections.BListAutoId<		BCiv> Civs { get; private set; }
@@ -146,7 +146,7 @@ namespace KSoft.Phoenix.Phx
 		#region IDisposable Members
 		public virtual void Dispose()
 		{
-			Util.DisposeAndNull(ref this.mTriggerSerializer);
+			Util.DisposeAndNull(ref this.mTriggerSerializer_);
 		}
 		#endregion
 
@@ -170,16 +170,16 @@ namespace KSoft.Phoenix.Phx
 			this.Leaders.SetupDatabaseInterface();
 		}
 
-		const int kObjectIdIsObjectTypeBitMask = 1<<30;
+		const int K_OBJECT_ID_IS_OBJECT_TYPE_BIT_MASK_ = 1<<30;
 		static void ObjectIdIsObjectTypeBitSet(ref int id)
 		{
-			id |= kObjectIdIsObjectTypeBitMask;
+			id |= K_OBJECT_ID_IS_OBJECT_TYPE_BIT_MASK_;
 		}
 		static bool ObjectIdIsObjectTypeBitGet(ref int id)
 		{
-			if ((id & kObjectIdIsObjectTypeBitMask) != 0)
+			if ((id & K_OBJECT_ID_IS_OBJECT_TYPE_BIT_MASK_) != 0)
 			{
-				id &= ~kObjectIdIsObjectTypeBitMask;
+				id &= ~K_OBJECT_ID_IS_OBJECT_TYPE_BIT_MASK_;
 				return true;
 			}
 			return false;
@@ -209,39 +209,39 @@ namespace KSoft.Phoenix.Phx
 
 		public Collections.IBTypeNames GetNamesInterface(GameDataObjectKind kind)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.NONE);
 
 			return this.GameData.GetNamesInterface(kind);
 		}
-		public Collections.IBTypeNames GetNamesInterface(HPBarDataObjectKind kind)
+		public Collections.IBTypeNames GetNamesInterface(HpBarDataObjectKind kind)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != HPBarDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != HpBarDataObjectKind.NONE);
 
-			return this.HPBars.GetNamesInterface(kind);
+			return this.HpBars.GetNamesInterface(kind);
 		}
 		public Collections.IBTypeNames GetNamesInterface(DatabaseObjectKind kind)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.NONE);
 
 			// #NOTE place new DatabaseObjectKind code here
 
 			switch (kind)
 			{
-			case DatabaseObjectKind.Ability:         return this.Abilities;
-			case DatabaseObjectKind.Civ:             return this.Civs;
-			case DatabaseObjectKind.DamageType:      return this.DamageTypes;
-			case DatabaseObjectKind.ImpactEffect:    return this.ImpactEffects;
-			case DatabaseObjectKind.Leader:          return this.Leaders;
-			case DatabaseObjectKind.Object:          return this.Objects;
-			case DatabaseObjectKind.ObjectType:      return this.ObjectTypes;
-			case DatabaseObjectKind.Power:           return this.Powers;
-			case DatabaseObjectKind.Squad:           return this.Squads;
-			case DatabaseObjectKind.Tactic:          return this.Tactics;
-			case DatabaseObjectKind.Tech:            return this.Techs;
-			case DatabaseObjectKind.TerrainTileType: return this.TerrainTileTypes;
-			case DatabaseObjectKind.Unit:            return null; // #TODO?
-			case DatabaseObjectKind.UserClass:       return this.UserClasses;
-			case DatabaseObjectKind.WeaponType:      return this.WeaponTypes;
+			case DatabaseObjectKind.ABILITY:         return this.Abilities;
+			case DatabaseObjectKind.CIV:             return this.Civs;
+			case DatabaseObjectKind.DAMAGE_TYPE:      return this.DamageTypes;
+			case DatabaseObjectKind.IMPACT_EFFECT:    return this.ImpactEffects;
+			case DatabaseObjectKind.LEADER:          return this.Leaders;
+			case DatabaseObjectKind.OBJECT:          return this.Objects;
+			case DatabaseObjectKind.OBJECT_TYPE:      return this.ObjectTypes;
+			case DatabaseObjectKind.POWER:           return this.Powers;
+			case DatabaseObjectKind.SQUAD:           return this.Squads;
+			case DatabaseObjectKind.TACTIC:          return this.Tactics;
+			case DatabaseObjectKind.TECH:            return this.Techs;
+			case DatabaseObjectKind.TERRAIN_TILE_TYPE: return this.TerrainTileTypes;
+			case DatabaseObjectKind.UNIT:            return null; // #TODO?
+			case DatabaseObjectKind.USER_CLASS:       return this.UserClasses;
+			case DatabaseObjectKind.WEAPON_TYPE:      return this.WeaponTypes;
 
 			default: throw new KSoft.Debug.UnreachableException(kind.ToString());
 			}
@@ -249,84 +249,84 @@ namespace KSoft.Phoenix.Phx
 
 		public int GetId(GameDataObjectKind kind, string name)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.NONE);
 
 			var dbi = this.GameData.GetMembersInterface(kind);
 			return dbi.TryGetIdWithUndefined(name);
 		}
-		public int GetId(HPBarDataObjectKind kind, string name)
+		public int GetId(HpBarDataObjectKind kind, string name)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != HPBarDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != HpBarDataObjectKind.NONE);
 
-			var dbi = this.HPBars.GetMembersInterface(kind);
+			var dbi = this.HpBars.GetMembersInterface(kind);
 			return dbi.TryGetIdWithUndefined(name);
 		}
 		public int GetId(DatabaseObjectKind kind, string name)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.NONE);
 
 			// #NOTE place new DatabaseObjectKind code here
 
 			switch (kind)
 			{
-			case DatabaseObjectKind.Ability:         return this.Abilities.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Civ:             return this.Civs.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.DamageType:      return this.DamageTypes.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.ImpactEffect:    return this.ImpactEffects.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Leader:          return this.Leaders.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Object:          return this.Objects.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.ObjectType:      return this.ObjectTypes.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Power:           return this.Powers.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Squad:           return this.Squads.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Tactic:          return this.Tactics.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.Tech:            return this.Techs.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.TerrainTileType: return this.TerrainTileTypes.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.ABILITY:         return this.Abilities.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.CIV:             return this.Civs.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.DAMAGE_TYPE:      return this.DamageTypes.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.IMPACT_EFFECT:    return this.ImpactEffects.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.LEADER:          return this.Leaders.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.OBJECT:          return this.Objects.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.OBJECT_TYPE:      return this.ObjectTypes.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.POWER:           return this.Powers.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.SQUAD:           return this.Squads.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.TACTIC:          return this.Tactics.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.TECH:            return this.Techs.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.TERRAIN_TILE_TYPE: return this.TerrainTileTypes.TryGetIdWithUndefined(name);
 			// TODO: Should just use the Objects DBI AFAICT
-			case DatabaseObjectKind.Unit:       return this.TryGetIdUnit(name);
-			case DatabaseObjectKind.UserClass:  return this.UserClasses.TryGetIdWithUndefined(name);
-			case DatabaseObjectKind.WeaponType: return this.WeaponTypes.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.UNIT:       return this.TryGetIdUnit(name);
+			case DatabaseObjectKind.USER_CLASS:  return this.UserClasses.TryGetIdWithUndefined(name);
+			case DatabaseObjectKind.WEAPON_TYPE: return this.WeaponTypes.TryGetIdWithUndefined(name);
 
 			default: throw new KSoft.Debug.UnreachableException(kind.ToString());
 			}
 		}
 		public string GetName(GameDataObjectKind kind, int id)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != GameDataObjectKind.NONE);
 
 			IProtoDataObjectDatabaseProvider provider = this.GameData;
 			return provider.GetName((int)kind, id);
 		}
-		public string GetName(HPBarDataObjectKind kind, int id)
+		public string GetName(HpBarDataObjectKind kind, int id)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != HPBarDataObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != HpBarDataObjectKind.NONE);
 
-			IProtoDataObjectDatabaseProvider provider = this.HPBars;
+			IProtoDataObjectDatabaseProvider provider = this.HpBars;
 			return provider.GetName((int)kind, id);
 		}
 		public string GetName(DatabaseObjectKind kind, int id)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.None);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != DatabaseObjectKind.NONE);
 
 			// #NOTE place new DatabaseObjectKind code here
 
 			switch (kind)
 			{
-			case DatabaseObjectKind.Ability:         return this.Abilities.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Civ:             return this.Civs.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.DamageType:      return this.DamageTypes.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.ImpactEffect:    return this.ImpactEffects.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Leader:          return this.Leaders.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Object:          return this.Objects.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.ObjectType:      return this.ObjectTypes.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Power:           return this.Powers.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Squad:           return this.Squads.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Tactic:          return this.Tactics.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.Tech:            return this.Techs.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.TerrainTileType: return this.TerrainTileTypes.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.ABILITY:         return this.Abilities.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.CIV:             return this.Civs.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.DAMAGE_TYPE:      return this.DamageTypes.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.IMPACT_EFFECT:    return this.ImpactEffects.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.LEADER:          return this.Leaders.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.OBJECT:          return this.Objects.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.OBJECT_TYPE:      return this.ObjectTypes.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.POWER:           return this.Powers.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.SQUAD:           return this.Squads.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.TACTIC:          return this.Tactics.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.TECH:            return this.Techs.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.TERRAIN_TILE_TYPE: return this.TerrainTileTypes.TryGetNameWithUndefined(id);
 			// TODO: Should just use the Objects DBI AFAICT
-			case DatabaseObjectKind.Unit:       return this.TryGetNameUnit(id);
-			case DatabaseObjectKind.UserClass:  return this.UserClasses.TryGetNameWithUndefined(id);
-			case DatabaseObjectKind.WeaponType: return this.WeaponTypes.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.UNIT:       return this.TryGetNameUnit(id);
+			case DatabaseObjectKind.USER_CLASS:  return this.UserClasses.TryGetNameWithUndefined(id);
+			case DatabaseObjectKind.WEAPON_TYPE: return this.WeaponTypes.TryGetNameWithUndefined(id);
 
 			default: throw new KSoft.Debug.UnreachableException(kind.ToString());
 			}
@@ -349,38 +349,38 @@ namespace KSoft.Phoenix.Phx
 		}
 		#endregion
 
-		XML.BTriggerScriptSerializer mTriggerSerializer;
+		XML.BTriggerScriptSerializer mTriggerSerializer_;
 		internal void InitializeTriggerScriptSerializer()
 		{
-			this.mTriggerSerializer = new XML.BTriggerScriptSerializer(this.Engine);
+			this.mTriggerSerializer_ = new XML.BTriggerScriptSerializer(this.Engine);
 		}
-		public BTriggerSystem LoadScript(string scriptName, BTriggerScriptType type = BTriggerScriptType.TriggerScript)
+		public BTriggerSystem LoadScript(string scriptName, BTriggerScriptType type = BTriggerScriptType.TRIGGER_SCRIPT)
 		{
-			var ctxt = this.mTriggerSerializer.StreamTriggerScriptGetContext(FA.Read, type, scriptName);
+			var ctxt = this.mTriggerSerializer_.StreamTriggerScriptGetContext(FA.Read, type, scriptName);
 			var task = Task<bool>.Factory.StartNew((state) => {
-				var _ctxt = state as XML.BTriggerScriptSerializer.StreamTriggerScriptContext;
-				return this.mTriggerSerializer.TryStreamData(_ctxt.FileInfo, FA.Read, this.mTriggerSerializer.StreamTriggerScript, _ctxt);
+				var ctxt = state as XML.BTriggerScriptSerializer.StreamTriggerScriptContext;
+				return this.mTriggerSerializer_.TryStreamData(ctxt.FileInfo, FA.Read, this.mTriggerSerializer_.StreamTriggerScript, ctxt);
 			}, ctxt);
 
 			return task.Result ? ctxt.Script : null;
 		}
 		public bool LoadScenarioScripts(string scnrPath)
 		{
-			var ctxt = this.mTriggerSerializer.StreamTriggerScriptGetContext(FA.Read, BTriggerScriptType.Scenario, scnrPath);
+			var ctxt = this.mTriggerSerializer_.StreamTriggerScriptGetContext(FA.Read, BTriggerScriptType.SCENARIO, scnrPath);
 			var task = Task<bool>.Factory.StartNew((state) => {
-				var _ctxt = state as XML.BTriggerScriptSerializer.StreamTriggerScriptContext;
-				return this.mTriggerSerializer.TryStreamData(_ctxt.FileInfo, FA.Read, this.mTriggerSerializer.LoadScenarioScripts, _ctxt);
+				var ctxt = state as XML.BTriggerScriptSerializer.StreamTriggerScriptContext;
+				return this.mTriggerSerializer_.TryStreamData(ctxt.FileInfo, FA.Read, this.mTriggerSerializer_.LoadScenarioScripts, ctxt);
 			}, ctxt);
 
 			return task.Result;
 		}
 
 		protected abstract XML.BDatabaseXmlSerializerBase NewXmlSerializer();
-		private XML.BDatabaseXmlSerializerBase mXmlSerializer;
+		private XML.BDatabaseXmlSerializerBase mXmlSerializer_;
 
 		public bool Preload()
 		{
-			var xs = this.mXmlSerializer = this.NewXmlSerializer();//using (var xs = NewXmlSerializer())
+			var xs = this.mXmlSerializer_ = this.NewXmlSerializer();//using (var xs = NewXmlSerializer())
 			{
 				return xs.Preload();
 			}
@@ -388,9 +388,9 @@ namespace KSoft.Phoenix.Phx
 
 		public bool Load()
 		{
-			Contract.Assert(this.mXmlSerializer != null);
+			Contract.Assert(this.mXmlSerializer_ != null);
 
-			var xs = this.mXmlSerializer;//using (var xs = NewXmlSerializer())
+			var xs = this.mXmlSerializer_;//using (var xs = NewXmlSerializer())
 			{
 				return xs.Load();
 			}
@@ -398,9 +398,9 @@ namespace KSoft.Phoenix.Phx
 
 		public bool LoadAllTactics()
 		{
-			Contract.Assert(this.mXmlSerializer != null);
+			Contract.Assert(this.mXmlSerializer_ != null);
 
-			var xs = this.mXmlSerializer;//using (var xs = NewXmlSerializer())
+			var xs = this.mXmlSerializer_;//using (var xs = NewXmlSerializer())
 			{
 				return xs.LoadAllTactics();
 			}

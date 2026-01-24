@@ -1,92 +1,92 @@
 ﻿namespace sm64.JSON {
   public sealed class ObjectComboEntry {
-    string name = "";
-    string behavior_name = "";
-    ModelCombo modelCombo;
-    uint behavior = 0;
+    string name_ = "";
+    string behaviorName_ = "";
+    ModelCombo modelCombo_;
+    uint behavior_ = 0;
 
     public string Name {
-      get { return this.name; }
-      set { this.name = value; }
+      get { return this.name_; }
+      set { this.name_ = value; }
     }
 
     public string BehaviorName {
-      get { return this.behavior_name; }
-      set { this.behavior_name = value; }
+      get { return this.behaviorName_; }
+      set { this.behaviorName_ = value; }
     }
 
-    public byte ModelID {
-      get { return this.modelCombo.ModelID; }
+    public byte ModelId {
+      get { return this.modelCombo_.ModelId; }
     }
 
     public uint ModelSegmentAddress {
-      get { return this.modelCombo.SegmentAddress; }
+      get { return this.modelCombo_.SegmentAddress; }
     }
 
     public uint Behavior {
-      get { return this.behavior; }
+      get { return this.behavior_; }
     }
 
     public ObjectComboEntry(string name,
                             byte modelId,
                             uint modelSegAddress,
                             uint behavior) {
-      this.name = name;
-      this.behavior = behavior;
-      this.behavior_name = Globals.getBehaviorNameEntryFromSegAddress(behavior).Name;
-      this.modelCombo = new ModelCombo(modelId, modelSegAddress);
+      this.name_ = name;
+      this.behavior_ = behavior;
+      this.behaviorName_ = Globals.GetBehaviorNameEntryFromSegAddress(behavior).Name;
+      this.modelCombo_ = new ModelCombo(modelId, modelSegAddress);
     }
 
-    private string bp1, bp2, bp3, bp4;
+    private string bp1_, bp2_, bp3_, bp4_;
 
-    public string BP1_NAME {
-      get { return this.bp1; }
-      set { this.bp1 = value; }
+    public string Bp1Name {
+      get { return this.bp1_; }
+      set { this.bp1_ = value; }
     }
 
-    public string BP2_NAME {
-      get { return this.bp2; }
-      set { this.bp2 = value; }
+    public string Bp2Name {
+      get { return this.bp2_; }
+      set { this.bp2_ = value; }
     }
 
-    public string BP3_NAME {
-      get { return this.bp3; }
-      set { this.bp3 = value; }
+    public string Bp3Name {
+      get { return this.bp3_; }
+      set { this.bp3_ = value; }
     }
 
-    public string BP4_NAME {
-      get { return this.bp4; }
-      set { this.bp4 = value; }
+    public string Bp4Name {
+      get { return this.bp4_; }
+      set { this.bp4_ = value; }
     }
 
-    private string bp1_desc, bp2_desc, bp3_desc, bp4_desc;
+    private string bp1Desc_, bp2Desc_, bp3Desc_, bp4Desc_;
 
-    public string BP1_DESCRIPTION {
-      get { return this.bp1_desc; }
-      set { this.bp1_desc = value; }
+    public string Bp1Description {
+      get { return this.bp1Desc_; }
+      set { this.bp1Desc_ = value; }
     }
 
-    public string BP2_DESCRIPTION {
-      get { return this.bp2_desc; }
-      set { this.bp2_desc = value; }
+    public string Bp2Description {
+      get { return this.bp2Desc_; }
+      set { this.bp2Desc_ = value; }
     }
 
-    public string BP3_DESCRIPTION {
-      get { return this.bp3_desc; }
-      set { this.bp3_desc = value; }
+    public string Bp3Description {
+      get { return this.bp3Desc_; }
+      set { this.bp3Desc_ = value; }
     }
 
-    public string BP4_DESCRIPTION {
-      get { return this.bp4_desc; }
-      set { this.bp4_desc = value; }
+    public string Bp4Description {
+      get { return this.bp4Desc_; }
+      set { this.bp4Desc_ = value; }
     }
 
     public override string ToString() {
-      return this.name + " = [" +
-             this.modelCombo.ToString() + "," +
-             this.behavior_name +
+      return this.name_ + " = [" +
+             this.modelCombo_.ToString() + "," +
+             this.behaviorName_ +
              " (0x" +
-             this.behavior.ToString("X8") + ")]";
+             this.behavior_.ToString("X8") + ")]";
     }
   }
 }

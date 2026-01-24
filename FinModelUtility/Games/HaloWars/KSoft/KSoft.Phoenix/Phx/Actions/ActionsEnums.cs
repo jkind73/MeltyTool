@@ -5,238 +5,238 @@ namespace KSoft.Phoenix.Phx
 	public enum BActionType : byte
 	{
 		#region 0x00
-		[XmlIgnore] Idle, // entity
-		[XmlIgnore] Listen, // entity
-		Move, GaggleMove = Move, // unit...
-		MoveAir,
-		[XmlIgnore] MoveWarthog,
-		[XmlIgnore] MoveGhost,
-		RangedAttack, HandAttack = RangedAttack,
-		[XmlIgnore] Building,
+		[XmlIgnore] IDLE, // entity
+		[XmlIgnore] LISTEN, // entity
+		MOVE, GAGGLE_MOVE = MOVE, // unit...
+		MOVE_AIR,
+		[XmlIgnore] MOVE_WARTHOG,
+		[XmlIgnore] MOVE_GHOST,
+		RANGED_ATTACK, HAND_ATTACK = RANGED_ATTACK,
+		[XmlIgnore] BUILDING,
 		[XmlIgnore] DOT,
-		[XmlIgnore] UnitChangeMode,
-		[XmlIgnore] Death,
-		[XmlIgnore] InfectDeath,
-		Garrison,
-		Ungarrison,
-		[XmlIgnore] ShieldRegen,
-		Honk,
+		[XmlIgnore] UNIT_CHANGE_MODE,
+		[XmlIgnore] DEATH,
+		[XmlIgnore] INFECT_DEATH,
+		GARRISON,
+		UNGARRISON,
+		[XmlIgnore] SHIELD_REGEN,
+		HONK,
 		#endregion
 		#region 0x10
-		SpawnSquad,
-		Capture,
-		Join,
-		ChangeOwner,
-		[XmlIgnore] AmmoRegen,
-		Physics,
-		[XmlIgnore] PlayBlockingAnimation,
-		Mines,
-		Detonate,
-		Gather,
-		CollisionAttack,
-		AreaAttack,
-		UnderAttack,
-		SecondaryTurretAttack,
-		RevealToTeam,
-		AirTrafficControl,
+		SPAWN_SQUAD,
+		CAPTURE,
+		JOIN,
+		CHANGE_OWNER,
+		[XmlIgnore] AMMO_REGEN,
+		PHYSICS,
+		[XmlIgnore] PLAY_BLOCKING_ANIMATION,
+		MINES,
+		DETONATE,
+		GATHER,
+		COLLISION_ATTACK,
+		AREA_ATTACK,
+		UNDER_ATTACK,
+		SECONDARY_TURRET_ATTACK,
+		REVEAL_TO_TEAM,
+		AIR_TRAFFIC_CONTROL,
 		#endregion
 		#region 0x20
-		Hitch,
-		Unhitch,
-		SlaveTurretAttack,
-		Thrown,
-		Dodge,
-		Deflect,
-		AvoidCollisionAir,
-		[XmlIgnore] PlayAttachmentAnims,
-		Heal,
-		Revive,
-		Buff,
-		Infect,
-		HotDrop,
-		TentacleDormant,
-		[XmlIgnore] HeroDeath,
-		Stasis,
+		HITCH,
+		UNHITCH,
+		SLAVE_TURRET_ATTACK,
+		THROWN,
+		DODGE,
+		DEFLECT,
+		AVOID_COLLISION_AIR,
+		[XmlIgnore] PLAY_ATTACHMENT_ANIMS,
+		HEAL,
+		REVIVE,
+		BUFF,
+		INFECT,
+		HOT_DROP,
+		TENTACLE_DORMANT,
+		[XmlIgnore] HERO_DEATH,
+		STASIS,
 		#endregion
 		#region 0x30
-		BubbleShield,
-		Bomb,
-		PlasmaShieldGen,
-		Jump,
-		AmbientLifeSpawner,
-		JumpGather,
-		JumpGarrison,
-		JumpAttack,
-		PointBlankAttack,
-		Roar,
-		EnergyShield,
-		[XmlIgnore] ScaleLOS,
-		Charge, // ChargedRangedAttack
-		TowerWall,
-		AoeHeal,
-		[XmlIgnore] Attack, // squad
+		BUBBLE_SHIELD,
+		BOMB,
+		PLASMA_SHIELD_GEN,
+		JUMP,
+		AMBIENT_LIFE_SPAWNER,
+		JUMP_GATHER,
+		JUMP_GARRISON,
+		JUMP_ATTACK,
+		POINT_BLANK_ATTACK,
+		ROAR,
+		ENERGY_SHIELD,
+		[XmlIgnore] SCALE_LOS,
+		CHARGE, // ChargedRangedAttack
+		TOWER_WALL,
+		AOE_HEAL,
+		[XmlIgnore] ATTACK, // squad
 		#endregion
 		#region 0x40
-		ChangeMode, // squad...
-		[XmlIgnore] Repair,
-		RepairOther,
-		[XmlIgnore] SquadShieldRegen,
-		[XmlIgnore] SquadGarrison,
-		[XmlIgnore] SquadUngarrison,
-		Transport,
-		[XmlIgnore] SquadPlayBlockingAnimation,
-		[XmlIgnore] SquadMove,
-		[XmlIgnore] Reinforce,
-		[XmlIgnore] Work,
-		CarpetBomb,
-		AirStrike,
-		[XmlIgnore] SquadHitch,
-		[XmlIgnore] SquadUnhitch,
-		[XmlIgnore] SquadDetonate,
+		CHANGE_MODE, // squad...
+		[XmlIgnore] REPAIR,
+		REPAIR_OTHER,
+		[XmlIgnore] SQUAD_SHIELD_REGEN,
+		[XmlIgnore] SQUAD_GARRISON,
+		[XmlIgnore] SQUAD_UNGARRISON,
+		TRANSPORT,
+		[XmlIgnore] SQUAD_PLAY_BLOCKING_ANIMATION,
+		[XmlIgnore] SQUAD_MOVE,
+		[XmlIgnore] REINFORCE,
+		[XmlIgnore] WORK,
+		CARPET_BOMB,
+		AIR_STRIKE,
+		[XmlIgnore] SQUAD_HITCH,
+		[XmlIgnore] SQUAD_UNHITCH,
+		[XmlIgnore] SQUAD_DETONATE,
 		#endregion
 		#region 0x50
-		Wander,
-		Cloak,
-		CloakDetector,
-		Daze,
-		[XmlIgnore] SquadJump,
-		AmbientLife,
-		ReflectDamage,
-		Cryo,
-		[XmlIgnore] PlatoonMove,
-		CoreSlide, // unit...
-		InfantryEnergyShield,
-		Dome,
-		SpiritBond, // squad
-		Rage, // unit
+		WANDER,
+		CLOAK,
+		CLOAK_DETECTOR,
+		DAZE,
+		[XmlIgnore] SQUAD_JUMP,
+		AMBIENT_LIFE,
+		REFLECT_DAMAGE,
+		CRYO,
+		[XmlIgnore] PLATOON_MOVE,
+		CORE_SLIDE, // unit...
+		INFANTRY_ENERGY_SHIELD,
+		DOME,
+		SPIRIT_BOND, // squad
+		RAGE, // unit
 		//
 		//
 		#endregion
 
-		Invalid = 0x5E
+		INVALID = 0x5E
 	};
 
 	public enum BProtoActionFlags
 	{
 		// 0x138
-		InstantAttack,
-		MeleeRange,
-		KillSelfOnAttack,
-		DontCheckOrientTolerance,
-		DontLoopAttackAnim,
-		StopAttackingWhenAmmoDepleted,
-		MainAttack,
-		Stationary,
+		INSTANT_ATTACK,
+		MELEE_RANGE,
+		KILL_SELF_ON_ATTACK,
+		DONT_CHECK_ORIENT_TOLERANCE,
+		DONT_LOOP_ATTACK_ANIM,
+		STOP_ATTACKING_WHEN_AMMO_DEPLETED,
+		MAIN_ATTACK,
+		STATIONARY,
 
 		// 0x139
 		//Strafing, // 1<<5, set when the Strafing element is streamed
 		//CanOrientOwner, // 1<<6, actually tests the inner text of the element for 'false'
-		Infection, // 1<<7
+		INFECTION, // 1<<7
 
 		// 0x13C
 		//
 		//
 		//
 		//
-		WaitForDodgeCooldown,
-		MultiDeflect,
-		WaitForDeflectCooldown,
+		WAIT_FOR_DODGE_COOLDOWN,
+		MULTI_DEFLECT,
+		WAIT_FOR_DEFLECT_COOLDOWN,
 		//
 
 		// 0x13D
-		AvoidOnly,
-		HideSpawnUntilRelease,
-		DoShakeOnAttackTag,
-		SmallArms,
+		AVOID_ONLY,
+		HIDE_SPAWN_UNTIL_RELEASE,
+		DO_SHAKE_ON_ATTACK_TAG,
+		SMALL_ARMS,
 
 		// 0x13E
-		DontAutoRestart, // 1<<7
+		DONT_AUTO_RESTART, // 1<<7
 	};
 
 	public enum BWeaponFlags
 	{
 		// 0x58
-		ThrowDamageParts,
-		ThrowAliveUnits,
-		ThrowUnits,
-		UsesAmmo,
-		PhysicsLaunchAxial,
-		EnableHeightBonusDamage,
-		AllowFriendlyFire,
+		THROW_DAMAGE_PARTS,
+		THROW_ALIVE_UNITS,
+		THROW_UNITS,
+		USES_AMMO,
+		PHYSICS_LAUNCH_AXIAL,
+		ENABLE_HEIGHT_BONUS_DAMAGE,
+		ALLOW_FRIENDLY_FIRE,
 
 		// 0x59
-		UseGroupRange,
+		USE_GROUP_RANGE,
 		//
-		UseDPSasDPA,
-		SmallArmsDeflectable,
-		Deflectable,
-		Dodgeable,
-		FlailThrownUnits,
+		USE_DP_SAS_DPA,
+		SMALL_ARMS_DEFLECTABLE,
+		DEFLECTABLE,
+		DODGEABLE,
+		FLAIL_THROWN_UNITS,
 		//PulseObject, // Set automatically when the PulseObject element is streamed
 
 		// 0x5A
 		//
 		//
-		Tentacle,
-		ApplyKnockback,
-		StasisBomb,
-		StasisDrain,
+		TENTACLE,
+		APPLY_KNOCKBACK,
+		STASIS_BOMB,
+		STASIS_DRAIN,
 		//StasisSmartTargeting,
-		CarriedObjectAsProjectileVisual,
+		CARRIED_OBJECT_AS_PROJECTILE_VISUAL,
 
 		// 0x5B
 		//
 		//
 		//
 		//
-		AOEIgnoresYAxis, // 1<<4
-		OverridesRevive,
+		AOE_IGNORES_Y_AXIS, // 1<<4
+		OVERRIDES_REVIVE,
 		//
-		AOELinearDamage,
+		AOE_LINEAR_DAMAGE,
 
 		// 0xDC
 		//
 		//
 		//
-		AirBurst, // 1<<3
-		PullUnits,
+		AIR_BURST, // 1<<3
+		PULL_UNITS,
 		//
-		KeepDPSRamp,
-		TargetsFootOfUnit,
+		KEEP_DPS_RAMP,
+		TARGETS_FOOT_OF_UNIT,
 	};
 
 	public enum BTargetRuleFlags
 	{
-		TargetsGround,
-		ContainsUnits,
-		GaiaOwned,
-		MergeSquads,
-		MeleeAttacker,
+		TARGETS_GROUND,
+		CONTAINS_UNITS,
+		GAIA_OWNED,
+		MERGE_SQUADS,
+		MELEE_ATTACKER,
 	};
 
 	public enum BTargetRuleTargetStates
 	{
-		Unbuilt,
-		Damaged,
-		Capturable,
+		UNBUILT,
+		DAMAGED,
+		CAPTURABLE,
 	};
 
 	partial class BProtoAction
 	{
 		enum BJoinType
 		{
-			Follow,
-			Merge,
-			Board,
-			FollowAttack,
+			FOLLOW,
+			MERGE,
+			BOARD,
+			FOLLOW_ATTACK,
 		};
 
 		enum BMergeType
 		{
-			None,
+			NONE,
 
-			Ground,
-			Air,
+			GROUND,
+			AIR,
 		};
 	};
 }

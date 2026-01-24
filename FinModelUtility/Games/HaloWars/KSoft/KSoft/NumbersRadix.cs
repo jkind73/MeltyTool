@@ -5,23 +5,23 @@ namespace KSoft
 	[EnumBitEncoderDisable]
 	public enum NumeralBase : byte
 	{
-		Binary	= 2,
-		Octal	= 8,
+		BINARY	= 2,
+		OCTAL	= 8,
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		Decimal = 10,
-		Hex		= 16,
+		DECIMAL = 10,
+		HEX		= 16,
 	};
 
 	/// <summary>Valid numerical bases (radix) that can be used in <see cref="KSoft.Numbers"/></summary>
 	[EnumBitEncoderDisable]
 	public enum NumbersRadix : byte
 	{
-		Binary	= NumeralBase.Binary,
-		Octal	= NumeralBase.Octal,
+		BINARY	= NumeralBase.BINARY,
+		OCTAL	= NumeralBase.OCTAL,
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		Decimal = NumeralBase.Decimal,
-		Hex		= NumeralBase.Hex,
-		Base36	= 36,
-		Base64	= 64,
+		DECIMAL = NumeralBase.DECIMAL,
+		HEX		= NumeralBase.HEX,
+		BASE36	= 36,
+		BASE64	= 64,
 	};
 }

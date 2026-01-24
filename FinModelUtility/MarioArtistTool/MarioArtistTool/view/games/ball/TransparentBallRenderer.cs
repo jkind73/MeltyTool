@@ -31,7 +31,7 @@ public sealed class TransparentBallRenderer(float radius) : IRenderable {
     var model = ModelImpl.CreateForViewer();
 
     var blackMaterial = model.MaterialManager.AddColorMaterial(Color.FromArgb(64, 0, 0, 0));
-    blackMaterial.DepthCompareType = DepthCompareType.Always;
+    blackMaterial.DepthCompareType = DepthCompareType.ALWAYS;
 
     var mesh = model.Skin.AddMesh();
     mesh.AddSimpleSphere(model.Skin, Vector3.Zero, radius, 30, blackMaterial);

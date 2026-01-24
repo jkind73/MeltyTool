@@ -11,7 +11,7 @@ namespace mkdd.schema.bol;
 public sealed partial class Object : IBinaryDeserializable {
   public Vector3 Position { get; set; }
   public Vector3 Scale { get; set; }
-  public Vector3i Rotation { get; } = new();
+  public Vector3I Rotation { get; } = new();
   public ushort ObjectId { get; set; }
   public short PathId { get; set; }
   public uint Unk0 { get; set; }

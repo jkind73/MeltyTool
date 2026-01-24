@@ -6,31 +6,31 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class cSaveMarker
+	partial class CSaveMarker
 	{
 		public const ushort
-			Tactic = 0x2710,
-			ProtoAction = 0x2711,
-			Weapon = 0x2712
+			TACTIC = 0x2710,
+			PROTO_ACTION = 0x2711,
+			WEAPON = 0x2712
 			;
 	};
 
 	sealed class BTactic
 		: IO.IEndianStreamSerializable
 	{
-		public BWeapon[] Weapons;
-		public BProtoAction[] ProtoActions;
-		public bool AnimInfoLoaded;
+		public BWeapon[] weapons;
+		public BProtoAction[] protoActions;
+		public bool animInfoLoaded;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamArray(s, ref this.Weapons);
-			Contract.Assert(this.Weapons.Length <= BWeapon.kMaxCount);
-			BSaveGame.StreamArray(s, ref this.ProtoActions);
-			Contract.Assert(this.ProtoActions.Length <= BProtoAction.kMaxCount);
-			s.Stream(ref this.AnimInfoLoaded);
-			s.StreamSignature(cSaveMarker.Tactic);
+			BSaveGame.StreamArray(s, ref this.weapons);
+			Contract.Assert(this.weapons.Length <= BWeapon.K_MAX_COUNT);
+			BSaveGame.StreamArray(s, ref this.protoActions);
+			Contract.Assert(this.protoActions.Length <= BProtoAction.K_MAX_COUNT);
+			s.Stream(ref this.animInfoLoaded);
+			s.StreamSignature(CSaveMarker.TACTIC);
 		}
 		#endregion
 	};

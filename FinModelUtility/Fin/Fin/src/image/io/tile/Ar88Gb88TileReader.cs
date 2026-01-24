@@ -10,7 +10,7 @@ namespace fin.image.io.tile;
 
 public readonly struct Ar88Gb88TileReader : ITileReader<Rgba32> {
   public IImage<Rgba32> CreateImage(int width, int height)
-    => new Rgba32Image(PixelFormat.AR88GB88, width, height);
+    => new Rgba32Image(PixelFormat.AR88_GB88, width, height);
 
   public int TileWidth => 4;
   public int TileHeight => 4;

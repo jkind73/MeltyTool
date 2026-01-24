@@ -9,53 +9,53 @@ namespace KSoft.Phoenix.Phx
 		, IEqualityComparer<BWeaponModifier>
 	{
 		#region Xml constants
-		public static readonly Collections.BTypeValuesParams<BWeaponModifier> kBListParams = new
+		public static readonly Collections.BTypeValuesParams<BWeaponModifier> KBListParams = new
 			Collections.BTypeValuesParams<BWeaponModifier>(db => db.DamageTypes);
-		public static readonly XML.BTypeValuesXmlParams<BWeaponModifier> kBListXmlParams = new
+		public static readonly XML.BTypeValuesXmlParams<BWeaponModifier> KBListXmlParams = new
 			XML.BTypeValuesXmlParams<BWeaponModifier>("DamageModifier", "type");
 		#endregion
 
 		#region Rating
-		float mRating = 1.0f;
+		float mRating_ = 1.0f;
 		public float Rating
 		{
-			get { return this.mRating; }
-			set { this.mRating = value; }
+			get { return this.mRating_; }
+			set { this.mRating_ = value; }
 		}
 		#endregion
 
 		#region DamagePercentage
-		float mDamagePercentage = 1.0f;
+		float mDamagePercentage_ = 1.0f;
 		public float DamagePercentage
 		{
-			get { return this.mDamagePercentage; }
+			get { return this.mDamagePercentage_; }
 		}
 		#endregion
 
 		#region ReflectDamageFactor
-		float mReflectDamageFactor;
+		float mReflectDamageFactor_;
 		public float ReflectDamageFactor
 		{
-			get { return this.mReflectDamageFactor; }
-			set { this.mReflectDamageFactor = value; }
+			get { return this.mReflectDamageFactor_; }
+			set { this.mReflectDamageFactor_ = value; }
 		}
 		#endregion
 
 		#region Bowlable
-		bool mBowlable;
+		bool mBowlable_;
 		public bool Bowlable
 		{
-			get { return this.mBowlable; }
-			set { this.mBowlable = value; }
+			get { return this.mBowlable_; }
+			set { this.mBowlable_ = value; }
 		}
 		#endregion
 
 		#region Rammable
-		bool mRammable;
+		bool mRammable_;
 		public bool Rammable
 		{
-			get { return this.mRammable; }
-			set { this.mRammable = value; }
+			get { return this.mRammable_; }
+			set { this.mRammable_ = value; }
 		}
 		#endregion
 
@@ -64,11 +64,11 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeOpt("rating", ref this.mRating, PhxPredicates.IsNotOne);
-			s.StreamCursor(ref this.mDamagePercentage);
-			s.StreamAttributeOpt("reflectDamageFactor", ref this.mReflectDamageFactor, Predicates.IsNotZero);
-			s.StreamAttributeOpt("bowlable", ref this.mBowlable, Predicates.IsTrue);
-			s.StreamAttributeOpt("rammable", ref this.mRammable, Predicates.IsTrue);
+			s.StreamAttributeOpt("rating", ref this.mRating_, PhxPredicates.IsNotOne);
+			s.StreamCursor(ref this.mDamagePercentage_);
+			s.StreamAttributeOpt("reflectDamageFactor", ref this.mReflectDamageFactor_, Predicates.IsNotZero);
+			s.StreamAttributeOpt("bowlable", ref this.mBowlable_, Predicates.IsTrue);
+			s.StreamAttributeOpt("rammable", ref this.mRammable_, Predicates.IsTrue);
 		}
 		#endregion
 

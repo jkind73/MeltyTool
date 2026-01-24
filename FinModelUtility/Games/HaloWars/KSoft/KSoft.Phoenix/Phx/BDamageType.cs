@@ -3,75 +3,75 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum ReticleAttackGrade
 	{
-		NoEffect,
-		Weak,
-		Fair,
-		Good,
-		Extreme,
+		NO_EFFECT,
+		WEAK,
+		FAIR,
+		GOOD,
+		EXTREME,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
 	public enum DamageDirection
 	{
-		Invalid = TypeExtensions.kNone,
+		INVALID = TypeExtensions.K_NONE,
 
-		Full,
-		FrontHalf,
-		BackHalf,
-		Front,
-		Back,
-		Left,
-		Right,
+		FULL,
+		FRONT_HALF,
+		BACK_HALF,
+		FRONT,
+		BACK,
+		LEFT,
+		RIGHT,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
 	public sealed class BDamageType
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("DamageType",
-			XML.BCollectionXmlParamsFlags.RequiresDataNamePreloading);
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("DamageType",
+			XML.BCollectionXmlParamsFlags.REQUIRES_DATA_NAME_PRELOADING);
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.Data,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "DamageTypes.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.Lists,
-			kXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.LISTS,
+			KXmlFileInfo);
 		#endregion
 
-		bool mAttackRating;
+		bool mAttackRating_;
 		public bool AttackRating
 		{
-			get { return this.mAttackRating; }
-			set { this.mAttackRating = value; }
+			get { return this.mAttackRating_; }
+			set { this.mAttackRating_ = value; }
 		}
 
-		bool mBaseType;
+		bool mBaseType_;
 		public bool BaseType
 		{
-			get { return this.mBaseType; }
-			set { this.mBaseType = value; }
+			get { return this.mBaseType_; }
+			set { this.mBaseType_ = value; }
 		}
 
-		bool mShielded;
+		bool mShielded_;
 		/// <remarks>The last type with this set will be the shielded damage type, or anything named "Shielded" will be</remarks>
 		public bool Shielded
 		{
-			get { return this.mShielded; }
-			set { this.mShielded = value; }
+			get { return this.mShielded_; }
+			set { this.mShielded_ = value; }
 		}
 
 		#region BListAutoIdObject Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamAttributeOpt("AttackRating", ref this.mAttackRating, Predicates.IsTrue);
-			s.StreamAttributeOpt("BaseType", ref this.mBaseType, Predicates.IsTrue);
-			s.StreamAttributeOpt("Shielded", ref this.mShielded, Predicates.IsTrue);
+			s.StreamAttributeOpt("AttackRating", ref this.mAttackRating_, Predicates.IsTrue);
+			s.StreamAttributeOpt("BaseType", ref this.mBaseType_, Predicates.IsTrue);
+			s.StreamAttributeOpt("Shielded", ref this.mShielded_, Predicates.IsTrue);
 		}
 		#endregion
 	};

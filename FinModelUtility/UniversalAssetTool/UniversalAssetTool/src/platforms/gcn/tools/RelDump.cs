@@ -10,8 +10,8 @@ namespace uni.platforms.gcn.tools;
 ///   Shamelessly stolen from https://github.com/Cuyler36/RELDumper
 /// </summary>
 public sealed class RelDump {
-  private const int REL_HEADER_SIZE = 0xA0;
-  private const int DOL_HEADER_SIZE = -0xC0;
+  private const int REL_HEADER_SIZE_ = 0xA0;
+  private const int DOL_HEADER_SIZE_ = -0xC0;
   private int currentHeaderSize_;
 
   private Dictionary<string, int> dataSectionMap_;
@@ -23,87 +23,87 @@ public sealed class RelDump {
     Asserts.True(relFile.Exists);
     Asserts.True(mapFile.Exists);
 
-    string REL_Location = relFile.FullPath;
-    string MAP_Location = mapFile.FullPath;
+    string relLocation = relFile.FullPath;
+    string mapLocation = mapFile.FullPath;
 
-    string Data_Dir = Path.GetDirectoryName(REL_Location) +
+    string dataDir = Path.GetDirectoryName(relLocation) +
                       "\\" +
-                      Path.GetFileNameWithoutExtension(REL_Location);
+                      Path.GetFileNameWithoutExtension(relLocation);
 
-    if (!new FinDirectory(Data_Dir).IsEmpty) {
+    if (!new FinDirectory(dataDir).IsEmpty) {
       return false;
     }
 
     this.currentHeaderSize_ =
-        Path.GetExtension(REL_Location).Contains("dol")
-            ? DOL_HEADER_SIZE
-            : REL_HEADER_SIZE;
-    byte[] REL_Data = File.ReadAllBytes(REL_Location);
-    string[] MAP_Data = File.ReadAllLines(MAP_Location);
-    string Memory_Map =
-        MAP_Data.FirstOrDefault(o => o.Contains("Memory map:"));
-    if (!string.IsNullOrEmpty(Memory_Map)) {
-      int Memory_Map_Idx = Array.IndexOf(MAP_Data, Memory_Map);
-      if (Memory_Map_Idx > -1) {
-        Memory_Map_Idx += 3; // Data starts three lines after
+        Path.GetExtension(relLocation).Contains("dol")
+            ? DOL_HEADER_SIZE_
+            : REL_HEADER_SIZE_;
+    byte[] relData = File.ReadAllBytes(relLocation);
+    string[] mapData = File.ReadAllLines(mapLocation);
+    string memoryMap =
+        mapData.FirstOrDefault(o => o.Contains("Memory map:"));
+    if (!string.IsNullOrEmpty(memoryMap)) {
+      int memoryMapIdx = Array.IndexOf(mapData, memoryMap);
+      if (memoryMapIdx > -1) {
+        memoryMapIdx += 3; // Data starts three lines after
 
-        Directory.CreateDirectory(Data_Dir);
+        Directory.CreateDirectory(dataDir);
 
         // Create Section Folders
         this.dataSectionMap_ = new Dictionary<string, int>();
-        for (int i = Memory_Map_Idx; i < MAP_Data.Length; i++) {
-          if (string.IsNullOrEmpty(MAP_Data[i]))
+        for (int i = memoryMapIdx; i < mapData.Length; i++) {
+          if (string.IsNullOrEmpty(mapData[i]))
             break;
-          string Section_Info = MAP_Data[i].TrimStart();
-          string Section_Name =
-              Regex.Match(Section_Info, @"^[^ ]*").Value;
-          string Section_Offsets =
-              Section_Info[(Section_Name.Length + 11)..];
-          string Section_Size =
-              Regex.Match(Section_Offsets, @"^[^ ]*").Value;
-          string Section_Offset =
-              Section_Offsets.Substring(Section_Size.Length + 1, 8);
-          if (int.TryParse(Section_Offset,
+          string sectionInfo = mapData[i].TrimStart();
+          string sectionName =
+              Regex.Match(sectionInfo, @"^[^ ]*").Value;
+          string sectionOffsets =
+              sectionInfo[(sectionName.Length + 11)..];
+          string sectionSize =
+              Regex.Match(sectionOffsets, @"^[^ ]*").Value;
+          string sectionOffset =
+              sectionOffsets.Substring(sectionSize.Length + 1, 8);
+          if (int.TryParse(sectionOffset,
                            NumberStyles.AllowHexSpecifier,
                            null,
-                           out int Offset) &&
-              int.TryParse(Section_Size,
+                           out int offset) &&
+              int.TryParse(sectionSize,
                            NumberStyles.AllowHexSpecifier,
                            null,
-                           out int Size)) {
-            string Section_Dir = Data_Dir + "\\" + Section_Name;
-            if (!Directory.Exists(Section_Dir)) {
-              Directory.CreateDirectory(Section_Dir);
+                           out int size)) {
+            string sectionDir = dataDir + "\\" + sectionName;
+            if (!Directory.Exists(sectionDir)) {
+              Directory.CreateDirectory(sectionDir);
             }
-            this.dataSectionMap_.Add(Section_Name, Offset);
+            this.dataSectionMap_.Add(sectionName, offset);
           }
         }
 
         // Section off data
-        string Current_Section = "";
-        for (int i = 0; i < Memory_Map_Idx - 3; i++) {
-          string Line = MAP_Data[i];
-          if (!string.IsNullOrEmpty(Line)) {
-            if (Line.Contains(" section layout")) {
+        string currentSection = "";
+        for (int i = 0; i < memoryMapIdx - 3; i++) {
+          string line = mapData[i];
+          if (!string.IsNullOrEmpty(line)) {
+            if (line.Contains(" section layout")) {
               i += 3; // Skip column text
-              Current_Section =
-                  Regex.Match(Line.TrimStart(), @"^[^ ]*").Value;
+              currentSection =
+                  Regex.Match(line.TrimStart(), @"^[^ ]*").Value;
               Console.WriteLine("Switched to section: " +
-                                Current_Section);
+                                currentSection);
               //Console.ReadKey();
-            } else if (!string.IsNullOrEmpty(Current_Section)) {
-              if (Line.Contains(@"...")) {
+            } else if (!string.IsNullOrEmpty(currentSection)) {
+              if (line.Contains(@"...")) {
                 //Console.WriteLine("Contained ... : " + Line);
                 continue;
               }
 
-              Line = Line.Trim(); // Clear Leading/Trailing Whitespace
-              Line = Line.Replace("\t",
+              line = line.Trim(); // Clear Leading/Trailing Whitespace
+              line = line.Replace("\t",
                                   " "); // Confirm all tabs get turned into a space
-              Line = Regex.Replace(Line,
+              line = Regex.Replace(line,
                                    @"\s+",
                                    " "); // Turn multiple spaces/tabs to one space
-              string[] Line_Data = Line.Split(' ');
+              string[] lineData = line.Split(' ');
               /*
                * Line_Data contents
                * =================
@@ -114,35 +114,35 @@ public sealed class RelDump {
                * Name 4
                * Object 5
                */
-              int Offset = this.GetRELOffset_(
-                  this.dataSectionMap_[Current_Section],
+              int offset = this.GetRELOffset_(
+                  this.dataSectionMap_[currentSection],
                   int.Parse(
-                      Line_Data[0],
+                      lineData[0],
                       NumberStyles
                           .AllowHexSpecifier));
-              int Size =
-                  int.Parse(Line_Data[1], NumberStyles.AllowHexSpecifier);
-              bool IsObject = Line_Data[3].Equals("1");
-              string Method_Name = Line_Data[4];
-              string Object_Name = Line_Data[5];
-              if (Line_Data.Length >= 7)
-                Object_Name += ("_" + Line_Data[6]);
+              int size =
+                  int.Parse(lineData[1], NumberStyles.AllowHexSpecifier);
+              bool isObject = lineData[3].Equals("1");
+              string methodName = lineData[4];
+              string objectName = lineData[5];
+              if (lineData.Length >= 7)
+                objectName += ("_" + lineData[6]);
 
-              string Dir = Data_Dir +
+              string dir = dataDir +
                            "\\" +
-                           Current_Section +
+                           currentSection +
                            "\\" +
-                           Object_Name;
-              if (!Directory.Exists(Dir)) {
-                Directory.CreateDirectory(Dir);
+                           objectName;
+              if (!Directory.Exists(dir)) {
+                Directory.CreateDirectory(dir);
               }
 
-              if (!IsObject) {
+              if (!isObject) {
                 try {
-                  using (FileStream Data_File =
-                         File.Create(Dir + "\\" + Method_Name + ".bin")) {
-                    Data_File.Write(REL_Data, Offset, Size);
-                    Data_File.Flush();
+                  using (FileStream dataFile =
+                         File.Create(dir + "\\" + methodName + ".bin")) {
+                    dataFile.Write(relData, offset, size);
+                    dataFile.Flush();
                   }
                 } catch {
                   //Console.WriteLine(string.Format("Unable to create file for: {0}/{1}! Offset was past the end of the file!",
@@ -152,8 +152,8 @@ public sealed class RelDump {
               } else {
                 Console.WriteLine(
                     string.Format("Parsing data for {0}/{1}",
-                                  Current_Section,
-                                  Object_Name));
+                                  currentSection,
+                                  objectName));
               }
             }
           }
@@ -169,9 +169,9 @@ public sealed class RelDump {
     return true;
   }
 
-  private int GetRELOffset_(int Section_Offset, int dataOffset) {
+  private int GetRELOffset_(int sectionOffset, int dataOffset) {
     return this.currentHeaderSize_ +
-           Section_Offset +
+           sectionOffset +
            dataOffset; // Header is 0xA0 bytes
   }
 }

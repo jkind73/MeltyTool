@@ -19,7 +19,7 @@ namespace pikmin1.schema.anm {
   [BinarySchema]
   public sealed partial class DcaAnimationData : IDcxAnimationData {
     [WLengthOfSequence(nameof(JointDataList))]
-    public uint jointCount_ { get; private set; }
+    public uint JointCount { get; private set; }
     public uint FrameCount { get; set; }
 
     [SequenceLengthSource(SchemaIntegerType.INT32)]
@@ -31,7 +31,7 @@ namespace pikmin1.schema.anm {
     [SequenceLengthSource(SchemaIntegerType.INT32)]
     public float[] PositionValues { get; set; }
 
-    [RSequenceLengthSource(nameof(jointCount_))]
+    [RSequenceLengthSource(nameof(JointCount))]
     public DcaJointData[] JointDataList { get; set; }
 
     [Skip]

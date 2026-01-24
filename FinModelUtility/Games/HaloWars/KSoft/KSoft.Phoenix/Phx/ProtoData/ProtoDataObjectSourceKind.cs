@@ -5,16 +5,16 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum ProtoDataObjectSourceKind
 	{
-		None = PhxUtil.kObjectKindNone,
+		NONE = PhxUtil.K_OBJECT_KIND_NONE,
 
-		Database,
-		GameData,
-		HPData,
+		DATABASE,
+		GAME_DATA,
+		HP_DATA,
 
-		Scenario,
-		TacticData,
-		TriggerScript,
-		Visual,
+		SCENARIO,
+		TACTIC_DATA,
+		TRIGGER_SCRIPT,
+		VISUAL,
 	};
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -39,10 +39,10 @@ namespace KSoft.Phoenix
 		{
 			switch (kind)
 			{
-				case Phx.ProtoDataObjectSourceKind.TacticData:
-				case Phx.ProtoDataObjectSourceKind.Visual:
-				case Phx.ProtoDataObjectSourceKind.TriggerScript:
-				case Phx.ProtoDataObjectSourceKind.Scenario:
+				case Phx.ProtoDataObjectSourceKind.TACTIC_DATA:
+				case Phx.ProtoDataObjectSourceKind.VISUAL:
+				case Phx.ProtoDataObjectSourceKind.TRIGGER_SCRIPT:
+				case Phx.ProtoDataObjectSourceKind.SCENARIO:
 					return true;
 
 				default:

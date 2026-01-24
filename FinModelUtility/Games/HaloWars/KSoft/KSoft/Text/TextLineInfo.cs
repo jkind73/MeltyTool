@@ -9,7 +9,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Text
 {
-	[Contracts.ContractClass(typeof(ITextLineInfoContract))]
+	[Contracts.ContractClass(typeof(TextLineInfoContract))]
 	public interface ITextLineInfo
 	{
 		bool HasLineInfo { get; }
@@ -18,7 +18,7 @@ namespace KSoft.Text
 		int LinePosition { get; }
 	};
 	[Contracts.ContractClassFor(typeof(ITextLineInfo))]
-	abstract class ITextLineInfoContract : ITextLineInfo
+	abstract class TextLineInfoContract : ITextLineInfo
 	{
 		public bool HasLineInfo => throw new NotImplementedException();
 
@@ -44,20 +44,20 @@ namespace KSoft.Text
 	{
 		public static readonly TextLineInfo Empty = new TextLineInfo();
 
-		readonly int mLineNumber, mLinePosition;
+		readonly int mLineNumber_, mLinePosition_;
 
-		public bool HasLineInfo		=> this.mLineNumber > 0;
+		public bool HasLineInfo		=> this.mLineNumber_ > 0;
 
-		public int LineNumber		=> this.mLineNumber;
-		public int LinePosition		=> this.mLinePosition;
+		public int LineNumber		=> this.mLineNumber_;
+		public int LinePosition		=> this.mLinePosition_;
 
 		public TextLineInfo(int lineNumber, int linePosition)
 		{
 			Contract.Requires(lineNumber > 0);
 			Contract.Requires(linePosition > 0);
 
-			this.mLineNumber = lineNumber;
-			this.mLinePosition = linePosition;
+			this.mLineNumber_ = lineNumber;
+			this.mLinePosition_ = linePosition;
 		}
 		public TextLineInfo(ITextLineInfo otherLineInfo) : this(otherLineInfo.LineNumber, otherLineInfo.LinePosition)
 		{
@@ -87,36 +87,36 @@ namespace KSoft.Text
 		/// <returns></returns>
 		public override string ToString() => ToString(this, true);
 
-		const string kNoLineInfoString = "<no line info>";
+		const string K_NO_LINE_INFO_STRING_ = "<no line info>";
 
 		public static string ToStringLineOnly<T>(T lineInfo, bool verboseString)
 			where T : ITextLineInfo
 		{
-			const string k_format_string =
+			const string kFormatString =
 				"{0}";
-			const string k_format_string_verbose =
+			const string kFormatStringVerbose =
 				"Ln {0}";
 
 			if (!lineInfo.HasLineInfo)
-				return kNoLineInfoString;
+				return K_NO_LINE_INFO_STRING_;
 
 			return string.Format(KSoft.Util.InvariantCultureInfo,
-				verboseString ? k_format_string_verbose : k_format_string,
+				verboseString ? kFormatStringVerbose : kFormatString,
 				lineInfo.LineNumber.ToString(KSoft.Util.InvariantCultureInfo));
 		}
 		public static string ToString<T>(T lineInfo, bool verboseString)
 			where T : ITextLineInfo
 		{
-			const string k_format_string =
+			const string kFormatString =
 				"{0}, {1}";
-			const string k_format_string_verbose =
+			const string kFormatStringVerbose =
 				"Ln {0}, Col {1}";
 
 			if (!lineInfo.HasLineInfo)
-				return kNoLineInfoString;
+				return K_NO_LINE_INFO_STRING_;
 
 			return string.Format(KSoft.Util.InvariantCultureInfo,
-				verboseString ? k_format_string_verbose : k_format_string,
+				verboseString ? kFormatStringVerbose : kFormatString,
 				lineInfo.LineNumber.ToString(KSoft.Util.InvariantCultureInfo),
 				lineInfo.LinePosition.ToString(KSoft.Util.InvariantCultureInfo));
 		}

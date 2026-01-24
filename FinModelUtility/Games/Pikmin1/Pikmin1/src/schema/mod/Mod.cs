@@ -14,20 +14,20 @@ namespace pikmin1.schema.mod;
 
 [BinarySchema]
 public sealed partial class DateTime : IBinaryConvertible {
-  public ushort year { get; set; } = 2021;
-  public byte month { get; set; } = 9;
-  public byte day { get; set; } = 18;
+  public ushort Year { get; set; } = 2021;
+  public byte Month { get; set; } = 9;
+  public byte Day { get; set; } = 18;
 }
 
 [BinarySchema]
 public sealed partial class ModHeader : IBinaryConvertible {
   public readonly DateTime dateTime = new();
 
-  public uint flags { get; set; }
+  public uint Flags { get; set; }
 }
 
 public enum ModFlags {
-  UseNBT = 0x01
+  USE_NBT = 0x01
 }
 
 public sealed class Mod : IBinaryConvertible {
@@ -134,7 +134,7 @@ public sealed class Mod : IBinaryConvertible {
           br.Align(0x20);
           this.materials.texEnvironments.Clear();
           for (var i = 0; i < numTexEnvironments; ++i) {
-            var texEnvironment = new TEVInfo();
+            var texEnvironment = new TevInfo();
             texEnvironment.Read(br);
             this.materials.texEnvironments.Add(texEnvironment);
           }

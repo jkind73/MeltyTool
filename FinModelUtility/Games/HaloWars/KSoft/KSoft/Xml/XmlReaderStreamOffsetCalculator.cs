@@ -14,25 +14,25 @@ namespace KSoft.Xml
 	static class XmlReaderStreamOffsetCalculator
 	{
 		#region StreamReader util
-		const string kStreamReader_BufferLengthPropName = "ByteLen_Prop";
-		const string kStreamReader_BufferPositionPropName = "CharPos_Prop";
-		const string kStreamReader_DefaultBufferSizeFieldName = "DefaultBufferSize";
+		const string K_STREAM_READER_BUFFER_LENGTH_PROP_NAME_ = "ByteLen_Prop";
+		const string K_STREAM_READER_BUFFER_POSITION_PROP_NAME_ = "CharPos_Prop";
+		const string K_STREAM_READER_DEFAULT_BUFFER_SIZE_FIELD_NAME_ = "DefaultBufferSize";
 
-		static readonly Func<StreamReader, int> kStreamReader_BufferLengthGet =
-			Reflection.Util.GenerateMemberGetter<StreamReader, int>(kStreamReader_BufferLengthPropName);
-		static readonly Func<StreamReader, int> kStreamReader_BufferPositionGet =
-			Reflection.Util.GenerateMemberGetter<StreamReader, int>(kStreamReader_BufferPositionPropName);
+		static readonly Func<StreamReader, int> KStreamReaderBufferLengthGet =
+			Reflection.Util.GenerateMemberGetter<StreamReader, int>(K_STREAM_READER_BUFFER_LENGTH_PROP_NAME_);
+		static readonly Func<StreamReader, int> KStreamReaderBufferPositionGet =
+			Reflection.Util.GenerateMemberGetter<StreamReader, int>(K_STREAM_READER_BUFFER_POSITION_PROP_NAME_);
 
-		static readonly int kStreamReader_DefaultBufferSize =
-			Reflection.Util.GenerateStaticFieldGetter<StreamReader, int>(kStreamReader_DefaultBufferSizeFieldName)();
+		static readonly int KStreamReaderDefaultBufferSize =
+			Reflection.Util.GenerateStaticFieldGetter<StreamReader, int>(K_STREAM_READER_DEFAULT_BUFFER_SIZE_FIELD_NAME_)();
 
 		static int GetBufferLength(StreamReader s)
 		{
-			return kStreamReader_BufferLengthGet(s);
+			return KStreamReaderBufferLengthGet(s);
 		}
 		static int GetBufferPosition(StreamReader s)
 		{
-			return kStreamReader_BufferPositionGet(s);
+			return KStreamReaderBufferPositionGet(s);
 		}
 		static int GetPreambleLength(StreamReader s)
 		{
@@ -41,21 +41,21 @@ namespace KSoft.Xml
 		#endregion
 
 		#region XmlTextReaderImpl util
-		const string kTextReaderImpl_BufferLengthPropName = "DtdParserProxy_ParsingBufferLength";
-		const string kTextReaderImpl_BufferPositionPropName = "DtdParserProxy_CurrentPosition";
+		const string K_TEXT_READER_IMPL_BUFFER_LENGTH_PROP_NAME_ = "DtdParserProxy_ParsingBufferLength";
+		const string K_TEXT_READER_IMPL_BUFFER_POSITION_PROP_NAME_ = "DtdParserProxy_CurrentPosition";
 
-		static readonly Func<XmlReader, int> kTextReaderImpl_BufferLengthGet =
-			Reflection.Util.GenerateMemberGetter<XmlReader, int>(kTextReaderImpl_BufferLengthPropName);
-		static readonly Func<XmlReader, int> kTextReaderImpl_BufferPositionGet =
-			Reflection.Util.GenerateMemberGetter<XmlReader, int>(kTextReaderImpl_BufferPositionPropName);
+		static readonly Func<XmlReader, int> KTextReaderImplBufferLengthGet =
+			Reflection.Util.GenerateMemberGetter<XmlReader, int>(K_TEXT_READER_IMPL_BUFFER_LENGTH_PROP_NAME_);
+		static readonly Func<XmlReader, int> KTextReaderImplBufferPositionGet =
+			Reflection.Util.GenerateMemberGetter<XmlReader, int>(K_TEXT_READER_IMPL_BUFFER_POSITION_PROP_NAME_);
 
 		static int GetBufferLength(XmlReader s)
 		{
-			return kTextReaderImpl_BufferLengthGet(s);
+			return KTextReaderImplBufferLengthGet(s);
 		}
 		static int GetBufferPosition(XmlReader s)
 		{
-			return kTextReaderImpl_BufferPositionGet(s);
+			return KTextReaderImplBufferPositionGet(s);
 		}
 		#endregion
 
@@ -66,24 +66,24 @@ namespace KSoft.Xml
 			Contract.Requires<InvalidOperationException>(xmlReader.GetType().Name == "XmlTextReaderImpl");
 
 			// get the 'base' position from the root stream
-			long stream_position = underlyingStreamReader.BaseStream.Position;
+			long streamPosition = underlyingStreamReader.BaseStream.Position;
 
 			// get the underlying stream's buffer state and text encoding preamble
-			var stream_buffer_length = GetBufferLength(underlyingStreamReader);
-			var stream_buffer_pos = GetBufferPosition(underlyingStreamReader);
-			var stream_preamble_length = GetPreambleLength(underlyingStreamReader);
+			var streamBufferLength = GetBufferLength(underlyingStreamReader);
+			var streamBufferPos = GetBufferPosition(underlyingStreamReader);
+			var streamPreambleLength = GetPreambleLength(underlyingStreamReader);
 
 			// get the xml reader's buffer state
-			var xml_buffer_length = GetBufferLength(xmlReader);
-			var xml_buffer_pos = GetBufferPosition(xmlReader);
+			var xmlBufferLength = GetBufferLength(xmlReader);
+			var xmlBufferPos = GetBufferPosition(xmlReader);
 
 			// subtract the lengths of the buffers which the stream/xml readers cached
 			// then add the 'cursor' positions the readers have in those buffers
 			// plus the text encoding preamble length
-			long pos = stream_position
-				- (stream_buffer_length == kStreamReader_DefaultBufferSize ? kStreamReader_DefaultBufferSize : 0)
-				- xml_buffer_length
-				+ xml_buffer_pos + stream_buffer_pos + stream_preamble_length;
+			long pos = streamPosition
+				- (streamBufferLength == KStreamReaderDefaultBufferSize ? KStreamReaderDefaultBufferSize : 0)
+				- xmlBufferLength
+				+ xmlBufferPos + streamBufferPos + streamPreambleLength;
 
 			return pos;
 		}

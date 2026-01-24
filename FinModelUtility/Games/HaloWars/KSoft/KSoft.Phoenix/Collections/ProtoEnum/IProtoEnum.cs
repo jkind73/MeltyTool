@@ -8,7 +8,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	[Contracts.ContractClass(typeof(IProtoEnumContract))]
+	[Contracts.ContractClass(typeof(ProtoEnumContract))]
 	public interface IProtoEnum
 	{
 		[Contracts.Pure]
@@ -32,7 +32,7 @@ namespace KSoft.Collections
 	};
 
 	[Contracts.ContractClassFor(typeof(IProtoEnum))]
-	abstract class IProtoEnumContract
+	abstract class ProtoEnumContract
 		: IProtoEnum
 	{
 		#region IProtoEnum Members
@@ -69,7 +69,7 @@ namespace KSoft.Phoenix
 		public static int TryGetId(this Collections.IProtoEnum dbi, string name)
 		{
 			if (dbi == null)
-				return TypeExtensions.kNone;
+				return TypeExtensions.K_NONE;
 
 			return dbi.TryGetMemberId(name);
 		}

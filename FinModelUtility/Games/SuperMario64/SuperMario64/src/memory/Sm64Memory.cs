@@ -52,7 +52,7 @@ namespace sm64.memory {
                                     out var segment,
                                     out var offset);
       var br = new SchemaBinaryReader(
-          Asserts.CastNonnull(ROM.Instance.getSegment(segment, this.AreaId)),
+          Asserts.CastNonnull(Rom.Instance.GetSegment(segment, this.AreaId)),
           SchemaConstants.SM64_ENDIANNESS);
       br.Position = offset;
       return br;

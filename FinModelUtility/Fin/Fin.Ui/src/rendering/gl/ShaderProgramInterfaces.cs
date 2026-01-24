@@ -25,7 +25,7 @@ public partial interface IShaderProgram : IDisposable {
   IShaderUniform<Vector2> GetUniformVec2(string name);
   IShaderUniform<Vector3> GetUniformVec3(string name);
   IShaderUniform<Vector4> GetUniformVec4(string name);
-  IShaderUniform<Matrix3x2> GetUniformMat3x2(string name);
+  IShaderUniform<Matrix3x2> GetUniformMat3X2(string name);
   IShaderUniform<Matrix4x4> GetUniformMat4(string name);
-  IShaderUniformArray<Matrix4x4> GetUniformMat4s(string name, int length);
+  IShaderUniformArray<Matrix4x4> GetUniformMat4S(string name, int length);
 }

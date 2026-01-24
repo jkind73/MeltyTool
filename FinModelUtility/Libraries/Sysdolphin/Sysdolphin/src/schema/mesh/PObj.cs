@@ -135,12 +135,12 @@ public partial class PObj : IDatLinkedListNode<PObj>, IBinaryDeserializable {
 
     // Reads display list
     var gxDisplayListReader = new GxDisplayListReader();
-    var positionAttr = this.VertexDescriptors[GxVertexAttribute.Position];
-    var normalAttr = this.VertexDescriptors[GxVertexAttribute.Normal];
+    var positionAttr = this.VertexDescriptors[GxVertexAttribute.POSITION];
+    var normalAttr = this.VertexDescriptors[GxVertexAttribute.NORMAL];
     var nbtAttr = this.VertexDescriptors[GxVertexAttribute.NBT];
-    var uv0Attr = this.VertexDescriptors[GxVertexAttribute.Tex0Coord];
-    var uv1Attr = this.VertexDescriptors[GxVertexAttribute.Tex1Coord];
-    var color0Attr = this.VertexDescriptors[GxVertexAttribute.Color0];
+    var uv0Attr = this.VertexDescriptors[GxVertexAttribute.TEX0_COORD];
+    var uv1Attr = this.VertexDescriptors[GxVertexAttribute.TEX1_COORD];
+    var color0Attr = this.VertexDescriptors[GxVertexAttribute.COLOR0];
 
     br.Position = this.Header.DisplayListOffset;
     for (var d = 0; d < this.Header.DisplayListSize; ++d) {

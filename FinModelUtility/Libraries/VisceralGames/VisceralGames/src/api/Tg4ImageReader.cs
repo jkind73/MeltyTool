@@ -18,13 +18,13 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace visceral.api;
 
 public record Tg4ImageFileBundle {
-  public required IReadOnlyTreeFile Tg4hFile { get; init; }
+  public required IReadOnlyTreeFile Tg4HFile { get; init; }
   public required IReadOnlyTreeFile Tg4dFile { get; init; }
 }
 
 public sealed class Tg4ImageReader {
   public IImage ReadImage(Tg4ImageFileBundle bundle) {
-    var headerFile = bundle.Tg4hFile;
+    var headerFile = bundle.Tg4HFile;
     var dataFile = bundle.Tg4dFile;
 
     using var headerEr =
@@ -63,14 +63,14 @@ public sealed class Tg4ImageReader {
     };
 
     if (compressionFormat == null) {
-      return FinImage.Create1x1FromColor(Color.Magenta);
+      return FinImage.Create1X1FromColor(Color.Magenta);
     }
 
     var isNormal = format == "DXT5_NM";
 
     var imageFormat = compressionFormat switch {
         CompressionFormat.Bc1          => PixelFormat.DXT1,
-        CompressionFormat.Bc1WithAlpha => PixelFormat.DXT1A,
+        CompressionFormat.Bc1WithAlpha => PixelFormat.DXT1_A,
         CompressionFormat.Bc3          => PixelFormat.DXT5,
         _                              => throw new ArgumentOutOfRangeException()
     };

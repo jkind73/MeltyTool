@@ -10,9 +10,9 @@ namespace sysdolphin.schema.texture;
 ///   https://github.com/Ploaj/HSDLib/blob/93a906444f34951c6eed4d8c6172bba43d4ada98/HSDRaw/Common/HSD_TOBJ.cs#L391
 /// </summary>
 [BinarySchema]
-public sealed partial class TObjLod : IBinaryDeserializable {
+public sealed partial class ObjLod : IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.UINT32)]
-  public GX_MIN_TEXTURE_FILTER MinFilter { get; set; }
+  public GxMinTextureFilter MinFilter { get; set; }
 
   public float Bias { get; set; }
 

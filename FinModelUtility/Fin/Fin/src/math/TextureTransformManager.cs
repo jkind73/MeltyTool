@@ -141,7 +141,7 @@ public sealed class TextureTransformManager : ITextureTransformManager {
       scale = textureScale.Value.Xy();
     }
 
-    return SystemMatrix3x2Util.FromCtrss(center,
+    return SystemMatrix3X2Util.FromCtrss(center,
                                          translation,
                                          textureRotationRadians?.Z,
                                          scale,
@@ -183,7 +183,7 @@ public sealed class TextureTransformManager : ITextureTransformManager {
                                           textureRotationRadians.Value.Z);
     }
 
-    return SystemMatrix4x4Util.FromCtrs(textureCenter, translation, rotation, textureScale);
+    return SystemMatrix4X4Util.FromCtrs(textureCenter, translation, rotation, textureScale);
   }
 
   public (bool is2d, Matrix3x2 twoDMatrix, Matrix4x4 threeDMatrix)? GetMatrix(

@@ -25,12 +25,12 @@ namespace KSoft.Phoenix.Runtime
 			s.Stream(ref this.Type, GameSettingTypeStreamer.Instance);
 			switch (this.Type)
 			{
-				case GameSettingType.Float:  s.Stream(ref this.Float); break;
-				case GameSettingType.Int:    s.Stream(ref this.Int); break;
-				case GameSettingType.Byte:   s.Stream(ref this.Byte); break;
-				case GameSettingType.Bool:   s.Stream(ref this.Bool); break;
-				case GameSettingType.Long:   s.Stream(ref this.Long); break;
-				case GameSettingType.String: s.Stream(ref this.String); break;
+				case GameSettingType.FLOAT:  s.Stream(ref this.Float); break;
+				case GameSettingType.INT:    s.Stream(ref this.Int); break;
+				case GameSettingType.BYTE:   s.Stream(ref this.Byte); break;
+				case GameSettingType.BOOL:   s.Stream(ref this.Bool); break;
+				case GameSettingType.LONG:   s.Stream(ref this.Long); break;
+				case GameSettingType.STRING: s.Stream(ref this.String); break;
 			}
 		}
 		#endregion

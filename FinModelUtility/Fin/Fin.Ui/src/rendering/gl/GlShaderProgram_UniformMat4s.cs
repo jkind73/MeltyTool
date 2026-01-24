@@ -8,18 +8,18 @@ using OpenTK.Graphics.OpenGL4;
 namespace fin.ui.rendering.gl;
 
 public partial class GlShaderProgram {
-  public IShaderUniformArray<Matrix4x4> GetUniformMat4s(
+  public IShaderUniformArray<Matrix4x4> GetUniformMat4S(
       string name,
       int length) {
       if (!this.cachedUniformsByName_.TryGetValue(name, out var uniform)) {
         this.cachedUniformsByName_[name] = uniform =
-            new Mat4sShaderUniform(this.GetUniformLocation_(name), length);
+            new Mat4SShaderUniform(this.GetUniformLocation_(name), length);
       }
 
       return Asserts.AsA<IShaderUniformArray<Matrix4x4>>(uniform);
     }
 
-  private class Mat4sShaderUniform(int location, int length)
+  private class Mat4SShaderUniform(int location, int length)
       : BShaderUniform, IShaderUniformArray<Matrix4x4> {
     private readonly Matrix4x4[] value_ = new Matrix4x4[length];
 

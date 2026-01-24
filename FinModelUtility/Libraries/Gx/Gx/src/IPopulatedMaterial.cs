@@ -5,19 +5,19 @@ using fin.model;
 namespace gx;
 
 public enum GxCullMode {
-  None = 0,  // Do not cull any primitives
-  Front = 1, // Cull front-facing primitives
-  Back = 2,  // Cull back-facing primitives
-  All = 3    // Cull all primitives
+  NONE = 0,  // Do not cull any primitives
+  FRONT = 1, // Cull front-facing primitives
+  BACK = 2,  // Cull back-facing primitives
+  ALL = 3    // Cull all primitives
 }
 
 public static class GxCullModeExtensions {
   public static CullingMode ToFinCullingMode(this GxCullMode gxCullMode)
     => gxCullMode switch {
-        GxCullMode.None  => CullingMode.SHOW_BOTH,
-        GxCullMode.Front => CullingMode.SHOW_BACK_ONLY,
-        GxCullMode.Back  => CullingMode.SHOW_FRONT_ONLY,
-        GxCullMode.All   => CullingMode.SHOW_NEITHER,
+        GxCullMode.NONE  => CullingMode.SHOW_BOTH,
+        GxCullMode.FRONT => CullingMode.SHOW_BACK_ONLY,
+        GxCullMode.BACK  => CullingMode.SHOW_FRONT_ONLY,
+        GxCullMode.ALL   => CullingMode.SHOW_NEITHER,
         _                => throw new ArgumentOutOfRangeException(),
     };
 }

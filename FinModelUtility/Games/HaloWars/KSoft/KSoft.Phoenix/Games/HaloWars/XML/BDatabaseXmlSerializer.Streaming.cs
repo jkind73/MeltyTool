@@ -4,7 +4,7 @@ namespace KSoft.Phoenix.HaloWars
 {
 	partial class BDatabaseXmlSerializer
 	{
-		static bool gRemoveUndefined = false;
+		static bool gRemoveUndefined_ = false;
 
 		#region Utils
 		static void RemoveAllButTheLastElement(IO.XmlElementStream s, XmlElement node, string elementName)
@@ -103,9 +103,9 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			// Don't add the types if we're not removing undefined data
 			// as we assume the UndefinedHandle/ProtoEnum shit is in use
-			if (!gRemoveUndefined) return;
+			if (!gRemoveUndefined_) return;
 
-			Debug.Trace.XML.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.kNone,
+			Debug.Trace.Xml.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.K_NONE,
 				"Fixing WeaponTypes with missing types");
 			this.Database.WeaponTypes.DynamicAdd(new Phx.BWeaponType(), "Cannon");
 			this.Database.WeaponTypes.DynamicAdd(new Phx.BWeaponType(), "needler");
@@ -130,7 +130,7 @@ namespace KSoft.Phoenix.HaloWars
 			string xpath;
 			XmlNodeList elements;
 
-			if (!ToLowerName(Phx.DatabaseObjectKind.Object))
+			if (!ToLowerName(Phx.DatabaseObjectKind.OBJECT))
 			{
 				xpath = "InfectionMap/InfectionMapEntry[contains(@base, 'needlergrunt')]";
 				elements = s.Cursor.SelectNodes(xpath);
@@ -145,7 +145,7 @@ namespace KSoft.Phoenix.HaloWars
 				FixGameDataXmlInfectionMapEntryInfected(s, "fld_inf_InfectedGrunt_01");
 			}
 
-			if (!ToLowerName(Phx.DatabaseObjectKind.Squad))
+			if (!ToLowerName(Phx.DatabaseObjectKind.SQUAD))
 			{
 				xpath = "InfectionMap/InfectionMapEntry[contains(@infectedSquad, '_Inf')]";
 				elements = s.Cursor.SelectNodes(xpath);
@@ -157,7 +157,7 @@ namespace KSoft.Phoenix.HaloWars
 			}
 
 			#region Alpha only
-			if (build == Engine.PhxEngineBuild.Alpha)
+			if (build == Engine.PhxEngineBuild.ALPHA)
 			{
 				xpath = "InfectionMap/InfectionMapEntry[contains(@base, 'unsc_inf_heavymarine_01')]";
 				elements = s.Cursor.SelectNodes(xpath);
@@ -174,15 +174,15 @@ namespace KSoft.Phoenix.HaloWars
 			string elementName;
 			// data provides float, engine expects DWORD
 
-			element = XPathSelectElementByName(s, Phx.BGameData.kXmlFileInfo.RootName,
+			element = XPathSelectElementByName(s, Phx.BGameData.KXmlFileInfo.RootName,
 				elementName="ALMaxWanderFrequency");
 			RemoveFloatText(s, element, elementName);
 
-			element = XPathSelectElementByName(s, Phx.BGameData.kXmlFileInfo.RootName,
+			element = XPathSelectElementByName(s, Phx.BGameData.KXmlFileInfo.RootName,
 				elementName="ALPredatorCheckFrequency");
 			RemoveFloatText(s, element, elementName);
 
-			element = XPathSelectElementByName(s, Phx.BGameData.kXmlFileInfo.RootName,
+			element = XPathSelectElementByName(s, Phx.BGameData.KXmlFileInfo.RootName,
 				elementName="ALPreyCheckFrequency");
 			RemoveFloatText(s, element, elementName);
 		}
@@ -191,7 +191,7 @@ namespace KSoft.Phoenix.HaloWars
 			string xpath = null;
 			XmlNodeList elements = null;
 			#region Fix LeaderPowerChargeResource
-			if (gRemoveUndefined)
+			if (gRemoveUndefined_)
 			{
 				xpath = "LeaderPowerChargeResource";
 				elements = s.Cursor.SelectNodes(xpath);
@@ -200,7 +200,7 @@ namespace KSoft.Phoenix.HaloWars
 					if (e.InnerText != "LeaderPowerCharge")
 						continue;
 
-					Debug.Trace.XML.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.kNone,
+					Debug.Trace.Xml.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.K_NONE,
 						"Fixing GameData XPath={0}");
 					e.InnerText = "";
 				}
@@ -221,10 +221,10 @@ namespace KSoft.Phoenix.HaloWars
 		// Fix float values which are in an invalid format for .NET's parsing
 		static void FixObjectsXmlInvalidSinglesCobra(IO.XmlElementStream s)
 		{
-			var node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "unsc_veh_cobra_01");
+			var node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "unsc_veh_cobra_01");
 			if (node == null) return;
 
-			var element = node[Phx.BProtoObject.kXmlElementAttackGradeDPS] as XmlElement;
+			var element = node[Phx.BProtoObject.K_XML_ELEMENT_ATTACK_GRADE_DPS] as XmlElement;
 
 			string txt = element.InnerText;
 			int idx = txt.IndexOf('.');
@@ -233,23 +233,23 @@ namespace KSoft.Phoenix.HaloWars
 		}
 		static void FixObjectsXmlInvalidSinglesAlpha(IO.XmlElementStream s)
 		{
-			var node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "cpgn8_air_strategicMissile_01");
+			var node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "cpgn8_air_strategicMissile_01");
 			if (node == null) return;
 
 			// <AttackGradeDPS>.</AttackGradeDPS>
-			var element = node[Phx.BProtoObject.kXmlElementAttackGradeDPS] as XmlElement;
+			var element = node[Phx.BProtoObject.K_XML_ELEMENT_ATTACK_GRADE_DPS] as XmlElement;
 			element.ParentNode.RemoveChild(element);
 		}
 		static void FixObjectsXmlInvalidSingles(Engine.PhxEngineBuild build, IO.XmlElementStream s)
 		{
-			if (build == Engine.PhxEngineBuild.Alpha)
+			if (build == Engine.PhxEngineBuild.ALPHA)
 				FixObjectsXmlInvalidSinglesAlpha(s);
 			else
 				FixObjectsXmlInvalidSinglesCobra(s);
 		}
 		static void FixObjectsXmlInvalidFlags(IO.XmlElementStream s)
 		{
-			var node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "fx_proj_fldbomb_01");
+			var node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "fx_proj_fldbomb_01");
 			if (node == null) return;
 
 			var nodes = node.ChildNodes;
@@ -282,15 +282,15 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			XmlNode node;
 
-			node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "pow_gp_wave_01");
+			node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "pow_gp_wave_01");
 			if (node != null)
 				FixObjectsXmlInvalidSoundsPowGpWave(s, node);
 
-			node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "pow_gp_wave_02");
+			node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "pow_gp_wave_02");
 			if (node != null)
 				FixObjectsXmlInvalidSoundsPowGpWave(s, node);
 
-			node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "pow_gp_wave_03");
+			node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "pow_gp_wave_03");
 			if (node != null)
 				FixObjectsXmlInvalidSoundsPowGpWave(s, node);
 		}
@@ -298,7 +298,7 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			XmlNode node;
 
-			node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "cov_bldg_megaTurret_01");
+			node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "cov_bldg_megaTurret_01");
 			if (node != null)
 			{
 				string xpath;
@@ -321,7 +321,7 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			foreach (string name in objectNames)
 			{
-				var node = XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, name);
+				var node = XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, name);
 				FixObjectXmlInvalidLifeSpan(s.Document, node);
 			}
 		}
@@ -369,7 +369,7 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			var build = this.Database.Engine.Build;
 			FixObjectsXmlInvalidSingles(build, s);
-			if (build == Engine.PhxEngineBuild.Release)
+			if (build == Engine.PhxEngineBuild.RELEASE)
 			{
 				FixObjectsXmlInvalidFlags(s);
 				FixObjectsXmlInvalidSounds(s); // #TODO does this need to be done for Alpha too?
@@ -379,13 +379,13 @@ namespace KSoft.Phoenix.HaloWars
 					"fx_unitLevelUp",
 					"fx_unitLevelUpHigh",
 					"fx_unitLevelUpLow");
-				FixObjectsXml_fld_air_bomber_01(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "fld_air_bomber_01"));
-				FixObjectsXml_hook_spawner_FloodRelease(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "hook_spawner_FloodRelease_01"));
-				FixObjectsXml_hook_spawner_FloodRelease(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "hook_spawner_FloodRelease_02"));
-				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "for_air_monitor_01"));
-				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "for_air_monitor_02"));
-				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "for_air_monitor_04"));
-				FixObjectsXml_for_air_attractor_01(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.kBListXmlParams, "for_air_attractor_01"));
+				FixObjectsXml_fld_air_bomber_01(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "fld_air_bomber_01"));
+				FixObjectsXml_hook_spawner_FloodRelease(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "hook_spawner_FloodRelease_01"));
+				FixObjectsXml_hook_spawner_FloodRelease(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "hook_spawner_FloodRelease_02"));
+				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "for_air_monitor_01"));
+				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "for_air_monitor_02"));
+				FixObjectsXml_for_air_monitor(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "for_air_monitor_04"));
+				FixObjectsXml_for_air_attractor_01(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoObject.KBListXmlParams, "for_air_attractor_01"));
 			}
 		}
 		#endregion
@@ -402,10 +402,10 @@ namespace KSoft.Phoenix.HaloWars
 
 			foreach (XmlElement e in elements)
 			{
-				var attr_old = e.Attributes[kAttrNameOld];
+				var attrOld = e.Attributes[kAttrNameOld];
 				var attr = s.Document.CreateAttribute(kAttrName);
-				attr.Value = attr_old.Value;
-				e.Attributes.InsertBefore(attr, attr_old);
+				attr.Value = attrOld.Value;
+				e.Attributes.InsertBefore(attr, attrOld);
 				e.RemoveAttribute(kAttrNameOld);
 			}
 		}
@@ -413,14 +413,14 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			foreach (string name in squadNames)
 			{
-				var node = XPathSelectNodeByName(s, Phx.BProtoSquad.kBListXmlParams, name);
+				var node = XPathSelectNodeByName(s, Phx.BProtoSquad.KBListXmlParams, name);
 				if (node != null)
 					node.ParentNode.RemoveChild(node);
 			}
 		}
 		static void FixSquadsXmlAlpha(IO.XmlElementStream s)
 		{
-			if (gRemoveUndefined) FixSquadsXmlAphaUndefinedObjects(s,
+			if (gRemoveUndefined_) FixSquadsXmlAphaUndefinedObjects(s,
 				"unsc_air_shortsword_01", "unsc_con_turret_01", "unsc_con_base_01",
 				"cov_inf_kamikazeGrunt_01", // needs to be 'cpgn_inf_kamikazegrunt_01', but fuck updating it
 				"cov_con_turret_01", "cov_con_node_01", "cov_con_base_01"
@@ -432,9 +432,9 @@ namespace KSoft.Phoenix.HaloWars
 		{
 			XmlNode node;
 
-			node = XPathSelectNodeByName(s, Phx.BProtoSquad.kBListXmlParams, "cov_veh_bruteChopper_01");
+			node = XPathSelectNodeByName(s, Phx.BProtoSquad.KBListXmlParams, "cov_veh_bruteChopper_01");
 			FixSquadsXmlSoundsKillEnemy(node);
-			node = XPathSelectNodeByName(s, Phx.BProtoSquad.kBListXmlParams, "cov_veh_ghost_01");
+			node = XPathSelectNodeByName(s, Phx.BProtoSquad.KBListXmlParams, "cov_veh_ghost_01");
 			FixSquadsXmlSoundsKillEnemy(node);
 		}
 		static void FixSquadsXmlSoundsKillEnemy(XmlNode node)
@@ -449,7 +449,7 @@ namespace KSoft.Phoenix.HaloWars
 				foreach (XmlElement e in elements)
 				{
 					var typeAttr = e.GetAttributeNode("Type");
-					typeAttr.Value = Phx.BSquadSoundType.KilledEnemy.ToString();
+					typeAttr.Value = Phx.BSquadSoundType.KILLED_ENEMY.ToString();
 				}
 			}
 		}
@@ -462,12 +462,12 @@ namespace KSoft.Phoenix.HaloWars
 
 		protected override void FixSquadsXml(IO.XmlElementStream s)
 		{
-			if (this.Database.Engine.Build == Engine.PhxEngineBuild.Alpha)
+			if (this.Database.Engine.Build == Engine.PhxEngineBuild.ALPHA)
 				FixSquadsXmlAlpha(s);
 			else
 			{
 				FixSquadsXmlSounds(s);
-				FixSquadsXml_for_air_sentinel_03(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoSquad.kBListXmlParams, "for_air_sentinel_03"));
+				FixSquadsXml_for_air_sentinel_03(s, (XmlElement)XPathSelectNodeByName(s, Phx.BProtoSquad.KBListXmlParams, "for_air_sentinel_03"));
 			}
 		}
 		#endregion
@@ -475,105 +475,105 @@ namespace KSoft.Phoenix.HaloWars
 		#region Fix Techs
 		static void FixTechsXmlBadNames(IO.XmlElementStream s, XML.BListXmlParams op, Engine.PhxEngineBuild build)
 		{
-			const string k_attr_command_data = "CommandData";
-			const string k_element_target = "Target";
+			const string kAttrCommandData = "CommandData";
+			const string kElementTarget = "Target";
 
-			string invalid_command_data_format = string.Format(
+			string invalidCommandDataFormat = string.Format(
 				"/{0}/{1}/Effects/Effect[@{2}='",
-				op.RootName, op.ElementName, k_attr_command_data) + "{0}']";
-			string invalid_target_format = string.Format(
+				op.rootName, op.elementName, kAttrCommandData) + "{0}']";
+			string invalidTargetFormat = string.Format(
 				"/{0}/{1}/Effects/Effect[Target='",
-				op.RootName, op.ElementName) + "{0}']";
+				op.rootName, op.elementName) + "{0}']";
 
 			string xpath;
 			XmlNodeList elements;
 
-			if (!ToLowerName(Phx.DatabaseObjectKind.Unit))
+			if (!ToLowerName(Phx.DatabaseObjectKind.UNIT))
 			{
 				#region Alpha only
-				if (build == Engine.PhxEngineBuild.Alpha)
+				if (build == Engine.PhxEngineBuild.ALPHA)
 				{
-					xpath = string.Format(invalid_target_format, "cov_inf_eliteleader_01");
+					xpath = string.Format(invalidTargetFormat, "cov_inf_eliteleader_01");
 					elements = s.Cursor.SelectNodes(xpath);
 					if (elements.Count > 0) foreach (XmlElement e in elements)
 					{
-						var fc = e[k_element_target].FirstChild;
+						var fc = e[kElementTarget].FirstChild;
 						fc.Value = "cov_inf_eliteLeader_01";
 					}
 				}
 				#endregion
 			}
 			#region Alpha only
-			if (build == Engine.PhxEngineBuild.Alpha)
+			if (build == Engine.PhxEngineBuild.ALPHA)
 			{
-				xpath = string.Format(invalid_target_format, "cov_inf_elite_leader01");
+				xpath = string.Format(invalidTargetFormat, "cov_inf_elite_leader01");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "cov_inf_eliteLeader_01";
 				}
 			}
 			#endregion
 
-			if (!ToLowerName(Phx.DatabaseObjectKind.Tech))
+			if (!ToLowerName(Phx.DatabaseObjectKind.TECH))
 			{
 				#region unsc_MAC_upgrade
-				xpath = string.Format(invalid_command_data_format, "unsc_mac_upgrade1");
+				xpath = string.Format(invalidCommandDataFormat, "unsc_mac_upgrade1");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
-						e.Attributes[k_attr_command_data].Value = "unsc_MAC_upgrade1";
+						e.Attributes[kAttrCommandData].Value = "unsc_MAC_upgrade1";
 
-				xpath = string.Format(invalid_command_data_format, "unsc_mac_upgrade2");
+				xpath = string.Format(invalidCommandDataFormat, "unsc_mac_upgrade2");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
-						e.Attributes[k_attr_command_data].Value = "unsc_MAC_upgrade2";
+						e.Attributes[kAttrCommandData].Value = "unsc_MAC_upgrade2";
 
-				xpath = string.Format(invalid_command_data_format, "unsc_mac_upgrade3");
+				xpath = string.Format(invalidCommandDataFormat, "unsc_mac_upgrade3");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
-						e.Attributes[k_attr_command_data].Value = "unsc_MAC_upgrade3";
+						e.Attributes[kAttrCommandData].Value = "unsc_MAC_upgrade3";
 				#endregion
 
 				#region unsc_flameMarine_upgrade
-				xpath = string.Format(invalid_target_format, "unsc_flamemarine_upgrade1");
+				xpath = string.Format(invalidTargetFormat, "unsc_flamemarine_upgrade1");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "unsc_flameMarine_upgrade1";
 				}
-				xpath = string.Format(invalid_target_format, "unsc_flamemarine_upgrade2");
+				xpath = string.Format(invalidTargetFormat, "unsc_flamemarine_upgrade2");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "unsc_flameMarine_upgrade2";
 				}
-				xpath = string.Format(invalid_target_format, "unsc_flamemarine_upgrade3");
+				xpath = string.Format(invalidTargetFormat, "unsc_flamemarine_upgrade3");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "unsc_flameMarine_upgrade3";
 				}
 				#endregion
 			}
 
-			if (!ToLowerName(Phx.DatabaseObjectKind.Squad))
+			if (!ToLowerName(Phx.DatabaseObjectKind.SQUAD))
 			{
-				xpath = string.Format(invalid_target_format, "unsc_inf_flamemarine_01");
+				xpath = string.Format(invalidTargetFormat, "unsc_inf_flamemarine_01");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "unsc_inf_flameMarine_01";
 				}
-				xpath = string.Format(invalid_target_format, "unsc_inf_Marine_01");
+				xpath = string.Format(invalidTargetFormat, "unsc_inf_Marine_01");
 				elements = s.Cursor.SelectNodes(xpath);
 				if (elements.Count > 0) foreach (XmlElement e in elements)
 				{
-					var fc = e[k_element_target].FirstChild;
+					var fc = e[kElementTarget].FirstChild;
 					fc.Value = "unsc_inf_marine_01";
 				}
 			}
@@ -590,24 +590,24 @@ namespace KSoft.Phoenix.HaloWars
 
 			foreach (XmlElement e in elements)
 			{
-				var attr_old = e.Attributes[kAttrNameOld];
+				var attrOld = e.Attributes[kAttrNameOld];
 				var attr = doc.CreateAttribute(kAttrName);
-				attr.Value = attr_old.Value;
-				e.Attributes.InsertBefore(attr, attr_old);
+				attr.Value = attrOld.Value;
+				e.Attributes.InsertBefore(attr, attrOld);
 				e.RemoveAttribute(kAttrNameOld);
 			}
 		}
 		// Remove non-existent ProtoTechs that are referenced by effects
 		static void FixTechsXmlEffectsInvalid(IO.XmlElementStream s, XML.BListXmlParams op, Engine.PhxEngineBuild build)
 		{
-			string xpath_target = string.Format(
+			string xpathTarget = string.Format(
 				"/{0}/{1}/Effects/Effect/Target",
-				op.RootName, op.ElementName);
+				op.rootName, op.elementName);
 			XmlNodeList elements;
 
-			if (build == Engine.PhxEngineBuild.Release)
+			if (build == Engine.PhxEngineBuild.RELEASE)
 			{
-				elements = s.Document.SelectNodes(xpath_target);
+				elements = s.Document.SelectNodes(xpathTarget);
 
 				foreach (XmlElement e in elements)
 				{
@@ -623,33 +623,33 @@ namespace KSoft.Phoenix.HaloWars
 		}
 		protected override void FixTechsXml(IO.XmlElementStream s)
 		{
-			var node = XPathSelectNodeByName(s, Phx.BProtoTech.kBListXmlParams, "unsc_scorpion_upgrade3");
+			var node = XPathSelectNodeByName(s, Phx.BProtoTech.KBListXmlParams, "unsc_scorpion_upgrade3");
 			if (node != null) FixTechsXmlEffectsDataSubType(s.Document, node);
 
-			node = XPathSelectNodeByName(s, Phx.BProtoTech.kBListXmlParams, "unsc_grizzly_upgrade0");
+			node = XPathSelectNodeByName(s, Phx.BProtoTech.KBListXmlParams, "unsc_grizzly_upgrade0");
 			if (node != null) FixTechsXmlEffectsDataSubType(s.Document, node);
 
-			FixTechsXmlEffectsInvalid(s, Phx.BProtoTech.kBListXmlParams, this.Database.Engine.Build);
-			if(gRemoveUndefined)
-				FixTechsXmlBadNames(s, Phx.BProtoTech.kBListXmlParams, this.Database.Engine.Build);
+			FixTechsXmlEffectsInvalid(s, Phx.BProtoTech.KBListXmlParams, this.Database.Engine.Build);
+			if(gRemoveUndefined_)
+				FixTechsXmlBadNames(s, Phx.BProtoTech.KBListXmlParams, this.Database.Engine.Build);
 		}
 		#endregion
 
 		#region Fix Powers
 		protected override void FixPowersXml(IO.XmlElementStream s)
 		{
-			FixPowersXmlUndefinedTechPrereqs(s, Phx.BProtoPower.kBListXmlParams, this.Database.Engine.Build);
+			FixPowersXmlUndefinedTechPrereqs(s, Phx.BProtoPower.KBListXmlParams, this.Database.Engine.Build);
 		}
 		static void FixPowersXmlUndefinedTechPrereqs(IO.XmlElementStream s, XML.BListXmlParams op, Engine.PhxEngineBuild build)
 		{
-			string xpath_target = string.Format(
+			string xpathTarget = string.Format(
 				"/{0}/{1}/Attributes/TechPrereq",
-				op.RootName, op.ElementName);
+				op.rootName, op.elementName);
 			XmlNodeList elements;
 
-			if (build == Engine.PhxEngineBuild.Release)
+			if (build == Engine.PhxEngineBuild.RELEASE)
 			{
-				elements = s.Document.SelectNodes(xpath_target);
+				elements = s.Document.SelectNodes(xpathTarget);
 
 				foreach (XmlElement e in elements)
 				{
@@ -731,7 +731,7 @@ namespace KSoft.Phoenix.HaloWars
 			}
 
 			// see: pow_gp_rage_impact
-			if (gRemoveUndefined)
+			if (gRemoveUndefined_)
 			{
 				xpath = "Action[Weapon='RageShockwave']";
 				elements = s.Cursor.SelectNodes(xpath);
@@ -770,7 +770,7 @@ namespace KSoft.Phoenix.HaloWars
 				return;
 			}
 
-			if (!gRemoveUndefined)
+			if (!gRemoveUndefined_)
 				return;
 
 			// see: cov_inf_grunt_01, cov_inf_needlergrunt_01, cov_inf_elite_01,

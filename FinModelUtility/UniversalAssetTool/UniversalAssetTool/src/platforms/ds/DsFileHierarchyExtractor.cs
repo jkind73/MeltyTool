@@ -24,7 +24,7 @@ internal class DsFileHierarchyExtractor {
   }
 
   private bool TryToFindRom_(string gameName, out ISystemFile romFile)
-    => DirectoryConstants.ROMS_DIRECTORY
+    => DirectoryConstants.romsDirectory
                          .TryToGetExistingFileWithFileType(
                              gameName,
                              out romFile,

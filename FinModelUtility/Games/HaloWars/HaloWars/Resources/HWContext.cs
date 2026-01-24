@@ -5,9 +5,9 @@ using KSoft.Phoenix.Resource;
 
 namespace HaloWarsTools;
 
-public sealed class HWContext(string gameInstallDirectory, string scratchDirectory) {
-  public string GameInstallDirectory = gameInstallDirectory;
-  public string ScratchDirectory = scratchDirectory;
+public sealed class HwContext(string gameInstallDirectory, string scratchDirectory) {
+  public string gameInstallDirectory = gameInstallDirectory;
+  public string scratchDirectory = scratchDirectory;
 
   /*public Dictionary<string, HWObjectDefinition> ObjectDefinitions => ValueCache.Get(LoadObjectDefinitions);
 
@@ -34,19 +34,19 @@ public sealed class HWContext(string gameInstallDirectory, string scratchDirecto
   }*/
 
   public string GetAbsoluteGamePath(string relativePath) {
-    return Path.Combine(this.GameInstallDirectory, relativePath);
+    return Path.Combine(this.gameInstallDirectory, relativePath);
   }
 
   public string GetRelativeGamePath(string absolutePath) {
-    return Path.GetRelativePath(this.GameInstallDirectory, absolutePath);
+    return Path.GetRelativePath(this.gameInstallDirectory, absolutePath);
   }
 
   public string GetAbsoluteScratchPath(string relativePath) {
-    return Path.Combine(this.ScratchDirectory, relativePath);
+    return Path.Combine(this.scratchDirectory, relativePath);
   }
 
   public string GetRelativeScratchPath(string absolutePath) {
-    return Path.GetRelativePath(this.ScratchDirectory, absolutePath);
+    return Path.GetRelativePath(this.scratchDirectory, absolutePath);
   }
 
   public bool UnpackEra(string relativeEraPath) {
@@ -60,24 +60,24 @@ public sealed class HWContext(string gameInstallDirectory, string scratchDirecto
     var expander =
         new EraFileExpander(absoluteEraPath);
 
-    expander.Options.Set(EraFileUtilOptions.x64);
-    expander.Options.Set(EraFileUtilOptions
-                             .SkipVerification);
+    expander.options.Set(EraFileUtilOptions.X64);
+    expander.options.Set(EraFileUtilOptions
+                             .SKIP_VERIFICATION);
 
-    expander.ExpanderOptions.Set(EraFileExpanderOptions
-                                     .Decrypt);
-    expander.ExpanderOptions.Set(EraFileExpanderOptions
-                                     .DontOverwriteExistingFiles);
-    expander.ExpanderOptions.Set(EraFileExpanderOptions
-                                     .DecompressUIFiles);
-    expander.ExpanderOptions.Set(EraFileExpanderOptions
-                                     .TranslateGfxFiles);
+    expander.expanderOptions.Set(EraFileExpanderOptions
+                                     .DECRYPT);
+    expander.expanderOptions.Set(EraFileExpanderOptions
+                                     .DONT_OVERWRITE_EXISTING_FILES);
+    expander.expanderOptions.Set(EraFileExpanderOptions
+                                     .DECOMPRESS_UI_FILES);
+    expander.expanderOptions.Set(EraFileExpanderOptions
+                                     .TRANSLATE_GFX_FILES);
 
     if (!expander.Read()) {
       return false;
     }
 
-    if (!expander.ExpandTo(this.ScratchDirectory,
+    if (!expander.ExpandTo(this.scratchDirectory,
                            Path.GetFileNameWithoutExtension(
                                absoluteEraPath))) {
       return false;
@@ -87,14 +87,14 @@ public sealed class HWContext(string gameInstallDirectory, string scratchDirecto
   }
 
   public bool IsEraUnpacked(string relativeEraPath) {
-    return File.Exists(Path.Combine(this.ScratchDirectory,
+    return File.Exists(Path.Combine(this.scratchDirectory,
                                     Path.ChangeExtension(
                                         Path.GetFileName(relativeEraPath),
                                         ".eradef")));
   }
 
   public void ExpandAllEraFiles() {
-    var files = Directory.GetFiles(this.GameInstallDirectory, "*.era");
+    var files = Directory.GetFiles(this.gameInstallDirectory, "*.era");
     foreach (var eraFile in files) {
       this.UnpackEra(this.GetRelativeGamePath(eraFile));
     }

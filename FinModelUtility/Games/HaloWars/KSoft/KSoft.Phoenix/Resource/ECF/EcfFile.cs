@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Resource.ECF
 
 		public EcfFile()
 		{
-			this.mHeader.HeaderSize = EcfHeader.kSizeOf;
+			this.mHeader.headerSize = EcfHeader.K_SIZE_OF;
 		}
 
 		public void InitializeChunkInfo(uint dataId, uint dataChunkExtraDataSize = 0)
@@ -33,7 +33,7 @@ namespace KSoft.Phoenix.Resource.ECF
 
 		public int CalculateHeaderAndChunkEntriesSize()
 		{
-			return this.mHeader.HeaderSize +
+			return this.mHeader.headerSize +
 			       this.mHeader.CalculateChunkEntriesSize(this.ChunksCount);
 		}
 
@@ -59,13 +59,13 @@ namespace KSoft.Phoenix.Resource.ECF
 
 			if (s.IsWriting)
 			{
-				this.mHeader.ChunkCount = (short) this.mChunks.Count;
+				this.mHeader.chunkCount = (short) this.mChunks.Count;
 
 				if (isFinalizing)
 					this.mHeader.UpdateTotalSize(s.BaseStream);
 			}
 
-			long header_position = s.BaseStream.CanSeek
+			long headerPosition = s.BaseStream.CanSeek
 				? s.BaseStream.Position
 				: -1;
 
@@ -75,33 +75,33 @@ namespace KSoft.Phoenix.Resource.ECF
 			// verify or update the header checksum
 			if (s.IsReading)
 			{
-				if (header_position != -1 &&
+				if (headerPosition != -1 &&
 					ecfFile != null &&
-					!ecfFile.Options.Test(EraFileUtilOptions.SkipVerification))
+					!ecfFile.options.Test(EraFileUtilOptions.SKIP_VERIFICATION))
 				{
-					var actual_adler = this.mHeader.ComputeAdler32(s.BaseStream, header_position);
-					if (actual_adler != this.mHeader.Adler32)
+					var actualAdler = this.mHeader.ComputeAdler32(s.BaseStream, headerPosition);
+					if (actualAdler != this.mHeader.adler32)
 					{
 						throw new System.IO.InvalidDataException(string.Format(
 							"ECF header adler32 {0} does not match actual adler32 {1}",
-							this.mHeader.Adler32.ToString("X8"),
-							actual_adler.ToString("X8")
+							this.mHeader.adler32.ToString("X8"),
+							actualAdler.ToString("X8")
 							));
 					}
 				}
 			}
 			else if (s.IsWriting)
 			{
-				if (header_position != -1 && isFinalizing)
+				if (headerPosition != -1 && isFinalizing)
 				{
-					this.mHeader.ComputeAdler32AndWrite(s, header_position);
+					this.mHeader.ComputeAdler32AndWrite(s, headerPosition);
 				}
 			}
 		}
 
 		internal void SerializeChunkHeaders(IO.EndianStream s)
 		{
-			s.StreamListElementsWithClear(this.mChunks, this.mHeader.ChunkCount, () => new EcfChunk());
+			s.StreamListElementsWithClear(this.mChunks, this.mHeader.chunkCount, () => new EcfChunk());
 		}
 
 		internal void SerializeEnd(IO.EndianStream s)

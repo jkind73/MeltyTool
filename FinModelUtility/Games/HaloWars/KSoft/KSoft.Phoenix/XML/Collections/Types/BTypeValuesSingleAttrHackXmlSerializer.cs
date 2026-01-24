@@ -13,7 +13,7 @@ namespace KSoft.Phoenix.XML
 	internal sealed class BTypeValuesSingleAttrHackXmlSerializer
 		: BTypeValuesXmlSerializerBase<float>
 	{
-		/*readonly*/ string kAttrName;
+		/*readonly*/ string kAttrName_;
 
 		public BTypeValuesSingleAttrHackXmlSerializer(BTypeValuesXmlParams<float> @params, Collections.BTypeValuesSingle list, string attributeName)
 			: base(@params, list)
@@ -22,7 +22,7 @@ namespace KSoft.Phoenix.XML
 			Contract.Requires<ArgumentNullException>(list != null);
 			Contract.Requires<ArgumentNullException>(attributeName != null);
 
-			this.kAttrName = attributeName;
+			this.kAttrName_ = attributeName;
 		}
 
 		#region IXmlElementStreamable Members
@@ -32,12 +32,12 @@ namespace KSoft.Phoenix.XML
 
 			this.ListExplicitIndex.InitializeItem(index);
 			float value = 0;
-			s.ReadAttribute(this.kAttrName, ref value);
+			s.ReadAttribute(this.kAttrName_, ref value);
 			this.ListExplicitIndex[index] = value;
 		}
 		protected override void Write<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, float data)
 		{
-			s.WriteAttribute(this.kAttrName, data);
+			s.WriteAttribute(this.kAttrName_, data);
 		}
 		#endregion
 	};

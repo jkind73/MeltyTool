@@ -3,10 +3,10 @@ namespace KSoft.Wwise.SoundBank
 {
 	partial class AkSoundBankObjectBase
 	{
-		static readonly Values.GroupTagData32 kDataSignature =
+		static readonly Values.GroupTagData32 KDataSignature =
 					new Values.GroupTagData32("DATA", "audiokinetic_sound_bank_data"); // BankDataChunkID
 
-		static AkSoundBankObjectBase NewDATA(uint generatorVersion)
+		static AkSoundBankObjectBase NewData(uint generatorVersion)
 		{
 			return new AkSoundBankData();
 		}
@@ -15,14 +15,14 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankData
 		: AkSoundBankObjectBase
 	{
-		public byte[] Buffer;
+		public byte[] buffer;
 
 		public override void Serialize(IO.EndianStream s, AkSubchunkHeader header)
 		{
 			if (s.IsReading)
-				this.Buffer = new byte[header.ChunkSize];
+				this.buffer = new byte[header.chunkSize];
 
-			s.Stream(this.Buffer);
+			s.Stream(this.buffer);
 		}
 	};
 }

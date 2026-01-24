@@ -15,12 +15,12 @@ public sealed partial class JointMatPoly : IBinaryConvertible {
 public sealed partial class Joint : IBinaryConvertible {
   public uint parentIdx = 0;
   public uint flags = 0;
-  public Vector3 boundsMax { get; set; }
-  public Vector3 boundsMin { get; set; }
+  public Vector3 BoundsMax { get; set; }
+  public Vector3 BoundsMin { get; set; }
   public float volumeRadius = 0;
-  public Vector3 scale { get; set; }
-  public Vector3 rotation { get; set; }
-  public Vector3 position { get; set; }
+  public Vector3 Scale { get; set; }
+  public Vector3 Rotation { get; set; }
+  public Vector3 Position { get; set; }
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
   public JointMatPoly[] matpolys;

@@ -5,15 +5,15 @@ namespace KSoft.Phoenix.Resource.ECF
 	public sealed class EcfFileChunkDefinition
 		: IO.ITagElementStringNameStreamable
 	{
-		public const string kFileExtension = ".ecf_chunk";
+		public const string K_FILE_EXTENSION = ".ecf_chunk";
 
-		internal int RawChunkIndex = TypeExtensions.kNone;
+		internal int rawChunkIndex = TypeExtensions.K_NONE;
 
 		public EcfFileDefinition Parent { get; private set; }
 
 		public ulong Id { get; private set; }
 		public byte AlignmentBit { get; private set; }
-			= EcfChunk.kDefaultAlignmentBit;
+			= EcfChunk.K_DEFAULT_ALIGNMENT_BIT;
 		/// <summary>Compression to use when baking into an ECF stream</summary>
 		public EcfCompressionType CompressionType { get; private set; }
 
@@ -24,40 +24,40 @@ namespace KSoft.Phoenix.Resource.ECF
 		public bool HasPossibleFileData { get { return this.FilePath.IsNotNullOrEmpty() || this.FileBytes.IsNotNullOrEmpty(); } }
 
 		#region ResourceFlags
-		private uint mResourceFlags;
+		private uint mResourceFlags_;
 
 		public bool IsContiguous
 		{
-			get { return Bitwise.Flags.Test(this.mResourceFlags, 1U<<(ushort)EcfChunkResourceFlags.Contiguous); }
-			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags, (ushort)1U<<(ushort)EcfChunkResourceFlags.Contiguous); }
+			get { return Bitwise.Flags.Test(this.mResourceFlags_, 1U<<(ushort)EcfChunkResourceFlags.CONTIGUOUS); }
+			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags_, (ushort)1U<<(ushort)EcfChunkResourceFlags.CONTIGUOUS); }
 		}
 
 		public bool IsWriteCombined
 		{
-			get { return Bitwise.Flags.Test(this.mResourceFlags, 1U<<(ushort)EcfChunkResourceFlags.WriteCombined); }
-			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags, (ushort)1U<<(ushort)EcfChunkResourceFlags.WriteCombined); }
+			get { return Bitwise.Flags.Test(this.mResourceFlags_, 1U<<(ushort)EcfChunkResourceFlags.WRITE_COMBINED); }
+			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags_, (ushort)1U<<(ushort)EcfChunkResourceFlags.WRITE_COMBINED); }
 		}
 
 		public bool IsDeflateStream
 		{
-			get { return Bitwise.Flags.Test(this.mResourceFlags, 1U<<(ushort)EcfChunkResourceFlags.IsDeflateStream); }
-			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags, (ushort)1U<<(ushort)EcfChunkResourceFlags.IsDeflateStream); }
+			get { return Bitwise.Flags.Test(this.mResourceFlags_, 1U<<(ushort)EcfChunkResourceFlags.IS_DEFLATE_STREAM); }
+			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags_, (ushort)1U<<(ushort)EcfChunkResourceFlags.IS_DEFLATE_STREAM); }
 		}
 
 		public bool IsResourceTag
 		{
-			get { return Bitwise.Flags.Test(this.mResourceFlags, 1U<<(ushort)EcfChunkResourceFlags.IsResourceTag); }
-			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags, (ushort)1U<<(ushort)EcfChunkResourceFlags.IsResourceTag); }
+			get { return Bitwise.Flags.Test(this.mResourceFlags_, 1U<<(ushort)EcfChunkResourceFlags.IS_RESOURCE_TAG); }
+			set { Bitwise.Flags.Modify(value, ref this.mResourceFlags_, (ushort)1U<<(ushort)EcfChunkResourceFlags.IS_RESOURCE_TAG); }
 		}
 		#endregion
 
 		public void Initialize(EcfFileDefinition parent, EcfChunk rawChunk, int rawChunkIndex)
 		{
-			this.RawChunkIndex = rawChunkIndex;
+			this.rawChunkIndex = rawChunkIndex;
 
 			this.Parent = parent;
-			this.Id = rawChunk.EntryId;
-			this.AlignmentBit = rawChunk.DataAlignmentBit;
+			this.Id = rawChunk.entryId;
+			this.AlignmentBit = rawChunk.dataAlignmentBit;
 			this.CompressionType = rawChunk.CompressionType;
 			this.IsContiguous = rawChunk.IsContiguous;
 			this.IsWriteCombined = rawChunk.IsWriteCombined;
@@ -67,10 +67,10 @@ namespace KSoft.Phoenix.Resource.ECF
 
 		internal void SetupRawChunk(EcfChunk rawChunk, int rawChunkIndex)
 		{
-			this.RawChunkIndex = rawChunkIndex;
+			this.rawChunkIndex = rawChunkIndex;
 
-			rawChunk.EntryId = this.Id;
-			rawChunk.DataAlignmentBit = this.AlignmentBit;
+			rawChunk.entryId = this.Id;
+			rawChunk.dataAlignmentBit = this.AlignmentBit;
 			rawChunk.CompressionType = this.CompressionType;
 			rawChunk.IsContiguous = this.IsContiguous;
 			rawChunk.IsWriteCombined = this.IsWriteCombined;
@@ -80,11 +80,11 @@ namespace KSoft.Phoenix.Resource.ECF
 
 		public void SetFilePathFromParentNameAndId()
 		{
-			string file_name = string.Format("{0}_{1}{2}",
+			string fileName = string.Format("{0}_{1}{2}",
 			                                 this.Parent.EcfName,
-			                                 this.Id.ToString("X8"), kFileExtension);
+			                                 this.Id.ToString("X8"), K_FILE_EXTENSION);
 
-			this.FilePath = file_name;
+			this.FilePath = fileName;
 		}
 
 		internal void SetFileBytes(byte[] bytes)
@@ -99,19 +99,19 @@ namespace KSoft.Phoenix.Resource.ECF
 			where TDoc : class
 			where TCursor : class
 		{
-			var ecf_expander = s.Owner as EcfFileExpander;
+			var ecfExpander = s.Owner as EcfFileExpander;
 
 			if (s.IsReading)
 				this.Parent = (EcfFileDefinition)s.UserData;
 
-			s.StreamAttribute("id", this, obj => this.Id, NumeralBase.Hex);
-			s.StreamAttributeOpt("align", this, obj => this.AlignmentBit, b => b != EcfChunk.kDefaultAlignmentBit, NumeralBase.Hex);
+			s.StreamAttribute("id", this, obj => this.Id, NumeralBase.HEX);
+			s.StreamAttributeOpt("align", this, obj => this.AlignmentBit, b => b != EcfChunk.K_DEFAULT_ALIGNMENT_BIT, NumeralBase.HEX);
 
-			if (s.StreamAttributeEnumOpt("Compression", this, obj => this.CompressionType, e => e != EcfCompressionType.Stored))
+			if (s.StreamAttributeEnumOpt("Compression", this, obj => this.CompressionType, e => e != EcfCompressionType.STORED))
 			{
 				// #NOTE DeflateRaw requires the decompressed size to be known somewhere, and generic ECF files do not store such info
 				// Only available in ERAs
-				if (this.CompressionType == EcfCompressionType.DeflateRaw)
+				if (this.CompressionType == EcfCompressionType.DEFLATE_RAW)
 					s.ThrowReadException(new InvalidDataException(this.CompressionType + " is not supported in this context"));
 			}
 
@@ -123,16 +123,16 @@ namespace KSoft.Phoenix.Resource.ECF
 			s.StreamAttributeOpt("Path", this, obj => this.FilePath, Predicates.IsNotNullOrEmpty);
 
 			// Don't try to write the file bytes
-			bool try_to_serialize_file_bytes = s.IsReading || this.FilePath.IsNullOrEmpty();
-			if (ecf_expander != null)
+			bool tryToSerializeFileBytes = s.IsReading || this.FilePath.IsNullOrEmpty();
+			if (ecfExpander != null)
 			{
-				if (!ecf_expander.ExpanderOptions.Test(EcfFileExpanderOptions.DontSaveChunksToFiles))
+				if (!ecfExpander.expanderOptions.Test(EcfFileExpanderOptions.DONT_SAVE_CHUNKS_TO_FILES))
 				{
-					try_to_serialize_file_bytes = true;
+					tryToSerializeFileBytes = true;
 				}
 			}
 
-			if (try_to_serialize_file_bytes)
+			if (tryToSerializeFileBytes)
 			{
 				if (!s.StreamCursorBytesOpt(this, obj => this.FileBytes))
 				{
@@ -160,7 +160,7 @@ namespace KSoft.Phoenix.Resource.ECF
 			where TDoc : class
 			where TCursor : class
 		{
-			if (this.mResourceFlags == 0)
+			if (this.mResourceFlags_ == 0)
 				return;
 
 			if (this.IsContiguous)

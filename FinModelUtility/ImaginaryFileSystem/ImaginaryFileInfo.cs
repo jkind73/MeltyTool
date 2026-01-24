@@ -9,11 +9,11 @@ namespace System.IO.Abstractions.TestingHelpers;
 #endif
 public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   private readonly IImaginaryFileDataAccessor imaginaryFileSystem_;
-  private string path;
-  private readonly string originalPath;
+  private string path_;
+  private readonly string originalPath_;
   private ImaginaryFileData cachedImaginaryFileData_;
   private ImaginaryFile imaginaryFile_;
-  private bool refreshOnNextRead;
+  private bool refreshOnNextRead_;
 
   /// <inheritdoc />
   public ImaginaryFileInfo(IImaginaryFileDataAccessor imaginaryFileSystem,
@@ -22,8 +22,8 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
                                 throw new ArgumentNullException(
                                     nameof(imaginaryFileSystem));
     imaginaryFileSystem.ImaginaryPathVerifier.IsLegalAbsoluteOrRelative(path, "path");
-    this.originalPath = path;
-    this.path = imaginaryFileSystem.Path.GetFullPath(path);
+    this.originalPath_ = path;
+    this.path_ = imaginaryFileSystem.Path.GetFullPath(path);
     this.imaginaryFile_ = new ImaginaryFile(imaginaryFileSystem);
     Refresh();
   }
@@ -38,14 +38,14 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override void Delete() {
-    refreshOnNextRead = true;
-    this.imaginaryFile_.Delete(path);
+    this.refreshOnNextRead_ = true;
+    this.imaginaryFile_.Delete(this.path_);
   }
 
   /// <inheritdoc />
   public override void Refresh() {
-    var mockFileData = this.imaginaryFileSystem_.GetFile(path)?.Clone();
-    this.cachedImaginaryFileData_ = mockFileData ?? ImaginaryFileData.NullObject.Clone();
+    var mockFileData = this.imaginaryFileSystem_.GetFile(this.path_)?.Clone();
+    this.cachedImaginaryFileData_ = mockFileData ?? ImaginaryFileData.NULL_OBJECT_.Clone();
   }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -59,11 +59,11 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override FileAttributes Attributes {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.Attributes;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.Attributes = value & ~FileAttributes.Directory;
     }
   }
@@ -71,33 +71,33 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override DateTime CreationTime {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.CreationTime.LocalDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.CreationTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Local);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Local);
     }
   }
 
   /// <inheritdoc />
   public override DateTime CreationTimeUtc {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.CreationTime.UtcDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.CreationTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Utc);
     }
   }
 
   /// <inheritdoc />
   public override bool Exists {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return (int) mockFileData.Attributes != -1 && !mockFileData.IsDirectory;
     }
   }
@@ -107,64 +107,64 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
     get {
       // System.IO.Path.GetExtension does only string manipulation,
       // so it's safe to delegate.
-      return Path.GetExtension(path);
+      return Path.GetExtension(this.path_);
     }
   }
 
   /// <inheritdoc />
   public override string FullName {
-    get { return path; }
+    get { return this.path_; }
   }
 
   /// <inheritdoc />
   public override DateTime LastAccessTime {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.LastAccessTime.LocalDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.LastAccessTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Local);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Local);
     }
   }
 
   /// <inheritdoc />
   public override DateTime LastAccessTimeUtc {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.LastAccessTime.UtcDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.LastAccessTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Utc);
     }
   }
 
   /// <inheritdoc />
   public override DateTime LastWriteTime {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.LastWriteTime.LocalDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.LastWriteTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Local);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Local);
     }
   }
 
   /// <inheritdoc />
   public override DateTime LastWriteTimeUtc {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return mockFileData.LastWriteTime.UtcDateTime;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       mockFileData.LastWriteTime
-          = AdjustUnspecifiedKind(value, DateTimeKind.Utc);
+          = AdjustUnspecifiedKind_(value, DateTimeKind.Utc);
     }
   }
 
@@ -174,7 +174,7 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
     {
         get
         {
-            var imaginaryFileData = GetMockFileDataForRead();
+            var imaginaryFileData = this.GetMockFileDataForRead_();
             return imaginaryFileData.LinkTarget;
         }
     }
@@ -182,7 +182,7 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override string Name {
-    get { return new ImaginaryPath(this.imaginaryFileSystem_).GetFileName(path); }
+    get { return new ImaginaryPath(this.imaginaryFileSystem_).GetFileName(this.path_); }
   }
 
   /// <inheritdoc />
@@ -211,41 +211,41 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override FileSystemStream Create() {
     var result = this.imaginaryFile_.Create(FullName);
-    refreshOnNextRead = true;
+    this.refreshOnNextRead_ = true;
     return result;
   }
 
   /// <inheritdoc />
   public override StreamWriter CreateText() {
     var result = this.imaginaryFile_.CreateText(FullName);
-    refreshOnNextRead = true;
+    this.refreshOnNextRead_ = true;
     return result;
   }
 
   /// <inheritdoc />
   public override void Decrypt() {
-    var mockFileData = GetMockFileDataForWrite();
+    var mockFileData = this.GetMockFileDataForWrite_();
     mockFileData.Attributes &= ~FileAttributes.Encrypted;
   }
 
   /// <inheritdoc />
   public override void Encrypt() {
-    var mockFileData = GetMockFileDataForWrite();
+    var mockFileData = this.GetMockFileDataForWrite_();
     mockFileData.Attributes |= FileAttributes.Encrypted;
   }
 
   /// <inheritdoc />
   public override void MoveTo(string destFileName) {
-    this.imaginaryFile_.Move(path, destFileName);
-    path = this.imaginaryFileSystem_.Path.GetFullPath(destFileName);
+    this.imaginaryFile_.Move(this.path_, destFileName);
+    this.path_ = this.imaginaryFileSystem_.Path.GetFullPath(destFileName);
   }
 
 #if FEATURE_FILE_MOVE_WITH_OVERWRITE
     /// <inheritdoc />
     public override void MoveTo(string destFileName, bool overwrite)
     {
-        imaginaryFile_.Move(path, destFileName, overwrite);
-        path = imaginaryFileSystem_.Path.GetFullPath(destFileName);
+        imaginaryFile_.Move(this.path_, destFileName, overwrite);
+        this.path_ = imaginaryFileSystem_.Path.GetFullPath(destFileName);
     }
 #endif
 
@@ -275,13 +275,13 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
 #endif
 
   /// <inheritdoc />
-  public override FileSystemStream OpenRead() => this.imaginaryFile_.OpenRead(path);
+  public override FileSystemStream OpenRead() => this.imaginaryFile_.OpenRead(this.path_);
 
   /// <inheritdoc />
-  public override StreamReader OpenText() => this.imaginaryFile_.OpenText(path);
+  public override StreamReader OpenText() => this.imaginaryFile_.OpenText(this.path_);
 
   /// <inheritdoc />
-  public override FileSystemStream OpenWrite() => this.imaginaryFile_.OpenWrite(path);
+  public override FileSystemStream OpenWrite() => this.imaginaryFile_.OpenWrite(this.path_);
 
   /// <inheritdoc />
   public override IFileInfo Replace(string destinationFileName,
@@ -293,7 +293,7 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   public override IFileInfo Replace(string destinationFileName,
                                     string destinationBackupFileName,
                                     bool ignoreMetadataErrors) {
-    this.imaginaryFile_.Replace(path,
+    this.imaginaryFile_.Replace(this.path_,
                                 destinationFileName,
                                 destinationBackupFileName,
                                 ignoreMetadataErrors);
@@ -310,19 +310,19 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
     get {
       // System.IO.Path.GetDirectoryName does only string manipulation,
       // so it's safe to delegate.
-      return Path.GetDirectoryName(path);
+      return Path.GetDirectoryName(this.path_);
     }
   }
 
   /// <inheritdoc />
   public override bool IsReadOnly {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       return (mockFileData.Attributes & FileAttributes.ReadOnly) ==
              FileAttributes.ReadOnly;
     }
     set {
-      var mockFileData = GetMockFileDataForWrite();
+      var mockFileData = this.GetMockFileDataForWrite_();
       if (value) {
         mockFileData.Attributes |= FileAttributes.ReadOnly;
       } else {
@@ -334,9 +334,9 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override long Length {
     get {
-      var mockFileData = GetMockFileDataForRead();
+      var mockFileData = this.GetMockFileDataForRead_();
       if (mockFileData == null || mockFileData.IsDirectory) {
-        throw CommonExceptions.FileNotFound(path);
+        throw CommonExceptions.FileNotFound(this.path_);
       }
 
       return mockFileData.Contents.Length;
@@ -345,34 +345,34 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override string ToString() {
-    return originalPath;
+    return this.originalPath_;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl() {
-    return GetMockFileData().AccessControl;
+    return this.GetMockFileData_().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl(
       IFileSystemAclSupport.AccessControlSections includeSections) {
-    return GetMockFileData().AccessControl;
+    return this.GetMockFileData_().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
   [SupportedOSPlatform("windows")]
   public void SetAccessControl(object value) {
-    GetMockFileData().AccessControl = value as FileSecurity;
+    this.GetMockFileData_().AccessControl = value as FileSecurity;
   }
 
-  private ImaginaryFileData GetMockFileData() {
-    return this.imaginaryFileSystem_.GetFile(path) ??
-           throw CommonExceptions.FileNotFound(path);
+  private ImaginaryFileData GetMockFileData_() {
+    return this.imaginaryFileSystem_.GetFile(this.path_) ??
+           throw CommonExceptions.FileNotFound(this.path_);
   }
 
-  private static DateTime AdjustUnspecifiedKind(
+  private static DateTime AdjustUnspecifiedKind_(
       DateTime time,
       DateTimeKind fallbackKind) {
     if (time.Kind == DateTimeKind.Unspecified) {
@@ -382,18 +382,18 @@ public class ImaginaryFileInfo : FileInfoBase, IFileSystemAclSupport {
     return time;
   }
 
-  private ImaginaryFileData GetMockFileDataForRead() {
-    if (refreshOnNextRead) {
+  private ImaginaryFileData GetMockFileDataForRead_() {
+    if (this.refreshOnNextRead_) {
       Refresh();
-      refreshOnNextRead = false;
+      this.refreshOnNextRead_ = false;
     }
 
     return this.cachedImaginaryFileData_;
   }
 
-  private ImaginaryFileData GetMockFileDataForWrite() {
-    refreshOnNextRead = true;
-    return this.imaginaryFileSystem_.GetFile(path) ??
-           throw CommonExceptions.FileNotFound(path);
+  private ImaginaryFileData GetMockFileDataForWrite_() {
+    this.refreshOnNextRead_ = true;
+    return this.imaginaryFileSystem_.GetFile(this.path_) ??
+           throw CommonExceptions.FileNotFound(this.path_);
   }
 }

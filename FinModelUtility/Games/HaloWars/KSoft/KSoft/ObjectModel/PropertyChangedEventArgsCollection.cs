@@ -11,15 +11,15 @@ namespace KSoft.ObjectModel
 {
 	public sealed class PropertyChangedEventArgsCollection : IEnumerable<System.ComponentModel.PropertyChangedEventArgs>
 	{
-		List<System.ComponentModel.PropertyChangedEventArgs> mEventArgs;
+		List<System.ComponentModel.PropertyChangedEventArgs> mEventArgs_;
 
 		public PropertyChangedEventArgsCollection()
 		{
-			this.mEventArgs = [];
+			this.mEventArgs_ = [];
 		}
 		PropertyChangedEventArgsCollection(IEnumerable<System.ComponentModel.PropertyChangedEventArgs> eventArgs)
 		{
-			this.mEventArgs = new List<System.ComponentModel.PropertyChangedEventArgs>(eventArgs);
+			this.mEventArgs_ = new List<System.ComponentModel.PropertyChangedEventArgs>(eventArgs);
 		}
 
 		public PropertyChangedEventArgsCollection CreateArgs<T, TProp>(
@@ -27,7 +27,7 @@ namespace KSoft.ObjectModel
 			Exprs.Expression<Func<T, TProp>> propertyExpr)
 		{
 			eventArgs = Util.CreatePropertyChangedEventArgs(propertyExpr);
-			this.mEventArgs.Add(eventArgs);
+			this.mEventArgs_.Add(eventArgs);
 
 			return this;
 		}
@@ -36,24 +36,24 @@ namespace KSoft.ObjectModel
 		{
 			Contract.Ensures(Contract.Result<PropertyChangedEventArgsCollection>() != this);
 
-			return new PropertyChangedEventArgsCollection(this.mEventArgs);
+			return new PropertyChangedEventArgsCollection(this.mEventArgs_);
 		}
 
 		public void NotifyPropertiesChanged(object sender, System.ComponentModel.PropertyChangedEventHandler handler)
 		{
 			if (handler != null)
-				foreach (var args in this.mEventArgs)
+				foreach (var args in this.mEventArgs_)
 					handler(sender, args);
 		}
 
 		#region IEnumerable<PropertyChangedEventArgs> Members
 		public IEnumerator<System.ComponentModel.PropertyChangedEventArgs> GetEnumerator()
 		{
-			return this.mEventArgs.GetEnumerator();
+			return this.mEventArgs_.GetEnumerator();
 		}
 		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
 		{
-			return this.mEventArgs.GetEnumerator();
+			return this.mEventArgs_.GetEnumerator();
 		}
 		#endregion
 	};

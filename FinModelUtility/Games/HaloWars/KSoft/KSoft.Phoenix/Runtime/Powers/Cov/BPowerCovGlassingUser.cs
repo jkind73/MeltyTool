@@ -7,22 +7,22 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerCovGlassingUser
 		: BPowerUser
 	{
-		public BVector InputDir, LastUpdatePos;
-		public BEntityID RealBeamID, FakeBeamID, AirImpactObjectID;
-		public uint TimestampNextCommand, CommandInterval;
-		public float MinBeamDistance, MaxBeamDistance, MaxBeamSpeed;
-		public int LOSMode;
+		public BVector inputDir, lastUpdatePos;
+		public BEntityID realBeamId, fakeBeamId, airImpactObjectId;
+		public uint timestampNextCommand, commandInterval;
+		public float minBeamDistance, maxBeamDistance, maxBeamSpeed;
+		public int losMode;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.StreamV(ref this.InputDir); s.StreamV(ref this.LastUpdatePos);
-			s.Stream(ref this.RealBeamID); s.Stream(ref this.FakeBeamID); s.Stream(ref this.AirImpactObjectID);
-			s.Stream(ref this.TimestampNextCommand); s.Stream(ref this.CommandInterval);
-			s.Stream(ref this.MinBeamDistance); s.Stream(ref this.MaxBeamDistance); s.Stream(ref this.MaxBeamSpeed);
-			s.Stream(ref this.LOSMode);
+			s.StreamV(ref this.inputDir); s.StreamV(ref this.lastUpdatePos);
+			s.Stream(ref this.realBeamId); s.Stream(ref this.fakeBeamId); s.Stream(ref this.airImpactObjectId);
+			s.Stream(ref this.timestampNextCommand); s.Stream(ref this.commandInterval);
+			s.Stream(ref this.minBeamDistance); s.Stream(ref this.maxBeamDistance); s.Stream(ref this.maxBeamSpeed);
+			s.Stream(ref this.losMode);
 		}
 		#endregion
 	};

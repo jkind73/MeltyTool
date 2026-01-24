@@ -7,13 +7,13 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public const string kXmlRootName = "TriggerDatabase";
+		public const string K_XML_ROOT_NAME = "TriggerDatabase";
 		#endregion
 
 		public Collections.BListAutoId<BTriggerProtoCondition> Conditions { get; private set; } = new Collections.BListAutoId<BTriggerProtoCondition>();
 		public Collections.BListAutoId<BTriggerProtoEffect> Effects { get; private set; } = new Collections.BListAutoId<BTriggerProtoEffect>();
 		public Dictionary<uint, TriggerSystemProtoObject> LookupTable { get; private set; } = new Dictionary<uint, TriggerSystemProtoObject>();
-		System.Collections.BitArray mUsedIds = new System.Collections.BitArray(1088);
+		System.Collections.BitArray mUsedIds_ = new System.Collections.BitArray(1088);
 
 		#region ITagElementStreamable<string> Members
 		static int SortById(TriggerSystemProtoObject x, TriggerSystemProtoObject y)
@@ -28,9 +28,9 @@ namespace KSoft.Phoenix.Phx
 			where TCursor : class
 		{
 			int count = 0;
-			for (int x = 1; x < this.mUsedIds.Length; x++)
+			for (int x = 1; x < this.mUsedIds_.Length; x++)
 			{
-				if (!this.mUsedIds[x])
+				if (!this.mUsedIds_[x])
 				{
 					s.WriteElement("Unknown", x);
 					count++;
@@ -44,23 +44,23 @@ namespace KSoft.Phoenix.Phx
 		{
 			if (s.IsWriting)
 			{
-				var task_sort_cond = Task.Factory.StartNew(() => this.Conditions.Sort(SortById));
-				var task_sort_effe = Task.Factory.StartNew(() => this.Effects.Sort(SortById));
+				var taskSortCond = Task.Factory.StartNew(() => this.Conditions.Sort(SortById));
+				var taskSortEffe = Task.Factory.StartNew(() => this.Effects.Sort(SortById));
 
-				var task_unknowns = Task<int>.Factory.StartNew(() =>
+				var taskUnknowns = Task<int>.Factory.StartNew(() =>
 				{
 					using (s.EnterCursorBookmark("Unknowns"))
 						return this.WriteUnknowns(s);
 				});
-				s.WriteAttribute("UnknownCount", task_unknowns.Result);
+				s.WriteAttribute("UnknownCount", taskUnknowns.Result);
 				s.WriteAttribute("ConditionsCount", this.Conditions.Count);
 				s.WriteAttribute("EffectsCount", this.Effects.Count);
 
-				Task.WaitAll(task_sort_cond, task_sort_effe);
+				Task.WaitAll(taskSortCond, taskSortEffe);
 			}
 
-			XML.XmlUtil.Serialize(s, this.Conditions, BTriggerProtoCondition.kBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.Effects, BTriggerProtoEffect.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Conditions, BTriggerProtoCondition.KBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Effects, BTriggerProtoEffect.KBListXmlParams);
 
 			if (s.IsReading)
 			{
@@ -83,7 +83,7 @@ namespace KSoft.Phoenix.Phx
 
 	void LookupTableAdd(TriggerSystemProtoObject dbo)
 		{
-			this.mUsedIds[dbo.DbId] = true;
+			this.mUsedIds_[dbo.DbId] = true;
 			this.LookupTable.Add(GenerateHandle(dbo), dbo);
 		}
 		bool LookupTableContains<T>(T obj, out TriggerSystemProtoObject dbo)
@@ -103,19 +103,19 @@ namespace KSoft.Phoenix.Phx
 			TriggerSystemProtoObject dbo;
 			if (!this.LookupTableContains(cond, out dbo))
 			{
-				var dbo_cond = new BTriggerProtoCondition(ts, cond);
+				var dboCond = new BTriggerProtoCondition(ts, cond);
 
-				this.Conditions.DynamicAdd(dbo_cond, dbo_cond.Name);
-				this.LookupTableAdd(dbo_cond);
+				this.Conditions.DynamicAdd(dboCond, dboCond.Name);
+				this.LookupTableAdd(dboCond);
 			}
 			else
 			{
 				int diff = dbo.CompareTo(ts, cond);
 				if (diff < 0)
 				{
-					var dbo_cond = new BTriggerProtoCondition(ts, cond);
-					this.LookupTable[GenerateHandle(cond)] = dbo_cond;
-					TraceUpdate(ts, dbo_cond);
+					var dboCond = new BTriggerProtoCondition(ts, cond);
+					this.LookupTable[GenerateHandle(cond)] = dboCond;
+					TraceUpdate(ts, dboCond);
 				}
 			}
 		}
@@ -124,19 +124,19 @@ namespace KSoft.Phoenix.Phx
 			TriggerSystemProtoObject dbo;
 			if (!this.LookupTableContains(effe, out dbo))
 			{
-				var dbo_effe = new BTriggerProtoEffect(ts, effe);
+				var dboEffe = new BTriggerProtoEffect(ts, effe);
 
-				this.Effects.DynamicAdd(dbo_effe, dbo_effe.Name);
-				this.LookupTableAdd(dbo_effe);
+				this.Effects.DynamicAdd(dboEffe, dboEffe.Name);
+				this.LookupTableAdd(dboEffe);
 			}
 			else
 			{
 				int diff = dbo.CompareTo(ts, effe);
 				if (diff < 0)
 				{
-					var dbo_effe = new BTriggerProtoEffect(ts, effe);
-					this.LookupTable[GenerateHandle(effe)] = dbo_effe;
-					TraceUpdate(ts, dbo_effe);
+					var dboEffe = new BTriggerProtoEffect(ts, effe);
+					this.LookupTable[GenerateHandle(effe)] = dboEffe;
+					TraceUpdate(ts, dboEffe);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ namespace KSoft.Phoenix.Phx
 		}
 		public void Save(string path, BDatabaseBase db)
 		{
-			using (var s = IO.XmlElementStream.CreateForWrite(kXmlRootName))
+			using (var s = IO.XmlElementStream.CreateForWrite(K_XML_ROOT_NAME))
 			{
 				s.InitializeAtRootElement();
 				s.StreamMode = System.IO.FileAccess.Write;

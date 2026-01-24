@@ -9,12 +9,12 @@ namespace KSoft.Collections
 		/// <summary>Get the source IProtoEnum from a global object</summary>
 		public readonly Func<IProtoEnum> kGetProtoEnum;
 		/// <summary>Get the source IProtoEnum from an engine's main database</summary>
-		public readonly Func<Phx.BDatabaseBase, IProtoEnum> kGetProtoEnumFromDB;
+		public readonly Func<Phx.BDatabaseBase, IProtoEnum> kGetProtoEnumFromDb;
 		public Func<int, bool> kGetMemberDefaultValue;
 
 		public BBitSetParams(Func<Phx.BDatabaseBase, IProtoEnum> protoEnumGetter)
 		{
-			this.kGetProtoEnumFromDB = protoEnumGetter;
+			this.kGetProtoEnumFromDb = protoEnumGetter;
 		}
 		public BBitSetParams(Func<IProtoEnum> protoEnumGetter)
 		{

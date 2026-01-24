@@ -11,25 +11,25 @@ namespace KSoft.IO
 	{
 		enum ParseErrorType
 		{
-			None,
+			NONE,
 			/// <summary>Input string is null or empty</summary>
-			NoInput,
+			NO_INPUT,
 			/// <summary>The input can't be parsed as-is</summary>
-			InvalidValue,
+			INVALID_VALUE,
 		};
 		static ParseErrorType ParseVerifyInput(string input)
 		{
 			return string.IsNullOrEmpty(input)
-				? ParseErrorType.NoInput
-				: ParseErrorType.None;
+				? ParseErrorType.NO_INPUT
+				: ParseErrorType.NONE;
 		}
 		static ParseErrorType ParseVerifyResult(ParseErrorType result, bool parseResult)
 		{
 			Util.MarkUnusedVariable(ref result);
 
 			return parseResult
-				? ParseErrorType.None
-				: ParseErrorType.InvalidValue;
+				? ParseErrorType.NONE
+				: ParseErrorType.INVALID_VALUE;
 		}
 
 		/// <summary></summary>
@@ -44,7 +44,7 @@ namespace KSoft.IO
 			Exception detailsException = null;
 			switch (type)
 			{
-			case ParseErrorType.NoInput:
+			case ParseErrorType.NO_INPUT:
 				if (noThrow)
 					return false;
 
@@ -52,7 +52,7 @@ namespace KSoft.IO
 					("Input null or empty", nameof(input));
 				break;
 
-			case ParseErrorType.InvalidValue:
+			case ParseErrorType.INVALID_VALUE:
 				detailsException = new ArgumentException(string.Format
 					(Util.InvariantCultureInfo, "Couldn't parse \"{0}\"", input), nameof(input));
 				break;
@@ -72,7 +72,7 @@ namespace KSoft.IO
 			, TextStreamReadErrorState errorState)
 		{
 			var result = ParseVerifyInput(input);
-			if (result == ParseErrorType.None)
+			if (result == ParseErrorType.NONE)
 				value = input[0];
 
 			return ParseHandleError(result, noThrow, input, errorState);
@@ -81,7 +81,7 @@ namespace KSoft.IO
 			, TextStreamReadErrorState errorState)
 		{
 			var result = ParseVerifyInput(input);
-			if (result == ParseErrorType.None)
+			if (result == ParseErrorType.NONE)
 				value = Text.Util.ParseBooleanLazy(input);
 
 			return ParseHandleError(result, noThrow, input, errorState);
@@ -92,11 +92,11 @@ namespace KSoft.IO
 			, TextStreamReadErrorState errorState)
 		{
 			var result = ParseVerifyInput(input);
-			if (result == ParseErrorType.None)
+			if (result == ParseErrorType.NONE)
 			{
 				// #HACK HaloWars data has floats with C-based 'f' suffix
-				char last_char = input[input.Length - 1];
-				if (last_char == 'f' || last_char == 'F')
+				char lastChar = input[input.Length - 1];
+				if (lastChar == 'f' || lastChar == 'F')
 					input = input.Substring(0, input.Length - 1);
 
 				result = ParseVerifyResult(result, Numbers.FloatTryParseInvariant(input, out value));
@@ -108,7 +108,7 @@ namespace KSoft.IO
 			, TextStreamReadErrorState errorState)
 		{
 			var result = ParseVerifyInput(input);
-			if (result == ParseErrorType.None)
+			if (result == ParseErrorType.NONE)
 				result = ParseVerifyResult(result, Numbers.DoubleTryParseInvariant(input, out value));
 
 			return ParseHandleError(result, noThrow, input, errorState);
@@ -119,7 +119,7 @@ namespace KSoft.IO
 	partial class TagElementTextStream<TDoc, TCursor>
 	{
 		#region Parse Util
-		TextStreamReadErrorState mReadErrorState;
+		TextStreamReadErrorState mReadErrorState_;
 
 		/// <summary>Sets the node that the current read operation is querying</summary>
 		/// <remarks>It should be assumed that this isn't reset after the current read successfully finishes</remarks>
@@ -129,20 +129,20 @@ namespace KSoft.IO
 			// TextStream implementations should only ever need to set the node and forget
 			Contract.Assert(value is Text.ITextLineInfo);
 
-			this.mReadErrorState.LastReadLineInfo = (Text.ITextLineInfo)value;
+			this.mReadErrorState_.LastReadLineInfo = (Text.ITextLineInfo)value;
 		} }
 		/// <summary>Throws a <see cref="Text.TextLineInfoException"/></summary>
 		/// <param name="detailsException">The details (inner) exception of what went wrong</param>
-		public sealed override void ThrowReadException(Exception detailsException) => this.mReadErrorState.ThrowReadExeception(detailsException);
+		public sealed override void ThrowReadException(Exception detailsException) => this.mReadErrorState_.ThrowReadExeception(detailsException);
 
-		public Text.TextLineInfo TryGetLastReadLineInfo() => this.IsReading && this.mReadErrorState.LastReadLineInfo != null
-				? new Text.TextLineInfo(this.mReadErrorState.LastReadLineInfo)
+		public Text.TextLineInfo TryGetLastReadLineInfo() => this.IsReading && this.mReadErrorState_.LastReadLineInfo != null
+				? new Text.TextLineInfo(this.mReadErrorState_.LastReadLineInfo)
 				: Text.TextLineInfo.Empty;
 
 		/// <summary>Argument value for noThrow to throw exceptions</summary>
-		const bool kThrowExcept = false;
+		const bool K_THROW_EXCEPT_ = false;
 		/// <summary>Argument value for noThrow to not throw exceptions</summary>
-		const bool kNoExcept = true;
+		const bool K_NO_EXCEPT_ = true;
 
 		protected bool ReadEnumInternal<TEnum>(string enumString, ref TEnum enumValue)
 			where TEnum : struct, IComparable, IFormattable, IConvertible
@@ -150,7 +150,7 @@ namespace KSoft.IO
 			var result = TagElementStreamParseEnumUtil.Parse(this.IgnoreCaseOnEnums,
 				enumString, ref enumValue);
 
-			if (result == TagElementStreamParseEnumResult.FailedMemberNotFound &&
+			if (result == TagElementStreamParseEnumResult.FAILED_MEMBER_NOT_FOUND &&
 			    this.ExceptionOnEnumParseFail)
 			{
 				this.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
@@ -158,7 +158,7 @@ namespace KSoft.IO
 					                        enumString, typeof(TEnum) )));
 			}
 
-			return result == TagElementStreamParseEnumResult.Success;
+			return result == TagElementStreamParseEnumResult.SUCCESS;
 		}
 		protected bool ReadEnumInternal<TEnum>(string enumString, ref int enumValue)
 			where TEnum : struct, IComparable, IFormattable, IConvertible
@@ -166,7 +166,7 @@ namespace KSoft.IO
 			var result = TagElementStreamParseEnumUtil.Parse<TEnum>(this.IgnoreCaseOnEnums,
 				enumString, ref enumValue);
 
-			if (result == TagElementStreamParseEnumResult.FailedMemberNotFound &&
+			if (result == TagElementStreamParseEnumResult.FAILED_MEMBER_NOT_FOUND &&
 			    this.ExceptionOnEnumParseFail)
 			{
 				this.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
@@ -174,7 +174,7 @@ namespace KSoft.IO
 					                        enumString, typeof(TEnum))));
 			}
 
-			return result == TagElementStreamParseEnumResult.Success;
+			return result == TagElementStreamParseEnumResult.SUCCESS;
 		}
 		#endregion
 
@@ -185,7 +185,7 @@ namespace KSoft.IO
 		protected override void ReadElementEnum<TEnum>(TCursor n, ref int enumValue) => this.ReadEnumInternal<TEnum>(this.GetInnerText(n), ref enumValue);
 
 		protected override void ReadElement(TCursor n, ref Values.KGuid value) =>
-			value = Values.KGuid.ParseExact(this.GetInnerText(n), this.mGuidFormatString);
+			value = Values.KGuid.ParseExact(this.GetInnerText(n), this.mGuidFormatString_);
 		#endregion
 
 		/// <summary>Interpret the Name of <see cref="Cursor"/> as a member of <typeparamref name="TEnum"/></summary>
@@ -203,7 +203,7 @@ namespace KSoft.IO
 		public override void ReadAttributeEnum<TEnum>(string name, ref int enumValue) => this.ReadEnumInternal<TEnum>(this.ReadAttribute(name), ref enumValue);
 
 		public override void ReadAttribute(string name, ref Values.KGuid value) =>
-			value = Values.KGuid.ParseExact(this.ReadAttribute(name), this.mGuidFormatString);
+			value = Values.KGuid.ParseExact(this.ReadAttribute(name), this.mGuidFormatString_);
 		#endregion
 
 		#region ReadElementOpt

@@ -1,23 +1,23 @@
 ﻿namespace vhr.json;
 
 public sealed class TrackItemStruct {
-  public int? alt_texture;
-  public int? flip_x;
+  public int? altTexture;
+  public int? flipX;
   public int? follow;
-  public int? image_index;
-  public float? image_xscale;
-  public float? image_yscale;
+  public int? imageIndex;
+  public float? imageXscale;
+  public float? imageYscale;
   public TrackItemModel? model;
-  public int? model_index;
+  public int? modelIndex;
   public string? @object;
   public int? position;
   public float? rotation;
   public float? scale;
-  public string? sprite_index;
+  public string? spriteIndex;
   public string? type;
   public float? x;
   public float? xoffset;
-  public float? xoff_percent;
+  public float? xoffPercent;
   public float? xscale;
   public float? y;
   public float? yscale;

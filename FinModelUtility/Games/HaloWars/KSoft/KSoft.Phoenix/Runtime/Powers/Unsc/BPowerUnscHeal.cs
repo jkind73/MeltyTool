@@ -9,36 +9,36 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerUnscHeal
 		: BPower
 	{
-		public BEntityID[] SquadsRepairing;
-		public BEntityTimePair[] IgnoreList;
-		public uint NextTickTime;
-		public BEntityID RepairObjectID;
-		public BProtoObjectID RepairAttachmentProtoID;
-		public BObjectTypeID FilterTypeID;
-		public float RepairRadius;
-		public uint TickDuration;
-		public float RepairCombatValuePerTick;
-		public uint CooldownTimeIfDamaged, TicksRemaining;
-		public bool SpreadAmongSquads, AllowReinforce, IgnorePlacement,
-			HealAny, NeverStops;
+		public BEntityID[] squadsRepairing;
+		public BEntityTimePair[] ignoreList;
+		public uint nextTickTime;
+		public BEntityID repairObjectId;
+		public BProtoObjectID repairAttachmentProtoId;
+		public BObjectTypeID filterTypeId;
+		public float repairRadius;
+		public uint tickDuration;
+		public float repairCombatValuePerTick;
+		public uint cooldownTimeIfDamaged, ticksRemaining;
+		public bool spreadAmongSquads, allowReinforce, ignorePlacement,
+			healAny, neverStops;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			BSaveGame.StreamArray(s, ref this.SquadsRepairing);
-			BSaveGame.StreamArray(s, ref this.IgnoreList);
-			s.Stream(ref this.NextTickTime);
-			s.Stream(ref this.RepairObjectID);
-			s.Stream(ref this.RepairAttachmentProtoID);
-			s.Stream(ref this.FilterTypeID);
-			s.Stream(ref this.RepairRadius);
-			s.Stream(ref this.TickDuration);
-			s.Stream(ref this.RepairCombatValuePerTick);
-			s.Stream(ref this.CooldownTimeIfDamaged); s.Stream(ref this.TicksRemaining);
-			s.Stream(ref this.SpreadAmongSquads); s.Stream(ref this.AllowReinforce); s.Stream(ref this.IgnorePlacement);
-			s.Stream(ref this.HealAny); s.Stream(ref this.NeverStops);
+			BSaveGame.StreamArray(s, ref this.squadsRepairing);
+			BSaveGame.StreamArray(s, ref this.ignoreList);
+			s.Stream(ref this.nextTickTime);
+			s.Stream(ref this.repairObjectId);
+			s.Stream(ref this.repairAttachmentProtoId);
+			s.Stream(ref this.filterTypeId);
+			s.Stream(ref this.repairRadius);
+			s.Stream(ref this.tickDuration);
+			s.Stream(ref this.repairCombatValuePerTick);
+			s.Stream(ref this.cooldownTimeIfDamaged); s.Stream(ref this.ticksRemaining);
+			s.Stream(ref this.spreadAmongSquads); s.Stream(ref this.allowReinforce); s.Stream(ref this.ignorePlacement);
+			s.Stream(ref this.healAny); s.Stream(ref this.neverStops);
 		}
 		#endregion
 	};

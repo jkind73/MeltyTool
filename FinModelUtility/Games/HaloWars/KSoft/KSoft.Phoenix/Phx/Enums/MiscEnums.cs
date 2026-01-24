@@ -3,245 +3,245 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BDifficultyType
 	{
-		Easy,
-		Normal,
-		Hard,
-		Legendary,
+		EASY,
+		NORMAL,
+		HARD,
+		LEGENDARY,
 
-		kNumberOfStandardTypes,
+		K_NUMBER_OF_STANDARD_TYPES,
 
-		Custom = kNumberOfStandardTypes,
-		Automatic,
+		CUSTOM = K_NUMBER_OF_STANDARD_TYPES,
+		AUTOMATIC,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
 	public enum BDifficultyTypeModifier
 	{
-		Easy,
-		Normal,
-		Hard,
-		Legendary,
-		Default,
-		SPCAIDefault,
+		EASY,
+		NORMAL,
+		HARD,
+		LEGENDARY,
+		DEFAULT,
+		SPCAI_DEFAULT,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
 	public enum BOperatorType
 	{
-		NotEqualTo,
-		LessThan,
-		LessThanOrEqualTo,
-		EqualTo,
-		GreaterThanOrEqualTo,
-		GreaterThan,
+		NOT_EQUAL_TO,
+		LESS_THAN,
+		LESS_THAN_OR_EQUAL_TO,
+		EQUAL_TO,
+		GREATER_THAN_OR_EQUAL_TO,
+		GREATER_THAN,
 	};
 
 	public enum BMathOperatorType
 	{
-		Add,
-		Subtract,
-		Multiply,
-		Divide,
-		Modulus,
+		ADD,
+		SUBTRACT,
+		MULTIPLY,
+		DIVIDE,
+		MODULUS,
 	};
 
 	public enum BActionStatus
 	{
-		NotDone,
-		DoneSuccess,
-		DoneFailure,
+		NOT_DONE,
+		DONE_SUCCESS,
+		DONE_FAILURE,
 	};
 
-	public enum BLOSType
+	public enum BlosType
 	{
-		LOSDontCare,
-		LOSNormal,
-		LOSFullVisible,
+		LOS_DONT_CARE,
+		LOS_NORMAL,
+		LOS_FULL_VISIBLE,
 	};
 
 	public enum BListPosition
 	{
-		First,
-		Last,
-		Random,
+		FIRST,
+		LAST,
+		RANDOM,
 	};
 
 	public enum BExposedAction
 	{
-		ExposedAction0,
-		ExposedAction1,
-		ExposedAction2,
+		EXPOSED_ACTION0,
+		EXPOSED_ACTION1,
+		EXPOSED_ACTION2,
 	};
 
 	public enum BDataScalar
 	{
-		Accuracy,
-		WorkRate,
-		Damage,
+		ACCURACY,
+		WORK_RATE,
+		DAMAGE,
 		LOS,
-		Velocity,
-		WeaponRange,
-		DamageTaken,
+		VELOCITY,
+		WEAPON_RANGE,
+		DAMAGE_TAKEN,
 	};
 
 	public enum BFlareType
 	{
-		Look,
-		Help,
-		Meet,
-		Attack,
+		LOOK,
+		HELP,
+		MEET,
+		ATTACK,
 	};
 
 	public enum BBidType
 	{
-		Invalid,
-		None,
-		Squad,
-		Tech,
-		Building,
-		Power,
+		INVALID,
+		NONE,
+		SQUAD,
+		TECH,
+		BUILDING,
+		POWER,
 	};
 	public enum BBidState
 	{
-		Invalid,
-		Inactive,
-		Waiting,
-		Approved,
+		INVALID,
+		INACTIVE,
+		WAITING,
+		APPROVED,
 	};
 
 	public enum BEventType
 	{
-		Invalid,
+		INVALID,
 
-		ControlTilt,
-		ControlZoom,
-		ControlRotate,
-		ControlPan,
-		ControlCircleSelect,
-		ControlCircleMultiSelect,
-		ControlClearAllSelections,
-		ControlModifierAction,
-		ControlModifierSpeed,
-		ControlResetCameraSettings,
-		ControlGotoRally,
-		ControlGotoBase,
-		ControlGotoScout,
-		ControlGotoNode,
-		ControlGotoHero,
-		ControlGotoAlert,
-		ControlGotoSelected,
-		ControlGroupSelect,
-		ControlGroupGoto,
-		ControlGroupAssign,
-		ControlGroupAddTo,
-		ControlScreenSelectMilitary,
-		ControlGlobalSelect,
-		ControlDoubleClickSelect,
-		ControlFindCrowdMilitary,
-		ControlFindCrowdVillager,
-		ControlSetRallyPoint,
-		Flare,
-		FlareHelp,
-		FlareMeet,
-		FlareAttack,
-		MenuShowCommand,
-		MenuCloseCommand,
-		MenuNavCommand,
-		MenuCommandHasFocus0,
-		MenuCommandHasFocus1,
-		MenuCommandHasFocus2,
-		MenuCommandHasFocus3,
-		MenuCommandHasFocus4,
-		MenuCommandHasFocus5,
-		MenuCommandHasFocus6,
-		MenuCommandHasFocus7,
-		MenuCommandHasFocusN,
-		MenuCommandClickmenuN,
-		MenuCommandIsMenuOpen,
-		MenuCommanndIsMenuNotOpen,
-		MenuShowPower,
-		MenuClosePower,
-		MenuPowerHasFocusN,
-		MenuPowerClickmenuN,
-		MenuPowerIsMenuOpen,
-		MenuPowerIsMenuNotOpen,
-		MenuShowSelectPower,
-		MenuShowAbility,
-		MenuShowTribute,
-		MenuShowObjectives,
-		GameEntityBuilt,
-		GameEntityKilled,
-		ChatShown,
-		ChatRemoved,
-		ChatCompleted,
-		CommandBowl,
-		CommandAbility,
-		CommandUnpack,
-		CommandDoWork,
-		CommandAttack,
-		CommandMove,
-		CommandTrainSquad,
-		CommandTrainSquadCancel,
-		CommandResearch,
-		CommandResearchCancel,
-		CommandBuildOther,
-		CommandRecycle,
-		CommandRecycleCancel,
-		CameraLookingAt,
-		SelectUnits,
-		CinematicCompleted,
-		FadeCompleted,
-		UsedPower,
-		Timer1Sec,
-		ControlCircleSelectFullyGrown,
-		PowerOrbitalComplete,
-		GameEntityRammed,
-		GameEntityJacked,
-		GameEntityKilledByNonProjectile,
+		CONTROL_TILT,
+		CONTROL_ZOOM,
+		CONTROL_ROTATE,
+		CONTROL_PAN,
+		CONTROL_CIRCLE_SELECT,
+		CONTROL_CIRCLE_MULTI_SELECT,
+		CONTROL_CLEAR_ALL_SELECTIONS,
+		CONTROL_MODIFIER_ACTION,
+		CONTROL_MODIFIER_SPEED,
+		CONTROL_RESET_CAMERA_SETTINGS,
+		CONTROL_GOTO_RALLY,
+		CONTROL_GOTO_BASE,
+		CONTROL_GOTO_SCOUT,
+		CONTROL_GOTO_NODE,
+		CONTROL_GOTO_HERO,
+		CONTROL_GOTO_ALERT,
+		CONTROL_GOTO_SELECTED,
+		CONTROL_GROUP_SELECT,
+		CONTROL_GROUP_GOTO,
+		CONTROL_GROUP_ASSIGN,
+		CONTROL_GROUP_ADD_TO,
+		CONTROL_SCREEN_SELECT_MILITARY,
+		CONTROL_GLOBAL_SELECT,
+		CONTROL_DOUBLE_CLICK_SELECT,
+		CONTROL_FIND_CROWD_MILITARY,
+		CONTROL_FIND_CROWD_VILLAGER,
+		CONTROL_SET_RALLY_POINT,
+		FLARE,
+		FLARE_HELP,
+		FLARE_MEET,
+		FLARE_ATTACK,
+		MENU_SHOW_COMMAND,
+		MENU_CLOSE_COMMAND,
+		MENU_NAV_COMMAND,
+		MENU_COMMAND_HAS_FOCUS0,
+		MENU_COMMAND_HAS_FOCUS1,
+		MENU_COMMAND_HAS_FOCUS2,
+		MENU_COMMAND_HAS_FOCUS3,
+		MENU_COMMAND_HAS_FOCUS4,
+		MENU_COMMAND_HAS_FOCUS5,
+		MENU_COMMAND_HAS_FOCUS6,
+		MENU_COMMAND_HAS_FOCUS7,
+		MENU_COMMAND_HAS_FOCUS_N,
+		MENU_COMMAND_CLICKMENU_N,
+		MENU_COMMAND_IS_MENU_OPEN,
+		MENU_COMMANND_IS_MENU_NOT_OPEN,
+		MENU_SHOW_POWER,
+		MENU_CLOSE_POWER,
+		MENU_POWER_HAS_FOCUS_N,
+		MENU_POWER_CLICKMENU_N,
+		MENU_POWER_IS_MENU_OPEN,
+		MENU_POWER_IS_MENU_NOT_OPEN,
+		MENU_SHOW_SELECT_POWER,
+		MENU_SHOW_ABILITY,
+		MENU_SHOW_TRIBUTE,
+		MENU_SHOW_OBJECTIVES,
+		GAME_ENTITY_BUILT,
+		GAME_ENTITY_KILLED,
+		CHAT_SHOWN,
+		CHAT_REMOVED,
+		CHAT_COMPLETED,
+		COMMAND_BOWL,
+		COMMAND_ABILITY,
+		COMMAND_UNPACK,
+		COMMAND_DO_WORK,
+		COMMAND_ATTACK,
+		COMMAND_MOVE,
+		COMMAND_TRAIN_SQUAD,
+		COMMAND_TRAIN_SQUAD_CANCEL,
+		COMMAND_RESEARCH,
+		COMMAND_RESEARCH_CANCEL,
+		COMMAND_BUILD_OTHER,
+		COMMAND_RECYCLE,
+		COMMAND_RECYCLE_CANCEL,
+		CAMERA_LOOKING_AT,
+		SELECT_UNITS,
+		CINEMATIC_COMPLETED,
+		FADE_COMPLETED,
+		USED_POWER,
+		TIMER1_SEC,
+		CONTROL_CIRCLE_SELECT_FULLY_GROWN,
+		POWER_ORBITAL_COMPLETE,
+		GAME_ENTITY_RAMMED,
+		GAME_ENTITY_JACKED,
+		GAME_ENTITY_KILLED_BY_NON_PROJECTILE,
 	};
 
 	public enum BGameStatePredicate
 	{
-		Invalid,
+		INVALID,
 
-		SquadsSelected,
-		HasSquads,
-		HasBuildings,
-		HasResources,
-		HasTech,
-		GameTime,
+		SQUADS_SELECTED,
+		HAS_SQUADS,
+		HAS_BUILDINGS,
+		HAS_RESOURCES,
+		HAS_TECH,
+		GAME_TIME,
 	};
 
 	public enum BPlayerScope
 	{
-		Invalid = TypeExtensions.kNone,
+		INVALID = TypeExtensions.K_NONE,
 
-		Any,
-		Player,
-		Team,
-		Enemy,
-		Gaia,
+		ANY,
+		PLAYER,
+		TEAM,
+		ENEMY,
+		GAIA,
 
-		kNumberOf
+		K_NUMBER_OF
 	};
 
 	public enum BVisualDisplayPriority
 	{
-		Normal = 1,
-		Combat,
-		High,
+		NORMAL = 1,
+		COMBAT,
+		HIGH,
 	};
 
 	public enum BRelationType
 	{
-		Any,
-		Self,
-		Ally,
-		Enemy,
-		Neutral,
+		ANY,
+		SELF,
+		ALLY,
+		ENEMY,
+		NEUTRAL,
 
-		Invalid,
+		INVALID,
 	};
 }

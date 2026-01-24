@@ -128,7 +128,7 @@ namespace KSoft.IO
 			where T : IBitStreamSerializable
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
 			Contract.Requires(ctor != null);
 
 			int count = list.Count;
@@ -156,7 +156,7 @@ namespace KSoft.IO
 			where T : IBitStreamSerializable, new()
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
 
 			return this.StreamElements(list, countBitSize, (object)null, (nil) => new T());
 		}

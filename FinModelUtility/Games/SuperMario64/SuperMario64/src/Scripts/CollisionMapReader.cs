@@ -20,22 +20,22 @@ namespace sm64.Scripts {
     }
 
     public static void LoadInto(CollisionMap cmap, uint address) {
-      var rom = ROM.Instance;
+      var rom = Rom.Instance;
 
       var segment = (ushort) (address >> 24);
       uint off = address & 0xFFFFFF;
-      byte[] data = rom.getSegment(segment, null)!;
-      var sub_cmd =
+      byte[] data = rom.GetSegment(segment, null)!;
+      var subCmd =
           (CollisionSubCommand) BitLogic.BytesToInt(data, (int) off, 2);
 
       // Check if the data is actually collision data.
       if (data[off] != 0x00 || data[off + 1] != 0x40)
         return;
 
-      uint num_verts = (ushort) BitLogic.BytesToInt(data, (int) off + 2, 2);
+      uint numVerts = (ushort) BitLogic.BytesToInt(data, (int) off + 2, 2);
 
       off += 4;
-      for (int i = 0; i < num_verts; i++) {
+      for (int i = 0; i < numVerts; i++) {
         short x = (short) BitLogic.BytesToInt(data, (int) off + 0, 2);
         short y = (short) BitLogic.BytesToInt(data, (int) off + 2, 2);
         short z = (short) BitLogic.BytesToInt(data, (int) off + 4, 2);
@@ -43,29 +43,29 @@ namespace sm64.Scripts {
         off += 6;
       }
 
-      while (sub_cmd != CollisionSubCommand.TERRAIN_LOAD_CONTINUE) {
-        sub_cmd = (CollisionSubCommand) BitLogic.BytesToInt(data, (int) off, 2);
+      while (subCmd != CollisionSubCommand.TERRAIN_LOAD_CONTINUE) {
+        subCmd = (CollisionSubCommand) BitLogic.BytesToInt(data, (int) off, 2);
         //Console.WriteLine(sub_cmd.ToString("X8"));
-        if (sub_cmd == CollisionSubCommand.TERRAIN_LOAD_CONTINUE) break;
+        if (subCmd == CollisionSubCommand.TERRAIN_LOAD_CONTINUE) break;
         //rom.printArraySection(data, (int)off, 4 + (int)collisionLength(sub_cmd));
         cmap.NewTriangleList((int) BitLogic.BytesToInt(data, (int) off, 2));
-        uint num_tri = (ushort) BitLogic.BytesToInt(data, (int) off + 2, 2);
-        uint col_len = GetLengthOfSubCommand(sub_cmd);
+        uint numTri = (ushort) BitLogic.BytesToInt(data, (int) off + 2, 2);
+        uint colLen = GetLengthOfSubCommand(subCmd);
         off += 4;
-        for (int i = 0; i < num_tri; i++) {
+        for (int i = 0; i < numTri; i++) {
           uint a = BitLogic.BytesToInt(data, (int) off + 0, 2);
           uint b = BitLogic.BytesToInt(data, (int) off + 2, 2);
           uint c = BitLogic.BytesToInt(data, (int) off + 4, 2);
           cmap.AddTriangle(a, b, c);
-          off += col_len;
+          off += colLen;
         }
       }
-      cmap.buildCollisionMap();
+      cmap.BuildCollisionMap();
       off += 2;
       bool end = false;
       while (!end) {
-        sub_cmd = (CollisionSubCommand) BitLogic.BytesToInt(data, (int) off, 2);
-        switch (sub_cmd) {
+        subCmd = (CollisionSubCommand) BitLogic.BytesToInt(data, (int) off, 2);
+        switch (subCmd) {
           case CollisionSubCommand.TERRAIN_LOAD_END:
             end = true;
             break;
@@ -74,9 +74,9 @@ namespace sm64.Scripts {
           case CollisionSubCommand.TERRAIN_LOAD_ENVIRONMENT:
             // TODO: Handle water and gas boxes
             // Also skipping water boxes. Will come back to it later.
-            uint num_boxes =
+            uint numBoxes =
                 (ushort) BitLogic.BytesToInt(data, (int) off + 2, 2);
-            off += 4 + (num_boxes * 0xC);
+            off += 4 + (numBoxes * 0xC);
             break;
           default:
             throw new NotImplementedException();

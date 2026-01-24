@@ -13,20 +13,20 @@ namespace KSoft.Phoenix
 {
 	partial class PhxUtil
 	{
-		const HandleWordUnsigned kUndefinedReferenceHandleBitmask =
+		const HandleWordUnsigned K_UNDEFINED_REFERENCE_HANDLE_BITMASK_ =
 			unchecked((HandleWordUnsigned)HandleWord.MinValue); // 0x80...
 
 		public static bool IsUndefinedReferenceHandle(HandleWord handle)
 		{
 			var uhandle = (HandleWordUnsigned)handle;
 
-			return (uhandle & kUndefinedReferenceHandleBitmask) != 0;
+			return (uhandle & K_UNDEFINED_REFERENCE_HANDLE_BITMASK_) != 0;
 		}
 		public static HandleWord GetUndefinedReferenceDataIndex(HandleWord undefinedRefHandle)
 		{
 			var uhandle = (HandleWordUnsigned)undefinedRefHandle;
 
-			return (HandleWord)(uhandle & ~kUndefinedReferenceHandleBitmask);
+			return (HandleWord)(uhandle & ~K_UNDEFINED_REFERENCE_HANDLE_BITMASK_);
 		}
 		public static HandleWord GetUndefinedReferenceHandle(HandleWord undefinedRefDataIndex)
 		{
@@ -35,7 +35,7 @@ namespace KSoft.Phoenix
 
 			var index = (HandleWordUnsigned)undefinedRefDataIndex;
 
-			return (HandleWord)(index | kUndefinedReferenceHandleBitmask);
+			return (HandleWord)(index | K_UNDEFINED_REFERENCE_HANDLE_BITMASK_);
 		}
 
 		public static bool IsUndefinedReferenceHandleOrNone(HandleWord handle)

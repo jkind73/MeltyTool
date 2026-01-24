@@ -13,7 +13,7 @@ public sealed class SuperMario64FileBundleGatherer : INamedAnnotatedFileBundleGa
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingFile(
+    if (!DirectoryConstants.romsDirectory.TryToGetExistingFile(
             "super_mario_64.z64",
             out var superMario64Rom)) {
       return;

@@ -15,38 +15,38 @@ using fin.model.impl;
 
 namespace HaloWarsTools;
 
-public sealed class HWXtdResource : HWBinaryResource {
+public sealed class HwXtdResource : HwBinaryResource {
   public IModel Mesh { get; private set; }
 
   public IImage AmbientOcclusionTexture { get; private set; }
   public IImage OpacityTexture { get; private set; }
 
-  public static HWXtdResource FromFile(HWContext context, string filename)
-    => GetOrCreateFromFile(context, filename, HWResourceType.Xtd) as
-        HWXtdResource;
+  public static HwXtdResource FromFile(HwContext context, string filename)
+    => GetOrCreateFromFile(context, filename, HwResourceType.XTD) as
+        HwXtdResource;
 
   protected override void Load(byte[] bytes) {
     base.Load(bytes);
 
-    this.Mesh = this.ImportMesh(bytes);
+    this.Mesh = this.ImportMesh_(bytes);
 
-    this.AmbientOcclusionTexture = this.ExtractEmbeddedDXT5A(bytes,
-      this.GetFirstChunkOfType(HWBinaryResourceChunkType.XTD_AOChunk));
-    this.OpacityTexture = this.ExtractEmbeddedDXT5A(
+    this.AmbientOcclusionTexture = this.ExtractEmbeddedDxt5A_(bytes,
+      this.GetFirstChunkOfType(HwBinaryResourceChunkType.XTD_AO_CHUNK));
+    this.OpacityTexture = this.ExtractEmbeddedDxt5A_(
         bytes,
-        this.GetFirstChunkOfType(HWBinaryResourceChunkType.XTD_AlphaChunk));
+        this.GetFirstChunkOfType(HwBinaryResourceChunkType.XTD_ALPHA_CHUNK));
   }
 
-  private IImage ExtractEmbeddedDXT5A(byte[] bytes,
-                                      HWBinaryResourceChunk chunk) {
+  private IImage ExtractEmbeddedDxt5A_(byte[] bytes,
+                                      HwBinaryResourceChunk chunk) {
     // Get raw embedded DXT5 texture from resource file
-    var width = (int) Math.Sqrt(chunk.Size * 2);
+    var width = (int) Math.Sqrt(chunk.size * 2);
     var height = width;
 
     // For some godforsaken reason, every pair of bytes is flipped so we need
     // to fix it here. This was really annoying to figure out, haha.
-    for (var i = 0; i < chunk.Size; i += 2) {
-      var offset = (int) chunk.Offset + i;
+    for (var i = 0; i < chunk.size; i += 2) {
+      var offset = (int) chunk.offset + i;
 
       var byte0 = bytes[offset + 0];
       var byte1 = bytes[offset + 1];
@@ -55,34 +55,34 @@ public sealed class HWXtdResource : HWBinaryResource {
       bytes[offset + 1] = byte0;
     }
 
-    return DxtDecoder.DecompressDxt5a(bytes,
-                                      (int) chunk.Offset,
+    return DxtDecoder.DecompressDxt5A(bytes,
+                                      (int) chunk.offset,
                                       width,
                                       height);
   }
 
-  private IModel ImportMesh(byte[] bytes) {
-    HWBinaryResourceChunk headerChunk = this.GetFirstChunkOfType(HWBinaryResourceChunkType.XTD_XTDHeader);
+  private IModel ImportMesh_(byte[] bytes) {
+    HwBinaryResourceChunk headerChunk = this.GetFirstChunkOfType(HwBinaryResourceChunkType.XTD_XTD_HEADER);
     float tileScale =
         BinaryUtils.ReadFloatBigEndian(bytes,
-                                       (int) headerChunk.Offset + 12);
-    HWBinaryResourceChunk atlasChunk = this.GetFirstChunkOfType(HWBinaryResourceChunkType.XTD_AtlasChunk);
+                                       (int) headerChunk.offset + 12);
+    HwBinaryResourceChunk atlasChunk = this.GetFirstChunkOfType(HwBinaryResourceChunkType.XTD_ATLAS_CHUNK);
 
     int gridSize =
-        (int) Math.Round(Math.Sqrt((atlasChunk.Size - 32) /
+        (int) Math.Round(Math.Sqrt((atlasChunk.size - 32) /
                                    8)); // Subtract the min/range vector sizes, divide by position + normal size, and sqrt for grid size
-    int positionOffset = (int) atlasChunk.Offset + 32;
+    int positionOffset = (int) atlasChunk.offset + 32;
     int normalOffset = positionOffset + gridSize * gridSize * 4;
 
     // These are stored as ZYX, 4 bytes per component
     Vector3 posCompMin = BinaryUtils
                          .ReadVector3BigEndian(
                              bytes,
-                             (int) atlasChunk.Offset)
+                             (int) atlasChunk.offset)
                          .ReverseComponents();
     Vector3 posCompRange =
         BinaryUtils
-            .ReadVector3BigEndian(bytes, (int) atlasChunk.Offset + 16)
+            .ReadVector3BigEndian(bytes, (int) atlasChunk.offset + 16)
             .ReverseComponents();
 
     var finModel = new ModelImpl<NormalUvVertexImpl>(
@@ -114,8 +114,8 @@ public sealed class HWXtdResource : HWBinaryResource {
       var triangleStripVertices = new IReadOnlyVertex[2 * gridSize];
 
       for (int z = 0; z < gridSize; ++z) {
-        var a = finVertices[GetVertexIndex(x, z, gridSize)];
-        var b = finVertices[GetVertexIndex(x + 1, z, gridSize)];
+        var a = finVertices[GetVertexIndex_(x, z, gridSize)];
+        var b = finVertices[GetVertexIndex_(x + 1, z, gridSize)];
 
         triangleStripVertices[2 * z + 0] = b;
         triangleStripVertices[2 * z + 1] = a;
@@ -147,7 +147,7 @@ public sealed class HWXtdResource : HWBinaryResource {
 
       // Get offset position and normal for this vertex
       Vector3 position =
-          ReadVector3Compressed(
+          ReadVector3Compressed_(
               bytes.AsSpan(positionOffset + offset, 4)) *
           posCompRange -
           posCompMin;
@@ -156,9 +156,9 @@ public sealed class HWXtdResource : HWBinaryResource {
       position += new Vector3(x, 0, z) * tileScale;
 
       Vector3 normal =
-          ConvertDirectionVector(
+          ConvertDirectionVector_(
               Vector3.Normalize(
-                  ReadVector3Compressed(
+                  ReadVector3Compressed_(
                       bytes.AsSpan(normalOffset + offset, 4)) *
                   2.0f -
                   Vector3.One));
@@ -175,27 +175,27 @@ public sealed class HWXtdResource : HWBinaryResource {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private static int GetVertexIndex(int x, int z, int gridSize)
+  private static int GetVertexIndex_(int x, int z, int gridSize)
     => z * gridSize + x;
 
-  private const uint K_BIT_MASK_10 = (1 << 10) - 1;
+  private const uint K_BIT_MASK_10_ = (1 << 10) - 1;
 
-  private const float INVERSE_K_BIT_MASK_10 =
-      1f / K_BIT_MASK_10;
+  private const float INVERSE_K_BIT_MASK_10_ =
+      1f / K_BIT_MASK_10_;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private static Vector3 ReadVector3Compressed(ReadOnlySpan<byte> bytes) {
+  private static Vector3 ReadVector3Compressed_(ReadOnlySpan<byte> bytes) {
     // Inexplicably, position and normal vectors are encoded inside 4 bytes. ~10 bits per component
     // This seems okay for directions, but positions suffer from stairstepping artifacts
     uint v = BitConverter.ToUInt32(bytes);
-    uint x = (v >> 0) & K_BIT_MASK_10;
-    uint y = (v >> 10) & K_BIT_MASK_10;
-    uint z = (v >> 20) & K_BIT_MASK_10;
-    return new Vector3(x, y, z) * INVERSE_K_BIT_MASK_10;
+    uint x = (v >> 0) & K_BIT_MASK_10_;
+    uint y = (v >> 10) & K_BIT_MASK_10_;
+    uint z = (v >> 20) & K_BIT_MASK_10_;
+    return new Vector3(x, y, z) * INVERSE_K_BIT_MASK_10_;
   }
 
   // TODO: This might not be right
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private static Vector3 ConvertDirectionVector(Vector3 vector)
+  private static Vector3 ConvertDirectionVector_(Vector3 vector)
     => new(vector.Z, vector.X, vector.Y);
 }

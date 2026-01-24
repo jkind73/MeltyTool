@@ -8,11 +8,11 @@ namespace ts2 {
   ///   Shamelessly stolen from:
   ///   https://github.com/OpenRadical/tspak/blob/main/tspak.c
   /// </summary>
-  public partial class P8ckArchiveReader : IArchiveReader<SubArchiveContentFile> {
-    private const string MAGIC = "P8CK";
+  public partial class P8CkArchiveReader : IArchiveReader<SubArchiveContentFile> {
+    private const string MAGIC_ = "P8CK";
 
     public bool IsValidArchive(Stream archive)
-      => MagicTextUtil.Verify(archive, MAGIC);
+      => MagicTextUtil.Verify(archive, MAGIC_);
 
     public IArchiveStream<SubArchiveContentFile> Decompress(Stream archive)
       => new SubArchiveStream(archive);
@@ -44,7 +44,7 @@ namespace ts2 {
 
     [BinarySchema]
     private partial class Header : IBinaryConvertible {
-      private readonly string magic_ = MAGIC;
+      private readonly string magic_ = MAGIC_;
 
       public int FileInfoOffset { get; set; }
       public int FileInfoCount { get; set; }

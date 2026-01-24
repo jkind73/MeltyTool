@@ -3,11 +3,11 @@ namespace KSoft.Phoenix.HaloWars
 {
 	public enum BScenarioTeam // Not really an official enum...just documentation as I've seen the TeamIDs used
 	{
-		None,
+		NONE,
 
 		UNSC,
-		Covenant,
-		Flood,
-		Forerunner,
+		COVENANT,
+		FLOOD,
+		FORERUNNER,
 	};
 }

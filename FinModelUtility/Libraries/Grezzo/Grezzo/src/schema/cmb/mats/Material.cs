@@ -24,13 +24,13 @@ public sealed class Material : IBinaryConvertible {
   public readonly TexMapper[] texMappers = new TexMapper[3];
   public readonly TexCoords[] texCoords = new TexCoords[3];
 
-  public Rgba32 emissionColor { get; private set; }
-  public Rgba32 ambientColor { get; private set; }
-  public Rgba32 diffuseRgba { get; private set; }
-  public Rgba32 specular0Color { get; private set; }
-  public Rgba32 specular1Color { get; private set; }
+  public Rgba32 EmissionColor { get; private set; }
+  public Rgba32 AmbientColor { get; private set; }
+  public Rgba32 DiffuseRgba { get; private set; }
+  public Rgba32 Specular0Color { get; private set; }
+  public Rgba32 Specular1Color { get; private set; }
 
-  public Rgba32[] constantColors { get; } = new Rgba32[6];
+  public Rgba32[] ConstantColors { get; } = new Rgba32[6];
 
   public readonly float[] bufferColor = new float[4];
 
@@ -120,14 +120,14 @@ public sealed class Material : IBinaryConvertible {
         this.texCoords[i] = texCoord;
       }
 
-      this.emissionColor = br.ReadNew<Rgba32>();
-      this.ambientColor = br.ReadNew<Rgba32>();
-      this.diffuseRgba = br.ReadNew<Rgba32>();
-      this.specular0Color = br.ReadNew<Rgba32>();
-      this.specular1Color = br.ReadNew<Rgba32>();
+      this.EmissionColor = br.ReadNew<Rgba32>();
+      this.AmbientColor = br.ReadNew<Rgba32>();
+      this.DiffuseRgba = br.ReadNew<Rgba32>();
+      this.Specular0Color = br.ReadNew<Rgba32>();
+      this.Specular1Color = br.ReadNew<Rgba32>();
 
-      for (var i = 0; i < this.constantColors.Length; ++i) {
-        this.constantColors[i] = br.ReadNew<Rgba32>();
+      for (var i = 0; i < this.ConstantColors.Length; ++i) {
+        this.ConstantColors[i] = br.ReadNew<Rgba32>();
       }
 
       br.ReadSingles(this.bufferColor);

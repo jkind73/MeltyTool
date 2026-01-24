@@ -26,7 +26,7 @@ public sealed class ThreeDsXfsaTool {
           xsfaFile.Parent!.Impl,
           () => {
             ProcessUtil.ExecuteBlockingSilently(
-                ThreeDsToolsConstants.THREEDS_XSFATOOL_EXE,
+                ThreeDsToolsConstants.ThreedsXsfatoolExe,
                 $"-i \"{xsfaFile.FullPath}\" " +
                 $"-o \"{directory.FullPath}\" " + "-q");
           });

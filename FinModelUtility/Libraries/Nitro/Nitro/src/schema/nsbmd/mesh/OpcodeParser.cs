@@ -109,14 +109,14 @@ public sealed class OpcodeParser : IOpcodeParser {
     var paramsLength = opcodeType switch {
         // 0x00
         OpcodeType.NOP
-            or OpcodeType.UNKNOWN_0x40
-            or OpcodeType.UNKNOWN_0x80 => 0,
+            or OpcodeType.UNKNOWN_0_X40
+            or OpcodeType.UNKNOWN_0_X80 => 0,
 
         // 0x01
         OpcodeType.END => 0,
 
         // 0x02
-        OpcodeType.UNKNOWN_0x02 => 2,
+        OpcodeType.UNKNOWN_0_X02 => 2,
 
         // 0x03
         OpcodeType.LOAD_MATRIX => 1,
@@ -136,11 +136,11 @@ public sealed class OpcodeParser : IOpcodeParser {
         OpcodeType.MULT_MATRIX_4 => 5,
 
         // 0x_7
-        OpcodeType.UNKNOWN_0x07 => 1,
-        OpcodeType.UNKNOWN_0x47 => 2,
+        OpcodeType.UNKNOWN_0_X07 => 1,
+        OpcodeType.UNKNOWN_0_X47 => 2,
 
         // 0x08
-        OpcodeType.UNKNOWN_0x08 => 1,
+        OpcodeType.UNKNOWN_0_X08 => 1,
 
         // 0x09
         OpcodeType.STORE_MATRIX => 1 + 1 + 3 * br.ReadByte(),
@@ -149,10 +149,10 @@ public sealed class OpcodeParser : IOpcodeParser {
         OpcodeType.SCALE_UP or OpcodeType.SCALE_DOWN => 0,
 
         // 0x0c
-        OpcodeType.UNKNOWN_0x0c => 2,
+        OpcodeType.UNKNOWN_0_X0_C => 2,
 
         // 0x0d
-        OpcodeType.UNKNOWN_0x0d => 2,
+        OpcodeType.UNKNOWN_0_X0D => 2,
 
         _                       => throw new ArgumentOutOfRangeException(nameof(opcodeType), opcodeType, null)
     };

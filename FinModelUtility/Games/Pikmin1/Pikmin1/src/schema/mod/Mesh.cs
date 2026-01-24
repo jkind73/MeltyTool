@@ -21,7 +21,7 @@ namespace pikmin1.schema.mod {
 
     [AlignStart(0x20)]
     [SequenceLengthSource(SchemaIntegerType.INT32)]
-    public byte[] dlistData { get; set; }
+    public byte[] DlistData { get; set; }
   }
 
   [BinarySchema]

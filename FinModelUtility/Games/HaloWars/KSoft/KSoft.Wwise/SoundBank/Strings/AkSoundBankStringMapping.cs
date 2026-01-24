@@ -9,21 +9,21 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankStringMapping
 		: AkSoundBankStringMappingBase
 	{
-		static readonly Memory.Strings.StringStorage kStringStorage =
-					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.Ascii, Memory.Strings.StringStorageLengthPrefix.Int8);
-		static readonly Text.StringStorageEncoding kStringEncoding = new Text.StringStorageEncoding(kStringStorage);
+		static readonly Memory.Strings.StringStorage KStringStorage =
+					new Memory.Strings.StringStorage(Memory.Strings.StringStorageWidthType.ASCII, Memory.Strings.StringStorageLengthPrefix.INT8);
+		static readonly Text.StringStorageEncoding KStringEncoding = new Text.StringStorageEncoding(KStringStorage);
 
-		void SerializeStringType(IO.EndianStream s, AKBKHashHeader hdr, AkSoundBank bank)
+		void SerializeStringType(IO.EndianStream s, AkbkHashHeader hdr, AkSoundBank bank)
 		{
-			Contract.Assert(hdr.Type == StringType.Bank);
+			Contract.Assert(hdr.Type == StringType.BANK);
 
-			uint bank_id = uint.MaxValue;
+			uint bankId = uint.MaxValue;
 			string str = null;
 
-			s.Stream(ref bank_id);
-			s.Stream(ref str, kStringEncoding);
+			s.Stream(ref bankId);
+			s.Stream(ref str, KStringEncoding);
 
-			bank.MapIdToName(bank_id, str);
+			bank.MapIdToName(bankId, str);
 		}
 		public override void Serialize(IO.EndianStream s, AkSubchunkHeader header)
 		{
@@ -35,7 +35,7 @@ namespace KSoft.Wwise.SoundBank
 
 			while (s.BaseStream.Position != eos)
 			{
-				AKBKHashHeader hdr = new AKBKHashHeader();
+				AkbkHashHeader hdr = new AkbkHashHeader();
 				hdr.Serialize(s);
 
 				for (int x = 0; x < hdr.Size; x++)

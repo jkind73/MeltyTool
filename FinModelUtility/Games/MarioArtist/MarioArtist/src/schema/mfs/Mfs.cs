@@ -10,30 +10,30 @@ public static class Mfs {
   public const string RAM_ID = "64dd-Multi0101";
 
   //MFS FAT
-  public enum FAT : ushort {
-    Unused = 0x0000,
-    DontManage = 0xFFFD,
-    Prohibited = 0xFFFE,
-    LastFileBlock = 0xFFFF
+  public enum Fat : ushort {
+    UNUSED = 0x0000,
+    DONT_MANAGE = 0xFFFD,
+    PROHIBITED = 0xFFFE,
+    LAST_FILE_BLOCK = 0xFFFF
   }
 
   public const int FAT_MAX = 2874;
 
   //MFS Entry
   public struct EntryAttr {
-    public bool CopyLimit;   //Limit Copy
-    public bool Encode;      //Encode
-    public bool Hidden;      //Hidden
-    public bool DisableRead; //Cannot be read by other applications
+    public bool copyLimit;   //Limit Copy
+    public bool encode;      //Encode
+    public bool hidden;      //Hidden
+    public bool disableRead; //Cannot be read by other applications
 
     public bool
-        DisableWrite; //Cannot be written, renamed, or deleted by other applications
+        disableWrite; //Cannot be written, renamed, or deleted by other applications
   }
 
-  public static readonly ushort[] EntryLimit =
+  public static readonly ushort[] ENTRY_LIMIT =
       [899, 814, 729, 644, 559, 474, 0];
 
   enum Error {
-    Good = 0, Argument, Filename, FileNotExist, DiskFull, FileAlreadyExists
+    GOOD = 0, ARGUMENT, FILENAME, FILE_NOT_EXIST, DISK_FULL, FILE_ALREADY_EXISTS
   }
 }

@@ -6,19 +6,19 @@ namespace KSoft.Phoenix.Phx
 		#region 0
 
 		#region 00
-		CanGetUnits = 2,
+		CAN_GET_UNITS = 2,
 
-		CanGetSquads = 4,
-		TechStatus = 5,
+		CAN_GET_SQUADS = 4,
+		TECH_STATUS = 5,
 
-		TriggerActiveTime = 7,
+		TRIGGER_ACTIVE_TIME = 7,
 		#endregion
 		#region 10
-		CompareInteger = 14,
-		CanPayCost = 15,
+		COMPARE_INTEGER = 14,
+		CAN_PAY_COST = 15,
 		#endregion
 		#region 20
-		CanUsePower = 27,
+		CAN_USE_POWER = 27,
 		#endregion
 		#region 30
 		#endregion
@@ -58,7 +58,7 @@ namespace KSoft.Phoenix.Phx
 		#region 80
 		#endregion
 		#region 90
-		CanRetrieveExternals = 192,
+		CAN_RETRIEVE_EXTERNALS = 192,
 		#endregion
 
 		#endregion
@@ -74,12 +74,12 @@ namespace KSoft.Phoenix.Phx
 		#region 30
 		#endregion
 		#region 40
-		CompareCiv = 240,
+		COMPARE_CIV = 240,
 		#endregion
 		#region 50
 		#endregion
 		#region 60
-		GameTimeReached = 268,
+		GAME_TIME_REACHED = 268,
 		#endregion
 		#region 70
 		#endregion
@@ -103,7 +103,7 @@ namespace KSoft.Phoenix.Phx
 		#region 40
 		#endregion
 		#region 50
-		CanGetOneSquad = 357,
+		CAN_GET_ONE_SQUAD = 357,
 		#endregion
 		#region 60
 		#endregion
@@ -129,14 +129,14 @@ namespace KSoft.Phoenix.Phx
 		#region 40
 		#endregion
 		#region 50
-		CompareFloat = 453,
+		COMPARE_FLOAT = 453,
 		#endregion
 		#region 60
 		#endregion
 		#region 70
 		#endregion
 		#region 80
-		CanGetOneProtoSquad = 486,
+		CAN_GET_ONE_PROTO_SQUAD = 486,
 		#endregion
 		#region 90
 		#endregion
@@ -156,7 +156,7 @@ namespace KSoft.Phoenix.Phx
 		#region 40
 		#endregion
 		#region 50
-		CanGetOneInteger = 552,
+		CAN_GET_ONE_INTEGER = 552,
 		#endregion
 		#region 60
 		#endregion
@@ -180,10 +180,10 @@ namespace KSoft.Phoenix.Phx
 		#region 30
 		#endregion
 		#region 40
-		UISquadListOK = 640,
-		UISquadListCancel = 641,
-		UISquadListUILockError = 642,
-		UISquadListWaiting = 643,
+		UI_SQUAD_LIST_OK = 640,
+		UI_SQUAD_LIST_CANCEL = 641,
+		UI_SQUAD_LIST_UI_LOCK_ERROR = 642,
+		UI_SQUAD_LIST_WAITING = 643,
 		#endregion
 		#region 50
 		#endregion
@@ -213,7 +213,7 @@ namespace KSoft.Phoenix.Phx
 		#region 50
 		#endregion
 		#region 60
-		CheckPop = 763,
+		CHECK_POP = 763,
 		#endregion
 		#region 70
 		#endregion
@@ -256,7 +256,7 @@ namespace KSoft.Phoenix.Phx
 		#region 10
 		#endregion
 		#region 20
-		AICanGetDifficultySetting = 920,
+		AI_CAN_GET_DIFFICULTY_SETTING = 920,
 		#endregion
 		#region 30
 		#endregion
@@ -271,7 +271,7 @@ namespace KSoft.Phoenix.Phx
 		#region 80
 		#endregion
 		#region 90
-		CanGetCoopPlayer = 991,
+		CAN_GET_COOP_PLAYER = 991,
 		#endregion
 
 		#endregion

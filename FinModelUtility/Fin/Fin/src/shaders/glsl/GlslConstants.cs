@@ -3,12 +3,12 @@
 namespace fin.shaders.glsl;
 
 public static class GlslConstants {
-  public static string SHADER_VERSION
+  public static string ShaderVersion
     => $"{OpenGlVersionService.MajorVersion}{OpenGlVersionService.MinorVersion}0{(
         OpenGlVersionService.Es ? " es" : "")}";
 
-  public static string VERTEX_SHADER_VERSION => SHADER_VERSION;
-  public static string FRAGMENT_SHADER_VERSION => SHADER_VERSION;
+  public static string VertexShaderVersion => ShaderVersion;
+  public static string FragmentShaderVersion => ShaderVersion;
 
   public const string FLOAT_PRECISION = "precision mediump float;";
 

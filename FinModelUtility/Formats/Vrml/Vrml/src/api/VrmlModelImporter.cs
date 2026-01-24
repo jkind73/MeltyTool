@@ -165,7 +165,7 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
         Style.PLAIN => "Regular",
       };
 
-      var fontFile = CommonFiles.COMMON_DIRECTORY.AssertGetExistingFile(
+      var fontFile = CommonFiles.CommonDirectory.AssertGetExistingFile(
           $"{baseFontName}-{styleText}.ttf");
 
       fontDictionary[(family, style)] = new QFont(
@@ -330,19 +330,19 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
         if (scaleOrientation != null &&
             scaleOrientation != Quaternion.Identity) {
           finBone = finBone.AddChild(
-              SystemMatrix4x4Util.FromRotation(scaleOrientation.Value));
+              SystemMatrix4X4Util.FromRotation(scaleOrientation.Value));
         }
 
         var scale = transform.Scale;
         if (scale != null && !scale.Value.IsRoughly1()) {
           finBone = finBone.AddChild(
-              SystemMatrix4x4Util.FromScale(scale.Value));
+              SystemMatrix4X4Util.FromScale(scale.Value));
         }
 
         if (scaleOrientation != null &&
             scaleOrientation != Quaternion.Identity) {
           finBone = finBone.AddChild(
-              FinMatrix4x4Util.FromRotation(scaleOrientation.Value)
+              FinMatrix4X4Util.FromRotation(scaleOrientation.Value)
                               .InvertInPlace());
         }
 

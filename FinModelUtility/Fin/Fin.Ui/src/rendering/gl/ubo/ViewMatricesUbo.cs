@@ -7,7 +7,7 @@ public sealed class ViewMatricesUbo {
   private readonly GlUbo impl_;
 
   public ViewMatricesUbo() {
-    this.bufferSize_ = UboUtil.SIZE_OF_MATRIX4X4;
+    this.bufferSize_ = UboUtil.SIZE_OF_MATRIX4_X4;
     this.impl_ = new(this.bufferSize_,
                      GlslConstants.UBO_GLOBAL_MATRICES_BINDING_INDEX);
   }
@@ -26,7 +26,7 @@ public sealed class ViewMatricesUbo {
     Span<byte> buffer = stackalloc byte[this.bufferSize_];
 
     // TODO: Pass in normal matrices here
-    UboUtil.AppendMatrix4x4(buffer,
+    UboUtil.AppendMatrix4X4(buffer,
                             ref offset,
                             GlTransform.ViewMatrix *
                             GlTransform.ProjectionMatrix);

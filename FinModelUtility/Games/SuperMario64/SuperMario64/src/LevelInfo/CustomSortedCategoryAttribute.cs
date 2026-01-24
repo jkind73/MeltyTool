@@ -7,7 +7,7 @@ namespace sm64.LevelInfo {
       ushort totalCategories)
       : CategoryAttribute(category.PadLeft(
                               category.Length + (totalCategories - categoryPos),
-                              NonPrintableChar)) {
-    private const char NonPrintableChar = '\t';
+                              NON_PRINTABLE_CHAR_)) {
+    private const char NON_PRINTABLE_CHAR_ = '\t';
   }
 }

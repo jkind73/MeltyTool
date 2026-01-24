@@ -12,13 +12,13 @@ namespace fin.io.sharpDirLister;
 public sealed class SchemaSharpDirectorySizeMeasurer {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
-  private const int PATH_SPAN_LENGTH = 260;
+  private const int PATH_SPAN_LENGTH_ = 260;
 
   public unsafe long MeasureSizeOfDirectory(string fullPath) {
-    Span<char> pathSpan = stackalloc char[PATH_SPAN_LENGTH];
+    Span<char> pathSpan = stackalloc char[PATH_SPAN_LENGTH_];
     fullPath.CopyTo(pathSpan);
 
-    Interop.WIN32_FIND_DATAW findData;
+    Interop.Win32FindDataw findData;
 
     var totalSize = 0L;
     fixed (char* pathPtr = &MemoryMarshal.GetReference(pathSpan)) {
@@ -37,7 +37,7 @@ public sealed class SchemaSharpDirectorySizeMeasurer {
       char* pathPtr,
       uint parentLength,
       ref long totalSize,
-      Interop.WIN32_FIND_DATAW* findDataPtr) {
+      Interop.Win32FindDataw* findDataPtr) {
     IntPtr fileSearchHandle = INVALID_HANDLE_VALUE;
     try {
       pathPtr[parentLength] = '\\';
@@ -46,7 +46,7 @@ public sealed class SchemaSharpDirectorySizeMeasurer {
       ClearEndOfPath_(pathPtr, parentLength + 2);
 
       var subFilePtr = pathPtr + parentLength + 1;
-      var remainingLength = PATH_SPAN_LENGTH - parentLength;
+      var remainingLength = PATH_SPAN_LENGTH_ - parentLength;
 
       fileSearchHandle = FindFirstFileW((IntPtr) pathPtr, (IntPtr) findDataPtr);
       if (fileSearchHandle != INVALID_HANDLE_VALUE) {
@@ -77,7 +77,7 @@ public sealed class SchemaSharpDirectorySizeMeasurer {
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private static long GetFileSize_(in Interop.WIN32_FIND_DATAW findData)
+  private static long GetFileSize_(in Interop.Win32FindDataw findData)
     => ((long) findData.nFileSizeHigh << 32) | (uint) findData.nFileSizeLow;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -88,16 +88,16 @@ public sealed class SchemaSharpDirectorySizeMeasurer {
   private static unsafe void ClearEndOfPath_(char* pathPtr, uint length)
     => Unsafe.InitBlockUnaligned(pathPtr + length,
                                  0,
-                                 2 * (PATH_SPAN_LENGTH - length));
+                                 2 * (PATH_SPAN_LENGTH_ - length));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   private static unsafe uint Length_(char* pathPtr) {
-    for (uint i = 0; i < PATH_SPAN_LENGTH; i++) {
+    for (uint i = 0; i < PATH_SPAN_LENGTH_; i++) {
       if (pathPtr[i] == '\0') {
         return i;
       }
     }
 
-    return PATH_SPAN_LENGTH;
+    return PATH_SPAN_LENGTH_;
   }
 }

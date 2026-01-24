@@ -4,23 +4,23 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BProtoTech
 		: BProtoBuildableObject
 	{
-		public float ResearchPoints { get { return this.BuildPoints; } }
+		public float ResearchPoints { get { return this.buildPoints; } }
 
-		public bool OwnStaticData, Unobtainable, Unique,
-			Shadow, OrPrereqs, Perpetual,
-			NoSound, Instant;
+		public bool ownStaticData, unobtainable, unique,
+			shadow, orPrereqs, perpetual,
+			noSound, instant;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			var sg = s.Owner as BSaveGame;
 
-			sg.StreamBCost(s, ref this.Cost);
-			s.Stream(ref this.BuildPoints);
-			s.Stream(ref this.OwnStaticData); s.Stream(ref this.Unobtainable); s.Stream(ref this.Unique);
-			s.Stream(ref this.Shadow); s.Stream(ref this.OrPrereqs); s.Stream(ref this.Perpetual);
-			s.Stream(ref this.Forbid);
-			s.Stream(ref this.NoSound); s.Stream(ref this.Instant);
+			sg.StreamBCost(s, ref this.cost);
+			s.Stream(ref this.buildPoints);
+			s.Stream(ref this.ownStaticData); s.Stream(ref this.unobtainable); s.Stream(ref this.unique);
+			s.Stream(ref this.shadow); s.Stream(ref this.orPrereqs); s.Stream(ref this.perpetual);
+			s.Stream(ref this.forbid);
+			s.Stream(ref this.noSound); s.Stream(ref this.instant);
 		}
 		#endregion
 	};

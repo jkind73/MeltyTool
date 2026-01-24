@@ -13,33 +13,33 @@ namespace KSoft.Phoenix.Resource.ECF
 	public struct EcfHeader
 		: IO.IEndianStreamSerializable
 	{
-		public const uint kSignature = 0xDABA7737;
-		public const int kSizeOf = 0x20;
-		public const int kAdler32StartOffset = sizeof(uint) * 3;
+		public const uint K_SIGNATURE = 0xDABA7737;
+		public const int K_SIZE_OF = 0x20;
+		public const int K_ADLER32_START_OFFSET = sizeof(uint) * 3;
 
-		public int HeaderSize;
+		public int headerSize;
 		// Checksum of the TotalSize field and onward, added to the checksum of everything after the header (HeaderSize - sizeof(ECFHeader))
-		public uint Adler32;
+		public uint adler32;
 
-		public int TotalSize;
-		public short ChunkCount;
-		private ushort mFlags;
-		private uint mID; // The signature of the data which this header encapsulates
-		private ushort mExtraDataSize;
+		public int totalSize;
+		public short chunkCount;
+		private ushort mFlags_;
+		private uint mId_; // The signature of the data which this header encapsulates
+		private ushort mExtraDataSize_;
 
-		public int Adler32BufferLength { get { return this.HeaderSize - kAdler32StartOffset; } }
-		public uint Id { get { return this.mID; } }
-		public ushort ExtraDataSize { get { return this.mExtraDataSize; } }
+		public int Adler32BufferLength { get { return this.headerSize - K_ADLER32_START_OFFSET; } }
+		public uint Id { get { return this.mId_; } }
+		public ushort ExtraDataSize { get { return this.mExtraDataSize_; } }
 
 		public void InitializeChunkInfo(uint dataId, uint dataChunkExtraDataSize = 0)
 		{
-			this.mID = dataId;
-			this.mExtraDataSize = (ushort)dataChunkExtraDataSize;
+			this.mId_ = dataId;
+			this.mExtraDataSize_ = (ushort)dataChunkExtraDataSize;
 		}
 
 		public void BeginBlock(IO.IKSoftBinaryStream s)
 		{
-			s.VirtualAddressTranslationInitialize(Shell.ProcessorSize.x32);
+			s.VirtualAddressTranslationInitialize(Shell.ProcessorSize.X32);
 			s.VirtualAddressTranslationPush(s.PositionPtr);
 		}
 		public void EndBlock(IO.IKSoftBinaryStream s)
@@ -51,42 +51,42 @@ namespace KSoft.Phoenix.Resource.ECF
 		{
 			Contract.Requires(startOffset >= 0);
 
-			this.TotalSize = (int)(s.Length - startOffset);
+			this.totalSize = (int)(s.Length - startOffset);
 		}
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.StreamSignature(kSignature);
-			s.Stream(ref this.HeaderSize);
-			s.Stream(ref this.Adler32);
-			s.Stream(ref this.TotalSize);
-			s.Stream(ref this.ChunkCount);
-			s.Stream(ref this.mFlags);
+			s.StreamSignature(K_SIGNATURE);
+			s.Stream(ref this.headerSize);
+			s.Stream(ref this.adler32);
+			s.Stream(ref this.totalSize);
+			s.Stream(ref this.chunkCount);
+			s.Stream(ref this.mFlags_);
 
-			if (s.IsReading && this.mFlags != 0)
+			if (s.IsReading && this.mFlags_ != 0)
 			{
 				// TODO: trace
 				System.Diagnostics.Debugger.Break();
 			}
 
-			s.Stream(ref this.mID);
-			s.Stream(ref this.mExtraDataSize);
+			s.Stream(ref this.mId_);
+			s.Stream(ref this.mExtraDataSize_);
 			s.Pad(sizeof(short) + sizeof(int));
 		}
 		#endregion
 
 		public int CalculateChunkEntriesSize(
-			int assumedChunkCount = TypeExtensions.kNone)
+			int assumedChunkCount = TypeExtensions.K_NONE)
 		{
 			if (assumedChunkCount.IsNone())
-				assumedChunkCount = this.ChunkCount;
+				assumedChunkCount = this.chunkCount;
 
-			int entries_size = EcfChunk.kSizeOf;
-			entries_size += this.ExtraDataSize;
-			entries_size *= assumedChunkCount;
+			int entriesSize = EcfChunk.K_SIZE_OF;
+			entriesSize += this.ExtraDataSize;
+			entriesSize *= assumedChunkCount;
 
-			return entries_size;
+			return entriesSize;
 		}
 
 		public uint ComputeAdler32(Stream stream, long headerPosition)
@@ -94,13 +94,13 @@ namespace KSoft.Phoenix.Resource.ECF
 			Contract.Requires(stream != null);
 			Contract.Requires(headerPosition >= 0);
 
-			long current_position = stream.Position;
+			long currentPosition = stream.Position;
 
-			long adler_start_position = headerPosition + kAdler32StartOffset;
-			stream.Seek(adler_start_position, SeekOrigin.Begin);
+			long adlerStartPosition = headerPosition + K_ADLER32_START_OFFSET;
+			stream.Seek(adlerStartPosition, SeekOrigin.Begin);
 			var adler = Security.Cryptography.Adler32.Compute(stream, this.Adler32BufferLength);
 
-			stream.Seek(current_position, SeekOrigin.Begin);
+			stream.Seek(currentPosition, SeekOrigin.Begin);
 
 			return adler;
 		}
@@ -110,36 +110,36 @@ namespace KSoft.Phoenix.Resource.ECF
 			Contract.Requires(s != null);
 			Contract.Requires(headerPosition >= 0);
 
-			long current_position = s.BaseStream.Position;
+			long currentPosition = s.BaseStream.Position;
 
-			long adler_start_position = headerPosition + kAdler32StartOffset;
-			s.BaseStream.Seek(adler_start_position, SeekOrigin.Begin);
+			long adlerStartPosition = headerPosition + K_ADLER32_START_OFFSET;
+			s.BaseStream.Seek(adlerStartPosition, SeekOrigin.Begin);
 			var adler = Security.Cryptography.Adler32.Compute(s.BaseStream, this.Adler32BufferLength);
-			this.Adler32 = adler;
+			this.adler32 = adler;
 
 			s.BaseStream.Seek(headerPosition, SeekOrigin.Begin);
 			this.Serialize(s);
 
-			s.BaseStream.Seek(current_position, SeekOrigin.Begin);
+			s.BaseStream.Seek(currentPosition, SeekOrigin.Begin);
 		}
 
 		public static bool VerifyIsEcf(IO.EndianReader s)
 		{
-			const int k_sizeof_signature = sizeof(uint);
+			const int kSizeofSignature = sizeof(uint);
 
 			Contract.Requires<InvalidOperationException>(s.BaseStream.CanRead);
 			Contract.Requires<InvalidOperationException>(s.BaseStream.CanSeek);
 
-			var base_stream = s.BaseStream;
-			if ((base_stream.Length - base_stream.Position) < k_sizeof_signature)
+			var baseStream = s.BaseStream;
+			if ((baseStream.Length - baseStream.Position) < kSizeofSignature)
 			{
 				return false;
 			}
 
 			uint sig = s.ReadUInt32();
-			base_stream.Seek(-k_sizeof_signature, SeekOrigin.Current);
+			baseStream.Seek(-kSizeofSignature, SeekOrigin.Current);
 
-			return sig == kSignature;
+			return sig == K_SIGNATURE;
 		}
 	};
 }

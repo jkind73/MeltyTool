@@ -10,9 +10,9 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	using StateFilterEnumeratorWrapper = EnumeratorWrapper<int, IReadOnlyBitSetEnumerators.StateFilterEnumerator>;
+	using StateFilterEnumeratorWrapper = EnumeratorWrapper<int, ReadOnlyBitSetEnumerators.StateFilterEnumerator>;
 
-	[Contracts.ContractClass(typeof(IReadOnlyBitSetContract))]
+	[Contracts.ContractClass(typeof(ReadOnlyBitSetContract))]
 	[SuppressMessage("Microsoft.Design", "CA1710:IdentifiersShouldHaveCorrectSuffix")]
 	public interface IReadOnlyBitSet
 		: ICloneable
@@ -107,7 +107,7 @@ namespace KSoft.Collections
 		#endregion
 	};
 	[Contracts.ContractClassFor(typeof(IReadOnlyBitSet))]
-	abstract class IReadOnlyBitSetContract : IReadOnlyBitSet
+	abstract class ReadOnlyBitSetContract : IReadOnlyBitSet
 	{
 		public int Length { get {
 			Contract.Ensures(Contract.Result<int>() >= 0);

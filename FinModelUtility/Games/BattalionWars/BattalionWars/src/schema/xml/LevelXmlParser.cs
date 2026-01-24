@@ -247,7 +247,7 @@ public sealed class LevelXmlParser {
 
               isUsefulNode = true;
               node ??= new LevelObject {Id = objId};
-              node.Matrix = new FinMatrix4x4(floats.AsSpan());
+              node.Matrix = new FinMatrix4X4(floats.AsSpan());
             } else if (objectType is "cNodeHierarchyResource" &&
                        childNameAttribute is "mName") {
               isUsefulNode = true;

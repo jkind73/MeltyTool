@@ -6,44 +6,44 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BTechNode
 		: ITechNode
 	{
-		public float ResearchPoints;
-		public int ResearchBuilding;
-		public Phx.BProtoTechStatus Status;
-		public bool Unique;
+		public float researchPoints;
+		public int researchBuilding;
+		public Phx.BProtoTechStatus status;
+		public bool unique;
 
-		public BTechUniqueNode[] UniqueNodes;
+		public BTechUniqueNode[] uniqueNodes;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamArray16(s, ref this.UniqueNodes);
-			s.Stream(ref this.ResearchPoints);
-			s.Stream(ref this.ResearchBuilding);
-			s.Stream(ref this.Status, BProtoTechStatusStreamer.Instance);
-			s.Stream(ref this.Unique);
+			BSaveGame.StreamArray16(s, ref this.uniqueNodes);
+			s.Stream(ref this.researchPoints);
+			s.Stream(ref this.researchBuilding);
+			s.Stream(ref this.status, BProtoTechStatusStreamer.Instance);
+			s.Stream(ref this.unique);
 		}
 		#endregion
 
 		#region ITechNode Members
 		float ITechNode.ResearchPoints
 		{
-			get { return this.ResearchPoints; }
-			set { this.ResearchPoints = value; }
+			get { return this.researchPoints; }
+			set { this.researchPoints = value; }
 		}
 		int ITechNode.ResearchBuilding
 		{
-			get { return this.ResearchBuilding; }
-			set { this.ResearchBuilding = value; }
+			get { return this.researchBuilding; }
+			set { this.researchBuilding = value; }
 		}
 		Phx.BProtoTechStatus ITechNode.Status
 		{
-			get { return this.Status; }
-			set { this.Status = value; }
+			get { return this.status; }
+			set { this.status = value; }
 		}
 		bool ITechNode.Unique
 		{
-			get { return this.Unique; }
-			set { this.Unique = value; }
+			get { return this.unique; }
+			set { this.unique = value; }
 		}
 		#endregion
 	};

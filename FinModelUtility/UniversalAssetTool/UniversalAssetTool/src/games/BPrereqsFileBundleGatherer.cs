@@ -17,7 +17,7 @@ public abstract class BPrereqsFileBundleGatherer
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingSubdir(
+    if (!DirectoryConstants.romsDirectory.TryToGetExistingSubdir(
             Path.Join(this.Name, ExtractorUtil.PREREQS),
             out var prereqsDir)) {
       return;

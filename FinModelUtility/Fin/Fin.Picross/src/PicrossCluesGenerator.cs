@@ -15,8 +15,8 @@ public interface IPicrossClues {
   IReadOnlyList<IReadOnlyList<IPicrossClue>> Rows { get; }
 }
 
-public sealed class PicrossCluesGenerator {
-  public IPicrossClues GenerateClues(
+public static class PicrossCluesGenerator {
+  public static IPicrossClues GenerateClues(
       IReadOnlyPicrossDefinition picrossDefinition) {
     var width = picrossDefinition.Width;
     var height = picrossDefinition.Height;
@@ -85,7 +85,7 @@ public sealed class PicrossCluesGenerator {
       byte Length)
       : IPicrossClue;
 
-  private class PicrossClues : IPicrossClues {
+  private sealed class PicrossClues : IPicrossClues {
     public required IReadOnlyList<IReadOnlyList<IPicrossClue>> Columns {
       get;
       init;

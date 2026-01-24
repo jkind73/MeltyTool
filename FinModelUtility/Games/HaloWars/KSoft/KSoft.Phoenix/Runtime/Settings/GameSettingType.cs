@@ -4,15 +4,15 @@ namespace KSoft.Phoenix.Runtime
 	enum GameSettingType : uint
 	{
 		//0
-		Float = 1,
-		Int,
+		FLOAT = 1,
+		INT,
 		//3
-		Byte = 4,
-		Bool,
+		BYTE = 4,
+		BOOL,
 		//6
-		Long = 7,
+		LONG = 7,
 		//8
 		//9
-		String = 10,
+		STRING = 10,
 	};
 }

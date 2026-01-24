@@ -17,7 +17,7 @@ public sealed class ColorShaderSourceGlslTests {
             WithNormals = false,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform vec4 diffuseColor;
@@ -40,7 +40,7 @@ public sealed class ColorShaderSourceGlslTests {
             WithNormals = false,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform vec4 diffuseColor;
@@ -60,10 +60,10 @@ public sealed class ColorShaderSourceGlslTests {
             WithColors = true,
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
 
           uniform vec4 diffuseColor;
           uniform bool hasSpecular;

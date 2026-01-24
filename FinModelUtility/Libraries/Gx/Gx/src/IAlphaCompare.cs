@@ -3,28 +3,28 @@
 namespace gx;
 
 public enum GxCompareType : byte {
-  Never = 0,
-  Less = 1,
-  Equal = 2,
-  LEqual = 3,
-  Greater = 4,
-  NEqual = 5,
-  GEqual = 6,
-  Always = 7
+  NEVER = 0,
+  LESS = 1,
+  EQUAL = 2,
+  L_EQUAL = 3,
+  GREATER = 4,
+  N_EQUAL = 5,
+  G_EQUAL = 6,
+  ALWAYS = 7
 }
 
 public static class GxCompareTypeExtensions {
   public static DepthCompareType ToFinDepthCompareType(
       this GxCompareType gxDepthCompareType)
     => gxDepthCompareType switch {
-        GxCompareType.Never   => DepthCompareType.Never,
-        GxCompareType.Less    => DepthCompareType.Less,
-        GxCompareType.Equal   => DepthCompareType.Equal,
-        GxCompareType.LEqual  => DepthCompareType.LEqual,
-        GxCompareType.Greater => DepthCompareType.Greater,
-        GxCompareType.NEqual  => DepthCompareType.NEqual,
-        GxCompareType.GEqual  => DepthCompareType.GEqual,
-        GxCompareType.Always  => DepthCompareType.Always,
+        GxCompareType.NEVER   => DepthCompareType.NEVER,
+        GxCompareType.LESS    => DepthCompareType.LESS,
+        GxCompareType.EQUAL   => DepthCompareType.EQUAL,
+        GxCompareType.L_EQUAL  => DepthCompareType.L_EQUAL,
+        GxCompareType.GREATER => DepthCompareType.GREATER,
+        GxCompareType.N_EQUAL  => DepthCompareType.N_EQUAL,
+        GxCompareType.G_EQUAL  => DepthCompareType.G_EQUAL,
+        GxCompareType.ALWAYS  => DepthCompareType.ALWAYS,
         _ => throw new ArgumentOutOfRangeException(
             nameof(gxDepthCompareType),
             gxDepthCompareType,
@@ -34,14 +34,14 @@ public static class GxCompareTypeExtensions {
   public static AlphaCompareType ToFinAlphaCompareType(
       this GxCompareType gxAlphaCompareType)
     => gxAlphaCompareType switch {
-        GxCompareType.Never   => AlphaCompareType.Never,
-        GxCompareType.Less    => AlphaCompareType.Less,
-        GxCompareType.Equal   => AlphaCompareType.Equal,
-        GxCompareType.LEqual  => AlphaCompareType.LEqual,
-        GxCompareType.Greater => AlphaCompareType.Greater,
-        GxCompareType.NEqual  => AlphaCompareType.NEqual,
-        GxCompareType.GEqual  => AlphaCompareType.GEqual,
-        GxCompareType.Always  => AlphaCompareType.Always,
+        GxCompareType.NEVER   => AlphaCompareType.NEVER,
+        GxCompareType.LESS    => AlphaCompareType.LESS,
+        GxCompareType.EQUAL   => AlphaCompareType.EQUAL,
+        GxCompareType.L_EQUAL  => AlphaCompareType.L_EQUAL,
+        GxCompareType.GREATER => AlphaCompareType.GREATER,
+        GxCompareType.N_EQUAL  => AlphaCompareType.N_EQUAL,
+        GxCompareType.G_EQUAL  => AlphaCompareType.G_EQUAL,
+        GxCompareType.ALWAYS  => AlphaCompareType.ALWAYS,
         _ => throw new ArgumentOutOfRangeException(
             nameof(gxAlphaCompareType),
             gxAlphaCompareType,
@@ -51,8 +51,8 @@ public static class GxCompareTypeExtensions {
 
 
 public enum GxAlphaOp : byte {
-  And = 0,
-  Or = 1,
+  AND = 0,
+  OR = 1,
   XOR = 2,
   XNOR = 3
 }
@@ -60,8 +60,8 @@ public enum GxAlphaOp : byte {
 public static class GxAlphaOpExtensions {
   public static AlphaOp ToFinAlphaOp(this GxAlphaOp gxAlphaOp)
     => gxAlphaOp switch {
-        GxAlphaOp.And  => AlphaOp.And,
-        GxAlphaOp.Or   => AlphaOp.Or,
+        GxAlphaOp.AND  => AlphaOp.AND,
+        GxAlphaOp.OR   => AlphaOp.OR,
         GxAlphaOp.XOR  => AlphaOp.XOR,
         GxAlphaOp.XNOR => AlphaOp.XNOR,
         _ => throw new ArgumentOutOfRangeException(

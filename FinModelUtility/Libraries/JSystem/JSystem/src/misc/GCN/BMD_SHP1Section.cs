@@ -16,151 +16,151 @@ using schema.binary;
 
 namespace jsystem.GCN;
 
-public partial class BMD {
-  public partial class SHP1Section {
-    public const string Signature = "SHP1";
-    public DataBlockHeader Header;
-    public ushort NrBatch;
-    public ushort Padding;
-    public uint BatchesOffset;
-    public uint ShapeRemapTableOffset;
-    public short[] ShapeRemapTable;
-    public uint Zero;
-    public uint BatchAttribsOffset;
-    public uint MatrixTableOffset;
-    public uint DataOffset;
-    public uint MatrixDataOffset;
-    public uint PacketLocationsOffset;
-    public Batch[] Batches;
+public partial class Bmd {
+  public partial class Shp1Section {
+    public const string SIGNATURE = "SHP1";
+    public DataBlockHeader header;
+    public ushort nrBatch;
+    public ushort padding;
+    public uint batchesOffset;
+    public uint shapeRemapTableOffset;
+    public short[] shapeRemapTable;
+    public uint zero;
+    public uint batchAttribsOffset;
+    public uint matrixTableOffset;
+    public uint dataOffset;
+    public uint matrixDataOffset;
+    public uint packetLocationsOffset;
+    public Batch[] batches;
 
-    public SHP1Section(IBinaryReader br, out bool OK) {
+    public Shp1Section(IBinaryReader br, out bool ok) {
       long position1 = br.Position;
-      bool OK1;
-      this.Header = new DataBlockHeader(br, "SHP1", out OK1);
-      if (!OK1) {
-        OK = false;
+      bool ok1;
+      this.header = new DataBlockHeader(br, "SHP1", out ok1);
+      if (!ok1) {
+        ok = false;
       } else {
-        this.NrBatch = br.ReadUInt16();
-        this.Padding = br.ReadUInt16();
-        this.BatchesOffset = br.ReadUInt32();
-        this.ShapeRemapTableOffset = br.ReadUInt32();
-        this.Zero = br.ReadUInt32();
-        this.BatchAttribsOffset = br.ReadUInt32();
-        this.MatrixTableOffset = br.ReadUInt32();
-        this.DataOffset = br.ReadUInt32();
-        this.MatrixDataOffset = br.ReadUInt32();
-        this.PacketLocationsOffset = br.ReadUInt32();
+        this.nrBatch = br.ReadUInt16();
+        this.padding = br.ReadUInt16();
+        this.batchesOffset = br.ReadUInt32();
+        this.shapeRemapTableOffset = br.ReadUInt32();
+        this.zero = br.ReadUInt32();
+        this.batchAttribsOffset = br.ReadUInt32();
+        this.matrixTableOffset = br.ReadUInt32();
+        this.dataOffset = br.ReadUInt32();
+        this.matrixDataOffset = br.ReadUInt32();
+        this.packetLocationsOffset = br.ReadUInt32();
         long position2 = br.Position;
         {
-          br.Position = position1 + (long) this.BatchesOffset;
-          this.Batches = new Batch[(int) this.NrBatch];
-          for (int index = 0; index < (int) this.NrBatch; ++index) {
-            this.Batches[index] = new Batch(br, position1, this);
+          br.Position = position1 + (long) this.batchesOffset;
+          this.batches = new Batch[(int) this.nrBatch];
+          for (int index = 0; index < (int) this.nrBatch; ++index) {
+            this.batches[index] = new Batch(br, position1, this);
           }
         }
         {
-          br.Position = position1 + (long) this.ShapeRemapTableOffset;
-          this.ShapeRemapTable = br.ReadInt16s(this.NrBatch);
+          br.Position = position1 + (long) this.shapeRemapTableOffset;
+          this.shapeRemapTable = br.ReadInt16s(this.nrBatch);
         }
-        br.Position = position1 + (long) this.Header.size;
-        OK = true;
+        br.Position = position1 + (long) this.header.size;
+        ok = true;
       }
     }
 
     public enum MatrixType : byte {
-      Mtx = 0,
-      BBoard = 1,
-      YBBoard = 2,
-      Multi = 3,
+      MTX = 0,
+      B_BOARD = 1,
+      YB_BOARD = 2,
+      MULTI = 3,
     }
 
     public partial class Batch {
-      public MatrixType MatrixType;
+      public MatrixType matrixType;
 
       [Unknown]
-      public byte Unknown1;
+      public byte unknown1;
 
-      public ushort NrPacket;
-      public ushort AttribsOffset;
-      public ushort FirstMatrixData;
-      public ushort FirstPacketLocation;
+      public ushort nrPacket;
+      public ushort attribsOffset;
+      public ushort firstMatrixData;
+      public ushort firstPacketLocation;
 
       [Unknown]
-      public ushort Unknown2;
+      public ushort unknown2;
 
-      public float BoundingSphereReadius;
-      public float[] BoundingBoxMin;
-      public float[] BoundingBoxMax;
-      public PacketLocation[] PacketLocations;
-      public Packet[] Packets;
+      public float boundingSphereReadius;
+      public float[] boundingBoxMin;
+      public float[] boundingBoxMax;
+      public PacketLocation[] packetLocations;
+      public Packet[] packets;
 
       public Batch(
           IBinaryReader br,
           long baseoffset,
-          SHP1Section Parent) {
-        this.MatrixType = (MatrixType) br.ReadByte();
-        this.Unknown1 = br.ReadByte();
-        this.NrPacket = br.ReadUInt16();
-        this.AttribsOffset = br.ReadUInt16();
-        this.FirstMatrixData = br.ReadUInt16();
-        this.FirstPacketLocation = br.ReadUInt16();
-        this.Unknown2 = br.ReadUInt16();
-        this.BoundingSphereReadius = br.ReadSingle();
-        this.BoundingBoxMin = br.ReadSingles(3);
-        this.BoundingBoxMax = br.ReadSingles(3);
+          Shp1Section parent) {
+        this.matrixType = (MatrixType) br.ReadByte();
+        this.unknown1 = br.ReadByte();
+        this.nrPacket = br.ReadUInt16();
+        this.attribsOffset = br.ReadUInt16();
+        this.firstMatrixData = br.ReadUInt16();
+        this.firstPacketLocation = br.ReadUInt16();
+        this.unknown2 = br.ReadUInt16();
+        this.boundingSphereReadius = br.ReadSingle();
+        this.boundingBoxMin = br.ReadSingles(3);
+        this.boundingBoxMax = br.ReadSingles(3);
         long position = br.Position;
         br.Position = baseoffset +
-                      (long) Parent.BatchAttribsOffset +
-                      (long) this.AttribsOffset;
+                      (long) parent.batchAttribsOffset +
+                      (long) this.attribsOffset;
 
         var batchAttributes = br.ReadNew<BatchAttributes>();
 
-        this.Packets = new Packet[(int) this.NrPacket];
-        this.PacketLocations = new PacketLocation[(int) this.NrPacket];
-        for (int index = 0; index < (int) this.NrPacket; ++index) {
+        this.packets = new Packet[(int) this.nrPacket];
+        this.packetLocations = new PacketLocation[(int) this.nrPacket];
+        for (int index = 0; index < (int) this.nrPacket; ++index) {
           br.Position = baseoffset +
-                        (long) Parent.PacketLocationsOffset +
-                        (long) (((int) this.FirstPacketLocation + index) * 8);
+                        (long) parent.packetLocationsOffset +
+                        (long) (((int) this.firstPacketLocation + index) * 8);
           var packetLocation = new PacketLocation();
           packetLocation.Read(br);
-          this.PacketLocations[index] = packetLocation;
+          this.packetLocations[index] = packetLocation;
 
           br.Position = baseoffset +
-                        (long) Parent.DataOffset +
-                        (long) this.PacketLocations[index].Offset;
-          this.Packets[index] = new Packet(br,
-                                           (int) this.PacketLocations[index]
-                                               .Size,
+                        (long) parent.dataOffset +
+                        (long) this.packetLocations[index].offset;
+          this.packets[index] = new Packet(br,
+                                           (int) this.packetLocations[index]
+                                               .size,
                                            batchAttributes);
           br.Position = baseoffset +
-                        (long) Parent.MatrixDataOffset +
-                        (long) (((int) this.FirstMatrixData + index) * 8);
-          this.Packets[index].MatrixData = br.ReadNew<MatrixData>();
+                        (long) parent.matrixDataOffset +
+                        (long) (((int) this.firstMatrixData + index) * 8);
+          this.packets[index].matrixData = br.ReadNew<MatrixData>();
           br.Position = baseoffset +
-                        (long) Parent.MatrixTableOffset +
+                        (long) parent.matrixTableOffset +
                         (long) (2U *
-                                this.Packets[index].MatrixData
+                                this.packets[index].matrixData
                                     .FirstIndex);
-          this.Packets[index].MatrixTable =
-              br.ReadUInt16s((int) this.Packets[index].MatrixData.Count);
+          this.packets[index].matrixTable =
+              br.ReadUInt16s((int) this.packets[index].matrixData.Count);
         }
 
         br.Position = position;
       }
 
       public sealed class Packet {
-        public Primitive[] Primitives;
-        public ushort[] MatrixTable;
-        public MatrixData MatrixData;
+        public Primitive[] primitives;
+        public ushort[] matrixTable;
+        public MatrixData matrixData;
 
         public Packet(
             IBinaryReader br,
-            int Length,
+            int length,
             IVertexDescriptor vertexDescriptor) {
           List<Primitive> primitiveList = [];
           var gxDisplayListReader = new GxDisplayListReader();
           br.Subread(
-              Length,
+              length,
               () => {
                 while (!br.Eof) {
                   var gxPrimitive
@@ -170,18 +170,18 @@ public partial class BMD {
                   }
 
                   var primitive = new Primitive();
-                  primitive.Type = gxPrimitive.PrimitiveType;
-                  primitive.Points
+                  primitive.type = gxPrimitive.PrimitiveType;
+                  primitive.points
                       = gxPrimitive
                         .Vertices
                         .Select(v => {
                           var index = new Primitive.Index();
 
-                          index.PosIndex = v.PositionIndex;
-                          index.MatrixIndex = v.JointIndex ?? 0;
-                          index.NormalIndex = v.NormalIndex;
-                          index.ColorIndices = v.ColorIndices;
-                          index.TexCoordIndices = v.TexCoordIndices;
+                          index.posIndex = v.PositionIndex;
+                          index.matrixIndex = v.JointIndex ?? 0;
+                          index.normalIndex = v.NormalIndex;
+                          index.colorIndices = v.ColorIndices;
+                          index.texCoordIndices = v.TexCoordIndices;
 
                           return index;
                         })
@@ -191,19 +191,19 @@ public partial class BMD {
                 }
               });
 
-          this.Primitives = primitiveList.ToArray();
+          this.primitives = primitiveList.ToArray();
         }
 
         public sealed class Primitive {
-          public GxPrimitiveType Type;
-          public Index[] Points;
+          public GxPrimitiveType type;
+          public Index[] points;
 
           public sealed class Index {
-            public ushort?[] ColorIndices;
-            public ushort?[] TexCoordIndices;
-            public ushort MatrixIndex;
-            public ushort PosIndex;
-            public ushort? NormalIndex;
+            public ushort?[] colorIndices;
+            public ushort?[] texCoordIndices;
+            public ushort matrixIndex;
+            public ushort posIndex;
+            public ushort? normalIndex;
           }
         }
       }

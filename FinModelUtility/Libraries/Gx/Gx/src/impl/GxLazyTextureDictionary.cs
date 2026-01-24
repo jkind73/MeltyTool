@@ -63,12 +63,12 @@ public class GxLazyTextureDictionary<TState, TDiscriminator>
 
       var texGenSrc = texCoordGen.TexGenSrc;
       switch (texGenSrc) {
-        case >= GxTexGenSrc.Tex0 and <= GxTexGenSrc.Tex7: {
-          var texCoordIndex = texGenSrc - GxTexGenSrc.Tex0;
+        case >= GxTexGenSrc.TEX0 and <= GxTexGenSrc.TEX7: {
+          var texCoordIndex = texGenSrc - GxTexGenSrc.TEX0;
           texture.UvIndex = texCoordIndex;
           break;
         }
-        case GxTexGenSrc.Normal: {
+        case GxTexGenSrc.NORMAL: {
           texture.UvType = UvType.SPHERICAL;
           break;
         }
@@ -80,7 +80,7 @@ public class GxLazyTextureDictionary<TState, TDiscriminator>
       }
 
       var texMatrixType = texCoordGen.TexMatrix;
-      if (texMatrixType != GxTexMatrix.Identity) {
+      if (texMatrixType != GxTexMatrix.IDENTITY) {
         // TODO: handle special matrix types
 
         var texCenter = texMatrix.Center;

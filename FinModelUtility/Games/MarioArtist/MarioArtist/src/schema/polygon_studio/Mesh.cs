@@ -16,8 +16,8 @@ public sealed partial class Mesh : IBinaryDeserializable {
   public ShadeType ShadeType { get; set; }
   public int VertexDefinitionsOffset { get; set; }
   public uint VertexDefinitionsSize { get; set; }
-  public int Unk2sOffset { get; set; }
-  public uint Unk2sSize { get; set; }
+  public int Unk2SOffset { get; set; }
+  public uint Unk2SSize { get; set; }
   public int TriangleDefinitionsOffset { get; set; }
   public uint TriangleDefinitionsSize { get; set; }
   public int TextureOffset { get; set; }

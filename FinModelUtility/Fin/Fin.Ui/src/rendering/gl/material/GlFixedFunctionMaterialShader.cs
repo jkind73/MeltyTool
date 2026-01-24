@@ -52,7 +52,7 @@ public sealed class GlFixedFunctionMaterialShader(
           : null;
       var glTexture = finTexture != null
           ? GlTexture.FromTexture(finTexture)
-          : GlMaterialConstants.NULL_WHITE_TEXTURE;
+          : GlMaterialConstants.NullWhiteTexture;
 
       this.SetUpTexture($"texture{i}", i, finTexture, glTexture);
     }

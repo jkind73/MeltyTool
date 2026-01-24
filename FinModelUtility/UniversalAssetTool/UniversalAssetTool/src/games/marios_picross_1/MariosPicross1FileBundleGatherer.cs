@@ -15,7 +15,7 @@ public sealed class MariosPicross1FileBundleGatherer : INamedAnnotatedFileBundle
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-    if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingFile(
+    if (!DirectoryConstants.romsDirectory.TryToGetExistingFile(
             "marios_picross_1.gb",
             out var romFile)) {
       return;
@@ -25,7 +25,6 @@ public sealed class MariosPicross1FileBundleGatherer : INamedAnnotatedFileBundle
         = ExtractorUtil.GetOrCreateExtractedDirectory(romFile);
 
     if (extractedDirectory.IsEmpty) {
-      var puzzleDefinitionImageConverter = new PicrossDefinitionImageConverter();
       var puzzleDefinitions = new GameBoyPicrossDefinitionReader().Read(romFile);
       if (puzzleDefinitions == null) {
         return;
@@ -38,7 +37,7 @@ public sealed class MariosPicross1FileBundleGatherer : INamedAnnotatedFileBundle
         }
 
         var puzzleImage
-            = puzzleDefinitionImageConverter.ConvertToImage(puzzleDefinition);
+            = PicrossDefinitionImageConverter.ConvertToImage(puzzleDefinition);
         var imageFile = new FinFile(Path.Join(extractedDirectory.FullPath,
                                               $"{name}.png"));
         using var imageStream = imageFile.OpenWrite();

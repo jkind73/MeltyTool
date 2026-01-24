@@ -5,7 +5,7 @@ using fin.ui.rendering.gl.ubo;
 namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneRenderer : IRenderable {
-  private const bool USE_RENDER_GRAPH = true;
+  private const bool USE_RENDER_GRAPH_ = true;
 
   private readonly ISceneInstance scene_;
 
@@ -26,7 +26,7 @@ public sealed class SceneRenderer : IRenderable {
 
   public SceneRenderer(ISceneInstance scene) {
     this.scene_ = scene;
-    if (USE_RENDER_GRAPH) {
+    if (USE_RENDER_GRAPH_) {
       this.renderGraph_ = new(scene);
     } else {
       this.areaRenderers_ = scene.Areas
@@ -45,7 +45,7 @@ public sealed class SceneRenderer : IRenderable {
   private void ReleaseUnmanagedResources_() {
     this.lightsUbo_?.Dispose();
 
-    if (USE_RENDER_GRAPH) {
+    if (USE_RENDER_GRAPH_) {
       this.renderGraph_.Dispose();
     } else {
       foreach (var areaRenderer in this.areaRenderers_) {
@@ -59,7 +59,7 @@ public sealed class SceneRenderer : IRenderable {
     this.lightsUbo_.UpdateData(this.scene_.Lighting);
     this.lightsUbo_.Bind();
 
-    if (USE_RENDER_GRAPH) {
+    if (USE_RENDER_GRAPH_) {
       this.renderGraph_.Render();
     } else {
       foreach (var areaRenderer in this.areaRenderers_) {

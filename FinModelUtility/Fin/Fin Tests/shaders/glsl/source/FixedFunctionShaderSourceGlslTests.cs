@@ -19,7 +19,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
         default,
         (m, t) => CreateFixedFunctionMaterial_(m, t, false, false, false),
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           out vec4 fragColor;
@@ -39,7 +39,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
         new MockMaterialOptions { WithColors = true, },
         (m, t) => CreateFixedFunctionMaterial_(m, t, false, false, true),
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           in vec4 vertexColor0;
@@ -61,14 +61,14 @@ public sealed class FixedFunctionShaderSourceGlslTests {
         new MockMaterialOptions { WithUvs = true, },
         (m, t) => {
           CreateFixedFunctionMaterial_(m, t, false, true, false);
-          m.SetAlphaCompare(AlphaOp.Or,
-                            AlphaCompareType.Greater,
+          m.SetAlphaCompare(AlphaOp.OR,
+                            AlphaCompareType.GREATER,
                             .95f,
-                            AlphaCompareType.Never,
+                            AlphaCompareType.NEVER,
                             0);
         },
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D texture0;
@@ -100,10 +100,10 @@ public sealed class FixedFunctionShaderSourceGlslTests {
         },
         (m, t) => CreateFixedFunctionMaterial_(m, t, true, true, true),
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
-          {{GlslUtil.LIGHT_HEADER}}
+          {{GlslUtil.LightHeader}}
           uniform bool hasSpecular;
           uniform float shininess;
           uniform sampler2D texture0;
@@ -147,7 +147,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
                         },
                         mm => {
                           var texture = mm.CreateTexture(
-                              FinImage.Create1x1FromColor(Color.White));
+                              FinImage.Create1X1FromColor(Color.White));
                           var material = mm.AddFixedFunctionMaterial();
                           createMaterial(material, texture);
                           return material;

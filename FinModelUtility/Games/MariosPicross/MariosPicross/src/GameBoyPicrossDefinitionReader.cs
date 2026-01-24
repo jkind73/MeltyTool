@@ -33,26 +33,26 @@ public sealed class GameBoyPicrossDefinitionReader {
 
       if (offsets.merge != PuzzleMergeType.UNMERGED) {
         var unmergedPicrossDefinitions = picrossDefinitions.AsSpan();
-        var picrossDefinitions30x30
+        var picrossDefinitions30X30
             = new IPicrossDefinition[unmergedPicrossDefinitions.Length / 4];
         for (var i = 0; i < unmergedPicrossDefinitions.Length - 3; i += 4) {
-          picrossDefinitions30x30[i / 4]
+          picrossDefinitions30X30[i / 4]
               = new PicrossDefinition30X30(
                   unmergedPicrossDefinitions.Slice(i, 4));
         }
 
         if (offsets.merge == PuzzleMergeType.MERGE_30) {
-          picrossDefinitions = picrossDefinitions30x30;
+          picrossDefinitions = picrossDefinitions30X30;
         } else {
-          var picrossDefinitions60x60
-              = new IPicrossDefinition[picrossDefinitions30x30.Length / 4];
-          for (var i = 0; i < picrossDefinitions30x30.Length - 3; i += 4) {
-            picrossDefinitions60x60[i / 4]
+          var picrossDefinitions60X60
+              = new IPicrossDefinition[picrossDefinitions30X30.Length / 4];
+          for (var i = 0; i < picrossDefinitions30X30.Length - 3; i += 4) {
+            picrossDefinitions60X60[i / 4]
                 = new PicrossDefinition60X60(
-                    picrossDefinitions30x30.AsSpan(i, 4));
+                    picrossDefinitions30X30.AsSpan(i, 4));
           }
 
-          picrossDefinitions = picrossDefinitions60x60;
+          picrossDefinitions = picrossDefinitions60X60;
         }
       }
 

@@ -17,5 +17,5 @@ public sealed class GeoModelFileBundle : IModelFileBundle {
 
   public required BnkFileIdsDictionary BnkFileIdsDictionary { get; init; }
   public required MtlbFileIdsDictionary MtlbFileIdsDictionary { get; init; }
-  public required Tg4hFileIdDictionary Tg4hFileIdDictionary { get; init; }
+  public required Tg4HFileIdDictionary Tg4HFileIdDictionary { get; init; }
 }

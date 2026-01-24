@@ -11,7 +11,7 @@ using fin.ui.rendering.gl;
 namespace fin.testing.model;
 
 public static class ModelGoldenAssert {
-  private static string[] EXTENSIONS = [".glb"];
+  private static string[] extensions_ = [".glb"];
 
   public static async Task AssertGolden<TModelBundle>(
       IFileHierarchyDirectory goldenSubdir,
@@ -39,7 +39,7 @@ public static class ModelGoldenAssert {
                       new FinFile(Path.Combine(targetDirectory.FullPath,
                                                $"{modelBundle.MainFile.NameWithoutExtension}.foo")),
               },
-              EXTENSIONS,
+              extensions_,
               true);
         });
   }

@@ -14,7 +14,7 @@ namespace fin.schema.vector;
 internal partial class Vector3sTests {
   [Test]
   public void TestWritesAsExpectedVector3s() {
-    var vec3s = new Vector3s();
+    var vec3s = new Vector3S();
     vec3s.X = 123;
     vec3s.Y = 456;
     vec3s.Z = 789;
@@ -39,7 +39,7 @@ internal partial class Vector3sTests {
     var ms = new MemoryStream(shorts.AsSpan().AsBytes().ToArray());
  
     var br = new SchemaBinaryReader(ms);
-    var vec3s = br.ReadNew<Vector3s>();
+    var vec3s = br.ReadNew<Vector3S>();
 
     Asserts.Equal(123, vec3s.X);
     Asserts.Equal(456, vec3s.Y);

@@ -14,11 +14,11 @@ namespace KSoft.Phoenix.XML
 			if (undefined.MemberUndefinedCount == 0)
 				return;
 
-			string element_name = "Undefined" + p.ElementName;
+			string elementName = "Undefined" + p.elementName;
 
 			foreach (string str in undefined.UndefinedMembers)
 			{
-				using (s.EnterCursorBookmark(element_name))
+				using (s.EnterCursorBookmark(elementName))
 				{
 					string temp = str;
 					p.StreamDataName(s, ref temp);

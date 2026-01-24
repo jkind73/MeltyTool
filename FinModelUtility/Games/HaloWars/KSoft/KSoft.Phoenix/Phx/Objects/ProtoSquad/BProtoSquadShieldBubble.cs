@@ -5,26 +5,26 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "ShieldBubble",
+			elementName = "ShieldBubble",
 		};
 		#endregion
 
-		int mTargetSquadID = TypeExtensions.kNone;
+		int mTargetSquadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoSquadReference]
-		public int TargetShieldSquadID
+		public int TargetShieldSquadId
 		{
-			get { return this.mTargetSquadID; }
-			set { this.mTargetSquadID = value; }
+			get { return this.mTargetSquadId_; }
+			set { this.mTargetSquadId_ = value; }
 		}
 
-		int mShieldSquadID = TypeExtensions.kNone;
+		int mShieldSquadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoSquadReference]
-		public int ShieldSquadID
+		public int ShieldSquadId
 		{
-			get { return this.mShieldSquadID; }
-			set { this.mShieldSquadID = value; }
+			get { return this.mShieldSquadId_; }
+			set { this.mShieldSquadId_ = value; }
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -34,8 +34,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDBID(s, "target", ref this.mTargetSquadID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceAttr);
-			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mShieldSquadID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceCursor);
+			xs.StreamDbid(s, "target", ref this.mTargetSquadId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_ATTR);
+			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mShieldSquadId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_CURSOR);
 		}
 		#endregion
 	};

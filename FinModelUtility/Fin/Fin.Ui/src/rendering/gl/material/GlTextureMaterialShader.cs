@@ -28,7 +28,7 @@ public sealed class GlTextureMaterialShader(
     var finTexture = PrimaryTextureFinder.GetFor(material);
     var glTexture = finTexture != null
         ? GlTexture.FromTexture(finTexture)
-        : GlMaterialConstants.NULL_WHITE_TEXTURE;
+        : GlMaterialConstants.NullWhiteTexture;
 
     this.SetUpTexture("diffuseTexture", 0, finTexture, glTexture);
 

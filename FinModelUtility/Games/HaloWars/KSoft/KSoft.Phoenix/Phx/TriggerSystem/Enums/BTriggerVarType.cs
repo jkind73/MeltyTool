@@ -1,4 +1,5 @@
 ﻿using System;
+using KSoft.Phoenix.HaloWars;
 
 namespace KSoft.Phoenix.Phx
 {
@@ -9,189 +10,189 @@ namespace KSoft.Phoenix.Phx
 	public enum BTriggerVarType : byte
 	{
 		#region 0x0
-		None,
+		NONE,
 
-		Tech,
+		TECH,
 		/// <see cref="BProtoTechStatus"/>
-		TechStatus,
+		TECH_STATUS,
 		/// <see cref="BOperatorType"/>
-		Operator,
-		ProtoObject,
-		ObjectType,
-		ProtoSquad,
-		Sound,
-		Entity,
-		EntityList,
-		Trigger, // int
-		Time, // int
-		Player,
-		[Obsolete] UILocation,
-		[Obsolete] UIEntity,
-		Cost, // TODO: special KV parsing...
+		OPERATOR,
+		PROTO_OBJECT,
+		OBJECT_TYPE,
+		PROTO_SQUAD,
+		SOUND,
+		ENTITY,
+		ENTITY_LIST,
+		TRIGGER, // int
+		TIME, // int
+		PLAYER,
+		[Obsolete] UI_LOCATION,
+		[Obsolete] UI_ENTITY,
+		COST, // TODO: special KV parsing...
 		#endregion
 
 		#region 0x10
 		/// <remarks>Engine defined</remarks>
 		/// <see cref="HaloWars.BAnimType"/>
-		AnimType,
+		ANIM_TYPE,
 		/// <see cref="BActionStatus"/>
-		ActionStatus,
-		Power,
-		Bool,
-		Float,
-		[Obsolete] Iterator,
-		Team, // int
-		PlayerList,
-		TeamList,
+		ACTION_STATUS,
+		POWER,
+		BOOL,
+		FLOAT,
+		[Obsolete] ITERATOR,
+		TEAM, // int
+		PLAYER_LIST,
+		TEAM_LIST,
 		/// <see cref="BGameData.PlayerStates"/>
-		PlayerState,
-		Objective, // int
-		Unit,
-		UnitList,
-		Squad,
-		SquadList,
-		[Obsolete] UIUnit,
+		PLAYER_STATE,
+		OBJECTIVE, // int
+		UNIT,
+		UNIT_LIST,
+		SQUAD,
+		SQUAD_LIST,
+		[Obsolete] UI_UNIT,
 		#endregion
 
 		#region 0x20
-		[Obsolete] UISquad,
-		[Obsolete] UISquadList,
-		String,
-		MessageIndex, // int
-		MessageJustify, // int
-		MessagePoint, // float
-		Color,
-		ProtoObjectList,
-		ObjectTypeList,
-		ProtoSquadList,
-		TechList,
+		[Obsolete] UI_SQUAD,
+		[Obsolete] UI_SQUAD_LIST,
+		STRING,
+		MESSAGE_INDEX, // int
+		MESSAGE_JUSTIFY, // int
+		MESSAGE_POINT, // float
+		COLOR,
+		PROTO_OBJECT_LIST,
+		OBJECT_TYPE_LIST,
+		PROTO_SQUAD_LIST,
+		TECH_LIST,
 		/// <see cref="BMathOperatorType"/>
-		MathOperator,
+		MATH_OPERATOR,
 		/// <see cref="BObjectDataType"/>
-		ObjectDataType,
+		OBJECT_DATA_TYPE,
 		/// <see cref="BObjectDataRelative"/>
-		ObjectDataRelative,
-		Civ,
-		ProtoObjectCollection,
+		OBJECT_DATA_RELATIVE,
+		CIV,
+		PROTO_OBJECT_COLLECTION,
 		#endregion
 
 		#region 0x30
-		Object,
-		ObjectList,
-		Group, // int
+		OBJECT,
+		OBJECT_LIST,
+		GROUP, // int
 		/// <see cref="BGameData.RefCounts"/>
-		RefCountType,
+		REF_COUNT_TYPE,
 		/// <see cref="BGameData.UnitFlags"/>
-		UnitFlag,
-		/// <see cref="BLOSType"/>
-		LOSType,
-		[Obsolete] EntityFilterSet,
+		UNIT_FLAG,
+		/// <see cref="BlosType"/>
+		LOS_TYPE,
+		[Obsolete] ENTITY_FILTER_SET,
 		/// <remarks>Population Bucket</remarks>
-		PopBucket,
+		POP_BUCKET,
 		/// <see cref="BListPosition"/>
-		ListPosition,
+		LIST_POSITION,
 		/// <see cref="BRelationType"/>
-		Diplomacy,
+		DIPLOMACY,
 		/// <see cref="BExposedAction"/>
-		ExposedAction,
+		EXPOSED_ACTION,
 		/// <see cref="BSquadMode"/>
-		SquadMode,
-		ExposedScript, // int
-		[Obsolete] KBBase,
-		[Obsolete] KBBaseList, // engine still initializes the list
+		SQUAD_MODE,
+		EXPOSED_SCRIPT, // int
+		[Obsolete] KB_BASE,
+		[Obsolete] KB_BASE_LIST, // engine still initializes the list
 		/// <see cref="BDataScalar"/>
-		DataScalar,
+		DATA_SCALAR,
 		#endregion
 
 		#region 0x40
-		[Obsolete] KBBaseQuery, // Obsolete? engine sets a flag in the BTriggerVar
-		DesignLine, // int
-		LocStringID, // int
-		Leader,
-		Cinematic, // int
+		[Obsolete] KB_BASE_QUERY, // Obsolete? engine sets a flag in the BTriggerVar
+		DESIGN_LINE, // int
+		LOC_STRING_ID, // int
+		LEADER,
+		CINEMATIC, // int
 		/// <see cref="BFlareType"/>
-		FlareType,
-		CinematicTag, // int
-		IconType, // parses as ProtoObject...
-		Difficulty, // int
-		Integer, // int (XMB specialized)
+		FLARE_TYPE,
+		CINEMATIC_TAG, // int
+		ICON_TYPE, // parses as ProtoObject...
+		DIFFICULTY, // int
+		INTEGER, // int (XMB specialized)
 		/// <remarks>Engine defined</remarks>
-		/// <see cref="HaloWars.BHUDItem"/>
-		HUDItem,
-		/// <see cref="BUIControlType"/>
-		ControlType,
-		[Obsolete] UIButton,
+		/// <see cref="BhudItem"/>
+		HUD_ITEM,
+		/// <see cref="BuiControlType"/>
+		CONTROL_TYPE,
+		[Obsolete] UI_BUTTON,
 		/// <see cref="BMissionType"/>
-		MissionType,
+		MISSION_TYPE,
 		/// <see cref="BMissionState"/>
-		MissionState,
+		MISSION_STATE,
 		/// <see cref="BMissionTargetType"/>
-		MissionTargetType,
+		MISSION_TARGET_TYPE,
 		#endregion
 
 		#region 0x50
-		IntegerList,
+		INTEGER_LIST,
 		/// <see cref="BBidType"/>
-		BidType,
+		BID_TYPE,
 		/// <see cref="BBidState"/>
-		BidState,
-		[Obsolete] BuildingCommandState,
-		Vector,
-		VectorList,
-		PlacementRule,
-		[Obsolete] KBSquad,
-		[Obsolete] KBSquadList, // engine still initializes the list
-		KBSquadQuery, // Obsolete? engine sets a flag in the BTriggerVar
-		[Obsolete] AISquadAnalysis,
-		/// <see cref="BAISquadAnalysisComponent"/>
-		AISquadAnalysisComponent,
-		[Obsolete] KBSquadFilterSet,
+		BID_STATE,
+		[Obsolete] BUILDING_COMMAND_STATE,
+		VECTOR,
+		VECTOR_LIST,
+		PLACEMENT_RULE,
+		[Obsolete] KB_SQUAD,
+		[Obsolete] KB_SQUAD_LIST, // engine still initializes the list
+		KB_SQUAD_QUERY, // Obsolete? engine sets a flag in the BTriggerVar
+		[Obsolete] AI_SQUAD_ANALYSIS,
+		/// <see cref="BaiSquadAnalysisComponent"/>
+		AI_SQUAD_ANALYSIS_COMPONENT,
+		[Obsolete] KB_SQUAD_FILTER_SET,
 		/// <remarks>Engine defined</remarks>
 		/// <see cref="HaloWars.BChatSpeaker"/>
-		ChatSpeaker,
+		CHAT_SPEAKER,
 		/// <see cref="BRumbleType"/>
-		RumbleType,
+		RUMBLE_TYPE,
 		/// <see cref="BRumbleMotor"/>
-		RumbleMotor,
+		RUMBLE_MOTOR,
 		#endregion
 
 		#region 0x60
 		/// <see cref="BProtoObjectCommandType"/>
-		CommandType,
+		COMMAND_TYPE,
 		/// <see cref="BObjectDataType"/>
-		SquadDataType,
+		SQUAD_DATA_TYPE,
 		/// <see cref="BEventType"/>
-		EventType,
-		TimeList, // int[]
-		DesignLineList, // int[]
+		EVENT_TYPE,
+		TIME_LIST, // int[]
+		DESIGN_LINE_LIST, // int[]
 		/// <see cref="BGameStatePredicate"/>
-		GameStatePredicate,
-		FloatList,
-		[Obsolete] UILocationMinigame,
+		GAME_STATE_PREDICATE,
+		FLOAT_LIST,
+		[Obsolete] UI_LOCATION_MINIGAME,
 		/// <see cref="BGameData.SquadFlags"/>
-		SquadFlag,
+		SQUAD_FLAG,
 		/// <remarks>Engine defined</remarks>
-		/// <see cref="HaloWars.BFlashableUIItem"/>
-		FlashableUIItem, // aka FlashableItems
-		TalkingHead, // int (XMB specialized)
-		Concept, // int
-		ConceptList, // int[]
-		UserClassType, // int (XMB specialized)
+		/// <see cref="BFlashableUiItem"/>
+		FLASHABLE_UI_ITEM, // aka FlashableItems
+		TALKING_HEAD, // int (XMB specialized)
+		CONCEPT, // int
+		CONCEPT_LIST, // int[]
+		USER_CLASS_TYPE, // int (XMB specialized)
 
 
 		#endregion
 
 		// "s/w b/w": sandwiched between
 
-		Distance = Float, // s/w b/w Trigger & Time
-		Percent = Float, // s/w b/w ActionStatus & Hitpoints
-		Hitpoints = Float, // s/w b/w Percent & Power
+		DISTANCE = FLOAT, // s/w b/w Trigger & Time
+		PERCENT = FLOAT, // s/w b/w ActionStatus & Hitpoints
+		HITPOINTS = FLOAT, // s/w b/w Percent & Power
 
-		Count = Integer, // s/w b/w Player & Location
+		COUNT = INTEGER, // s/w b/w Player & Location
 
-		Location = Vector, // s/w b/w Count & UILocation
-		Direction = Vector, // s/w b/w TalkingHead & FlareType
+		LOCATION = VECTOR, // s/w b/w Count & UILocation
+		DIRECTION = VECTOR, // s/w b/w TalkingHead & FlareType
 
-		LocationList = VectorList, // s/w b/w Group & RefCountType
+		LOCATION_LIST = VECTOR_LIST, // s/w b/w Group & RefCountType
 	};
 }

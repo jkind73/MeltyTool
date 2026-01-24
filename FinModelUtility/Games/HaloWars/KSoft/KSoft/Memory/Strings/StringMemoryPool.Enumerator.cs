@@ -11,22 +11,22 @@ namespace KSoft.Memory.Strings
 		/// </summary>
 		protected struct KeyValueEnumerator : IEnumerator<KeyValuePair<Values.PtrHandle, string>>
 		{
-			const int kBlankIndexState = -2;
+			const int K_BLANK_INDEX_STATE_ = -2;
 
-			StringMemoryPool mPool;
-			int mCurrentIndex;
+			StringMemoryPool mPool_;
+			int mCurrentIndex_;
 
 			public KeyValueEnumerator(StringMemoryPool pool)
 			{
-				this.mPool = pool;
-				this.mCurrentIndex = kBlankIndexState;
-				this.mCurrent = new KeyValuePair<Values.PtrHandle, string>(Values.PtrHandle.Null32, null);
+				this.mPool_ = pool;
+				this.mCurrentIndex_ = K_BLANK_INDEX_STATE_;
+				this.mCurrent_ = new KeyValuePair<Values.PtrHandle, string>(Values.PtrHandle.Null32, null);
 			}
 
 			#region IEnumerator<T> Members
-			KeyValuePair<Values.PtrHandle, string> mCurrent;
+			KeyValuePair<Values.PtrHandle, string> mCurrent_;
 			/// <summary>Get the current element in the enumeration</summary>
-			public KeyValuePair<Values.PtrHandle, string> Current { get { return this.mCurrent; } }
+			public KeyValuePair<Values.PtrHandle, string> Current { get { return this.mCurrent_; } }
 			#endregion
 
 			#region IDisposable Members
@@ -35,31 +35,31 @@ namespace KSoft.Memory.Strings
 
 			#region IEnumerator Members
 			/// <summary>Get the current element in the enumeration</summary>
-			object System.Collections.IEnumerator.Current { get { return this.mCurrent; } }
+			object System.Collections.IEnumerator.Current { get { return this.mCurrent_; } }
 
 			/// <summary>Advances the enumerator to the next address\string pair</summary>
 			/// <returns></returns>
 			public bool MoveNext()
 			{
 				// for supporting state Resets
-				if (this.mCurrentIndex == kBlankIndexState)
-					this.mCurrentIndex = 0;
+				if (this.mCurrentIndex_ == K_BLANK_INDEX_STATE_)
+					this.mCurrentIndex_ = 0;
 
-				if (this.mCurrentIndex >= 0 && this.mCurrentIndex < this.mPool.Count)
+				if (this.mCurrentIndex_ >= 0 && this.mCurrentIndex_ < this.mPool_.Count)
 				{
-					this.mCurrent = new KeyValuePair<Values.PtrHandle, string>(this.mPool.mReferences[this.mCurrentIndex], this.mPool.mPool[this.mCurrentIndex]);
+					this.mCurrent_ = new KeyValuePair<Values.PtrHandle, string>(this.mPool_.mReferences_[this.mCurrentIndex_], this.mPool_.mPool_[this.mCurrentIndex_]);
 
-					this.mCurrentIndex++;
+					this.mCurrentIndex_++;
 				}
 				// when we've past the end of the pool
 				else
-					this.mCurrentIndex = TypeExtensions.kNone;
+					this.mCurrentIndex_ = TypeExtensions.K_NONE;
 
-				return this.mCurrentIndex >= 0 && this.mCurrentIndex < this.mPool.Count;
+				return this.mCurrentIndex_ >= 0 && this.mCurrentIndex_ < this.mPool_.Count;
 			}
 
 			public void Reset() {
-				this.mCurrentIndex = kBlankIndexState; }
+				this.mCurrentIndex_ = K_BLANK_INDEX_STATE_; }
 			#endregion
 		};
 	};

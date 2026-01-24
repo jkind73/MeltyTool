@@ -7,9 +7,9 @@ namespace KSoft.Phoenix.Phx
 
 	partial class BDatabaseBase
 	{
-		HashSet<BCost> mPoolCosts;
+		HashSet<BCost> mPoolCosts_;
 		//HashSet<BPops> mPoolPops;
-		HashSet<BProtoObjectVeterancyList> mPoolVeterancies;
+		HashSet<BProtoObjectVeterancyList> mPoolVeterancies_;
 
 	public bool InternTypeValues<T>(ref Collections.BTypeValuesBase<T> values)
 		{

@@ -8,7 +8,7 @@ public sealed class Xmod : ITextDeserializable {
   public IReadOnlyList<Vector3> Positions { get; set; }
   public IReadOnlyList<Vector3> Normals { get; set; }
   public IReadOnlyList<Vector4> Colors { get; set; }
-  public IReadOnlyList<Vector2> Uv1s { get; set; }
+  public IReadOnlyList<Vector2> Uv1S { get; set; }
   public IReadOnlyList<Material> Materials { get; set; }
   public IReadOnlyList<Packet> Packets { get; set; }
 
@@ -20,8 +20,8 @@ public sealed class Xmod : ITextDeserializable {
     var numVertices = TextReaderUtils.ReadKeyValueNumber<int>(tr, "verts");
     var numNormals = TextReaderUtils.ReadKeyValueNumber<int>(tr, "normals");
     var numColors = TextReaderUtils.ReadKeyValueNumber<int>(tr, "colors");
-    var numUv1s = TextReaderUtils.ReadKeyValueNumber<int>(tr, "tex1s");
-    var numUv2s = TextReaderUtils.ReadKeyValueNumber<int>(tr, "tex2s");
+    var numUv1S = TextReaderUtils.ReadKeyValueNumber<int>(tr, "tex1s");
+    var numUv2S = TextReaderUtils.ReadKeyValueNumber<int>(tr, "tex2s");
     var numTangents =
         TextReaderUtils.ReadKeyValueNumber<int>(tr, "tangents");
     var numMaterials =
@@ -45,11 +45,11 @@ public sealed class Xmod : ITextDeserializable {
     this.Colors = TextReaderUtils.ReadInstances<Vector4>(tr, "c", numColors);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
 
-    this.Uv1s =
-        TextReaderUtils.ReadInstances<Vector2>(tr, "t1", numUv1s);
+    this.Uv1S =
+        TextReaderUtils.ReadInstances<Vector2>(tr, "t1", numUv1S);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
-    var uv2s =
-        TextReaderUtils.ReadInstances<Vector2>(tr, "t2", numUv2s);
+    var uv2S =
+        TextReaderUtils.ReadInstances<Vector2>(tr, "t2", numUv2S);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
 
     this.Materials = tr.ReadNews<Material>(numMaterials);

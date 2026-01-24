@@ -9,7 +9,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	[Contracts.ContractClass(typeof(IProtoEnumWithUndefinedContract))]
+	[Contracts.ContractClass(typeof(ProtoEnumWithUndefinedContract))]
 	public interface IProtoEnumWithUndefined
 		: IProtoEnum
 	{
@@ -27,7 +27,7 @@ namespace KSoft.Collections
 		ObservableCollection<string> UndefinedMembers { get; }
 	};
 	[Contracts.ContractClassFor(typeof(IProtoEnumWithUndefined))]
-	abstract class IProtoEnumWithUndefinedContract
+	abstract class ProtoEnumWithUndefinedContract
 		: IProtoEnumWithUndefined
 	{
 		#region IProtoEnum Members
@@ -73,7 +73,7 @@ namespace KSoft.Phoenix
 		internal static int TryGetIdWithUndefined(this Collections.IHasUndefinedProtoMemberInterface dbi, string name)
 		{
 			if (dbi == null)
-				return TypeExtensions.kNone;
+				return TypeExtensions.K_NONE;
 
 			return dbi.UndefinedInterface.GetMemberIdOrUndefined(name);
 		}

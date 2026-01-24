@@ -21,32 +21,32 @@ namespace KSoft.Values
 		, System.Collections.IComparer, IComparable
 	{
 		#region Name
-		public const string kNullGroupName = TypeExtensions.kNoneDisplayString;
-		public const int kGroupNamePadLength = 64;
+		public const string K_NULL_GROUP_NAME = TypeExtensions.K_NONE_DISPLAY_STRING;
+		public const int K_GROUP_NAME_PAD_LENGTH = 64;
 
-		readonly string mName;
+		readonly string mName_;
 		/// <summary>Full name of this group</summary>
-		public string Name { get => this.mName; }
+		public string Name { get => this.mName_; }
 
 		/// <summary>Formats <see cref="Name"/> to a properly (left) aligned string (using blank-white-space)</summary>
 		/// <returns><see cref="string.PadLeft"/> on <see cref="Name"/></returns>
-		/// <remarks>Pad width is determined by <see cref="kGroupNamePadLength"/></remarks>
-		public string NameToLeftPaddedString()	=> this.mName.PadLeft(kGroupNamePadLength);
+		/// <remarks>Pad width is determined by <see cref="K_GROUP_NAME_PAD_LENGTH"/></remarks>
+		public string NameToLeftPaddedString()	=> this.mName_.PadLeft(K_GROUP_NAME_PAD_LENGTH);
 		/// <summary> Formats <see cref="Name"/> to a properly (right) aligned string (using blank-white-space)</summary>
 		/// <returns><see cref="string.PadRight"/> on <see cref="Name"/></returns>
-		/// <remarks>Pad width is determined by <see cref="kGroupNamePadLength"/></remarks>
-		public string NameToRightPaddedString()	=> this.mName.PadRight(kGroupNamePadLength);
+		/// <remarks>Pad width is determined by <see cref="K_GROUP_NAME_PAD_LENGTH"/></remarks>
+		public string NameToRightPaddedString()	=> this.mName_.PadRight(K_GROUP_NAME_PAD_LENGTH);
 		#endregion
 
 		#region Tag
-		readonly string mTagAsString;
-		readonly char[] mTag;
+		readonly string mTagAsString_;
+		readonly char[] mTag_;
 		/// <summary>The character code of this group</summary>
 		[System.ComponentModel.Browsable(false)]
 		[SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-		public char[] Tag { get => this.mTag; }
+		public char[] Tag { get => this.mTag_; }
 		/// <summary>Get the character code of this group as a string</summary>
-		public string TagString { get => this.mTagAsString; }
+		public string TagString { get => this.mTagAsString_; }
 		#endregion
 
 		/// <summary>Extra data that can be tagged to this Group Tag</summary>
@@ -72,13 +72,13 @@ namespace KSoft.Values
 		{
 			Contract.Assume(expectedLength > 0);
 
-			this.mName = kNullGroupName;
+			this.mName_ = K_NULL_GROUP_NAME;
 
-			this.mTag = new char[expectedLength];
-			for (int x = 0; x < this.mTag.Length; x++)
-				this.mTag[x] = (char)0xFF;
+			this.mTag_ = new char[expectedLength];
+			for (int x = 0; x < this.mTag_.Length; x++)
+				this.mTag_[x] = (char)0xFF;
 
-			this.mTagAsString = new string(this.mTag);
+			this.mTagAsString_ = new string(this.mTag_);
 		}
 		/// <summary>Initialize a group tag from a character code and name</summary>
 		/// <param name="groupTag">Character code string</param>
@@ -91,13 +91,13 @@ namespace KSoft.Values
 			Contract.Requires(!string.IsNullOrEmpty(name));
 			Contract.Requires<ArgumentOutOfRangeException>(groupTag.Length == expectedLength);
 #endif
-			Contract.Requires<ArgumentException>(name != kNullGroupName, "Name reserved for null group tags");
+			Contract.Requires<ArgumentException>(name != K_NULL_GROUP_NAME, "Name reserved for null group tags");
 
 			Util.MarkUnusedVariable(ref expectedLength); // #REVIEW: why did I leave the Requires using this commented out?
 
-			this.mName = name;
-			this.mTagAsString = groupTag;
-			this.mTag = groupTag.ToCharArray();
+			this.mName_ = name;
+			this.mTagAsString_ = groupTag;
+			this.mTag_ = groupTag.ToCharArray();
 		}
 		/// <summary>Initialize a group tag from a character code, name and <see cref="Guid"/></summary>
 		/// <param name="groupTag">Character code string</param>
@@ -127,12 +127,12 @@ namespace KSoft.Values
 			Contract.Requires(min != null && min != GroupTagData32.Null);
 			Contract.Requires(!string.IsNullOrEmpty(name));
 #endif
-			Contract.Requires<ArgumentException>(name != kNullGroupName, "Name reserved for null group tags");
+			Contract.Requires<ArgumentException>(name != K_NULL_GROUP_NAME, "Name reserved for null group tags");
 
-			this.mName = name;
-			this.mTagAsString = string.Format(Util.InvariantCultureInfo,
-			                                  "{0}{1}", maj.mTagAsString, min.mTagAsString);
-			this.mTag = this.mTagAsString.ToCharArray();
+			this.mName_ = name;
+			this.mTagAsString_ = string.Format(Util.InvariantCultureInfo,
+			                                  "{0}{1}", maj.mTagAsString_, min.mTagAsString_);
+			this.mTag_ = this.mTagAsString_.ToCharArray();
 		}
 		/// <summary>Specialized ctor for <see cref="GroupTagData64"/> built from two <see cref="GroupTagData32"/></summary>
 		/// <param name="maj">First four-character code</param>
@@ -182,7 +182,7 @@ namespace KSoft.Values
 		{
 			Contract.Requires(value != null);
 
-			return value.mName;
+			return value.mName_;
 		}
 
 		/// <summary>Returns the group tag in char[] form</summary>
@@ -193,7 +193,7 @@ namespace KSoft.Values
 		{
 			Contract.Requires(value != null);
 
-			return value.mTag;
+			return value.mTag_;
 		}
 		#endregion
 
@@ -231,7 +231,7 @@ namespace KSoft.Values
 			Contract.Assume(x != null);
 			Contract.Assume(y != null);
 
-			return string.Compare(x.mName, y.mName, StringComparison.OrdinalIgnoreCase);
+			return string.Compare(x.mName_, y.mName_, StringComparison.OrdinalIgnoreCase);
 		}
 
 		/// <summary>Does a comparison based on the group tag's names</summary>
@@ -242,7 +242,7 @@ namespace KSoft.Values
 		{
 			Contract.Assume(other != null);
 
-			return string.Compare(this.mName, other.mName, StringComparison.OrdinalIgnoreCase);
+			return string.Compare(this.mName_, other.mName_, StringComparison.OrdinalIgnoreCase);
 		}
 
 		/// <summary>Does a comparison based on the tag group's names</summary>

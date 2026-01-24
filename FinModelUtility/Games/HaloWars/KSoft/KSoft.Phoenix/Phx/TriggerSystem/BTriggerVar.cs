@@ -5,20 +5,20 @@ namespace KSoft.Phoenix.Phx
 		: TriggerScriptIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("TriggerVar")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("TriggerVar")
 		{
-			DataName = DatabaseNamedObject.kXmlAttrNameN,
+			dataName = DatabaseNamedObject.K_XML_ATTR_NAME_N,
 		};
 
-		const string kXmlAttrType = "Type";
-		const string kXmlAttrIsNull = "IsNull";
+		const string K_XML_ATTR_TYPE_ = "Type";
+		const string K_XML_ATTR_IS_NULL_ = "IsNull";
 		#endregion
 
-		BTriggerVarType mType = BTriggerVarType.None;
-		public BTriggerVarType Type { get { return this.mType; } }
+		BTriggerVarType mType_ = BTriggerVarType.NONE;
+		public BTriggerVarType Type { get { return this.mType_; } }
 
-		bool mIsNull;
-		public bool IsNull { get { return this.mIsNull; } }
+		bool mIsNull_;
+		public bool IsNull { get { return this.mIsNull_; } }
 
 		//string mValue;
 
@@ -26,8 +26,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			base.Serialize(s);
 
-			s.StreamAttributeEnum(kXmlAttrType, ref this.mType);
-			s.StreamAttribute    (kXmlAttrIsNull, ref this.mIsNull);
+			s.StreamAttributeEnum(K_XML_ATTR_TYPE_, ref this.mType_);
+			s.StreamAttribute    (K_XML_ATTR_IS_NULL_, ref this.mIsNull_);
 			//s.StreamCursor(ref mValue);
 		}
 	};

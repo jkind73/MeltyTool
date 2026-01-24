@@ -5,47 +5,47 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region LeftRumbleType
-		BRumbleType mLeftRumbleType;
+		BRumbleType mLeftRumbleType_;
 		public BRumbleType LeftRumbleType
 		{
-			get { return this.mLeftRumbleType; }
-			set { this.mLeftRumbleType = value; }
+			get { return this.mLeftRumbleType_; }
+			set { this.mLeftRumbleType_ = value; }
 		}
 		#endregion
 
 		#region RightRumbleType
-		BRumbleType mRightRumbleType;
+		BRumbleType mRightRumbleType_;
 		public BRumbleType RightRumbleType
 		{
-			get { return this.mRightRumbleType; }
-			set { this.mRightRumbleType = value; }
+			get { return this.mRightRumbleType_; }
+			set { this.mRightRumbleType_ = value; }
 		}
 		#endregion
 
 		#region Duration
-		float mDuration;
+		float mDuration_;
 		public float Duration
 		{
-			get { return this.mDuration; }
-			set { this.mDuration = value; }
+			get { return this.mDuration_; }
+			set { this.mDuration_ = value; }
 		}
 		#endregion
 
 		#region LeftStrength
-		float mLeftStrength;
+		float mLeftStrength_;
 		public float LeftStrength
 		{
-			get { return this.mLeftStrength; }
-			set { this.mLeftStrength = value; }
+			get { return this.mLeftStrength_; }
+			set { this.mLeftStrength_ = value; }
 		}
 		#endregion
 
 		#region RightStrength
-		float mRightStrength;
+		float mRightStrength_;
 		public float RightStrength
 		{
-			get { return this.mRightStrength; }
-			set { this.mRightStrength = value; }
+			get { return this.mRightStrength_; }
+			set { this.mRightStrength_ = value; }
 		}
 		#endregion
 
@@ -54,11 +54,11 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeEnumOpt("LeftRumbleType", ref this.mLeftRumbleType, e => e != BRumbleType.None);
-			s.StreamAttributeEnumOpt("RightRumbleType", ref this.mRightRumbleType, e => e != BRumbleType.None);
-			s.StreamAttributeOpt("Duration", ref this.mDuration, Predicates.IsNotZero);
-			s.StreamAttributeOpt("LeftStrength", ref this.mLeftStrength, Predicates.IsNotZero);
-			s.StreamAttributeOpt("RightStrength", ref this.mRightStrength, Predicates.IsNotZero);
+			s.StreamAttributeEnumOpt("LeftRumbleType", ref this.mLeftRumbleType_, e => e != BRumbleType.NONE);
+			s.StreamAttributeEnumOpt("RightRumbleType", ref this.mRightRumbleType_, e => e != BRumbleType.NONE);
+			s.StreamAttributeOpt("Duration", ref this.mDuration_, Predicates.IsNotZero);
+			s.StreamAttributeOpt("LeftStrength", ref this.mLeftStrength_, Predicates.IsNotZero);
+			s.StreamAttributeOpt("RightStrength", ref this.mRightStrength_, Predicates.IsNotZero);
 		}
 		#endregion
 	};

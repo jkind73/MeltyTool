@@ -11,10 +11,10 @@ using schema.text.reader;
 namespace xmod.schema;
 
 public static class TextReaderUtils {
-  public static char OPEN_BRACE = '{';
-  public static char CLOSING_BRACE = '}';
-  public static char COLON = ':';
-  public static char QUOTE = '"';
+  public static char openBrace = '{';
+  public static char closingBrace = '}';
+  public static char colon = ':';
+  public static char quote = '"';
 
   public static string ReadKeyValue(ITextReader tr, string expectedKey) {
     var (key, value) = ReadKeyValue(tr);

@@ -5,12 +5,12 @@ namespace KSoft.Phoenix.Resource.ECF
 {
 	public enum EcfFileUtilOptions
 	{
-		DumpDebugInfo,
-		SkipVerification,
+		DUMP_DEBUG_INFO,
+		SKIP_VERIFICATION,
 		/// <summary>Built for 64-bit builds</summary>
-		x64,
+		X64,
 
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
 	};
 
 	public abstract class EcfFileUtil
@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.Resource.ECF
 		public TextWriter DebugOutput { get; set; }
 
 		/// <see cref="EcfFileUtilOptions"/>
-		public Collections.BitVector32 Options = new Collections.BitVector32();
+		public Collections.BitVector32 options = new Collections.BitVector32();
 
 		protected EcfFileUtil()
 		{

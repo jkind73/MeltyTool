@@ -5,7 +5,7 @@ namespace KSoft.Text
 	{
 		/// <summary>Latin-1 lookup table for converting char to a digit</summary>
 		/// <remarks>Supports up to base 36</remarks>
-		static readonly byte[] kCharToByteLookup36 = [
+		static readonly byte[] KCharToByteLookup36 = [
 			//	0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F	
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 0
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 1
@@ -32,7 +32,7 @@ namespace KSoft.Text
 
 		/// <summary>Latin-1 lookup table for converting char to a digit</summary>
 		/// <remarks>Supports up to base 62</remarks>
-		static readonly byte[] kCharToByteLookup62 = [
+		static readonly byte[] KCharToByteLookup62 = [
 			//	0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F	
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 0
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 1
@@ -59,7 +59,7 @@ namespace KSoft.Text
 
 		/// <summary>Latin-1 lookup table for testing if char is a digit</summary>
 		/// <remarks>Supports up to base 62</remarks>
-		static readonly bool[] kCharIsDigitLookup62 = [
+		static readonly bool[] KCharIsDigitLookup62 = [
 			//	0		1		2		3		4		5		6		7		8		9		A		B		C		D		E		F		
 	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	// 0
 	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	// 1
@@ -86,7 +86,7 @@ namespace KSoft.Text
 
 		/// <summary>Latin-1 lookup table for converting char to a digit</summary>
 		/// <remarks>Supports up to base 16</remarks>
-		static readonly byte[] kCharToByteLookup16 = [
+		static readonly byte[] KCharToByteLookup16 = [
 			//	0	1	2	3	4	5	6	7	8	9	A	B	C	D	E	F	
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 0
 	0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,// 1
@@ -113,7 +113,7 @@ namespace KSoft.Text
 
 		/// <summary>Latin-1 lookup table for testing if char is a digit</summary>
 		/// <remarks>Supports up to base 16</remarks>
-		static readonly bool[] kCharIsDigitLookup16 = [
+		static readonly bool[] KCharIsDigitLookup16 = [
 			//	0		1		2		3		4		5		6		7		8		9		A		B		C		D		E		F		
 	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	// 0
 	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	false,	// 1

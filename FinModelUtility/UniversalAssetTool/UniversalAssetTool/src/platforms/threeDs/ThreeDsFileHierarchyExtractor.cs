@@ -22,7 +22,7 @@ public sealed class ThreeDsFileHierarchyExtractor {
   }
 
   private static bool TryToFindRom_(string gameName, out IReadOnlySystemFile romFile)
-    => DirectoryConstants.ROMS_DIRECTORY
+    => DirectoryConstants.romsDirectory
                          .TryToGetExistingFileWithFileType(
                              gameName,
                              out romFile,

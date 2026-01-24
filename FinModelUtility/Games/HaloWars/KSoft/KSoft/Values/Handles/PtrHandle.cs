@@ -14,18 +14,18 @@ namespace KSoft.Values
 	public enum PtrHandleType : byte
 	{
 		/// <summary>Pointer is absolute, no fix-ups are needed</summary>
-		Absolute,
+		ABSOLUTE,
 		/// <summary>Pointer is relative to a base address</summary>
 		/// <remarks>a.k.a., a virtual address</remarks>
-		Relative,
+		RELATIVE,
 
-		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)]
-		kNumberOf
+		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)]
+		K_NUMBER_OF
 	};
 
 	/// <summary>Wrapper structure for handling either a 32-bit or 64-bit pointer (address)</summary>
 	/// <remarks>If you use the parameterless ctor, the pointer will be implicitly 32-bit</remarks>
-	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size = kSizeOf)]
+	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size = K_SIZE_OF)]
 //	[System.ComponentModel.TypeConverter(typeof(PtrHandleConverter))]
 	[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 	public struct PtrHandle
@@ -36,12 +36,12 @@ namespace KSoft.Values
 	{
 		#region Constants
 		/// <summary>Size needed for extra pointer info, padded to the nearest 64-bits</summary>
-		const int kSizeOfInfo = sizeof(bool) + sizeof(byte) +
+		const int K_SIZE_OF_INFO_ = sizeof(bool) + sizeof(byte) +
 			sizeof(short) + // unused
 			sizeof(uint);
 
 		/// <summary>Size of the largest address entity</summary>
-		public const int kSizeOf = sizeof(ulong) + kSizeOfInfo;
+		public const int K_SIZE_OF = sizeof(ulong) + K_SIZE_OF_INFO_;
 
 		/// <summary>Constant value representing a null 32-bit address</summary>
 		public static PtrHandle Null32 { get { return new PtrHandle(uint.MinValue); } }
@@ -57,13 +57,13 @@ namespace KSoft.Values
 		/// Result returned from a Comparison operation when the 'lhs' field
 		/// doesn't match the 'rhs' field's address size
 		/// </summary>
-		public const int kComparisonDifferentSize = -2;
+		public const int K_COMPARISON_DIFFERENT_SIZE = -2;
 		/// <summary>Result returned from a comparison operation when 'lhs &lt; rhs'</summary>
-		public const int kComparisonLess = -1;
+		public const int K_COMPARISON_LESS = -1;
 		/// <summary>Result returned from a comparison operation when 'lhs == rhs'</summary>
-		public const int kComparisonEqual = 0;
+		public const int K_COMPARISON_EQUAL = 0;
 		/// <summary>Result returned from a comparison operation when 'lhs &gt; rhs'</summary>
-		public const int kComparisonGreater = 1;
+		public const int K_COMPARISON_GREATER = 1;
 		#endregion
 
 		#region Fields
@@ -99,7 +99,7 @@ namespace KSoft.Values
 		#endregion
 
 		/// <summary>The size of this pointer</summary>
-		public Shell.ProcessorSize Size { get { return !this.Is64bit ? Shell.ProcessorSize.x32 : Shell.ProcessorSize.x64; } }
+		public Shell.ProcessorSize Size { get { return !this.Is64bit ? Shell.ProcessorSize.X32 : Shell.ProcessorSize.X64; } }
 		/// <summary>Is this pointer not referencing anything?</summary>
 		public bool IsNull { get { return this.Handle == 0; } }
 		public bool IsNotNull { get { return this.Handle != 0; } }
@@ -108,14 +108,14 @@ namespace KSoft.Values
 		public bool IsNotInvalidHandle { get { return this.Handle != ulong.MaxValue || this.u32 != uint.MaxValue; } }
 
 		#region Ctor
-		PtrHandle(bool is64bit, ulong handle)
+		PtrHandle(bool is64Bit, ulong handle)
 		{
 			this.Handle = this.Info = this.u64 = 0;
 			this.u32 = this.UserData = 0;
-			this.Type = PtrHandleType.Absolute;
+			this.Type = PtrHandleType.ABSOLUTE;
 
 			this.Handle = handle;
-			this.Is64bit = is64bit;
+			this.Is64bit = is64Bit;
 		}
 
 		/// <summary>Construct an address based on the traits (but not the actual value) of another <see cref="PtrHandle"/></summary>
@@ -129,7 +129,7 @@ namespace KSoft.Values
 		/// <summary>Construct an address which is implicity casted based on the size</summary>
 		/// <param name="addressSize">Real size of <paramref name="address"/></param>
 		/// <param name="address">Starting address value</param>
-		public PtrHandle(Shell.ProcessorSize addressSize, ulong address) : this(addressSize == Shell.ProcessorSize.x64, address)
+		public PtrHandle(Shell.ProcessorSize addressSize, ulong address) : this(addressSize == Shell.ProcessorSize.X64, address)
 		{
 		}
 
@@ -139,18 +139,18 @@ namespace KSoft.Values
 		{
 			this.Handle = this.Info = this.u64 = 0;
 			this.u32 = this.UserData = 0;
-			this.Type = PtrHandleType.Absolute;
+			this.Type = PtrHandleType.ABSOLUTE;
 
-			this.Is64bit = addressSize == Shell.ProcessorSize.x64;
+			this.Is64bit = addressSize == Shell.ProcessorSize.X64;
 		}
 
 		/// <summary>Construct a 32-bit address</summary>
 		/// <param name="address">Starting address value</param>
-		public PtrHandle(uint address) : this(Shell.ProcessorSize.x32)	{
+		public PtrHandle(uint address) : this(Shell.ProcessorSize.X32)	{
 			this.u32 = address; }
 		/// <summary>Construct a 64-bit address</summary>
 		/// <param name="address">Starting address value</param>
-		public PtrHandle(ulong address) : this(Shell.ProcessorSize.x64)	{
+		public PtrHandle(ulong address) : this(Shell.ProcessorSize.X64)	{
 			this.u64 = address; }
 		#endregion
 
@@ -178,28 +178,28 @@ namespace KSoft.Values
 		/// <param name="x">left-hand value for comparison expression</param>
 		/// <param name="y">right-hand value for comparison expression</param>
 		/// <returns>
-		/// <see cref="kComparisonLess"/>: x is less than y
-		/// <see cref="kComparisonGreater"/>: x is greater than y
-		/// <see cref="kComparisonEqual"/>: x is equal to y
+		/// <see cref="K_COMPARISON_LESS"/>: x is less than y
+		/// <see cref="K_COMPARISON_GREATER"/>: x is greater than y
+		/// <see cref="K_COMPARISON_EQUAL"/>: x is equal to y
 		/// </returns>
 		public static int NonStrictCompare(PtrHandle x, PtrHandle y)
 		{
-			if (x.Handle == y.Handle)		return kComparisonEqual;
+			if (x.Handle == y.Handle)		return K_COMPARISON_EQUAL;
 
-			else if (x.Handle < y.Handle)	return kComparisonLess;
-			else							return kComparisonGreater;
+			else if (x.Handle < y.Handle)	return K_COMPARISON_LESS;
+			else							return K_COMPARISON_GREATER;
 		}
 
 		/// <summary>Compare two <see cref="PtrHandle"/> objects for similar size and address values</summary>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns>
-		/// <see cref="kComparisonDifferentSize"/>: x.<see cref="Is64bit"/> != y.<see cref="Is64bit"/>
-		/// <see cref="kComparisonLess"/>: x is less than y
-		/// <see cref="kComparisonGreater"/>: x is greater than y
-		/// <see cref="kComparisonEqual"/>: x is equal to y
+		/// <see cref="K_COMPARISON_DIFFERENT_SIZE"/>: x.<see cref="Is64bit"/> != y.<see cref="Is64bit"/>
+		/// <see cref="K_COMPARISON_LESS"/>: x is less than y
+		/// <see cref="K_COMPARISON_GREATER"/>: x is greater than y
+		/// <see cref="K_COMPARISON_EQUAL"/>: x is equal to y
 		/// </returns>
-		public int Compare(PtrHandle x, PtrHandle y)					{ return x.Is64bit == y.Is64bit ? NonStrictCompare(x, y) : kComparisonDifferentSize; }
+		public int Compare(PtrHandle x, PtrHandle y)					{ return x.Is64bit == y.Is64bit ? NonStrictCompare(x, y) : K_COMPARISON_DIFFERENT_SIZE; }
 		/// <summary>Compare this with another <see cref="PtrHandle"/> object for similar size and address values</summary>
 		/// <param name="other"></param>
 		/// <returns></returns>

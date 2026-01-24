@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BTriggerScriptType
 	{
-		Invalid = TypeExtensions.kNone,
-		TriggerScript,
-		Scenario,
-		Ability,
-		Power,
+		INVALID = TypeExtensions.K_NONE,
+		TRIGGER_SCRIPT,
+		SCENARIO,
+		ABILITY,
+		POWER,
 	};
 }

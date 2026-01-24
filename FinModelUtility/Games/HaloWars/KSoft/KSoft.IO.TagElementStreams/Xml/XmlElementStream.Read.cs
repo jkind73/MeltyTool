@@ -12,12 +12,12 @@ namespace KSoft.IO
 		#region ReadElement impl
 		protected override string GetInnerText(XmlElement n)
 		{
-			var text_node = this.GetInnerTextNode(n);
-			if (text_node != null)
+			var textNode = this.GetInnerTextNode(n);
+			if (textNode != null)
 			{
-				this.ReadErrorNode = text_node; // #REVIEW: which is more informative, using the element (n) or text_node?
+				this.ReadErrorNode = textNode; // #REVIEW: which is more informative, using the element (n) or text_node?
 				// TextNode's actual text
-				return text_node.Value;
+				return textNode.Value;
 			}
 
 			return null;
@@ -28,13 +28,13 @@ namespace KSoft.IO
 			if (!n.HasChildNodes)
 				return null;
 
-			var text_node = n.LastChild;
-			if (text_node.NodeType == XmlNodeType.Text)
-				return text_node;
+			var textNode = n.LastChild;
+			if (textNode.NodeType == XmlNodeType.Text)
+				return textNode;
 
-			text_node = n.FirstChild;
-			if (text_node.NodeType == XmlNodeType.Text)
-				return text_node;
+			textNode = n.FirstChild;
+			if (textNode.NodeType == XmlNodeType.Text)
+				return textNode;
 
 			foreach (XmlNode node in n.ChildNodes)
 			{

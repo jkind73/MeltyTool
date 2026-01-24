@@ -15,13 +15,13 @@ namespace KSoft.Xml
 	[SuppressMessage("Microsoft.Design", "CA3077:InsecureDTDProcessingInAPIDesign")]
 	public sealed class XmlDocumentWithLocation : XmlDocument
 	{
-		IXmlLineInfo mLoadReader;
+		IXmlLineInfo mLoadReader_;
 
 		public string FileName { get; set; }
 
 		internal Text.TextLineInfo CurrentLineInfo { get {
-			if (this.mLoadReader != null && this.mLoadReader.HasLineInfo())
-				return new Text.TextLineInfo(this.mLoadReader.LineNumber, this.mLoadReader.LinePosition);
+			if (this.mLoadReader_ != null && this.mLoadReader_.HasLineInfo())
+				return new Text.TextLineInfo(this.mLoadReader_.LineNumber, this.mLoadReader_.LinePosition);
 
 			return Text.TextLineInfo.Empty;
 		} }
@@ -36,15 +36,15 @@ namespace KSoft.Xml
 
 		public override void Load(XmlReader reader)
 		{
-			this.mLoadReader = (IXmlLineInfo)reader;
+			this.mLoadReader_ = (IXmlLineInfo)reader;
 			base.Load(reader);
-			this.mLoadReader = null;
+			this.mLoadReader_ = null;
 		}
 
 		#region Create overrides
-		public override XmlAttribute CreateAttribute(string prefix, string localName, string namespaceURI)
+		public override XmlAttribute CreateAttribute(string prefix, string localName, string namespaceUri)
 		{
-			return new XmlAttributeWithLocation(prefix, localName, namespaceURI, this);
+			return new XmlAttributeWithLocation(prefix, localName, namespaceUri, this);
 		}
 
 		public override XmlCDataSection CreateCDataSection(string data)
@@ -52,9 +52,9 @@ namespace KSoft.Xml
 			return new XmlCDataSectionWithLocation(data, this);
 		}
 
-		public override XmlElement CreateElement(string prefix, string localName, string namespaceURI)
+		public override XmlElement CreateElement(string prefix, string localName, string namespaceUri)
 		{
-			return new XmlElementWithLocation(prefix, localName, namespaceURI, this);
+			return new XmlElementWithLocation(prefix, localName, namespaceUri, this);
 		}
 
 		public override XmlText CreateTextNode(string text)
@@ -82,14 +82,14 @@ namespace KSoft.Xml
 			Contract.Requires<ArgumentException>(node is XmlAttributeWithLocation || node is XmlElementWithLocation,
 				"Can only retrieve location of nodes with location data");
 
-			var loc_info = (Text.ITextLineInfo)node;
+			var locInfo = (Text.ITextLineInfo)node;
 
-			if (!loc_info.HasLineInfo)
+			if (!locInfo.HasLineInfo)
 				return this.FileName;
-			else if (loc_info.LinePosition != 0)
-				return this.GetFileLocationStringWithColumn(loc_info, verboseString);
+			else if (locInfo.LinePosition != 0)
+				return this.GetFileLocationStringWithColumn(locInfo, verboseString);
 			else
-				return this.GetFileLocationStringWithLineOnly(loc_info, verboseString);
+				return this.GetFileLocationStringWithLineOnly(locInfo, verboseString);
 		}
 	};
 }

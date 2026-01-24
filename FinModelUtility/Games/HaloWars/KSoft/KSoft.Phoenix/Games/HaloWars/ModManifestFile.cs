@@ -7,13 +7,13 @@ namespace KSoft.Phoenix.HaloWars
 		: ObjectModel.BasicViewModel
 	{
 		#region Sku
-		DefinitiveEditionSku mSku = DefinitiveEditionSku.Undefined;
+		DefinitiveEditionSku mSku_ = DefinitiveEditionSku.UNDEFINED;
 		public DefinitiveEditionSku Sku
 		{
-			get { return this.mSku; }
+			get { return this.mSku_; }
 			set
 			{
-				if (this.SetFieldEnum(ref this.mSku, value))
+				if (this.SetFieldEnum(ref this.mSku_, value))
 				{
 					this.FilePath = this.Sku.GetModManifestPath();
 				}
@@ -22,13 +22,13 @@ namespace KSoft.Phoenix.HaloWars
 		#endregion
 
 		#region FilePath
-		string mFilePath;
+		string mFilePath_;
 		public string FilePath
 		{
-			get { return this.mFilePath; }
+			get { return this.mFilePath_; }
 			set
 			{
-				if (this.SetFieldObj(ref this.mFilePath, value))
+				if (this.SetFieldObj(ref this.mFilePath_, value))
 				{
 					this.ContainingFolder = this.ContainingFolder;
 					this.DisplayTitle = this.DisplayTitle;
@@ -107,25 +107,25 @@ namespace KSoft.Phoenix.HaloWars
 	public sealed class ModManifestDirectory
 		: ObjectModel.BasicViewModel
 	{
-		const char kDisabledPrefix = ';';
+		const char K_DISABLED_PREFIX_ = ';';
 
 		#region IsDisabled
-		bool mIsDisabled;
+		bool mIsDisabled_;
 		public bool IsDisabled
 		{
-			get { return this.mIsDisabled; }
-			set { this.SetFieldVal(ref this.mIsDisabled, value); }
+			get { return this.mIsDisabled_; }
+			set { this.SetFieldVal(ref this.mIsDisabled_, value); }
 		}
 		#endregion
 
 		#region Directory
-		string mDirectory;
+		string mDirectory_;
 		public string Directory
 		{
-			get { return this.mDirectory; }
+			get { return this.mDirectory_; }
 			set
 			{
-				if (this.SetFieldObj(ref this.mDirectory, value))
+				if (this.SetFieldObj(ref this.mDirectory_, value))
 				{
 					// refresh validity
 					this.IsValid = this.IsValid;
@@ -164,21 +164,21 @@ namespace KSoft.Phoenix.HaloWars
 
 			this.IsDisabled = false;
 
-			int directory_start_index = 0;
-			if (line.StartsWith(kDisabledPrefix))
+			int directoryStartIndex = 0;
+			if (line.StartsWith(K_DISABLED_PREFIX_))
 			{
 				this.IsDisabled = true;
-				directory_start_index = 1;
+				directoryStartIndex = 1;
 			}
 
-			string dir = line.Substring(directory_start_index);
-			var invalid_chars = Path.GetInvalidPathChars();
+			string dir = line.Substring(directoryStartIndex);
+			var invalidChars = Path.GetInvalidPathChars();
 
 			foreach (char c in dir)
 			{
-				foreach (char invalid_char in invalid_chars)
+				foreach (char invalidChar in invalidChars)
 				{
-					if (c == invalid_char)
+					if (c == invalidChar)
 					{
 						return false;
 					}
@@ -197,7 +197,7 @@ namespace KSoft.Phoenix.HaloWars
 
 			if (this.IsDisabled)
 			{
-				line.Append(kDisabledPrefix);
+				line.Append(K_DISABLED_PREFIX_);
 			}
 
 			line.Append(this.Directory);

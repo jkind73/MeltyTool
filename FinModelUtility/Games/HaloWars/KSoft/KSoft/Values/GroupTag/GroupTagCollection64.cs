@@ -18,11 +18,11 @@ namespace KSoft.Values
 	public sealed class GroupTag64Collection : GroupTagCollection
 	{
 		#region Elements
-		readonly GroupTagDatum[] mGroupTags;
+		readonly GroupTagDatum[] mGroupTags_;
 		/// <summary>This collection's group tag elements</summary>
-		public IReadOnlyList<GroupTagDatum> GroupTags { get { return this.mGroupTags; } }
+		public IReadOnlyList<GroupTagDatum> GroupTags { get { return this.mGroupTags_; } }
 
-		protected override GroupTagData[] BaseGroupTags { get { return (GroupTagData[]) this.mGroupTags; } }
+		protected override GroupTagData[] BaseGroupTags { get { return (GroupTagData[]) this.mGroupTags_; } }
 		#endregion
 
 		public override GroupTagData NullGroupTag { get { return GroupTagDatum.Null; } }
@@ -41,8 +41,8 @@ namespace KSoft.Values
 		{
 			Contract.Requires<ArgumentNullException>(groupTags != null);
 
-			this.mGroupTags = new GroupTagDatum[groupTags.Length];
-			groupTags.CopyTo(this.mGroupTags, 0);
+			this.mGroupTags_ = new GroupTagDatum[groupTags.Length];
+			groupTags.CopyTo(this.mGroupTags_, 0);
 		}
 		/// <summary>Create a collection using an explicit list of group tags</summary>
 		/// <param name="sort">Should we sort the list?</param>
@@ -74,7 +74,7 @@ namespace KSoft.Values
 		[Contracts.Pure]
 		public int FindGroupIndexByTag(TagWord groupTag)
 		{
-			return this.GroupTags.FindIndex(gt => gt.ID == groupTag);
+			return this.GroupTags.FindIndex(gt => gt.Id == groupTag);
 		}
 
 		/// <summary>Find a <see cref="GroupTagData64"/> object in this collection based on it's group tag</summary>
@@ -83,11 +83,11 @@ namespace KSoft.Values
 		[Contracts.Pure]
 		public GroupTagDatum FindGroupByTag(TagWord tag)
 		{
-			var matching_tags = from gt in this.GroupTags
-								where gt.ID == tag
+			var matchingTags = from gt in this.GroupTags
+								where gt.Id == tag
 								select gt;
 
-			return matching_tags.FirstOrDefault();
+			return matchingTags.FirstOrDefault();
 		}
 
 		/// <summary>Determines if a group tag ID exists in this collection</summary>
@@ -96,7 +96,7 @@ namespace KSoft.Values
 		[Contracts.Pure]
 		public bool Contains(TagWord tag)
 		{
-			return this.GroupTags.Any(gt => gt.ID == tag);
+			return this.GroupTags.Any(gt => gt.Id == tag);
 		}
 		#endregion
 
@@ -122,7 +122,7 @@ namespace KSoft.Values
 	/// Allows for ease-of-use in other attributes where we'd need to index a <see cref="GroupTag64Collection"/>
 	/// collection for a specific <see cref="GroupTagData64"/> member
 	///
-	/// <see cref="GroupTagContainerAttribute.kDefaultName"/> is the default name value used for the "main"
+	/// <see cref="GroupTagContainerAttribute.K_DEFAULT_NAME"/> is the default name value used for the "main"
 	/// collection lookup
 	/// </remarks>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]

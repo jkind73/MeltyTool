@@ -57,7 +57,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
 
     var material = model.MaterialManager.AddShaderMaterial(
         $$"""
-          #version {{GlslConstants.VERTEX_SHADER_VERSION}}
+          #version {{GlslConstants.VertexShaderVersion}}
 
           {{GlslUtil.GetMatricesHeaders(model)}}
 
@@ -79,7 +79,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
           }
           """,
         $$"""
-          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
+          #version {{GlslConstants.FragmentShaderVersion}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           {{GlslUtil.GetMatricesHeaders(model)}}
@@ -167,7 +167,7 @@ public sealed class InfiniteGridRenderer : IRenderable {
             }
           }
           """);
-    material.DepthCompareType = DepthCompareType.LEqual;
+    material.DepthCompareType = DepthCompareType.L_EQUAL;
 
     var v0 = model.Skin.AddVertex(-1, -1, 0);
     var v1 = model.Skin.AddVertex(1, -1, 0);

@@ -10,18 +10,18 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Tech")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Tech")
 		{
-			RootName = "TechTree",
-			DataName = "name",
-			Flags = 0
+			rootName = "TechTree",
+			dataName = "name",
+			flags = 0
 #if TECH_NEEDS_ToLowerDataNames
 				| XML.BCollectionXmlParamsFlags.ToLowerDataNames
 #endif
-				| XML.BCollectionXmlParamsFlags.RequiresDataNamePreloading
-				| XML.BCollectionXmlParamsFlags.SupportsUpdating
+				| XML.BCollectionXmlParamsFlags.REQUIRES_DATA_NAME_PRELOADING
+				| XML.BCollectionXmlParamsFlags.SUPPORTS_UPDATING
 		};
-		public static readonly Collections.BListAutoIdParams kBListParams
+		public static readonly Collections.BListAutoIdParams KBListParams
 #if TECH_NEEDS_ToLowerDataNames
 			= new Collections.BListAutoIdParams()
 		{
@@ -31,67 +31,67 @@ namespace KSoft.Phoenix.Phx
 			= null;
 #endif
 
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Location = Engine.ContentStorage.Game,
-			Directory = Engine.GameDirectory.Data,
+			Location = Engine.ContentStorage.GAME,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Techs.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.XmlFileInfo kXmlFileInfoUpdate = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfoUpdate = new Engine.XmlFileInfo
 		{
-			Location = Engine.ContentStorage.Update,
-			Directory = Engine.GameDirectory.Data,
+			Location = Engine.ContentStorage.UPDATE,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Techs_Update.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.ProtoData,
-			kXmlFileInfo,
-			kXmlFileInfoUpdate);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.PROTO_DATA,
+			KXmlFileInfo,
+			KXmlFileInfoUpdate);
 
-		static readonly Collections.CodeEnum<BProtoTechFlags> kFlagsProtoEnum = new Collections.CodeEnum<BProtoTechFlags>();
-		static readonly Collections.BBitSetParams kFlagsParams = new Collections.BBitSetParams(() => kFlagsProtoEnum);
+		static readonly Collections.CodeEnum<BProtoTechFlags> KFlagsProtoEnum = new Collections.CodeEnum<BProtoTechFlags>();
+		static readonly Collections.BBitSetParams KFlagsParams = new Collections.BBitSetParams(() => KFlagsProtoEnum);
 		#endregion
 
 		#region Alpha
-		BProtoTechAlphaMode mAlphaMode = BProtoTechAlphaMode.None;
+		BProtoTechAlphaMode mAlphaMode_ = BProtoTechAlphaMode.NONE;
 		public BProtoTechAlphaMode AlphaMode
 		{
-			get { return this.mAlphaMode; }
-			set { this.mAlphaMode = value; }
+			get { return this.mAlphaMode_; }
+			set { this.mAlphaMode_ = value; }
 		}
 		#endregion
 
 		public Collections.BBitSet Flags { get; private set; }
 
 		#region Icon
-		string mIcon;
+		string mIcon_;
 		[Meta.TextureReference]
 		public string Icon
 		{
-			get { return this.mIcon; }
-			set { this.mIcon = value; }
+			get { return this.mIcon_; }
+			set { this.mIcon_ = value; }
 		}
 		#endregion
 
 		#region ResearchCompleteSound
-		string mResearchCompleteSound;
+		string mResearchCompleteSound_;
 		[Meta.SoundCueReference]
 		public string ResearchCompleteSound
 		{
-			get { return this.mResearchCompleteSound; }
-			set { this.mResearchCompleteSound = value; }
+			get { return this.mResearchCompleteSound_; }
+			set { this.mResearchCompleteSound_ = value; }
 		}
 		#endregion
 
 		#region ResearchAnim
-		string mResearchAnim;
+		string mResearchAnim_;
 		[Meta.BAnimTypeReference]
 		public string ResearchAnim
 		{
-			get { return this.mResearchAnim; }
-			set { this.mResearchAnim = value; }
+			get { return this.mResearchAnim_; }
+			set { this.mResearchAnim_ = value; }
 		}
 		#endregion
 
@@ -99,25 +99,25 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BListArray<BProtoTechEffect> Effects { get; private set; }
 
 		#region StatsObjectID
-		int mStatsObjectID = TypeExtensions.kNone;
+		int mStatsObjectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int StatsObjectID
+		public int StatsObjectId
 		{
-			get { return this.mStatsObjectID; }
-			set { this.mStatsObjectID = value; }
+			get { return this.mStatsObjectId_; }
+			set { this.mStatsObjectId_ = value; }
 		}
 		#endregion
 
 		public bool HasPrereqs { get { return this.Prereqs != null && this.Prereqs.IsNotEmpty; } }
 
-		public BProtoTech() : base(BResource.kBListTypeValuesParams, BResource.kBListTypeValuesXmlParams_CostLowercaseType)
+		public BProtoTech() : base(BResource.KBListTypeValuesParams, BResource.KBListTypeValuesXmlParamsCostLowercaseType)
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDisplayNameID = true;
-			textData.HasRolloverTextID = true;
-			textData.HasPrereqTextID = true;
+			textData.HasDisplayNameId = true;
+			textData.HasRolloverTextId = true;
+			textData.HasPrereqTextId = true;
 
-			this.Flags = new Collections.BBitSet(kFlagsParams);
+			this.Flags = new Collections.BBitSet(KFlagsParams);
 			this.Prereqs = new BProtoTechPrereqs();
 			this.Effects = new Collections.BListArray<BProtoTechEffect>();
 		}
@@ -136,11 +136,11 @@ namespace KSoft.Phoenix.Phx
 
 			var xs = s.GetSerializerInterface();
 
-			int alpha = (int) this.mAlphaMode;
+			int alpha = (int) this.mAlphaMode_;
 			s.StreamAttributeOpt("Alpha", ref alpha, Predicates.IsNotNone);
-			this.mAlphaMode = (BProtoTechAlphaMode)alpha;
+			this.mAlphaMode_ = (BProtoTechAlphaMode)alpha;
 
-			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.kFlagsSansRoot);
+			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.KFlagsSansRoot);
 
 			if (s.IsReading)
 			{
@@ -149,19 +149,19 @@ namespace KSoft.Phoenix.Phx
 					string statusValue = null;
 					s.ReadCursor(ref statusValue);
 					if (string.Equals(statusValue, "Unobtainable", System.StringComparison.OrdinalIgnoreCase))
-						this.Flags.Set((int)BProtoTechFlags.Unobtainable);
+						this.Flags.Set((int)BProtoTechFlags.UNOBTAINABLE);
 				}
 			}
 
-			s.StreamStringOpt("Icon", ref this.mIcon, toLower: false, type: XML.XmlUtil.kSourceElement);
-			s.StreamStringOpt("ResearchCompleteSound", ref this.mResearchCompleteSound, toLower: false, type: XML.XmlUtil.kSourceElement);
-			s.StreamStringOpt("ResearchAnim", ref this.mResearchAnim, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamStringOpt("Icon", ref this.mIcon_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
+			s.StreamStringOpt("ResearchCompleteSound", ref this.mResearchCompleteSound_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
+			s.StreamStringOpt("ResearchAnim", ref this.mResearchAnim_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
 			using (var bm = s.EnterCursorBookmarkOpt("Prereqs", this, v => v.HasPrereqs)) if (bm.IsNotNull)
 			{
 				this.Prereqs.Serialize(s);
 			}
-			XML.XmlUtil.Serialize(s, this.Effects, BProtoTechEffect.kBListXmlParams);
-			xs.StreamDBID(s, "StatsObject", ref this.mStatsObjectID, DatabaseObjectKind.Object);
+			XML.XmlUtil.Serialize(s, this.Effects, BProtoTechEffect.KBListXmlParams);
+			xs.StreamDbid(s, "StatsObject", ref this.mStatsObjectId_, DatabaseObjectKind.OBJECT);
 		}
 		#endregion
 	};

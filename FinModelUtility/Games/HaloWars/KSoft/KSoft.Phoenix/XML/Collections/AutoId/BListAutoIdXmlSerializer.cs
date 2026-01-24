@@ -81,73 +81,73 @@ namespace KSoft.Phoenix.XML
 		, IBListAutoIdXmlSerializer
 		where T : class, Collections.IListAutoIdObject, new()
 	{
-		BListXmlParams mParams;
-		Collections.BListAutoId<T> mList;
+		BListXmlParams mParams_;
+		Collections.BListAutoId<T> mList_;
 
-		public override BListXmlParams Params { get { return this.mParams; } }
-		public override Collections.BListBase<T> List { get { return this.mList; } }
+		public override BListXmlParams Params { get { return this.mParams_; } }
+		public override Collections.BListBase<T> List { get { return this.mList_; } }
 
 		public BListAutoIdXmlSerializer(BListXmlParams @params, Collections.BListAutoId<T> list)
 		{
 			Contract.Requires<ArgumentNullException>(@params != null);
 			Contract.Requires<ArgumentNullException>(list != null);
 
-			this.mParams = @params;
-			this.mList = list;
+			this.mParams_ = @params;
+			this.mList_ = list;
 		}
 
-		bool mIsPreloaded;
+		bool mIsPreloaded_;
 		bool RequiresDataNamePreloading { get { return this.Params.RequiresDataNamePreloading; } }
 
-		int mCountBeforeUpdate;
-		bool mIsUpdating;
+		int mCountBeforeUpdate_;
+		bool mIsUpdating_;
 
 		#region Database interfaces
-		bool SetupItem(out T item, string item_name, int iteration)
+		bool SetupItem(out T item, string itemName, int iteration)
 		{
-			bool stream_item = !this.RequiresDataNamePreloading || (this.RequiresDataNamePreloading && this.mIsPreloaded);
+			bool streamItem = !this.RequiresDataNamePreloading || (this.RequiresDataNamePreloading && this.mIsPreloaded_);
 
-			if (this.mIsUpdating)
+			if (this.mIsUpdating_)
 			{
 				// The update system in HW is fucked...just because the "update" attribute is true or left out, doesn't mean the value existed before or is not a new value
 				// So just try
-				int idx = this.mList.TryGetMemberId(item_name);
+				int idx = this.mList_.TryGetMemberId(itemName);
 				if (idx.IsNotNone())
 				{
-					item = this.mList[idx];
-					return stream_item;
+					item = this.mList_[idx];
+					return streamItem;
 				}
 
-				iteration += this.mCountBeforeUpdate;
+				iteration += this.mCountBeforeUpdate_;
 			}
 
-			if (this.RequiresDataNamePreloading && this.mIsPreloaded)
+			if (this.RequiresDataNamePreloading && this.mIsPreloaded_)
 			{
-				item = this.mList[iteration];
-				return stream_item;
+				item = this.mList_[iteration];
+				return streamItem;
 			}
 
-			this.mList.DynamicAdd(item = new T(), item_name, iteration);
+			this.mList_.DynamicAdd(item = new T(), itemName, iteration);
 
-			return stream_item;
+			return streamItem;
 		}
 		#endregion
 
 		#region IXmlElementStreamable Members
 		protected override void Read<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, int iteration)
 		{
-			string item_name = null;
-			this.Params.StreamDataName(s, ref item_name);
+			string itemName = null;
+			this.Params.StreamDataName(s, ref itemName);
 
 			T item;
-			if (this.SetupItem(out item, item_name, iteration))
+			if (this.SetupItem(out item, itemName, iteration))
 				item.Serialize(s);
 		}
 		protected override void Write<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, T data)
 		{
-			string item_name = data.Data;
-			if (item_name != null)
-				this.Params.StreamDataName(s, ref item_name);
+			string itemName = data.Data;
+			if (itemName != null)
+				this.Params.StreamDataName(s, ref itemName);
 
 			try
 			{
@@ -155,7 +155,7 @@ namespace KSoft.Phoenix.XML
 			}
 			catch (Exception ex)
 			{
-				throw new InvalidOperationException(string.Format("Failed to write {0}", item_name),
+				throw new InvalidOperationException(string.Format("Failed to write {0}", itemName),
 					ex);
 			}
 		}
@@ -163,18 +163,18 @@ namespace KSoft.Phoenix.XML
 		{
 			base.WriteNodes(s, xs);
 
-			ProtoEnumUndefinedMembers.Write(s, this.mParams, this.mList.UndefinedInterface);
+			ProtoEnumUndefinedMembers.Write(s, this.mParams_, this.mList_.UndefinedInterface);
 		}
 
 		void Preload<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
-			this.mIsPreloaded = false;
+			this.mIsPreloaded_ = false;
 
 			this.Serialize(s);
 
-			this.mIsPreloaded = true;
+			this.mIsPreloaded_ = true;
 		}
 		public void StreamPreload<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -186,14 +186,14 @@ namespace KSoft.Phoenix.XML
 			where TDoc : class
 			where TCursor : class
 		{
-			this.mIsUpdating = true;
-			this.mCountBeforeUpdate = this.mList.Count;
+			this.mIsUpdating_ = true;
+			this.mCountBeforeUpdate_ = this.mList_.Count;
 
 			if (this.RequiresDataNamePreloading)
 				this.Preload(s);
 			this.Serialize(s);
 
-			this.mIsUpdating = false;
+			this.mIsUpdating_ = false;
 			//mCountBeforeUpdate = 0;
 		}
 		#endregion

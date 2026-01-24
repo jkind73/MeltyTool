@@ -1,72 +1,72 @@
 ﻿namespace KSoft.Security.Cryptography
 {
-	public sealed class PhxTEA
+	public sealed class PhxTea
 	{
 		#region Keys
-		const int kKeySize = 3;
+		const int K_KEY_SIZE_ = 3;
 
-		public static readonly ulong[] kKeyEra = [
+		public static readonly ulong[] KKeyEra = [
 			0xBC3EB6B4D0471DDB,
 			0x8299E6431912BE73,
 			0x4601515D43D26DF5
 		];
-		public static readonly ulong[] kKeyGameFile = [
+		public static readonly ulong[] KKeyGameFile = [
 			0x194F8D77DF360283,
 			0x1385AC1E2122F575,
 			0xA7392D249DC2C737
 		];
 
-		ulong[] mKey;
+		ulong[] mKey_;
 
 		public void InitializeKey(ulong[] key, ulong userKey = 0)
 		{
 			if (userKey == 0)
-				this.mKey = key;
+				this.mKey_ = key;
 			else
-				this.mKey = [key[0], key[1], userKey];
+				this.mKey_ = [key[0], key[1], userKey];
 		}
 		#endregion
 
-		IO.EndianReader mStreamIn;
-		IO.EndianWriter mStreamOut;
-		ulong[] mBufferIn, mBufferOut;
+		IO.EndianReader mStreamIn_;
+		IO.EndianWriter mStreamOut_;
+		ulong[] mBufferIn_, mBufferOut_;
 
 		void InitializeBuffers()
 		{
-			this.mBufferIn = new ulong[kBlocksPerIteration];
-			this.mBufferOut = new ulong[kBlocksPerIteration];
+			this.mBufferIn_ = new ulong[K_BLOCKS_PER_ITERATION_];
+			this.mBufferOut_ = new ulong[K_BLOCKS_PER_ITERATION_];
 		}
 
-		public PhxTEA(IO.EndianReader streamIn, IO.EndianWriter streamOut)
+		public PhxTea(IO.EndianReader streamIn, IO.EndianWriter streamOut)
 		{
-			this.mStreamIn = streamIn;
-			this.mStreamOut = streamOut;
+			this.mStreamIn_ = streamIn;
+			this.mStreamOut_ = streamOut;
 			this.InitializeBuffers();
 		}
 
 		void FillBufferIn()
 		{
-			for (int x = 0; x < this.mBufferIn.Length; x++)
-				this.mStreamIn.Read(out this.mBufferIn[x]);
+			for (int x = 0; x < this.mBufferIn_.Length; x++)
+				this.mStreamIn_.Read(out this.mBufferIn_[x]);
 		}
 		void FillBufferOut()
 		{
-			for (int x = 0; x < this.mBufferOut.Length; x++)
-				this.mStreamOut.Write(this.mBufferOut[x]);
+			for (int x = 0; x < this.mBufferOut_.Length; x++)
+				this.mStreamOut_.Write(this.mBufferOut_[x]);
 		}
 
 		void ProcessBuffer(long size, ProcessIterationProc proc)
 		{
 			if (size == 0)
-				size = this.mStreamIn.BaseStream.Length - this.mStreamIn.BaseStream.Position;
+				size = this.mStreamIn_.BaseStream.Length - this.mStreamIn_.BaseStream.Position;
 
-			uint interation_count = GetIterationsCount(size);
+			uint interationCount = GetIterationsCount(size);
 
-			for (uint x = 0; x < interation_count; x++)
+			for (uint x = 0; x < interationCount; x++)
 			{
 				this.FillBufferIn();
 
-				proc(this.mKey, this.mBufferIn, this.mBufferOut, x);
+				proc(this.mKey_, this.mBufferIn_, this.mBufferOut_, x);
 
 				this.FillBufferOut();
 			}
@@ -83,22 +83,22 @@
 		#region Implementation
 		delegate void ProcessIterationProc(ulong[] key, ulong[] buffIn, ulong[] buffOut, uint iteration);
 
-		const uint kDelta = 0x9E3779B9;
-		const int kRoundCountShift = 4;
-		const int kRoundCount = 1 << 4;
+		const uint K_DELTA_ = 0x9E3779B9;
+		const int K_ROUND_COUNT_SHIFT_ = 4;
+		const int K_ROUND_COUNT_ = 1 << 4;
 
-		const int kBlocksPerIterationShift = 3;
-		const int kBlocksPerIteration = 1 << kBlocksPerIterationShift;
+		const int K_BLOCKS_PER_ITERATION_SHIFT_ = 3;
+		const int K_BLOCKS_PER_ITERATION_ = 1 << K_BLOCKS_PER_ITERATION_SHIFT_;
 
-		const ulong kIterationMod = 0xBCCD0923;
+		const ulong K_ITERATION_MOD_ = 0xBCCD0923;
 
 		static uint GetIterationsCount(long size)
 		{
 			const int kBlockSizeShift = 3;
 
-			uint block_count = (uint)(size >> kBlockSizeShift);
+			uint blockCount = (uint)(size >> kBlockSizeShift);
 
-			return block_count >> kBlocksPerIterationShift;
+			return blockCount >> K_BLOCKS_PER_ITERATION_SHIFT_;
 		}
 
 		static void Mod0(ref ulong q, out ulong v)
@@ -123,8 +123,8 @@
 		static void DecryptRounds(ref ulong v, ulong key0, ulong key1)
 		{
 			ulong lv0 = v >> 32, lv1 = v & 0xFFFFFFFF;
-			uint sum = kDelta << kRoundCountShift;
-			for (int x = 0; x < kRoundCount; x++)
+			uint sum = K_DELTA_ << K_ROUND_COUNT_SHIFT_;
+			for (int x = 0; x < K_ROUND_COUNT_; x++)
 			{
 				lv0 = (lv0
 					- (((uint)lv1 >> 5) ^ sum))
@@ -138,7 +138,7 @@
 					- ((uint)lv0 << 4)
 					- (key0 >> 32);
 
-				sum -= kDelta;
+				sum -= K_DELTA_;
 			}
 
 			v = (lv0 << 32) | (lv1 & 0xFFFFFFFF);
@@ -147,9 +147,9 @@
 		{
 			ulong lv0 = v >> 32, lv1 = v & 0xFFFFFFFF;
 			uint sum = 0;
-			for (int x = 0; x < kRoundCount; x++)
+			for (int x = 0; x < K_ROUND_COUNT_; x++)
 			{
-				sum += kDelta;
+				sum += K_DELTA_;
 
 				lv1 = (lv1
 					+ (((uint)lv0 >> 5) ^ sum))
@@ -208,10 +208,10 @@
 							t4 ^ block7 ^ (t3 + (block5 ^ block4)),
 							out t9, out t10, out t11, out t12,	key[1], key[0]);
 
-			ulong iter_mod = iteration + kIterationMod;
-			if (iter_mod == 0) iter_mod++;
+			ulong iterMod = iteration + K_ITERATION_MOD_;
+			if (iterMod == 0) iterMod++;
 
-			ulong q = iter_mod;
+			ulong q = iterMod;
 			ulong q0, q1, q2, q3, q4, q5, q6, q7;
 
 			Mod0(ref q, out q0);	Mod1(ref q, out q1);
@@ -237,10 +237,10 @@
 			ulong	block0 = buffIn[index+0],	block1 = buffIn[index+1],	block2 = buffIn[index+2],	block3 = buffIn[index+3],	
 					block4 = buffIn[index+4],	block5 = buffIn[index+5],	block6 = buffIn[index+6],	block7 = buffIn[index+7];
 
-			ulong iter_mod = iteration + kIterationMod;
-			if (iter_mod == 0) iter_mod++;
+			ulong iterMod = iteration + K_ITERATION_MOD_;
+			if (iterMod == 0) iterMod++;
 
-			ulong q = iter_mod;
+			ulong q = iterMod;
 			ulong q0, q1, q2, q3, q4, q5, q6, q7;
 
 			Mod0(ref q, out q0);	Mod1(ref q, out q1);

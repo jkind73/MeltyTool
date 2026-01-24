@@ -11,17 +11,17 @@ namespace KSoft.IO
 {
 	/// <summary>Forces the stream to seek to the end of the virtual buffer when disposed</summary>
 	[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-	public struct IKSoftStreamWithVirtualBufferCleanup : IDisposable
+	public struct IkSoftStreamWithVirtualBufferCleanup : IDisposable
 	{
-		IKSoftStreamWithVirtualBuffer mStream;
-		readonly long mBufferEnd;
+		IKSoftStreamWithVirtualBuffer mStream_;
+		readonly long mBufferEnd_;
 
-		public IKSoftStreamWithVirtualBufferCleanup(IKSoftStreamWithVirtualBuffer stream)
+		public IkSoftStreamWithVirtualBufferCleanup(IKSoftStreamWithVirtualBuffer stream)
 		{
 			Contract.Requires(stream != null);
 			Contract.Requires(stream.VirtualBufferStart > 0 && stream.VirtualBufferLength > 0);
-			this.mStream = stream;
-			this.mBufferEnd = stream.VirtualBufferStart + stream.VirtualBufferLength;
+			this.mStream_ = stream;
+			this.mBufferEnd_ = stream.VirtualBufferStart + stream.VirtualBufferLength;
 		}
 
 		/// <summary>
@@ -30,70 +30,70 @@ namespace KSoft.IO
 		/// </summary>
 		public void Dispose()
 		{
-			if (this.mStream != null)
+			if (this.mStream_ != null)
 			{
-				long leftovers = this.mBufferEnd - this.mStream.BaseStream.Position;
+				long leftovers = this.mBufferEnd_ - this.mStream_.BaseStream.Position;
 				if (leftovers > 0)
-					this.mStream.BaseStream.Seek(leftovers, SeekOrigin.Current);
+					this.mStream_.BaseStream.Seek(leftovers, SeekOrigin.Current);
 
-				this.mStream.VirtualBufferStart = this.mStream.VirtualBufferLength = 0;
-				this.mStream = null;
+				this.mStream_.VirtualBufferStart = this.mStream_.VirtualBufferLength = 0;
+				this.mStream_ = null;
 			}
 		}
 	};
 	/// <summary>Temporarily bookmarks a stream's VirtualBuffer properties</summary>
 	[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-	public struct IKSoftStreamWithVirtualBufferBookmark : IDisposable
+	public struct IkSoftStreamWithVirtualBufferBookmark : IDisposable
 	{
-		IKSoftStreamWithVirtualBuffer mStream;
-		readonly long mOldStart, mOldLength;
+		IKSoftStreamWithVirtualBuffer mStream_;
+		readonly long mOldStart_, mOldLength_;
 
-		public IKSoftStreamWithVirtualBufferBookmark(IKSoftStreamWithVirtualBuffer stream)
+		public IkSoftStreamWithVirtualBufferBookmark(IKSoftStreamWithVirtualBuffer stream)
 		{
 			Contract.Requires(stream != null);
-			this.mStream = stream;
-			this.mOldStart = stream.VirtualBufferStart;
-			this.mOldLength = stream.VirtualBufferLength;
+			this.mStream_ = stream;
+			this.mOldStart_ = stream.VirtualBufferStart;
+			this.mOldLength_ = stream.VirtualBufferLength;
 		}
 
 		/// <summary>Restores the VirtualBuffer properties of the underlying stream to their previous values</summary>
 		public void Dispose()
 		{
-			if (this.mStream != null)
+			if (this.mStream_ != null)
 			{
-				this.mStream.VirtualBufferStart = this.mOldStart;
-				this.mStream.VirtualBufferLength = this.mOldLength;
-				this.mStream = null;
+				this.mStream_.VirtualBufferStart = this.mOldStart_;
+				this.mStream_.VirtualBufferLength = this.mOldLength_;
+				this.mStream_ = null;
 			}
 		}
 	};
 	/// <summary>
 	/// Temporarily bookmarks a stream's VirtualBuffer properties and sets up a new virtual buffer concept
 	/// </summary>
-	/// <see cref="IKSoftStreamWithVirtualBufferBookmark"/>
-	/// <see cref="IKSoftStreamWithVirtualBufferCleanup"/>
+	/// <see cref="IkSoftStreamWithVirtualBufferBookmark"/>
+	/// <see cref="IkSoftStreamWithVirtualBufferCleanup"/>
 	[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
-	public struct IKSoftStreamWithVirtualBufferAndBookmark : IDisposable
+	public struct IkSoftStreamWithVirtualBufferAndBookmark : IDisposable
 	{
-		IKSoftStreamWithVirtualBufferBookmark mBookmark;
-		IKSoftStreamWithVirtualBufferCleanup mCleanup;
-		bool mDisposed;
+		IkSoftStreamWithVirtualBufferBookmark mBookmark_;
+		IkSoftStreamWithVirtualBufferCleanup mCleanup_;
+		bool mDisposed_;
 
-		public IKSoftStreamWithVirtualBufferAndBookmark(IKSoftStreamWithVirtualBuffer stream, long bufferLength)
+		public IkSoftStreamWithVirtualBufferAndBookmark(IKSoftStreamWithVirtualBuffer stream, long bufferLength)
 		{
 			Contract.Requires(stream != null);
-			this.mBookmark = stream.EnterVirtualBufferBookmark();
-			this.mCleanup = stream.EnterVirtualBuffer(bufferLength);
-			this.mDisposed = false;
+			this.mBookmark_ = stream.EnterVirtualBufferBookmark();
+			this.mCleanup_ = stream.EnterVirtualBuffer(bufferLength);
+			this.mDisposed_ = false;
 		}
 
 		public void Dispose()
 		{
-			if (!this.mDisposed)
+			if (!this.mDisposed_)
 			{
-				this.mCleanup.Dispose();
-				this.mBookmark.Dispose();
-				this.mDisposed = true;
+				this.mCleanup_.Dispose();
+				this.mBookmark_.Dispose();
+				this.mDisposed_ = true;
 			}
 		}
 	};

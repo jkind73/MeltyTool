@@ -9,7 +9,7 @@ public enum XmlLevelAttributeType {
   VECTOR_XZ,
   VECTOR_4,
   U8_COLOR,
-  MATRIX_4X4
+  MATRIX_4_X4
 }
 
 public sealed class XmlLevelAttribute : BXmlLevelTypedItemList<XmlLevelAttributeType>, IXmlLevelObjectField;

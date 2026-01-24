@@ -2,60 +2,60 @@
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class cSaveMarker
+	partial class CSaveMarker
 	{
 		public const ushort
-			World1 = 0x2710, World2 = 0x2711, World3 = 0x2712, World4 = 0x2713, World5 = 0x2714,
-			Players = 0x2715,
-			Teams = 0x2716,
-			SimOrder = 0x2717,
-			UnitOpp = 0x2718,
-			PathMoveData = 0x2719,
-			Platoons = 0x271A,
-			Dopples = 0x271B,
-			Projectiles = 0x271C,
-			AirSpots = 0x271D,
-			Armies = 0x271E,
-			Squads = 0x271F,
+			WORLD1 = 0x2710, WORLD2 = 0x2711, WORLD3 = 0x2712, WORLD4 = 0x2713, WORLD5 = 0x2714,
+			PLAYERS = 0x2715,
+			TEAMS = 0x2716,
+			SIM_ORDER = 0x2717,
+			UNIT_OPP = 0x2718,
+			PATH_MOVE_DATA = 0x2719,
+			PLATOONS = 0x271A,
+			DOPPLES = 0x271B,
+			PROJECTILES = 0x271C,
+			AIR_SPOTS = 0x271D,
+			ARMIES = 0x271E,
+			SQUADS = 0x271F,
 
-			Units = 0x2720,
-			ObjectiveManager = 0x2721,
-			GeneralEvents = 0x2722,
-			Triggers = 0x2723,
-			Visibilty = 0x2724,
-			ScoreManager = 0x2725,
-			StoredAnimEventManager = 0x2726,
-			EntityScheduler = 0x2727,
-			CollectiblesManager = 0x2728,
-			Objects = 0x2729
+			UNITS = 0x2720,
+			OBJECTIVE_MANAGER = 0x2721,
+			GENERAL_EVENTS = 0x2722,
+			TRIGGERS = 0x2723,
+			VISIBILTY = 0x2724,
+			SCORE_MANAGER = 0x2725,
+			STORED_ANIM_EVENT_MANAGER = 0x2726,
+			ENTITY_SCHEDULER = 0x2727,
+			COLLECTIBLES_MANAGER = 0x2728,
+			OBJECTS = 0x2729
 			;
 
-		public const ushort ObjectAnimEventTagQueue_DoneIndex = 0x9C5;
+		public const ushort OBJECT_ANIM_EVENT_TAG_QUEUE_DONE_INDEX = 0x9C5;
 
-		public const byte BActionController__cNumberControllers = 2;
+		public const byte B_ACTION_CONTROLLER_C_NUMBER_CONTROLLERS = 2;
 	};
 
 	sealed class BWorld
 		: IO.IEndianStreamSerializable
 	{
-		public const byte cMaximumSupportedPlayers = 9,
-			cMaxPlayerColorCategories = 2,
-			cMaximumSupportedTeams = 5;
+		public const byte C_MAXIMUM_SUPPORTED_PLAYERS = 9,
+			C_MAX_PLAYER_COLOR_CATEGORIES = 2,
+			C_MAXIMUM_SUPPORTED_TEAMS = 5;
 
 		public sealed class ObjectGroup
 			: IO.IEndianStreamSerializable
 		{
-			public short Id;
+			public short id;
 
-			public int[] Objects; // not sure if BProtoObjectID, etc
-			public int[] TriggeredTeams;
+			public int[] objects; // not sure if BProtoObjectID, etc
+			public int[] triggeredTeams;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.Id);
-				BSaveGame.StreamArray(s, ref this.Objects);
-				BSaveGame.StreamArray(s, ref this.TriggeredTeams);
+				s.Stream(ref this.id);
+				BSaveGame.StreamArray(s, ref this.objects);
+				BSaveGame.StreamArray(s, ref this.triggeredTeams);
 			}
 			#endregion
 		};
@@ -63,12 +63,12 @@ namespace KSoft.Phoenix.Runtime
 		public struct BExplorationGroupTimerEntry
 			: IO.IEndianStreamSerializable
 		{
-			public uint Unknown0, Unknown4, Unknown8;
+			public uint unknown0, unknown4, unknown8;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.Unknown0); s.Stream(ref this.Unknown4); s.Stream(ref this.Unknown8);
+				s.Stream(ref this.unknown0); s.Stream(ref this.unknown4); s.Stream(ref this.unknown8);
 			}
 			#endregion
 		};
@@ -76,27 +76,27 @@ namespace KSoft.Phoenix.Runtime
 		public struct PlayerColorCategory
 			: IO.IEndianStreamSerializable
 		{
-			public uint Objects, Corpse, Selection, 
-				Minimap, UI;
-			public byte Index;
+			public uint objects, corpse, selection, 
+				minimap, ui;
+			public byte index;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.Objects); s.Stream(ref this.Corpse); s.Stream(ref this.Selection);
-				s.Stream(ref this.Minimap); s.Stream(ref this.UI);
-				s.Stream(ref this.Index);
+				s.Stream(ref this.objects); s.Stream(ref this.corpse); s.Stream(ref this.selection);
+				s.Stream(ref this.minimap); s.Stream(ref this.ui);
+				s.Stream(ref this.index);
 			}
 			#endregion
 		};
 
-		ObjectGroup[] NumExplorationGroups;
-		BExplorationGroupTimerEntry[] ActiveExplorationGroups;
-		public BPlayer[] Players;
-		PlayerColorCategory[,] PlayerColorCategories = new PlayerColorCategory[cMaxPlayerColorCategories, cMaximumSupportedPlayers];
-		List<CondensedListItem16<BSimOrder>> SimOrders = [];
-		List<CondensedListItem16<BUnitOpp>> UnitOpps = [];
-		List<CondensedListItem16<BPathMoveData>> PathMoveData = [];
+		ObjectGroup[] numExplorationGroups_;
+		BExplorationGroupTimerEntry[] activeExplorationGroups_;
+		public BPlayer[] players;
+		PlayerColorCategory[,] playerColorCategories_ = new PlayerColorCategory[C_MAX_PLAYER_COLOR_CATEGORIES, C_MAXIMUM_SUPPORTED_PLAYERS];
+		List<CondensedListItem16<BSimOrder>> simOrders_ = [];
+		List<CondensedListItem16<BUnitOpp>> unitOpps_ = [];
+		List<CondensedListItem16<BPathMoveData>> pathMoveData_ = [];
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
@@ -105,26 +105,26 @@ namespace KSoft.Phoenix.Runtime
 
 			if (s.IsReading)
 			{
-				this.Players = new BPlayer[sg.Players.Count];
-				for(int x = 0; x < this.Players.Length; x++)
-					this.Players[x] = new BPlayer();
+				this.players = new BPlayer[sg.Players.Count];
+				for(int x = 0; x < this.players.Length; x++)
+					this.players[x] = new BPlayer();
 			}
 
-			BSaveGame.StreamArray16(s, ref this.NumExplorationGroups, isIterated:true);
-			BSaveGame.StreamArray(s, ref this.ActiveExplorationGroups);
-			s.StreamSignature(cSaveMarker.World1);
-			foreach (var player in this.Players)
+			BSaveGame.StreamArray16(s, ref this.numExplorationGroups_, isIterated:true);
+			BSaveGame.StreamArray(s, ref this.activeExplorationGroups_);
+			s.StreamSignature(CSaveMarker.WORLD1);
+			foreach (var player in this.players)
 				s.Stream(player);
-			s.StreamSignature(cSaveMarker.Players);
-			s.StreamSignature(cMaximumSupportedPlayers);
-			s.StreamSignature(cMaxPlayerColorCategories);
- 			for (int x = 0; x < cMaxPlayerColorCategories; x++)
- 				for (int y = 0; y < cMaximumSupportedPlayers; y++)
- 					s.Stream(ref this.PlayerColorCategories[x, y]);
-			s.StreamSignature(cSaveMarker.World2);
-			BSaveGame.StreamFreeList(s, this.SimOrders, BSimOrder.kFreeListInfo);
-			BSaveGame.StreamFreeList(s, this.UnitOpps, BUnitOpp.kFreeListInfo);
-			BSaveGame.StreamFreeList(s, this.PathMoveData, BPathMoveData.kFreeListInfo);
+			s.StreamSignature(CSaveMarker.PLAYERS);
+			s.StreamSignature(C_MAXIMUM_SUPPORTED_PLAYERS);
+			s.StreamSignature(C_MAX_PLAYER_COLOR_CATEGORIES);
+ 			for (int x = 0; x < C_MAX_PLAYER_COLOR_CATEGORIES; x++)
+ 				for (int y = 0; y < C_MAXIMUM_SUPPORTED_PLAYERS; y++)
+ 					s.Stream(ref this.playerColorCategories_[x, y]);
+			s.StreamSignature(CSaveMarker.WORLD2);
+			BSaveGame.StreamFreeList(s, this.simOrders_, BSimOrder.KFreeListInfo);
+			BSaveGame.StreamFreeList(s, this.unitOpps_, BUnitOpp.KFreeListInfo);
+			BSaveGame.StreamFreeList(s, this.pathMoveData_, BPathMoveData.KFreeListInfo);
 
 			//...
 		}

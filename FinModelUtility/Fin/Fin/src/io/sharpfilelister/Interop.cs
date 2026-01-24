@@ -9,7 +9,7 @@ namespace fin.io.sharpfilelister;
 [SuppressUnmanagedCodeSecurity]
 public sealed class Interop {
   [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-  public unsafe struct WIN32_FIND_DATAW {
+  public unsafe struct Win32FindDataw {
     public FileAttributes dwFileAttributes;
     internal FILETIME ftCreationTime;
     internal FILETIME ftLastAccessTime;
@@ -26,11 +26,11 @@ public sealed class Interop {
   [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
   public static extern IntPtr FindFirstFileW(
       IntPtr lpFileName,
-      out WIN32_FIND_DATAW lpFindFileData);
+      out Win32FindDataw lpFindFileData);
 
   [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
   public static extern bool FindNextFile(IntPtr hFindFile,
-                                         out WIN32_FIND_DATAW lpFindFileData);
+                                         out Win32FindDataw lpFindFileData);
 
   [DllImport("kernel32.dll")]
   public static extern bool FindClose(IntPtr hFindFile);

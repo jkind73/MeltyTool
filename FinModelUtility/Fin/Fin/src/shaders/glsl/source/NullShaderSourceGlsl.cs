@@ -17,7 +17,7 @@ public sealed class NullShaderSourceGlsl(
       var sb = new IndentedStringBuilder();
       sb.AppendLine(
           $"""
-           #version {GlslConstants.FRAGMENT_SHADER_VERSION}
+           #version {GlslConstants.FragmentShaderVersion}
            {GlslConstants.FLOAT_PRECISION}
 
            out vec4 fragColor;

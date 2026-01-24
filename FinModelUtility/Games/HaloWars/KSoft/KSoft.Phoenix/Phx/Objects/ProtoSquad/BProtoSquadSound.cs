@@ -5,58 +5,58 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "Sound",
+			elementName = "Sound",
 		};
 		#endregion
 
 		#region Sound
-		string mSound;
+		string mSound_;
 		public string Sound
 		{
-			get { return this.mSound; }
-			set { this.mSound = value; }
+			get { return this.mSound_; }
+			set { this.mSound_ = value; }
 		}
 		#endregion
 
 		#region Type
-		BSquadSoundType mType = BSquadSoundType.None;
+		BSquadSoundType mType_ = BSquadSoundType.NONE;
 		public BSquadSoundType Type
 		{
-			get { return this.mType; }
-			set { this.mType = value; }
+			get { return this.mType_; }
+			set { this.mType_ = value; }
 		}
 		#endregion
 
 		#region SquadID
-		int mSquadID = TypeExtensions.kNone;
+		int mSquadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoSquadReference]
-		public int SquadID
+		public int SquadId
 		{
-			get { return this.mSquadID; }
-			set { this.mSquadID = value; }
+			get { return this.mSquadId_; }
+			set { this.mSquadId_ = value; }
 		}
 		#endregion
 
 		#region WorldID
 		// #NOTE assumes 0 is the World enum "None" member
-		const int cWorldIdNone = 0;
+		const int C_WORLD_ID_NONE_ = 0;
 
-		int mWorldID = cWorldIdNone;
-		public int WorldID
+		int mWorldId_ = C_WORLD_ID_NONE_;
+		public int WorldId
 		{
-			get { return this.mWorldID; }
-			set { this.mWorldID = value; }
+			get { return this.mWorldId_; }
+			set { this.mWorldId_ = value; }
 		}
 		#endregion
 
 		#region CastingUnitOnly
-		bool mCastingUnitOnly;
+		bool mCastingUnitOnly_;
 		public bool CastingUnitOnly
 		{
-			get { return this.mCastingUnitOnly; }
-			set { this.mCastingUnitOnly = value; }
+			get { return this.mCastingUnitOnly_; }
+			set { this.mCastingUnitOnly_ = value; }
 		}
 		#endregion
 
@@ -67,17 +67,17 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamCursor(ref this.mSound);
+			s.StreamCursor(ref this.mSound_);
 
-			if (s.StreamAttributeEnumOpt("Type", ref this.mType, e => e != BSquadSoundType.None))
+			if (s.StreamAttributeEnumOpt("Type", ref this.mType_, e => e != BSquadSoundType.NONE))
 			{
 				// #NOTE Engine, in debug builds, asserts Squad is valid when specified
-				xs.StreamDBID(s, "Squad", ref this.mSquadID, DatabaseObjectKind.Squad, xmlSource: XML.XmlUtil.kSourceAttr);
+				xs.StreamDbid(s, "Squad", ref this.mSquadId_, DatabaseObjectKind.SQUAD, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
 				// #NOTE Engine, in debug builds, asserts the world ID is not cWorldIdNone when the World value is defined.
 				// It doesn't explicitly parse None, but defaults to None when it doesn't recognize the provided value
-				s.StreamProtoEnum("World", ref this.mWorldID, xs.Database.GameScenarioWorlds, xmlSource: XML.XmlUtil.kSourceAttr
-					, isOptionalDefaultValue: cWorldIdNone);
-				s.StreamAttributeOpt("CastingUnitOnly", ref this.mCastingUnitOnly, Predicates.IsTrue);
+				s.StreamProtoEnum("World", ref this.mWorldId_, xs.Database.GameScenarioWorlds, xmlSource: XML.XmlUtil.K_SOURCE_ATTR
+					, isOptionalDefaultValue: C_WORLD_ID_NONE_);
+				s.StreamAttributeOpt("CastingUnitOnly", ref this.mCastingUnitOnly_, Predicates.IsTrue);
 			}
 		}
 		#endregion

@@ -80,7 +80,7 @@ public sealed class XmlLevelParser {
         "sVectorXZ"  => XmlLevelAttributeType.VECTOR_XZ,
         "sVector4"   => XmlLevelAttributeType.VECTOR_4,
         "sU8Color"   => XmlLevelAttributeType.U8_COLOR,
-        "sMatrix4x4" => XmlLevelAttributeType.MATRIX_4X4,
+        "sMatrix4x4" => XmlLevelAttributeType.MATRIX_4_X4,
         _            => throw new ArgumentOutOfRangeException(nameof(attributeType), attributeType, null)
     };
 

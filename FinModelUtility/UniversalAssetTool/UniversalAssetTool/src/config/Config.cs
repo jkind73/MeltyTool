@@ -35,10 +35,10 @@ public sealed class Config {
   public ViewerSettings Viewer { get; } = new();
 
   public static void ReloadSettings()
-    => instance_ = DirectoryConstants.CONFIG_FILE.Deserialize<Config>();
+    => instance_ = DirectoryConstants.ConfigFile.Deserialize<Config>();
 
   public static void SaveSettings()
-    => DirectoryConstants.CONFIG_FILE.Serialize(Instance);
+    => DirectoryConstants.ConfigFile.Serialize(Instance);
 }
 
 public partial class GeneralSettings {
@@ -101,7 +101,7 @@ public enum ExportedFormat {
 }
 
 public static class ExportedFormatUtil {
-  public static readonly BidirectionalDictionary<ExportedFormat, string> map_
+  public static readonly BidirectionalDictionary<ExportedFormat, string> MAP_
       = new() {
           [ExportedFormat.DAE] = ".dae",
           [ExportedFormat.FBX] = ".fbx",
@@ -110,8 +110,8 @@ public static class ExportedFormatUtil {
           [ExportedFormat.OBJ] = ".obj",
       };
 
-  public static string AsFileType(this ExportedFormat format) => map_[format];
-  public static ExportedFormat AsFormat(this string fileType) => map_[fileType];
+  public static string AsFileType(this ExportedFormat format) => MAP_[format];
+  public static ExportedFormat AsFormat(this string fileType) => MAP_[fileType];
 }
 
 public partial class ExporterSettings {

@@ -27,7 +27,7 @@ public sealed class VrwdwFileBundleGatherer : BPrereqsFileBundleGatherer {
 
     foreach (var midFile in fileHierarchy.Root.GetFilesWithFileType(".mid")) {
       organizer.Add(
-          new MidiAudioFileBundle(midFile, CommonFiles.WINDOWS_SOUNDFONT_FILE)
+          new MidiAudioFileBundle(midFile, CommonFiles.WindowsSoundfontFile)
               .Annotate(midFile));
     }
   }

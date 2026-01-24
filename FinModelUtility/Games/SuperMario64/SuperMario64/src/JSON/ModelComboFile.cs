@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace sm64.JSON {
   public sealed class ModelComboFile {
-    private static byte parseByte(string str) {
+    private static byte ParseByte_(string str) {
       bool isHex = false;
       if (str.StartsWith("0x")) {
         str = str[2..];
@@ -19,7 +19,7 @@ namespace sm64.JSON {
         return byte.Parse(str, NumberStyles.HexNumber);
     }
 
-    private static uint parseUInt(string str) {
+    private static uint ParseUInt_(string str) {
       bool isHex = false;
       if (str.StartsWith("0x")) {
         str = str[2..];
@@ -34,32 +34,32 @@ namespace sm64.JSON {
         return uint.Parse(str, NumberStyles.HexNumber);
     }
 
-    public static void writeObjectCombosFile(string filename) {
+    public static void WriteObjectCombosFile(string filename) {
       Globals.objectComboEntries.Sort((x, y) => string.Compare(x.Name, y.Name));
 
       JArray array = [];
       foreach (ObjectComboEntry oce in Globals.objectComboEntries) {
         JObject entry = new JObject();
         entry["Name"] = oce.Name;
-        entry["ModelID"] = "0x" + oce.ModelID.ToString("X2");
+        entry["ModelID"] = "0x" + oce.ModelId.ToString("X2");
         entry["ModelAddress"] = "0x" + oce.ModelSegmentAddress.ToString("X8");
         entry["Behavior"] = "0x" + oce.Behavior.ToString("X8");
-        if (oce.BP1_NAME != null)
-          entry["BP1_NAME"] = oce.BP1_NAME;
-        if (oce.BP2_NAME != null)
-          entry["BP2_NAME"] = oce.BP2_NAME;
-        if (oce.BP3_NAME != null)
-          entry["BP3_NAME"] = oce.BP3_NAME;
-        if (oce.BP4_NAME != null)
-          entry["BP4_NAME"] = oce.BP4_NAME;
-        if (oce.BP1_DESCRIPTION != null)
-          entry["BP1_DESCRIPTION"] = oce.BP1_DESCRIPTION;
-        if (oce.BP2_DESCRIPTION != null)
-          entry["BP2_DESCRIPTION"] = oce.BP2_DESCRIPTION;
-        if (oce.BP3_DESCRIPTION != null)
-          entry["BP3_DESCRIPTION"] = oce.BP3_DESCRIPTION;
-        if (oce.BP4_DESCRIPTION != null)
-          entry["BP4_DESCRIPTION"] = oce.BP4_DESCRIPTION;
+        if (oce.Bp1Name != null)
+          entry["BP1_NAME"] = oce.Bp1Name;
+        if (oce.Bp2Name != null)
+          entry["BP2_NAME"] = oce.Bp2Name;
+        if (oce.Bp3Name != null)
+          entry["BP3_NAME"] = oce.Bp3Name;
+        if (oce.Bp4Name != null)
+          entry["BP4_NAME"] = oce.Bp4Name;
+        if (oce.Bp1Description != null)
+          entry["BP1_DESCRIPTION"] = oce.Bp1Description;
+        if (oce.Bp2Description != null)
+          entry["BP2_DESCRIPTION"] = oce.Bp2Description;
+        if (oce.Bp3Description != null)
+          entry["BP3_DESCRIPTION"] = oce.Bp3Description;
+        if (oce.Bp4Description != null)
+          entry["BP4_DESCRIPTION"] = oce.Bp4Description;
         array.Add(entry);
       }
 
@@ -69,12 +69,12 @@ namespace sm64.JSON {
       File.WriteAllText(filename, o.ToString());
     }
 
-    private static bool checkValidEntry(JObject entry) {
+    private static bool CheckValidEntry_(JObject entry) {
       return (entry["Name"] != null && entry["ModelID"] != null &&
               entry["ModelAddress"] != null && entry["Behavior"] != null);
     }
 
-    public static void parseObjectCombos(string filename) {
+    public static void ParseObjectCombos(string filename) {
       if (File.Exists(filename)) {
         string json = File.ReadAllText(filename);
         JObject o = JObject.Parse(json);
@@ -82,32 +82,32 @@ namespace sm64.JSON {
           JArray array = (JArray) o["ObjectCombos"];
           foreach (JToken token in array.Children()) {
             JObject entry = (JObject) token;
-            if (checkValidEntry(entry)) {
+            if (CheckValidEntry_(entry)) {
               string name = entry["Name"].ToString();
-              string modelID_s = entry["ModelID"].ToString();
-              string ModelAddress_s = entry["ModelAddress"].ToString();
-              string Behavior_s = entry["Behavior"].ToString();
-              byte modelID = parseByte(modelID_s);
-              uint ModelAddress = parseUInt(ModelAddress_s);
-              uint Behavior = parseUInt(Behavior_s);
+              string modelIdS = entry["ModelID"].ToString();
+              string modelAddressS = entry["ModelAddress"].ToString();
+              string behaviorS = entry["Behavior"].ToString();
+              byte modelId = ParseByte_(modelIdS);
+              uint modelAddress = ParseUInt_(modelAddressS);
+              uint behavior = ParseUInt_(behaviorS);
               ObjectComboEntry oce =
-                  new ObjectComboEntry(name, modelID, ModelAddress, Behavior);
+                  new ObjectComboEntry(name, modelId, modelAddress, behavior);
               if (entry["BP1_NAME"] != null)
-                oce.BP1_NAME = entry["BP1_NAME"].ToString();
+                oce.Bp1Name = entry["BP1_NAME"].ToString();
               if (entry["BP2_NAME"] != null)
-                oce.BP2_NAME = entry["BP2_NAME"].ToString();
+                oce.Bp2Name = entry["BP2_NAME"].ToString();
               if (entry["BP3_NAME"] != null)
-                oce.BP3_NAME = entry["BP3_NAME"].ToString();
+                oce.Bp3Name = entry["BP3_NAME"].ToString();
               if (entry["BP4_NAME"] != null)
-                oce.BP4_NAME = entry["BP4_NAME"].ToString();
+                oce.Bp4Name = entry["BP4_NAME"].ToString();
               if (entry["BP1_DESCRIPTION"] != null)
-                oce.BP1_DESCRIPTION = entry["BP1_DESCRIPTION"].ToString();
+                oce.Bp1Description = entry["BP1_DESCRIPTION"].ToString();
               if (entry["BP2_DESCRIPTION"] != null)
-                oce.BP2_DESCRIPTION = entry["BP2_DESCRIPTION"].ToString();
+                oce.Bp2Description = entry["BP2_DESCRIPTION"].ToString();
               if (entry["BP3_DESCRIPTION"] != null)
-                oce.BP3_DESCRIPTION = entry["BP3_DESCRIPTION"].ToString();
+                oce.Bp3Description = entry["BP3_DESCRIPTION"].ToString();
               if (entry["BP4_DESCRIPTION"] != null)
-                oce.BP4_DESCRIPTION = entry["BP4_DESCRIPTION"].ToString();
+                oce.Bp4Description = entry["BP4_DESCRIPTION"].ToString();
               Globals.objectComboEntries.Add(oce);
             }
           }

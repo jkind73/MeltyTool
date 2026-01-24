@@ -42,7 +42,7 @@ public static partial class Ctrtool {
         ProcessUtil
             .ExecuteBlockingSilently(
                 ThreeDsToolsConstants
-                    .EXTRACT_CIA_BAT,
+                    .ExtractCiaBat,
                 $"\"{romFile.FullPath}\"",
                 $"\"{dstDirectory.FullPath}\"");
       });

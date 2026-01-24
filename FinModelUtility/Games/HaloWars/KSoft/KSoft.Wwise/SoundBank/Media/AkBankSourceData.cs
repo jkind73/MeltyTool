@@ -8,57 +8,57 @@ namespace KSoft.Wwise.SoundBank
 	{
 		enum AkPluginType
 		{
-			None,
-			Codec,
-			Source,
-			Effect,
-			MotionDevice,
-			MotionSource,
+			NONE,
+			CODEC,
+			SOURCE,
+			EFFECT,
+			MOTION_DEVICE,
+			MOTION_SOURCE,
 		};
 		public enum SourceType : uint
 		{
-			Data,
-			Streaming,
-			PrefetchStreaming,
+			DATA,
+			STREAMING,
+			PREFETCH_STREAMING,
 
-			NotInitialized = uint.MaxValue
+			NOT_INITIALIZED = uint.MaxValue
 		};
 
-		const uint AkPluginTypeMask = 0xF;
+		const uint AK_PLUGIN_TYPE_MASK_ = 0xF;
 
-		public uint PluginID;
-		public SourceType StreamType;
-		public uint AudioFormat_SampleRate;
+		public uint pluginId;
+		public SourceType streamType;
+		public uint audioFormatSampleRate;
 		// uChannelMask : 18
 		// uBitsPerSample : 6
 		// uBlockAlign : 5
 		// uTypeID : 2
 		// uInterleaveID : 1
-		public uint AudioFormat_Bits;
-		public AkMediaInformation MediaInfo;
+		public uint audioFormatBits;
+		public AkMediaInformation mediaInfo;
 
-		public CAkParameterNodeBase ParameterNode = new CAkParameterNodeBase();
+		public CAkParameterNodeBase parameterNode = new CAkParameterNodeBase();
 
-		public bool Prefetch { get { return this.StreamType == SourceType.PrefetchStreaming; } }
+		public bool Prefetch { get { return this.streamType == SourceType.PREFETCH_STREAMING; } }
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.PluginID);
-			s.Stream(ref this.StreamType, SourceTypeStreamer.Instance);
-			s.Stream(ref this.AudioFormat_SampleRate);
-			s.Stream(ref this.AudioFormat_Bits);
-			s.Stream(ref this.MediaInfo.SourceID);
-			s.Stream(ref this.MediaInfo.FileID);
-			if (this.StreamType != SourceType.Streaming)
+			s.Stream(ref this.pluginId);
+			s.Stream(ref this.streamType, SourceTypeStreamer.Instance);
+			s.Stream(ref this.audioFormatSampleRate);
+			s.Stream(ref this.audioFormatBits);
+			s.Stream(ref this.mediaInfo.sourceId);
+			s.Stream(ref this.mediaInfo.fileId);
+			if (this.streamType != SourceType.STREAMING)
 			{
-				s.Stream(ref this.MediaInfo.FileOffset);
-				s.Stream(ref this.MediaInfo.MediaSize);
+				s.Stream(ref this.mediaInfo.fileOffset);
+				s.Stream(ref this.mediaInfo.mediaSize);
 			}
-			s.Stream(ref this.MediaInfo.IsLanguageSpecific);
+			s.Stream(ref this.mediaInfo.isLanguageSpecific);
 
-			var ptype = (AkPluginType)(this.PluginID & AkPluginTypeMask);
-			if (ptype == AkPluginType.Source || ptype == AkPluginType.MotionSource)
+			var ptype = (AkPluginType)(this.pluginId & AK_PLUGIN_TYPE_MASK_);
+			if (ptype == AkPluginType.SOURCE || ptype == AkPluginType.MOTION_SOURCE)
 				s.Pad32(); // size
 #if false
 			s.Stream(ParameterNode);

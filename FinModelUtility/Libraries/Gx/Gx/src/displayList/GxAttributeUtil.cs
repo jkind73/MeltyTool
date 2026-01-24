@@ -10,17 +10,17 @@ namespace gx.displayList;
 public static class GxAttributeUtil {
   public static int GetColorComponentCount(
       GxComponentCountType componentCountType)
-    => GetComponentCount(GxVertexAttribute.Color0, componentCountType);
+    => GetComponentCount(GxVertexAttribute.COLOR0, componentCountType);
 
   public static int GetComponentCount(GxVertexAttribute vertexAttribute,
                                       GxComponentCountType componentCountType)
     => vertexAttribute switch {
-        GxVertexAttribute.Position => componentCountType switch {
+        GxVertexAttribute.POSITION => componentCountType switch {
             GxComponentCountType.POS_XY  => 2,
             GxComponentCountType.POS_XYZ => 3,
             _                            => throw new ArgumentOutOfRangeException(nameof(componentCountType), componentCountType, null)
         },
-        GxVertexAttribute.Normal => componentCountType switch {
+        GxVertexAttribute.NORMAL => componentCountType switch {
             GxComponentCountType.NRM_XYZ => 3,
             _                            => throw new ArgumentOutOfRangeException(nameof(componentCountType), componentCountType, null)
         },
@@ -28,13 +28,13 @@ public static class GxAttributeUtil {
             GxComponentCountType.NRM_NBT => 3,
             _                            => throw new ArgumentOutOfRangeException(nameof(componentCountType), componentCountType, null)
         },
-        GxVertexAttribute.Color0 or GxVertexAttribute.Color1
+        GxVertexAttribute.COLOR0 or GxVertexAttribute.COLOR1
             => componentCountType switch {
                 GxComponentCountType.CLR_RGB  => 3,
                 GxComponentCountType.CLR_RGBA => 4,
                 _                             => throw new ArgumentOutOfRangeException(nameof(componentCountType), componentCountType, null)
             },
-        >= GxVertexAttribute.Tex0Coord and <= GxVertexAttribute.Tex7Coord
+        >= GxVertexAttribute.TEX0_COORD and <= GxVertexAttribute.TEX7_COORD
             => componentCountType switch {
                 GxComponentCountType.TEX_S  => 1,
                 GxComponentCountType.TEX_ST => 2,
@@ -118,7 +118,7 @@ public static class GxAttributeUtil {
                                      GxAxisComponentType axisComponentType,
                                      byte decimalPoint) {
     var componentCount = GxAttributeUtil.GetComponentCount(
-        GxVertexAttribute.Position,
+        GxVertexAttribute.POSITION,
         componentCountType);
 
     Span<float> floats = stackalloc float[3];
@@ -134,7 +134,7 @@ public static class GxAttributeUtil {
                                    GxAxisComponentType axisComponentType,
                                    byte decimalPoint) {
     var componentCount = GxAttributeUtil.GetComponentCount(
-        GxVertexAttribute.Normal,
+        GxVertexAttribute.NORMAL,
         componentCountType);
 
     Span<float> floats = stackalloc float[3];
@@ -150,7 +150,7 @@ public static class GxAttributeUtil {
                                      GxAxisComponentType axisComponentType,
                                      byte decimalPoint) {
     var componentCount = GxAttributeUtil.GetComponentCount(
-        GxVertexAttribute.Tex0Coord,
+        GxVertexAttribute.TEX0_COORD,
         componentCountType);
 
     Span<float> floats = stackalloc float[2];

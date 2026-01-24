@@ -6,15 +6,15 @@ namespace KSoft.Phoenix.Runtime
 	struct BHardpoint
 		: IO.IEndianStreamSerializable
 	{
-		public const int kMaxCount = 0x14;
+		public const int K_MAX_COUNT = 0x14;
 
-		public float YawRotationRate, PitchRotationRate;
+		public float yawRotationRate, pitchRotationRate;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.YawRotationRate);
-			s.Stream(ref this.PitchRotationRate);
+			s.Stream(ref this.yawRotationRate);
+			s.Stream(ref this.pitchRotationRate);
 		}
 		#endregion
 	};
@@ -22,22 +22,22 @@ namespace KSoft.Phoenix.Runtime
 	public struct BHardpointState
 		: IO.IEndianStreamSerializable
 	{
-		public int OwnerAction;
-		public float AutoCenteringTimer, YawSoundActivationTimer, PitchSoundActivationTimer;
-		public BUnitOppID OppID;
+		public int ownerAction;
+		public float autoCenteringTimer, yawSoundActivationTimer, pitchSoundActivationTimer;
+		public BUnitOppID oppId;
 		public bool
-			AllowAutoCentering, YawSound, YawSoundPlaying,
-			PitchSound, PitchSoundPlaying, SecondaryTurretScanToken
+			allowAutoCentering, yawSound, yawSoundPlaying,
+			pitchSound, pitchSoundPlaying, secondaryTurretScanToken
 			;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.OwnerAction);
-			s.Stream(ref this.AutoCenteringTimer);	s.Stream(ref this.YawSoundActivationTimer);	s.Stream(ref this.PitchSoundActivationTimer);
-			s.Stream(ref this.OppID);
-			s.Stream(ref this.AllowAutoCentering);	s.Stream(ref this.YawSound);				s.Stream(ref this.YawSoundPlaying);
-			s.Stream(ref this.PitchSound);			s.Stream(ref this.PitchSoundPlaying);	s.Stream(ref this.SecondaryTurretScanToken);
+			s.Stream(ref this.ownerAction);
+			s.Stream(ref this.autoCenteringTimer);	s.Stream(ref this.yawSoundActivationTimer);	s.Stream(ref this.pitchSoundActivationTimer);
+			s.Stream(ref this.oppId);
+			s.Stream(ref this.allowAutoCentering);	s.Stream(ref this.yawSound);				s.Stream(ref this.yawSoundPlaying);
+			s.Stream(ref this.pitchSound);			s.Stream(ref this.pitchSoundPlaying);	s.Stream(ref this.secondaryTurretScanToken);
 		}
 		#endregion
 	};

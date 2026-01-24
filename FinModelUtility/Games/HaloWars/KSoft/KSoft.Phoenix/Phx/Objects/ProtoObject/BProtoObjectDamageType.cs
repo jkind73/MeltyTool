@@ -8,37 +8,37 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<BProtoObjectDamageType>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "DamageType",
+			elementName = "DamageType",
 		};
 		#endregion
 
 		#region DamageType
-		int mDamageType = TypeExtensions.kNone;
+		int mDamageType_ = TypeExtensions.K_NONE;
 		[Meta.BDamageTypeReference]
 		public int DamageType
 		{
-			get { return this.mDamageType; }
-			set { this.mDamageType = value; }
+			get { return this.mDamageType_; }
+			set { this.mDamageType_ = value; }
 		}
 		#endregion
 
 		#region Direction
-		DamageDirection mDirection = DamageDirection.Invalid;
+		DamageDirection mDirection_ = DamageDirection.INVALID;
 		public DamageDirection Direction
 		{
-			get { return this.mDirection; }
-			set { this.mDirection = value; }
+			get { return this.mDirection_; }
+			set { this.mDirection_ = value; }
 		}
 		#endregion
 
 		#region Mode
-		BSquadMode mMode = BSquadMode.Normal;
+		BSquadMode mMode_ = BSquadMode.NORMAL;
 		public BSquadMode Mode
 		{
-			get { return this.mMode; }
-			set { this.mMode = value; }
+			get { return this.mMode_; }
+			set { this.mMode_ = value; }
 		}
 		#endregion
 
@@ -49,9 +49,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDamageType, DatabaseObjectKind.DamageType, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
-			s.StreamAttributeEnum("direction", ref this.mDirection);
-			s.StreamAttributeEnumOpt("mode", ref this.mMode, e => e != BSquadMode.Normal);
+			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDamageType_, DatabaseObjectKind.DAMAGE_TYPE, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
+			s.StreamAttributeEnum("direction", ref this.mDirection_);
+			s.StreamAttributeEnumOpt("mode", ref this.mMode_, e => e != BSquadMode.NORMAL);
 		}
 		#endregion
 

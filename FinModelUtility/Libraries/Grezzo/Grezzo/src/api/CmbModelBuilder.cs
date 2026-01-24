@@ -72,7 +72,7 @@ public sealed class CmbModelBuilder {
     var finSkin = finModel.Skin;
 
     // Adds bones
-    var cmbBones = cmb.skl.Data.bones;
+    var cmbBones = cmb.skl.Data.Bones;
     var boneChildren = new ListDictionary<Bone, Bone>();
     foreach (var bone in cmbBones) {
       var parentId = bone.parentId;
@@ -85,16 +85,16 @@ public sealed class CmbModelBuilder {
     var boneQueue =
         new FinTuple2Queue<Bone, IBone?>((cmbBones[0], null));
     while (boneQueue.TryDequeue(out var cmbBone, out var finBoneParent)) {
-      var translation = cmbBone.translation;
-      var radians = cmbBone.rotation;
-      var scale = cmbBone.scale;
+      var translation = cmbBone.Translation;
+      var radians = cmbBone.Rotation;
+      var scale = cmbBone.Scale;
 
       var finBone
           = (finBoneParent ?? finModel.Skeleton.Root).AddChild(
               translation);
       finBone.Transform.SetRotationRadians(radians);
       finBone.Transform.SetScale(scale);
-      finBones[cmbBone.id] = finBone;
+      finBones[cmbBone.Id] = finBone;
 
       if (boneChildren.TryGetList(cmbBone, out var children)) {
         boneQueue.Enqueue(children!.Select(child => (child, finBone)));
@@ -163,7 +163,7 @@ public sealed class CmbModelBuilder {
       }
     }
 
-    var cmbTextures = cmb.tex.Data.textures;
+    var cmbTextures = cmb.tex.Data.Textures;
 
     var textureImages = new LazyArray<IImage>(
         cmbTextures.Length,
@@ -177,11 +177,11 @@ public sealed class CmbModelBuilder {
           } else {
             var ctxb
                 = ctxbs?.FirstOrDefault(
-                    ctxb => ctxb.Chunk.Entry.Name == cmbTexture.name);
+                    ctxb => ctxb.Chunk.Entry.Name == cmbTexture.Name);
             image = ctxb != null
                 ? cmbTexture.GetImageReader()
                             .ReadImage(ctxb.Chunk.Entry.Data)
-                : FinImage.Create1x1FromColor(Color.Magenta);
+                : FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           return image;
@@ -204,11 +204,11 @@ public sealed class CmbModelBuilder {
     // Adds meshes
     var sklm = cmb.sklm.Data;
     foreach (var cmbMesh in sklm.mshs.Meshes) {
-      var shape = sklm.shapes.shapes[cmbMesh.shapeIndex];
+      var shape = sklm.shapes.Shapes[cmbMesh.shapeIndex];
 
       uint vertexCount = 0;
       var meshIndices = new List<uint>();
-      foreach (var pset in shape.primitiveSets) {
+      foreach (var pset in shape.PrimitiveSets) {
         foreach (var index in pset.primitive.indices) {
           meshIndices.Add(index);
           vertexCount = Math.Max(vertexCount, index);
@@ -219,27 +219,27 @@ public sealed class CmbModelBuilder {
 
       var preproject = new bool?[vertexCount];
       var skinningModes = new SkinningMode?[vertexCount];
-      foreach (var pset in shape.primitiveSets) {
+      foreach (var pset in shape.PrimitiveSets) {
         foreach (var index in pset.primitive.indices) {
           skinningModes[index] = pset.skinningMode;
-          preproject[index] = pset.skinningMode != SkinningMode.Smooth;
+          preproject[index] = pset.skinningMode != SkinningMode.SMOOTH;
         }
       }
 
       // Gets flags
       var inc = 1;
-      var hasNrm = shape.vertFlags.GetBit(inc++);
+      var hasNrm = shape.VertFlags.GetBit(inc++);
       if (cmb.header.version > Version.OCARINA_OF_TIME_3D) {
         // Skip "HasTangents" for now
         inc++;
       }
 
-      var hasClr = shape.vertFlags.GetBit(inc++);
-      var hasUv0 = shape.vertFlags.GetBit(inc++);
-      var hasUv1 = shape.vertFlags.GetBit(inc++);
-      var hasUv2 = shape.vertFlags.GetBit(inc++);
-      var hasBi = shape.vertFlags.GetBit(inc++);
-      var hasBw = shape.vertFlags.GetBit(inc++);
+      var hasClr = shape.VertFlags.GetBit(inc++);
+      var hasUv0 = shape.VertFlags.GetBit(inc++);
+      var hasUv1 = shape.VertFlags.GetBit(inc++);
+      var hasUv2 = shape.VertFlags.GetBit(inc++);
+      var hasBi = shape.VertFlags.GetBit(inc++);
+      var hasBw = shape.VertFlags.GetBit(inc++);
 
       var material = finMaterials[(cmbMesh.materialIndex, hasClr)];
       var needsUv0 = material?.Textures.Any(t => t.UvIndex == 0) ?? false;
@@ -260,7 +260,7 @@ public sealed class CmbModelBuilder {
                       .SeparateTriplets()
                       .ToMemoryEnumerator();
       var colorEnumerator =
-          DataTypeUtil.Read(cmb.vatr.color, shape.color, 4)
+          DataTypeUtil.Read(cmb.vatr.color, shape.Color, 4)
                       .Select(v => (byte) (255 * v))
                       .SeparateQuadruplets()
                       .ToMemoryEnumerator();

@@ -11,32 +11,32 @@ namespace KSoft.Phoenix.Xmb
 {
 	/*public */sealed class XmbFileContext
 	{
-		public Shell.ProcessorSize PointerSize;
+		public Shell.ProcessorSize pointerSize;
 	};
 
 	/*public*/ sealed partial class XmbFile
 		: IO.IEndianStreamable
 		, IDisposable
 	{
-		public const string kFileExt = ".xmb";
-		const uint kSignature = 0x71439800;
+		public const string K_FILE_EXT = ".xmb";
+		const uint K_SIGNATURE_ = 0x71439800;
 
-		List<Element> mElements;
-		XmbVariantMemoryPool mPool;
-		bool mHasUnicodeStrings;
+		List<Element> mElements_;
+		XmbVariantMemoryPool mPool_;
+		bool mHasUnicodeStrings_;
 
-		public bool HasUnicodeStrings { get { return this.mHasUnicodeStrings; } }
+		public bool HasUnicodeStrings { get { return this.mHasUnicodeStrings_; } }
 
 	#region IDisposable Members
 	public void Dispose()
 		{
-			if (this.mElements != null)
+			if (this.mElements_ != null)
 			{
-				this.mElements.Clear();
-				this.mElements = null;
+				this.mElements_.Clear();
+				this.mElements_ = null;
 			}
 
-			Util.DisposeAndNull(ref this.mPool);
+			Util.DisposeAndNull(ref this.mPool_);
 		}
 		#endregion
 
@@ -45,69 +45,69 @@ namespace KSoft.Phoenix.Xmb
 		{
 			var context = s.UserData as XmbFileContext;
 
-			using (s.ReadSignatureWithByteSwapSupport(kSignature))
+			using (s.ReadSignatureWithByteSwapSupport(K_SIGNATURE_))
 			{
-				if (context.PointerSize == Shell.ProcessorSize.x64)
+				if (context.pointerSize == Shell.ProcessorSize.X64)
 				{
 					// #HACK to deal with xmb files which weren't updated with new tools
-					if (s.ByteOrder == Shell.EndianFormat.Big)
+					if (s.ByteOrder == Shell.EndianFormat.BIG)
 					{
-						context.PointerSize = Shell.ProcessorSize.x32;
+						context.pointerSize = Shell.ProcessorSize.X32;
 					}
 				}
 
-				s.VirtualAddressTranslationInitialize(context.PointerSize);
+				s.VirtualAddressTranslationInitialize(context.pointerSize);
 
-				Values.PtrHandle elements_offset_pos;
+				Values.PtrHandle elementsOffsetPos;
 
-				if (context.PointerSize == Shell.ProcessorSize.x64)
+				if (context.pointerSize == Shell.ProcessorSize.X64)
 				{
 					s.Pad32();
 				}
 				#region Initialize elements
 				{
 					int count = s.ReadInt32();
-					if (context.PointerSize == Shell.ProcessorSize.x64)
+					if (context.pointerSize == Shell.ProcessorSize.X64)
 					{
 						s.Pad32();
 					}
-					s.ReadVirtualAddress(out elements_offset_pos);
+					s.ReadVirtualAddress(out elementsOffsetPos);
 
-					this.mElements = new List<Element>(count);
+					this.mElements_ = new List<Element>(count);
 				}
 				#endregion
 				#region Initialize and read pool
 				{
 					int size = s.ReadInt32();
-					if (context.PointerSize == Shell.ProcessorSize.x64)
+					if (context.pointerSize == Shell.ProcessorSize.X64)
 					{
 						s.Pad32();
 					}
-					Values.PtrHandle pool_offset_pos = s.ReadVirtualAddress();
+					Values.PtrHandle poolOffsetPos = s.ReadVirtualAddress();
 
-					s.Seek((long)pool_offset_pos);
+					s.Seek((long)poolOffsetPos);
 					byte[] buffer = s.ReadBytes(size);
 
-					this.mPool = new XmbVariantMemoryPool(buffer, s.ByteOrder);
+					this.mPool_ = new XmbVariantMemoryPool(buffer, s.ByteOrder);
 				}
 				#endregion
 
-				if (context.PointerSize == Shell.ProcessorSize.x64)
+				if (context.pointerSize == Shell.ProcessorSize.X64)
 				{
 					s.Pad64();
 				}
 
-				s.Seek((long)elements_offset_pos);
-				for (int x = 0; x < this.mElements.Capacity; x++)
+				s.Seek((long)elementsOffsetPos);
+				for (int x = 0; x < this.mElements_.Capacity; x++)
 				{
 					var e = new Element();
-					this.mElements.Add(e);
+					this.mElements_.Add(e);
 
-					e.Index = x;
+					e.index = x;
 					e.Read(this, context, s);
 				}
 
-				foreach (var e in this.mElements)
+				foreach (var e in this.mElements_)
 				{
 					e.ReadAttributes(this, s);
 					e.ReadChildren(s);
@@ -119,57 +119,57 @@ namespace KSoft.Phoenix.Xmb
 		{
 			var context = s.UserData as XmbFileContext;
 
-			s.Write(kSignature);
-			if (context.PointerSize == Shell.ProcessorSize.x64)
+			s.Write(K_SIGNATURE_);
+			if (context.pointerSize == Shell.ProcessorSize.X64)
 			{
 				s.Pad32();
 			}
 
 			#region Elements header
-			s.Write(this.mElements.Count);
-			if (context.PointerSize == Shell.ProcessorSize.x64)
+			s.Write(this.mElements_.Count);
+			if (context.pointerSize == Shell.ProcessorSize.X64)
 			{
 				s.Pad32();
 			}
-			var elements_offset_pos = s.MarkVirtualAddress(context.PointerSize);
+			var elementsOffsetPos = s.MarkVirtualAddress(context.pointerSize);
 			#endregion
 
 			#region Pool header
-			s.Write(this.mPool.Size);
-			if (context.PointerSize == Shell.ProcessorSize.x64)
+			s.Write(this.mPool_.Size);
+			if (context.pointerSize == Shell.ProcessorSize.X64)
 			{
 				s.Pad32();
 			}
-			var pool_offset_pos = s.MarkVirtualAddress(context.PointerSize);
+			var poolOffsetPos = s.MarkVirtualAddress(context.pointerSize);
 			#endregion
 
-			if (context.PointerSize == Shell.ProcessorSize.x64)
+			if (context.pointerSize == Shell.ProcessorSize.X64)
 			{
 				s.Pad64();
 			}
 
-			var elements_offset = s.PositionPtr;
-			foreach (var e in this.mElements)
+			var elementsOffset = s.PositionPtr;
+			foreach (var e in this.mElements_)
 			{
 				e.Write(s);
 			}
-			foreach (var e in this.mElements)
+			foreach (var e in this.mElements_)
 			{
 				e.WriteAttributes(s);
 				e.WriteChildren(s);
 			}
 
-			var pool_offset = s.PositionPtr;
-			this.mPool.Write(s);
+			var poolOffset = s.PositionPtr;
+			this.mPool_.Write(s);
 
-			s.Seek((long)elements_offset_pos);
-			s.WriteVirtualAddress(elements_offset);
-			s.Seek((long)pool_offset_pos);
-			s.WriteVirtualAddress(pool_offset);
+			s.Seek((long)elementsOffsetPos);
+			s.WriteVirtualAddress(elementsOffset);
+			s.Seek((long)poolOffsetPos);
+			s.WriteVirtualAddress(poolOffset);
 		}
 		#endregion
 
-		string ToString(XmbVariant v) { return v.ToString(this.mPool); }
+		string ToString(XmbVariant v) { return v.ToString(this.mPool_); }
 
 		public XmlDocument ToXmlDocument()
 		{
@@ -184,12 +184,12 @@ namespace KSoft.Phoenix.Xmb
 		{
 			Contract.Ensures(doc == null || Contract.Result<XmlDocument>() != null);
 
-			if (doc != null && this.mElements != null && this.mElements.Count > 1)
+			if (doc != null && this.mElements_ != null && this.mElements_.Count > 1)
 			{
-				var root = this.mElements[0];
-				var root_e = root.ToXml(this, doc, null);
+				var root = this.mElements_[0];
+				var rootE = root.ToXml(this, doc, null);
 
-				doc.AppendChild(root_e);
+				doc.AppendChild(rootE);
 			}
 
 			return doc;
@@ -217,17 +217,17 @@ namespace KSoft.Phoenix.Xmb
 
 			var doc = this.ToXmlDocument();
 
-			var encoding = this.mHasUnicodeStrings
+			var encoding = this.mHasUnicodeStrings_
 				? System.Text.Encoding.UTF8
 				: System.Text.Encoding.ASCII;
-			var xml_writer_settings = new XmlWriterSettings()
+			var xmlWriterSettings = new XmlWriterSettings()
 			{
 				Indent = true,
 				IndentChars = "\t",
 				CloseOutput = false,
 				Encoding = encoding,
 			};
-			using (var xml = XmlWriter.Create(stream, xml_writer_settings))
+			using (var xml = XmlWriter.Create(stream, xmlWriterSettings))
 			{
 				doc.Save(xml);
 			}

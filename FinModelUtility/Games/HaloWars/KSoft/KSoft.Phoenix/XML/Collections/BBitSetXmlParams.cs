@@ -6,7 +6,7 @@ namespace KSoft.Phoenix.XML
 	{
 		// enabled flags are written as xml elements without any attributes or text. Eg:
 		// <InfiniteUses /> means the BPowerFlags.InfiniteUses bit is set
-		public bool ElementItselfMeansTrue;
+		public bool elementItselfMeansTrue;
 
 		private BBitSetXmlParams()
 		{
@@ -15,17 +15,17 @@ namespace KSoft.Phoenix.XML
 		/// <param name="elementName">Name of the xml element which represents the type (enum) value</param>
 		public BBitSetXmlParams(string elementName)
 		{
-			this.ElementName = elementName;
+			this.elementName = elementName;
 
-			this.Flags = 0
-			             | BCollectionXmlParamsFlags.UseInnerTextForData
-			             | BCollectionXmlParamsFlags.InternDataNames;
+			this.flags = 0
+			             | BCollectionXmlParamsFlags.USE_INNER_TEXT_FOR_DATA
+			             | BCollectionXmlParamsFlags.INTERN_DATA_NAMES;
 		}
 
-		public static readonly BBitSetXmlParams kFlagsSansRoot = new BBitSetXmlParams("Flag");
-		public static readonly BBitSetXmlParams kFlagsAreElementNamesThatMeanTrue = new BBitSetXmlParams()
+		public static readonly BBitSetXmlParams KFlagsSansRoot = new BBitSetXmlParams("Flag");
+		public static readonly BBitSetXmlParams KFlagsAreElementNamesThatMeanTrue = new BBitSetXmlParams()
 		{
-			ElementItselfMeansTrue = true,
+			elementItselfMeansTrue = true,
 		};
 	};
 }

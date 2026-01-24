@@ -16,7 +16,7 @@ namespace KSoft.Phoenix.Resource
 		public string UserName { get; set; }
 
 		public string SourceFileName { get; private set; }
-		public byte[] SourceDigest { get; private set; } = new byte[Security.Cryptography.PhxHash.kSha1SizeOf];
+		public byte[] SourceDigest { get; private set; } = new byte[Security.Cryptography.PhxHash.K_SHA1_SIZE_OF];
 		public long SourceFileSize { get; private set; }
 		public DateTime SourceFileTimeStamp { get; private set; }
 
@@ -101,8 +101,8 @@ namespace KSoft.Phoenix.Resource
 
 			string streamedString = null;
 
-			this.TimeStamp = DateTime.FromFileTimeUtc((long)header.TagTimeStamp);
-			this.Guid = header.TagGuid;
+			this.TimeStamp = DateTime.FromFileTimeUtc((long)header.tagTimeStamp);
+			this.Guid = header.tagGuid;
 			if (header.StreamTagMachineName(s, ref streamedString))
 				this.MachineName = streamedString;
 			if (header.StreamTagUserName(s, ref streamedString))
@@ -110,13 +110,13 @@ namespace KSoft.Phoenix.Resource
 
 			if (header.StreamSourceFileNamee(s, ref streamedString))
 				this.SourceFileName = streamedString;
-			Array.Copy(header.SourceDigest, this.SourceDigest, header.SourceDigest.Length);
-			this.SourceFileSize = (long)header.SourceFileSize;
-			this.SourceFileTimeStamp = DateTime.FromFileTimeUtc((long)header.SourceFileTimeStamp);
+			Array.Copy(header.sourceDigest, this.SourceDigest, header.sourceDigest.Length);
+			this.SourceFileSize = (long)header.sourceFileSize;
+			this.SourceFileTimeStamp = DateTime.FromFileTimeUtc((long)header.sourceFileTimeStamp);
 
 			if (header.StreamCreatorToolCommandLine(s, ref streamedString))
 				this.CreatorToolCommandLine = streamedString;
-			this.CreatorToolVersion = header.CreatorToolVersion;
+			this.CreatorToolVersion = header.creatorToolVersion;
 
 			this.PlatformId = header.PlatformId;
 		}

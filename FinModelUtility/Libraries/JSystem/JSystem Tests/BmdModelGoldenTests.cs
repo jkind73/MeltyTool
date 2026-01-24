@@ -13,12 +13,12 @@ namespace jsystem;
 public sealed class BmdModelGoldenTests
     : BModelGoldenTests<BmdModelFileBundle, BmdModelImporter> {
   private readonly IFileHierarchyDirectory goldenDirectory_;
-  private readonly BMD bmd_;
+  private readonly Bmd bmd_;
 
   public BmdModelGoldenTests(
       IFileHierarchyDirectory goldenDirectory) {
     this.goldenDirectory_ = goldenDirectory;
-    this.bmd_ = new BMD(this.GetFileBundleFromDirectory(
+    this.bmd_ = new Bmd(this.GetFileBundleFromDirectory(
                                 this.goldenDirectory_.AssertGetExistingSubdir("input"))
                             .BmdFile.ReadAllBytes());
   }
@@ -28,20 +28,20 @@ public sealed class BmdModelGoldenTests
     => await this.AssertGolden(this.goldenDirectory_);
 
   [Test]
-  public async Task TestExportBmdDrw1s()
-    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.DRW1);
+  public async Task TestExportBmdDrw1S()
+    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.Drw1);
 
   [Test]
-  public async Task TestExportBmdEvp1s()
-    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.EVP1);
+  public async Task TestExportBmdEvp1S()
+    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.evp1);
 
   [Test]
-  public async Task TestExportBmdInf1s()
-    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.INF1);
+  public async Task TestExportBmdInf1S()
+    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.Inf1);
 
   [Test]
-  public async Task TestExportBmdJnt1s()
-    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.JNT1);
+  public async Task TestExportBmdJnt1S()
+    => await SchemaTesting.WritesAndReadsIdentically(this.bmd_.Jnt1);
 
   public override BmdModelFileBundle GetFileBundleFromDirectory(
       IFileHierarchyDirectory directory)

@@ -10,8 +10,8 @@ using OpenTK.Graphics.OpenGL4;
 namespace fin.ui.rendering.gl;
 
 public sealed partial class GlShaderProgram : IShaderProgram {
-  private const bool ASSERT_COMPILATION = true;
-  private const bool ASSERT_LINK = true;
+  private const bool ASSERT_COMPILATION_ = true;
+  private const bool ASSERT_LINK_ = true;
 
   private bool isDisposed_;
   private readonly CachedShaderProgram cachedShaderProgram_;
@@ -22,7 +22,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
       vertexShaderCache_ = new(
           src => CreateAndCompileShader_(src, ShaderType.VertexShader),
           (_, id) => {
-            if (id != UNDEFINED_ID) {
+            if (id != UNDEFINED_ID_) {
               GL.DeleteShader(id);
             }
           });
@@ -31,7 +31,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
       fragmentShaderCache_ = new(
           src => CreateAndCompileShader_(src, ShaderType.FragmentShader),
           (_, id) => {
-            if (id != UNDEFINED_ID) {
+            if (id != UNDEFINED_ID_) {
               GL.DeleteShader(id);
             }
           });
@@ -54,7 +54,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                 GL.AttachShader(programId, fragmentShaderId);
                 GL.LinkProgram(programId);
 
-                if (ASSERT_LINK) {
+                if (ASSERT_LINK_) {
                   GL.GetProgram(
                       programId,
                       GetProgramParameterName.LinkStatus,
@@ -93,7 +93,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                 fragmentShaderCache_.DecrementAndMaybeDispose(fragmentSrc);
               });
 
-  private const int UNDEFINED_ID = -1;
+  private const int UNDEFINED_ID_ = -1;
 
   public static GlShaderProgram FromShaders(string vertexShaderSrc,
                                             string fragmentShaderSrc)
@@ -129,7 +129,7 @@ public sealed partial class GlShaderProgram : IShaderProgram {
     GL.ShaderSource(shaderId, 1, [src], (int[]) null);
     GL.CompileShader(shaderId);
 
-    if (ASSERT_COMPILATION) {
+    if (ASSERT_COMPILATION_) {
       GL.GetShader(shaderId,
                    ShaderParameter.CompileStatus,
                    out var compileStatus);

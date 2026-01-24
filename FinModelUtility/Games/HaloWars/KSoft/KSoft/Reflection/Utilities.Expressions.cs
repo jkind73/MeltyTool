@@ -12,8 +12,8 @@ namespace KSoft.Reflection
 {
 	public partial class Util
 	{
-		public const int kGenerateDynamicDelegateMaximumParameters = 16;
-		const string kDelegateInvokeMethodName = "Invoke";
+		public const int K_GENERATE_DYNAMIC_DELEGATE_MAXIMUM_PARAMETERS = 16;
+		const string K_DELEGATE_INVOKE_METHOD_NAME_ = "Invoke";
 
 		// Reference:
 		// http://www.codeproject.com/KB/cs/FastMethodInvoker.aspx
@@ -79,10 +79,10 @@ namespace KSoft.Reflection
 		}
 		static Type[] GetDynamicDelegateParamTypes(Type result, params Type[] parameters)
 		{
-			bool has_result = result != null;
+			bool hasResult = result != null;
 
 			var types = parameters;
-			if (has_result)
+			if (hasResult)
 			{
 				types = new Type[parameters.Length + 1];
 
@@ -97,14 +97,14 @@ namespace KSoft.Reflection
 		public static Type GenerateDynamicDelegateType(Type result, params Type[] parameters)
 		{
 			Contract.Requires<ArgumentNullException>(parameters != null);
-			Contract.Requires<ArgumentException>(parameters.Length <= kGenerateDynamicDelegateMaximumParameters);
+			Contract.Requires<ArgumentException>(parameters.Length <= K_GENERATE_DYNAMIC_DELEGATE_MAXIMUM_PARAMETERS);
 
-			bool has_result = result != null || result != typeof(void);
+			bool hasResult = result != null || result != typeof(void);
 
-			var del_type = GetDynamicDelegateType(has_result, parameters.Length);
-			var del_params = GetDynamicDelegateParamTypes(result, parameters);
+			var delType = GetDynamicDelegateType(hasResult, parameters.Length);
+			var delParams = GetDynamicDelegateParamTypes(result, parameters);
 
-			return del_type.MakeGenericType(del_params);
+			return delType.MakeGenericType(delParams);
 		}
 		public static Type GenerateDynamicDelegateType(Reflect.MethodInfo method)
 		{
@@ -123,29 +123,29 @@ namespace KSoft.Reflection
 			Contract.Ensures(Contract.Result<TFunc>() != null);
 
 			var type = typeof(T);
-			var sig_method_info = typeof(TSig).GetMethod(kDelegateInvokeMethodName);
-			var method_params = sig_method_info.GetParameters().Select(p => p.ParameterType).ToArray();
-			var method = type.GetMethod(methodName, bindingAttr, null, method_params, null);
+			var sigMethodInfo = typeof(TSig).GetMethod(K_DELEGATE_INVOKE_METHOD_NAME_);
+			var methodParams = sigMethodInfo.GetParameters().Select(p => p.ParameterType).ToArray();
+			var method = type.GetMethod(methodName, bindingAttr, null, methodParams, null);
 
 			if (method == null)
 				throw new InvalidOperationException(string.Format(KSoft.Util.InvariantCultureInfo,
 					"Couldn't find a method in {0} named '{1}' ({2})",
 					type, methodName, bindingAttr));
 
-			var param_this =Expr.Parameter(type, kThisName);
+			var paramThis =Expr.Parameter(type, K_THIS_NAME_);
 			// have to convert it to a collection, else a different set of Parameter objects will be created for Call and the Lambda
-			var @params =	(from param_type in method_params
+			var @params =	(from param_type in methodParams
 							select Expr.Parameter(param_type)).ToArray();
-			var call =		Expr.Call(param_this, method, @params);
+			var call =		Expr.Call(paramThis, method, @params);
 
-			var params_lamda = new System.Linq.Expressions.ParameterExpression[method_params.Length+1];
+			var paramsLamda = new System.Linq.Expressions.ParameterExpression[methodParams.Length+1];
 			{
-				params_lamda[0] = param_this;
+				paramsLamda[0] = paramThis;
 				int i = 1;
 				foreach(var param in @params)
-					params_lamda[i++] = param;
+					paramsLamda[i++] = param;
 			}
-			return Expr.Lambda<TFunc>(call, params_lamda).Compile();
+			return Expr.Lambda<TFunc>(call, paramsLamda).Compile();
 		}
 
 		#region GenerateConstructorFunc
@@ -156,47 +156,47 @@ namespace KSoft.Reflection
 			Reflect.BindingFlags bindingAttr)
 			where TFunc : class
 		{
-			var func_type = typeof(TFunc);
-			var func_method_info = func_type.GetMethod(kDelegateInvokeMethodName);
+			var funcType = typeof(TFunc);
+			var funcMethodInfo = funcType.GetMethod(K_DELEGATE_INVOKE_METHOD_NAME_);
 			#region func_method_info validation
-			if (!func_method_info.ReturnType.IsAssignableFrom(type))
+			if (!funcMethodInfo.ReturnType.IsAssignableFrom(type))
 			{
 				string msg = string.Format(KSoft.Util.InvariantCultureInfo,
 					"Generation failed: {0} returns a {1} which isn't assignable from {2}",
-					func_type, func_method_info.ReturnType, type);
+					funcType, funcMethodInfo.ReturnType, type);
 				throw new InvalidOperationException(msg);
 			}
 			#endregion
 
-			var func_params = func_method_info.GetParameters().Select(p => p.ParameterType).ToArray();
-			var ctor = type.GetConstructor(bindingAttr, null, func_params, null);
+			var funcParams = funcMethodInfo.GetParameters().Select(p => p.ParameterType).ToArray();
+			var ctor = type.GetConstructor(bindingAttr, null, funcParams, null);
 			#region ctor validation
 			if (ctor == null)
 			{
-				var param_names = new System.Text.StringBuilder();
-				foreach (var param_type in func_params)
+				var paramNames = new System.Text.StringBuilder();
+				foreach (var paramType in funcParams)
 				{
-					if (param_names.Length != 0)
-						param_names.Append(',');
-					param_names.Append(param_type.Name);
+					if (paramNames.Length != 0)
+						paramNames.Append(',');
+					paramNames.Append(paramType.Name);
 				}
-				if (param_names.Length == 0)
-					param_names.Append("<no-parameters>");
+				if (paramNames.Length == 0)
+					paramNames.Append("<no-parameters>");
 
 				string msg = string.Format(KSoft.Util.InvariantCultureInfo,
 					"Generation failed: {0} has no ctor which matches the bindings '{1}' and takes the following parameter types: {2}",
-					type, bindingAttr, param_names);
+					type, bindingAttr, paramNames);
 
 				throw new InvalidOperationException(msg);
 			}
 			#endregion
 
 			// have to convert it to a collection, else a different set of Parameter objects will be created for New and the Lambda
-			var call_params = (from param_type in func_params
+			var callParams = (from param_type in funcParams
 							  select Expr.Parameter(param_type)).ToArray();
 
-			var new_expr = Expr.New(ctor, call_params);
-			var lambda = Expr.Lambda<TFunc>(new_expr, call_params);
+			var newExpr = Expr.New(ctor, callParams);
+			var lambda = Expr.Lambda<TFunc>(newExpr, callParams);
 
 			return lambda.Compile();
 		}

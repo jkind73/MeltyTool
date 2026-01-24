@@ -6,13 +6,13 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Security.Cryptography
 {
-	public sealed class XTEA256
-		: XTEABase
+	public sealed class Xtea256
+		: XteaBase
 	{
 		public void SetKey(byte[] b)
 		{
 			// round = 6 + 52/_countof(uint[] v)
-			const int k_round_count = 32;
+			const int kRoundCount = 32;
 
 			uint[] key = new uint[4];
 			for (int i = 0; i < 16; )
@@ -23,9 +23,9 @@ namespace KSoft.Security.Cryptography
 							((uint) b[i++]);
 			}
 
-			uint[] r = new uint[k_round_count];
+			uint[] r = new uint[kRoundCount];
 			for (int i = 0; i < r.Length; i++)
-				r[i] = kDeltas[i] + key[kKeyIndex[i]];
+				r[i] = KDeltas[i] + key[KKeyIndex[i]];
 
 			this.k0 =  r[0];
 			this.k1 =  r[1];

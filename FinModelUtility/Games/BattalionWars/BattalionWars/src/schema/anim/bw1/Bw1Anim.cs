@@ -122,20 +122,20 @@ public sealed class Bw1Anim : IAnim, IBinaryDeserializable {
       out double outX,
       out double outY,
       out double outZ) {
-    var first_uint = br.ReadUInt32();
+    var firstUint = br.ReadUInt32();
     br.Position -= 2;
-    var second_ushort = br.ReadUInt16();
+    var secondUshort = br.ReadUInt16();
 
     outX =
-        WeirdFloatMath.CreateWeirdDoubleFromUInt32(first_uint >> 0x15) *
+        WeirdFloatMath.CreateWeirdDoubleFromUInt32(firstUint >> 0x15) *
         animBone.XPosDelta + animBone.XPosMin;
     outY =
         WeirdFloatMath.CreateWeirdDoubleFromUInt32(
-            (first_uint >> 10) & 0x7ff) * animBone.YPosDelta +
+            (firstUint >> 10) & 0x7ff) * animBone.YPosDelta +
         animBone.YPosMin;
     outZ =
         WeirdFloatMath.CreateWeirdDoubleFromUInt32(
-            (uint) (second_ushort & 0x3ff)) * animBone.ZPosDelta +
+            (uint) (secondUshort & 0x3ff)) * animBone.ZPosDelta +
         animBone.ZPosMin;
   }
 
@@ -147,37 +147,37 @@ public sealed class Bw1Anim : IAnim, IBinaryDeserializable {
                                                 out double outW) {
     br.ReadUInt16s(shorts);
 
-    var first_ushort = shorts[0];
-    var second_ushort = shorts[1];
-    var third_ushort = shorts[2];
+    var firstUshort = shorts[0];
+    var secondUshort = shorts[1];
+    var thirdUshort = shorts[2];
 
     outX =
         (WeirdFloatMath.CreateWeirdDoubleFromUInt32(
-             (uint) (first_ushort & 0x7fff)) -
+             (uint) (firstUshort & 0x7fff)) -
          WeirdFloatMath.C_16384) *
         WeirdFloatMath.C_6_10351_EN5;
 
     outY =
         (WeirdFloatMath.CreateWeirdDoubleFromUInt32(
-             (uint) (second_ushort & 0x7fff)) -
+             (uint) (secondUshort & 0x7fff)) -
          WeirdFloatMath.C_16384) *
         WeirdFloatMath.C_6_10351_EN5;
 
     outZ =
-        (WeirdFloatMath.CreateWeirdDoubleFromUInt32(third_ushort) -
+        (WeirdFloatMath.CreateWeirdDoubleFromUInt32(thirdUshort) -
          32768f) *
         WeirdFloatMath.C_3_05175_EN5;
 
-    var expected_normalized_w =
+    var expectedNormalizedW =
         ((1 - outX * outX) - outY * outY) - outZ * outZ;
     outW = 0d;
-    if (expected_normalized_w > 0) {
-      outW = Math.Sqrt(expected_normalized_w);
+    if (expectedNormalizedW > 0) {
+      outW = Math.Sqrt(expectedNormalizedW);
 
-      var sign = first_ushort >> 0xf == 0 ? 1 : -1;
+      var sign = firstUshort >> 0xf == 0 ? 1 : -1;
       outW *= sign;
     }
 
-    return (short) second_ushort < 0;
+    return (short) secondUshort < 0;
   }
 }

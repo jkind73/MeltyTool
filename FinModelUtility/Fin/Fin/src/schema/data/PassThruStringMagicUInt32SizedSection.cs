@@ -8,7 +8,7 @@ public sealed partial class PassThruStringMagicUInt32SizedSection<T>(
     string magic,
     T data) : IMagicSection<T>
     where T : IBinaryConvertible {
-  private string MagicAsserter_ => this.Magic;
+  private string MagicAsserter => this.Magic;
 
   [Skip]
   public string Magic { get; set; } = magic;

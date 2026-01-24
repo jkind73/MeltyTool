@@ -18,20 +18,20 @@ namespace KSoft.Collections
 		, IEquatable<StringSegment>
 		, IList<char>
 	{
-		readonly string mData;
-		public string Data { get { return this.mData; } }
-		readonly int mOffset;
-		public int Offset { get { return this.mOffset; } }
-		readonly int mCount;
-		public int Count { get { return this.mCount; } }
+		readonly string mData_;
+		public string Data { get { return this.mData_; } }
+		readonly int mOffset_;
+		public int Offset { get { return this.mOffset_; } }
+		readonly int mCount_;
+		public int Count { get { return this.mCount_; } }
 
 		#region Ctor
 		public StringSegment(string data)
 		{
 			Contract.Requires<ArgumentNullException>(data != null);
-			this.mData = data;
-			this.mOffset = 0;
-			this.mCount = data.Length;
+			this.mData_ = data;
+			this.mOffset_ = 0;
+			this.mCount_ = data.Length;
 		}
 		public StringSegment(string data, int offset, int count)
 		{
@@ -40,15 +40,15 @@ namespace KSoft.Collections
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentException>(count < (data.Length - offset));
 
-			this.mData = data;
-			this.mOffset = offset;
-			this.mCount = count;
+			this.mData_ = data;
+			this.mOffset_ = offset;
+			this.mCount_ = count;
 		}
 		#endregion
 
 		void VerifyData()
 		{
-			if (this.mData == null)
+			if (this.mData_ == null)
 				throw new InvalidOperationException("String data is null");
 		}
 
@@ -56,32 +56,32 @@ namespace KSoft.Collections
 		{
 			this.VerifyData();
 
-			int index = this.mData.IndexOf(value, this.mOffset, this.mCount);
+			int index = this.mData_.IndexOf(value, this.mOffset_, this.mCount_);
 			if (index < 0)
-				return TypeExtensions.kNone;
+				return TypeExtensions.K_NONE;
 
-			return index - this.mOffset;
+			return index - this.mOffset_;
 		}
 
 		public bool Contains(char value)
 		{
 			this.VerifyData();
 
-			return this.mData.IndexOf(value, this.mOffset, this.mCount) >= 0;
+			return this.mData_.IndexOf(value, this.mOffset_, this.mCount_) >= 0;
 		}
 
 		public void CopyTo(char[] array, int arrayIndex)
 		{
 			this.VerifyData();
 
-			this.mData.CopyTo(this.mOffset, array, arrayIndex, this.mCount);
+			this.mData_.CopyTo(this.mOffset_, array, arrayIndex, this.mCount_);
 		}
 
 		#region IReadOnlyList<char> Members
 		public char this[int index] { get {
 			this.VerifyData();
 
-			return this.mData[this.mOffset + index];
+			return this.mData_[this.mOffset_ + index];
 		} }
 
 		char IList<char>.this[int index] {
@@ -118,7 +118,7 @@ namespace KSoft.Collections
 		#region Equatable Members
 		public bool Equals(StringSegment other)
 		{
-			return other.mData == this.mData && other.mOffset == this.mOffset && other.mCount == this.mCount;
+			return other.mData_ == this.mData_ && other.mOffset_ == this.mOffset_ && other.mCount_ == this.mCount_;
 		}
 		public override bool Equals(object obj)
 		{
@@ -137,8 +137,8 @@ namespace KSoft.Collections
 
 		public override int GetHashCode()
 		{
-			if (this.mData != null)
-				return (this.mData.GetHashCode() ^ this.mOffset) ^ this.mCount;
+			if (this.mData_ != null)
+				return (this.mData_.GetHashCode() ^ this.mOffset_) ^ this.mCount_;
 
 			return 0;
 		}

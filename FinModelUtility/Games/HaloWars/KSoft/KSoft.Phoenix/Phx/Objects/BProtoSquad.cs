@@ -12,17 +12,17 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Squad")
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Squad")
 		{
-			DataName = kXmlAttrName,
-			Flags = 0
+			dataName = K_XML_ATTR_NAME,
+			flags = 0
 #if SQUAD_NEEDS_ToLowerDataNames
 				| XML.BCollectionXmlParamsFlags.ToLowerDataNames |
 #endif
-				| XML.BCollectionXmlParamsFlags.RequiresDataNamePreloading
-				| XML.BCollectionXmlParamsFlags.SupportsUpdating
+				| XML.BCollectionXmlParamsFlags.REQUIRES_DATA_NAME_PRELOADING
+				| XML.BCollectionXmlParamsFlags.SUPPORTS_UPDATING
 		};
-		public static readonly Collections.BListAutoIdParams kBListParams
+		public static readonly Collections.BListAutoIdParams KBListParams
 #if SQUAD_NEEDS_ToLowerDataNames
 			= new Collections.BListAutoIdParams()
 		{
@@ -32,106 +32,106 @@ namespace KSoft.Phoenix.Phx
 			= null;
 #endif
 
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Location = Engine.ContentStorage.Game,
-			Directory = Engine.GameDirectory.Data,
+			Location = Engine.ContentStorage.GAME,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Squads.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.XmlFileInfo kXmlFileInfoUpdate = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfoUpdate = new Engine.XmlFileInfo
 		{
-			Location = Engine.ContentStorage.Update,
-			Directory = Engine.GameDirectory.Data,
+			Location = Engine.ContentStorage.UPDATE,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Squads_Update.xml",
-			RootName = kBListXmlParams.RootName
+			RootName = KBListXmlParams.rootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.ProtoData,
-			kXmlFileInfo,
-			kXmlFileInfoUpdate);
+		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.PROTO_DATA,
+			KXmlFileInfo,
+			KXmlFileInfoUpdate);
 
-		static readonly Collections.CodeEnum<BProtoSquadFlags> kFlagsProtoEnum = new Collections.CodeEnum<BProtoSquadFlags>();
-		static readonly Collections.BBitSetParams kFlagsParams = new Collections.BBitSetParams(() => kFlagsProtoEnum);
+		static readonly Collections.CodeEnum<BProtoSquadFlags> KFlagsProtoEnum = new Collections.CodeEnum<BProtoSquadFlags>();
+		static readonly Collections.BBitSetParams KFlagsParams = new Collections.BBitSetParams(() => KFlagsProtoEnum);
 		#endregion
 
 		#region FormationType
-		BProtoSquadFormationType mFormationType = BProtoSquadFormationType.Standard;
+		BProtoSquadFormationType mFormationType_ = BProtoSquadFormationType.STANDARD;
 		public BProtoSquadFormationType FormationType
 		{
-			get { return this.mFormationType; }
-			set { this.mFormationType = value; }
+			get { return this.mFormationType_; }
+			set { this.mFormationType_ = value; }
 		}
 		#endregion
-		bool mUpdate;
-		public bool Update { get { return this.mUpdate; } }
+		bool mUpdate_;
+		public bool Update { get { return this.mUpdate_; } }
 
 		#region PortraitIcon
-		string mPortraitIcon;
+		string mPortraitIcon_;
 		public string PortraitIcon
 		{
-			get { return this.mPortraitIcon; }
-			set { this.mPortraitIcon = value; }
+			get { return this.mPortraitIcon_; }
+			set { this.mPortraitIcon_ = value; }
 		}
 		#endregion
 		#region AltIcon
-		string mAltIcon;
+		string mAltIcon_;
 		public string AltIcon
 		{
-			get { return this.mAltIcon; }
-			set { this.mAltIcon = value; }
+			get { return this.mAltIcon_; }
+			set { this.mAltIcon_ = value; }
 		}
 		#endregion
 		#region Stance
-		BSquadStance mStance = BSquadStance.Defensive;
+		BSquadStance mStance_ = BSquadStance.DEFENSIVE;
 		public BSquadStance Stance
 		{
-			get { return this.mStance; }
-			set { this.mStance = value; }
+			get { return this.mStance_; }
+			set { this.mStance_ = value; }
 		}
 		#endregion
 		#region TrainAnim
-		string mTrainAnim;
+		string mTrainAnim_;
 		[Meta.BAnimTypeReference]
 		public string TrainAnim
 		{
-			get { return this.mTrainAnim; }
-			set { this.mTrainAnim = value; }
+			get { return this.mTrainAnim_; }
+			set { this.mTrainAnim_ = value; }
 		}
 		#endregion
 		#region Selection
-		static BVector cDefaultSelectionRadius { get { return new BVector(1.0f, 0.0f, 1.0f, 0.0f); } }
+		static BVector CDefaultSelectionRadius { get { return new BVector(1.0f, 0.0f, 1.0f, 0.0f); } }
 
-		BVector mSelectionRadius = cDefaultSelectionRadius;
+		BVector mSelectionRadius_ = CDefaultSelectionRadius;
 		public BVector SelectionRadius
 		{
-			get { return this.mSelectionRadius; }
-			set { this.mSelectionRadius = value; }
+			get { return this.mSelectionRadius_; }
+			set { this.mSelectionRadius_ = value; }
 		}
 
-		BVector mSelectionOffset;
+		BVector mSelectionOffset_;
 		public BVector SelectionOffset
 		{
-			get { return this.mSelectionOffset; }
-			set { this.mSelectionOffset = value; }
+			get { return this.mSelectionOffset_; }
+			set { this.mSelectionOffset_ = value; }
 		}
 
-		bool mSelectionConformToTerrain;
+		bool mSelectionConformToTerrain_;
 		public bool SelectionConformToTerrain
 		{
-			get { return this.mSelectionConformToTerrain; }
-			set { this.mSelectionConformToTerrain = value; }
+			get { return this.mSelectionConformToTerrain_; }
+			set { this.mSelectionConformToTerrain_ = value; }
 		}
 
-		bool mSelectionAllowOrientation = true;
+		bool mSelectionAllowOrientation_ = true;
 		public bool SelectionAllowOrientation
 		{
-			get { return this.mSelectionAllowOrientation; }
-			set { this.mSelectionAllowOrientation = value; }
+			get { return this.mSelectionAllowOrientation_; }
+			set { this.mSelectionAllowOrientation_ = value; }
 		}
 
 		bool HasSelectionData { get {
-			return this.SelectionRadius != cDefaultSelectionRadius
+			return this.SelectionRadius != CDefaultSelectionRadius
 				|| PhxPredicates.IsNotZero(this.SelectionOffset)
 				||
 				this.SelectionConformToTerrain
@@ -141,218 +141,218 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 		#region HPBar
 
-		int mHPBarID = TypeExtensions.kNone;
-		[Meta.BProtoHPBarReference]
-		public int HPBarID
+		int mHpBarId_ = TypeExtensions.K_NONE;
+		[Meta.BProtoHpBarReference]
+		public int HpBarId
 		{
-			get { return this.mHPBarID; }
-			set { this.mHPBarID = value; }
+			get { return this.mHpBarId_; }
+			set { this.mHpBarId_ = value; }
 		}
 
-		BVector mHPBarSize;
-		public BVector HPBarSize
+		BVector mHpBarSize_;
+		public BVector HpBarSize
 		{
-			get { return this.mHPBarSize; }
-			set { this.mHPBarSize = value; }
+			get { return this.mHpBarSize_; }
+			set { this.mHpBarSize_ = value; }
 		}
 
-		BVector mHPBarOffset;
-		public BVector HPBarOffset
+		BVector mHpBarOffset_;
+		public BVector HpBarOffset
 		{
-			get { return this.mHPBarOffset; }
-			set { this.mHPBarOffset = value; }
+			get { return this.mHpBarOffset_; }
+			set { this.mHpBarOffset_ = value; }
 		}
 
-		bool HasHPBarData { get {
-			return this.HPBarID.IsNotNone()
-				|| PhxPredicates.IsNotZero(this.HPBarSize)
-				|| PhxPredicates.IsNotZero(this.HPBarOffset);
+		bool HasHpBarData { get {
+			return this.HpBarId.IsNotNone()
+				|| PhxPredicates.IsNotZero(this.HpBarSize)
+				|| PhxPredicates.IsNotZero(this.HpBarOffset);
 		} }
 		#endregion
 		#region VeterancyBar
-		static BVector cDefaultVeterancyBarSize { get { return new BVector(1.0f, 1.0f, 0.0f, 0.0f); } }
+		static BVector CDefaultVeterancyBarSize { get { return new BVector(1.0f, 1.0f, 0.0f, 0.0f); } }
 
-		int mVeterancyBarID = TypeExtensions.kNone;
+		int mVeterancyBarId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoVeterancyBarReference]
-		public int VeterancyBarID
+		public int VeterancyBarId
 		{
-			get { return this.mVeterancyBarID; }
-			set { this.mVeterancyBarID = value; }
+			get { return this.mVeterancyBarId_; }
+			set { this.mVeterancyBarId_ = value; }
 		}
 
-		int mVeterancyCenteredBarID = TypeExtensions.kNone;
+		int mVeterancyCenteredBarId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoVeterancyBarReference]
-		public int VeterancyCenteredBarID
+		public int VeterancyCenteredBarId
 		{
-			get { return this.mVeterancyCenteredBarID; }
-			set { this.mVeterancyCenteredBarID = value; }
+			get { return this.mVeterancyCenteredBarId_; }
+			set { this.mVeterancyCenteredBarId_ = value; }
 		}
 
-		BVector mVeterancyBarSize = cDefaultVeterancyBarSize;
+		BVector mVeterancyBarSize_ = CDefaultVeterancyBarSize;
 		public BVector VeterancyBarSize
 		{
-			get { return this.mVeterancyBarSize; }
-			set { this.mVeterancyBarSize = value; }
+			get { return this.mVeterancyBarSize_; }
+			set { this.mVeterancyBarSize_ = value; }
 		}
 
-		BVector mVeterancyBarOffset;
+		BVector mVeterancyBarOffset_;
 		public BVector VeterancyBarOffset
 		{
-			get { return this.mVeterancyBarOffset; }
-			set { this.mVeterancyBarOffset = value; }
+			get { return this.mVeterancyBarOffset_; }
+			set { this.mVeterancyBarOffset_ = value; }
 		}
 
 		bool HasVeterancyBarData { get {
-			return this.VeterancyBarID.IsNotNone()
+			return this.VeterancyBarId.IsNotNone()
 				||
-				this.VeterancyCenteredBarID.IsNotNone()
+				this.VeterancyCenteredBarId.IsNotNone()
 				||
-				this.VeterancyBarSize != cDefaultVeterancyBarSize
+				this.VeterancyBarSize != CDefaultVeterancyBarSize
 				|| PhxPredicates.IsNotZero(this.VeterancyBarOffset);
 		} }
 		#endregion
 		#region AbilityRecoveryBar
-		static BVector cDefaultAbilityRecoveryBarSize { get { return new BVector(1.0f, 1.0f, 0.0f, 0.0f); } }
+		static BVector CDefaultAbilityRecoveryBarSize { get { return new BVector(1.0f, 1.0f, 0.0f, 0.0f); } }
 
-		int mAbilityRecoveryBarID = TypeExtensions.kNone;
+		int mAbilityRecoveryBarId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoPieProgressReference]
-		public int AbilityRecoveryBarID
+		public int AbilityRecoveryBarId
 		{
-			get { return this.mAbilityRecoveryBarID; }
-			set { this.mAbilityRecoveryBarID = value; }
+			get { return this.mAbilityRecoveryBarId_; }
+			set { this.mAbilityRecoveryBarId_ = value; }
 		}
 
-		int mAbilityRecoveryCenteredBarID = TypeExtensions.kNone;
+		int mAbilityRecoveryCenteredBarId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoPieProgressReference]
-		public int AbilityRecoveryCenteredBarID
+		public int AbilityRecoveryCenteredBarId
 		{
-			get { return this.mAbilityRecoveryCenteredBarID; }
-			set { this.mAbilityRecoveryCenteredBarID = value; }
+			get { return this.mAbilityRecoveryCenteredBarId_; }
+			set { this.mAbilityRecoveryCenteredBarId_ = value; }
 		}
 
-		BVector mAbilityRecoveryBarSize = cDefaultAbilityRecoveryBarSize;
+		BVector mAbilityRecoveryBarSize_ = CDefaultAbilityRecoveryBarSize;
 		public BVector AbilityRecoveryBarSize
 		{
-			get { return this.mAbilityRecoveryBarSize; }
-			set { this.mAbilityRecoveryBarSize = value; }
+			get { return this.mAbilityRecoveryBarSize_; }
+			set { this.mAbilityRecoveryBarSize_ = value; }
 		}
 
-		BVector mAbilityRecoveryBarOffset;
+		BVector mAbilityRecoveryBarOffset_;
 		public BVector AbilityRecoveryBarOffset
 		{
-			get { return this.mAbilityRecoveryBarOffset; }
-			set { this.mAbilityRecoveryBarOffset = value; }
+			get { return this.mAbilityRecoveryBarOffset_; }
+			set { this.mAbilityRecoveryBarOffset_ = value; }
 		}
 
 		bool HasAbilityRecoveryBarData { get {
-			return this.AbilityRecoveryBarID.IsNotNone()
+			return this.AbilityRecoveryBarId.IsNotNone()
 				||
-				this.AbilityRecoveryCenteredBarID.IsNotNone()
+				this.AbilityRecoveryCenteredBarId.IsNotNone()
 				||
-				this.AbilityRecoveryBarSize != cDefaultAbilityRecoveryBarSize
+				this.AbilityRecoveryBarSize != CDefaultAbilityRecoveryBarSize
 				|| PhxPredicates.IsNotZero(this.AbilityRecoveryBarOffset);
 		} }
 		#endregion
 		#region BobbleHeadID
-		int mBobbleHeadID = TypeExtensions.kNone;
+		int mBobbleHeadId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoBobbleHeadReference]
-		public int BobbleHeadID
+		public int BobbleHeadId
 		{
-			get { return this.mBobbleHeadID; }
-			set { this.mBobbleHeadID = value; }
+			get { return this.mBobbleHeadId_; }
+			set { this.mBobbleHeadId_ = value; }
 		}
 		#endregion
 		#region BuildingStrengthDisplayID
-		int mBuildingStrengthDisplayID = TypeExtensions.kNone;
+		int mBuildingStrengthDisplayId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoBuildingStrengthReference]
-		public int BuildingStrengthDisplayID
+		public int BuildingStrengthDisplayId
 		{
-			get { return this.mBuildingStrengthDisplayID; }
-			set { this.mBuildingStrengthDisplayID = value; }
+			get { return this.mBuildingStrengthDisplayId_; }
+			set { this.mBuildingStrengthDisplayId_ = value; }
 		}
 		#endregion
 		#region CryoPoints
-		float mCryoPoints = PhxUtil.kInvalidSingle;
+		float mCryoPoints_ = PhxUtil.K_INVALID_SINGLE;
 		/// <remarks>Actually defaults to the default value in GameData</remarks>
 		public float CryoPoints
 		{
-			get { return this.mCryoPoints; }
-			set { this.mCryoPoints = value; }
+			get { return this.mCryoPoints_; }
+			set { this.mCryoPoints_ = value; }
 		}
 		#endregion
 		#region DazeResist
-		float mDazeResist = 1.0f;
+		float mDazeResist_ = 1.0f;
 		public float DazeResist
 		{
-			get { return this.mDazeResist; }
-			set { this.mDazeResist = value; }
+			get { return this.mDazeResist_; }
+			set { this.mDazeResist_ = value; }
 		}
 		#endregion
 		#region Birth
 
-		BSquadBirthType mBirthType = BSquadBirthType.Invalid;
+		BSquadBirthType mBirthType_ = BSquadBirthType.INVALID;
 		public BSquadBirthType BirthType
 		{
-			get { return this.mBirthType; }
-			set { this.mBirthType = value; }
+			get { return this.mBirthType_; }
+			set { this.mBirthType_ = value; }
 		}
 
-		string mBirthBone;
+		string mBirthBone_;
 		public string BirthBone
 		{
-			get { return this.mBirthBone; }
-			set { this.mBirthBone = value; }
+			get { return this.mBirthBone_; }
+			set { this.mBirthBone_ = value; }
 		}
 
-		string mBirthEndBone;
+		string mBirthEndBone_;
 		public string BirthEndBone
 		{
-			get { return this.mBirthEndBone; }
-			set { this.mBirthEndBone = value; }
+			get { return this.mBirthEndBone_; }
+			set { this.mBirthEndBone_ = value; }
 		}
 
-		string mBirthAnim0;
+		string mBirthAnim0_;
 		[Meta.BAnimTypeReference]
 		public string BirthAnim0
 		{
-			get { return this.mBirthAnim0; }
-			set { this.mBirthAnim0 = value; }
+			get { return this.mBirthAnim0_; }
+			set { this.mBirthAnim0_ = value; }
 		}
 
-		string mBirthAnim1;
+		string mBirthAnim1_;
 		[Meta.BAnimTypeReference]
 		public string BirthAnim1
 		{
-			get { return this.mBirthAnim1; }
-			set { this.mBirthAnim1 = value; }
+			get { return this.mBirthAnim1_; }
+			set { this.mBirthAnim1_ = value; }
 		}
 
-		string mBirthAnim2;
+		string mBirthAnim2_;
 		[Meta.BAnimTypeReference]
 		public string BirthAnim2
 		{
-			get { return this.mBirthAnim2; }
-			set { this.mBirthAnim2 = value; }
+			get { return this.mBirthAnim2_; }
+			set { this.mBirthAnim2_ = value; }
 		}
 
-		string mBirthAnim3;
+		string mBirthAnim3_;
 		[Meta.BAnimTypeReference]
 		public string BirthAnim3
 		{
-			get { return this.mBirthAnim3; }
-			set { this.mBirthAnim3 = value; }
+			get { return this.mBirthAnim3_; }
+			set { this.mBirthAnim3_ = value; }
 		}
 
-		string mBirthTrainerAnim;
+		string mBirthTrainerAnim_;
 		[Meta.BAnimTypeReference]
 		public string BirthTrainerAnim
 		{
-			get { return this.mBirthTrainerAnim; }
-			set { this.mBirthTrainerAnim = value; }
+			get { return this.mBirthTrainerAnim_; }
+			set { this.mBirthTrainerAnim_ = value; }
 		}
 
 		bool HasBirthData { get {
-			return this.BirthType != BSquadBirthType.Invalid
+			return this.BirthType != BSquadBirthType.INVALID
 				||
 				this.BirthBone.IsNotNullOrEmpty()
 				||
@@ -371,27 +371,27 @@ namespace KSoft.Phoenix.Phx
 		#endregion
 		public Collections.BListArray<BProtoSquadUnit> Units { get; private set; }
 		#region SubSelectSort
-		int mSubSelectSort = int.MaxValue;
+		int mSubSelectSort_ = int.MaxValue;
 		public int SubSelectSort
 		{
-			get { return this.mSubSelectSort; }
-			set { this.mSubSelectSort = value; }
+			get { return this.mSubSelectSort_; }
+			set { this.mSubSelectSort_ = value; }
 		}
 		#endregion
 		#region TurnRadius
 
-		float mTurnRadiusMin = PhxUtil.kInvalidSingle;
+		float mTurnRadiusMin_ = PhxUtil.K_INVALID_SINGLE;
 		public float TurnRadiusMin
 		{
-			get { return this.mTurnRadiusMin; }
-			set { this.mTurnRadiusMin = value; }
+			get { return this.mTurnRadiusMin_; }
+			set { this.mTurnRadiusMin_ = value; }
 		}
 
-		float mTurnRadiusMax = PhxUtil.kInvalidSingle;
+		float mTurnRadiusMax_ = PhxUtil.K_INVALID_SINGLE;
 		public float TurnRadiusMax
 		{
-			get { return this.mTurnRadiusMax; }
-			set { this.mTurnRadiusMax = value; }
+			get { return this.mTurnRadiusMax_; }
+			set { this.mTurnRadiusMax_ = value; }
 		}
 
 		bool HasTurnRadiusData { get {
@@ -400,83 +400,83 @@ namespace KSoft.Phoenix.Phx
 		} }
 		#endregion
 		#region LeashDistance
-		float mLeashDistance;
+		float mLeashDistance_;
 		public float LeashDistance
 		{
-			get { return this.mLeashDistance; }
-			set { this.mLeashDistance = value; }
+			get { return this.mLeashDistance_; }
+			set { this.mLeashDistance_ = value; }
 		}
 		#endregion
 		#region LeashDeadzone
-		const float cDefaultLeashDeadzone = 10.0f;
+		const float C_DEFAULT_LEASH_DEADZONE_ = 10.0f;
 
-		float mLeashDeadzone = cDefaultLeashDeadzone;
+		float mLeashDeadzone_ = C_DEFAULT_LEASH_DEADZONE_;
 		public float LeashDeadzone
 		{
-			get { return this.mLeashDeadzone; }
-			set { this.mLeashDeadzone = value; }
+			get { return this.mLeashDeadzone_; }
+			set { this.mLeashDeadzone_ = value; }
 		}
 		#endregion
 		#region LeashRecallDelay
-		const int cDefaultLeashRecallDelay = 2 * 1000;
+		const int C_DEFAULT_LEASH_RECALL_DELAY_ = 2 * 1000;
 
-		int mLeashRecallDelay = cDefaultLeashRecallDelay;
+		int mLeashRecallDelay_ = C_DEFAULT_LEASH_RECALL_DELAY_;
 		/// <remarks>in milliseconds</remarks>
 		public int LeashRecallDelay
 		{
-			get { return this.mLeashRecallDelay; }
-			set { this.mLeashRecallDelay = value; }
+			get { return this.mLeashRecallDelay_; }
+			set { this.mLeashRecallDelay_ = value; }
 		}
 		#endregion
 		#region AggroDistance
-		float mAggroDistance;
+		float mAggroDistance_;
 		public float AggroDistance
 		{
-			get { return this.mAggroDistance; }
-			set { this.mAggroDistance = value; }
+			get { return this.mAggroDistance_; }
+			set { this.mAggroDistance_ = value; }
 		}
 		#endregion
 		#region MinimapScale
-		float mMinimapScale;
+		float mMinimapScale_;
 		public float MinimapScale
 		{
-			get { return this.mMinimapScale; }
-			set { this.mMinimapScale = value; }
+			get { return this.mMinimapScale_; }
+			set { this.mMinimapScale_ = value; }
 		}
 		#endregion
 		public Collections.BBitSet Flags { get; private set; }
 		#region Level
-		int mLevel;
+		int mLevel_;
 		public int Level
 		{
-			get { return this.mLevel; }
-			set { this.mLevel = value; }
+			get { return this.mLevel_; }
+			set { this.mLevel_ = value; }
 		}
 		#endregion
 		#region TechLevel
-		int mTechLevel;
+		int mTechLevel_;
 		public int TechLevel
 		{
-			get { return this.mTechLevel; }
-			set { this.mTechLevel = value; }
+			get { return this.mTechLevel_; }
+			set { this.mTechLevel_ = value; }
 		}
 		#endregion
 		public Collections.BListArray<BProtoSquadSound> Sounds { get; private set; }
 		#region RecoveringEffectID
-		int mRecoveringEffectID = TypeExtensions.kNone;
+		int mRecoveringEffectId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoObjectReference]
-		public int RecoveringEffectID
+		public int RecoveringEffectId
 		{
-			get { return this.mRecoveringEffectID; }
-			set { this.mRecoveringEffectID = value; }
+			get { return this.mRecoveringEffectId_; }
+			set { this.mRecoveringEffectId_ = value; }
 		}
 		#endregion
 		#region CanAttackWhileMoving
-		bool mCanAttackWhileMoving = true;
+		bool mCanAttackWhileMoving_ = true;
 		public bool CanAttackWhileMoving
 		{
-			get { return this.mCanAttackWhileMoving; }
-			set { this.mCanAttackWhileMoving = value; }
+			get { return this.mCanAttackWhileMoving_; }
+			set { this.mCanAttackWhileMoving_ = value; }
 		}
 		#endregion
 
@@ -485,18 +485,18 @@ namespace KSoft.Phoenix.Phx
 			return this.Units.Count == 1 && this.Units[0].Count == 1;
 		}}
 
-		public BProtoSquad() : base(BResource.kBListTypeValuesParams, BResource.kBListTypeValuesXmlParams_CostLowercaseType)
+		public BProtoSquad() : base(BResource.KBListTypeValuesParams, BResource.KBListTypeValuesXmlParamsCostLowercaseType)
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDisplayNameID = true;
-			textData.HasRolloverTextID = true;
-			textData.HasStatsNameID = true;
-			textData.HasPrereqTextID = true;
-			textData.HasRoleTextID = true;
+			textData.HasDisplayNameId = true;
+			textData.HasRolloverTextId = true;
+			textData.HasStatsNameId = true;
+			textData.HasPrereqTextId = true;
+			textData.HasRoleTextId = true;
 
 			this.Units = new Collections.BListArray<BProtoSquadUnit>();
 
-			this.Flags = new Collections.BBitSet(kFlagsParams);
+			this.Flags = new Collections.BBitSet(KFlagsParams);
 
 			this.Sounds = new Collections.BListArray<BProtoSquadSound>();
 		}
@@ -507,95 +507,95 @@ namespace KSoft.Phoenix.Phx
 			base.Serialize(s);
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnumOpt("formationType", ref this.mFormationType, e => e != BProtoSquadFormationType.Standard);
-			s.StreamAttributeOpt("update", ref this.mUpdate, Predicates.IsTrue);
+			s.StreamAttributeEnumOpt("formationType", ref this.mFormationType_, e => e != BProtoSquadFormationType.STANDARD);
+			s.StreamAttributeOpt("update", ref this.mUpdate_, Predicates.IsTrue);
 
-			s.StreamElementOpt("PortraitIcon", ref this.mPortraitIcon, Predicates.IsNotNullOrEmpty);
-			s.StreamElementOpt("AltIcon", ref this.mAltIcon, Predicates.IsNotNullOrEmpty);
-			s.StreamElementEnumOpt("Stance", ref this.mStance, e => e != BSquadStance.Defensive);
-			s.StreamElementOpt("TrainAnim", ref this.mTrainAnim, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("PortraitIcon", ref this.mPortraitIcon_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("AltIcon", ref this.mAltIcon_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementEnumOpt("Stance", ref this.mStance_, e => e != BSquadStance.DEFENSIVE);
+			s.StreamElementOpt("TrainAnim", ref this.mTrainAnim_, Predicates.IsNotNullOrEmpty);
 			#region Selection
 			using (var bm = s.EnterCursorBookmarkOpt("Selection", this, v => v.HasSelectionData)) if (bm.IsNotNull)
 			{
 				// #NOTE assumes cDefaultSelectionRadius's XZ values are 1.0
-				s.StreamElementOpt("RadiusX", ref this.mSelectionRadius.X, PhxPredicates.IsNotOne);
-				s.StreamElementOpt("RadiusZ", ref this.mSelectionRadius.Z, PhxPredicates.IsNotOne);
-				s.StreamElementOpt("YOffset", ref this.mSelectionOffset.Y, Predicates.IsNotZero);
-				s.StreamElementOpt("ZOffset", ref this.mSelectionOffset.Z, Predicates.IsNotZero);
-				s.StreamElementOpt("ConformToTerrain", ref this.mSelectionConformToTerrain, Predicates.IsTrue);
-				s.StreamElementOpt("AllowOrientation", ref this.mSelectionAllowOrientation, Predicates.IsFalse);
+				s.StreamElementOpt("RadiusX", ref this.mSelectionRadius_.X, PhxPredicates.IsNotOne);
+				s.StreamElementOpt("RadiusZ", ref this.mSelectionRadius_.Z, PhxPredicates.IsNotOne);
+				s.StreamElementOpt("YOffset", ref this.mSelectionOffset_.Y, Predicates.IsNotZero);
+				s.StreamElementOpt("ZOffset", ref this.mSelectionOffset_.Z, Predicates.IsNotZero);
+				s.StreamElementOpt("ConformToTerrain", ref this.mSelectionConformToTerrain_, Predicates.IsTrue);
+				s.StreamElementOpt("AllowOrientation", ref this.mSelectionAllowOrientation_, Predicates.IsFalse);
 			}
 			#endregion
 			#region HPBar
-			using (var bm = s.EnterCursorBookmarkOpt("HPBar", this, v => v.HasHPBarData)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("HPBar", this, v => v.HasHpBarData)) if (bm.IsNotNull)
 			{
-				xs.StreamHPBarName(s, XML.XmlUtil.kNoXmlName, ref this.mHPBarID, HPBarDataObjectKind.HPBar, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
-				s.StreamAttributeOpt("sizeX", ref this.mHPBarSize.X, Predicates.IsNotZero);
-				s.StreamAttributeOpt("sizeY", ref this.mHPBarSize.Y, Predicates.IsNotZero);
-				s.StreamBVector("offset", ref this.mHPBarOffset, xmlSource: XML.XmlUtil.kSourceAttr);
+				xs.StreamHpBarName(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mHpBarId_, HpBarDataObjectKind.HP_BAR, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
+				s.StreamAttributeOpt("sizeX", ref this.mHpBarSize_.X, Predicates.IsNotZero);
+				s.StreamAttributeOpt("sizeY", ref this.mHpBarSize_.Y, Predicates.IsNotZero);
+				s.StreamBVector("offset", ref this.mHpBarOffset_, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
 			}
 			#endregion
 			#region VeterancyBar
 			using (var bm = s.EnterCursorBookmarkOpt("VeterancyBar", this, v => v.HasVeterancyBarData)) if (bm.IsNotNull)
 			{
-				xs.StreamHPBarName(s, XML.XmlUtil.kNoXmlName, ref this.mVeterancyBarID, HPBarDataObjectKind.VeterancyBar, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
-				xs.StreamHPBarName(s, "Centered", ref this.mVeterancyCenteredBarID, HPBarDataObjectKind.VeterancyBar, isOptional: false, xmlSource: XML.XmlUtil.kSourceAttr);
+				xs.StreamHpBarName(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mVeterancyBarId_, HpBarDataObjectKind.VETERANCY_BAR, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
+				xs.StreamHpBarName(s, "Centered", ref this.mVeterancyCenteredBarId_, HpBarDataObjectKind.VETERANCY_BAR, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
 				// #NOTE assumes cDefaultVeterancyBarSize's XY values are 1.0
-				s.StreamAttributeOpt("sizeX", ref this.mVeterancyBarSize.X, PhxPredicates.IsNotOne);
-				s.StreamAttributeOpt("sizeY", ref this.mVeterancyBarSize.Y, PhxPredicates.IsNotOne);
-				s.StreamAttributeOpt("offsetX", ref this.mVeterancyBarOffset.X, Predicates.IsNotZero);
-				s.StreamAttributeOpt("offsetY", ref this.mVeterancyBarOffset.Y, Predicates.IsNotZero);
+				s.StreamAttributeOpt("sizeX", ref this.mVeterancyBarSize_.X, PhxPredicates.IsNotOne);
+				s.StreamAttributeOpt("sizeY", ref this.mVeterancyBarSize_.Y, PhxPredicates.IsNotOne);
+				s.StreamAttributeOpt("offsetX", ref this.mVeterancyBarOffset_.X, Predicates.IsNotZero);
+				s.StreamAttributeOpt("offsetY", ref this.mVeterancyBarOffset_.Y, Predicates.IsNotZero);
 			}
 			#endregion
 			#region AbilityRecoveryBar
 			using (var bm = s.EnterCursorBookmarkOpt("AbilityRecoveryBar", this, v => v.HasAbilityRecoveryBarData)) if (bm.IsNotNull)
 			{
-				xs.StreamHPBarName(s, XML.XmlUtil.kNoXmlName, ref this.mAbilityRecoveryBarID, HPBarDataObjectKind.PieProgress, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
-				xs.StreamHPBarName(s, "Centered", ref this.mAbilityRecoveryCenteredBarID, HPBarDataObjectKind.PieProgress, isOptional: false, xmlSource: XML.XmlUtil.kSourceAttr);
+				xs.StreamHpBarName(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mAbilityRecoveryBarId_, HpBarDataObjectKind.PIE_PROGRESS, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
+				xs.StreamHpBarName(s, "Centered", ref this.mAbilityRecoveryCenteredBarId_, HpBarDataObjectKind.PIE_PROGRESS, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
 				// #NOTE assumes cDefaultAbilityRecoveryBarSize's XY values are 1.0
-				s.StreamAttributeOpt("sizeX", ref this.mAbilityRecoveryBarSize.X, PhxPredicates.IsNotOne);
-				s.StreamAttributeOpt("sizeY", ref this.mAbilityRecoveryBarSize.Y, PhxPredicates.IsNotOne);
-				s.StreamAttributeOpt("offsetX", ref this.mAbilityRecoveryBarOffset.X, Predicates.IsNotZero);
-				s.StreamAttributeOpt("offsetY", ref this.mAbilityRecoveryBarOffset.Y, Predicates.IsNotZero);
+				s.StreamAttributeOpt("sizeX", ref this.mAbilityRecoveryBarSize_.X, PhxPredicates.IsNotOne);
+				s.StreamAttributeOpt("sizeY", ref this.mAbilityRecoveryBarSize_.Y, PhxPredicates.IsNotOne);
+				s.StreamAttributeOpt("offsetX", ref this.mAbilityRecoveryBarOffset_.X, Predicates.IsNotZero);
+				s.StreamAttributeOpt("offsetY", ref this.mAbilityRecoveryBarOffset_.Y, Predicates.IsNotZero);
 			}
 			#endregion
-			xs.StreamHPBarName(s, "BobbleHead", ref this.mBobbleHeadID, HPBarDataObjectKind.BobbleHead);
-			xs.StreamHPBarName(s, "BuildingStrengthDisplay", ref this.mBuildingStrengthDisplayID, HPBarDataObjectKind.BuildingStrength);
-			s.StreamElementOpt("CryoPoints", ref this.mCryoPoints, PhxPredicates.IsNotInvalid);
-			s.StreamElementOpt("DazeResist", ref this.mDazeResist, PhxPredicates.IsNotOne);
+			xs.StreamHpBarName(s, "BobbleHead", ref this.mBobbleHeadId_, HpBarDataObjectKind.BOBBLE_HEAD);
+			xs.StreamHpBarName(s, "BuildingStrengthDisplay", ref this.mBuildingStrengthDisplayId_, HpBarDataObjectKind.BUILDING_STRENGTH);
+			s.StreamElementOpt("CryoPoints", ref this.mCryoPoints_, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("DazeResist", ref this.mDazeResist_, PhxPredicates.IsNotOne);
 			#region Birth
 			using (var bm = s.EnterCursorBookmarkOpt("Birth", this, v => v.HasBirthData)) if (bm.IsNotNull)
 			{
-				s.StreamCursorEnum(ref this.mBirthType);
-				s.StreamAttributeOpt("spawnpoint", ref this.mBirthBone, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("endPoint", ref this.mBirthEndBone, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("anim0", ref this.mBirthAnim0, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("anim1", ref this.mBirthAnim1, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("anim2", ref this.mBirthAnim2, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("anim3", ref this.mBirthAnim3, Predicates.IsNotNullOrEmpty);
-				s.StreamAttributeOpt("trainerAnim", ref this.mBirthTrainerAnim, Predicates.IsNotNullOrEmpty);
+				s.StreamCursorEnum(ref this.mBirthType_);
+				s.StreamAttributeOpt("spawnpoint", ref this.mBirthBone_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("endPoint", ref this.mBirthEndBone_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("anim0", ref this.mBirthAnim0_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("anim1", ref this.mBirthAnim1_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("anim2", ref this.mBirthAnim2_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("anim3", ref this.mBirthAnim3_, Predicates.IsNotNullOrEmpty);
+				s.StreamAttributeOpt("trainerAnim", ref this.mBirthTrainerAnim_, Predicates.IsNotNullOrEmpty);
 			}
 			#endregion
-			XML.XmlUtil.Serialize(s, this.Units, BProtoSquadUnit.kBListXmlParams);
-			s.StreamElementOpt("SubSelectSort", ref this.mSubSelectSort, v => v != int.MaxValue);
+			XML.XmlUtil.Serialize(s, this.Units, BProtoSquadUnit.KBListXmlParams);
+			s.StreamElementOpt("SubSelectSort", ref this.mSubSelectSort_, v => v != int.MaxValue);
 			#region TurnRadius
 			using (var bm = s.EnterCursorBookmarkOpt("TurnRadius", this, v => v.HasTurnRadiusData)) if (bm.IsNotNull)
 			{
-				s.StreamAttributeOpt("min", ref this.mTurnRadiusMin, PhxPredicates.IsNotInvalid);
-				s.StreamAttributeOpt("max", ref this.mTurnRadiusMax, PhxPredicates.IsNotInvalid);
+				s.StreamAttributeOpt("min", ref this.mTurnRadiusMin_, PhxPredicates.IsNotInvalid);
+				s.StreamAttributeOpt("max", ref this.mTurnRadiusMax_, PhxPredicates.IsNotInvalid);
 			}
 			#endregion
-			s.StreamElementOpt("LeashDistance", ref this.mLeashDistance, Predicates.IsNotZero);
-			s.StreamElementOpt("LeashDeadzone", ref this.mLeashDeadzone, v => v != cDefaultLeashDeadzone);
-			s.StreamElementOpt("LeashRecallDelay", ref this.mLeashRecallDelay, v => v != cDefaultLeashRecallDelay);
-			s.StreamElementOpt("AggroDistance", ref this.mAggroDistance, Predicates.IsNotZero);
-			s.StreamElementOpt("MinimapScale", ref this.mMinimapScale, Predicates.IsNotZero);
-			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.kFlagsSansRoot);
-			s.StreamElementOpt("Level", ref this.mLevel, Predicates.IsNotZero);
-			s.StreamElementOpt("TechLevel", ref this.mTechLevel, Predicates.IsNotZero);
-			XML.XmlUtil.Serialize(s, this.Sounds, BProtoSquadSound.kBListXmlParams);
-			xs.StreamDBID(s, "RecoveringEffect", ref this.mRecoveringEffectID, DatabaseObjectKind.Object);
-			s.StreamElementOpt("CanAttackWhileMoving", ref this.mCanAttackWhileMoving, Predicates.IsFalse);
+			s.StreamElementOpt("LeashDistance", ref this.mLeashDistance_, Predicates.IsNotZero);
+			s.StreamElementOpt("LeashDeadzone", ref this.mLeashDeadzone_, v => v != C_DEFAULT_LEASH_DEADZONE_);
+			s.StreamElementOpt("LeashRecallDelay", ref this.mLeashRecallDelay_, v => v != C_DEFAULT_LEASH_RECALL_DELAY_);
+			s.StreamElementOpt("AggroDistance", ref this.mAggroDistance_, Predicates.IsNotZero);
+			s.StreamElementOpt("MinimapScale", ref this.mMinimapScale_, Predicates.IsNotZero);
+			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.KFlagsSansRoot);
+			s.StreamElementOpt("Level", ref this.mLevel_, Predicates.IsNotZero);
+			s.StreamElementOpt("TechLevel", ref this.mTechLevel_, Predicates.IsNotZero);
+			XML.XmlUtil.Serialize(s, this.Sounds, BProtoSquadSound.KBListXmlParams);
+			xs.StreamDbid(s, "RecoveringEffect", ref this.mRecoveringEffectId_, DatabaseObjectKind.OBJECT);
+			s.StreamElementOpt("CanAttackWhileMoving", ref this.mCanAttackWhileMoving_, Predicates.IsFalse);
 		}
 		#endregion
 	};

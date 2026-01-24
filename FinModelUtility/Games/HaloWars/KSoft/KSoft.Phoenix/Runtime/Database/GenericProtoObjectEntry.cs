@@ -6,14 +6,14 @@ namespace KSoft.Phoenix.Runtime
 		public struct GenericProtoObjectEntry
 			: IO.IEndianStreamSerializable
 		{
-			public string Name;
-			public int Id;
+			public string name;
+			public int id;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamPascalString32(ref this.Name);
-				s.Stream(ref this.Id);
+				s.StreamPascalString32(ref this.name);
+				s.Stream(ref this.id);
 			}
 			#endregion
 		};

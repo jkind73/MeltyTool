@@ -16,13 +16,13 @@ public static class DataTypeUtil {
       IBinaryReader br,
       DataType dataType)
     => dataType switch {
-        DataType.Byte   => br.ReadSByte(),
-        DataType.UByte  => br.ReadByte(),
-        DataType.Short  => br.ReadInt16(),
-        DataType.UShort => br.ReadUInt16(),
-        DataType.Int    => br.ReadInt32(),
-        DataType.UInt   => br.ReadUInt32(),
-        DataType.Float  => br.ReadSingle(),
+        DataType.BYTE   => br.ReadSByte(),
+        DataType.U_BYTE  => br.ReadByte(),
+        DataType.SHORT  => br.ReadInt16(),
+        DataType.U_SHORT => br.ReadUInt16(),
+        DataType.INT    => br.ReadInt32(),
+        DataType.U_INT   => br.ReadUInt32(),
+        DataType.FLOAT  => br.ReadSingle(),
         _ => throw new ArgumentOutOfRangeException(
             nameof(dataType),
             dataType,
@@ -33,13 +33,13 @@ public static class DataTypeUtil {
       ReadOnlyMemory<byte> data,
       DataType dataType)
     => dataType switch {
-        DataType.Byte   => (sbyte) data.Span[0],
-        DataType.UByte  => data.Span[0],
-        DataType.Short  => BinaryPrimitives.ReadInt16LittleEndian(data.Span),
-        DataType.UShort => BinaryPrimitives.ReadUInt16LittleEndian(data.Span),
-        DataType.Int    => BinaryPrimitives.ReadInt32LittleEndian(data.Span),
-        DataType.UInt   => BinaryPrimitives.ReadUInt32LittleEndian(data.Span),
-        DataType.Float  => BinaryPrimitives.ReadSingleLittleEndian(data.Span),
+        DataType.BYTE   => (sbyte) data.Span[0],
+        DataType.U_BYTE  => data.Span[0],
+        DataType.SHORT  => BinaryPrimitives.ReadInt16LittleEndian(data.Span),
+        DataType.U_SHORT => BinaryPrimitives.ReadUInt16LittleEndian(data.Span),
+        DataType.INT    => BinaryPrimitives.ReadInt32LittleEndian(data.Span),
+        DataType.U_INT   => BinaryPrimitives.ReadUInt32LittleEndian(data.Span),
+        DataType.FLOAT  => BinaryPrimitives.ReadSingleLittleEndian(data.Span),
         _ => throw new ArgumentOutOfRangeException(
             nameof(dataType),
             dataType,
@@ -64,7 +64,7 @@ public static class DataTypeUtil {
       AttributeSlice slice,
       VertexAttribute attribute,
       int itemsPerTuple) {
-      if (attribute.Mode == VertexAttributeMode.Constant) {
+      if (attribute.Mode == VertexAttributeMode.CONSTANT) {
         foreach (var constant in attribute.Constants.Take(itemsPerTuple)) {
           yield return constant;
         }
@@ -85,13 +85,13 @@ public static class DataTypeUtil {
 
   public static int GetSize(this DataType dataType)
     => dataType switch {
-        DataType.Byte   => 1,
-        DataType.UByte  => 1,
-        DataType.Short  => 2,
-        DataType.UShort => 2,
-        DataType.Int    => 4,
-        DataType.UInt   => 4,
-        DataType.Float  => 4,
+        DataType.BYTE   => 1,
+        DataType.U_BYTE  => 1,
+        DataType.SHORT  => 2,
+        DataType.U_SHORT => 2,
+        DataType.INT    => 4,
+        DataType.U_INT   => 4,
+        DataType.FLOAT  => 4,
         _ => throw new ArgumentOutOfRangeException(
             nameof(dataType),
             dataType,

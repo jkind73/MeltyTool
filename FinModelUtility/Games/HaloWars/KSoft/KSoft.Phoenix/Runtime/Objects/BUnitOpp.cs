@@ -9,45 +9,45 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BUnitOpp
 		: IO.IEndianStreamSerializable
 	{
-		const int cMaximumPathLength = 0xC8;
+		const int C_MAXIMUM_PATH_LENGTH_ = 0xC8;
 
-		internal static readonly FreeListInfo kFreeListInfo = new FreeListInfo(cSaveMarker.UnitOpp)
+		internal static readonly FreeListInfo KFreeListInfo = new FreeListInfo(CSaveMarker.UNIT_OPP)
 		{
 			MaxCount=0x4E20,
 		};
 
-		public BVector[] Path;
+		public BVector[] path;
 		public BSimTarget Target { get; private set; } = new BSimTarget();
-		public BEntityID Source;
-		public BUnitOppID ID;
-		public BUnitOppType Type;
-		public ushort UserData;
-		public byte Priority;
-		public byte UserData2;
-		public ushort WaitCount;
-		public bool Evaluated, ExistForOneUpdate, ExistUntilEvaluated,
-			AllowComplete, NotifySource, Leash,
-			ForceLeash, Trigger, RemoveActions,
-			Complete, CompleteValue, PreserveDPS,
-			MustComplete, UserDataSet;
+		public BEntityID source;
+		public BUnitOppID id;
+		public BUnitOppType type;
+		public ushort userData;
+		public byte priority;
+		public byte userData2;
+		public ushort waitCount;
+		public bool evaluated, existForOneUpdate, existUntilEvaluated,
+			allowComplete, notifySource, leash,
+			forceLeash, trigger, removeActions,
+			complete, completeValue, preserveDps,
+			mustComplete, userDataSet;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamVectorArray(s, ref this.Path, cMaximumPathLength);
+			BSaveGame.StreamVectorArray(s, ref this.path, C_MAXIMUM_PATH_LENGTH_);
 			s.Stream(this.Target);
-			s.Stream(ref this.Source);
-			s.Stream(ref this.ID);
-			s.Stream(ref this.Type);
-			s.Stream(ref this.UserData);
-			s.Stream(ref this.Priority);
-			s.Stream(ref this.UserData2);
-			s.Stream(ref this.WaitCount);
-			s.Stream(ref this.Evaluated); s.Stream(ref this.ExistForOneUpdate); s.Stream(ref this.ExistUntilEvaluated);
-			s.Stream(ref this.AllowComplete); s.Stream(ref this.NotifySource); s.Stream(ref this.Leash);
-			s.Stream(ref this.ForceLeash); s.Stream(ref this.Trigger); s.Stream(ref this.RemoveActions);
-			s.Stream(ref this.Complete); s.Stream(ref this.CompleteValue); s.Stream(ref this.PreserveDPS);
-			s.Stream(ref this.MustComplete); s.Stream(ref this.UserDataSet);
+			s.Stream(ref this.source);
+			s.Stream(ref this.id);
+			s.Stream(ref this.type);
+			s.Stream(ref this.userData);
+			s.Stream(ref this.priority);
+			s.Stream(ref this.userData2);
+			s.Stream(ref this.waitCount);
+			s.Stream(ref this.evaluated); s.Stream(ref this.existForOneUpdate); s.Stream(ref this.existUntilEvaluated);
+			s.Stream(ref this.allowComplete); s.Stream(ref this.notifySource); s.Stream(ref this.leash);
+			s.Stream(ref this.forceLeash); s.Stream(ref this.trigger); s.Stream(ref this.removeActions);
+			s.Stream(ref this.complete); s.Stream(ref this.completeValue); s.Stream(ref this.preserveDps);
+			s.Stream(ref this.mustComplete); s.Stream(ref this.userDataSet);
 		}
 		#endregion
 	};

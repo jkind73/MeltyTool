@@ -38,68 +38,68 @@ namespace KSoft.T4
 		};
 
 		#region Individual definitions
-		internal static readonly NumberCodeDefinition kByte = new NumberCodeDefinition(TypeCode.Byte);
-		internal static readonly NumberCodeDefinition kSByte = new NumberCodeDefinition(TypeCode.SByte);
+		internal static readonly NumberCodeDefinition KByte = new NumberCodeDefinition(TypeCode.Byte);
+		internal static readonly NumberCodeDefinition KSByte = new NumberCodeDefinition(TypeCode.SByte);
 
-		internal static readonly NumberCodeDefinition kUInt16 = new NumberCodeDefinition(TypeCode.UInt16);
-		internal static readonly NumberCodeDefinition kInt16 = new NumberCodeDefinition(TypeCode.Int16);
+		internal static readonly NumberCodeDefinition KUInt16 = new NumberCodeDefinition(TypeCode.UInt16);
+		internal static readonly NumberCodeDefinition KInt16 = new NumberCodeDefinition(TypeCode.Int16);
 
-		internal static readonly NumberCodeDefinition kUInt32 = new NumberCodeDefinition(TypeCode.UInt32);
-		internal static readonly NumberCodeDefinition kInt32 = new NumberCodeDefinition(TypeCode.Int32);
+		internal static readonly NumberCodeDefinition KUInt32 = new NumberCodeDefinition(TypeCode.UInt32);
+		internal static readonly NumberCodeDefinition KInt32 = new NumberCodeDefinition(TypeCode.Int32);
 
-		internal static readonly NumberCodeDefinition kUInt64 = new NumberCodeDefinition(TypeCode.UInt64);
-		internal static readonly NumberCodeDefinition kInt64 = new NumberCodeDefinition(TypeCode.Int64);
+		internal static readonly NumberCodeDefinition KUInt64 = new NumberCodeDefinition(TypeCode.UInt64);
+		internal static readonly NumberCodeDefinition KInt64 = new NumberCodeDefinition(TypeCode.Int64);
 
-		internal static readonly NumberCodeDefinition kSingle = new NumberCodeDefinition(TypeCode.Single);
-		internal static readonly NumberCodeDefinition kDouble = new NumberCodeDefinition(TypeCode.Double);
+		internal static readonly NumberCodeDefinition KSingle = new NumberCodeDefinition(TypeCode.Single);
+		internal static readonly NumberCodeDefinition KDouble = new NumberCodeDefinition(TypeCode.Double);
 
-		internal static readonly PrimitiveCodeDefinition kBool = new BooleanCodeDefinition();
+		internal static readonly PrimitiveCodeDefinition KBool = new BooleanCodeDefinition();
 
-		internal static readonly PrimitiveCodeDefinition kChar = new CharCodeDefinition();
+		internal static readonly PrimitiveCodeDefinition KChar = new CharCodeDefinition();
 
-		internal static readonly PrimitiveCodeDefinition kString = new StringCodeDefinition();
+		internal static readonly PrimitiveCodeDefinition KString = new StringCodeDefinition();
 
-		internal static readonly PrimitiveCodeDefinition kKGuid = new KGuidCodeDefinition();
+		internal static readonly PrimitiveCodeDefinition KKGuid = new KGuidCodeDefinition();
 		#endregion
 
 		/// <summary>All primitive type definitions that are numeric</summary>
 		public static IEnumerable<NumberCodeDefinition> Numbers { get {
-			yield return kByte;
-			yield return kSByte;
+			yield return KByte;
+			yield return KSByte;
 
-			yield return kUInt16;
-			yield return kInt16;
+			yield return KUInt16;
+			yield return KInt16;
 
-			yield return kUInt32;
-			yield return kInt32;
+			yield return KUInt32;
+			yield return KInt32;
 
-			yield return kUInt64;
-			yield return kInt64;
+			yield return KUInt64;
+			yield return KInt64;
 
-			yield return kSingle;
-			yield return kDouble;
+			yield return KSingle;
+			yield return KDouble;
 		} }
 
 		/// <summary>All primitive type definitions (sans String)</summary>
 		public static IEnumerable<PrimitiveCodeDefinition> Primitives { get {
-			yield return kBool;
+			yield return KBool;
 
-			yield return kChar;
+			yield return KChar;
 
-			yield return kByte;
-			yield return kSByte;
+			yield return KByte;
+			yield return KSByte;
 
-			yield return kUInt16;
-			yield return kInt16;
+			yield return KUInt16;
+			yield return KInt16;
 
-			yield return kUInt32;
-			yield return kInt32;
+			yield return KUInt32;
+			yield return KInt32;
 
-			yield return kUInt64;
-			yield return kInt64;
+			yield return KUInt64;
+			yield return KInt64;
 
-			yield return kSingle;
-			yield return kDouble;
+			yield return KSingle;
+			yield return KDouble;
 		} }
 	};
 }

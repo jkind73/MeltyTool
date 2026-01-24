@@ -25,7 +25,7 @@ namespace granny3d {
     string Name { get; }
     int ParentIndex { get; }
     IGrannyTransform LocalTransform { get; }
-    IFinMatrix4x4 InverseWorld4x4 { get; }
+    IFinMatrix4X4 InverseWorld4X4 { get; }
     float LodError { get; }
   }
 
@@ -49,15 +49,15 @@ namespace granny3d {
 
   public interface IGrannyTransform {
     GrannyTransformFlags Flags { get; }
-    Vector3f Position { get; }
+    Vector3F Position { get; }
     Quaternion Orientation { get; }
-    Vector3f[] ScaleShear { get; }
+    Vector3F[] ScaleShear { get; }
   }
 
   [Flags]
   public enum GrannyTransformFlags : uint {
-    HasPosition = 0x1,
-    HasOrientation = 0x2,
-    HasScaleShear = 0x4,
+    HAS_POSITION = 0x1,
+    HAS_ORIENTATION = 0x2,
+    HAS_SCALE_SHEAR = 0x4,
   }
 }

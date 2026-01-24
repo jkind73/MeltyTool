@@ -5,17 +5,17 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public const string kXmlRootName = "CollectiblesDefinitions";
+		public const string K_XML_ROOT_NAME = "CollectiblesDefinitions";
 
-		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.Data,
+			Directory = Engine.GameDirectory.DATA,
 			FileName = "Skulls.xml",
-			RootName = kXmlRootName
+			RootName = K_XML_ROOT_NAME
 		};
 		#endregion
 
-		int mXmlVersion = TypeExtensions.kNone;
+		int mXmlVersion_ = TypeExtensions.K_NONE;
 		public BCollectiblesSkullManager SkullManager { get; private set; } = new BCollectiblesSkullManager();
 
 		#region ITagElementStreamable<string> Members
@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamElementOpt("CollectiblesXMLVersion", ref this.mXmlVersion, Predicates.IsNotNone);
+			s.StreamElementOpt("CollectiblesXMLVersion", ref this.mXmlVersion_, Predicates.IsNotNone);
 			this.SkullManager.Serialize(s);
 		}
 		#endregion

@@ -5,67 +5,67 @@ namespace KSoft.Phoenix.Phx
 	public sealed partial class BProtoAction
 		: Collections.BListAutoIdObject
 	{
-		public static readonly Predicate<BActionType> kNotInvalidActionType = e => e != BActionType.Invalid;
-		static readonly Predicate<BSquadMode> kNotInvalidSquadMode = e => e != BSquadMode.Invalid;
+		public static readonly Predicate<BActionType> KNotInvalidActionType = e => e != BActionType.INVALID;
+		static readonly Predicate<BSquadMode> KNotInvalidSquadMode = e => e != BSquadMode.INVALID;
 
 		#region Xml constants
-		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
 		{
-			ElementName = "Action",
-			DataName = "Name",
-			Flags = XML.BCollectionXmlParamsFlags.UseElementForData |
-				XML.BCollectionXmlParamsFlags.ForceNoRootElementStreaming,
+			elementName = "Action",
+			dataName = "Name",
+			flags = XML.BCollectionXmlParamsFlags.USE_ELEMENT_FOR_DATA |
+				XML.BCollectionXmlParamsFlags.FORCE_NO_ROOT_ELEMENT_STREAMING,
 		};
 		#endregion
 
 		#region Properties
-		BActionType mActionType = BActionType.Invalid;
-		float mProjectileSpread = PhxUtil.kInvalidSingle;
+		BActionType mActionType_ = BActionType.INVALID;
+		float mProjectileSpread_ = PhxUtil.K_INVALID_SINGLE;
 
 		[Meta.BProtoSquadReference]
-		int mSquadTypeID = TypeExtensions.kNone;
+		int mSquadTypeId_ = TypeExtensions.K_NONE;
 		[Meta.BWeaponTypeReference]
-		int mWeaponID = TypeExtensions.kNone;
+		int mWeaponId_ = TypeExtensions.K_NONE;
 		[Meta.BProtoActionReference]
-		int mLinkedActionID = TypeExtensions.kNone;
+		int mLinkedActionId_ = TypeExtensions.K_NONE;
 
-		BSquadMode mSquadMode = BSquadMode.Invalid;
-		BSquadMode mNewSquadMode = BSquadMode.Invalid;
+		BSquadMode mSquadMode_ = BSquadMode.INVALID;
+		BSquadMode mNewSquadMode_ = BSquadMode.INVALID;
 #if false
 		int mNewTacticStateID = TypeExtensions.kNone;
 #endif
 
-		float mWorkRate = PhxUtil.kInvalidSingle;
-		float mWorkRateVariance = PhxUtil.kInvalidSingle;
-		float mWorkRange = PhxUtil.kInvalidSingle;
+		float mWorkRate_ = PhxUtil.K_INVALID_SINGLE;
+		float mWorkRateVariance_ = PhxUtil.K_INVALID_SINGLE;
+		float mWorkRange_ = PhxUtil.K_INVALID_SINGLE;
 
-		float mDamageModifiersDmg;
-		float mDamageModifiersDmgTaken;
-		bool mDamageModifiersByCombatValue;
+		float mDamageModifiersDmg_;
+		float mDamageModifiersDmgTaken_;
+		bool mDamageModifiersByCombatValue_;
 
-		int mResourceID = TypeExtensions.kNone;
-		bool mDefault;
+		int mResourceId_ = TypeExtensions.K_NONE;
+		bool mDefault_;
 
-		int mSlaveAttackActionID = TypeExtensions.kNone;
-		int mBaseDPSWeaponID = TypeExtensions.kNone;
+		int mSlaveAttackActionId_ = TypeExtensions.K_NONE;
+		int mBaseDpsWeaponId_ = TypeExtensions.K_NONE;
 
-		BActionType mPersistentActionType = BActionType.Invalid;
+		BActionType mPersistentActionType_ = BActionType.INVALID;
 
-		float mDuration = PhxUtil.kInvalidSingle;
-		float mDurationSpread = PhxUtil.kInvalidSingle;
+		float mDuration_ = PhxUtil.K_INVALID_SINGLE;
+		float mDurationSpread_ = PhxUtil.K_INVALID_SINGLE;
 
-		int mAutoRepairIdleTime = TypeExtensions.kNone;
-		float mAutoRepairThreshold = PhxUtil.kInvalidSingle;
-		float mAutoRepairSearchDistance = PhxUtil.kInvalidSingle;
-		int mInvalidTargetObjectID = TypeExtensions.kNone;
+		int mAutoRepairIdleTime_ = TypeExtensions.K_NONE;
+		float mAutoRepairThreshold_ = PhxUtil.K_INVALID_SINGLE;
+		float mAutoRepairSearchDistance_ = PhxUtil.K_INVALID_SINGLE;
+		int mInvalidTargetObjectId_ = TypeExtensions.K_NONE;
 
-		int mProtoObjectID = TypeExtensions.kNone;
-		bool mProtoObjectIsSquad;
+		int mProtoObjectId_ = TypeExtensions.K_NONE;
+		bool mProtoObjectIsSquad_;
 #if false
 		int mCountStringID = TypeExtensions.kNone;
 #endif
-		int mMaxNumUnitsPerformAction = TypeExtensions.kNone;
-		float mDamageCharge = PhxUtil.kInvalidSingle;
+		int mMaxNumUnitsPerformAction_ = TypeExtensions.K_NONE;
+		float mDamageCharge_ = PhxUtil.K_INVALID_SINGLE;
 		#endregion
 
 		#region BListAutoIdObject Members
@@ -74,76 +74,76 @@ namespace KSoft.Phoenix.Phx
 			var xs = s.GetSerializerInterface();
 			var td = KSoft.Debug.TypeCheck.CastReference<BTacticData>(s.UserData);
 
-			s.StreamElementEnumOpt("ActionType", ref this.mActionType, kNotInvalidActionType);
-			s.StreamElementOpt("ProjectileSpread", ref this.mProjectileSpread, PhxPredicates.IsNotInvalid);
+			s.StreamElementEnumOpt("ActionType", ref this.mActionType_, KNotInvalidActionType);
+			s.StreamElementOpt("ProjectileSpread", ref this.mProjectileSpread_, PhxPredicates.IsNotInvalid);
 
-			xs.StreamDBID(s, "SquadType", ref this.mSquadTypeID, DatabaseObjectKind.Squad);
-			td.StreamID(s, "Weapon", ref this.mWeaponID, TacticDataObjectKind.Weapon);
-			td.StreamID(s, "LinkedAction", ref this.mLinkedActionID, TacticDataObjectKind.Action);
+			xs.StreamDbid(s, "SquadType", ref this.mSquadTypeId_, DatabaseObjectKind.SQUAD);
+			td.StreamId(s, "Weapon", ref this.mWeaponId_, TacticDataObjectKind.WEAPON);
+			td.StreamId(s, "LinkedAction", ref this.mLinkedActionId_, TacticDataObjectKind.ACTION);
 
-			s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode, kNotInvalidSquadMode);
-			s.StreamElementEnumOpt("NewSquadMode", ref this.mNewSquadMode, kNotInvalidSquadMode);
+			s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode_, KNotInvalidSquadMode);
+			s.StreamElementEnumOpt("NewSquadMode", ref this.mNewSquadMode_, KNotInvalidSquadMode);
 #if false
 			td.StreamID(s, "NewTacticState", ref mNewTacticStateID, BTacticData.ObjectKind.TacticState);
 #endif
 
 			#region Work
-			s.StreamElementOpt("WorkRate", ref this.mWorkRate, PhxPredicates.IsNotInvalid);
-			s.StreamElementOpt("WorkRateVariance", ref this.mWorkRateVariance, PhxPredicates.IsNotInvalid);
-			s.StreamElementOpt("WorkRange", ref this.mWorkRange, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("WorkRate", ref this.mWorkRate_, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("WorkRateVariance", ref this.mWorkRateVariance_, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("WorkRange", ref this.mWorkRange_, PhxPredicates.IsNotInvalid);
 			#endregion
 
 			#region DamageModifiers
-			using (var bm = s.EnterCursorBookmarkOpt("DamageModifiers", this, o => this.mDamageModifiersDmg != PhxUtil.kInvalidSingle)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("DamageModifiers", this, o => this.mDamageModifiersDmg_ != PhxUtil.K_INVALID_SINGLE)) if (bm.IsNotNull)
 			{
-				s.StreamAttribute("damage", ref this.mDamageModifiersDmg);
-				s.StreamAttributeOpt("damageTaken", ref this.mDamageModifiersDmgTaken, PhxPredicates.IsNotInvalid);
-				s.StreamAttributeOpt("byCombatValue", ref this.mDamageModifiersByCombatValue, Predicates.IsTrue);
+				s.StreamAttribute("damage", ref this.mDamageModifiersDmg_);
+				s.StreamAttributeOpt("damageTaken", ref this.mDamageModifiersDmgTaken_, PhxPredicates.IsNotInvalid);
+				s.StreamAttributeOpt("byCombatValue", ref this.mDamageModifiersByCombatValue_, Predicates.IsTrue);
 			}
 			#endregion
 
-			xs.StreamTypeName(s, "Resource", ref this.mResourceID, GameDataObjectKind.Cost);
+			xs.StreamTypeName(s, "Resource", ref this.mResourceId_, GameDataObjectKind.COST);
 			// if element equals 'true' this is the default action
-			s.StreamElementOpt("Default", ref this.mDefault, Predicates.IsTrue);
+			s.StreamElementOpt("Default", ref this.mDefault_, Predicates.IsTrue);
 
-			td.StreamID(s, "SlaveAttackAction", ref this.mSlaveAttackActionID, TacticDataObjectKind.Action);
-			td.StreamID(s, "BaseDPSWeapon", ref this.mBaseDPSWeaponID, TacticDataObjectKind.Weapon);
+			td.StreamId(s, "SlaveAttackAction", ref this.mSlaveAttackActionId_, TacticDataObjectKind.ACTION);
+			td.StreamId(s, "BaseDPSWeapon", ref this.mBaseDpsWeaponId_, TacticDataObjectKind.WEAPON);
 
-			s.StreamElementEnumOpt("PersistentActionType", ref this.mPersistentActionType, kNotInvalidActionType);
+			s.StreamElementEnumOpt("PersistentActionType", ref this.mPersistentActionType_, KNotInvalidActionType);
 
 			#region Duration
-			using (var bm = s.EnterCursorBookmarkOpt("Duration", this, o => this.mDuration != PhxUtil.kInvalidSingle)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("Duration", this, o => this.mDuration_ != PhxUtil.K_INVALID_SINGLE)) if (bm.IsNotNull)
 			{
-				s.StreamCursor(ref this.mDuration);
-				s.StreamAttributeOpt("DurationSpread", ref this.mDurationSpread, PhxPredicates.IsNotInvalid);
+				s.StreamCursor(ref this.mDuration_);
+				s.StreamAttributeOpt("DurationSpread", ref this.mDurationSpread_, PhxPredicates.IsNotInvalid);
 			}
 			#endregion
 
 			#region AutoRepair
-			using (var bm = s.EnterCursorBookmarkOpt("AutoRepair", this, o => this.mAutoRepairIdleTime != PhxUtil.kInvalidSingle)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("AutoRepair", this, o => this.mAutoRepairIdleTime_ != PhxUtil.K_INVALID_SINGLE)) if (bm.IsNotNull)
 			{
-				s.StreamAttribute("AutoRepairIdleTime", ref this.mAutoRepairIdleTime);
-				s.StreamAttribute("AutoRepairThreshold", ref this.mAutoRepairThreshold);
-				s.StreamAttribute("AutoRepairSearchDistance", ref this.mAutoRepairSearchDistance);
+				s.StreamAttribute("AutoRepairIdleTime", ref this.mAutoRepairIdleTime_);
+				s.StreamAttribute("AutoRepairThreshold", ref this.mAutoRepairThreshold_);
+				s.StreamAttribute("AutoRepairSearchDistance", ref this.mAutoRepairSearchDistance_);
 			}
 			#endregion
-			xs.StreamDBID(s, "InvalidTarget", ref this.mInvalidTargetObjectID, DatabaseObjectKind.Object);
+			xs.StreamDbid(s, "InvalidTarget", ref this.mInvalidTargetObjectId_, DatabaseObjectKind.OBJECT);
 
 			#region ProtoObject
-			using (var bm = s.EnterCursorBookmarkOpt("ProtoObject", this, o => this.mProtoObjectID.IsNotNone())) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt("ProtoObject", this, o => this.mProtoObjectId_.IsNotNone())) if (bm.IsNotNull)
 			{
 				// TODO: This IS optional, right? Only on 'true'?
 				// inner text: if 0, proto object, if not, proto squad
-				s.StreamAttributeOpt("Squad", ref this.mProtoObjectIsSquad, Predicates.IsTrue);
-				xs.StreamDBID(s, null, ref this.mSquadTypeID,
-				              this.mProtoObjectIsSquad ? DatabaseObjectKind.Squad : DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
+				s.StreamAttributeOpt("Squad", ref this.mProtoObjectIsSquad_, Predicates.IsTrue);
+				xs.StreamDbid(s, null, ref this.mSquadTypeId_,
+				              this.mProtoObjectIsSquad_ ? DatabaseObjectKind.SQUAD : DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
 			}
 			#endregion
 #if false
 			xs.StreamXmlForStringID(s, "Count", ref mCountStringID);
 #endif
-			s.StreamElementOpt("MaxNumUnitsPerformAction", ref this.mMaxNumUnitsPerformAction, Predicates.IsNotNone);
-			s.StreamElementOpt("DamageCharge", ref this.mDamageCharge, PhxPredicates.IsNotInvalid);
+			s.StreamElementOpt("MaxNumUnitsPerformAction", ref this.mMaxNumUnitsPerformAction_, Predicates.IsNotNone);
+			s.StreamElementOpt("DamageCharge", ref this.mDamageCharge_, PhxPredicates.IsNotInvalid);
 		}
 		#endregion
 	};
