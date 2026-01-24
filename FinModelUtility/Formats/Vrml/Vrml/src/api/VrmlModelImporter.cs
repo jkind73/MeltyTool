@@ -23,7 +23,6 @@ using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.texture;
 using fin.util.asserts;
 using fin.util.enumerables;
-using fin.image.util;
 using fin.util.sets;
 using fin.util.strings;
 
@@ -173,8 +172,8 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
           fontFile.FullPath,
           fontSize,
           new QFontBuilderConfiguration(false) {
-            CharSet = string.Join("", chars),
-            TextGenerationRenderHint = TextGenerationRenderHint.AntiAlias,
+            charSet = string.Join("", chars),
+            textGenerationRenderHint = TextGenerationRenderHint.ANTI_ALIAS,
           });
     }
 
@@ -183,9 +182,9 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
           var text = string.Join('\n', textNode.String);
 
           var fontAlignment = textNode.FontStyle.MajorJustify switch {
-            Justify.BEGIN or Justify.FIRST => QFontAlignment.Left,
-            Justify.MIDDLE => QFontAlignment.Centre,
-            Justify.END => QFontAlignment.Right,
+            Justify.BEGIN or Justify.FIRST => QFontAlignment.LEFT,
+            Justify.MIDDLE => QFontAlignment.CENTRE,
+            Justify.END => QFontAlignment.RIGHT,
           };
 
           var fontStyleNode = textNode.FontStyle;
