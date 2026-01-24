@@ -193,15 +193,13 @@ csharp_preserve_single_line_statements = true
 
 # Naming rules
 
-dotnet_naming_rule.static_field_should_be_snake_case.severity = error
-dotnet_naming_rule.static_field_should_be_snake_case.symbols = static_field
-dotnet_naming_rule.static_field_should_be_snake_case.applicable_accessibilities = public, protected
-dotnet_naming_rule.static_field_should_be_snake_case.style = snake_case
+dotnet_naming_rule.readonly_static_field_should_be_snake_case.severity = error
+dotnet_naming_rule.readonly_static_field_should_be_snake_case.symbols = readonly_static_field
+dotnet_naming_rule.readonly_static_field_should_be_snake_case.style = snake_case
 
-dotnet_naming_rule.private_static_field_should_be_snake_case_.severity = error
-dotnet_naming_rule.private_static_field_should_be_snake_case_.symbols = static_field
-dotnet_naming_rule.private_static_field_should_be_snake_case_.applicable_accessibilities = private
-dotnet_naming_rule.private_static_field_should_be_snake_case_.style = snake_case_
+dotnet_naming_rule.private_readonly_static_field_should_be_snake_case_.severity = error
+dotnet_naming_rule.private_readonly_static_field_should_be_snake_case_.symbols = private_readonly_static_field
+dotnet_naming_rule.private_readonly_static_field_should_be_snake_case_.style = snake_case_
 
 dotnet_naming_rule.interface_should_be_begins_with_i.severity = error
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
@@ -245,13 +243,17 @@ dotnet_naming_symbols.private_method.applicable_kinds = method
 dotnet_naming_symbols.private_method.applicable_accessibilities = private
 dotnet_naming_symbols.private_method.required_modifiers = 
 
+dotnet_naming_symbols.readonly_static_field.applicable_kinds = field
+dotnet_naming_symbols.readonly_static_field.applicable_accessibilities = public, internal, private, protected, protected_internal
+dotnet_naming_symbols.readonly_static_field.required_modifiers = static, readonly
+
+dotnet_naming_symbols.private_readonly_static_field.applicable_kinds = field
+dotnet_naming_symbols.private_readonly_static_field.applicable_accessibilities = private
+dotnet_naming_symbols.private_readonly_static_field.required_modifiers = static, readonly
+
 dotnet_naming_symbols.public_or_protected_field.applicable_kinds = field
 dotnet_naming_symbols.public_or_protected_field.applicable_accessibilities = public, protected
 dotnet_naming_symbols.public_or_protected_field.required_modifiers = 
-
-dotnet_naming_symbols.static_field.applicable_kinds = field
-dotnet_naming_symbols.static_field.applicable_accessibilities = public, internal, private, protected, protected_internal
-dotnet_naming_symbols.static_field.required_modifiers = static
 
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field
 dotnet_naming_symbols.private_or_internal_field.applicable_accessibilities = internal, private
