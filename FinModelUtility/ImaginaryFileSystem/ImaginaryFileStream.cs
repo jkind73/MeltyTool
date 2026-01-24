@@ -15,7 +15,7 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
   /// </summary>
   public new static FileSystemStream Null { get; } = new NullFileSystemStream();
 
-  private class NullFileSystemStream : FileSystemStream {
+  private sealed class NullFileSystemStream : FileSystemStream {
     /// <summary>
     /// Initializes a new instance of <see cref="NullFileSystemStream" />.
     /// </summary>
@@ -56,7 +56,7 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       fileData.CheckFileAccess(path, access);
 
       var timeAdjustments
-          = GetTimeAdjustmentsForFileStreamWhenFileExists(mode, access);
+          = GetTimeAdjustmentsForFileStreamWhenFileExists_(mode, access);
       imaginaryFileDataAccessor.AdjustTimes(fileData, timeAdjustments);
       var existingContents = fileData.Contents;
       var keepExistingContents =
@@ -293,7 +293,7 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
     }
   }
 
-  private TimeAdjustments GetTimeAdjustmentsForFileStreamWhenFileExists(
+  private static TimeAdjustments GetTimeAdjustmentsForFileStreamWhenFileExists_(
       FileMode mode,
       FileAccess access) {
     switch (mode) {

@@ -15,7 +15,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class TextureMaterialImpl(IReadOnlyTexture texture)
+  private sealed class TextureMaterialImpl(IReadOnlyTexture texture)
       : BMaterialImpl, ITextureMaterial {
     public IReadOnlyTexture Texture { get; } = texture;
 

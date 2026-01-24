@@ -71,13 +71,13 @@ public partial class FileIdsDictionary : IFileIdsDictionary {
         });
 
   [BinarySchema]
-  private partial class FileIds : IBinaryConvertible {
+  private sealed partial class FileIds : IBinaryConvertible {
     [RSequenceUntilEndOfStream]
     public FileIdsPair[] Pairs { get; set; }
   }
 
   [BinarySchema]
-  private partial class FileIdsPair : IBinaryConvertible {
+  private sealed partial class FileIdsPair : IBinaryConvertible {
     public uint Id { get; set; }
 
     [SequenceLengthSource(SchemaIntegerType.UINT16)]
@@ -85,7 +85,7 @@ public partial class FileIdsDictionary : IFileIdsDictionary {
   }
 
   [BinarySchema]
-  private partial class SizedString : IBinaryConvertible {
+  private sealed partial class SizedString : IBinaryConvertible {
     [StringLengthSource(SchemaIntegerType.UINT16)]
     public string FilePath { get; set; }
   }

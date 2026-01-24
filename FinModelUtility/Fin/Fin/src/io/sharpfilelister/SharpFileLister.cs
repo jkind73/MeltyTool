@@ -14,11 +14,11 @@ public sealed class DirectoryInformation {
   public LinkedList<DirectoryInformation> Subdirs { get; } = [];
 }
 
-public sealed class SharpFileLister {
+public static class SharpFileLister {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
   //Code based heavily on https://stackoverflow.com/q/47471744
-  public unsafe DirectoryInformation FindNextFilePInvoke(string path) {
+  public static unsafe DirectoryInformation FindNextFilePInvoke(string path) {
     var directoryInfo = new DirectoryInformation { AbsoluteSubdirPath = path };
     var fileList = directoryInfo.AbsoluteFilePaths;
     var directoryList = directoryInfo.Subdirs;
@@ -40,7 +40,7 @@ public sealed class SharpFileLister {
           if ((attributes & FileAttributes.Directory) == 0) {
             fileList.AddLast(fullPath);
           } else if ((attributes & FileAttributes.ReparsePoint) == 0) {
-            directoryList.AddLast(this.FindNextFilePInvoke(fullPath));
+            directoryList.AddLast(FindNextFilePInvoke(fullPath));
           }
         } while (FindNextFile(fileSearchHandle, out findData));
       }

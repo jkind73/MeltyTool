@@ -58,7 +58,7 @@ public sealed class FixedFunctionRegisters : IFixedFunctionRegisters {
     return scalarRegister;
   }
 
-  private class ColorRegister(string name, IColorConstant defaultValue)
+  private sealed class ColorRegister(string name, IColorConstant defaultValue)
       : BColorValue, IColorRegister {
     public string Name { get; } = name;
 
@@ -80,7 +80,7 @@ public sealed class FixedFunctionRegisters : IFixedFunctionRegisters {
     public override string ToString() => $"{this.Name} : {this.ColorValue}";
   }
 
-  private class ScalarRegister(string name, IScalarConstant defaultValue)
+  private sealed class ScalarRegister(string name, IScalarConstant defaultValue)
       : BScalarValue, IScalarRegister {
     public string Name { get; } = name;
 

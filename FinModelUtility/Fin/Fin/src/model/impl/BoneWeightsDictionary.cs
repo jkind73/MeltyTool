@@ -116,7 +116,7 @@ public sealed class BoneWeightsDictionary {
     return hash;
   }
 
-  private class BoneWeightsImpl : IBoneWeights {
+  private sealed class BoneWeightsImpl : IBoneWeights {
     public int Index { get; init; }
     public VertexSpace VertexSpace { get; init; }
     public IReadOnlyList<IReadOnlyBoneWeight> Weights { get; init; }

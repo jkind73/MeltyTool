@@ -9,8 +9,8 @@ using fin.model.accessor;
 
 namespace fin.model.io.exporters.assimp.indirect;
 
-public sealed class AssimpIndirectUvFixer {
-  public void Fix(IReadOnlyModel model, Scene sc) {
+public static class AssimpIndirectUvFixer {
+  public static void Fix(IReadOnlyModel model, Scene sc) {
     var finVertices = model.Skin.Vertices;
 
     var vertexAccessor = ConsistentVertexAccessor.GetAccessorForModel(model);

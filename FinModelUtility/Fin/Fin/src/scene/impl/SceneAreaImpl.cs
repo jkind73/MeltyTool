@@ -6,7 +6,7 @@ using fin.image;
 namespace fin.scene;
 
 public partial class SceneImpl {
-  private class SceneAreaImpl : ISceneArea {
+  private sealed class SceneAreaImpl : ISceneArea {
     private readonly List<ISceneNode> objects_ = [];
 
     public void Dispose() {

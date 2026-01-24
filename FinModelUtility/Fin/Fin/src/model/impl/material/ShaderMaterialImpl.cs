@@ -14,7 +14,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class ShaderMaterialImpl(string vertexShader, string fragmentShader)
+  private sealed class ShaderMaterialImpl(string vertexShader, string fragmentShader)
       : BMaterialImpl, IShaderMaterial {
     private readonly Dictionary<string, IReadOnlyTexture> textureByUniform_
         = new();

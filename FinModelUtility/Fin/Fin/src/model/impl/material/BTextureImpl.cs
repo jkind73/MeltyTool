@@ -12,7 +12,7 @@ using fin.image.util;
 namespace fin.model.impl;
 
 public partial class ModelImpl<TVertex> {
-  private partial class MaterialManagerImpl {
+  private sealed partial class MaterialManagerImpl {
     public IReadOnlyList<ITexture> Textures { get; }
   }
 

@@ -32,7 +32,7 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override IDirectoryInfo CreateDirectory(string path) {
-    return CreateDirectoryInternal(path);
+    return this.CreateDirectoryInternal(path);
   }
 
 #if FEATURE_UNIX_FILE_MODE
@@ -82,19 +82,19 @@ public class ImaginaryDirectory : DirectoryBase {
         /// <inheritdoc />
         public override IFileSystemInfo CreateSymbolicLink(string path, string pathToTarget)
         {
-            imaginaryFileDataAccessor_.ImaginaryPathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
-            imaginaryFileDataAccessor_.ImaginaryPathVerifier.IsLegalAbsoluteOrRelative(pathToTarget, nameof(pathToTarget));
+          this.imaginaryFileDataAccessor_.ImaginaryPathVerifier.IsLegalAbsoluteOrRelative(path, nameof(path));
+          this.imaginaryFileDataAccessor_.ImaginaryPathVerifier.IsLegalAbsoluteOrRelative(pathToTarget, nameof(pathToTarget));
 
-            if (Exists(path))
+            if (this.Exists(path))
             {
                 throw CommonExceptions.FileAlreadyExists(nameof(path));
             }
 
-            imaginaryFileDataAccessor_.AddDirectory(path);
-            imaginaryFileDataAccessor_.GetFile(path).LinkTarget = pathToTarget;
+            this.imaginaryFileDataAccessor_.AddDirectory(path);
+            this.imaginaryFileDataAccessor_.GetFile(path).LinkTarget = pathToTarget;
 
             var directoryInfo =
- new ImaginaryDirectoryInfo(imaginaryFileDataAccessor_, path);
+ new ImaginaryDirectoryInfo(this.imaginaryFileDataAccessor_, path);
             directoryInfo.Attributes |= FileAttributes.ReparsePoint;
             return directoryInfo;
         }
@@ -112,18 +112,18 @@ public class ImaginaryDirectory : DirectoryBase {
             do
             {
                 var randomDir =
- $"{prefix}{FileSystem.Path.GetRandomFileName()}";
+ $"{prefix}{this.FileSystem.Path.GetRandomFileName()}";
                 potentialTempDirectory =
- Path.Combine(FileSystem.Path.GetTempPath(), randomDir);
-            } while (Exists(potentialTempDirectory));
+ Path.Combine(this.FileSystem.Path.GetTempPath(), randomDir);
+            } while (this.Exists(potentialTempDirectory));
 
-            return CreateDirectoryInternal(potentialTempDirectory);
+            return this.CreateDirectoryInternal(potentialTempDirectory);
         }
 #endif
 
   /// <inheritdoc />
   public override void Delete(string path) {
-    Delete(path, false);
+    this.Delete(path, false);
   }
 
 
@@ -195,24 +195,24 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override string GetCurrentDirectory() {
-    return currentDirectory;
+    return this.currentDirectory;
   }
 
   /// <inheritdoc />
   public override string[] GetDirectories(string path) {
-    return GetDirectories(path, "*");
+    return this.GetDirectories(path, "*");
   }
 
   /// <inheritdoc />
   public override string[] GetDirectories(string path, string searchPattern) {
-    return GetDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
+    return this.GetDirectories(path, searchPattern, SearchOption.TopDirectoryOnly);
   }
 
   /// <inheritdoc />
   public override string[] GetDirectories(string path,
                                           string searchPattern,
                                           SearchOption searchOption) {
-    return EnumerateDirectories(path, searchPattern, searchOption).ToArray();
+    return this.EnumerateDirectories(path, searchPattern, searchOption).ToArray();
   }
 
 #if FEATURE_ENUMERATION_OPTIONS
@@ -220,7 +220,7 @@ public class ImaginaryDirectory : DirectoryBase {
         public override string[] GetDirectories(string path, string searchPattern,
             EnumerationOptions enumerationOptions)
         {
-            return GetDirectories(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
+            return this.GetDirectories(path, "*", EnumerationOptionsToSearchOption_(enumerationOptions));
         }
 #endif
 
@@ -232,34 +232,34 @@ public class ImaginaryDirectory : DirectoryBase {
   /// <inheritdoc />
   public override string[] GetFiles(string path) {
     // Same as what the real framework does
-    return GetFiles(path, "*");
+    return this.GetFiles(path, "*");
   }
 
   /// <inheritdoc />
   public override string[] GetFiles(string path, string searchPattern) {
     // Same as what the real framework does
-    return GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
+    return this.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
   }
 
   /// <inheritdoc />
   public override string[] GetFiles(string path,
                                     string searchPattern,
                                     SearchOption searchOption) {
-    return GetFilesInternal(this.imaginaryFileDataAccessor_.AllFiles,
-                            path,
-                            searchPattern,
-                            searchOption);
+    return this.GetFilesInternal_(this.imaginaryFileDataAccessor_.AllFiles,
+                                 path,
+                                 searchPattern,
+                                 searchOption);
   }
 
 #if FEATURE_ENUMERATION_OPTIONS
         /// <inheritdoc />
         public override string[] GetFiles(string path, string searchPattern, EnumerationOptions enumerationOptions)
         {
-            return GetFiles(path, searchPattern, EnumerationOptionsToSearchOption(enumerationOptions));
+            return this.GetFiles(path, searchPattern, EnumerationOptionsToSearchOption_(enumerationOptions));
         }
 #endif
 
-  private string[] GetFilesInternal(
+  private string[] GetFilesInternal_(
       IEnumerable<string> files,
       string path,
       string searchPattern,
@@ -272,7 +272,7 @@ public class ImaginaryDirectory : DirectoryBase {
       throw new ArgumentException("Invalid character(s) in path", nameof(path));
     }
 
-    CheckSearchPattern(searchPattern);
+    this.CheckSearchPattern(searchPattern);
     if (searchPattern.Equals(string.Empty,
                              StringComparison.OrdinalIgnoreCase)) {
       searchPattern = "*";
@@ -282,7 +282,7 @@ public class ImaginaryDirectory : DirectoryBase {
     path = path.NormalizeSlashes();
     path = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
 
-    if (!Exists(path)) {
+    if (!this.Exists(path)) {
       throw CommonExceptions.CouldNotFindPartOfPath(path);
     }
 
@@ -348,9 +348,9 @@ public class ImaginaryDirectory : DirectoryBase {
 
     if (searchEndInStarDot) {
       pathPatternNoExtension
-          = ReplaceLastOccurrence(pathPattern, @"]*?\.", @"\.]*?[.]*");
+          = ReplaceLastOccurrence_(pathPattern, @"]*?\.", @"\.]*?[.]*");
       pathPatternEndsInDot
-          = ReplaceLastOccurrence(pathPattern, @"]*?\.", @"]*?[.]{1,}");
+          = ReplaceLastOccurrence_(pathPattern, @"]*?\.", @"]*?[.]{1,}");
     }
 
     return files.Where(p =>
@@ -366,15 +366,15 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override string[] GetFileSystemEntries(string path) {
-    return GetFileSystemEntries(path, "*");
+    return this.GetFileSystemEntries(path, "*");
   }
 
   /// <inheritdoc />
   public override string[] GetFileSystemEntries(
       string path,
       string searchPattern) {
-    var dirs = GetDirectories(path, searchPattern);
-    var files = GetFiles(path, searchPattern);
+    var dirs = this.GetDirectories(path, searchPattern);
+    var files = this.GetFiles(path, searchPattern);
 
     return dirs.Union(files).ToArray();
   }
@@ -384,8 +384,8 @@ public class ImaginaryDirectory : DirectoryBase {
       string path,
       string searchPattern,
       SearchOption searchOption) {
-    var dirs = GetDirectories(path, searchPattern, searchOption);
-    var files = GetFiles(path, searchPattern, searchOption);
+    var dirs = this.GetDirectories(path, searchPattern, searchOption);
+    var files = this.GetFiles(path, searchPattern, searchOption);
 
     return dirs.Union(files).ToArray();
   }
@@ -395,7 +395,7 @@ public class ImaginaryDirectory : DirectoryBase {
         public override string[] GetFileSystemEntries(string path, string searchPattern,
             EnumerationOptions enumerationOptions)
         {
-            return GetFileSystemEntries(path, "*", EnumerationOptionsToSearchOption(enumerationOptions));
+            return this.GetFileSystemEntries(path, "*", EnumerationOptionsToSearchOption_(enumerationOptions));
         }
 #endif
 
@@ -557,12 +557,11 @@ public class ImaginaryDirectory : DirectoryBase {
         /// <inheritdoc />
         public override IFileSystemInfo ResolveLinkTarget(string linkPath, bool returnFinalTarget)
         {
-            var initialContainer = imaginaryFileDataAccessor_.GetFile(linkPath);
+            var initialContainer = this.imaginaryFileDataAccessor_.GetFile(linkPath);
             if (initialContainer.LinkTarget != null)
             {
                 var nextLocation = initialContainer.LinkTarget;
-                var nextContainer =
- imaginaryFileDataAccessor_.GetFile(nextLocation);
+                var nextContainer = this.imaginaryFileDataAccessor_.GetFile(nextLocation);
 
                 if (returnFinalTarget)
                 {
@@ -576,8 +575,7 @@ public class ImaginaryDirectory : DirectoryBase {
                             break;
                         }
                         nextLocation = nextContainer.LinkTarget;
-                        nextContainer =
- imaginaryFileDataAccessor_.GetFile(nextLocation);
+                        nextContainer = this.imaginaryFileDataAccessor_.GetFile(nextLocation);
                     }
 
                     if (nextContainer.LinkTarget != null)
@@ -588,11 +586,11 @@ public class ImaginaryDirectory : DirectoryBase {
 
                 if (nextContainer.IsDirectory)
                 {
-                    return new ImaginaryDirectoryInfo(imaginaryFileDataAccessor_, nextLocation);
+                    return new ImaginaryDirectoryInfo(this.imaginaryFileDataAccessor_, nextLocation);
                 }
                 else
                 {
-                    return new ImaginaryFileInfo(imaginaryFileDataAccessor_, nextLocation);
+                    return new ImaginaryFileInfo(this.imaginaryFileDataAccessor_, nextLocation);
                 }
             }
             throw CommonExceptions.NameCannotBeResolvedByTheSystem(linkPath);
@@ -615,7 +613,7 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override void SetCurrentDirectory(string path) {
-    currentDirectory = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
+    this.currentDirectory = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
   }
 
   /// <inheritdoc />
@@ -647,16 +645,16 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateDirectories(string path) {
-    return EnumerateDirectories(path, "*");
+    return this.EnumerateDirectories(path, "*");
   }
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateDirectories(
       string path,
       string searchPattern) {
-    return EnumerateDirectories(path,
-                                searchPattern,
-                                SearchOption.TopDirectoryOnly);
+    return this.EnumerateDirectories(path,
+                                     searchPattern,
+                                     SearchOption.TopDirectoryOnly);
   }
 
   /// <inheritdoc />
@@ -670,14 +668,14 @@ public class ImaginaryDirectory : DirectoryBase {
     var originalPath = path;
     path = path.TrimSlashes();
     path = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
-    return GetFilesInternal(this.imaginaryFileDataAccessor_.AllDirectories,
-                            path,
-                            searchPattern,
-                            searchOption)
-           .Where(p => !this.imaginaryFileDataAccessor_.StringOperations.Equals(
-                      p,
-                      path))
-           .Select(p => FixPrefix(p, originalPath));
+    return this.GetFilesInternal_(this.imaginaryFileDataAccessor_.AllDirectories,
+                                 path,
+                                 searchPattern,
+                                 searchOption)
+               .Where(p => !this.imaginaryFileDataAccessor_.StringOperations.Equals(
+                          p,
+                          path))
+               .Select(p => this.FixPrefix(p, originalPath));
   }
 
   private string FixPrefix(string path, string originalPath) {
@@ -698,20 +696,20 @@ public class ImaginaryDirectory : DirectoryBase {
         {
             var searchOption =
  enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            return EnumerateDirectories(path, searchPattern, searchOption);
+            return this.EnumerateDirectories(path, searchPattern, searchOption);
         }
 #endif
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateFiles(string path) {
-    return GetFiles(path);
+    return this.GetFiles(path);
   }
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateFiles(
       string path,
       string searchPattern) {
-    return GetFiles(path, searchPattern);
+    return this.GetFiles(path, searchPattern);
   }
 
   /// <inheritdoc />
@@ -719,7 +717,7 @@ public class ImaginaryDirectory : DirectoryBase {
       string path,
       string searchPattern,
       SearchOption searchOption) {
-    return GetFiles(path, searchPattern, searchOption);
+    return this.GetFiles(path, searchPattern, searchOption);
   }
 
 #if FEATURE_ENUMERATION_OPTIONS
@@ -728,20 +726,20 @@ public class ImaginaryDirectory : DirectoryBase {
         {
             var searchOption =
  enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            return GetFiles(path, searchPattern, searchOption);
+            return this.GetFiles(path, searchPattern, searchOption);
         }
 #endif
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateFileSystemEntries(string path) {
-    return GetFileSystemEntries(path);
+    return this.GetFileSystemEntries(path);
   }
 
   /// <inheritdoc />
   public override IEnumerable<string> EnumerateFileSystemEntries(
       string path,
       string searchPattern) {
-    return GetFileSystemEntries(path, searchPattern);
+    return this.GetFileSystemEntries(path, searchPattern);
   }
 
   /// <inheritdoc />
@@ -749,7 +747,7 @@ public class ImaginaryDirectory : DirectoryBase {
       string path,
       string searchPattern,
       SearchOption searchOption) {
-    return GetFileSystemEntries(path, searchPattern, searchOption);
+    return this.GetFileSystemEntries(path, searchPattern, searchOption);
   }
 
 #if FEATURE_ENUMERATION_OPTIONS
@@ -759,8 +757,8 @@ public class ImaginaryDirectory : DirectoryBase {
             var searchOption =
  enumerationOptions.RecurseSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
             var fileSystemEntries =
- new List<string>(GetFiles(path, searchPattern, searchOption));
-            fileSystemEntries.AddRange(GetDirectories(path, searchPattern, searchOption));
+ new List<string>(this.GetFiles(path, searchPattern, searchOption));
+            fileSystemEntries.AddRange(this.GetDirectories(path, searchPattern, searchOption));
             return fileSystemEntries;
         }
 #endif
@@ -768,7 +766,7 @@ public class ImaginaryDirectory : DirectoryBase {
   private string EnsureAbsolutePath(string path) {
     return Path.IsPathRooted(path)
         ? path
-        : Path.Combine(GetCurrentDirectory(), path);
+        : Path.Combine(this.GetCurrentDirectory(), path);
   }
 
   private void CheckSearchPattern(string searchPattern) {
@@ -808,9 +806,9 @@ public class ImaginaryDirectory : DirectoryBase {
     }
   }
 
-  private string ReplaceLastOccurrence(string source,
-                                       string find,
-                                       string replace) {
+  private static string ReplaceLastOccurrence_(string source,
+                                               string find,
+                                               string replace) {
     if (source == null) {
       return source;
     }
@@ -826,7 +824,7 @@ public class ImaginaryDirectory : DirectoryBase {
   }
 
 #if FEATURE_ENUMERATION_OPTIONS
-        private SearchOption EnumerationOptionsToSearchOption(EnumerationOptions enumerationOptions)
+        private static SearchOption EnumerationOptionsToSearchOption_(EnumerationOptions enumerationOptions)
         {
             static Exception CreateExceptionForUnsupportedProperty(string propertyName)
             {

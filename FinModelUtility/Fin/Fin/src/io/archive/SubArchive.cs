@@ -92,7 +92,7 @@ public sealed class SubArchiveExtractor : IArchiveExtractor<SubArchiveContentFil
       return ArchiveExtractionResult.ALREADY_EXISTS;
     }
 
-    return this.TryToExtractIntoExistingDirectory_<TArchiveReader>(
+    return TryToExtractIntoExistingDirectory_<TArchiveReader>(
         archiveName,
         archive,
         rootDirectory,
@@ -100,7 +100,7 @@ public sealed class SubArchiveExtractor : IArchiveExtractor<SubArchiveContentFil
         archiveFileNameProcessor);
   }
 
-  private ArchiveExtractionResult TryToExtractIntoExistingDirectory_<
+  private static ArchiveExtractionResult TryToExtractIntoExistingDirectory_<
       TArchiveReader>(
       string archiveName,
       Stream archive,
@@ -144,7 +144,7 @@ public sealed class SubArchiveExtractor : IArchiveExtractor<SubArchiveContentFil
   }
 
 
-  public ArchiveExtractionResult ExtractRelativeToRoot<TArchiveReader>(
+  public static ArchiveExtractionResult ExtractRelativeToRoot<TArchiveReader>(
       IReadOnlyGenericFile archiveFile,
       IReadOnlyTreeDirectory rootDirectory)
       where TArchiveReader : IArchiveReader<SubArchiveContentFile>, new() {

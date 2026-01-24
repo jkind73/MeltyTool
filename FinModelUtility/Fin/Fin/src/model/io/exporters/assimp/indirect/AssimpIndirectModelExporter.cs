@@ -151,9 +151,9 @@ public sealed class AssimpIndirectModelExporter : IModelExporter {
       // Bone orientation is already correct, you just need to enable
       // "Automatic Bone Orientation" if importing in Blender.
 
-      new AssimpIndirectAnimationFixer().Fix(model, assScene);
-      new AssimpIndirectUvFixer().Fix(model, assScene);
-      new AssimpIndirectTextureFixer().Fix(model, assScene);
+      AssimpIndirectAnimationFixer.Fix(model, assScene);
+      AssimpIndirectUvFixer.Fix(model, assScene);
+      AssimpIndirectTextureFixer.Fix(model, assScene);
 
       foreach (var nonGltfFormat in nonGltfFormats) {
         var nonGltfOutputFile =

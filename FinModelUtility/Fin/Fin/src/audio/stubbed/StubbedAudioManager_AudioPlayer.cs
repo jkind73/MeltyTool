@@ -6,7 +6,7 @@ namespace fin.audio.stubbed;
 public partial class StubbedAudioManager {
   public IAudioPlayer<short> AudioPlayer { get; } = new StubbedAudioPlayer();
 
-  private partial class StubbedAudioPlayer : IAudioPlayer<short> {
+  private sealed partial class StubbedAudioPlayer : IAudioPlayer<short> {
     public bool IsDisposed { get; }
     public void Dispose() { }
 

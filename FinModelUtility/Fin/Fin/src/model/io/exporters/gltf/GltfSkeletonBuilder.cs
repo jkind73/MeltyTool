@@ -10,7 +10,7 @@ using GltfNode = Node;
 using GltfSkin = Skin;
 
 public sealed class GltfSkeletonBuilder {
-  public (GltfNode, IReadOnlyBone)[] BuildAndBindSkeleton(
+  public static (GltfNode, IReadOnlyBone)[] BuildAndBindSkeleton(
       GltfNode rootNode,
       GltfSkin skin,
       float scale,
@@ -24,7 +24,7 @@ public sealed class GltfSkeletonBuilder {
     while (boneQueue.Count > 0) {
       var (node, bone) = boneQueue.Dequeue();
 
-      this.ApplyBoneOrientationToNode_(node, bone, scale);
+      ApplyBoneOrientationToNode_(node, bone, scale);
 
       if (bone != rootBone) {
         skinNodesAndBones[bone.Index - 1] = (node, bone);
@@ -49,9 +49,9 @@ public sealed class GltfSkeletonBuilder {
     return skinNodesAndBones.ToArray();
   }
 
-  private void ApplyBoneOrientationToNode_(GltfNode node,
-                                           IReadOnlyBone bone,
-                                           float scale) {
+  private static void ApplyBoneOrientationToNode_(GltfNode node,
+                                                  IReadOnlyBone bone,
+                                                  float scale) {
     var matrix = bone.Transform.LocalMatrix;
     matrix.Translation *= scale;
     node.LocalMatrix = matrix;

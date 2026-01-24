@@ -21,7 +21,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private partial class BoneTracksImpl(
+  private sealed partial class BoneTracksImpl(
       IAnimation animation,
       ISharedInterpolationConfig sharedConfig,
       IReadOnlyBone bone)

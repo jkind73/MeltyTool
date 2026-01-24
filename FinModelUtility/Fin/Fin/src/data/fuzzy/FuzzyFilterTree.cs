@@ -14,7 +14,7 @@ public sealed class FuzzyFilterTree<T> : IFuzzyFilterTree<T> {
       new LevenshteinTreeFuzzySearchDictionary<FuzzyNode>();
 
   // TODO: Clean this up.
-  private class FuzzyNode : IFuzzyNode<T> {
+  private sealed class FuzzyNode : IFuzzyNode<T> {
     private readonly FuzzyFilterTree<T> tree_;
     private readonly List<IFuzzyNode<T>> children_ = [];
 
@@ -79,10 +79,10 @@ public sealed class FuzzyFilterTree<T> : IFuzzyFilterTree<T> {
       string keyword,
       float minMatchPercentage) { 
     var matches = this.impl_.Search(keyword, minMatchPercentage);
-    this.PropagateMatchPercentages_(matches);
+    PropagateMatchPercentages_(matches);
   }
 
-  private void PropagateMatchPercentages_(
+  private static void PropagateMatchPercentages_(
       IEnumerable<IFuzzySearchResult<FuzzyNode>> matches) {
     foreach (var match in matches) {
       SetChangeDistance_(match.Data, match.ChangeDistance);

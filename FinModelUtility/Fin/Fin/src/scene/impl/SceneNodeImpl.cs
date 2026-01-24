@@ -7,7 +7,7 @@ using fin.model.impl;
 namespace fin.scene;
 
 public partial class SceneImpl {
-  private class SceneNodeImpl : ISceneNode {
+  private sealed class SceneNodeImpl : ISceneNode {
     private readonly List<ISceneNode> childNodes_ = [];
     private readonly List<ISceneNodeComponent> components_ = [];
 

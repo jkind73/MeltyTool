@@ -46,7 +46,7 @@ public sealed class Logging {
     => new Logger(FACTORY_.CreateLogger(categoryName));
 
 
-  private class Logger(MicrosoftLogger impl) : ILogger {
+  private sealed class Logger(MicrosoftLogger impl) : ILogger {
     public IDisposable BeginScope(string scope)
       => Asserts.CastNonnull(impl.BeginScope(scope));
 

@@ -17,7 +17,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class ScrollingTextureImpl(
+  private sealed class ScrollingTextureImpl(
       int index,
       IReadOnlyImage image,
       float scrollSpeedX,

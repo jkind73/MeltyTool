@@ -10,7 +10,7 @@ namespace fin.model.impl;
 public partial class ModelImpl<TVertex> {
   public IAnimationManager AnimationManager { get; }
 
-  private partial class AnimationManagerImpl : IAnimationManager {
+  private sealed partial class AnimationManagerImpl : IAnimationManager {
     private readonly IModel model_;
 
     private readonly IList<IModelAnimation> animations_ =
@@ -35,7 +35,7 @@ public partial class ModelImpl<TVertex> {
       => this.animations_.Remove(animation);
   }
 
-  private partial class ModelAnimationImpl(int boneCount) : IModelAnimation {
+  private sealed partial class ModelAnimationImpl(int boneCount) : IModelAnimation {
     private SharedInterpolationConfig sharedInterpolationConfig_ = new() {
         Looping = true
     };

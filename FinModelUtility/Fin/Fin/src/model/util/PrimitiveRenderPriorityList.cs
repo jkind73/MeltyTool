@@ -32,7 +32,7 @@ public sealed class PrimitiveRenderPriorityList
   public IEnumerator<(IReadOnlyMesh, IReadOnlyPrimitive)> GetEnumerator()
     => this.elements_.Select(e => e.meshAndPrimitive).GetEnumerator();
 
-  private class RenderPriorityComparer : IComparer<PrimitiveBundle> {
+  private sealed class RenderPriorityComparer : IComparer<PrimitiveBundle> {
     public int Compare(PrimitiveBundle lhs, PrimitiveBundle rhs) {
       // Order first by primitive's inverse priority
       if (lhs.inversePriority != rhs.inversePriority) {

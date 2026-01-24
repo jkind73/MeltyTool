@@ -140,13 +140,13 @@ public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
       StringWriter os,
       IScalarFactor factor) {
     if (factor is IScalarIdentifiedValue<TIdentifier> identifiedValue) {
-      this.PrintScalarIdentifiedValue_(os, identifiedValue);
+      PrintScalarIdentifiedValue_(os, identifiedValue);
     } else if (factor is IScalarNamedValue namedValue) {
-      this.PrintScalarNamedValue_(os, namedValue);
+      PrintScalarNamedValue_(os, namedValue);
     } else if (factor is IScalarConstant constant) {
-      this.PrintScalarConstant_(os, constant);
+      PrintScalarConstant_(os, constant);
     } else if (factor is IColorNamedValueSwizzle<TIdentifier> namedSwizzle) {
-      this.PrintColorNamedValueSwizzle_(os, namedSwizzle);
+      PrintColorNamedValueSwizzle_(os, namedSwizzle);
     } else if (factor is IColorValueSwizzle swizzle) {
       this.PrintColorValueSwizzle_(os, swizzle);
     } else {
@@ -154,17 +154,17 @@ public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
     }
   }
 
-  private void PrintScalarIdentifiedValue_(
+  private static void PrintScalarIdentifiedValue_(
       StringWriter os,
       IScalarIdentifiedValue<TIdentifier> identifiedValue)
     => os.Write("{" + identifiedValue.Identifier + "}");
 
-  private void PrintScalarNamedValue_(
+  private static void PrintScalarNamedValue_(
       StringWriter os,
       IScalarNamedValue namedValue)
     => os.Write("{" + namedValue.Name + "}");
 
-  private void PrintScalarConstant_(
+  private static void PrintScalarConstant_(
       StringWriter os,
       IScalarConstant constant)
     => os.Write(constant.Value);
@@ -265,9 +265,9 @@ public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
       StringWriter os,
       IColorFactor factor) {
     if (factor is IColorIdentifiedValue<TIdentifier> identifiedValue) {
-      this.PrintColorIdentifiedValue_(os, identifiedValue);
+      PrintColorIdentifiedValue_(os, identifiedValue);
     } else if (factor is IColorNamedValue namedValue) {
-      this.PrintColorNamedValue_(os, namedValue);
+      PrintColorNamedValue_(os, namedValue);
     } else {
       var useIntensity = factor.Intensity != null;
 
@@ -287,12 +287,12 @@ public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
     }
   }
 
-  private void PrintColorIdentifiedValue_(
+  private static void PrintColorIdentifiedValue_(
       StringWriter os,
       IColorIdentifiedValue<TIdentifier> identifiedValue)
     => os.Write("<" + identifiedValue.Identifier + ">");
 
-  private void PrintColorNamedValue_(
+  private static void PrintColorNamedValue_(
       StringWriter os,
       IColorNamedValue namedValue)
     => os.Write("<" + namedValue.Name + ">");
@@ -318,10 +318,10 @@ public sealed class FixedFunctionEquationsPrettyPrinter<TIdentifier> {
     os.Write(')');
   }
 
-  private void PrintColorNamedValueSwizzle_(
+  private static void PrintColorNamedValueSwizzle_(
       StringWriter os,
       IColorNamedValueSwizzle<TIdentifier> swizzle) {
-    this.PrintColorIdentifiedValue_(os, swizzle.Source);
+    PrintColorIdentifiedValue_(os, swizzle.Source);
     os.Write(".");
     os.Write(swizzle.SwizzleType);
   }

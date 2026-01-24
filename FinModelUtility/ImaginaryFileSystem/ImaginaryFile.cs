@@ -30,7 +30,7 @@ public partial class ImaginaryFile : FileBase {
         "path");
 
     if (!imaginaryFileDataAccessor_.FileExists(path)) {
-      VerifyDirectoryExists(path);
+      this.VerifyDirectoryExists_(path);
       imaginaryFileDataAccessor_.AddFile(path,
                                          imaginaryFileDataAccessor_.AdjustTimes(
                                              new ImaginaryFileData(bytes),
@@ -65,8 +65,8 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(contents, nameof(contents));
-    VerifyValueIsNotNull(encoding, nameof(encoding));
+    VerifyValueIsNotNull_(contents, nameof(contents));
+    VerifyValueIsNotNull_(encoding, nameof(encoding));
 
     var concatContents
         = contents.Aggregate("", (a, b) => a + b + Environment.NewLine);
@@ -92,7 +92,7 @@ public partial class ImaginaryFile : FileBase {
     }
 
     if (!this.imaginaryFileDataAccessor_.FileExists(path)) {
-      VerifyDirectoryExists(path);
+      this.VerifyDirectoryExists_(path);
       this.imaginaryFileDataAccessor_.AddFile(path,
                                               this.imaginaryFileDataAccessor_
                                                   .AdjustTimes(
@@ -173,7 +173,7 @@ public partial class ImaginaryFile : FileBase {
       throw CommonExceptions.FileNotFound(sourceFileName);
     }
 
-    VerifyDirectoryExists(destFileName);
+    this.VerifyDirectoryExists_(destFileName);
 
     var fileExists = this.imaginaryFileDataAccessor_.FileExists(destFileName);
     if (fileExists) {
@@ -226,7 +226,7 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             nameof(path));
-    VerifyDirectoryExists(path);
+    this.VerifyDirectoryExists_(path);
 
     var mockFileData = new ImaginaryFileData(new byte[0]);
     this.imaginaryFileDataAccessor_.AdjustTimes(
@@ -260,7 +260,7 @@ public partial class ImaginaryFile : FileBase {
       throw CommonExceptions.FileAlreadyExists(nameof(path));
     }
 
-    VerifyDirectoryExists(path);
+    this.VerifyDirectoryExists_(path);
 
     var fileExists = imaginaryFileDataAccessor_.FileExists(pathToTarget);
     if (!fileExists) {
@@ -308,7 +308,7 @@ public partial class ImaginaryFile : FileBase {
     // We mimic exact behavior of the standard File.Delete() method
     // which throws exception only if the folder does not exist,
     // but silently returns if deleting a non-existing file in an existing folder.
-    VerifyDirectoryExists(path);
+    this.VerifyDirectoryExists_(path);
 
     var file = this.imaginaryFileDataAccessor_.GetFile(path);
     if (file != null && !file.AllowedFileShare.HasFlag(FileShare.Delete)) {
@@ -390,7 +390,7 @@ public partial class ImaginaryFile : FileBase {
       if (directoryInfo.Exists) {
         result = directoryInfo.Attributes;
       } else {
-        VerifyDirectoryExists(path);
+        this.VerifyDirectoryExists_(path);
 
         throw CommonExceptions.FileNotFound(path);
       }
@@ -593,7 +593,7 @@ public partial class ImaginaryFile : FileBase {
       throw CommonExceptions.ProcessCannotAccessFileInUse();
     }
 
-    VerifyDirectoryExists(destFileName);
+    this.VerifyDirectoryExists_(destFileName);
 
     if (this.imaginaryFileDataAccessor_.GetFile(destFileName) != null) {
       if (this.imaginaryFileDataAccessor_.StringOperations.Equals(
@@ -667,7 +667,7 @@ public partial class ImaginaryFile : FileBase {
       throw CommonExceptions.ProcessCannotAccessFileInUse();
     }
 
-    VerifyDirectoryExists(destFileName);
+    this.VerifyDirectoryExists_(destFileName);
 
     imaginaryFileDataAccessor_.RemoveFile(sourceFileName);
     imaginaryFileDataAccessor_.AddFile(destFileName,
@@ -885,7 +885,7 @@ public partial class ImaginaryFile : FileBase {
       throw new ArgumentNullException(nameof(encoding));
     }
 
-    return ReadAllTextInternal(path, encoding);
+    return this.ReadAllTextInternal_(path, encoding);
   }
 
   /// <inheritdoc />
@@ -905,7 +905,7 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(encoding, "encoding");
+    VerifyValueIsNotNull_(encoding, "encoding");
 
     return ReadAllLines(path, encoding);
   }
@@ -1202,13 +1202,13 @@ public partial class ImaginaryFile : FileBase {
   /// Given a byte array and a file path, this method opens the specified file, writes the contents of the byte array to the file, and then closes the file.
   /// </remarks>
   public override void WriteAllBytes(string path, byte[] bytes) {
-    VerifyValueIsNotNull(bytes, "bytes");
+    VerifyValueIsNotNull_(bytes, "bytes");
 
     this.imaginaryFileDataAccessor_.ImaginaryPathVerifier
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyDirectoryExists(path);
+    this.VerifyDirectoryExists_(path);
 
     this.imaginaryFileDataAccessor_.AddFile(path,
                                             this.imaginaryFileDataAccessor_
@@ -1264,7 +1264,7 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(contents, "contents");
+    VerifyValueIsNotNull_(contents, "contents");
 
     WriteAllLines(path, contents, ImaginaryFileData.DefaultEncoding);
   }
@@ -1318,8 +1318,8 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(contents, "contents");
-    VerifyValueIsNotNull(encoding, "encoding");
+    VerifyValueIsNotNull_(contents, "contents");
+    VerifyValueIsNotNull_(encoding, "encoding");
 
     var sb = new StringBuilder();
     foreach (var line in contents) {
@@ -1371,7 +1371,7 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(contents, "contents");
+    VerifyValueIsNotNull_(contents, "contents");
 
     WriteAllLines(path, contents, ImaginaryFileData.DefaultEncoding);
   }
@@ -1418,8 +1418,8 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(contents, "contents");
-    VerifyValueIsNotNull(encoding, "encoding");
+    VerifyValueIsNotNull_(contents, "contents");
+    VerifyValueIsNotNull_(encoding, "encoding");
 
     WriteAllLines(path, new List<string>(contents), encoding);
   }
@@ -1497,13 +1497,13 @@ public partial class ImaginaryFile : FileBase {
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    VerifyValueIsNotNull(path, "path");
+    VerifyValueIsNotNull_(path, "path");
 
     if (this.imaginaryFileDataAccessor_.Directory.Exists(path)) {
       throw CommonExceptions.AccessDenied(path);
     }
 
-    VerifyDirectoryExists(path);
+    this.VerifyDirectoryExists_(path);
 
     ImaginaryFileData data = contents == null
         ? new ImaginaryFileData(new byte[0])
@@ -1536,7 +1536,7 @@ public partial class ImaginaryFile : FileBase {
     }
   }
 
-  private string ReadAllTextInternal(string path, Encoding encoding) {
+  private string ReadAllTextInternal_(string path, Encoding encoding) {
     var mockFileData = this.imaginaryFileDataAccessor_.GetFile(path);
     mockFileData.CheckFileAccess(path, FileAccess.Read);
     this.imaginaryFileDataAccessor_.AdjustTimes(
@@ -1545,7 +1545,7 @@ public partial class ImaginaryFile : FileBase {
     return ReadAllBytes(mockFileData.Contents, encoding);
   }
 
-  private void VerifyValueIsNotNull(object value, string parameterName) {
+  private static void VerifyValueIsNotNull_(object value, string parameterName) {
     if (value == null) {
       throw new ArgumentNullException(parameterName,
                                       StringResources.Manager.GetString(
@@ -1553,7 +1553,7 @@ public partial class ImaginaryFile : FileBase {
     }
   }
 
-  private void VerifyDirectoryExists(string path) {
+  private void VerifyDirectoryExists_(string path) {
     var pathOps = this.imaginaryFileDataAccessor_.Path;
     var dir = pathOps.GetDirectoryName(pathOps.GetFullPath(path));
 

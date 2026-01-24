@@ -27,7 +27,7 @@ public sealed class
                         keywords.Select(keyword => {
                                   var changeDistance =
                                       token.Length -
-                                      this.FindLongestLengthOfSubstring_(
+                                      FindLongestLengthOfSubstring_(
                                           keyword, token);
                                   var addOrRemoveDistance =
                                       Math.Abs(
@@ -77,18 +77,17 @@ public sealed class
   private record ChangeDistanceAndSimilarity(int ChangeDistance,
                                              float Similarity);
 
-  private record SimilarityInfo(T Data,
-                                int ChangeDistance,
-                                float Similarity) :
-      ChangeDistanceAndSimilarity(ChangeDistance, Similarity);
+  private sealed record SimilarityInfo(T Data,
+                                       int ChangeDistance,
+                                       float Similarity)
+      : ChangeDistanceAndSimilarity(ChangeDistance, Similarity);
 
-  private record FuzzySearchResult
-  (T Data,
-   int ChangeDistance,
-   float Similarity) : IFuzzySearchResult<T>;
+  private sealed record FuzzySearchResult(
+      T Data,
+      int ChangeDistance,
+      float Similarity) : IFuzzySearchResult<T>;
 
-  private int
-      FindLongestLengthOfSubstring_(string container, string substring) {
+  private static int FindLongestLengthOfSubstring_(string container, string substring) {
     var substringLength = substring.Length;
     var matchLengths = new int[substringLength];
 

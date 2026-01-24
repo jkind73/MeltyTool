@@ -50,7 +50,7 @@ public abstract class BUncompressedArchiveImporter<TBundle>
     return archive;
   }
 
-  private class UncompressedArchive : IArchive {
+  private sealed class UncompressedArchive : IArchive {
     public void Dispose() => this.Stream.Dispose();
 
     public required Stream Stream { get; init; }
@@ -59,7 +59,7 @@ public abstract class BUncompressedArchiveImporter<TBundle>
     public required IReadOnlyList<IArchiveSubFile> FileEntries { get; init; }
   }
 
-  private class UncompressedArchiveSubFileImpl(
+  private sealed class UncompressedArchiveSubFileImpl(
       UncompressedArchive archive,
       UncompressedArchiveSubFile metadata) : IArchiveSubFile {
     public string FullPath => metadata.FullPath;

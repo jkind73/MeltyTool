@@ -25,7 +25,7 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
     return [mutableBuffer];
   }
 
-  public IAudioBuffer<short>[] ImportAudio(
+  public static IAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       Stream oggStream) {
     var mutableBuffer = audioManager.CreateAudioBuffer();

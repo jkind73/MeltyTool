@@ -18,7 +18,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class FixedFunctionMaterialImpl
+  private sealed class FixedFunctionMaterialImpl
       : BMaterialImpl, IFixedFunctionMaterial {
     private readonly List<IReadOnlyTexture> textures_ = [];
 

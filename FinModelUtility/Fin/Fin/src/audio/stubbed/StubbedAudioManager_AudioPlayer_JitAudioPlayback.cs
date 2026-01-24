@@ -7,7 +7,7 @@ public partial class StubbedAudioManager {
         uint bufferCount)
       => new StubbedJitAudioPlayback(buffer);
 
-    private class StubbedJitAudioPlayback(IJitAudioDataSource<short> buffer)
+    private sealed class StubbedJitAudioPlayback(IJitAudioDataSource<short> buffer)
         : IJitAudioPlayback<short> {
       private readonly StubbedPlaybackState state_ = new(buffer.Frequency);
       

@@ -51,7 +51,7 @@ public static class SceneExtensions {
                                       Action<ISceneNodeInstance> handler)
     => sceneNode.AddComponent(new LambdaSceneNodeTickComponent(handler));
 
-  private class LambdaSceneNodeTickComponent(
+  private sealed class LambdaSceneNodeTickComponent(
       Action<ISceneNodeInstance> handler) : ISceneNodeTickComponent {
     public void Dispose() { }
     public void Tick(ISceneNodeInstance self) => handler(self);
@@ -66,7 +66,7 @@ public static class SceneExtensions {
                                         Action<ISceneNodeInstance> handler)
     => sceneNode.AddComponent(new LambdaSceneNodeRenderComponent(handler));
 
-  private class RenderableSceneNodeRenderComponent(IRenderable impl)
+  private sealed class RenderableSceneNodeRenderComponent(IRenderable impl)
       : ISceneNodeRenderComponent {
     public void Dispose() => (impl as IDisposable)?.Dispose();
     public void Render(ISceneNodeInstance self) => impl.Render();
@@ -105,8 +105,7 @@ public static class SceneExtensions {
     var neededLightIndices = new HashSet<int>();
 
     foreach (var finModel in finModels) {
-      var useLighting =
-          new UseLightingDetector().ShouldUseLightingFor(finModel);
+      var useLighting = UseLightingDetector.ShouldUseLightingFor(finModel);
       if (!useLighting) {
         continue;
       }

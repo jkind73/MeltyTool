@@ -105,7 +105,7 @@ public partial class FixedFunctionEquations<TIdentifier> {
   }
 
 
-  private class ColorInput(TIdentifier identifier)
+  private sealed class ColorInput(TIdentifier identifier)
       : BColorValue, IColorInput<TIdentifier> {
     public TIdentifier Identifier { get; } = identifier;
 
@@ -122,7 +122,7 @@ public partial class FixedFunctionEquations<TIdentifier> {
       => new ColorNamedValueSwizzle(this, ColorSwizzle.B);
   }
 
-  private class ColorOutput(TIdentifier identifier, IColorValue value)
+  private sealed class ColorOutput(TIdentifier identifier, IColorValue value)
       : BColorValue, IColorOutput<TIdentifier> {
     public TIdentifier Identifier { get; } = identifier;
     public IColorValue ColorValue { get; } = value;
@@ -140,7 +140,7 @@ public partial class FixedFunctionEquations<TIdentifier> {
   }
 
 
-  private class ColorNamedValueSwizzle(
+  private sealed class ColorNamedValueSwizzle(
       IColorIdentifiedValue<TIdentifier> source,
       ColorSwizzle swizzleType)
       : BScalarValue,

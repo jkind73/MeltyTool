@@ -5,7 +5,7 @@ using System.Text;
 
 namespace fin.util.strings;
 
-public class IndentedStringBuilder {
+public sealed class IndentedStringBuilder {
   private readonly StringBuilder impl_ = new();
 
   private int currentIndentAmount_;

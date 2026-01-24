@@ -19,7 +19,7 @@ public partial class ModelImpl<TVertex> {
       return mesh;
     }
 
-    private class MeshImpl(SkinImpl skin, int index, bool isSubMesh) : IMesh {
+    private sealed class MeshImpl(SkinImpl skin, int index, bool isSubMesh) : IMesh {
       private readonly List<IMesh> subMeshes_ = [];
       private readonly List<IPrimitive> primitives_ = [];
 

@@ -18,6 +18,6 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class TextureImpl(int index, IReadOnlyImage[] mipmapImages)
+  private sealed class TextureImpl(int index, IReadOnlyImage[] mipmapImages)
       : BTextureImpl(index, mipmapImages);
 }

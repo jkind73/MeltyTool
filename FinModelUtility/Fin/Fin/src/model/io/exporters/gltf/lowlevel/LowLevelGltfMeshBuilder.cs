@@ -20,10 +20,8 @@ using GltfPrimitiveType = SharpGLTF.Schema2.PrimitiveType;
 
 namespace fin.model.io.exporters.gltf.lowlevel;
 
-public sealed class LowLevelGltfMeshBuilder {
-  public bool UvIndices { get; set; }
-
-  public IList<Mesh> BuildAndBindMesh(
+public static class LowLevelGltfMeshBuilder {
+  public static IList<Mesh> BuildAndBindMesh(
       ModelRoot gltfModel,
       IReadOnlyModel model,
       float scale,

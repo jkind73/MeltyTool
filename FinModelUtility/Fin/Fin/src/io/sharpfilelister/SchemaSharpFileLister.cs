@@ -34,7 +34,7 @@ public sealed class SchemaSharpFileLister {
   public const IntPtr INVALID_HANDLE_VALUE = -1;
 
   //Code based heavily on https://stackoverflow.com/q/47471744
-  public unsafe SchemaDirectoryInformation FindNextFilePInvoke(
+  public static unsafe SchemaDirectoryInformation FindNextFilePInvoke(
       string path,
       string name) {
     var directoryInfo = new SchemaDirectoryInformation { Name = name };
@@ -58,7 +58,7 @@ public sealed class SchemaSharpFileLister {
           if ((attributes & FileAttributes.Directory) == 0) {
             fileList.AddLast(new Uint16SizedString { Name = fileName });
           } else if ((attributes & FileAttributes.ReparsePoint) == 0) {
-            directoryList.AddLast(this.FindNextFilePInvoke(fullPath, fileName));
+            directoryList.AddLast(FindNextFilePInvoke(fullPath, fileName));
           }
         } while (FindNextFile(fileSearchHandle, out findData));
       }

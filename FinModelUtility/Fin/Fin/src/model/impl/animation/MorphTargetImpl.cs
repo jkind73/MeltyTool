@@ -18,7 +18,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class MorphTargetImpl : IMorphTarget {
+  private sealed class MorphTargetImpl : IMorphTarget {
     private readonly IndexableDictionary<IReadOnlyVertex, Vector3>
         positionMorphs_ = new();
 

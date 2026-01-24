@@ -56,12 +56,12 @@ public partial class FixedFunctionEquations<TIdentifier> {
   }
 
 
-  private class ScalarInput(TIdentifier identifier)
+  private sealed class ScalarInput(TIdentifier identifier)
       : BScalarValue, IScalarInput<TIdentifier> {
     public TIdentifier Identifier { get; } = identifier;
   }
 
-  private class ScalarOutput(TIdentifier identifier, IScalarValue value)
+  private sealed class ScalarOutput(TIdentifier identifier, IScalarValue value)
       : BScalarValue, IScalarOutput<TIdentifier> {
     public TIdentifier Identifier { get; } = identifier;
     public IScalarValue ScalarValue { get; } = value;

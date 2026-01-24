@@ -22,7 +22,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class MeshTracksImpl(
+  private sealed class MeshTracksImpl(
       IReadOnlyMesh mesh,
       ISharedInterpolationConfig sharedConfig)
       : IMeshTracks {

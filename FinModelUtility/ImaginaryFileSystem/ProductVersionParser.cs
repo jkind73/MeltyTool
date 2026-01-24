@@ -63,7 +63,7 @@ internal static class ProductVersionParser {
   /// <summary>
   /// Represents a product version with numeric parts for major, minor, build, and private versions.
   /// </summary>
-  public class ProductVersion {
+  public sealed class ProductVersion {
     /// <summary>
     /// Gets the major part of the version number
     /// </summary>

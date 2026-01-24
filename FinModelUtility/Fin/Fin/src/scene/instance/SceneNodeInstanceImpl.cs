@@ -8,7 +8,7 @@ using fin.math.transform;
 namespace fin.scene.instance;
 
 public partial class SceneInstanceImpl {
-  private class SceneNodeInstanceImpl
+  private sealed class SceneNodeInstanceImpl
       : ISceneNodeInstance {
     private readonly IReadOnlySceneNode sceneObject_;
     public SceneNodeInstanceImpl(SceneNodeInstanceImpl? parent,

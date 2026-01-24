@@ -65,7 +65,7 @@ public class ImaginaryDriveInfoFactory : IDriveInfoFactory {
     return driveName;
   }
 
-  private class DriveEqualityComparer : IEqualityComparer<string> {
+  private sealed class DriveEqualityComparer : IEqualityComparer<string> {
     private readonly IImaginaryFileDataAccessor imaginaryFileSystem_;
 
     public DriveEqualityComparer(

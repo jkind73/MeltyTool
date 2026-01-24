@@ -19,7 +19,7 @@ using AlphaMode = SharpGLTF.Materials.AlphaMode;
 
 namespace fin.model.io.exporters.gltf;
 
-public sealed class GltfMaterialBuilder {
+public static class GltfMaterialBuilder {
   private readonly struct Fin2GltfImageConverter(
       IReadOnlyImage[] finImages,
       IDictionary<IReadOnlyImage, MemoryImage> gltfImageByFinImage)
@@ -35,19 +35,19 @@ public sealed class GltfMaterialBuilder {
     }
   }
 
-  public IDictionary<IReadOnlyMaterial, Material> GetMaterials(
+  public static IDictionary<IReadOnlyMaterial, Material> GetMaterials(
       ModelRoot gltfModelRoot,
       IReadOnlyMaterialManager finMaterialManager)
-    => this.ConvertMaterials_(finMaterialManager)
+    => ConvertMaterials_(finMaterialManager)
            .ToDictionary(tuple => tuple.Item1,
                          tuple => gltfModelRoot.CreateMaterial(tuple.Item2));
 
-  public IDictionary<IReadOnlyMaterial, MaterialBuilder> GetMaterialBuilders(
+  public static IDictionary<IReadOnlyMaterial, MaterialBuilder> GetMaterialBuilders(
       IReadOnlyMaterialManager finMaterialManager)
-    => this.ConvertMaterials_(finMaterialManager)
+    => ConvertMaterials_(finMaterialManager)
            .ToDictionary(tuple => tuple.Item1, tuple => tuple.Item2);
 
-  private IEnumerable<(IReadOnlyMaterial, MaterialBuilder)> ConvertMaterials_(
+  private static IEnumerable<(IReadOnlyMaterial, MaterialBuilder)> ConvertMaterials_(
       IReadOnlyMaterialManager finMaterialManager) {
     var finImages = finMaterialManager.Textures
                                       .Select(texture => texture.Image)

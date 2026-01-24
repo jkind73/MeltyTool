@@ -5,7 +5,7 @@ using Assimp;
 namespace fin.model.io.exporters.assimp.indirect;
 
 public sealed class AssimpIndirectAnimationFixer {
-  public void Fix(IReadOnlyModel model, Scene sc) {
+  public static void Fix(IReadOnlyModel model, Scene sc) {
     var finAnimations = model.AnimationManager.Animations;
     var assAnimations = sc.Animations;
     for (var a = 0; a < assAnimations.Count; ++a) {
@@ -19,9 +19,9 @@ public sealed class AssimpIndirectAnimationFixer {
 
         // TODO: Include tangents from the animation file.
         foreach (var channel in assAnimation.NodeAnimationChannels) {
-          this.ScaleKeyTimes_(channel.PositionKeys, animationSpeedup);
-          this.ScaleKeyTimes_(channel.ScalingKeys, animationSpeedup);
-          this.ScaleKeyTimes_(channel.RotationKeys, animationSpeedup);
+          ScaleKeyTimes_(channel.PositionKeys, animationSpeedup);
+          ScaleKeyTimes_(channel.ScalingKeys, animationSpeedup);
+          ScaleKeyTimes_(channel.RotationKeys, animationSpeedup);
         }
       }
 
@@ -35,7 +35,7 @@ public sealed class AssimpIndirectAnimationFixer {
     }
   }
 
-  private void ScaleKeyTimes_(List<VectorKey> keys, double scale) {
+  private static void ScaleKeyTimes_(List<VectorKey> keys, double scale) {
     for (var i = 0; i < keys.Count; ++i) {
       var key = keys[i];
       key.Time *= scale;
@@ -43,7 +43,7 @@ public sealed class AssimpIndirectAnimationFixer {
     }
   }
 
-  private void ScaleKeyTimes_(List<QuaternionKey> keys, double scale) {
+  private static void ScaleKeyTimes_(List<QuaternionKey> keys, double scale) {
     for (var i = 0; i < keys.Count; ++i) {
       var key = keys[i];
       key.Time *= scale;

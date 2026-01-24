@@ -58,8 +58,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
   private static SchemaDirectoryInformation GetInfo_(
       IReadOnlyTreeDirectory directory)
-    => new SchemaSharpFileLister()
-        .FindNextFilePInvoke(directory.FullPath, "");
+    => SchemaSharpFileLister.FindNextFilePInvoke(directory.FullPath, "");
 
   private SchemaDirectoryInformation UpdateCacheFile_(
       long? actualSize = null) {
@@ -90,14 +89,14 @@ public partial class CachedFileHierarchy : IFileHierarchy {
   }
 
   [BinarySchema]
-  private partial class CachedFileHierarchyDataHeader : IBinaryConvertible {
+  private sealed partial class CachedFileHierarchyDataHeader : IBinaryConvertible {
     public const uint CURRENT_VERSION = 0;
     public uint Version { get; set; } = CURRENT_VERSION;
     public long Size { get; set; }
   }
 
   [BinarySchema]
-  private partial class CachedFileHierarchyData : IBinaryConvertible {
+  private sealed partial class CachedFileHierarchyData : IBinaryConvertible {
     public CachedFileHierarchyDataHeader Header { get; set; } = new();
     public SchemaDirectoryInformation Root { get; set; } = new();
   }
@@ -150,7 +149,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     public override string ToString() => this.LocalPath;
   }
 
-  private class FileHierarchyDirectory
+  private sealed class FileHierarchyDirectory
       : BFileHierarchyIoObject,
         IFileHierarchyDirectory {
     private readonly List<IFileHierarchyDirectory> subdirs_ = [];
@@ -499,7 +498,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
                                      rest)));
   }
 
-  private class FileHierarchyFile(
+  private sealed class FileHierarchyFile(
       IFileHierarchy hierarchy,
       IFileHierarchyDirectory root,
       IFileHierarchyDirectory parent,

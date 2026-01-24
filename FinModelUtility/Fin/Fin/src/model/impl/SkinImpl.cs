@@ -13,7 +13,7 @@ public partial class ModelImpl<TVertex> {
   ISkin IModel.Skin => this.Skin;
   public ISkin<TVertex> Skin { get; }
 
-  private partial class SkinImpl : ISkin<TVertex> {
+  private sealed partial class SkinImpl : ISkin<TVertex> {
     private readonly Func<int, Vector3, TVertex> vertexCreator_;
     private readonly List<IVertex> vertices_;
     private readonly List<TVertex> typedVertices_;
@@ -109,12 +109,12 @@ public partial class ModelImpl<TVertex> {
       return this.boneWeightsDictionary_.Create(vertexSpace, weights);
     }
 
-    private class PrimitiveImpl(
+    private sealed class PrimitiveImpl(
         PrimitiveType type,
         IReadOnlyList<IReadOnlyVertex> vertices)
         : BPrimitiveImpl(type, vertices);
 
-    private class LinesPrimitiveImpl(
+    private sealed class LinesPrimitiveImpl(
         PrimitiveType primitiveType,
         IReadOnlyList<IReadOnlyVertex> vertices)
         : BPrimitiveImpl(primitiveType, vertices), ILinesPrimitive {
@@ -126,7 +126,7 @@ public partial class ModelImpl<TVertex> {
       }
     }
 
-    private class PointsPrimitiveImpl(IReadOnlyList<IReadOnlyVertex> vertices)
+    private sealed class PointsPrimitiveImpl(IReadOnlyList<IReadOnlyVertex> vertices)
         : BPrimitiveImpl(PrimitiveType.POINTS, vertices), IPointsPrimitive {
       public float Radius { get; private set; }
 

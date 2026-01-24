@@ -13,7 +13,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class StandardMaterialImpl : BMaterialImpl, IStandardMaterial {
+  private sealed class StandardMaterialImpl : BMaterialImpl, IStandardMaterial {
     public override IEnumerable<IReadOnlyTexture> Textures {
       get {
         if (this.DiffuseTexture != null) {

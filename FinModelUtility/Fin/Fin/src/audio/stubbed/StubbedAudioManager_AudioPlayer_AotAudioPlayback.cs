@@ -6,7 +6,7 @@ public partial class StubbedAudioManager {
         IAotAudioDataSource<short> buffer)
       => new StubbedAotAudioPlayback(buffer);
 
-    private class StubbedAotAudioPlayback(IAotAudioDataSource<short> buffer)
+    private sealed class StubbedAotAudioPlayback(IAotAudioDataSource<short> buffer)
         : IAotAudioPlayback<short> {
       private readonly StubbedPlaybackState state_ =
           new(buffer.Frequency, buffer.LengthInSamples);

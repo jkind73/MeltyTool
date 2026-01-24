@@ -556,7 +556,7 @@ public class ImaginaryFileSystem : FileSystemBase, IImaginaryFileDataAccessor {
 #if FEATURE_SERIALIZABLE
     [Serializable]
 #endif
-  private class FileSystemEntry {
+  private sealed class FileSystemEntry {
     public string Path { get; set; }
     public ImaginaryFileData Data { get; set; }
   }

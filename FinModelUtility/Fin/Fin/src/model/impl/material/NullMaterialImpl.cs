@@ -13,7 +13,7 @@ public partial class ModelImpl<TVertex> {
     }
   }
 
-  private class NullMaterialImpl : BMaterialImpl, INullMaterial {
+  private sealed class NullMaterialImpl : BMaterialImpl, INullMaterial {
     public override IEnumerable<ITexture> Textures { get; } =
       [];
   }

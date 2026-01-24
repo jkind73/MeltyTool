@@ -12,14 +12,14 @@ using fin.util.lists;
 namespace fin.io;
 
 public static partial class FileHierarchy {
-  private class UpFrontFileHierarchy : IFileHierarchy {
+  private sealed class UpFrontFileHierarchy : IFileHierarchy {
     public UpFrontFileHierarchy(ISystemDirectory directory) : this(
         directory.Name.ToString(),
         directory) { }
 
     public UpFrontFileHierarchy(string name, ISystemDirectory directory) {
       this.Name = name;
-      var populatedSubdirs = new SharpFileLister().FindNextFilePInvoke(
+      var populatedSubdirs = SharpFileLister.FindNextFilePInvoke(
           directory.FullPath);
       this.Root = new FileHierarchyDirectory(this,
                                              directory,
@@ -79,7 +79,7 @@ public static partial class FileHierarchy {
     }
 
 
-    private class FileHierarchyDirectory
+    private sealed class FileHierarchyDirectory
         : BFileHierarchyIoObject,
           IFileHierarchyDirectory {
       private readonly List<IFileHierarchyDirectory> subdirs_ = [];
@@ -418,7 +418,7 @@ public static partial class FileHierarchy {
                                        rest)));
     }
 
-    private class FileHierarchyFile(
+    private sealed class FileHierarchyFile(
         IFileHierarchy hierarchy,
         IFileHierarchyDirectory root,
         IFileHierarchyDirectory parent,

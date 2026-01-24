@@ -11,7 +11,7 @@ namespace fin.model.impl;
 public partial class ModelImpl<TVertex> {
   public ISkeleton Skeleton { get; } = new SkeletonImpl();
 
-  private class SkeletonImpl : ISkeleton {
+  private sealed class SkeletonImpl : ISkeleton {
     public readonly List<IBone> bones = [];
 
     public IBone Root { get; }
@@ -21,7 +21,7 @@ public partial class ModelImpl<TVertex> {
       this.Root = new BoneImpl(this, null, 0, 0, 0);
     }
 
-    private class BoneImpl : IBone {
+    private sealed class BoneImpl : IBone {
       private readonly SkeletonImpl skeleton_;
       private readonly IList<IBone> children_ = new List<IBone>();
       private readonly Counter counter_;

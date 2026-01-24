@@ -10,8 +10,8 @@ using fin.model.util;
 
 namespace fin.model.io.exporters.assimp.indirect;
 
-public sealed class AssimpIndirectTextureFixer {
-  public void Fix(IReadOnlyModel model, Scene sc) {
+public static class AssimpIndirectTextureFixer {
+  public static void Fix(IReadOnlyModel model, Scene sc) {
     // Imports the textures
     var finTextures = new HashSet<IReadOnlyTexture>();
     foreach (var finMaterial in model.MaterialManager.All) {
@@ -61,8 +61,8 @@ public sealed class AssimpIndirectTextureFixer {
         var assTextureSlot = new TextureSlot {
             FilePath = finTexture.ValidFileName,
             // TODO: FBX doesn't support mirror. Blegh
-            WrapModeU = this.ConvertWrapMode_(finTexture.WrapModeU),
-            WrapModeV = this.ConvertWrapMode_(finTexture.WrapModeV),
+            WrapModeU = ConvertWrapMode_(finTexture.WrapModeU),
+            WrapModeV = ConvertWrapMode_(finTexture.WrapModeV),
             TextureType = TextureType.Diffuse,
             UVIndex = finTexture.UvIndex
         };
@@ -75,7 +75,7 @@ public sealed class AssimpIndirectTextureFixer {
     }
   }
 
-  private TextureWrapMode ConvertWrapMode_(WrapMode wrapMode)
+  private static TextureWrapMode ConvertWrapMode_(WrapMode wrapMode)
     => wrapMode switch {
         WrapMode.CLAMP         => TextureWrapMode.Clamp,
         WrapMode.REPEAT        => TextureWrapMode.Wrap,

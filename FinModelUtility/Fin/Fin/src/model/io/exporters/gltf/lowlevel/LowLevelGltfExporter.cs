@@ -34,7 +34,7 @@ public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
 
     // Builds skeleton.
     var rootNode = scene.CreateNode();
-    var skinNodeAndBones = new GltfSkeletonBuilder().BuildAndBindSkeleton(
+    var skinNodeAndBones = GltfSkeletonBuilder.BuildAndBindSkeleton(
         rootNode,
         skin,
         scale,
@@ -49,14 +49,12 @@ public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
 
     // Builds materials.
     var finToTexCoordAndGltfMaterial =
-        new GltfMaterialBuilder().GetMaterials(
+        GltfMaterialBuilder.GetMaterials(
             modelRoot,
             model.MaterialManager);
 
     // Builds meshes.
-    var meshBuilder = new LowLevelGltfMeshBuilder
-        { UvIndices = this.UvIndices };
-    var gltfMeshes = meshBuilder.BuildAndBindMesh(
+    var gltfMeshes = LowLevelGltfMeshBuilder.BuildAndBindMesh(
         modelRoot,
         model,
         scale,

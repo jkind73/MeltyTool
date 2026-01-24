@@ -144,13 +144,13 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     var hasWrittenLineBetweenUniformsAndIns = false;
     var hasWrittenAnyIns = false;
 
-    Action AppendLineBetweenUniformsAndIns = () => {
+    void AppendLineBetweenUniformsAndIns() {
       hasWrittenAnyIns = true;
       if (hadUniform && !hasWrittenLineBetweenUniformsAndIns) {
         hasWrittenLineBetweenUniformsAndIns = true;
         sb.AppendLine();
       }
-    };
+    }
 
     if (dependsOnNormals) {
       AppendLineBetweenUniformsAndIns();
@@ -319,12 +319,12 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
           }
 
           var alphaOpValue =
-              this.DetermineAlphaOpValue_(
+              DetermineAlphaOpValue_(
                   material.AlphaOp,
-                  this.DetermineAlphaCompareType_(
+                  DetermineAlphaCompareType_(
                       material.AlphaCompareType0,
                       material.AlphaReference0),
-                  this.DetermineAlphaCompareType_(
+                  DetermineAlphaCompareType_(
                       material.AlphaCompareType1,
                       material.AlphaReference1));
 
@@ -332,11 +332,11 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
             sb.AppendLine();
 
             var alphaCompareText0 =
-                this.GetAlphaCompareText_(material.AlphaCompareType0,
+                GetAlphaCompareText_(material.AlphaCompareType0,
                                           "alphaComponent",
                                           material.AlphaReference0);
             var alphaCompareText1 =
-                this.GetAlphaCompareText_(material.AlphaCompareType1,
+                GetAlphaCompareText_(material.AlphaCompareType1,
                                           "alphaComponent",
                                           material.AlphaReference1);
 
@@ -403,7 +403,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
         });
   }
 
-  private string GetAlphaCompareText_(
+  private static string GetAlphaCompareText_(
       AlphaCompareType alphaCompareType,
       string alphaAccessorText,
       float reference)
@@ -436,7 +436,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     ALWAYS_FALSE,
   }
 
-  private AlphaOpValue DetermineAlphaOpValue_(
+  private static AlphaOpValue DetermineAlphaOpValue_(
       AlphaOp alphaOp,
       AlphaCompareValue compareValue0,
       AlphaCompareValue compareValue1) {
@@ -494,7 +494,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     ALWAYS_FALSE,
   }
 
-  private AlphaCompareValue DetermineAlphaCompareType_(
+  private static AlphaCompareValue DetermineAlphaCompareType_(
       AlphaCompareType compareType,
       float reference) {
     var isReference0 = Math.Abs(reference - 0) < .001;
@@ -595,9 +595,9 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
         identifiedValue) {
       this.PrintScalarIdentifiedValue_(sb, identifiedValue, textures);
     } else if (factor is IScalarNamedValue namedValue) {
-      this.PrintScalarNamedValue_(sb, namedValue);
+      PrintScalarNamedValue_(sb, namedValue);
     } else if (factor is IScalarConstant constant) {
-      this.PrintScalarConstant_(sb, constant);
+      PrintScalarConstant_(sb, constant);
     } else if
         (factor is IColorNamedValueSwizzle<FixedFunctionSource>
          namedSwizzle) {
@@ -609,7 +609,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     }
   }
 
-  private void PrintScalarNamedValue_(
+  private static void PrintScalarNamedValue_(
       IndentedStringBuilder sb,
       IScalarNamedValue namedValue)
     => sb.Append($"scalar_{namedValue.Name}");
@@ -638,17 +638,17 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       return sb.ToString();
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_0,
-                        FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_7,
-                        out var globalDiffuseAlphaIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_0,
+                   FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_7,
+                   out var globalDiffuseAlphaIndex)) {
       return $"individualLightDiffuseColors[{globalDiffuseAlphaIndex}].a";
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_SPECULAR_ALPHA_0,
-                        FixedFunctionSource.LIGHT_SPECULAR_ALPHA_7,
-                        out var globalSpecularAlphaIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_SPECULAR_ALPHA_0,
+                   FixedFunctionSource.LIGHT_SPECULAR_ALPHA_7,
+                   out var globalSpecularAlphaIndex)) {
       return $"individualLightSpecularColors[{globalSpecularAlphaIndex}].a";
     }
 
@@ -672,8 +672,8 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     };
   }
 
-  private void PrintScalarConstant_(IndentedStringBuilder sb,
-                                    IScalarConstant constant)
+  private static void PrintScalarConstant_(IndentedStringBuilder sb,
+                                           IScalarConstant constant)
     => PrintFloat_(sb, constant.Value);
 
   private static void PrintFloat_(IndentedStringBuilder sb, float value)
@@ -798,7 +798,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
         identifiedValue) {
       this.PrintColorIdentifiedValue_(sb, identifiedValue, textures);
     } else if (factor is IColorNamedValue namedValue) {
-      this.PrintColorNamedValue_(sb, namedValue);
+      PrintColorNamedValue_(sb, namedValue);
     } else {
       var useIntensity = factor.Intensity != null;
 
@@ -828,7 +828,7 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       IReadOnlyList<IReadOnlyTexture> textures)
     => this.GetColorNamedValue_(sb, identifiedValue, textures);
 
-  private void PrintColorNamedValue_(
+  private static void PrintColorNamedValue_(
       IndentedStringBuilder sb,
       IColorNamedValue namedValue)
     => sb.Append($"color_{namedValue.Name}");
@@ -861,35 +861,35 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
       return;
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_DIFFUSE_COLOR_0,
-                        FixedFunctionSource.LIGHT_DIFFUSE_COLOR_7,
-                        out var globalDiffuseColorIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_DIFFUSE_COLOR_0,
+                   FixedFunctionSource.LIGHT_DIFFUSE_COLOR_7,
+                   out var globalDiffuseColorIndex)) {
       sb.Append($"individualLightDiffuseColors[{globalDiffuseColorIndex}].rgb");
       return;
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_0,
-                        FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_7,
-                        out var globalDiffuseAlphaIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_0,
+                   FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_7,
+                   out var globalDiffuseAlphaIndex)) {
       sb.Append($"individualLightDiffuseColors[{globalDiffuseAlphaIndex}].aaa");
       return;
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_SPECULAR_COLOR_0,
-                        FixedFunctionSource.LIGHT_SPECULAR_COLOR_7,
-                        out var globalSpecularColorIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_SPECULAR_COLOR_0,
+                   FixedFunctionSource.LIGHT_SPECULAR_COLOR_7,
+                   out var globalSpecularColorIndex)) {
       sb.Append(
           $"individualLightSpecularColors[{globalSpecularColorIndex}].rgb");
       return;
     }
 
-    if (this.IsInRange_(id,
-                        FixedFunctionSource.LIGHT_SPECULAR_ALPHA_0,
-                        FixedFunctionSource.LIGHT_SPECULAR_ALPHA_7,
-                        out var globalSpecularAlphaIndex)) {
+    if (IsInRange_(id,
+                   FixedFunctionSource.LIGHT_SPECULAR_ALPHA_0,
+                   FixedFunctionSource.LIGHT_SPECULAR_ALPHA_7,
+                   out var globalSpecularAlphaIndex)) {
       sb.Append(
           $"individualLightSpecularColors[{globalSpecularAlphaIndex}].aaa");
       return;
@@ -939,10 +939,10 @@ public sealed class FixedFunctionEquationsGlslPrinter(IReadOnlyModel model) {
     }
   }
 
-  private bool IsInRange_(FixedFunctionSource value,
-                          FixedFunctionSource min,
-                          FixedFunctionSource max,
-                          out int relative) {
+  private static bool IsInRange_(FixedFunctionSource value,
+                                 FixedFunctionSource min,
+                                 FixedFunctionSource max,
+                                 out int relative) {
     relative = value - min;
     return value >= min && value <= max;
   }

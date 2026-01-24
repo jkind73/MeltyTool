@@ -16,7 +16,7 @@ public partial class StubbedAudioManager {
       IReadOnlySet<IReadOnlyGenericFile> files)
     => new StubbedAudioBuffer(fileBundle, files);
 
-  private class StubbedAudioBuffer(
+  private sealed class StubbedAudioBuffer(
       IFileBundle fileBundle,
       IReadOnlySet<IReadOnlyGenericFile> files)
       : ILoadedAudioBuffer<short> {

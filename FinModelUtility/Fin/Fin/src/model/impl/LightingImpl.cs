@@ -28,7 +28,7 @@ public sealed class LightingImpl : ILighting {
   public IColor AmbientLightColor { get; set; } =
     FinColor.FromSystemColor(Color.White);
 
-  private class LightImpl : ILight {
+  private sealed class LightImpl : ILight {
     public string Name { get; private set; }
 
     public ILight SetName(string name) {

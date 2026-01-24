@@ -6,7 +6,7 @@ using System.Linq;
 namespace fin.scene.instance;
 
 public partial class SceneInstanceImpl {
-  private class SceneAreaInstanceImpl(IReadOnlySceneArea sceneArea)
+  private sealed class SceneAreaInstanceImpl(IReadOnlySceneArea sceneArea)
       : ISceneAreaInstance {
     ~SceneAreaInstanceImpl() => this.ReleaseUnmanagedResources_();
 
