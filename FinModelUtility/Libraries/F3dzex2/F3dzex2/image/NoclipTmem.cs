@@ -89,15 +89,15 @@ public sealed class TileState {
   }
 
   public float GetFullWidth()
-    => this.GetAdjustedSize_(this.fullWidth, this.maskS);
+    => GetAdjustedSize_(this.fullWidth, this.maskS);
 
   public float GetTileWidth()
-    => this.GetAdjustedSize_(this.lrs - this.uls, this.maskS);
+    => GetAdjustedSize_(this.lrs - this.uls, this.maskS);
 
   public float GetTileHeight()
     => GetAdjustedSize_(this.lrt - this.ult, this.maskT);
 
-  private float GetAdjustedSize_(float rawSize, ushort mask) {
+  private static float GetAdjustedSize_(float rawSize, ushort mask) {
     rawSize++;
     if (mask != 0)
       return Math.Min(1 << mask, rawSize);
