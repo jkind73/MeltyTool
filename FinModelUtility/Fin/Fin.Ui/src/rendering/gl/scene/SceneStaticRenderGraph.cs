@@ -52,7 +52,7 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
 public class RenderGraphElement : IComparable<RenderGraphElement> {
   public RenderGraphElement(IRenderGraphParams prms) {
     this.Params = prms;
-    this.InitSortKey();
+    this.InitSortKey_();
   }
 
   public IRenderGraphParams Params { get; }
@@ -62,27 +62,27 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
 
   // Loosely based on: https://realtimecollisiondetection.net/blog/?p=86
   // Transparent bits
-  public const int transparentInversePriorityBitCount = 16;
-  public const ulong transparentInversePriorityMask
-      = ((ulong) 1 << transparentInversePriorityBitCount) - 1;
-  public const int transparentMinPrimitiveIndexBitCount = 16;
-  public const ulong transparentMinPrimitiveIndexMask
-      = ((ulong) 1 << transparentMinPrimitiveIndexBitCount) - 1;
-  public const int transparentDepthBitCount = 31;
-  public const ulong transparentDepthMax = ((ulong) 1 << transparentDepthBitCount) - 1;
+  private const int TRANSPARENT_INVERSE_PRIORITY_BIT_COUNT_ = 16;
+  private const ulong TRANSPARENT_INVERSE_PRIORITY_MASK_
+      = ((ulong) 1 << TRANSPARENT_INVERSE_PRIORITY_BIT_COUNT_) - 1;
+  private const int TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_ = 16;
+  private const ulong TRANSPARENT_MIN_PRIMITIVE_INDEX_MASK_
+      = ((ulong) 1 << TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_) - 1;
+  private const int TRANSPARENT_DEPTH_BIT_COUNT_ = 31;
+  private const ulong TRANSPARENT_DEPTH_MAX_ = ((ulong) 1 << TRANSPARENT_DEPTH_BIT_COUNT_) - 1;
 
   // Opaque bits
-  public const int opaqueProgramIdBitCount = 16;
-  public const ulong opaqueProgramIdMask = ((ulong) 1 << opaqueProgramIdBitCount) - 1;
-  public const int opaqueVaoIdBitCount = 12;
-  public const ulong opaqueVaoIdMask = ((ulong) 1 << opaqueVaoIdBitCount) - 1;
-  public const int opaqueMaterialIndexBitCount = 12;
-  public const ulong opaqueMaterialIndexMask
-      = ((ulong) 1 << opaqueMaterialIndexBitCount) - 1;
-  public const int opaqueDepthBitCount = 23;
-  public const ulong opaqueDepthMax = ((ulong) 1 << opaqueDepthBitCount) - 1;
+  private const int OPAQUE_PROGRAM_ID_BIT_COUNT_ = 16;
+  private const ulong OPAQUE_PROGRAM_ID_MASK_ = ((ulong) 1 << OPAQUE_PROGRAM_ID_BIT_COUNT_) - 1;
+  private const int OPAQUE_VAO_ID_BIT_COUNT_ = 12;
+  private const ulong OPAQUE_VAO_ID_MASK_ = ((ulong) 1 << OPAQUE_VAO_ID_BIT_COUNT_) - 1;
+  private const int OPAQUE_MATERIAL_INDEX_BIT_COUNT_ = 12;
+  private const ulong OPAQUE_MATERIAL_INDEX_MASK_
+      = ((ulong) 1 << OPAQUE_MATERIAL_INDEX_BIT_COUNT_) - 1;
+  private const int OPAQUE_DEPTH_BIT_COUNT_ = 23;
+  private const ulong OPAQUE_DEPTH_MAX_ = ((ulong) 1 << OPAQUE_DEPTH_BIT_COUNT_) - 1;
 
-  public void InitSortKey() {
+  private void InitSortKey_() {
     ulong sortKey = 0;
 
     var prms = this.Params;
@@ -94,32 +94,32 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
 
     if (isTransparent) {
       var inversePriorityBits
-          = prms.InversePriority & transparentInversePriorityMask;
+          = prms.InversePriority & TRANSPARENT_INVERSE_PRIORITY_MASK_;
       sortKey
           |= inversePriorityBits <<
-             (transparentDepthBitCount +
-              transparentMinPrimitiveIndexBitCount);
+             (TRANSPARENT_DEPTH_BIT_COUNT_ +
+              TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_);
 
       var minPrimitiveIndexBits
-          = (ulong) prms.MinPrimitiveIndex & transparentMinPrimitiveIndexMask;
-      sortKey |= minPrimitiveIndexBits << transparentDepthBitCount;
+          = (ulong) prms.MinPrimitiveIndex & TRANSPARENT_MIN_PRIMITIVE_INDEX_MASK_;
+      sortKey |= minPrimitiveIndexBits << TRANSPARENT_DEPTH_BIT_COUNT_;
     } else {
       var programIdBits
-          = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & opaqueProgramIdMask;
+          = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & OPAQUE_PROGRAM_ID_MASK_;
       sortKey
           |= programIdBits <<
-             (opaqueDepthBitCount +
-              opaqueMaterialIndexBitCount +
-              opaqueVaoIdBitCount);
+             (OPAQUE_DEPTH_BIT_COUNT_ +
+              OPAQUE_MATERIAL_INDEX_BIT_COUNT_ +
+              OPAQUE_VAO_ID_BIT_COUNT_);
 
-      var vaoIdBits = (ulong) (prms.VaoId) & opaqueVaoIdMask;
+      var vaoIdBits = (ulong) (prms.VaoId) & OPAQUE_VAO_ID_MASK_;
       sortKey
           |= vaoIdBits <<
-             (opaqueDepthBitCount +
-              opaqueMaterialIndexBitCount);
+             (OPAQUE_DEPTH_BIT_COUNT_ +
+              OPAQUE_MATERIAL_INDEX_BIT_COUNT_);
 
-      var materialIndexBits = (ulong) (material?.Index ?? 0) & opaqueMaterialIndexMask;
-      sortKey |= materialIndexBits << opaqueDepthBitCount;
+      var materialIndexBits = (ulong) (material?.Index ?? 0) & OPAQUE_MATERIAL_INDEX_MASK_;
+      sortKey |= materialIndexBits << OPAQUE_DEPTH_BIT_COUNT_;
     }
 
     this.SortKey = sortKey;
@@ -141,12 +141,12 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
 
     if (isTransparent) {
       var distance1To0 = 1 - distance0To1;
-      var depthBits = (ulong) (distance1To0 * transparentDepthMax);
+      var depthBits = (ulong) (distance1To0 * TRANSPARENT_DEPTH_MAX_);
 
-      sortKey = (sortKey & ~transparentDepthMax) | depthBits;
+      sortKey = (sortKey & ~TRANSPARENT_DEPTH_MAX_) | depthBits;
     } else {
-      var depthBits = (ulong) (distance0To1 * opaqueDepthMax);
-      sortKey = (sortKey & ~opaqueDepthMax) | depthBits;
+      var depthBits = (ulong) (distance0To1 * OPAQUE_DEPTH_MAX_);
+      sortKey = (sortKey & ~OPAQUE_DEPTH_MAX_) | depthBits;
     }
 
     this.SortKey = sortKey;
