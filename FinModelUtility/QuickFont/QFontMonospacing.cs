@@ -9,7 +9,7 @@ namespace QuickFont;
 
 public enum QFontMonospacing
 {
-  Natural,
-  Yes,
-  No,
+  NATURAL,
+  YES,
+  NO,
 }

@@ -16,11 +16,11 @@ namespace QuickFont;
 [DebuggerDisplay("{FontName}")]
 public class QFont : IDisposable
 {
-  private bool _disposed;
+  private bool disposed_;
 
-  public int MaxLineHeight => this.FontData.MaxLineHeight;
+  public int MaxLineHeight => this.FontData.maxLineHeight;
 
-  public int MaxGlyphHeight => this.FontData.MaxGlyphHeight;
+  public int MaxGlyphHeight => this.FontData.maxGlyphHeight;
 
   internal QFontData FontData { get; private set; }
 
@@ -30,40 +30,40 @@ public class QFont : IDisposable
 
   public QFont(IFont font, QFontBuilderConfiguration config = null)
   {
-    this.InitialiseQFont(font, config);
+    this.InitialiseQFont_(font, config);
   }
 
   public QFont(string fontPath, float size, QFontBuilderConfiguration config, FontStyle style = FontStyle.Regular)
   {
     float scale = 1f;
-    using (IFont font = QFont.GetFont(fontPath, size, style, config != null ? config.SuperSampleLevels : 1, scale))
+    using (IFont font = QFont.GetFont_(fontPath, size, style, config != null ? config.superSampleLevels : 1, scale))
     {
       this.FontName = font.ToString();
-      this.InitialiseQFont(font, config);
+      this.InitialiseQFont_(font, config);
     }
   }
 
   public QFont(byte[] fontData, float size, QFontBuilderConfiguration config, FontStyle style = FontStyle.Regular)
   {
     float scale = 1f;
-    using (IFont font = (IFont) new FreeTypeFont(fontData, size, style, config != null ? config.SuperSampleLevels : 1, scale))
+    using (IFont font = (IFont) new FreeTypeFont(fontData, size, style, config != null ? config.superSampleLevels : 1, scale))
     {
       this.FontName = font.ToString();
-      this.InitialiseQFont(font, config);
+      this.InitialiseQFont_(font, config);
     }
   }
 
   public QFont(string qfontPath, QFontConfiguration loaderConfig, float downSampleFactor = 1f)
   {
     float num = 1f;
-    this.InitialiseQFont((IFont) null, new QFontBuilderConfiguration(loaderConfig), Builder.LoadQFontDataFromFile(qfontPath, downSampleFactor * num, loaderConfig));
+    this.InitialiseQFont_((IFont) null, new QFontBuilderConfiguration(loaderConfig), Builder.LoadQFontDataFromFile(qfontPath, downSampleFactor * num, loaderConfig));
     this.FontName = qfontPath;
   }
 
-  private void InitialiseQFont(IFont font, QFontBuilderConfiguration config, QFontData data = null)
+  private void InitialiseQFont_(IFont font, QFontBuilderConfiguration config, QFontData data = null)
   {
-    this.FontData = data ?? QFont.BuildFont(font, config, (string) null);
-    if (this.FontData.Pages.Length != 1 || this.FontData.DropShadowFont != null && this.FontData.DropShadowFont.FontData.Pages.Length != 1)
+    this.FontData = data ?? QFont.BuildFont_(font, config, (string) null);
+    if (this.FontData.pages.Length != 1 || this.FontData.dropShadowFont != null && this.FontData.dropShadowFont.FontData.pages.Length != 1)
       throw new NotSupportedException("The implementation of QFontDrawing does not support multiple textures per Font/Shadow. Thus this font can not be properly rendered in all cases. Reduce number of characters or increase QFontBuilderConfiguration.MaxTexSize QFontShadowConfiguration.PageMaxTextureSize to contain all characters/char-shadows in one Bitmap=>Texture.");
   }
 
@@ -72,7 +72,7 @@ public class QFont : IDisposable
       string newFontName,
       QFontBuilderConfiguration config)
   {
-    Builder.SaveQFontDataToFile(QFont.BuildFont(font, config, newFontName), newFontName);
+    Builder.SaveQFontDataToFile(QFont.BuildFont_(font, config, newFontName), newFontName);
   }
 
   public static void CreateTextureFontFiles(
@@ -82,21 +82,21 @@ public class QFont : IDisposable
       QFontBuilderConfiguration config,
       FontStyle style = FontStyle.Regular)
   {
-    using (IFont font = QFont.GetFont(fileName, size, style, config != null ? config.SuperSampleLevels : 1))
+    using (IFont font = QFont.GetFont_(fileName, size, style, config != null ? config.superSampleLevels : 1))
       QFont.CreateTextureFontFiles(font, newFontName, config);
   }
 
-  private static IFont GetFont(
+  private static IFont GetFont_(
       string fontPath,
       float size,
       FontStyle style,
       int superSampleLevels = 1,
       float scale = 1f)
   {
-    return !File.Exists(fontPath) ? (IFont) new GDIFont(fontPath, size, style, superSampleLevels, scale) : (IFont) new FreeTypeFont(fontPath, size, style, superSampleLevels, scale);
+    return !File.Exists(fontPath) ? (IFont) new GdiFont(fontPath, size, style, superSampleLevels, scale) : (IFont) new FreeTypeFont(fontPath, size, style, superSampleLevels, scale);
   }
 
-  private static QFontData BuildFont(
+  private static QFontData BuildFont_(
       IFont font,
       QFontBuilderConfiguration config,
       string saveName)
@@ -112,11 +112,11 @@ public class QFont : IDisposable
 
   protected virtual void Dispose(bool disposing)
   {
-    if (this._disposed)
+    if (this.disposed_)
       return;
     if (disposing)
       this.FontData.Dispose();
-    this._disposed = true;
+    this.disposed_ = true;
   }
 
   public SizeF Measure(string text, SizeF maxSize, QFontAlignment alignment)
@@ -134,7 +134,7 @@ public class QFont : IDisposable
     return new QFontDrawingPrimitive(this).Measure(processedText);
   }
 
-  public SizeF Measure(string text, QFontAlignment alignment = QFontAlignment.Left)
+  public SizeF Measure(string text, QFontAlignment alignment = QFontAlignment.LEFT)
   {
     return new QFontDrawingPrimitive(this).Measure(text, alignment);
   }

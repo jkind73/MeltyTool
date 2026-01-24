@@ -9,15 +9,15 @@ public struct Indexable : IIndexable {
 }
 
 public class IndexableDictionaries {
-  private const int x = 10000;
-  private const int n = 1000;
+  private const int X_ = 10000;
+  private const int N_ = 1000;
 
-  private readonly IndexableDictionary<Indexable, int> indexableV1_ = new(x);
-  private readonly IndexableDictionaryV2<Indexable, int> indexableV2_ = new(x);
+  private readonly IndexableDictionary<Indexable, int> indexableV1_ = new(X_);
+  private readonly IndexableDictionaryV2<Indexable, int> indexableV2_ = new(X_);
 
   [GlobalSetup]
   public void SetUp() {
-    for (var i = 0; i < x; i++) {
+    for (var i = 0; i < X_; i++) {
       this.indexableV1_[i] = i;
       this.indexableV2_[i] = i;
     }
@@ -25,9 +25,9 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void AddWithoutCapacityV1() {
-    for (var iteration = 0; iteration < n; ++iteration) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
       var impl = new IndexableDictionary<Indexable, int>();
-      for (var i = 0; i < x; i++) {
+      for (var i = 0; i < X_; i++) {
         impl[i] = i;
       }
     }
@@ -35,9 +35,9 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void AddWithoutCapacityV2() {
-    for (var iteration = 0; iteration < n; ++iteration) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
       var impl = new IndexableDictionaryV2<Indexable, int>();
-      for (var i = 0; i < x; i++) {
+      for (var i = 0; i < X_; i++) {
         impl[i] = i;
       }
     }
@@ -45,9 +45,9 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void AddWithCapacityV1() {
-    for (var iteration = 0; iteration < n; ++iteration) {
-      var impl = new IndexableDictionary<Indexable, int>(x);
-      for (var i = 0; i < x; i++) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
+      var impl = new IndexableDictionary<Indexable, int>(X_);
+      for (var i = 0; i < X_; i++) {
         impl[i] = i;
       }
     }
@@ -55,9 +55,9 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void AddWithCapacityV2() {
-    for (var iteration = 0; iteration < n; ++iteration) {
-      var impl = new IndexableDictionaryV2<Indexable, int>(x);
-      for (var i = 0; i < x; i++) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
+      var impl = new IndexableDictionaryV2<Indexable, int>(X_);
+      for (var i = 0; i < X_; i++) {
         impl[i] = i;
       }
     }
@@ -65,7 +65,7 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void EnumerateV1() {
-    for (var iteration = 0; iteration < n; ++iteration) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
       foreach (var value in this.indexableV1_) {
         var foo = value;
       }
@@ -74,7 +74,7 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void EnumerateV2() {
-    for (var iteration = 0; iteration < n; ++iteration) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
       foreach (var value in this.indexableV2_) {
         var foo = value;
       }
@@ -83,8 +83,8 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void TryGetValueV1() {
-    for (var iteration = 0; iteration < n; ++iteration) {
-      for (var i = 0; i < x; i++) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
+      for (var i = 0; i < X_; i++) {
         if (this.indexableV1_.TryGetValue(i, out var value)) {
           var foo = value;
         }
@@ -94,8 +94,8 @@ public class IndexableDictionaries {
 
   [Benchmark]
   public void TryGetValueV2() {
-    for (var iteration = 0; iteration < n; ++iteration) {
-      for (var i = 0; i < x; i++) {
+    for (var iteration = 0; iteration < N_; ++iteration) {
+      for (var i = 0; i < X_; i++) {
         if (this.indexableV2_.TryGetValue(i, out var value)) {
           var foo = value;
         }

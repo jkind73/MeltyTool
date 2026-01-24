@@ -13,25 +13,25 @@ namespace QuickFont;
 
 public sealed class QBitmap
 {
-  public Bitmap Bitmap;
-  public BitmapData BitmapData;
+  public Bitmap bitmap;
+  public BitmapData bitmapData;
 
-  public QBitmap(string filePath) => this.LockBits(new Bitmap(filePath));
+  public QBitmap(string filePath) => this.LockBits_(new Bitmap(filePath));
 
-  public QBitmap(Bitmap bitmap) => this.LockBits(bitmap);
+  public QBitmap(Bitmap bitmap) => this.LockBits_(bitmap);
 
-  private void LockBits(Bitmap bitmap)
+  private void LockBits_(Bitmap bitmap)
   {
-    this.Bitmap = bitmap;
-    this.BitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
+    this.bitmap = bitmap;
+    this.bitmapData = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, bitmap.PixelFormat);
   }
 
   public unsafe void Clear32(byte r, byte g, byte b, byte a)
   {
-    byte* scan0 = (byte*) (void*) this.BitmapData.Scan0;
-    for (int index1 = 0; index1 < this.BitmapData.Height; ++index1)
+    byte* scan0 = (byte*) (void*) this.bitmapData.Scan0;
+    for (int index1 = 0; index1 < this.bitmapData.Height; ++index1)
     {
-      for (int index2 = 0; index2 < this.BitmapData.Width; ++index2)
+      for (int index2 = 0; index2 < this.bitmapData.Width; ++index2)
       {
         *scan0 = b;
         scan0[1] = g;
@@ -39,7 +39,7 @@ public sealed class QBitmap
         scan0[3] = a;
         scan0 += 4;
       }
-      scan0 += this.BitmapData.Stride - this.BitmapData.Width * 4;
+      scan0 += this.bitmapData.Stride - this.bitmapData.Width * 4;
     }
   }
 
@@ -164,7 +164,7 @@ public sealed class QBitmap
 
   public unsafe void PutPixel32(int px, int py, byte r, byte g, byte b, byte a)
   {
-    IntPtr num = (IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4;
+    IntPtr num = (IntPtr) (void*) this.bitmapData.Scan0 + this.bitmapData.Stride * py + px * 4;
     *(sbyte*) num = (sbyte) r;
     *(sbyte*) (num + 1) = (sbyte) g;
     *(sbyte*) (num + 2) = (sbyte) b;
@@ -179,7 +179,7 @@ public sealed class QBitmap
       ref byte b,
       ref byte a)
   {
-    byte* numPtr = (byte*) ((IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4);
+    byte* numPtr = (byte*) ((IntPtr) (void*) this.bitmapData.Scan0 + this.bitmapData.Stride * py + px * 4);
     r = *numPtr;
     g = numPtr[1];
     b = numPtr[2];
@@ -188,21 +188,21 @@ public sealed class QBitmap
 
   public unsafe void PutAlpha32(int px, int py, byte a)
   {
-    *(sbyte*) ((IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4 + 3) = (sbyte) a;
+    *(sbyte*) ((IntPtr) (void*) this.bitmapData.Scan0 + this.bitmapData.Stride * py + px * 4 + 3) = (sbyte) a;
   }
 
   public unsafe void GetAlpha32(int px, int py, ref byte a)
   {
-    a = *(byte*) ((IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * py + px * 4 + 3);
+    a = *(byte*) ((IntPtr) (void*) this.bitmapData.Scan0 + this.bitmapData.Stride * py + px * 4 + 3);
   }
 
   public void DownScale32(int newWidth, int newHeight)
   {
-    QBitmap qbitmap = new QBitmap(new Bitmap(newWidth, newHeight, this.Bitmap.PixelFormat));
-    if (this.Bitmap.PixelFormat != PixelFormat.Format32bppArgb)
+    QBitmap qbitmap = new QBitmap(new Bitmap(newWidth, newHeight, this.bitmap.PixelFormat));
+    if (this.bitmap.PixelFormat != PixelFormat.Format32bppArgb)
       throw new Exception("DownsScale32 only works on 32 bit images");
-    float num1 = (float) this.BitmapData.Width / (float) newWidth;
-    float num2 = (float) this.BitmapData.Height / (float) newHeight;
+    float num1 = (float) this.bitmapData.Width / (float) newWidth;
+    float num2 = (float) this.bitmapData.Height / (float) newHeight;
     byte r1 = 0;
     byte g1 = 0;
     byte b1 = 0;
@@ -212,22 +212,22 @@ public sealed class QBitmap
     {
       for (int px = 0; px < newWidth; ++px)
       {
-        float val1_1 = (float) px * num1;
-        float val1_2 = (float) (px + 1) * num1;
-        float val1_3 = (float) py * num2;
-        float val1_4 = (float) (py + 1) * num2;
-        int num4 = (int) val1_1;
-        int num5 = (int) val1_2;
-        int num6 = (int) val1_3;
-        int num7 = (int) val1_4;
+        float val11 = (float) px * num1;
+        float val12 = (float) (px + 1) * num1;
+        float val13 = (float) py * num2;
+        float val14 = (float) (py + 1) * num2;
+        int num4 = (int) val11;
+        int num5 = (int) val12;
+        int num6 = (int) val13;
+        int num7 = (int) val14;
         if (num4 < 0)
           num4 = 0;
         if (num6 < 0)
           num6 = 0;
-        if (num5 >= this.BitmapData.Width)
-          num5 = this.BitmapData.Width - 1;
-        if (num7 >= this.BitmapData.Height)
-          num7 = this.BitmapData.Height - 1;
+        if (num5 >= this.bitmapData.Width)
+          num5 = this.bitmapData.Width - 1;
+        if (num7 >= this.bitmapData.Height)
+          num7 = this.bitmapData.Height - 1;
         float num8 = 0.0f;
         float num9 = 0.0f;
         float num10 = 0.0f;
@@ -237,10 +237,10 @@ public sealed class QBitmap
         {
           for (int index2 = num4; index2 <= num5; ++index2)
           {
-            float num13 = Math.Max(val1_1, (float) index2);
-            double num14 = (double) Math.Min(val1_2, (float) (index2 + 1));
-            float num15 = Math.Max(val1_3, (float) index1);
-            float num16 = Math.Min(val1_4, (float) (index1 + 1));
+            float num13 = Math.Max(val11, (float) index2);
+            double num14 = (double) Math.Min(val12, (float) (index2 + 1));
+            float num15 = Math.Max(val13, (float) index1);
+            float num16 = Math.Min(val14, (float) (index1 + 1));
             double num17 = (double) num13;
             float num18 = (float) ((num14 - num17) * ((double) num16 - (double) num15));
             this.GetPixel32(index2, index1, ref r1, ref g1, ref b1, ref a1);
@@ -278,17 +278,17 @@ public sealed class QBitmap
       }
     }
     this.Free();
-    this.Bitmap = qbitmap.Bitmap;
-    this.BitmapData = qbitmap.BitmapData;
+    this.bitmap = qbitmap.bitmap;
+    this.bitmapData = qbitmap.bitmapData;
   }
 
   public unsafe void Colour32(byte r, byte g, byte b)
   {
-    for (int index1 = 0; index1 < this.BitmapData.Width; ++index1)
+    for (int index1 = 0; index1 < this.bitmapData.Width; ++index1)
     {
-      for (int index2 = 0; index2 < this.BitmapData.Height; ++index2)
+      for (int index2 = 0; index2 < this.bitmapData.Height; ++index2)
       {
-        IntPtr num = (IntPtr) (void*) this.BitmapData.Scan0 + this.BitmapData.Stride * index2 + index1 * 4;
+        IntPtr num = (IntPtr) (void*) this.bitmapData.Scan0 + this.bitmapData.Stride * index2 + index1 * 4;
         *(sbyte*) num = (sbyte) b;
         *(sbyte*) (num + 1) = (sbyte) g;
         *(sbyte*) (num + 2) = (sbyte) r;
@@ -298,10 +298,10 @@ public sealed class QBitmap
 
   public void ExpandAlpha(int radius, int passes)
   {
-    QBitmap qbitmap = new QBitmap(new Bitmap(this.Bitmap.Width, this.Bitmap.Height, this.Bitmap.PixelFormat));
+    QBitmap qbitmap = new QBitmap(new Bitmap(this.bitmap.Width, this.bitmap.Height, this.bitmap.PixelFormat));
     byte a1 = 0;
-    int width = this.Bitmap.Width;
-    int height = this.Bitmap.Height;
+    int width = this.bitmap.Width;
+    int height = this.bitmap.Height;
     for (int index1 = 0; index1 < passes; ++index1)
     {
       for (int py = 0; py < height; ++py)
@@ -346,10 +346,10 @@ public sealed class QBitmap
 
   public void BlurAlpha(int radius, int passes)
   {
-    QBitmap qbitmap = new QBitmap(new Bitmap(this.Bitmap.Width, this.Bitmap.Height, this.Bitmap.PixelFormat));
+    QBitmap qbitmap = new QBitmap(new Bitmap(this.bitmap.Width, this.bitmap.Height, this.bitmap.PixelFormat));
     byte a1 = 0;
-    int width = this.Bitmap.Width;
-    int height = this.Bitmap.Height;
+    int width = this.bitmap.Width;
+    int height = this.bitmap.Height;
     for (int index1 = 0; index1 < passes; ++index1)
     {
       for (int py = 0; py < height; ++py)
@@ -398,7 +398,7 @@ public sealed class QBitmap
 
   public void Free()
   {
-    this.Bitmap.UnlockBits(this.BitmapData);
-    this.Bitmap.Dispose();
+    this.bitmap.UnlockBits(this.bitmapData);
+    this.bitmap.Dispose();
   }
 }

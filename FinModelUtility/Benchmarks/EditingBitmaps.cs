@@ -17,31 +17,31 @@ using Rectangle = System.Drawing.Rectangle;
 namespace benchmarks;
 
 public unsafe class EditingBitmaps {
-  private const int SIZE = 4000;
+  private const int SIZE_ = 4000;
 
   private Bitmap bitmap_ =
-      new(SIZE, SIZE, PixelFormat.Format32bppArgb);
+      new(SIZE_, SIZE_, PixelFormat.Format32bppArgb);
 
   private BitmapData bmpData_;
 
-  public static readonly Configuration ImageSharpConfig;
+  public static readonly Configuration IMAGE_SHARP_CONFIG;
 
   private Rgba32Image finImage_
-      = new(fin.image.PixelFormat.RGBA8888, SIZE, SIZE);
+      = new(fin.image.PixelFormat.RGBA8888, SIZE_, SIZE_);
 
   static EditingBitmaps() {
-    ImageSharpConfig = Configuration.Default.Clone();
-    ImageSharpConfig.PreferContiguousImageBuffers = true;
+    IMAGE_SHARP_CONFIG = Configuration.Default.Clone();
+    IMAGE_SHARP_CONFIG.PreferContiguousImageBuffers = true;
   }
 
-  private Image<Rgba32> image_ = new(ImageSharpConfig, SIZE, SIZE);
+  private Image<Rgba32> image_ = new(IMAGE_SHARP_CONFIG, SIZE_, SIZE_);
 
   private MemoryHandle memoryHandle_;
   private Rgba32* imagePtr_;
 
   public void LockBitmap() {
     this.bmpData_ = this.bitmap_.LockBits(
-        new Rectangle(0, 0, SIZE, SIZE),
+        new Rectangle(0, 0, SIZE_, SIZE_),
         ImageLockMode.ReadWrite,
         PixelFormat.Format32bppArgb);
   }
@@ -64,9 +64,9 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapBytes() {
     this.LockBitmap();
     var ptr = (byte*) this.bmpData_.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = 4 * (y * SIZE + x);
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = 4 * (y * SIZE_ + x);
         var b = ptr[i + 0];
         var g = ptr[i + 1];
         var r = ptr[i + 2];
@@ -81,9 +81,9 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapUints() {
     this.LockBitmap();
     var ptr = (uint*) this.bmpData_.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
         var bgra = ptr[i];
         var b = bgra & 0xff;
         var g = (bgra >> 8) & 0xff;
@@ -99,9 +99,9 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapUintsAndCasting() {
     this.LockBitmap();
     var ptr = (uint*) this.bmpData_.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
 
         var bgra = ptr[i];
         var b = (byte) bgra;
@@ -117,8 +117,8 @@ public unsafe class EditingBitmaps {
   [Benchmark]
   public void ReadingBitmapUintsViaFastBitmapLibGetPixel() {
     using var fastBitmap = this.bitmap_.FastLock();
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
         var bgra = fastBitmap.GetPixelUInt(x, y);
         var b = bgra & 0xff;
         var g = (bgra >> 8) & 0xff;
@@ -132,9 +132,9 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapUintsViaFastBitmapLibPtr() {
     using var fastBitmap = this.bitmap_.FastLock();
     var ptr = (uint*) fastBitmap.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
 
         var bgra = ptr[i];
         var b = bgra & 0xff;
@@ -149,8 +149,8 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapUintsSchenanigans() {
     this.LockBitmap();
     var ptr = (uint*) this.bmpData_.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
         var bgra = *(ptr++);
         var b = (byte) bgra;
         var g = (byte) (bgra >> 8);
@@ -166,9 +166,9 @@ public unsafe class EditingBitmaps {
   public void ReadingBitmapColors() {
     this.LockBitmap();
     var ptr = (int*) this.bmpData_.Scan0;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
         var color = Color.FromArgb(ptr[i]);
         var r = color.R;
         var g = color.G;
@@ -184,9 +184,9 @@ public unsafe class EditingBitmaps {
   public void ReadingImageBytes() {
     using var _ = this.LockImage();
     var ptr = (byte*) this.imagePtr_;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = 4 * (y * SIZE + x);
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = 4 * (y * SIZE_ + x);
         var r = ptr[i + 0];
         var g = ptr[i + 1];
         var b = ptr[i + 2];
@@ -206,15 +206,15 @@ public unsafe class EditingBitmaps {
                    out byte b,
                    out byte a)
         => {
-      var value = ptr[y * SIZE + x];
+      var value = ptr[y * SIZE_ + x];
       r = (byte) (value & 0xff);
       g = (byte) ((value >> 8) & 0xff);
       b = (byte) ((value >> 16) & 0xff);
       a = (byte) (value >> 24);
     };
 
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
         handler(x, y, out var r, out var g, out var b, out var a);
       }
     }
@@ -224,9 +224,9 @@ public unsafe class EditingBitmaps {
   public void ReadingImageUints() {
     using var _ = this.LockImage();
     var ptr = (uint*) this.imagePtr_;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
         var bgra = ptr[i];
         var b = bgra & 0xff;
         var g = (bgra >> 8) & 0xff;
@@ -237,12 +237,12 @@ public unsafe class EditingBitmaps {
   }
 
   //[Benchmark]
-  public void ReadingImageRgba32s() {
+  public void ReadingImageRgba32S() {
     using var _ = this.LockImage();
     var ptr = this.imagePtr_;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
         var rgba = ptr[i];
         var r = rgba.R;
         var g = rgba.G;
@@ -255,8 +255,8 @@ public unsafe class EditingBitmaps {
   [Benchmark]
   public void ReadingFinImageWithNewValues() {
     this.finImage_.Access(get => {
-      for (var y = 0; y < SIZE; ++y) {
-        for (var x = 0; x < SIZE; ++x) {
+      for (var y = 0; y < SIZE_; ++y) {
+        for (var x = 0; x < SIZE_; ++x) {
           get(x,
               y,
               out var r,
@@ -272,8 +272,8 @@ public unsafe class EditingBitmaps {
   public void ReadingFinImageWithSameValues() {
     this.finImage_.Access(get => {
       byte r, g, b, a;
-      for (var y = 0; y < SIZE; ++y) {
-        for (var x = 0; x < SIZE; ++x) {
+      for (var y = 0; y < SIZE_; ++y) {
+        for (var x = 0; x < SIZE_; ++x) {
           get(x, y, out r, out g, out b, out a);
         }
       }
@@ -284,9 +284,9 @@ public unsafe class EditingBitmaps {
   public void ReadingFinImageWithLock() {
     using var imageLock = this.finImage_.Lock();
     var ptr = imageLock.Pixels;
-    for (var y = 0; y < SIZE; ++y) {
-      for (var x = 0; x < SIZE; ++x) {
-        var i = y * SIZE + x;
+    for (var y = 0; y < SIZE_; ++y) {
+      for (var x = 0; x < SIZE_; ++x) {
+        var i = y * SIZE_ + x;
         var rgba = ptr[i];
         var r = rgba.R;
         var g = rgba.G;

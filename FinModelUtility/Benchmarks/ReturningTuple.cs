@@ -3,7 +3,7 @@
 namespace benchmarks;
 
 public sealed class ReturningTuple {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
   struct Xyzw {
     public float X { get; set; }
@@ -14,7 +14,7 @@ public sealed class ReturningTuple {
 
   [Benchmark]
   public void ReturnFromMethod() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var (value1, value2) = this.ReturnFromMethodImpl_();
     }
   }
@@ -26,7 +26,7 @@ public sealed class ReturningTuple {
 
   [Benchmark]
   public void ReturnViaOut() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.ReturnViaOutImpl_(out var value1, out var value2);
     }
   }
@@ -39,7 +39,7 @@ public sealed class ReturningTuple {
 
   [Benchmark]
   public void ReturnFromRef() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       Xyzw value1 = default, value2 = default;
       this.ReturnViaRefImpl_(ref value1, ref value2);
     }

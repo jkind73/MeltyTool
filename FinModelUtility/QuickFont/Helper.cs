@@ -22,7 +22,7 @@ internal static class Helper
     return array;
   }
 
-  public static void SafeGLEnable(EnableCap cap, Action code)
+  public static void SafeGlEnable(EnableCap cap, Action code)
   {
     GlUtil.AssertNoErrorsWhenDebugging();
     int num = GL.IsEnabled(cap) ? 1 : 0;
@@ -37,7 +37,7 @@ internal static class Helper
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
-  public static void SafeGLEnable(EnableCap[] caps, Action code)
+  public static void SafeGlEnable(EnableCap[] caps, Action code)
   {
     GlUtil.AssertNoErrorsWhenDebugging();
     bool[] flagArray = new bool[caps.Length];

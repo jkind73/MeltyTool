@@ -19,40 +19,40 @@ namespace QuickFont;
 
 public class QFontDrawing : IDisposable
 {
-  private const string SHADER_VERSION_STRING130 = "#version 130\n\n";
-  private const string SHADER_VERSION_STRING140 = "#version 140\n\n";
-  private const string SHADER_VERSION_STRING150 = "#version 150\n\n";
-  private static QFontSharedState _sharedState;
-  public QVertexArrayObject VertexArrayObject;
-  private QFontSharedState _instanceSharedState;
-  private readonly List<QFontDrawingPrimitive> _glFontDrawingPrimitives;
-  private readonly bool _useDefaultBlendFunction;
-  private Matrix4 _projectionMatrix;
-  private bool _disposed;
+  private const string SHADER_VERSION_STRING130_ = "#version 130\n\n";
+  private const string SHADER_VERSION_STRING140_ = "#version 140\n\n";
+  private const string SHADER_VERSION_STRING150_ = "#version 150\n\n";
+  private static QFontSharedState sharedState_;
+  public QVertexArrayObject vertexArrayObject;
+  private QFontSharedState instanceSharedState_;
+  private readonly List<QFontDrawingPrimitive> glFontDrawingPrimitives_;
+  private readonly bool useDefaultBlendFunction_;
+  private Matrix4 projectionMatrix_;
+  private bool disposed_;
 
   public QFontDrawing(bool useDefaultBlendFunction = true, QFontSharedState state = null)
   {
-    this._useDefaultBlendFunction = useDefaultBlendFunction;
-    this._glFontDrawingPrimitives = [];
-    this.InitialiseState(state);
+    this.useDefaultBlendFunction_ = useDefaultBlendFunction;
+    this.glFontDrawingPrimitives_ = [];
+    this.InitialiseState_(state);
   }
 
-  public static QFontSharedState SharedState => QFontDrawing._sharedState;
+  public static QFontSharedState SharedState => QFontDrawing.sharedState_;
 
   public QFontSharedState InstanceSharedState
   {
-    get => this._instanceSharedState ?? QFontDrawing.SharedState;
+    get => this.instanceSharedState_ ?? QFontDrawing.SharedState;
   }
 
   public Matrix4 ProjectionMatrix
   {
-    get => this._projectionMatrix;
-    set => this._projectionMatrix = value;
+    get => this.projectionMatrix_;
+    set => this.projectionMatrix_ = value;
   }
 
-  public List<QFontDrawingPrimitive> DrawingPrimitives => this._glFontDrawingPrimitives;
+  public List<QFontDrawingPrimitive> DrawingPrimitives => this.glFontDrawingPrimitives_;
 
-  private static string LoadShaderFromResource(string path)
+  private static string LoadShaderFromResource_(string path)
   {
     Assembly executingAssembly = Assembly.GetExecutingAssembly();
     path = ((IEnumerable<string>) executingAssembly.GetManifestResourceNames()).Where<string>((Func<string, bool>) (f => f.EndsWith(path))).First<string>();
@@ -63,7 +63,7 @@ public class QFontDrawing : IDisposable
       return streamReader.ReadToEnd();
   }
 
-  private static void InitialiseStaticState()
+  private static void InitialiseStaticState_()
   {
     GlUtil.AssertNoErrorsWhenDebugging();
     int shader1 = GL.CreateShader(ShaderType.VertexShader);
@@ -74,8 +74,8 @@ public class QFontDrawing : IDisposable
     int params2 = 0;
     GlUtil.AssertNoErrorsWhenDebugging();
        
-    GL.ShaderSource(shader1, QFontDrawing.LoadShaderFromResource("simple_es.vs"));
-    GL.ShaderSource(shader2, QFontDrawing.LoadShaderFromResource("simple_es.fs"));
+    GL.ShaderSource(shader1, QFontDrawing.LoadShaderFromResource_("simple_es.vs"));
+    GL.ShaderSource(shader2, QFontDrawing.LoadShaderFromResource_("simple_es.fs"));
     GL.CompileShader(shader1);
     GL.CompileShader(shader2);
     GL.GetShader(shader1, ShaderParameter.CompileStatus, out params1);
@@ -103,7 +103,7 @@ public class QFontDrawing : IDisposable
     int attribLocation1 = GL.GetAttribLocation(program, "in_position");
     int attribLocation2 = GL.GetAttribLocation(program, "in_tc");
     int attribLocation3 = GL.GetAttribLocation(program, "in_colour");
-    QFontDrawing._sharedState = new QFontSharedState(TextureUnit.Texture0, new ShaderLocations()
+    QFontDrawing.sharedState_ = new QFontSharedState(TextureUnit.Texture0, new ShaderLocations()
     {
         ShaderProgram = program,
         ProjectionMatrixUniformLocation = uniformLocation1,
@@ -116,17 +116,17 @@ public class QFontDrawing : IDisposable
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
-  private void InitialiseState(QFontSharedState state)
+  private void InitialiseState_(QFontSharedState state)
   {
     if (state != null)
     {
-      this._instanceSharedState = state;
+      this.instanceSharedState_ = state;
     }
     else
     {
       if (QFontDrawing.SharedState != null)
         return;
-      QFontDrawing.InitialiseStaticState();
+      QFontDrawing.InitialiseStaticState_();
     }
   }
 
@@ -134,28 +134,28 @@ public class QFontDrawing : IDisposable
   {
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.UseProgram(this.InstanceSharedState.ShaderVariables.ShaderProgram);
-    if (this._useDefaultBlendFunction)
+    if (this.useDefaultBlendFunction_)
     {
       GL.Enable(EnableCap.Blend);
       GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
     }
-    GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ProjectionMatrixUniformLocation, false, ref this._projectionMatrix);
+    GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ProjectionMatrixUniformLocation, false, ref this.projectionMatrix_);
     GL.Uniform1(this.InstanceSharedState.ShaderVariables.SamplerLocation, 0);
     GL.ActiveTexture(this.InstanceSharedState.DefaultTextureUnit);
     int first = 0;
-    this.VertexArrayObject.Bind();
-    foreach (QFontDrawingPrimitive drawingPrimitive in this._glFontDrawingPrimitives)
+    this.vertexArrayObject.Bind();
+    foreach (QFontDrawingPrimitive drawingPrimitive in this.glFontDrawingPrimitives_)
     {
-      GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ModelViewMatrixUniformLocation, false, ref drawingPrimitive.ModelViewMatrix);
+      GL.UniformMatrix4(this.InstanceSharedState.ShaderVariables.ModelViewMatrixUniformLocation, false, ref drawingPrimitive.modelViewMatrix);
       PrimitiveType mode = PrimitiveType.Triangles;
       GL.ActiveTexture(QFontDrawing.SharedState.DefaultTextureUnit);
       if (drawingPrimitive.ShadowVertexRepr.Count > 0)
       {
-        GL.BindTexture(TextureTarget.Texture2D, drawingPrimitive.Font.FontData.DropShadowFont.FontData.Pages[0].TextureID);
+        GL.BindTexture(TextureTarget.Texture2D, drawingPrimitive.Font.FontData.dropShadowFont.FontData.pages[0].TextureId);
         GL.DrawArrays(mode, first, drawingPrimitive.ShadowVertexRepr.Count);
         first += drawingPrimitive.ShadowVertexRepr.Count;
       }
-      GL.BindTexture(TextureTarget.Texture2D, drawingPrimitive.Font.FontData.Pages[0].TextureID);
+      GL.BindTexture(TextureTarget.Texture2D, drawingPrimitive.Font.FontData.pages[0].TextureId);
       GL.DrawArrays(mode, first, drawingPrimitive.CurrentVertexRepr.Count);
       first += drawingPrimitive.CurrentVertexRepr.Count;
     }
@@ -167,29 +167,29 @@ public class QFontDrawing : IDisposable
   public void DisableShader()
   {
     GL.UseProgram(0);
-    this.VertexArrayObject.DisableAttributes();
+    this.vertexArrayObject.DisableAttributes();
   }
 
   public static void RefreshViewport() => ViewportHelper.InvalidateViewport();
 
   public void RefreshBuffers()
   {
-    if (this.VertexArrayObject == null)
-      this.VertexArrayObject = new QVertexArrayObject(QFontDrawing.SharedState);
-    this.VertexArrayObject.Reset();
-    foreach (QFontDrawingPrimitive drawingPrimitive in this._glFontDrawingPrimitives)
+    if (this.vertexArrayObject == null)
+      this.vertexArrayObject = new QVertexArrayObject(QFontDrawing.SharedState);
+    this.vertexArrayObject.Reset();
+    foreach (QFontDrawingPrimitive drawingPrimitive in this.glFontDrawingPrimitives_)
     {
-      this.VertexArrayObject.AddVertexes(drawingPrimitive.ShadowVertexRepr);
-      this.VertexArrayObject.AddVertexes(drawingPrimitive.CurrentVertexRepr);
+      this.vertexArrayObject.AddVertexes(drawingPrimitive.ShadowVertexRepr);
+      this.vertexArrayObject.AddVertexes(drawingPrimitive.CurrentVertexRepr);
     }
-    this.VertexArrayObject.Load();
+    this.vertexArrayObject.Load();
   }
 
   public SizeF Print(QFont font, ProcessedText text, Vector3 position, QFontRenderOptions opt)
   {
     QFontDrawingPrimitive drawingPrimitive = new QFontDrawingPrimitive(font, opt);
     this.DrawingPrimitives.Add(drawingPrimitive);
-    return drawingPrimitive.Print(text, position, opt.ClippingRectangle);
+    return drawingPrimitive.Print(text, position, opt.clippingRectangle);
   }
 
   public SizeF Print(QFont font, ProcessedText processedText, Vector3 position, Color? colour = null)
@@ -208,7 +208,7 @@ public class QFontDrawing : IDisposable
   {
     QFontDrawingPrimitive drawingPrimitive = new QFontDrawingPrimitive(font, opt);
     this.DrawingPrimitives.Add(drawingPrimitive);
-    return drawingPrimitive.Print(text, position, alignment, opt.ClippingRectangle);
+    return drawingPrimitive.Print(text, position, alignment, opt.clippingRectangle);
   }
 
   public SizeF Print(
@@ -247,7 +247,7 @@ public class QFontDrawing : IDisposable
   {
     QFontDrawingPrimitive drawingPrimitive = new QFontDrawingPrimitive(font, opt);
     this.DrawingPrimitives.Add(drawingPrimitive);
-    return drawingPrimitive.Print(text, position, maxSize, alignment, opt.ClippingRectangle);
+    return drawingPrimitive.Print(text, position, maxSize, alignment, opt.clippingRectangle);
   }
 
   public void Dispose()
@@ -258,13 +258,13 @@ public class QFontDrawing : IDisposable
 
   protected virtual void Dispose(bool disposing)
   {
-    if (this._disposed)
+    if (this.disposed_)
       return;
-    if (disposing && this.VertexArrayObject != null)
+    if (disposing && this.vertexArrayObject != null)
     {
-      this.VertexArrayObject.Dispose();
-      this.VertexArrayObject = (QVertexArrayObject) null;
+      this.vertexArrayObject.Dispose();
+      this.vertexArrayObject = (QVertexArrayObject) null;
     }
-    this._disposed = true;
+    this.disposed_ = true;
   }
 }

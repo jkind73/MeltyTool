@@ -3,11 +3,11 @@
 namespace benchmarks;
 
 public sealed class ReadingStringNts {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
   [Benchmark]
   public void ReadUntilNull() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
     }
   }
 }

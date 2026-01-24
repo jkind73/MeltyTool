@@ -9,9 +9,9 @@ namespace QuickFont.Configuration;
 
 public enum TextGenerationRenderHint
 {
-  AntiAliasGridFit,
-  AntiAlias,
-  SizeDependent,
-  ClearTypeGridFit,
-  SystemDefault,
+  ANTI_ALIAS_GRID_FIT,
+  ANTI_ALIAS,
+  SIZE_DEPENDENT,
+  CLEAR_TYPE_GRID_FIT,
+  SYSTEM_DEFAULT,
 }

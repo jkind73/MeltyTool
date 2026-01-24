@@ -5,8 +5,8 @@ using BenchmarkDotNet.Attributes;
 namespace benchmarks;
 
 public sealed class DependencyInjection {
-  private const int n = 100000;
-  private const float value = 1;
+  private const int N_ = 100000;
+  private const float VALUE_ = 1;
 
 
   public interface IMethod {
@@ -18,8 +18,8 @@ public sealed class DependencyInjection {
     
   [Benchmark]
   public void CallDirectly() {
-    for (var i = 0; i < n; i++) {
-      var x = Math.Acos(value);
+    for (var i = 0; i < N_; i++) {
+      var x = Math.Acos(VALUE_);
     }
   }
 
@@ -28,8 +28,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaMethod() {
     var viaMethod = new ViaMethodWrapper();
-    for (var i = 0; i < n; i++) {
-      var x = viaMethod.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaMethod.Run(VALUE_);
     }
   }
 
@@ -43,8 +43,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaInline() {
     var viaInlineWrapper = new ViaInlineWrapper();
-    for (var i = 0; i < n; i++) {
-      var x = viaInlineWrapper.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaInlineWrapper.Run(VALUE_);
     }
   }
 
@@ -58,8 +58,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaOptimizedInline() {
     var viaOptimizedInlineWrapper = new ViaOptimizedInlineWrapper();
-    for (var i = 0; i < n; i++) {
-      var x = viaOptimizedInlineWrapper.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaOptimizedInlineWrapper.Run(VALUE_);
     }
   }
 
@@ -76,8 +76,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaMethodGroup() {
     var viaMethodGroup = new ViaMethodGroup(Math.Acos);
-    for (var i = 0; i < n; i++) {
-      var x = viaMethodGroup.methodGroup(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaMethodGroup.methodGroup(VALUE_);
     }
   }
 
@@ -91,8 +91,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaLambda() {
     var viaLambda = new ViaLambda(d => Math.Acos(d));
-    for (var i = 0; i < n; i++) {
-      var x = viaLambda.lambda(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaLambda.lambda(VALUE_);
     }
   }
 
@@ -106,8 +106,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaInterfaceImpl() {
     var viaInterface = new ViaInterfaceImpl(new ViaOptimizedInlineWrapper());
-    for (var i = 0; i < n; i++) {
-      var x = viaInterface.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaInterface.Run(VALUE_);
     }
   }
 
@@ -121,8 +121,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaGenericImpl() {
     var viaGeneric = new ViaGenericImpl<ViaOptimizedInlineWrapper>(new ViaOptimizedInlineWrapper());
-    for (var i = 0; i < n; i++) {
-      var x = viaGeneric.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaGeneric.Run(VALUE_);
     }
   }
 
@@ -140,8 +140,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaStruct() {
     var viaGeneric = new ViaStruct();
-    for (var i = 0; i < n; i++) {
-      var x = viaGeneric.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaGeneric.Run(VALUE_);
     }
   }
 
@@ -154,8 +154,8 @@ public sealed class DependencyInjection {
   [Benchmark]
   public void CallViaGenericStruct() {
     var viaGeneric = new ViaGenericImpl<ViaStruct>(new ViaStruct());
-    for (var i = 0; i < n; i++) {
-      var x = viaGeneric.Run(value);
+    for (var i = 0; i < N_; i++) {
+      var x = viaGeneric.Run(VALUE_);
     }
   }
 }

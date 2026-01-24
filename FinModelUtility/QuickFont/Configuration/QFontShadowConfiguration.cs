@@ -9,10 +9,10 @@ namespace QuickFont.Configuration;
 
 public sealed class QFontShadowConfiguration
 {
-  public float Scale = 1f;
-  public ShadowType Type;
-  public int BlurRadius = 3;
-  public int BlurPasses = 2;
-  public int PageMaxTextureSize = 4096;
-  public int GlyphMargin = 2;
+  public float scale = 1f;
+  public ShadowType type;
+  public int blurRadius = 3;
+  public int blurPasses = 2;
+  public int pageMaxTextureSize = 4096;
+  public int glyphMargin = 2;
 }

@@ -11,40 +11,40 @@ namespace QuickFont.Configuration;
 
 public sealed class QFontKerningConfiguration
 {
-  private readonly Dictionary<char, CharacterKerningRule> _characterKerningRules = new Dictionary<char, CharacterKerningRule>();
-  public byte AlphaEmptyPixelTolerance;
+  private readonly Dictionary<char, CharacterKerningRule> characterKerningRules_ = new Dictionary<char, CharacterKerningRule>();
+  public byte alphaEmptyPixelTolerance;
 
   public void BatchSetCharacterKerningRule(string chars, CharacterKerningRule rule)
   {
     foreach (char key in chars)
-      this._characterKerningRules[key] = rule;
+      this.characterKerningRules_[key] = rule;
   }
 
   public void SetCharacterKerningRule(char c, CharacterKerningRule rule)
   {
-    this._characterKerningRules[c] = rule;
+    this.characterKerningRules_[c] = rule;
   }
 
   public CharacterKerningRule GetCharacterKerningRule(char c)
   {
-    return this._characterKerningRules.TryGetValue(c, out CharacterKerningRule rule) ? rule : CharacterKerningRule.Normal;
+    return this.characterKerningRules_.TryGetValue(c, out CharacterKerningRule rule) ? rule : CharacterKerningRule.NORMAL;
   }
 
   public CharacterKerningRule GetOverridingCharacterKerningRuleForPair(string str)
   {
     if (str.Length < 2)
-      return CharacterKerningRule.Normal;
+      return CharacterKerningRule.NORMAL;
     char c1 = str[0];
     char c2 = str[1];
-    if (this.GetCharacterKerningRule(c1) == CharacterKerningRule.Zero || this.GetCharacterKerningRule(c2) == CharacterKerningRule.Zero)
-      return CharacterKerningRule.Zero;
-    return this.GetCharacterKerningRule(c1) == CharacterKerningRule.NotMoreThanHalf || this.GetCharacterKerningRule(c2) == CharacterKerningRule.NotMoreThanHalf ? CharacterKerningRule.NotMoreThanHalf : CharacterKerningRule.Normal;
+    if (this.GetCharacterKerningRule(c1) == CharacterKerningRule.ZERO || this.GetCharacterKerningRule(c2) == CharacterKerningRule.ZERO)
+      return CharacterKerningRule.ZERO;
+    return this.GetCharacterKerningRule(c1) == CharacterKerningRule.NOT_MORE_THAN_HALF || this.GetCharacterKerningRule(c2) == CharacterKerningRule.NOT_MORE_THAN_HALF ? CharacterKerningRule.NOT_MORE_THAN_HALF : CharacterKerningRule.NORMAL;
   }
 
   public QFontKerningConfiguration()
   {
-    this.BatchSetCharacterKerningRule("_^", CharacterKerningRule.Zero);
-    this.SetCharacterKerningRule('"', CharacterKerningRule.NotMoreThanHalf);
-    this.SetCharacterKerningRule('\'', CharacterKerningRule.NotMoreThanHalf);
+    this.BatchSetCharacterKerningRule("_^", CharacterKerningRule.ZERO);
+    this.SetCharacterKerningRule('"', CharacterKerningRule.NOT_MORE_THAN_HALF);
+    this.SetCharacterKerningRule('\'', CharacterKerningRule.NOT_MORE_THAN_HALF);
   }
 }

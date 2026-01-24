@@ -5,10 +5,10 @@ using BenchmarkDotNet.Attributes;
 namespace benchmarks;
 
 public sealed class CopyingAndReversingValues {
-  private const int n = 100000000;
+  private const int N_ = 100000000;
 
-  public MemoryStream ms = new MemoryStream(n * sizeof(float));
-  public float[] values = new float[n];
+  public MemoryStream ms = new MemoryStream(N_ * sizeof(float));
+  public float[] values = new float[N_];
 
   [IterationSetup]
   public void Setup() {
@@ -17,7 +17,7 @@ public sealed class CopyingAndReversingValues {
 
   [Benchmark]
   public void ReversingWithManualSize() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.values[i] = this.ReversingWithManualSizeImpl<float>(sizeof(float));
     }
   }
@@ -35,7 +35,7 @@ public sealed class CopyingAndReversingValues {
 
   [Benchmark]
   public void ReversingWithGenericSize() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.values[i] = this.ReversingWithGenericSizeImpl<float>();
     }
   }
@@ -53,7 +53,7 @@ public sealed class CopyingAndReversingValues {
 
   [Benchmark]
   public void ReversingWithSpans() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.values[i] = this.ReversingWithSpansImpl<float>();
     }
   }
@@ -69,7 +69,7 @@ public sealed class CopyingAndReversingValues {
 
   [Benchmark]
   public void ReversingWithPointer() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.values[i] = this.ReversingWithSpansImpl<float>();
     }
   }
@@ -87,7 +87,7 @@ public sealed class CopyingAndReversingValues {
 
   [Benchmark]
   public void ReversingDirectly() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.ReversingDirectlyImpl(out this.values[i]);
     }
   }

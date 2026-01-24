@@ -9,7 +9,7 @@ namespace QuickFont;
 
 internal enum TextNodeType
 {
-  Word,
-  LineBreak,
-  Space,
+  WORD,
+  LINE_BREAK,
+  SPACE,
 }

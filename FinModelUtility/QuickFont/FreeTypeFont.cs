@@ -19,18 +19,18 @@ namespace QuickFont;
 
 public class FreeTypeFont : IFont, IDisposable
 {
-  private static Library _fontLibrary;
-  private const uint DPI = 96;
-  private Face _fontFace;
-  private int _maxHorizontalBearyingY;
-  private bool _disposedValue;
+  private static Library fontLibrary_;
+  private const uint DPI_ = 96;
+  private Face fontFace_;
+  private int maxHorizontalBearyingY_;
+  private bool disposedValue_;
 
   public float Size { get; private set; }
 
-  public bool HasKerningInformation => this._fontFace.HasKerning;
+  public bool HasKerningInformation => this.fontFace_.HasKerning;
 
   public static void Init(IReadOnlyTreeDirectory dllDirectory) {
-    _fontLibrary = new Library(dllDirectory.FullPath);
+    fontLibrary_ = new Library(dllDirectory.FullPath);
   }
 
   public FreeTypeFont(
@@ -54,7 +54,7 @@ public class FreeTypeFont : IFont, IDisposable
         fontStyle = (StyleFlags) 1;
         break;
     }
-    this.LoadFontFace(fontPath, size, fontStyle, superSampleLevels, scale);
+    this.LoadFontFace_(fontPath, size, fontStyle, superSampleLevels, scale);
   }
 
   public FreeTypeFont(
@@ -77,23 +77,23 @@ public class FreeTypeFont : IFont, IDisposable
         fontStyle = (StyleFlags) 1;
         break;
     }
-    this.LoadFontFace(fontData, size, fontStyle, superSampleLevels, scale);
+    this.LoadFontFace_(fontData, size, fontStyle, superSampleLevels, scale);
   }
 
-  private void LoadFontFace(
+  private void LoadFontFace_(
       string fontPath,
       float size,
       StyleFlags fontStyle,
       int superSampleLevels,
       float scale)
   {
-    Face face1 = _fontLibrary.NewFace(fontPath, -1);
+    Face face1 = fontLibrary_.NewFace(fontPath, -1);
     int faceCount = face1.FaceCount;
     face1.Dispose();
     Face face2 = (Face) null;
     for (int index = 0; index < faceCount; ++index)
     {
-      face2 = _fontLibrary.NewFace(fontPath, index);
+      face2 = fontLibrary_.NewFace(fontPath, index);
       if (face2.StyleFlags != fontStyle)
       {
         face2.Dispose();
@@ -103,26 +103,26 @@ public class FreeTypeFont : IFont, IDisposable
         break;
     }
     if (face2 == null)
-      face2 = _fontLibrary.NewFace(fontPath, 0);
-    this._fontFace = face2;
+      face2 = fontLibrary_.NewFace(fontPath, 0);
+    this.fontFace_ = face2;
     this.Size = size * scale * (float) superSampleLevels;
-    this._fontFace.SetCharSize(0, this.Size, 0U, 96U);
+    this.fontFace_.SetCharSize(0, this.Size, 0U, 96U);
   }
 
-  private void LoadFontFace(
+  private void LoadFontFace_(
       byte[] fontData,
       float size,
       StyleFlags fontStyle,
       int superSampleLevels,
       float scale)
   {
-    Face face1 = _fontLibrary.NewMemoryFace(fontData, -1);
+    Face face1 = fontLibrary_.NewMemoryFace(fontData, -1);
     int faceCount = face1.FaceCount;
     face1.Dispose();
     Face face2 = (Face) null;
     for (int index = 0; index < faceCount; ++index)
     {
-      face2 = _fontLibrary.NewMemoryFace(fontData, index);
+      face2 = fontLibrary_.NewMemoryFace(fontData, index);
       if (face2.StyleFlags != fontStyle)
       {
         face2.Dispose();
@@ -132,75 +132,75 @@ public class FreeTypeFont : IFont, IDisposable
         break;
     }
     if (face2 == null)
-      face2 = _fontLibrary.NewMemoryFace(fontData, 0);
-    this._fontFace = face2;
+      face2 = fontLibrary_.NewMemoryFace(fontData, 0);
+    this.fontFace_ = face2;
     this.Size = size * scale * (float) superSampleLevels;
-    this._fontFace.SetCharSize(0, this.Size, 0U, 96U);
+    this.fontFace_.SetCharSize(0, this.Size, 0U, 96U);
   }
 
-  public override string ToString() => this._fontFace.FamilyName ?? "";
+  public override string ToString() => this.fontFace_.FamilyName ?? "";
 
   public Point DrawString(string s, Graphics graph, Brush color, int x, int y)
   {
     if (s.Length > 1)
       throw new ArgumentOutOfRangeException(nameof (s), "Implementation currently only supports drawing individual characters");
     Color color1 = color is SolidBrush ? ((SolidBrush) color).Color : throw new ArgumentException("Brush is required to be a SolidBrush (single, solid color)", nameof (color));
-    this.LoadGlyph(s[0]);
-    this._fontFace.Glyph.RenderGlyph((RenderMode) 0);
-    if (this._fontFace.Glyph.Bitmap.Width <= 0)
+    this.LoadGlyph_(s[0]);
+    this.fontFace_.Glyph.RenderGlyph((RenderMode) 0);
+    if (this.fontFace_.Glyph.Bitmap.Width <= 0)
       return Point.Empty;
-    Bitmap gdipBitmap = FTBitmapExtensions.ToGdipBitmap(this._fontFace.Glyph.Bitmap, color1);
-    int num1 = y + this._maxHorizontalBearyingY;
+    Bitmap gdipBitmap = FtBitmapExtensions.ToGdipBitmap(this.fontFace_.Glyph.Bitmap, color1);
+    int num1 = y + this.maxHorizontalBearyingY_;
     Graphics graphics = graph;
     Bitmap bitmap = gdipBitmap;
     int x1 = x;
     int num2 = num1;
-    Fixed26Dot6 horizontalBearingY1 = this._fontFace.Glyph.Metrics.HorizontalBearingY;
+    Fixed26Dot6 horizontalBearingY1 = this.fontFace_.Glyph.Metrics.HorizontalBearingY;
     int num3 = (int) Math.Ceiling((double) horizontalBearingY1);
     int y1 = num2 - num3;
     graphics.DrawImageUnscaled((Image) bitmap, x1, y1);
     int num4 = num1;
-    Fixed26Dot6 horizontalBearingY2 = this._fontFace.Glyph.Metrics.HorizontalBearingY;
+    Fixed26Dot6 horizontalBearingY2 = this.fontFace_.Glyph.Metrics.HorizontalBearingY;
     int num5 = (int) Math.Ceiling((double) horizontalBearingY2);
     return new Point(0, num4 - num5 - 2 * y);
   }
 
   public int GetKerning(char c1, char c2)
   {
-    FTVector26Dot6 kerning = this._fontFace.GetKerning(this._fontFace.GetCharIndex((uint) c1), this._fontFace.GetCharIndex((uint) c2), (KerningMode) 0);
+    FTVector26Dot6 kerning = this.fontFace_.GetKerning(this.fontFace_.GetCharIndex((uint) c1), this.fontFace_.GetCharIndex((uint) c2), (KerningMode) 0);
     return (int) Math.Ceiling((double) kerning.X);
   }
 
-  private void LoadGlyph(char c)
+  private void LoadGlyph_(char c)
   {
-    this._fontFace.LoadGlyph(this._fontFace.GetCharIndex((uint) c), (LoadFlags) 0, (LoadTarget) 0);
+    this.fontFace_.LoadGlyph(this.fontFace_.GetCharIndex((uint) c), (LoadFlags) 0, (LoadTarget) 0);
   }
 
   public SizeF MeasureString(string s, Graphics graph)
   {
     if (s.Length > 1)
       throw new ArgumentOutOfRangeException(nameof (s), "Implementation currently only supports drawing individual characters");
-    this.LoadGlyph(s[0]);
-    GlyphMetrics metrics = this._fontFace.Glyph.Metrics;
+    this.LoadGlyph_(s[0]);
+    GlyphMetrics metrics = this.fontFace_.Glyph.Metrics;
     int num = (int) metrics.HorizontalBearingY;
-    if (num > this._maxHorizontalBearyingY)
-      this._maxHorizontalBearyingY = num;
+    if (num > this.maxHorizontalBearyingY_)
+      this.maxHorizontalBearyingY_ = num;
     return new SizeF((float) metrics.Width, (float) metrics.Height);
   }
 
   protected virtual void Dispose(bool disposing)
   {
-    if (this._disposedValue)
+    if (this.disposedValue_)
       return;
     if (disposing)
     {
-      if (this._fontFace != null)
+      if (this.fontFace_ != null)
       {
-        this._fontFace.Dispose();
-        this._fontFace = (Face) null;
+        this.fontFace_.Dispose();
+        this.fontFace_ = (Face) null;
       }
     }
-    this._disposedValue = true;
+    this.disposedValue_ = true;
   }
 
   public void Dispose() => this.Dispose(true);

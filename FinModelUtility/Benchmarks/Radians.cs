@@ -5,10 +5,10 @@ using fin.math.rotations;
 namespace benchmarks;
 
 public sealed class Radians {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
-  public const float lhs = 1;
-  public const float rhs = 2;
+  public const float LHS = 1;
+  public const float RHS = 2;
 
   public const float PI2 = MathF.PI * 2;
   public const float PI3 = MathF.PI * 3;
@@ -16,33 +16,33 @@ public sealed class Radians {
 
   [Benchmark]
   public void Inline() {
-    for (var i = 0; i < n; i++) {
-      var radians = ((((lhs - rhs) % PI2) + PI3) % PI2) - MathF.PI;
+    for (var i = 0; i < N_; i++) {
+      var radians = ((((LHS - RHS) % PI2) + PI3) % PI2) - MathF.PI;
     }
   }
 
   [Benchmark]
   public void StaticCall() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var radians =
-          RadiansUtil.CalculateRadiansTowards(lhs, rhs);
+          RadiansUtil.CalculateRadiansTowards(LHS, RHS);
     }
   }
 
-  private readonly ReadonlyRadiansFloat lhsStruct = new(1);
-  private readonly ReadonlyRadiansFloat rhsStruct = new(2);
+  private readonly ReadonlyRadiansFloat lhsStruct_ = new(1);
+  private readonly ReadonlyRadiansFloat rhsStruct_ = new(2);
 
   [Benchmark]
   public void ReadonlyStruct() {
-    for (var i = 0; i < n; i++) {
-      var radians = this.lhsStruct - this.rhsStruct;
+    for (var i = 0; i < N_; i++) {
+      var radians = this.lhsStruct_ - this.rhsStruct_;
     }
   }
 
 
   [Benchmark]
   public void ReadonlyStructEach() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var lhs = new ReadonlyRadiansFloat(1);
       var rhs = new ReadonlyRadiansFloat(2);
 
@@ -52,7 +52,7 @@ public sealed class Radians {
 
   [Benchmark]
   public void StructEach() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var lhs = new RadiansFloat(1);
       var rhs = new RadiansFloat(2);
 
@@ -62,10 +62,10 @@ public sealed class Radians {
 
 
   public readonly struct ReadonlyRadiansFloat(float radians) {
-    private const float PI2 = MathF.PI * 2;
-    private const float PI3 = MathF.PI * 3;
+    private const float PI2_ = MathF.PI * 2;
+    private const float PI3_ = MathF.PI * 3;
 
-    private readonly float radians_ = (((radians % PI2) + PI3) % PI2) - MathF.PI;
+    private readonly float radians_ = (((radians % PI2_) + PI3_) % PI2_) - MathF.PI;
 
     public ReadonlyRadiansFloat Add(ReadonlyRadiansFloat other)
       => new(this.radians_ + other.radians_);
@@ -84,10 +84,10 @@ public sealed class Radians {
   }
 
   public struct RadiansFloat(float radians) {
-    private const float PI2 = MathF.PI * 2;
-    private const float PI3 = MathF.PI * 3;
+    private const float PI2_ = MathF.PI * 2;
+    private const float PI3_ = MathF.PI * 3;
 
-    private readonly float radians_ = (((radians % PI2) + PI3) % PI2) - MathF.PI;
+    private readonly float radians_ = (((radians % PI2_) + PI3_) % PI2_) - MathF.PI;
 
     public RadiansFloat Add(RadiansFloat other)
       => new(this.radians_ + other.radians_);

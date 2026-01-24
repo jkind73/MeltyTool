@@ -16,32 +16,32 @@ namespace QuickFont;
 
 public class QVertexArrayObject : IDisposable
 {
-  private const int INITIAL_SIZE = 1000;
-  private int _bufferSize;
-  private int _bufferMaxVertexCount;
-  public int VertexCount;
-  private int _VAOID;
-  private int _VBOID;
-  public readonly QFontSharedState QFontSharedState;
-  private List<QVertex> _vertices;
-  private QVertex[] _vertexArray;
-  private static readonly int QVertexStride = Marshal.SizeOf<QVertex>(new QVertex());
-  private bool _disposedValue;
+  private const int INITIAL_SIZE_ = 1000;
+  private int bufferSize_;
+  private int bufferMaxVertexCount_;
+  public int vertexCount;
+  private int vaoid_;
+  private int vboid_;
+  public readonly QFontSharedState qFontSharedState;
+  private List<QVertex> vertices_;
+  private QVertex[] vertexArray_;
+  private static readonly int Q_VERTEX_STRIDE_ = Marshal.SizeOf<QVertex>(new QVertex());
+  private bool disposedValue_;
 
   public QVertexArrayObject(QFontSharedState state)
   {
-    this.QFontSharedState = state;
-    this._vertices = new List<QVertex>(1000);
-    this._bufferMaxVertexCount = 1000;
-    this._bufferSize = this._bufferMaxVertexCount * QVertexArrayObject.QVertexStride;
+    this.qFontSharedState = state;
+    this.vertices_ = new List<QVertex>(1000);
+    this.bufferMaxVertexCount_ = 1000;
+    this.bufferSize_ = this.bufferMaxVertexCount_ * QVertexArrayObject.Q_VERTEX_STRIDE_;
     GlUtil.AssertNoErrorsWhenDebugging();
-    this._VAOID = GL.GenVertexArray();
-    GL.UseProgram(this.QFontSharedState.ShaderVariables.ShaderProgram);
-    GL.BindVertexArray(this._VAOID);
-    GL.GenBuffers(1, out this._VBOID);
-    GL.BindBuffer(BufferTarget.ArrayBuffer, this._VBOID);
-    this.EnableAttributes();
-    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) this._bufferSize, IntPtr.Zero, BufferUsageHint.StreamDraw);
+    this.vaoid_ = GL.GenVertexArray();
+    GL.UseProgram(this.qFontSharedState.ShaderVariables.ShaderProgram);
+    GL.BindVertexArray(this.vaoid_);
+    GL.GenBuffers(1, out this.vboid_);
+    GL.BindBuffer(BufferTarget.ArrayBuffer, this.vboid_);
+    this.EnableAttributes_();
+    GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) this.bufferSize_, IntPtr.Zero, BufferUsageHint.StreamDraw);
     GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
     GL.BindVertexArray(0);
     GlUtil.AssertNoErrorsWhenDebugging();
@@ -49,14 +49,14 @@ public class QVertexArrayObject : IDisposable
 
   internal void AddVertexes(IList<QVertex> vertices)
   {
-    this.VertexCount += vertices.Count;
-    this._vertices.AddRange((IEnumerable<QVertex>) vertices);
+    this.vertexCount += vertices.Count;
+    this.vertices_.AddRange((IEnumerable<QVertex>) vertices);
   }
 
   public void AddVertex(Vector3 position, Vector2 textureCoord, Vector4 colour)
   {
-    ++this.VertexCount;
-    this._vertices.Add(new QVertex()
+    ++this.vertexCount;
+    this.vertices_.Add(new QVertex()
     {
         Position = position,
         TextureCoord = textureCoord,
@@ -66,77 +66,77 @@ public class QVertexArrayObject : IDisposable
 
   public void Load()
   {
-    if (this.VertexCount == 0)
+    if (this.vertexCount == 0)
       return;
-    this._vertexArray = this._vertices.ToArray();
+    this.vertexArray_ = this.vertices_.ToArray();
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.BindBuffer(BufferTarget.ArrayBuffer, this._VBOID);
-    GL.BindVertexArray(this._VAOID);
-    if (this.VertexCount > this._bufferMaxVertexCount)
+    GL.BindBuffer(BufferTarget.ArrayBuffer, this.vboid_);
+    GL.BindVertexArray(this.vaoid_);
+    if (this.vertexCount > this.bufferMaxVertexCount_)
     {
-      while (this.VertexCount > this._bufferMaxVertexCount)
+      while (this.vertexCount > this.bufferMaxVertexCount_)
       {
-        this._bufferMaxVertexCount += 1000;
-        this._bufferSize = this._bufferMaxVertexCount * QVertexArrayObject.QVertexStride;
+        this.bufferMaxVertexCount_ += 1000;
+        this.bufferSize_ = this.bufferMaxVertexCount_ * QVertexArrayObject.Q_VERTEX_STRIDE_;
       }
-      GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) this._bufferSize, IntPtr.Zero, BufferUsageHint.StreamDraw);
+      GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) this.bufferSize_, IntPtr.Zero, BufferUsageHint.StreamDraw);
     }
-    GL.BufferSubData<QVertex>(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr) (this.VertexCount * QVertexArrayObject.QVertexStride), this._vertexArray);
+    GL.BufferSubData<QVertex>(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr) (this.vertexCount * QVertexArrayObject.Q_VERTEX_STRIDE_), this.vertexArray_);
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   public void Reset()
   {
-    this._vertices.Clear();
-    this.VertexCount = 0;
+    this.vertices_.Clear();
+    this.vertexCount = 0;
   }
 
   public void Bind() {
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.BindVertexArray(this._VAOID);
+    GL.BindVertexArray(this.vaoid_);
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   public void DisableAttributes()
   {
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.DisableVertexAttribArray(this.QFontSharedState.ShaderVariables.PositionCoordAttribLocation);
-    GL.DisableVertexAttribArray(this.QFontSharedState.ShaderVariables.TextureCoordAttribLocation);
-    GL.DisableVertexAttribArray(this.QFontSharedState.ShaderVariables.ColorCoordAttribLocation);
+    GL.DisableVertexAttribArray(this.qFontSharedState.ShaderVariables.PositionCoordAttribLocation);
+    GL.DisableVertexAttribArray(this.qFontSharedState.ShaderVariables.TextureCoordAttribLocation);
+    GL.DisableVertexAttribArray(this.qFontSharedState.ShaderVariables.ColorCoordAttribLocation);
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
-  private void EnableAttributes()
+  private void EnableAttributes_()
   {
     GlUtil.AssertNoErrorsWhenDebugging();
-    int qvertexStride = QVertexArrayObject.QVertexStride;
-    GL.EnableVertexAttribArray(this.QFontSharedState.ShaderVariables.PositionCoordAttribLocation);
-    GL.EnableVertexAttribArray(this.QFontSharedState.ShaderVariables.TextureCoordAttribLocation);
-    GL.EnableVertexAttribArray(this.QFontSharedState.ShaderVariables.ColorCoordAttribLocation);
-    GL.VertexAttribPointer(this.QFontSharedState.ShaderVariables.PositionCoordAttribLocation, 3, VertexAttribPointerType.Float, false, qvertexStride, IntPtr.Zero);
-    GL.VertexAttribPointer(this.QFontSharedState.ShaderVariables.TextureCoordAttribLocation, 2, VertexAttribPointerType.Float, false, qvertexStride, new IntPtr(12));
-    GL.VertexAttribPointer(this.QFontSharedState.ShaderVariables.ColorCoordAttribLocation, 4, VertexAttribPointerType.Float, false, qvertexStride, new IntPtr(20));
+    int qvertexStride = QVertexArrayObject.Q_VERTEX_STRIDE_;
+    GL.EnableVertexAttribArray(this.qFontSharedState.ShaderVariables.PositionCoordAttribLocation);
+    GL.EnableVertexAttribArray(this.qFontSharedState.ShaderVariables.TextureCoordAttribLocation);
+    GL.EnableVertexAttribArray(this.qFontSharedState.ShaderVariables.ColorCoordAttribLocation);
+    GL.VertexAttribPointer(this.qFontSharedState.ShaderVariables.PositionCoordAttribLocation, 3, VertexAttribPointerType.Float, false, qvertexStride, IntPtr.Zero);
+    GL.VertexAttribPointer(this.qFontSharedState.ShaderVariables.TextureCoordAttribLocation, 2, VertexAttribPointerType.Float, false, qvertexStride, new IntPtr(12));
+    GL.VertexAttribPointer(this.qFontSharedState.ShaderVariables.ColorCoordAttribLocation, 4, VertexAttribPointerType.Float, false, qvertexStride, new IntPtr(20));
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
   protected virtual void Dispose(bool disposing)
   {
-    if (this._disposedValue)
+    if (this.disposedValue_)
       return;
     if (disposing)
     {
       GlUtil.AssertNoErrorsWhenDebugging();
-      GL.DeleteBuffers(1, ref this._VBOID);
-      GL.DeleteVertexArrays(1, ref this._VAOID);
+      GL.DeleteBuffers(1, ref this.vboid_);
+      GL.DeleteVertexArrays(1, ref this.vaoid_);
       GlUtil.AssertNoErrorsWhenDebugging();
-      if (this._vertices != null)
+      if (this.vertices_ != null)
       {
-        this._vertices.Clear();
-        this._vertices = (List<QVertex>) null;
+        this.vertices_.Clear();
+        this.vertices_ = (List<QVertex>) null;
       }
     }
-    this._vertexArray = (QVertex[]) null;
-    this._disposedValue = true;
+    this.vertexArray_ = (QVertex[]) null;
+    this.disposedValue_ = true;
   }
 
   public void Dispose() => this.Dispose(true);

@@ -9,6 +9,6 @@ namespace QuickFont.Configuration;
 
 public enum ShadowType
 {
-  Blurred,
-  Expanded,
+  BLURRED,
+  EXPANDED,
 }

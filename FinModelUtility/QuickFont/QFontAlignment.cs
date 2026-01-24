@@ -9,8 +9,8 @@ namespace QuickFont;
 
 public enum QFontAlignment
 {
-  Left,
-  Right,
-  Centre,
-  Justify,
+  LEFT,
+  RIGHT,
+  CENTRE,
+  JUSTIFY,
 }

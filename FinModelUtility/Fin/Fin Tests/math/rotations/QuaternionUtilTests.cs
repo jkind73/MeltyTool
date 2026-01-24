@@ -21,18 +21,18 @@ public sealed class QuaternionUtilTests {
                             float yRadians,
                             float zRadians,
                             float expectedQX,
-                            float expectedQY,
-                            float expectedQZ,
-                            float expectedQW) {
+                            float expectedQy,
+                            float expectedQz,
+                            float expectedQw) {
     var tolerance = .0000001f;
 
     var actualQuaternion =
         QuaternionUtil.CreateZyxRadians(xRadians, yRadians, zRadians);
 
     Assert.AreEqual(expectedQX, actualQuaternion.X, tolerance);
-    Assert.AreEqual(expectedQY, actualQuaternion.Y, tolerance);
-    Assert.AreEqual(expectedQZ, actualQuaternion.Z, tolerance);
-    Assert.AreEqual(expectedQW, actualQuaternion.W, tolerance);
+    Assert.AreEqual(expectedQy, actualQuaternion.Y, tolerance);
+    Assert.AreEqual(expectedQz, actualQuaternion.Z, tolerance);
+    Assert.AreEqual(expectedQw, actualQuaternion.W, tolerance);
   }
 
   [Test]

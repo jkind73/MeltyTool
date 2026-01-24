@@ -205,6 +205,10 @@ dotnet_naming_rule.interface_should_be_begins_with_i.severity = error
 dotnet_naming_rule.interface_should_be_begins_with_i.symbols = interface
 dotnet_naming_rule.interface_should_be_begins_with_i.style = begins_with_i
 
+dotnet_naming_rule.abstract_class_should_be_begins_w__b.severity = error
+dotnet_naming_rule.abstract_class_should_be_begins_w__b.symbols = abstract_class
+dotnet_naming_rule.abstract_class_should_be_begins_w__b.style = begins_w__b
+
 dotnet_naming_rule.types_should_be_pascal_case.severity = error
 dotnet_naming_rule.types_should_be_pascal_case.symbols = types
 dotnet_naming_rule.types_should_be_pascal_case.style = pascal_case
@@ -225,9 +229,13 @@ dotnet_naming_rule.private_or_internal_field_should_be_camel_case__ends_with__.s
 dotnet_naming_rule.private_or_internal_field_should_be_camel_case__ends_with__.symbols = private_or_internal_field
 dotnet_naming_rule.private_or_internal_field_should_be_camel_case__ends_with__.style = camel_case__ends_with__
 
-dotnet_naming_rule.abstract_class_should_be_begins_w__b.severity = error
-dotnet_naming_rule.abstract_class_should_be_begins_w__b.symbols = abstract_class
-dotnet_naming_rule.abstract_class_should_be_begins_w__b.style = begins_w__b
+dotnet_naming_rule.const_public_or_protected_field_should_be_camel_case.severity = error
+dotnet_naming_rule.const_public_or_protected_field_should_be_camel_case.symbols = const_public_or_protected_field
+dotnet_naming_rule.const_public_or_protected_field_should_be_camel_case.style = snake_case
+
+dotnet_naming_rule.const_private_or_internal_field_should_be_camel_case__ends_with__.severity = error
+dotnet_naming_rule.const_private_or_internal_field_should_be_camel_case__ends_with__.symbols = const_private_or_internal_field
+dotnet_naming_rule.const_private_or_internal_field_should_be_camel_case__ends_with__.style = snake_case_
 
 # Symbol specifications
 
@@ -244,15 +252,23 @@ dotnet_naming_symbols.private_method.applicable_accessibilities = private
 dotnet_naming_symbols.private_method.required_modifiers = 
 
 dotnet_naming_symbols.readonly_static_field.applicable_kinds = field
-dotnet_naming_symbols.readonly_static_field.applicable_accessibilities = public, internal, private, protected, protected_internal
+dotnet_naming_symbols.readonly_static_field.applicable_accessibilities = public, protected, protected_internal
 dotnet_naming_symbols.readonly_static_field.required_modifiers = static, readonly
 
 dotnet_naming_symbols.private_readonly_static_field.applicable_kinds = field
-dotnet_naming_symbols.private_readonly_static_field.applicable_accessibilities = private
+dotnet_naming_symbols.private_readonly_static_field.applicable_accessibilities = internal, private
 dotnet_naming_symbols.private_readonly_static_field.required_modifiers = static, readonly
 
+dotnet_naming_symbols.const_public_or_protected_field.applicable_kinds = field
+dotnet_naming_symbols.const_public_or_protected_field.applicable_accessibilities = public, protected
+dotnet_naming_symbols.const_public_or_protected_field.required_modifiers = const
+
+dotnet_naming_symbols.const_private_or_internal_field.applicable_kinds = field
+dotnet_naming_symbols.const_private_or_internal_field.applicable_accessibilities = internal, private
+dotnet_naming_symbols.const_private_or_internal_field.required_modifiers = const
+
 dotnet_naming_symbols.public_or_protected_field.applicable_kinds = field
-dotnet_naming_symbols.public_or_protected_field.applicable_accessibilities = public, protected
+dotnet_naming_symbols.public_or_protected_field.applicable_accessibilities = public, protected, protected_internal
 dotnet_naming_symbols.public_or_protected_field.required_modifiers = 
 
 dotnet_naming_symbols.private_or_internal_field.applicable_kinds = field

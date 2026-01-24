@@ -3,7 +3,7 @@
 namespace benchmarks;
 
 public sealed class PassingInStructs {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
   struct XyzwStruct {
     public float X { get; set; }
@@ -14,7 +14,7 @@ public sealed class PassingInStructs {
 
   [Benchmark]
   public void PassingInNormally() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value1 = new XyzwStruct { X = 1, Y = 2, Z = 3, W = 4 };
       var value2 = this.PassingInNormallyImpl_(value1);
     }
@@ -26,7 +26,7 @@ public sealed class PassingInStructs {
 
   [Benchmark]
   public void PassingInViaRef() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = new XyzwStruct { X = 1, Y = 2, Z = 3, W = 4 };
       this.PassingInViaRefImpl_(ref value);
     }

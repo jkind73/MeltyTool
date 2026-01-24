@@ -12,27 +12,27 @@ namespace QuickFont.Configuration;
 [Flags]
 public enum CharacterSet
 {
-  BasicSet = 0,
-  FrenchQuotes = 1,
-  SpanishQuestEx = 2,
-  CyrillicSet = 4,
-  ExtendedLatin = 8,
-  GreekAlphabet = 16, // 0x00000010
-  TurkishI = 32, // 0x00000020
-  HebrewAlphabet = 64, // 0x00000040
-  ArabicAlphabet = 128, // 0x00000080
-  ThaiKhmerAlphabet = 256, // 0x00000100
-  Hiragana = 512, // 0x00000200
-  JapDigits = 1024, // 0x00000400
-  AsianQuotes = 2048, // 0x00000800
-  EssentialKanji = 4096, // 0x00001000
-  Katakana = 8192, // 0x00002000
-  General = ExtendedLatin | SpanishQuestEx | FrenchQuotes, // 0x0000000B
-  Cyrillic = CyrillicSet | FrenchQuotes, // 0x00000005
-  Greek = GreekAlphabet | FrenchQuotes, // 0x00000011
-  Turkish = TurkishI | ExtendedLatin, // 0x00000028
-  Hebrew = HebrewAlphabet, // 0x00000040
-  Arabic = ArabicAlphabet | FrenchQuotes, // 0x00000081
-  Japanese = Katakana | EssentialKanji | AsianQuotes | JapDigits | Hiragana, // 0x00003E00
-  Thai = ThaiKhmerAlphabet | FrenchQuotes, // 0x00000101
+  BASIC_SET = 0,
+  FRENCH_QUOTES = 1,
+  SPANISH_QUEST_EX = 2,
+  CYRILLIC_SET = 4,
+  EXTENDED_LATIN = 8,
+  GREEK_ALPHABET = 16, // 0x00000010
+  TURKISH_I = 32, // 0x00000020
+  HEBREW_ALPHABET = 64, // 0x00000040
+  ARABIC_ALPHABET = 128, // 0x00000080
+  THAI_KHMER_ALPHABET = 256, // 0x00000100
+  HIRAGANA = 512, // 0x00000200
+  JAP_DIGITS = 1024, // 0x00000400
+  ASIAN_QUOTES = 2048, // 0x00000800
+  ESSENTIAL_KANJI = 4096, // 0x00001000
+  KATAKANA = 8192, // 0x00002000
+  GENERAL = EXTENDED_LATIN | SPANISH_QUEST_EX | FRENCH_QUOTES, // 0x0000000B
+  CYRILLIC = CYRILLIC_SET | FRENCH_QUOTES, // 0x00000005
+  GREEK = GREEK_ALPHABET | FRENCH_QUOTES, // 0x00000011
+  TURKISH = TURKISH_I | EXTENDED_LATIN, // 0x00000028
+  HEBREW = HEBREW_ALPHABET, // 0x00000040
+  ARABIC = ARABIC_ALPHABET | FRENCH_QUOTES, // 0x00000081
+  JAPANESE = KATAKANA | ESSENTIAL_KANJI | ASIAN_QUOTES | JAP_DIGITS | HIRAGANA, // 0x00003E00
+  THAI = THAI_KHMER_ALPHABET | FRENCH_QUOTES, // 0x00000101
 }

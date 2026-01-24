@@ -11,7 +11,7 @@ namespace QuickFont;
 
 public sealed class ProcessedText
 {
-  internal TextNodeList TextNodeList;
-  internal SizeF MaxSize;
-  internal QFontAlignment Alignment;
+  internal TextNodeList textNodeList_;
+  internal SizeF maxSize_;
+  internal QFontAlignment alignment_;
 }

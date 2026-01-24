@@ -9,7 +9,7 @@ namespace QuickFont.Configuration;
 
 public enum CharacterKerningRule
 {
-  Normal,
-  Zero,
-  NotMoreThanHalf,
+  NORMAL,
+  ZERO,
+  NOT_MORE_THAN_HALF,
 }

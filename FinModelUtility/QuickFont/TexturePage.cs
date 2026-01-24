@@ -16,9 +16,9 @@ namespace QuickFont;
 
 internal class TexturePage : IDisposable
 {
-  private int _textureID;
+  private int textureId_;
 
-  public int TextureID => this._textureID;
+  public int TextureId => this.textureId_;
 
   public int Width { get; private set; }
 
@@ -27,21 +27,21 @@ internal class TexturePage : IDisposable
   public TexturePage(string filePath)
   {
     QBitmap qbitmap = new QBitmap(filePath);
-    this.CreateTexture(qbitmap.BitmapData);
+    this.CreateTexture_(qbitmap.bitmapData);
     qbitmap.Free();
   }
 
-  public TexturePage(BitmapData dataSource) => this.CreateTexture(dataSource);
+  public TexturePage(BitmapData dataSource) => this.CreateTexture_(dataSource);
 
-  private void CreateTexture(BitmapData dataSource)
+  private void CreateTexture_(BitmapData dataSource)
   {
     this.Width = dataSource.Width;
     this.Height = dataSource.Height;
 
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.GenTextures(1, out this._textureID);
+    GL.GenTextures(1, out this.textureId_);
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
+    GL.BindTexture(TextureTarget.Texture2D, this.TextureId);
     GlUtil.AssertNoErrorsWhenDebugging();
     GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
     GlUtil.AssertNoErrorsWhenDebugging();
@@ -57,7 +57,7 @@ internal class TexturePage : IDisposable
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 
-  private static byte[] ConvertBgraToRgba(BitmapData dataSource)
+  private static byte[] ConvertBgraToRgba_(BitmapData dataSource)
   {
     int length = dataSource.Stride * dataSource.Height;
     byte[] destination = new byte[length];
@@ -73,7 +73,7 @@ internal class TexturePage : IDisposable
 
   public void Dispose() {
     GlUtil.AssertNoErrorsWhenDebugging();
-    GL.DeleteTexture(this.TextureID);
+    GL.DeleteTexture(this.TextureId);
     GlUtil.AssertNoErrorsWhenDebugging();
   }
 }

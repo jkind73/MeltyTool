@@ -14,16 +14,16 @@ using System.Linq;
 #nullable disable
 namespace QuickFont;
 
-public sealed class GDIFont : IFont, IDisposable
+public sealed class GdiFont : IFont, IDisposable
 {
-  private Font _font;
-  private FontFamily _fontFamily;
+  private Font font_;
+  private FontFamily fontFamily_;
 
-  public float Size => this._font.Size;
+  public float Size => this.font_.Size;
 
   public bool HasKerningInformation => false;
 
-  public GDIFont(
+  public GdiFont(
       string fontPath,
       float size,
       FontStyle style,
@@ -34,22 +34,22 @@ public sealed class GDIFont : IFont, IDisposable
     {
       PrivateFontCollection privateFontCollection = new PrivateFontCollection();
       privateFontCollection.AddFontFile(fontPath);
-      this._fontFamily = privateFontCollection.Families[0];
+      this.fontFamily_ = privateFontCollection.Families[0];
     }
     catch (FileNotFoundException ex)
     {
-      this._fontFamily = ((IEnumerable<FontFamily>) new InstalledFontCollection().Families).FirstOrDefault<FontFamily>((Func<FontFamily, bool>) (family => string.Equals(fontPath, family.Name)));
-      if (this._fontFamily == null)
-        this._fontFamily = SystemFonts.DefaultFont.FontFamily;
+      this.fontFamily_ = ((IEnumerable<FontFamily>) new InstalledFontCollection().Families).FirstOrDefault<FontFamily>((Func<FontFamily, bool>) (family => string.Equals(fontPath, family.Name)));
+      if (this.fontFamily_ == null)
+        this.fontFamily_ = SystemFonts.DefaultFont.FontFamily;
     }
-    if (!this._fontFamily.IsStyleAvailable(style))
+    if (!this.fontFamily_.IsStyleAvailable(style))
       throw new ArgumentException("Font file: " + fontPath + " does not support style: " + style.ToString());
-    this._font = new Font(this._fontFamily, size * scale * (float) superSampleLevels, style);
+    this.font_ = new Font(this.fontFamily_, size * scale * (float) superSampleLevels, style);
   }
 
   public Point DrawString(string s, Graphics graph, Brush color, int x, int y)
   {
-    graph.DrawString(s, this._font, color, (float) x, (float) y);
+    graph.DrawString(s, this.font_, color, (float) x, (float) y);
     return Point.Empty;
   }
 
@@ -58,13 +58,13 @@ public sealed class GDIFont : IFont, IDisposable
     throw new NotImplementedException("Font kerning for GDI Fonts is not implemented. Should be calculated manually.");
   }
 
-  public SizeF MeasureString(string s, Graphics graph) => graph.MeasureString(s, this._font);
+  public SizeF MeasureString(string s, Graphics graph) => graph.MeasureString(s, this.font_);
 
-  public override string ToString() => this._font.Name;
+  public override string ToString() => this.font_.Name;
 
   public void Dispose()
   {
-    this._font.Dispose();
-    this._fontFamily.Dispose();
+    this.font_.Dispose();
+    this.fontFamily_.Dispose();
   }
 }

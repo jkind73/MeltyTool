@@ -13,38 +13,38 @@ namespace QuickFont;
 
 internal class QFontData
 {
-  public Dictionary<string, int> KerningPairs;
-  public TexturePage[] Pages;
-  public Dictionary<char, QFontGlyph> CharSetMapping;
-  public float MeanGlyphWidth;
-  public int MaxGlyphHeight;
-  public int MaxLineHeight;
-  public QFont DropShadowFont;
-  public bool IsDropShadow;
-  public bool NaturallyMonospaced;
+  public Dictionary<string, int> kerningPairs;
+  public TexturePage[] pages;
+  public Dictionary<char, QFontGlyph> charSetMapping;
+  public float meanGlyphWidth;
+  public int maxGlyphHeight;
+  public int maxLineHeight;
+  public QFont dropShadowFont;
+  public bool isDropShadow;
+  public bool naturallyMonospaced;
 
   public bool IsMonospacingActive(QFontRenderOptions options)
   {
-    return options.Monospacing == QFontMonospacing.Natural && this.NaturallyMonospaced || options.Monospacing == QFontMonospacing.Yes;
+    return options.monospacing == QFontMonospacing.NATURAL && this.naturallyMonospaced || options.monospacing == QFontMonospacing.YES;
   }
 
   public float GetMonoSpaceWidth(QFontRenderOptions options)
   {
-    return (float) Math.Ceiling(1.0 + (1.0 + (double) options.CharacterSpacing) * (double) this.MeanGlyphWidth);
+    return (float) Math.Ceiling(1.0 + (1.0 + (double) options.characterSpacing) * (double) this.meanGlyphWidth);
   }
 
   public List<string> Serialize()
   {
     List<string> stringList1 = [];
     List<string> stringList2 = stringList1;
-    int num = this.Pages.Length;
+    int num = this.pages.Length;
     string str1 = num.ToString() ?? "";
     stringList2.Add(str1);
     List<string> stringList3 = stringList1;
-    num = this.CharSetMapping.Count;
+    num = this.charSetMapping.Count;
     string str2 = num.ToString() ?? "";
     stringList3.Add(str2);
-    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.CharSetMapping)
+    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.charSetMapping)
     {
       char key = keyValuePair.Key;
       QFontGlyph qfontGlyph = keyValuePair.Value;
@@ -52,21 +52,21 @@ internal class QFontData
       string[] strArray = new string[13];
       strArray[0] = key.ToString();
       strArray[1] = " ";
-      strArray[2] = qfontGlyph.Page.ToString();
+      strArray[2] = qfontGlyph.page.ToString();
       strArray[3] = " ";
-      num = qfontGlyph.Rect.X;
+      num = qfontGlyph.rect.X;
       strArray[4] = num.ToString();
       strArray[5] = " ";
-      num = qfontGlyph.Rect.Y;
+      num = qfontGlyph.rect.Y;
       strArray[6] = num.ToString();
       strArray[7] = " ";
-      num = qfontGlyph.Rect.Width;
+      num = qfontGlyph.rect.Width;
       strArray[8] = num.ToString();
       strArray[9] = " ";
-      num = qfontGlyph.Rect.Height;
+      num = qfontGlyph.rect.Height;
       strArray[10] = num.ToString();
       strArray[11] = " ";
-      strArray[12] = qfontGlyph.YOffset.ToString();
+      strArray[12] = qfontGlyph.yOffset.ToString();
       string str3 = string.Concat(strArray);
       stringList4.Add(str3);
     }
@@ -75,7 +75,7 @@ internal class QFontData
 
   public void Deserialize(List<string> input, out int pageCount, out char[] charSet)
   {
-    this.CharSetMapping = new Dictionary<char, QFontGlyph>();
+    this.charSetMapping = new Dictionary<char, QFontGlyph>();
     List<char> charList = [];
     try
     {
@@ -85,7 +85,7 @@ internal class QFontData
       {
         string[] strArray = input[2 + index].Split(' ');
         QFontGlyph qfontGlyph = new QFontGlyph(int.Parse(strArray[1]), new Rectangle(int.Parse(strArray[2]), int.Parse(strArray[3]), int.Parse(strArray[4]), int.Parse(strArray[5])), int.Parse(strArray[6]), strArray[0][0]);
-        this.CharSetMapping.Add(strArray[0][0], qfontGlyph);
+        this.charSetMapping.Add(strArray[0][0], qfontGlyph);
         charList.Add(strArray[0][0]);
       }
     }
@@ -98,45 +98,45 @@ internal class QFontData
 
   public void CalculateMeanWidth()
   {
-    this.MeanGlyphWidth = 0.0f;
-    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.CharSetMapping)
-      this.MeanGlyphWidth += (float) keyValuePair.Value.Rect.Width;
-    this.MeanGlyphWidth /= (float) this.CharSetMapping.Count;
+    this.meanGlyphWidth = 0.0f;
+    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.charSetMapping)
+      this.meanGlyphWidth += (float) keyValuePair.Value.rect.Width;
+    this.meanGlyphWidth /= (float) this.charSetMapping.Count;
   }
 
   public void CalculateMaxHeight()
   {
-    this.MaxGlyphHeight = 0;
-    this.MaxLineHeight = 0;
-    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.CharSetMapping)
+    this.maxGlyphHeight = 0;
+    this.maxLineHeight = 0;
+    foreach (KeyValuePair<char, QFontGlyph> keyValuePair in this.charSetMapping)
     {
-      this.MaxGlyphHeight = Math.Max(keyValuePair.Value.Rect.Height, this.MaxGlyphHeight);
-      this.MaxLineHeight = Math.Max(keyValuePair.Value.Rect.Height + keyValuePair.Value.YOffset, this.MaxLineHeight);
+      this.maxGlyphHeight = Math.Max(keyValuePair.Value.rect.Height, this.maxGlyphHeight);
+      this.maxLineHeight = Math.Max(keyValuePair.Value.rect.Height + keyValuePair.Value.yOffset, this.maxLineHeight);
     }
   }
 
   public int GetKerningPairCorrection(int index, string text, TextNode textNode)
   {
-    if (this.KerningPairs == null)
+    if (this.kerningPairs == null)
       return 0;
     char[] chArray = new char[2];
     if (index + 1 == text.Length)
     {
-      if (textNode == null || textNode.Next == null || textNode.Next.Type != TextNodeType.Word)
+      if (textNode == null || textNode.next == null || textNode.next.type != TextNodeType.WORD)
         return 0;
-      chArray[1] = textNode.Next.Text[0];
+      chArray[1] = textNode.next.text[0];
     }
     else
       chArray[1] = text[index + 1];
     chArray[0] = text[index];
     string key = new string(chArray);
-    return this.KerningPairs.ContainsKey(key) ? this.KerningPairs[key] : 0;
+    return this.kerningPairs.ContainsKey(key) ? this.kerningPairs[key] : 0;
   }
 
   public void Dispose()
   {
-    foreach (TexturePage page in this.Pages)
+    foreach (TexturePage page in this.pages)
       page.Dispose();
-    this.DropShadowFont?.Dispose();
+    this.dropShadowFont?.Dispose();
   }
 }

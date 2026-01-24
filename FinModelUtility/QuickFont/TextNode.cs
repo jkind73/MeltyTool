@@ -9,19 +9,19 @@ namespace QuickFont;
 
 internal class TextNode
 {
-  public TextNodeType Type;
-  public string Text;
-  public float Length;
-  public float LengthTweak;
-  public float Height;
-  public TextNode Next;
-  public TextNode Previous;
+  public TextNodeType type;
+  public string text;
+  public float length;
+  public float lengthTweak;
+  public float height;
+  public TextNode next;
+  public TextNode previous;
 
-  public float ModifiedLength => this.Length + this.LengthTweak;
+  public float ModifiedLength => this.length + this.lengthTweak;
 
   public TextNode(TextNodeType type, string text)
   {
-    this.Type = type;
-    this.Text = text;
+    this.type = type;
+    this.text = text;
   }
 }

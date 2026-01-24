@@ -14,7 +14,7 @@ namespace QuickFont;
 
 internal static class KerningCalculator
 {
-  private static int Kerning(
+  private static int Kerning_(
       QFontGlyph g1,
       QFontGlyph g2,
       KerningCalculator.XLimits[] lim1,
@@ -23,22 +23,22 @@ internal static class KerningCalculator
       IFont font)
   {
     if (font != null && font.HasKerningInformation)
-      return font.GetKerning(g1.Character, g2.Character);
-    int yoffset1 = g1.YOffset;
-    int yoffset2 = g2.YOffset;
+      return font.GetKerning(g1.character, g2.character);
+    int yoffset1 = g1.yOffset;
+    int yoffset2 = g2.yOffset;
     int num1 = Math.Max(yoffset1, yoffset2);
-    int num2 = Math.Min(g1.Rect.Height + yoffset1, g2.Rect.Height + yoffset2);
-    int width = g1.Rect.Width;
+    int num2 = Math.Min(g1.rect.Height + yoffset1, g2.rect.Height + yoffset2);
+    int width = g1.rect.Width;
     int val1 = width;
     for (int index = num1; index < num2; ++index)
-      val1 = Math.Min(val1, width - lim1[index - yoffset1].Max + lim2[index - yoffset2].Min);
-    int val2 = Math.Min(Math.Min(val1, g1.Rect.Width), g2.Rect.Width);
-    switch (config.GetOverridingCharacterKerningRuleForPair(g1.Character.ToString() + g2.Character.ToString()))
+      val1 = Math.Min(val1, width - lim1[index - yoffset1].max + lim2[index - yoffset2].min);
+    int val2 = Math.Min(Math.Min(val1, g1.rect.Width), g2.rect.Width);
+    switch (config.GetOverridingCharacterKerningRuleForPair(g1.character.ToString() + g2.character.ToString()))
     {
-      case CharacterKerningRule.Zero:
+      case CharacterKerningRule.ZERO:
         return 1;
-      case CharacterKerningRule.NotMoreThanHalf:
-        return 1 - (int) Math.Min((float) Math.Min(g1.Rect.Width, g2.Rect.Width) * 0.5f, (float) val2);
+      case CharacterKerningRule.NOT_MORE_THAN_HALF:
+        return 1 - (int) Math.Min((float) Math.Min(g1.rect.Width, g2.rect.Width) * 0.5f, (float) val2);
       default:
         return 1 - val2;
     }
@@ -56,8 +56,8 @@ internal static class KerningCalculator
     int val2 = 0;
     for (int index = 0; index < charSet.Length; ++index)
     {
-      Rectangle rect = glyphs[index].Rect;
-      QBitmap bitmapPage = bitmapPages[glyphs[index].Page];
+      Rectangle rect = glyphs[index].rect;
+      QBitmap bitmapPage = bitmapPages[glyphs[index].page];
       xlimitsArray1[index] = new KerningCalculator.XLimits[rect.Height + 1];
       val2 = Math.Max(rect.Height, val2);
       int y = rect.Y;
@@ -70,19 +70,19 @@ internal static class KerningCalculator
         bool flag = true;
         for (int px = x; px <= num2; ++px)
         {
-          if (!QBitmap.EmptyAlphaPixel(bitmapPage.BitmapData, px, py, config.AlphaEmptyPixelTolerance))
+          if (!QBitmap.EmptyAlphaPixel(bitmapPage.bitmapData, px, py, config.alphaEmptyPixelTolerance))
           {
             if (flag)
             {
-              xlimitsArray1[index][py - y].Min = px - x;
+              xlimitsArray1[index][py - y].min = px - x;
               flag = false;
             }
             num3 = px;
           }
         }
-        xlimitsArray1[index][py - y].Max = num3 - x;
+        xlimitsArray1[index][py - y].max = num3 - x;
         if (flag)
-          xlimitsArray1[index][py - y].Min = num2 - 1;
+          xlimitsArray1[index][py - y].min = num2 - 1;
       }
     }
     KerningCalculator.XLimits[] xlimitsArray2 = new KerningCalculator.XLimits[val2 + 1];
@@ -94,13 +94,13 @@ internal static class KerningCalculator
       {
         if (index3 != 0)
         {
-          xlimitsArray2[index3].Min = Math.Min(xlimitsArray1[index1][index3 - 1].Min, xlimitsArray2[index3].Min);
-          xlimitsArray2[index3].Max = Math.Max(xlimitsArray1[index1][index3 - 1].Max, xlimitsArray2[index3].Max);
+          xlimitsArray2[index3].min = Math.Min(xlimitsArray1[index1][index3 - 1].min, xlimitsArray2[index3].min);
+          xlimitsArray2[index3].max = Math.Max(xlimitsArray1[index1][index3 - 1].max, xlimitsArray2[index3].max);
         }
         if (index3 != xlimitsArray1[index1].Length - 1)
         {
-          xlimitsArray2[index3].Min = Math.Min(xlimitsArray1[index1][index3 + 1].Min, xlimitsArray2[index3].Min);
-          xlimitsArray2[index3].Max = Math.Max(xlimitsArray1[index1][index3 + 1].Max, xlimitsArray2[index3].Max);
+          xlimitsArray2[index3].min = Math.Min(xlimitsArray1[index1][index3 + 1].min, xlimitsArray2[index3].min);
+          xlimitsArray2[index3].max = Math.Max(xlimitsArray1[index1][index3 + 1].max, xlimitsArray2[index3].max);
         }
       }
       for (int index4 = 0; index4 < xlimitsArray1[index1].Length; ++index4)
@@ -109,14 +109,14 @@ internal static class KerningCalculator
     for (int index5 = 0; index5 < charSet.Length; ++index5)
     {
       for (int index6 = 0; index6 < charSet.Length; ++index6)
-        kerning.Add(charSet[index5].ToString() + charSet[index6].ToString(), KerningCalculator.Kerning(glyphs[index5], glyphs[index6], xlimitsArray1[index5], xlimitsArray1[index6], config, font));
+        kerning.Add(charSet[index5].ToString() + charSet[index6].ToString(), KerningCalculator.Kerning_(glyphs[index5], glyphs[index6], xlimitsArray1[index5], xlimitsArray1[index6], config, font));
     }
     return kerning;
   }
 
   private struct XLimits
   {
-    public int Min;
-    public int Max;
+    public int min;
+    public int max;
   }
 }

@@ -12,70 +12,70 @@ namespace QuickFont;
 
 public sealed class QFontRenderOptions
 {
-  public Color Colour = Color.White;
-  public float CharacterSpacing = 0.05f;
-  public float WordSpacing = 0.9f;
-  public float LineSpacing = 1f;
-  public bool DropShadowActive;
-  public Vector2 DropShadowOffset = new Vector2(0.16f, 0.16f);
-  public Color DropShadowColour = Color.FromArgb(128, Color.Black);
-  public QFontMonospacing Monospacing;
-  public Viewport? TransformToViewport;
-  public bool LockToPixel;
-  public float LockToPixelRatio = 1f;
-  public bool UseDefaultBlendFunction = true;
-  public bool WordWrap = true;
-  private float _justifyCharWeightForExpand = 0.5f;
-  private float _justifyCharWeightForContract = 0.2f;
-  public float JustifyCapExpand = 0.5f;
-  public float JustifyCapContract = 0.1f;
-  public float JustifyContractionPenalty = 2f;
-  public Rectangle ClippingRectangle;
+  public Color colour = Color.White;
+  public float characterSpacing = 0.05f;
+  public float wordSpacing = 0.9f;
+  public float lineSpacing = 1f;
+  public bool dropShadowActive;
+  public Vector2 dropShadowOffset = new Vector2(0.16f, 0.16f);
+  public Color dropShadowColour = Color.FromArgb(128, Color.Black);
+  public QFontMonospacing monospacing;
+  public Viewport? transformToViewport;
+  public bool lockToPixel;
+  public float lockToPixelRatio = 1f;
+  public bool useDefaultBlendFunction = true;
+  public bool wordWrap = true;
+  private float justifyCharWeightForExpand_ = 0.5f;
+  private float justifyCharWeightForContract_ = 0.2f;
+  public float justifyCapExpand = 0.5f;
+  public float justifyCapContract = 0.1f;
+  public float justifyContractionPenalty = 2f;
+  public Rectangle clippingRectangle;
 
   public float DropShadowOpacity
   {
     set
     {
-      this.DropShadowColour = Color.FromArgb((int) (byte) ((double) value * (double) byte.MaxValue), Color.Black);
+      this.dropShadowColour = Color.FromArgb((int) (byte) ((double) value * (double) byte.MaxValue), Color.Black);
     }
   }
 
   public float JustifyCharacterWeightForExpand
   {
-    get => this._justifyCharWeightForExpand;
-    set => this._justifyCharWeightForExpand = MathHelper.Clamp(value, 0.0f, 1f);
+    get => this.justifyCharWeightForExpand_;
+    set => this.justifyCharWeightForExpand_ = MathHelper.Clamp(value, 0.0f, 1f);
   }
 
   public float JustifyCharacterWeightForContract
   {
-    get => this._justifyCharWeightForContract;
-    set => this._justifyCharWeightForContract = MathHelper.Clamp(value, 0.0f, 1f);
+    get => this.justifyCharWeightForContract_;
+    set => this.justifyCharWeightForContract_ = MathHelper.Clamp(value, 0.0f, 1f);
   }
 
   public QFontRenderOptions CreateClone()
   {
     return new QFontRenderOptions()
     {
-        Colour = this.Colour,
-        CharacterSpacing = this.CharacterSpacing,
-        WordSpacing = this.WordSpacing,
-        LineSpacing = this.LineSpacing,
-        DropShadowActive = this.DropShadowActive,
-        DropShadowOffset = this.DropShadowOffset,
-        DropShadowColour = this.DropShadowColour,
-        Monospacing = this.Monospacing,
-        TransformToViewport = this.TransformToViewport,
-        LockToPixel = this.LockToPixel,
-        LockToPixelRatio = this.LockToPixelRatio,
-        UseDefaultBlendFunction = this.UseDefaultBlendFunction,
+        colour = this.colour,
+        characterSpacing = this.characterSpacing,
+        wordSpacing = this.wordSpacing,
+        lineSpacing = this.lineSpacing,
+        dropShadowActive = this.dropShadowActive,
+        dropShadowOffset = this.dropShadowOffset,
+        dropShadowColour = this.dropShadowColour,
+        monospacing = this.monospacing,
+        transformToViewport = this.transformToViewport,
+        lockToPixel = this.lockToPixel,
+        lockToPixelRatio = this.lockToPixelRatio,
+        useDefaultBlendFunction = this.useDefaultBlendFunction,
         JustifyCharacterWeightForExpand = this.JustifyCharacterWeightForExpand,
-        _justifyCharWeightForExpand = this._justifyCharWeightForExpand,
+        justifyCharWeightForExpand_ = this.justifyCharWeightForExpand_,
         JustifyCharacterWeightForContract = this.JustifyCharacterWeightForContract,
-        _justifyCharWeightForContract = this._justifyCharWeightForContract,
-        JustifyCapExpand = this.JustifyCapExpand,
-        JustifyCapContract = this.JustifyCapContract,
-        JustifyContractionPenalty = this.JustifyContractionPenalty,
-        ClippingRectangle = this.ClippingRectangle
+        justifyCharWeightForContract_ = this.justifyCharWeightForContract_,
+        justifyCapExpand = this.justifyCapExpand,
+        justifyCapContract = this.justifyCapContract,
+        justifyContractionPenalty = this.justifyContractionPenalty,
+        clippingRectangle = this.clippingRectangle
     };
   }
 }

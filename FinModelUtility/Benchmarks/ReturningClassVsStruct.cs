@@ -3,7 +3,7 @@
 namespace benchmarks;
 
 public sealed class ReturningClassVsStruct {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
   interface IXyzw {
     float X { get; set; }
@@ -28,7 +28,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnClass() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = this.ReturnClassImpl_();
     }
   }
@@ -39,7 +39,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnClassViaInterface() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = this.ReturnClassViaInterfaceImpl_();
     }
   }
@@ -50,7 +50,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnStruct() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = this.ReturnStructImpl_();
     }
   }
@@ -62,7 +62,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnStructTwice() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = this.ReturnStructTwiceImpl1_();
     }
   }
@@ -78,7 +78,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnStructByRefTwice() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.ReturnStructByRefTwiceImpl1_(out var value);
     }
   }
@@ -89,7 +89,7 @@ public sealed class ReturningClassVsStruct {
 
   [Benchmark]
   public void ReturnStructViaInterface() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = this.ReturnStructViaInterfaceImpl_();
     }
   }

@@ -16,15 +16,15 @@ public sealed class GlTextTexture : IGlTexture {
   public GlTextTexture(string text,
                        QFont font,
                        Color color,
-                       QFontAlignment alignment = QFontAlignment.Left) {
+                       QFontAlignment alignment = QFontAlignment.LEFT) {
     var roughSize = font.Measure(text);
     var roughWidth = (int) MathF.Ceiling(roughSize.Width);
     var roughHeight = (int) MathF.Ceiling(roughSize.Height);
 
     var x = alignment switch {
-        QFontAlignment.Left   => 0,
-        QFontAlignment.Centre => roughWidth / 2,
-        QFontAlignment.Right  => roughWidth,
+        QFontAlignment.LEFT   => 0,
+        QFontAlignment.CENTRE => roughWidth / 2,
+        QFontAlignment.RIGHT  => roughWidth,
         _ => throw new ArgumentOutOfRangeException(
             nameof(alignment),
             alignment,
@@ -36,7 +36,7 @@ public sealed class GlTextTexture : IGlTexture {
                              text,
                              new Vector3(x, roughHeight, 0),
                              alignment,
-                             new QFontRenderOptions { Colour = color });
+                             new QFontRenderOptions { colour = color });
 
     drawing.ProjectionMatrix = Matrix4.CreateOrthographicOffCenter(
         0,

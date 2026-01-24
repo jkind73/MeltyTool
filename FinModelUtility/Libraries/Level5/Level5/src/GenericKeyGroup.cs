@@ -27,12 +27,12 @@ public sealed class GenericKeyGroup<T> {
 
   private LinkedList<GenericAnimKey<T>> keys_ = [];
 
-  public void AddKey(float frame, T value, InterpolationType type = InterpolationType.Linear, float TanIn = 0, float TanOut = float.MaxValue) {
+  public void AddKey(float frame, T value, InterpolationType type = InterpolationType.Linear, float TanIn = 0, float tanOut = float.MaxValue) {
       GenericAnimKey<T> key = new() {
           Frame = frame,
           Value = value,
           InTan = TanIn,
-          OutTan = TanOut == float.MaxValue ? TanIn : TanOut,
+          OutTan = tanOut == float.MaxValue ? TanIn : tanOut,
           InterpolationType = type,
       };
       this.keys_.AddLast(key);

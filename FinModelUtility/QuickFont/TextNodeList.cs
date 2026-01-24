@@ -13,8 +13,8 @@ namespace QuickFont;
 
 internal class TextNodeList : IEnumerable
 {
-  public TextNode Head;
-  public TextNode Tail;
+  public TextNode head;
+  public TextNode tail;
 
   public TextNodeList(string text)
   {
@@ -30,17 +30,17 @@ internal class TextNodeList : IEnumerable
         case ' ':
           if (flag)
           {
-            this.Add(new TextNode(TextNodeType.Word, stringBuilder.ToString()));
+            this.Add(new TextNode(TextNodeType.WORD, stringBuilder.ToString()));
             flag = false;
           }
           switch (ch)
           {
             case '\n':
             case '\r':
-              this.Add(new TextNode(TextNodeType.LineBreak, (string) null));
+              this.Add(new TextNode(TextNodeType.LINE_BREAK, (string) null));
               continue;
             case ' ':
-              this.Add(new TextNode(TextNodeType.Space, (string) null));
+              this.Add(new TextNode(TextNodeType.SPACE, (string) null));
               continue;
             default:
               continue;
@@ -57,103 +57,103 @@ internal class TextNodeList : IEnumerable
     }
     if (!flag)
       return;
-    this.Add(new TextNode(TextNodeType.Word, stringBuilder.ToString()));
+    this.Add(new TextNode(TextNodeType.WORD, stringBuilder.ToString()));
   }
 
   public void MeasureNodes(QFontData fontData, QFontRenderOptions options)
   {
     foreach (TextNode node in this)
     {
-      if ((double) Math.Abs(node.Length) < 1.4012984643248171E-45)
-        node.Length = this.MeasureTextNodeLength(node, fontData, options);
+      if ((double) Math.Abs(node.length) < 1.4012984643248171E-45)
+        node.length = this.MeasureTextNodeLength_(node, fontData, options);
     }
   }
 
-  private float MeasureTextNodeLength(
+  private float MeasureTextNodeLength_(
       TextNode node,
       QFontData fontData,
       QFontRenderOptions options)
   {
     bool flag = fontData.IsMonospacingActive(options);
     float monoSpaceWidth = fontData.GetMonoSpaceWidth(options);
-    if (node.Type == TextNodeType.Space)
-      return flag ? monoSpaceWidth : (float) Math.Ceiling((double) fontData.MeanGlyphWidth * (double) options.WordSpacing);
+    if (node.type == TextNodeType.SPACE)
+      return flag ? monoSpaceWidth : (float) Math.Ceiling((double) fontData.meanGlyphWidth * (double) options.wordSpacing);
     float num = 0.0f;
     float val1 = 0.0f;
-    if (node.Type == TextNodeType.Word)
+    if (node.type == TextNodeType.WORD)
     {
-      for (int index = 0; index < node.Text.Length; ++index)
+      for (int index = 0; index < node.text.Length; ++index)
       {
-        char key = node.Text[index];
-        if (fontData.CharSetMapping.ContainsKey(key))
+        char key = node.text[index];
+        if (fontData.charSetMapping.ContainsKey(key))
         {
-          QFontGlyph qfontGlyph = fontData.CharSetMapping[key];
+          QFontGlyph qfontGlyph = fontData.charSetMapping[key];
           if (flag)
             num += monoSpaceWidth;
           else
-            num += (float) Math.Ceiling((double) fontData.CharSetMapping[key].Rect.Width + (double) fontData.MeanGlyphWidth * (double) options.CharacterSpacing + (double) fontData.GetKerningPairCorrection(index, node.Text, node));
-          val1 = Math.Max(val1, (float) (qfontGlyph.YOffset + qfontGlyph.Rect.Height));
+            num += (float) Math.Ceiling((double) fontData.charSetMapping[key].rect.Width + (double) fontData.meanGlyphWidth * (double) options.characterSpacing + (double) fontData.GetKerningPairCorrection(index, node.text, node));
+          val1 = Math.Max(val1, (float) (qfontGlyph.yOffset + qfontGlyph.rect.Height));
         }
       }
     }
-    node.Height = val1;
+    node.height = val1;
     return num;
   }
 
   public void Crumble(TextNode node, int baseCaseSize)
   {
-    if (node.Text.Length <= baseCaseSize)
+    if (node.text.Length <= baseCaseSize)
       return;
     TextNode node1 = this.SplitNode(node);
-    TextNode next = node1.Next;
+    TextNode next = node1.next;
     this.Crumble(node1, baseCaseSize);
     this.Crumble(next, baseCaseSize);
   }
 
   public TextNode SplitNode(TextNode node)
   {
-    if (node.Type != TextNodeType.Word)
-      throw new Exception("Cannot slit text node of type: " + node.Type.ToString());
-    int num = node.Text.Length / 2;
-    string text1 = node.Text[..num];
-    string text2 = node.Text.Substring(num, node.Text.Length - num);
-    TextNode textNode1 = new TextNode(TextNodeType.Word, text1);
-    TextNode textNode2 = new TextNode(TextNodeType.Word, text2);
-    textNode1.Next = textNode2;
-    textNode2.Previous = textNode1;
-    if (node.Previous == null)
+    if (node.type != TextNodeType.WORD)
+      throw new Exception("Cannot slit text node of type: " + node.type.ToString());
+    int num = node.text.Length / 2;
+    string text1 = node.text[..num];
+    string text2 = node.text.Substring(num, node.text.Length - num);
+    TextNode textNode1 = new TextNode(TextNodeType.WORD, text1);
+    TextNode textNode2 = new TextNode(TextNodeType.WORD, text2);
+    textNode1.next = textNode2;
+    textNode2.previous = textNode1;
+    if (node.previous == null)
     {
-      this.Head = textNode1;
+      this.head = textNode1;
     }
     else
     {
-      node.Previous.Next = textNode1;
-      textNode1.Previous = node.Previous;
+      node.previous.next = textNode1;
+      textNode1.previous = node.previous;
     }
-    if (node.Next == null)
+    if (node.next == null)
     {
-      this.Tail = textNode2;
+      this.tail = textNode2;
     }
     else
     {
-      node.Next.Previous = textNode2;
-      textNode2.Next = node.Next;
+      node.next.previous = textNode2;
+      textNode2.next = node.next;
     }
     return textNode1;
   }
 
   public void Add(TextNode node)
   {
-    if (this.Head == null)
+    if (this.head == null)
     {
-      this.Head = node;
-      this.Tail = node;
+      this.head = node;
+      this.tail = node;
     }
     else
     {
-      this.Tail.Next = node;
-      node.Previous = this.Tail;
-      this.Tail = node;
+      this.tail.next = node;
+      node.previous = this.tail;
+      this.tail = node;
     }
   }
 
@@ -162,12 +162,12 @@ internal class TextNodeList : IEnumerable
     StringBuilder stringBuilder = new StringBuilder();
     foreach (TextNode textNode in this)
     {
-      if (textNode.Type == TextNodeType.Space)
+      if (textNode.type == TextNodeType.SPACE)
         stringBuilder.Append(" ");
-      if (textNode.Type == TextNodeType.LineBreak)
+      if (textNode.type == TextNodeType.LINE_BREAK)
         stringBuilder.Append(Environment.NewLine);
-      if (textNode.Type == TextNodeType.Word)
-        stringBuilder.Append(textNode.Text ?? "");
+      if (textNode.type == TextNodeType.WORD)
+        stringBuilder.Append(textNode.text ?? "");
     }
     return stringBuilder.ToString();
   }
@@ -179,19 +179,19 @@ internal class TextNodeList : IEnumerable
 
   private sealed class TextNodeListEnumerator : IEnumerator
   {
-    private TextNode _currentNode;
-    private TextNodeList _targetList;
+    private TextNode currentNode_;
+    private TextNodeList targetList_;
 
-    public TextNodeListEnumerator(TextNodeList targetList) => this._targetList = targetList;
+    public TextNodeListEnumerator(TextNodeList targetList) => this.targetList_ = targetList;
 
-    public object Current => (object) this._currentNode;
+    public object Current => (object) this.currentNode_;
 
     public bool MoveNext()
     {
-      this._currentNode = this._currentNode != null ? this._currentNode.Next : this._targetList.Head;
-      return this._currentNode != null;
+      this.currentNode_ = this.currentNode_ != null ? this.currentNode_.next : this.targetList_.head;
+      return this.currentNode_ != null;
     }
 
-    public void Reset() => this._currentNode = (TextNode) null;
+    public void Reset() => this.currentNode_ = (TextNode) null;
   }
 }

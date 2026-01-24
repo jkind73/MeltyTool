@@ -9,9 +9,9 @@ namespace QuickFont.Configuration;
 
 public class QFontConfiguration
 {
-  public QFontShadowConfiguration ShadowConfig;
-  public QFontKerningConfiguration KerningConfig = new QFontKerningConfiguration();
-  public bool TransformToCurrentOrthogProjection;
+  public QFontShadowConfiguration shadowConfig;
+  public QFontKerningConfiguration kerningConfig = new QFontKerningConfiguration();
+  public bool transformToCurrentOrthogProjection;
 
   public QFontConfiguration()
   {
@@ -20,7 +20,7 @@ public class QFontConfiguration
   public QFontConfiguration(bool addDropShadow, bool transformToOrthogProjection = false)
   {
     if (addDropShadow)
-      this.ShadowConfig = new QFontShadowConfiguration();
-    this.TransformToCurrentOrthogProjection = transformToOrthogProjection;
+      this.shadowConfig = new QFontShadowConfiguration();
+    this.transformToCurrentOrthogProjection = transformToOrthogProjection;
   }
 }

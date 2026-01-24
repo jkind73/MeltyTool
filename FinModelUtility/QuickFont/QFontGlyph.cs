@@ -10,19 +10,19 @@ using System.Drawing;
 #nullable disable
 namespace QuickFont;
 
-[DebuggerDisplay("{Character} Pg:{Page}")]
+[DebuggerDisplay("{character} Pg:{page}")]
 public sealed class QFontGlyph
 {
-  public int Page;
-  public Rectangle Rect;
-  public int YOffset;
-  public char Character;
+  public int page;
+  public Rectangle rect;
+  public int yOffset;
+  public char character;
 
   public QFontGlyph(int page, Rectangle rect, int yOffset, char character)
   {
-    this.Page = page;
-    this.Rect = rect;
-    this.YOffset = yOffset;
-    this.Character = character;
+    this.page = page;
+    this.rect = rect;
+    this.yOffset = yOffset;
+    this.character = character;
   }
 }

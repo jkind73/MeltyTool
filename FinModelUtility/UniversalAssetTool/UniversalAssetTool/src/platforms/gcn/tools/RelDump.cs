@@ -169,9 +169,9 @@ public sealed class RelDump {
     return true;
   }
 
-  private int GetRELOffset_(int Section_Offset, int Data_Offset) {
+  private int GetRELOffset_(int Section_Offset, int dataOffset) {
     return this.currentHeaderSize_ +
            Section_Offset +
-           Data_Offset; // Header is 0xA0 bytes
+           dataOffset; // Header is 0xA0 bytes
   }
 }

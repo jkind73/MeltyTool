@@ -6,13 +6,13 @@ using Melville.SharpFont;
 
 namespace SharpFont.Gdi;
 
-public static class FTBitmapExtensions {
+public static class FtBitmapExtensions {
   //HACK these variables exist to reduce the cost of reflection at runtime.
   //Meant to be a temporary fix to https://github.com/Robmaister/SharpFont/issues/62
   //until libgdiplus gets patched.
-  private static bool hasCheckedForMono;
-  private static bool isRunningOnMono;
-  private static System.Reflection.FieldInfo monoPaletteFlagsField;
+  private static bool hasCheckedForMono_;
+  private static bool isRunningOnMono_;
+  private static System.Reflection.FieldInfo monoPaletteFlagsField_;
 
   /// <summary>
   /// Copies the contents of the <see cref="FTBitmap"/> to a GDI+ <see cref="Bitmap"/>.
@@ -46,7 +46,7 @@ public static class FTBitmapExtensions {
                                   PixelFormat.Format1bppIndexed);
 
         for (int i = 0; i < b.Rows; i++)
-          Copy(b.Buffer,
+          Copy_(b.Buffer,
                i * b.Pitch,
                locked.Scan0,
                i * locked.Stride,
@@ -70,7 +70,7 @@ public static class FTBitmapExtensions {
                                   PixelFormat.Format4bppIndexed);
 
         for (int i = 0; i < b.Rows; i++)
-          Copy(b.Buffer,
+          Copy_(b.Buffer,
                i * b.Pitch,
                locked.Scan0,
                i * locked.Stride,
@@ -100,7 +100,7 @@ public static class FTBitmapExtensions {
                                   PixelFormat.Format8bppIndexed);
 
         for (int i = 0; i < b.Rows; i++)
-          Copy(b.Buffer,
+          Copy_(b.Buffer,
                i * b.Pitch,
                locked.Scan0,
                i * locked.Stride,
@@ -120,19 +120,19 @@ public static class FTBitmapExtensions {
 
         //HACK There's a bug in Mono's libgdiplus requiring the "PaletteHasAlpha" flag to be set for transparency to work properly
         //See https://github.com/Robmaister/SharpFont/issues/62
-        if (!hasCheckedForMono) {
-          hasCheckedForMono = true;
-          isRunningOnMono = Type.GetType("Mono.Runtime") != null;
-          if (isRunningOnMono) {
-            monoPaletteFlagsField = typeof(ColorPalette).GetField(
+        if (!hasCheckedForMono_) {
+          hasCheckedForMono_ = true;
+          isRunningOnMono_ = Type.GetType("Mono.Runtime") != null;
+          if (isRunningOnMono_) {
+            monoPaletteFlagsField_ = typeof(ColorPalette).GetField(
                 "flags",
                 System.Reflection.BindingFlags.Instance |
                 System.Reflection.BindingFlags.NonPublic);
           }
         }
 
-        if (isRunningOnMono)
-          monoPaletteFlagsField.SetValue(palette, palette.Flags | 1);
+        if (isRunningOnMono_)
+          monoPaletteFlagsField_.SetValue(palette, palette.Flags | 1);
 
         bmp.Palette = palette;
         return bmp;
@@ -147,7 +147,7 @@ public static class FTBitmapExtensions {
                                   PixelFormat.Format24bppRgb);
 
         for (int i = 0; i < b.Rows; i++)
-          Copy(b.Buffer,
+          Copy_(b.Buffer,
                i * b.Pitch,
                locked.Scan0,
                i * locked.Stride,
@@ -183,7 +183,7 @@ public static class FTBitmapExtensions {
   /// <param name="destination">The destination pointer.</param>
   /// <param name="destinationOffset">An offset into the destination buffer.</param>
   /// <param name="count">The number of bytes to copy.</param>
-  static unsafe void Copy(IntPtr source,
+  static unsafe void Copy_(IntPtr source,
                           int sourceOffset,
                           IntPtr destination,
                           int destinationOffset,

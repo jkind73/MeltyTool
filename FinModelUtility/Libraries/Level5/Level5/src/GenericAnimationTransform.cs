@@ -91,7 +91,7 @@ public sealed class GenericTransformTrack(AnimationTrackFormat type) {
                      InterpolationType interpolationType =
                          InterpolationType.Linear,
                      float InTan = 0,
-                     float OutTan = float.MaxValue) {
-    this.Keys.AddKey(frame, value, interpolationType, InTan, OutTan);
+                     float outTan = float.MaxValue) {
+    this.Keys.AddKey(frame, value, interpolationType, InTan, outTan);
     }
 }

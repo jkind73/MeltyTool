@@ -3,7 +3,7 @@
 namespace benchmarks;
 
 public sealed class EditingClassVsStruct {
-  private const int n = 100000;
+  private const int N_ = 100000;
 
   interface IXyzw {
     float X { get; set; }
@@ -28,7 +28,7 @@ public sealed class EditingClassVsStruct {
 
   [Benchmark]
   public void EditingClass() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = new XyzwClass();
       this.EditingClassImpl_(value);
     }
@@ -44,7 +44,7 @@ public sealed class EditingClassVsStruct {
   [Benchmark]
   public void EditingClassViaInterface() {
     var value = new XyzwClass();
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.EditingClassViaInterfaceImpl_(value);
     }
   }
@@ -58,7 +58,7 @@ public sealed class EditingClassVsStruct {
 
   [Benchmark]
   public void EditingStruct() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.EditingStructImpl_(out var value);
     }
   }
@@ -68,7 +68,7 @@ public sealed class EditingClassVsStruct {
 
   [Benchmark]
   public void EditingStructViaRef() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       var value = new XyzwStruct { X = 1, Y = 2, Z = 3, W = 4 };
       this.EditingStructViaRefImpl_(ref value);
     }
@@ -84,7 +84,7 @@ public sealed class EditingClassVsStruct {
 
   [Benchmark]
   public void EditingStructViaInterface() {
-    for (var i = 0; i < n; i++) {
+    for (var i = 0; i < N_; i++) {
       this.EditingStructViaInterfaceImpl_(out var value);
     }
   }
