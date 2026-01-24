@@ -17,7 +17,7 @@ public sealed partial class BaseRoomInfo : IBinaryConvertible {
 [BinarySchema]
 public sealed partial class BaseCollTriInfo : IBinaryConvertible {
   public uint mapCode = 0;
-  public readonly Vector3I indice = new();
+  public readonly Vector3i indice = new();
 
   [Unknown]
   public ushort unknown2 = 0;

@@ -13,7 +13,7 @@ using readOnly;
 
 namespace fin.scene;
 
-public interface ISceneFileBundle : I3DFileBundle {
+public interface ISceneFileBundle : I3dFileBundle {
   FileBundleType IFileBundle.Type => FileBundleType.SCENE;
 }
 

@@ -138,7 +138,7 @@ public sealed class ModlModelImporter : IAsyncModelImporter<ModlModelFileBundle>
                   : textureFile.ReadNew<Text>();
               image = texr.Image;
             } else {
-              image = FinImage.Create1X1FromColor(Color.Magenta);
+              image = FinImage.Create1x1FromColor(Color.Magenta);
             }
 
             var finTexture =

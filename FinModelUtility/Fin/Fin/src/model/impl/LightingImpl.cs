@@ -55,7 +55,7 @@ public sealed class LightingImpl : ILighting {
     public IReadOnlyXyz? Position { get; private set; }
 
     public ILight SetPosition(in Vector3 position)
-      => this.SetPosition(new Vector3F {
+      => this.SetPosition(new Vector3f {
           X = position.X, Y = position.Y, Z = position.Z
       });
 
@@ -68,7 +68,7 @@ public sealed class LightingImpl : ILighting {
     public IReadOnlyXyz? Normal { get; private set; }
 
     public ILight SetNormal(in Vector3 normal)
-      => this.SetNormal(new Vector3F {
+      => this.SetNormal(new Vector3f {
           X = normal.X, Y = normal.Y, Z = normal.Z
       });
 

@@ -4,16 +4,16 @@ using schema.binary;
 
 namespace visceral.api;
 
-public sealed class Tg4HFileIdDictionary : IReadOnlyFileIdDictionary {
+public sealed class Tg4hFileIdDictionary : IReadOnlyFileIdDictionary {
   private readonly IFileIdDictionary impl_;
 
-  public Tg4HFileIdDictionary(IReadOnlyTreeDirectory baseDirectory) {
+  public Tg4hFileIdDictionary(IReadOnlyTreeDirectory baseDirectory) {
       this.BaseDirectory = baseDirectory;
       this.impl_ = new FileIdDictionary(baseDirectory);
       this.PopulateFromBaseDirectory_(baseDirectory);
     }
 
-  public Tg4HFileIdDictionary(IReadOnlyTreeDirectory baseDirectory,
+  public Tg4hFileIdDictionary(IReadOnlyTreeDirectory baseDirectory,
                               ISystemFile fileIdFile) {
       this.BaseDirectory = baseDirectory;
       if (fileIdFile.Exists) {

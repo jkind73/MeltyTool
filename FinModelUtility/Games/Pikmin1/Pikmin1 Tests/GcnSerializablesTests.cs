@@ -118,14 +118,14 @@ public sealed class GcnSerializablesTests {
   }
 
   [Test]
-  public void TestVector2I() => TestGcnSerializableSimple(new Vector2I());
+  public void TestVector2I() => TestGcnSerializableSimple(new Vector2i());
 
 
   [Test]
-  public void TestVector3F() => TestGcnSerializableSimple(new Vector3F());
+  public void TestVector3F() => TestGcnSerializableSimple(new Vector3f());
 
   [Test]
-  public void TestVector3I() => TestGcnSerializableSimple(new Vector3I());
+  public void TestVector3I() => TestGcnSerializableSimple(new Vector3i());
 
   [Test]
   public void TestVtxMatrix() => TestGcnSerializableSimple(new VtxMatrix());

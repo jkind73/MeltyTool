@@ -16,7 +16,7 @@ public sealed partial class TexCoords : IBinaryDeserializable {
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public TextureMatrixMode MatrixMode { get; private set; }
 
-  public Vector2F Scale { get; } = new();
-  public Vector2F Translation { get; } = new();
+  public Vector2f Scale { get; } = new();
+  public Vector2f Translation { get; } = new();
   public float Rotation { get; private set; }
 }

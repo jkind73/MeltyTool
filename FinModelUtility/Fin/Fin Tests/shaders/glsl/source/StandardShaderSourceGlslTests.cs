@@ -252,7 +252,7 @@ public sealed class StandardShaderSourceGlslTests {
                         options,
                         mm => {
                           var texture = mm.CreateTexture(
-                              FinImage.Create1X1FromColor(options.TransparencyType switch {
+                              FinImage.Create1x1FromColor(options.TransparencyType switch {
                                   TransparencyType.OPAQUE      => Color.White,
                                   TransparencyType.MASK        => Color.FromArgb(0, 255, 255, 255),
                                   TransparencyType.TRANSPARENT => Color.FromArgb(128, 255, 255, 255),

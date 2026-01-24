@@ -225,7 +225,7 @@ public static class ExporterUtil {
                                Func<IModel> loaderHandler,
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile)
-      where T : I3DFileBundle {
+      where T : I3dFileBundle {
     var mainFile = Asserts.CastNonnull(threeDFileBundle.FileBundle.MainFile);
 
     var parentOutputDirectory =
@@ -248,7 +248,7 @@ public static class ExporterUtil {
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile,
                                string? overrideName = null)
-      where T : I3DFileBundle
+      where T : I3dFileBundle
     => Export(threeDFileBundle,
               loaderHandler,
               outputDirectory,
@@ -265,7 +265,7 @@ public static class ExporterUtil {
       IReadOnlyList<ExportFormatDescription> formats,
       bool overwriteExistingFile,
       string? overrideName = null)
-      where T : I3DFileBundle {
+      where T : I3dFileBundle {
     var mainFile = Asserts.CastNonnull(threeDFileBundle.MainFile);
     var name = (overrideName ?? mainFile.NameWithoutExtension).ToString();
 

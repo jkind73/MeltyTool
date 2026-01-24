@@ -21,7 +21,7 @@ public interface IImporter<out TResource, in TFileBundle>
 }
 
 
-public interface I3DFileBundle : IFileBundle {
+public interface I3dFileBundle : IFileBundle {
   /// <summary>
   ///   Whether to use a low-level exporter when exporting. This supports
   ///   less features at the moment, but is required for exporting huge
@@ -35,4 +35,4 @@ public interface I3DFileBundle : IFileBundle {
 public interface I3DImporter<out TResource, in TFileBundle>
     : IImporter<TResource, TFileBundle>
     where TResource : IResource
-    where TFileBundle : I3DFileBundle;
+    where TFileBundle : I3dFileBundle;

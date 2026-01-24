@@ -88,7 +88,7 @@ namespace UoT.memory {
         var fileName = zSegment.FileName;
         var segment = zSegment.Segment;
 
-        BzFile file;
+        BZFile file;
         if (fileName.StartsWith("object_")) {
           var obj = new ZObject(segment);
           file = obj;

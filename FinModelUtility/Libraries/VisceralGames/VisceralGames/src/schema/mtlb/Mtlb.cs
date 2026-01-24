@@ -51,10 +51,10 @@ public sealed class Mtlb : IBinaryDeserializable {
 
             var valueOffset = valuesOffset + br.ReadUInt32();
             Vector4? colorValues = null;
-            Vector2I? idValues = null;
+            Vector2i? idValues = null;
             if (type.IsSampler()) {
               idValues
-                  = br.SubreadAt(valueOffset, () => br.ReadNew<Vector2I>());
+                  = br.SubreadAt(valueOffset, () => br.ReadNew<Vector2i>());
             } else {
               colorValues = br.SubreadAt(valueOffset, br.ReadVector4);
             }
@@ -146,6 +146,6 @@ public sealed class MtlbChannel {
   public MtlbChannelCategory MtlbChannelCategory { get; set; }
   public MtlbChannelType Type { get; set; }
   public Vector4? ColorValues { get; set; }
-  public Vector2I? IdValues { get; set; }
+  public Vector2i? IdValues { get; set; }
   public string Path { get; set; }
 }

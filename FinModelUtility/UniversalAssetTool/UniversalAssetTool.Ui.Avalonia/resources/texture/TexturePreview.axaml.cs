@@ -33,7 +33,7 @@ public sealed class TexturePreviewViewModelForDesigner : TexturePreviewViewModel
 
 public class TexturePreviewViewModel : BViewModel {
   private static readonly Bitmap missingImage_
-      = FinImage.Create1X1FromColor(Color.Magenta).AsAvaloniaImage();
+      = FinImage.Create1x1FromColor(Color.Magenta).AsAvaloniaImage();
 
   public required IReadOnlyTexture? Texture {
     get;

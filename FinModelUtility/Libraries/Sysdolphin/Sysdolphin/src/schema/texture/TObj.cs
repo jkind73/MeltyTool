@@ -14,7 +14,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace sysdolphin.schema.texture;
 
 [Flags]
-public enum ObjFlags {
+public enum TObjFlags {
   COORD_UV = 0 << 0,
   COORD_REFLECTION = 1 << 0,
   COORD_HILIGHT = 2 << 0,
@@ -50,80 +50,80 @@ public enum ObjFlags {
 }
 
 public enum Coord {
-  UV = ObjFlags.COORD_UV,
-  REFLECTION = ObjFlags.COORD_REFLECTION,
-  HILIGHT = ObjFlags.COORD_HILIGHT,
-  SHADOW = ObjFlags.COORD_SHADOW,
-  TOON = ObjFlags.COORD_TOON,
-  GRADATION = ObjFlags.COORD_GRADATION,
+  UV = TObjFlags.COORD_UV,
+  REFLECTION = TObjFlags.COORD_REFLECTION,
+  HILIGHT = TObjFlags.COORD_HILIGHT,
+  SHADOW = TObjFlags.COORD_SHADOW,
+  TOON = TObjFlags.COORD_TOON,
+  GRADATION = TObjFlags.COORD_GRADATION,
 }
 
 public enum ColorMap {
   NONE = 0,
-  ALPHA_MASK = ObjFlags.COLORMAP_ALPHA_MASK,
-  RGB_MASK = ObjFlags.COLORMAP_RGB_MASK,
-  BLEND = ObjFlags.COLORMAP_BLEND,
-  MODULATE = ObjFlags.COLORMAP_MODULATE,
-  REPLACE = ObjFlags.COLORMAP_REPLACE,
-  PASS = ObjFlags.COLORMAP_PASS,
-  ADD = ObjFlags.COLORMAP_ADD,
-  SUB = ObjFlags.COLORMAP_SUB,
+  ALPHA_MASK = TObjFlags.COLORMAP_ALPHA_MASK,
+  RGB_MASK = TObjFlags.COLORMAP_RGB_MASK,
+  BLEND = TObjFlags.COLORMAP_BLEND,
+  MODULATE = TObjFlags.COLORMAP_MODULATE,
+  REPLACE = TObjFlags.COLORMAP_REPLACE,
+  PASS = TObjFlags.COLORMAP_PASS,
+  ADD = TObjFlags.COLORMAP_ADD,
+  SUB = TObjFlags.COLORMAP_SUB,
 }
 
 public enum AlphaMap {
   NONE = 0,
-  ALPHA_MASK = ObjFlags.ALPHAMAP_ALPHA_MASK,
-  BLEND = ObjFlags.ALPHAMAP_BLEND,
-  MODULATE = ObjFlags.ALPHAMAP_MODULATE,
-  REPLACE = ObjFlags.ALPHAMAP_REPLACE,
-  PASS = ObjFlags.ALPHAMAP_PASS,
-  ADD = ObjFlags.ALPHAMAP_ADD,
-  SUB = ObjFlags.ALPHAMAP_SUB,
+  ALPHA_MASK = TObjFlags.ALPHAMAP_ALPHA_MASK,
+  BLEND = TObjFlags.ALPHAMAP_BLEND,
+  MODULATE = TObjFlags.ALPHAMAP_MODULATE,
+  REPLACE = TObjFlags.ALPHAMAP_REPLACE,
+  PASS = TObjFlags.ALPHAMAP_PASS,
+  ADD = TObjFlags.ALPHAMAP_ADD,
+  SUB = TObjFlags.ALPHAMAP_SUB,
 }
 
-public static class ObjFlagsExtensions {
-  public static Coord GetCoord(this ObjFlags flags) {
+public static class TObjFlagsExtensions {
+  public static Coord GetCoord(this TObjFlags flags) {
     var mask = 7 << 0;
-    var maskedFlags = (ObjFlags) ((int) flags & mask);
+    var maskedFlags = (TObjFlags) ((int) flags & mask);
     return maskedFlags switch {
-        ObjFlags.COORD_UV         => Coord.UV,
-        ObjFlags.COORD_REFLECTION => Coord.REFLECTION,
-        ObjFlags.COORD_HILIGHT    => Coord.HILIGHT,
-        ObjFlags.COORD_SHADOW     => Coord.SHADOW,
-        ObjFlags.COORD_TOON       => Coord.TOON,
-        ObjFlags.COORD_GRADATION  => Coord.GRADATION,
+        TObjFlags.COORD_UV         => Coord.UV,
+        TObjFlags.COORD_REFLECTION => Coord.REFLECTION,
+        TObjFlags.COORD_HILIGHT    => Coord.HILIGHT,
+        TObjFlags.COORD_SHADOW     => Coord.SHADOW,
+        TObjFlags.COORD_TOON       => Coord.TOON,
+        TObjFlags.COORD_GRADATION  => Coord.GRADATION,
         _                          => throw new ArgumentOutOfRangeException()
     };
   }
 
-  public static ColorMap GetColorMap(this ObjFlags flags) {
+  public static ColorMap GetColorMap(this TObjFlags flags) {
     var mask = 15 << 16;
-    var maskedFlags = (ObjFlags) ((int) flags & mask);
+    var maskedFlags = (TObjFlags) ((int) flags & mask);
     return maskedFlags switch {
-        ObjFlags.COLORMAP_ALPHA_MASK => ColorMap.ALPHA_MASK,
-        ObjFlags.COLORMAP_RGB_MASK   => ColorMap.RGB_MASK,
-        ObjFlags.COLORMAP_BLEND      => ColorMap.BLEND,
-        ObjFlags.COLORMAP_MODULATE   => ColorMap.MODULATE,
-        ObjFlags.COLORMAP_REPLACE    => ColorMap.REPLACE,
-        ObjFlags.COLORMAP_PASS       => ColorMap.PASS,
-        ObjFlags.COLORMAP_ADD        => ColorMap.ADD,
-        ObjFlags.COLORMAP_SUB        => ColorMap.SUB,
+        TObjFlags.COLORMAP_ALPHA_MASK => ColorMap.ALPHA_MASK,
+        TObjFlags.COLORMAP_RGB_MASK   => ColorMap.RGB_MASK,
+        TObjFlags.COLORMAP_BLEND      => ColorMap.BLEND,
+        TObjFlags.COLORMAP_MODULATE   => ColorMap.MODULATE,
+        TObjFlags.COLORMAP_REPLACE    => ColorMap.REPLACE,
+        TObjFlags.COLORMAP_PASS       => ColorMap.PASS,
+        TObjFlags.COLORMAP_ADD        => ColorMap.ADD,
+        TObjFlags.COLORMAP_SUB        => ColorMap.SUB,
         0                             => ColorMap.NONE,
         _                             => throw new ArgumentOutOfRangeException()
     };
   }
 
-  public static AlphaMap GetAlphaMap(this ObjFlags flags) {
+  public static AlphaMap GetAlphaMap(this TObjFlags flags) {
     var mask = 7 << 20;
-    var maskedFlags = (ObjFlags) ((int) flags & mask);
+    var maskedFlags = (TObjFlags) ((int) flags & mask);
     return maskedFlags switch {
-        ObjFlags.ALPHAMAP_ALPHA_MASK => AlphaMap.ALPHA_MASK,
-        ObjFlags.ALPHAMAP_BLEND      => AlphaMap.BLEND,
-        ObjFlags.ALPHAMAP_MODULATE   => AlphaMap.MODULATE,
-        ObjFlags.ALPHAMAP_REPLACE    => AlphaMap.REPLACE,
-        ObjFlags.ALPHAMAP_PASS       => AlphaMap.PASS,
-        ObjFlags.ALPHAMAP_ADD        => AlphaMap.ADD,
-        ObjFlags.ALPHAMAP_SUB        => AlphaMap.SUB,
+        TObjFlags.ALPHAMAP_ALPHA_MASK => AlphaMap.ALPHA_MASK,
+        TObjFlags.ALPHAMAP_BLEND      => AlphaMap.BLEND,
+        TObjFlags.ALPHAMAP_MODULATE   => AlphaMap.MODULATE,
+        TObjFlags.ALPHAMAP_REPLACE    => AlphaMap.REPLACE,
+        TObjFlags.ALPHAMAP_PASS       => AlphaMap.PASS,
+        TObjFlags.ALPHAMAP_ADD        => AlphaMap.ADD,
+        TObjFlags.ALPHAMAP_SUB        => AlphaMap.SUB,
         0                             => AlphaMap.NONE,
         _                             => throw new ArgumentOutOfRangeException()
     };
@@ -138,12 +138,12 @@ public static class ObjFlagsExtensions {
 ///    - https://github.com/jam1garner/Smash-Forge/blob/c0075bca364366bbea2d3803f5aeae45a4168640/Smash%20Forge/Filetypes/Melee/LibWii/TLP.cs#L166
 ///    - https://github.com/Ploaj/HSDLib/blob/93a906444f34951c6eed4d8c6172bba43d4ada98/HSDRaw/Common/HSD_TOBJ.cs#L92
 /// </summary>
-public sealed class Obj : IBinaryDeserializable {
+public sealed class TObj : IBinaryDeserializable {
   public uint StringOffset { get; private set; }
   public string? Name { get; set; }
 
   public uint NextTObjOffset { get; private set; }
-  public Obj? NextTObj { get; private set; }
+  public TObj? NextTObj { get; private set; }
 
   public GxTexGenSrc TexGenSrc { get; private set; }
 
@@ -157,7 +157,7 @@ public sealed class Obj : IBinaryDeserializable {
   public byte RepeatS { get; private set; }
   public byte RepeatT { get; private set; }
 
-  public ObjFlags Flags { get; private set; }
+  public TObjFlags Flags { get; private set; }
 
   public float Blending { get; private set; }
 
@@ -192,7 +192,7 @@ public sealed class Obj : IBinaryDeserializable {
 
     br.Position += 2;
 
-    this.Flags = (ObjFlags) br.ReadUInt32();
+    this.Flags = (TObjFlags) br.ReadUInt32();
 
     this.Blending = br.ReadSingle();
 
@@ -326,7 +326,7 @@ public sealed class Obj : IBinaryDeserializable {
 
     if (this.NextTObjOffset != 0) {
       br.Position = this.NextTObjOffset;
-      this.NextTObj = br.ReadNew<Obj>();
+      this.NextTObj = br.ReadNew<TObj>();
     }
   }
 }

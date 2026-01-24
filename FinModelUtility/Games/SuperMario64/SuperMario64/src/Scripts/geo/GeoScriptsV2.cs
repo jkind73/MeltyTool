@@ -115,16 +115,16 @@ namespace sm64.Scripts {
     }
 
     public IFinMatrix4x4 CreateTranslationAndRotationMatrix_(
-        Vector3S position,
-        Vector3S rotation)
+        Vector3s position,
+        Vector3s rotation)
       => this.CreateRotationMatrix_(rotation)
              .MultiplyInPlace(this.CreateTranslationMatrix_(position));
 
-    public IFinMatrix4x4 CreateTranslationMatrix_(Vector3S position)
+    public IFinMatrix4x4 CreateTranslationMatrix_(Vector3s position)
       => FinMatrix4x4Util.FromTranslation(
           new Vector3(position.X, position.Y, position.Z));
 
-    public IFinMatrix4x4 CreateRotationMatrix_(Vector3S rotation)
+    public IFinMatrix4x4 CreateRotationMatrix_(Vector3s rotation)
       => FinMatrix4x4Util
          .FromRotation(
              new RotationImpl().SetDegrees(0, 0, rotation.Z))

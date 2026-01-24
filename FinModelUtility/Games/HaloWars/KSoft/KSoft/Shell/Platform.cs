@@ -121,13 +121,13 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		public int Compare(Platform x, Platform y) => StaticCompare(x, y);
 		/// <summary>See <see cref="IComparer{T}.Compare"/></summary>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
+		/// <param name="objX"></param>
+		/// <param name="objY"></param>
 		/// <returns></returns>
-		int System.Collections.IComparer.Compare(object x, object y)
+		int System.Collections.IComparer.Compare(object objX, object objY)
 		{
-			Debug.TypeCheck.CastValue(x, out Platform x);
-			Debug.TypeCheck.CastValue(y, out Platform y);
+			Debug.TypeCheck.CastValue(objX, out Platform x);
+			Debug.TypeCheck.CastValue(objY, out Platform y);
 
 			return StaticCompare(x, y);
 		}
@@ -143,9 +143,9 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			Debug.TypeCheck.CastValue(obj, out Platform obj);
+			Debug.TypeCheck.CastValue(obj, out Platform platform);
 
-			return StaticCompare(this, obj);
+			return StaticCompare(this, platform);
 		}
 		#endregion
 

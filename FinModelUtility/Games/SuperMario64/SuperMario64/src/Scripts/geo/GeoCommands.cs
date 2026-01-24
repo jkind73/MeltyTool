@@ -228,8 +228,8 @@ namespace sm64.scripts {
     private readonly byte padding_ = 0;
 
     public short CameraType { get; set; }
-    public Vector3S EyePosition { get; } = new();
-    public Vector3S FocusPosition { get; } = new();
+    public Vector3s EyePosition { get; } = new();
+    public Vector3s FocusPosition { get; } = new();
     public uint Function { get; set; }
   }
 
@@ -252,8 +252,8 @@ namespace sm64.scripts {
     public GeoTranslateAndRotateFormat Format
       => GeoUtils.GetTranslateAndRotateFormat(this.Params);
 
-    public Vector3S Translation { get; } = new();
-    public Vector3S Rotation { get; } = new();
+    public Vector3s Translation { get; } = new();
+    public Vector3s Rotation { get; } = new();
 
     public uint? DisplayListSegmentedAddress { get; set; }
   }
@@ -272,7 +272,7 @@ namespace sm64.scripts {
     public GeoDrawingLayer DrawingLayer
       => GeoUtils.GetDrawingLayerFromParams(this.Params);
 
-    public Vector3S Translation { get; } = new();
+    public Vector3s Translation { get; } = new();
 
     [Skip]
     public bool HasDisplayList
@@ -296,7 +296,7 @@ namespace sm64.scripts {
     public GeoDrawingLayer DrawingLayer
       => GeoUtils.GetDrawingLayerFromParams(this.Params);
 
-    public Vector3S Rotation { get; } = new();
+    public Vector3s Rotation { get; } = new();
 
     [Skip]
     public bool HasDisplayList
@@ -313,7 +313,7 @@ namespace sm64.scripts {
 
     public GeoDrawingLayer DrawingLayer { get; set; }
 
-    public Vector3S Translation { get; } = new();
+    public Vector3s Translation { get; } = new();
 
     public uint? DisplayListSegmentedAddress { get; set; }
   }
@@ -332,7 +332,7 @@ namespace sm64.scripts {
     public GeoDrawingLayer DrawingLayer
       => GeoUtils.GetDrawingLayerFromParams(this.Params);
 
-    public Vector3S Translation { get; } = new();
+    public Vector3s Translation { get; } = new();
 
     [Skip]
     public bool HasDisplayList
@@ -412,7 +412,7 @@ namespace sm64.scripts {
     [Unknown]
     public byte Unk { get; set; }
 
-    public Vector3S Offset { get; } = new();
+    public Vector3s Offset { get; } = new();
 
     public uint Func { get; set; }
   }

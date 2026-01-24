@@ -16,11 +16,11 @@ public static class GlMaterialConstants {
     }
 
     NullWhiteTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.White));
+        new GlTexture(FinImage.Create1x1FromColor(Color.White));
     NullGrayTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.Gray));
+        new GlTexture(FinImage.Create1x1FromColor(Color.Gray));
     NullBlackTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.Black));
+        new GlTexture(FinImage.Create1x1FromColor(Color.Black));
   }
 
   public static bool IsCommonTexture(IGlTexture texture)
