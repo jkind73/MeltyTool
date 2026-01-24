@@ -7,18 +7,17 @@
 using OpenTK.Graphics.OpenGL4;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public sealed class QFontSharedState
 {
-  public sealed class QFontSharedState
+  public QFontSharedState(TextureUnit defaultTextureUnit, ShaderLocations shaderVariables)
   {
-    public QFontSharedState(TextureUnit defaultTextureUnit, ShaderLocations shaderVariables)
-    {
-      this.DefaultTextureUnit = defaultTextureUnit;
-      this.ShaderVariables = shaderVariables;
-    }
-
-    public TextureUnit DefaultTextureUnit { get; }
-
-    public ShaderLocations ShaderVariables { get; }
+    this.DefaultTextureUnit = defaultTextureUnit;
+    this.ShaderVariables = shaderVariables;
   }
+
+  public TextureUnit DefaultTextureUnit { get; }
+
+  public ShaderLocations ShaderVariables { get; }
 }

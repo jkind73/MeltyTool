@@ -1,13 +1,13 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-namespace benchmarks {
-  public sealed class ReadingStringNts {
-    private const int n = 100000;
+namespace benchmarks;
 
-    [Benchmark]
-    public void ReadUntilNull() {
-      for (var i = 0; i < n; i++) {
-      }
+public sealed class ReadingStringNts {
+  private const int n = 100000;
+
+  [Benchmark]
+  public void ReadUntilNull() {
+    for (var i = 0; i < n; i++) {
     }
   }
 }

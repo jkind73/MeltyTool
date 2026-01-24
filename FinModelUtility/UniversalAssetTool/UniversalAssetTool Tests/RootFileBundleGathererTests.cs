@@ -8,14 +8,15 @@ using uni.games;
 
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace uni {
-  public sealed class RootFileBundleGathererTests {
-    [TearDown]
-    public void Setup() {
-      FinFileSystem.FileSystem = new FileSystem();
-    }
+namespace uni;
 
-    private const string CONFIG_JSON_ = @"
+public sealed class RootFileBundleGathererTests {
+  [TearDown]
+  public void Setup() {
+    FinFileSystem.FileSystem = new FileSystem();
+  }
+
+  private const string CONFIG_JSON_ = @"
 {
   ""Exporter"": {
     ""ExportedFormats"": [
@@ -43,85 +44,84 @@ namespace uni {
   }
 }";
 
-    [Test]
-    public void TestEmptyFromVisualStudio() {
-      {
-        var mockFileSystem = new MockFileSystem();
+  [Test]
+  public void TestEmptyFromVisualStudio() {
+    {
+      var mockFileSystem = new MockFileSystem();
 
-        mockFileSystem.AddDirectory("FinModelUtility");
-        mockFileSystem.AddDirectory("cli/config");
-        mockFileSystem.AddDirectory("cli/out");
-        mockFileSystem.AddDirectory("cli/roms");
-        mockFileSystem.AddDirectory("cli/tools/dll");
-        mockFileSystem.AddDirectory("cli/tools/universal_asset_tool");
-        mockFileSystem.AddFile("cli/config.json",
-                               new MockFileData(CONFIG_JSON_));
+      mockFileSystem.AddDirectory("FinModelUtility");
+      mockFileSystem.AddDirectory("cli/config");
+      mockFileSystem.AddDirectory("cli/out");
+      mockFileSystem.AddDirectory("cli/roms");
+      mockFileSystem.AddDirectory("cli/tools/dll");
+      mockFileSystem.AddDirectory("cli/tools/universal_asset_tool");
+      mockFileSystem.AddFile("cli/config.json",
+                             new MockFileData(CONFIG_JSON_));
 
-        mockFileSystem.Directory.SetCurrentDirectory(
-            "FinModelUtility/some/game");
+      mockFileSystem.Directory.SetCurrentDirectory(
+          "FinModelUtility/some/game");
 
-        FinFileSystem.FileSystem = mockFileSystem;
-      }
-
-      var percentageProgress = new PercentageProgress();
-      var root = new RootFileBundleGatherer().GatherAllFiles(
-          percentageProgress,
-          out _);
-      Assert.AreEqual(0, root.Subdirs.Count);
-      Assert.AreEqual(0, root.FileBundles.Count);
+      FinFileSystem.FileSystem = mockFileSystem;
     }
 
-    [Test]
-    public void TestEmptyFromBundled() {
-      {
-        var mockFileSystem = new MockFileSystem();
+    var percentageProgress = new PercentageProgress();
+    var root = new RootFileBundleGatherer().GatherAllFiles(
+        percentageProgress,
+        out _);
+    Assert.AreEqual(0, root.Subdirs.Count);
+    Assert.AreEqual(0, root.FileBundles.Count);
+  }
 
-        mockFileSystem.AddDirectory("cli/config");
-        mockFileSystem.AddDirectory("cli/out");
-        mockFileSystem.AddDirectory("cli/roms");
-        mockFileSystem.AddDirectory("cli/tools/dll");
-        mockFileSystem.AddDirectory("cli/tools/universal_asset_tool");
-        mockFileSystem.AddFile("cli/config.json",
-                               new MockFileData(CONFIG_JSON_));
+  [Test]
+  public void TestEmptyFromBundled() {
+    {
+      var mockFileSystem = new MockFileSystem();
 
-        mockFileSystem.Directory.SetCurrentDirectory(
-            "cli/tools/universal_asset_tool");
+      mockFileSystem.AddDirectory("cli/config");
+      mockFileSystem.AddDirectory("cli/out");
+      mockFileSystem.AddDirectory("cli/roms");
+      mockFileSystem.AddDirectory("cli/tools/dll");
+      mockFileSystem.AddDirectory("cli/tools/universal_asset_tool");
+      mockFileSystem.AddFile("cli/config.json",
+                             new MockFileData(CONFIG_JSON_));
 
-        FinFileSystem.FileSystem = mockFileSystem;
-      }
+      mockFileSystem.Directory.SetCurrentDirectory(
+          "cli/tools/universal_asset_tool");
 
-      var percentageProgress = new PercentageProgress();
-      var root = new RootFileBundleGatherer().GatherAllFiles(
-          percentageProgress,
-          out _);
-      Assert.AreEqual(0, root.Subdirs.Count);
-      Assert.AreEqual(0, root.FileBundles.Count);
+      FinFileSystem.FileSystem = mockFileSystem;
     }
 
-    [Test]
-    public void TestEmptyFromGithub() {
-      {
-        var mockFileSystem = new MockFileSystem();
+    var percentageProgress = new PercentageProgress();
+    var root = new RootFileBundleGatherer().GatherAllFiles(
+        percentageProgress,
+        out _);
+    Assert.AreEqual(0, root.Subdirs.Count);
+    Assert.AreEqual(0, root.FileBundles.Count);
+  }
 
-        mockFileSystem.AddDirectory("config");
-        mockFileSystem.AddDirectory("out");
-        mockFileSystem.AddDirectory("roms");
-        mockFileSystem.AddDirectory("tools/dll");
-        mockFileSystem.AddDirectory("tools/universal_asset_tool");
-        mockFileSystem.AddFile("config.json", new MockFileData(CONFIG_JSON_));
+  [Test]
+  public void TestEmptyFromGithub() {
+    {
+      var mockFileSystem = new MockFileSystem();
 
-        mockFileSystem.Directory.SetCurrentDirectory(
-            "tools/universal_asset_tool");
+      mockFileSystem.AddDirectory("config");
+      mockFileSystem.AddDirectory("out");
+      mockFileSystem.AddDirectory("roms");
+      mockFileSystem.AddDirectory("tools/dll");
+      mockFileSystem.AddDirectory("tools/universal_asset_tool");
+      mockFileSystem.AddFile("config.json", new MockFileData(CONFIG_JSON_));
 
-        FinFileSystem.FileSystem = mockFileSystem;
-      }
+      mockFileSystem.Directory.SetCurrentDirectory(
+          "tools/universal_asset_tool");
 
-      var percentageProgress = new PercentageProgress();
-      var root = new RootFileBundleGatherer().GatherAllFiles(
-              percentageProgress,
-              out _);
-      Assert.AreEqual(0, root.Subdirs.Count);
-      Assert.AreEqual(0, root.FileBundles.Count);
+      FinFileSystem.FileSystem = mockFileSystem;
     }
+
+    var percentageProgress = new PercentageProgress();
+    var root = new RootFileBundleGatherer().GatherAllFiles(
+        percentageProgress,
+        out _);
+    Assert.AreEqual(0, root.Subdirs.Count);
+    Assert.AreEqual(0, root.FileBundles.Count);
   }
 }

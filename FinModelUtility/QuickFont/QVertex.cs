@@ -8,13 +8,12 @@ using OpenTK.Mathematics;
 using System.Runtime.InteropServices;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+internal struct QVertex
 {
-  [StructLayout(LayoutKind.Sequential, Pack = 1)]
-  internal struct QVertex
-  {
-    public Vector3 Position;
-    public Vector2 TextureCoord;
-    public Vector4 VertexColor;
-  }
+  public Vector3 Position;
+  public Vector2 TextureCoord;
+  public Vector4 VertexColor;
 }

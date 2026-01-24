@@ -8,18 +8,17 @@ using System;
 using System.Drawing;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public interface IFont : IDisposable
 {
-  public interface IFont : IDisposable
-  {
-    SizeF MeasureString(string s, Graphics graph);
+  SizeF MeasureString(string s, Graphics graph);
 
-    float Size { get; }
+  float Size { get; }
 
-    bool HasKerningInformation { get; }
+  bool HasKerningInformation { get; }
 
-    Point DrawString(string s, Graphics graph, Brush color, int x, int y);
+  Point DrawString(string s, Graphics graph, Brush color, int x, int y);
 
-    int GetKerning(char c1, char c2);
-  }
+  int GetKerning(char c1, char c2);
 }

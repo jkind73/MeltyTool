@@ -8,36 +8,35 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public static class ViewportHelper
 {
-  public static class ViewportHelper
+  private static Viewport? currentViewport_;
+
+  public static Viewport? CurrentViewport
   {
-    private static Viewport? currentViewport_;
-
-    public static Viewport? CurrentViewport
+    get
     {
-      get
-      {
-        if (!ViewportHelper.currentViewport_.HasValue)
-          ViewportHelper.UpdateCurrentViewport();
-        return ViewportHelper.currentViewport_;
-      }
+      if (!ViewportHelper.currentViewport_.HasValue)
+        ViewportHelper.UpdateCurrentViewport();
+      return ViewportHelper.currentViewport_;
     }
+  }
 
-    public static void UpdateCurrentViewport()
-    {
-      int[] data = new int[4];
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.GetInteger(GetPName.Viewport, data);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      ViewportHelper.currentViewport_ = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
-    }
+  public static void UpdateCurrentViewport()
+  {
+    int[] data = new int[4];
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.GetInteger(GetPName.Viewport, data);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    ViewportHelper.currentViewport_ = new Viewport?(new Viewport((float) data[0], (float) data[1], (float) data[2], (float) data[3]));
+  }
 
-    public static void InvalidateViewport() => ViewportHelper.currentViewport_ = null;
+  public static void InvalidateViewport() => ViewportHelper.currentViewport_ = null;
 
-    public static bool IsOrthographicProjection(ref Matrix4 mat)
-    {
-      return (double) mat.M12 == 0.0 && (double) mat.M13 == 0.0 && (double) mat.M14 == 0.0 && (double) mat.M21 == 0.0 && (double) mat.M23 == 0.0 && (double) mat.M24 == 0.0 && (double) mat.M31 == 0.0 && (double) mat.M32 == 0.0 && (double) mat.M34 == 0.0 && (double) mat.M44 == 1.0;
-    }
+  public static bool IsOrthographicProjection(ref Matrix4 mat)
+  {
+    return (double) mat.M12 == 0.0 && (double) mat.M13 == 0.0 && (double) mat.M14 == 0.0 && (double) mat.M21 == 0.0 && (double) mat.M23 == 0.0 && (double) mat.M24 == 0.0 && (double) mat.M31 == 0.0 && (double) mat.M32 == 0.0 && (double) mat.M34 == 0.0 && (double) mat.M44 == 1.0;
   }
 }

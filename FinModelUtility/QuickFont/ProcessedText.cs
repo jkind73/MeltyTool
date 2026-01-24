@@ -7,12 +7,11 @@
 using System.Drawing;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public sealed class ProcessedText
 {
-  public sealed class ProcessedText
-  {
-    internal TextNodeList TextNodeList;
-    internal SizeF MaxSize;
-    internal QFontAlignment Alignment;
-  }
+  internal TextNodeList TextNodeList;
+  internal SizeF MaxSize;
+  internal QFontAlignment Alignment;
 }

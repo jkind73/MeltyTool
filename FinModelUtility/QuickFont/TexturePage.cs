@@ -12,69 +12,68 @@ using System.Runtime.InteropServices;
 using PixelFormat = OpenTK.Graphics.OpenGL4.PixelFormat;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+internal class TexturePage : IDisposable
 {
-  internal class TexturePage : IDisposable
+  private int _textureID;
+
+  public int TextureID => this._textureID;
+
+  public int Width { get; private set; }
+
+  public int Height { get; private set; }
+
+  public TexturePage(string filePath)
   {
-    private int _textureID;
+    QBitmap qbitmap = new QBitmap(filePath);
+    this.CreateTexture(qbitmap.BitmapData);
+    qbitmap.Free();
+  }
 
-    public int TextureID => this._textureID;
+  public TexturePage(BitmapData dataSource) => this.CreateTexture(dataSource);
 
-    public int Width { get; private set; }
+  private void CreateTexture(BitmapData dataSource)
+  {
+    this.Width = dataSource.Width;
+    this.Height = dataSource.Height;
 
-    public int Height { get; private set; }
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.GenTextures(1, out this._textureID);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, this.Width, this.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataSource.Scan0);
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+    GlUtil.AssertNoErrorsWhenDebugging();
+  }
 
-    public TexturePage(string filePath)
+  private static byte[] ConvertBgraToRgba(BitmapData dataSource)
+  {
+    int length = dataSource.Stride * dataSource.Height;
+    byte[] destination = new byte[length];
+    Marshal.Copy(dataSource.Scan0, destination, 0, length);
+    for (int index = 0; index < destination.Length; index += 4)
     {
-      QBitmap qbitmap = new QBitmap(filePath);
-      this.CreateTexture(qbitmap.BitmapData);
-      qbitmap.Free();
+      byte num = destination[index];
+      destination[index] = destination[index + 2];
+      destination[index + 2] = num;
     }
+    return destination;
+  }
 
-    public TexturePage(BitmapData dataSource) => this.CreateTexture(dataSource);
-
-    private void CreateTexture(BitmapData dataSource)
-    {
-      this.Width = dataSource.Width;
-      this.Height = dataSource.Height;
-
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.GenTextures(1, out this._textureID);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.BindTexture(TextureTarget.Texture2D, this.TextureID);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int) TextureWrapMode.ClampToEdge);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int) TextureWrapMode.ClampToEdge);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int) TextureMinFilter.Linear);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int) TextureMagFilter.Linear);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba8, this.Width, this.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, dataSource.Scan0);
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
-      GlUtil.AssertNoErrorsWhenDebugging();
-    }
-
-    private static byte[] ConvertBgraToRgba(BitmapData dataSource)
-    {
-      int length = dataSource.Stride * dataSource.Height;
-      byte[] destination = new byte[length];
-      Marshal.Copy(dataSource.Scan0, destination, 0, length);
-      for (int index = 0; index < destination.Length; index += 4)
-      {
-        byte num = destination[index];
-        destination[index] = destination[index + 2];
-        destination[index + 2] = num;
-      }
-      return destination;
-    }
-
-    public void Dispose() {
-      GlUtil.AssertNoErrorsWhenDebugging();
-      GL.DeleteTexture(this.TextureID);
-      GlUtil.AssertNoErrorsWhenDebugging();
-    }
+  public void Dispose() {
+    GlUtil.AssertNoErrorsWhenDebugging();
+    GL.DeleteTexture(this.TextureID);
+    GlUtil.AssertNoErrorsWhenDebugging();
   }
 }

@@ -5,11 +5,10 @@
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
 #nullable disable
-namespace QuickFont.Configuration
+namespace QuickFont.Configuration;
+
+public enum ShadowType
 {
-  public enum ShadowType
-  {
-    Blurred,
-    Expanded,
-  }
+  Blurred,
+  Expanded,
 }

@@ -8,29 +8,29 @@ using NUnit.Framework;
 
 using pikmin1.api;
 
-namespace pikmin1 {
-  public sealed class ModModelGoldenTests
-      : BModelGoldenTests<ModModelFileBundle, ModModelImporter> {
-    [Test]
-    [TestCaseSource(nameof(GetGoldenDirectories_))]
-    public async Task TestExportsGoldenAsExpected(
-        IFileHierarchyDirectory goldenDirectory)
-      => await this.AssertGolden(goldenDirectory);
+namespace pikmin1;
 
-    public override ModModelFileBundle GetFileBundleFromDirectory(
-        IFileHierarchyDirectory directory) {
-      return new ModModelFileBundle {
-          ModFile = directory.FilesWithExtension(".mod").Single(),
-          AnmFile = directory.FilesWithExtension(".anm").SingleOrDefault(),
-      };
-    }
+public sealed class ModModelGoldenTests
+    : BModelGoldenTests<ModModelFileBundle, ModModelImporter> {
+  [Test]
+  [TestCaseSource(nameof(GetGoldenDirectories_))]
+  public async Task TestExportsGoldenAsExpected(
+      IFileHierarchyDirectory goldenDirectory)
+    => await this.AssertGolden(goldenDirectory);
 
-    private static IFileHierarchyDirectory[] GetGoldenDirectories_() {
-      var rootGoldenDirectory
-          = GoldenAssert
-              .GetRootGoldensDirectory(Assembly.GetExecutingAssembly());
-      return GoldenAssert.GetGoldenDirectories(rootGoldenDirectory)
-                         .ToArray();
-    }
+  public override ModModelFileBundle GetFileBundleFromDirectory(
+      IFileHierarchyDirectory directory) {
+    return new ModModelFileBundle {
+        ModFile = directory.FilesWithExtension(".mod").Single(),
+        AnmFile = directory.FilesWithExtension(".anm").SingleOrDefault(),
+    };
+  }
+
+  private static IFileHierarchyDirectory[] GetGoldenDirectories_() {
+    var rootGoldenDirectory
+        = GoldenAssert
+            .GetRootGoldensDirectory(Assembly.GetExecutingAssembly());
+    return GoldenAssert.GetGoldenDirectories(rootGoldenDirectory)
+                       .ToArray();
   }
 }

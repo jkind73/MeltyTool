@@ -12,60 +12,59 @@ using System.IO;
 using System.Linq;
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public sealed class GDIFont : IFont, IDisposable
 {
-  public sealed class GDIFont : IFont, IDisposable
-  {
-    private Font _font;
-    private FontFamily _fontFamily;
+  private Font _font;
+  private FontFamily _fontFamily;
 
-    public float Size => this._font.Size;
+  public float Size => this._font.Size;
 
-    public bool HasKerningInformation => false;
+  public bool HasKerningInformation => false;
 
-    public GDIFont(
+  public GDIFont(
       string fontPath,
       float size,
       FontStyle style,
       int superSampleLevels = 1,
       float scale = 1f)
+  {
+    try
     {
-      try
-      {
-        PrivateFontCollection privateFontCollection = new PrivateFontCollection();
-        privateFontCollection.AddFontFile(fontPath);
-        this._fontFamily = privateFontCollection.Families[0];
-      }
-      catch (FileNotFoundException ex)
-      {
-        this._fontFamily = ((IEnumerable<FontFamily>) new InstalledFontCollection().Families).FirstOrDefault<FontFamily>((Func<FontFamily, bool>) (family => string.Equals(fontPath, family.Name)));
-        if (this._fontFamily == null)
-          this._fontFamily = SystemFonts.DefaultFont.FontFamily;
-      }
-      if (!this._fontFamily.IsStyleAvailable(style))
-        throw new ArgumentException("Font file: " + fontPath + " does not support style: " + style.ToString());
-      this._font = new Font(this._fontFamily, size * scale * (float) superSampleLevels, style);
+      PrivateFontCollection privateFontCollection = new PrivateFontCollection();
+      privateFontCollection.AddFontFile(fontPath);
+      this._fontFamily = privateFontCollection.Families[0];
     }
-
-    public Point DrawString(string s, Graphics graph, Brush color, int x, int y)
+    catch (FileNotFoundException ex)
     {
-      graph.DrawString(s, this._font, color, (float) x, (float) y);
-      return Point.Empty;
+      this._fontFamily = ((IEnumerable<FontFamily>) new InstalledFontCollection().Families).FirstOrDefault<FontFamily>((Func<FontFamily, bool>) (family => string.Equals(fontPath, family.Name)));
+      if (this._fontFamily == null)
+        this._fontFamily = SystemFonts.DefaultFont.FontFamily;
     }
+    if (!this._fontFamily.IsStyleAvailable(style))
+      throw new ArgumentException("Font file: " + fontPath + " does not support style: " + style.ToString());
+    this._font = new Font(this._fontFamily, size * scale * (float) superSampleLevels, style);
+  }
 
-    public int GetKerning(char c1, char c2)
-    {
-      throw new NotImplementedException("Font kerning for GDI Fonts is not implemented. Should be calculated manually.");
-    }
+  public Point DrawString(string s, Graphics graph, Brush color, int x, int y)
+  {
+    graph.DrawString(s, this._font, color, (float) x, (float) y);
+    return Point.Empty;
+  }
 
-    public SizeF MeasureString(string s, Graphics graph) => graph.MeasureString(s, this._font);
+  public int GetKerning(char c1, char c2)
+  {
+    throw new NotImplementedException("Font kerning for GDI Fonts is not implemented. Should be calculated manually.");
+  }
 
-    public override string ToString() => this._font.Name;
+  public SizeF MeasureString(string s, Graphics graph) => graph.MeasureString(s, this._font);
 
-    public void Dispose()
-    {
-      this._font.Dispose();
-      this._fontFamily.Dispose();
-    }
+  public override string ToString() => this._font.Name;
+
+  public void Dispose()
+  {
+    this._font.Dispose();
+    this._fontFamily.Dispose();
   }
 }

@@ -5,15 +5,14 @@
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
 #nullable disable
-namespace QuickFont.Configuration
+namespace QuickFont.Configuration;
+
+public sealed class QFontShadowConfiguration
 {
-  public sealed class QFontShadowConfiguration
-  {
-    public float Scale = 1f;
-    public ShadowType Type;
-    public int BlurRadius = 3;
-    public int BlurPasses = 2;
-    public int PageMaxTextureSize = 4096;
-    public int GlyphMargin = 2;
-  }
+  public float Scale = 1f;
+  public ShadowType Type;
+  public int BlurRadius = 3;
+  public int BlurPasses = 2;
+  public int PageMaxTextureSize = 4096;
+  public int GlyphMargin = 2;
 }

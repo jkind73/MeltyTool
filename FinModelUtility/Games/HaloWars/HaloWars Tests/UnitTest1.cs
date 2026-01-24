@@ -1,12 +1,12 @@
-namespace HaloWars_Tests {
-  public sealed class Tests {
-    [SetUp]
-    public void Setup() {
-    }
+namespace HaloWars_Tests;
 
-    [Test]
-    public void Test1() {
-      Assert.Pass();
-    }
+public sealed class Tests {
+  [SetUp]
+  public void Setup() {
+  }
+
+  [Test]
+  public void Test1() {
+    Assert.Pass();
   }
 }

@@ -5,23 +5,22 @@
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
 #nullable disable
-namespace QuickFont.Configuration
+namespace QuickFont.Configuration;
+
+public class QFontConfiguration
 {
-  public class QFontConfiguration
+  public QFontShadowConfiguration ShadowConfig;
+  public QFontKerningConfiguration KerningConfig = new QFontKerningConfiguration();
+  public bool TransformToCurrentOrthogProjection;
+
+  public QFontConfiguration()
   {
-    public QFontShadowConfiguration ShadowConfig;
-    public QFontKerningConfiguration KerningConfig = new QFontKerningConfiguration();
-    public bool TransformToCurrentOrthogProjection;
+  }
 
-    public QFontConfiguration()
-    {
-    }
-
-    public QFontConfiguration(bool addDropShadow, bool transformToOrthogProjection = false)
-    {
-      if (addDropShadow)
-        this.ShadowConfig = new QFontShadowConfiguration();
-      this.TransformToCurrentOrthogProjection = transformToOrthogProjection;
-    }
+  public QFontConfiguration(bool addDropShadow, bool transformToOrthogProjection = false)
+  {
+    if (addDropShadow)
+      this.ShadowConfig = new QFontShadowConfiguration();
+    this.TransformToCurrentOrthogProjection = transformToOrthogProjection;
   }
 }

@@ -12,84 +12,84 @@ using ReactiveUI;
 
 using uni.ui.avalonia.resources.model;
 
-namespace uni.ui.avalonia.resources.animation {
-  public sealed class AnimationsPanelViewModelForDesigner
-      : AnimationsPanelViewModel {
-    public AnimationsPanelViewModelForDesigner() {
-      this.AnimationPlaybackManager = new FrameAdvancer {
-          LoopPlayback = true,
-      };
-      this.Animations = ModelDesignerUtil.CreateStubModel()
-                                         .AnimationManager.Animations;
+namespace uni.ui.avalonia.resources.animation;
+
+public sealed class AnimationsPanelViewModelForDesigner
+    : AnimationsPanelViewModel {
+  public AnimationsPanelViewModelForDesigner() {
+    this.AnimationPlaybackManager = new FrameAdvancer {
+        LoopPlayback = true,
+    };
+    this.Animations = ModelDesignerUtil.CreateStubModel()
+                                       .AnimationManager.Animations;
+  }
+}
+
+public class KeyValuePairViewModel(string key, string? value)
+    : BViewModel {
+  public string Key => key;
+  public string? Value => value;
+
+  public static implicit operator KeyValuePairViewModel(
+      (string key, object? value) tuple)
+    => new(tuple.key, tuple.value?.ToString());
+}
+
+public class AnimationsPanelViewModel : BViewModel {
+  public IReadOnlyList<IReadOnlyAnimation>? Animations {
+    get;
+    set {
+      this.RaiseAndSetIfChanged(ref field, value);
+      this.AnimationList = new AnimationListViewModel { Animations = value };
     }
   }
 
-  public class KeyValuePairViewModel(string key, string? value)
-      : BViewModel {
-    public string Key => key;
-    public string? Value => value;
-
-    public static implicit operator KeyValuePairViewModel(
-        (string key, object? value) tuple)
-      => new(tuple.key, tuple.value?.ToString());
+  public AnimationListViewModel AnimationList {
+    get;
+    private set
+      => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  public class AnimationsPanelViewModel : BViewModel {
-    public IReadOnlyList<IReadOnlyAnimation>? Animations {
-      get;
-      set {
-        this.RaiseAndSetIfChanged(ref field, value);
-        this.AnimationList = new AnimationListViewModel { Animations = value };
+  public AnimationViewModel? SelectedAnimation {
+    get;
+    set {
+      this.RaiseAndSetIfChanged(ref field,
+                                value);
+
+      var animationPlaybackManager = this.AnimationPlaybackManager;
+      var animation = value?.Animation;
+      if (animationPlaybackManager == null || animation == null) {
+        return;
       }
-    }
 
-    public AnimationListViewModel AnimationList {
-      get;
-      private set
-        => this.RaiseAndSetIfChanged(ref field, value);
-    }
+      animationPlaybackManager.SetAnimation(animation);
 
-    public AnimationViewModel? SelectedAnimation {
-      get;
-      set {
-        this.RaiseAndSetIfChanged(ref field,
-                                  value);
-
-        var animationPlaybackManager = this.AnimationPlaybackManager;
-        var animation = value?.Animation;
-        if (animationPlaybackManager == null || animation == null) {
-          return;
-        }
-
-        animationPlaybackManager.SetAnimation(animation);
-
-        this.OnAnimationSelected?.Invoke(this, animation);
-      }
-    }
-
-    public event EventHandler<IReadOnlyAnimation> OnAnimationSelected;
-
-    public AnimationPlaybackPanelViewModel AnimationPlaybackPanel { get; }
-      = new();
-
-    public IAnimationPlaybackManager? AnimationPlaybackManager {
-      get => this.AnimationPlaybackPanel.AnimationPlaybackManager;
-      set => this.AnimationPlaybackPanel.AnimationPlaybackManager = value;
+      this.OnAnimationSelected?.Invoke(this, animation);
     }
   }
 
-  public partial class AnimationsPanel : UserControl {
-    public AnimationsPanel() {
-      this.InitializeComponent();
-    }
+  public event EventHandler<IReadOnlyAnimation> OnAnimationSelected;
 
-    protected AnimationsPanelViewModel ViewModel
-      => Asserts.AsA<AnimationsPanelViewModel>(this.DataContext);
+  public AnimationPlaybackPanelViewModel AnimationPlaybackPanel { get; }
+    = new();
 
-    protected void AnimationList_OnAnimationSelected(
-        object? sender,
-        AnimationSelectedEventArgs e) {
-      this.ViewModel.SelectedAnimation = e.Animation;
-    }
+  public IAnimationPlaybackManager? AnimationPlaybackManager {
+    get => this.AnimationPlaybackPanel.AnimationPlaybackManager;
+    set => this.AnimationPlaybackPanel.AnimationPlaybackManager = value;
+  }
+}
+
+public partial class AnimationsPanel : UserControl {
+  public AnimationsPanel() {
+    this.InitializeComponent();
+  }
+
+  protected AnimationsPanelViewModel ViewModel
+    => Asserts.AsA<AnimationsPanelViewModel>(this.DataContext);
+
+  protected void AnimationList_OnAnimationSelected(
+      object? sender,
+      AnimationSelectedEventArgs e) {
+    this.ViewModel.SelectedAnimation = e.Animation;
   }
 }

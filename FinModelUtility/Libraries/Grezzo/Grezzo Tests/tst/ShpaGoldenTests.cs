@@ -10,32 +10,32 @@ using schema.binary;
 
 using Version = grezzo.schema.cmb.Version;
 
-namespace grezzo {
-  public sealed class ShpaGoldenTests {
-    [Test]
-    [TestCaseSource(nameof(GetGoldenFiles_))]
-    public async Task TestExportsGoldenAsExpected(
-        IReadOnlySystemFile goldenFile) {
-      var goldenGameDir = goldenFile.AssertGetParent();
+namespace grezzo;
 
-      CmbHeader.Version = goldenGameDir.Name switch {
-          "luigis_mansion_3d" => Version.LUIGIS_MANSION_3D,
-      };
+public sealed class ShpaGoldenTests {
+  [Test]
+  [TestCaseSource(nameof(GetGoldenFiles_))]
+  public async Task TestExportsGoldenAsExpected(
+      IReadOnlySystemFile goldenFile) {
+    var goldenGameDir = goldenFile.AssertGetParent();
 
-      var er = new SchemaBinaryReader(goldenFile.OpenRead());
-      await SchemaTesting.ReadsAndWritesIdentically<Shpa>(
-          er,
-          assertExactEndPositions: false);
-    }
+    CmbHeader.Version = goldenGameDir.Name switch {
+        "luigis_mansion_3d" => Version.LUIGIS_MANSION_3D,
+    };
 
-    private static IReadOnlySystemFile[] GetGoldenFiles_() {
-      var rootGoldenDirectory
-          = GoldenAssert
-            .GetRootGoldensDirectory(Assembly.GetExecutingAssembly())
-            .AssertGetExistingSubdir("shpa");
-      return rootGoldenDirectory.GetExistingSubdirs()
-                                .SelectMany(dir => dir.GetExistingFiles())
-                                .ToArray();
-    }
+    var er = new SchemaBinaryReader(goldenFile.OpenRead());
+    await SchemaTesting.ReadsAndWritesIdentically<Shpa>(
+        er,
+        assertExactEndPositions: false);
+  }
+
+  private static IReadOnlySystemFile[] GetGoldenFiles_() {
+    var rootGoldenDirectory
+        = GoldenAssert
+          .GetRootGoldensDirectory(Assembly.GetExecutingAssembly())
+          .AssertGetExistingSubdir("shpa");
+    return rootGoldenDirectory.GetExistingSubdirs()
+                              .SelectMany(dir => dir.GetExistingFiles())
+                              .ToArray();
   }
 }

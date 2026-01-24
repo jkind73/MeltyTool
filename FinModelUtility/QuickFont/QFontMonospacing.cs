@@ -5,12 +5,11 @@
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public enum QFontMonospacing
 {
-  public enum QFontMonospacing
-  {
-    Natural,
-    Yes,
-    No,
-  }
+  Natural,
+  Yes,
+  No,
 }

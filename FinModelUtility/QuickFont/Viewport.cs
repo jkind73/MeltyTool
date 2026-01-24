@@ -5,13 +5,12 @@
 // Assembly location: C:\Users\Ryan\AppData\Local\Temp\Ramumib\5e47dbd843\lib\net5.0\Wayfinder.QuickFont.dll
 
 #nullable disable
-namespace QuickFont
+namespace QuickFont;
+
+public struct Viewport(float x, float y, float width, float height)
 {
-  public struct Viewport(float x, float y, float width, float height)
-  {
-    public float X = x;
-    public float Y = y;
-    public float Width = width;
-    public float Height = height;
-  }
+  public float X = x;
+  public float Y = y;
+  public float Width = width;
+  public float Height = height;
 }

@@ -7,45 +7,44 @@
 using System.Collections.Generic;
 
 #nullable disable
-namespace QuickFont.Configuration
+namespace QuickFont.Configuration;
+
+public sealed class QFontKerningConfiguration
 {
-  public sealed class QFontKerningConfiguration
+  private readonly Dictionary<char, CharacterKerningRule> _characterKerningRules = new Dictionary<char, CharacterKerningRule>();
+  public byte AlphaEmptyPixelTolerance;
+
+  public void BatchSetCharacterKerningRule(string chars, CharacterKerningRule rule)
   {
-    private readonly Dictionary<char, CharacterKerningRule> _characterKerningRules = new Dictionary<char, CharacterKerningRule>();
-    public byte AlphaEmptyPixelTolerance;
+    foreach (char key in chars)
+      this._characterKerningRules[key] = rule;
+  }
 
-    public void BatchSetCharacterKerningRule(string chars, CharacterKerningRule rule)
-    {
-      foreach (char key in chars)
-        this._characterKerningRules[key] = rule;
-    }
+  public void SetCharacterKerningRule(char c, CharacterKerningRule rule)
+  {
+    this._characterKerningRules[c] = rule;
+  }
 
-    public void SetCharacterKerningRule(char c, CharacterKerningRule rule)
-    {
-      this._characterKerningRules[c] = rule;
-    }
+  public CharacterKerningRule GetCharacterKerningRule(char c)
+  {
+    return this._characterKerningRules.TryGetValue(c, out CharacterKerningRule rule) ? rule : CharacterKerningRule.Normal;
+  }
 
-    public CharacterKerningRule GetCharacterKerningRule(char c)
-    {
-      return this._characterKerningRules.TryGetValue(c, out CharacterKerningRule rule) ? rule : CharacterKerningRule.Normal;
-    }
+  public CharacterKerningRule GetOverridingCharacterKerningRuleForPair(string str)
+  {
+    if (str.Length < 2)
+      return CharacterKerningRule.Normal;
+    char c1 = str[0];
+    char c2 = str[1];
+    if (this.GetCharacterKerningRule(c1) == CharacterKerningRule.Zero || this.GetCharacterKerningRule(c2) == CharacterKerningRule.Zero)
+      return CharacterKerningRule.Zero;
+    return this.GetCharacterKerningRule(c1) == CharacterKerningRule.NotMoreThanHalf || this.GetCharacterKerningRule(c2) == CharacterKerningRule.NotMoreThanHalf ? CharacterKerningRule.NotMoreThanHalf : CharacterKerningRule.Normal;
+  }
 
-    public CharacterKerningRule GetOverridingCharacterKerningRuleForPair(string str)
-    {
-      if (str.Length < 2)
-        return CharacterKerningRule.Normal;
-      char c1 = str[0];
-      char c2 = str[1];
-      if (this.GetCharacterKerningRule(c1) == CharacterKerningRule.Zero || this.GetCharacterKerningRule(c2) == CharacterKerningRule.Zero)
-        return CharacterKerningRule.Zero;
-      return this.GetCharacterKerningRule(c1) == CharacterKerningRule.NotMoreThanHalf || this.GetCharacterKerningRule(c2) == CharacterKerningRule.NotMoreThanHalf ? CharacterKerningRule.NotMoreThanHalf : CharacterKerningRule.Normal;
-    }
-
-    public QFontKerningConfiguration()
-    {
-      this.BatchSetCharacterKerningRule("_^", CharacterKerningRule.Zero);
-      this.SetCharacterKerningRule('"', CharacterKerningRule.NotMoreThanHalf);
-      this.SetCharacterKerningRule('\'', CharacterKerningRule.NotMoreThanHalf);
-    }
+  public QFontKerningConfiguration()
+  {
+    this.BatchSetCharacterKerningRule("_^", CharacterKerningRule.Zero);
+    this.SetCharacterKerningRule('"', CharacterKerningRule.NotMoreThanHalf);
+    this.SetCharacterKerningRule('\'', CharacterKerningRule.NotMoreThanHalf);
   }
 }

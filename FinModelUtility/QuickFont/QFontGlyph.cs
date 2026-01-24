@@ -8,22 +8,21 @@ using System.Diagnostics;
 using System.Drawing;
 
 #nullable disable
-namespace QuickFont
-{
-  [DebuggerDisplay("{Character} Pg:{Page}")]
-  public sealed class QFontGlyph
-  {
-    public int Page;
-    public Rectangle Rect;
-    public int YOffset;
-    public char Character;
+namespace QuickFont;
 
-    public QFontGlyph(int page, Rectangle rect, int yOffset, char character)
-    {
-      this.Page = page;
-      this.Rect = rect;
-      this.YOffset = yOffset;
-      this.Character = character;
-    }
+[DebuggerDisplay("{Character} Pg:{Page}")]
+public sealed class QFontGlyph
+{
+  public int Page;
+  public Rectangle Rect;
+  public int YOffset;
+  public char Character;
+
+  public QFontGlyph(int page, Rectangle rect, int yOffset, char character)
+  {
+    this.Page = page;
+    this.Rect = rect;
+    this.YOffset = yOffset;
+    this.Character = character;
   }
 }
