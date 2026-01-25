@@ -62,12 +62,12 @@ dotnet_diagnostic.cs8604.severity = error
 # CS8618: Non-nullable property 'ImageNames' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. 
 #dotnet_diagnostic.cs8618.severity = error
 
-# IDE1005: Redundant using directive
+# IDE0005: Redundant using directive
 dotnet_diagnostic.ide0005.severity = error
 
 # IDE1006: Naming Styles
-#dotnet_diagnostic.ide0006.severity = error
-dotnet_diagnostic.ide0006.severity = warning
+#dotnet_diagnostic.ide1006.severity = error
+dotnet_diagnostic.ide1006.severity = warning
 
 
 #### Core EditorConfig Options ####

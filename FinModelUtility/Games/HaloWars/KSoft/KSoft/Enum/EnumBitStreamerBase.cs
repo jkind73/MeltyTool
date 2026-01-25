@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using KSoft.Reflection;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else

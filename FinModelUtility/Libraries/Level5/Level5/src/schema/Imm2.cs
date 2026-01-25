@@ -17,9 +17,9 @@ using schema.binary.attributes;
 namespace level5.schema;
 
 /// <summary>
-///   Skeletal animation
+///   UV animation
 /// </summary>
-public sealed class Mtn2 {
+public sealed class Imm2 {
   public GenericAnimation Anim { get; } = new GenericAnimation();
 
   public ListDictionary<uint, (short, short)> Somethings { get; } = new();
@@ -43,14 +43,7 @@ public sealed class Mtn2 {
     var decomSize = r.ReadInt32();
     var nameOffset = r.ReadUInt32();
     var compDataOffset = r.ReadUInt32();
-    var positionCount = r.ReadInt32();
-    var rotationCount = r.ReadInt32();
-    var scaleCount = r.ReadInt32();
-
-    // This corresponds to PRMs that may be toggled on/off in the animation.
-    var toggledPrmCount = r.ReadInt32();
-    // This corresponds to bones that will be moved in the animation.
-    var boneCount = r.ReadInt32();
+    var trackCounts = r.ReadUInt32s(4);
 
     r.Position = 0x54;
     this.Anim.FrameCount = r.ReadInt32();
@@ -86,12 +79,12 @@ public sealed class Mtn2 {
         d.Position = (d.ReadUInt16());
 
         tracks.Add(new AnimTrack() {
-            Type = d.ReadByte(),
-            DataType = d.ReadByte(),
-            Unk = d.ReadByte(),
-            DataCount = d.ReadByte(),
-            Start = d.ReadUInt16(),
-            End = d.ReadUInt16()
+          Type = d.ReadByte(),
+          DataType = d.ReadByte(),
+          Unk = d.ReadByte(),
+          DataCount = d.ReadByte(),
+          Start = d.ReadUInt16(),
+          End = d.ReadUInt16()
         });
       }
 
@@ -100,8 +93,8 @@ public sealed class Mtn2 {
       foreach (var v in hashes) {
         var node = new GenericAnimationTransform();
         node.Hash = v;
-        node.HashType = AnimNodeHashType.CRC32_C;
-        this.Anim.transformNodes.Add(node);
+        node.HashType = AnimNodeHashType.CRC32C;
+        this.Anim.TransformNodes.Add(node);
       }
 
       var offset = 0;
@@ -160,7 +153,7 @@ public sealed class Mtn2 {
 
       var nodeIndex = boneIndex + (flag == 0 ? boneCount : 0);
 
-      var node = this.Anim.transformNodes[nodeIndex];
+      var node = this.Anim.TransformNodes[nodeIndex];
 
       br.Position = (keyDataOffset);
       for (int k = 0; k < keyFrameCount; k++) {
@@ -186,17 +179,17 @@ public sealed class Mtn2 {
             case 4:
               switch (flag) {
                 case 0: {
-                  animdata[j] = br.ReadByte();
-                  break;
-                }
+                    animdata[j] = br.ReadByte();
+                    break;
+                  }
                 case 0x20: {
-                  boneVisibilityData = br.ReadUInt64();
-                  break;
-                }
+                    boneVisibilityData = br.ReadUInt64();
+                    break;
+                  }
                 default: {
-                  throw new NotImplementedException(
-                      $"Flag with value: {flag.ToHexString()}");
-                }
+                    throw new NotImplementedException(
+                        $"Flag with value: {flag.ToHexString()}");
+                  }
               }
               break;
             default:
@@ -208,13 +201,13 @@ public sealed class Mtn2 {
           case 1:
             node.AddKey(frame,
                         animdata[0],
-                        AnimationTrackFormat.TRANSLATE_X);
+                        AnimationTrackFormat.TranslateX);
             node.AddKey(frame,
                         animdata[1],
-                        AnimationTrackFormat.TRANSLATE_Y);
+                        AnimationTrackFormat.TranslateY);
             node.AddKey(frame,
                         animdata[2],
-                        AnimationTrackFormat.TRANSLATE_Z);
+                        AnimationTrackFormat.TranslateZ);
             break;
           case 2:
             // TODO: Invert?
@@ -223,33 +216,33 @@ public sealed class Mtn2 {
                                animdata[1],
                                animdata[2],
                                animdata[3]));
-            node.AddKey(frame, e.X, AnimationTrackFormat.ROTATE_X);
-            node.AddKey(frame, e.Y, AnimationTrackFormat.ROTATE_Y);
-            node.AddKey(frame, e.Z, AnimationTrackFormat.ROTATE_Z);
+            node.AddKey(frame, e.X, AnimationTrackFormat.RotateX);
+            node.AddKey(frame, e.Y, AnimationTrackFormat.RotateY);
+            node.AddKey(frame, e.Z, AnimationTrackFormat.RotateZ);
             break;
           case 3:
-            node.AddKey(frame, animdata[0], AnimationTrackFormat.SCALE_X);
-            node.AddKey(frame, animdata[1], AnimationTrackFormat.SCALE_Y);
-            node.AddKey(frame, animdata[2], AnimationTrackFormat.SCALE_Z);
+            node.AddKey(frame, animdata[0], AnimationTrackFormat.ScaleX);
+            node.AddKey(frame, animdata[1], AnimationTrackFormat.ScaleY);
+            node.AddKey(frame, animdata[2], AnimationTrackFormat.ScaleZ);
             break;
           case 9: {
-            switch (flag) {
-              case 0x00: {
-                this.Somethings.Add(node.Hash,
-                                    (frame, (short) Math.Round(animdata[0])));
-                break;
+              switch (flag) {
+                case 0x00: {
+                    this.Somethings.Add(node.Hash,
+                                        (frame, (short) Math.Round(animdata[0])));
+                    break;
+                  }
+                case 0x20: {
+                    for (var b = 0; b < hashes.Count; ++b) {
+                      var isActive = (boneVisibilityData >> b) & 1;
+                      this.Somethings.Add(hashes[boneIndex + b],
+                                          (frame, (short) isActive));
+                    }
+                    break;
+                  }
               }
-              case 0x20: {
-                for (var b = 0; b < hashes.Count; ++b) {
-                  var isActive = (boneVisibilityData >> b) & 1;
-                  this.Somethings.Add(hashes[boneIndex + b],
-                                      (frame, (short) isActive));
-                }
-                break;
-              }
+              break;
             }
-            break;
-          }
           default:
             throw new NotImplementedException(
                 "Track Type " + track.Type + " not implemented");

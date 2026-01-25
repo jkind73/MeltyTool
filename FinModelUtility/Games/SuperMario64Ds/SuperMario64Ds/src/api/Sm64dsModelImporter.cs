@@ -15,7 +15,6 @@ using fin.model.impl;
 using fin.model.io.importers;
 using fin.model.util;
 using fin.util.dictionaries;
-using fin.image.util;
 using fin.util.sets;
 
 using schema.binary;

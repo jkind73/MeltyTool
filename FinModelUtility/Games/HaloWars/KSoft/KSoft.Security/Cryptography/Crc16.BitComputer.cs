@@ -94,10 +94,10 @@ namespace KSoft.Security.Cryptography
 			#endregion
 
 			#region Compute 64-bits
-			public void ComputeLe(ulong value)
+			public void ComputeLe(ulong inValue)
 			{
-				uint lo = Bits.GetLowBits(value);
-				uint hi = Bits.GetHighBits(value);
+				uint lo = Bits.GetLowBits(inValue);
+				uint hi = Bits.GetHighBits(inValue);
 				uint value;
 
 				value = lo;
@@ -106,10 +106,10 @@ namespace KSoft.Security.Cryptography
 				value = hi;
 				this.ComputeLe(value);
 			}
-			public void ComputeBe(ulong value)
+			public void ComputeBe(ulong inValue)
 			{
-				uint lo = Bits.GetLowBits(value);
-				uint hi = Bits.GetHighBits(value);
+				uint lo = Bits.GetLowBits(inValue);
+				uint hi = Bits.GetHighBits(inValue);
 				uint value;
 
 				value = hi;

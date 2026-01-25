@@ -20,7 +20,6 @@ using fin.model.io.importers;
 using fin.model.util;
 using fin.util.asserts;
 using fin.util.enums;
-using fin.image.util;
 using fin.util.lists;
 
 using gx;
