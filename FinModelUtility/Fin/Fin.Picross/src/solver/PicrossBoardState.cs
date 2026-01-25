@@ -61,7 +61,7 @@ public sealed class PicrossBoardState : IPicrossBoardState {
       cellStates[i] = new PicrossCellState();
     }
 
-    var clues = PicrossCluesGenerator.GenerateClues(definition);
+    var clues = new PicrossCluesGenerator().GenerateClues(definition);
 
     var columnClueStates = ToClueStates_(clues.Columns);
     this.columnLineStates_

@@ -16,9 +16,6 @@ using SixLabors.ImageSharp.PixelFormats;
 
 namespace level5.schema;
 
-/// <summary>
-///   Image
-/// </summary>
 public sealed class Xi {
   public int Width { get; set; }
   public int Height { get; set; }

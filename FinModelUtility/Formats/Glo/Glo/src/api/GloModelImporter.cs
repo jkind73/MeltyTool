@@ -2,6 +2,7 @@
 using System.Numerics;
 
 using fin.animation.keyframes;
+using fin.color;
 using fin.data.dictionaries;
 using fin.data.lazy;
 using fin.data.queues;
@@ -15,6 +16,7 @@ using fin.model.io.importers;
 using fin.model.util;
 using fin.util.asserts;
 using fin.util.enums;
+using fin.image.util;
 using fin.util.sets;
 
 using glo.schema;

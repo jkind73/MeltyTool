@@ -7,8 +7,11 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
+using fin.data.dictionaries;
 using fin.io;
+using fin.model;
 using fin.scene;
+using fin.util.asserts;
 
 namespace HaloWarsTools;
 

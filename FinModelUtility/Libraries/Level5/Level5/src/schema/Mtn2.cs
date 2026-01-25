@@ -16,9 +16,6 @@ using schema.binary.attributes;
 
 namespace level5.schema;
 
-/// <summary>
-///   Skeletal animation
-/// </summary>
 public sealed class Mtn2 {
   public GenericAnimation Anim { get; } = new GenericAnimation();
 

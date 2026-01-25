@@ -8,7 +8,7 @@ namespace KSoft.Phoenix.Phx
 		, IComparable<BPopulation>
 		, IEqualityComparer<BPopulation>
 	{
-		sealed class EqualityComparer_ : IEqualityComparer<BPopulation>
+		sealed class EqualityComparer : IEqualityComparer<BPopulation>
 		{
 			#region IEqualityComparer<BPopulation> Members
 			public bool Equals(BPopulation x, BPopulation y)
@@ -22,16 +22,13 @@ namespace KSoft.Phoenix.Phx
 			}
 			#endregion
 		};
-		private static EqualityComparer_ gEqualityComparer_;
+		private static EqualityComparer gEqualityComparer_;
+		public static IEqualityComparer<BPopulation> EqualityComparer { get {
+			if (gEqualityComparer_ == null)
+				gEqualityComparer_ = new EqualityComparer();
 
-        public static IEqualityComparer<BPopulation> EqualityComparer {
-          get {
-            if (gEqualityComparer_ == null)
-              gEqualityComparer_ = new EqualityComparer_();
-
-            return gEqualityComparer_;
-          }
-        }
+			return gEqualityComparer_;
+		} }
 
 		#region Xml constants
 		public static readonly Collections.BTypeValuesParams<BPopulation> KBListParams = new
