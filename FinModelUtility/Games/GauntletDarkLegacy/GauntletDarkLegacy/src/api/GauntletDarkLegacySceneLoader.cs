@@ -2,6 +2,7 @@
 
 using fin.data.lazy;
 using fin.io;
+using fin.math.rotations;
 using fin.model;
 using fin.scene;
 using fin.ui.rendering.gl.scene;
@@ -93,7 +94,16 @@ public sealed class GauntletDarkLegacySceneImporter
       var component = lazyComponents[itemInstanceInfo.Description];
       if (component != null) {
         var itemNode = finArea.AddRootNode();
-        itemNode.SetPosition(itemInstance.Position);
+        itemNode.Name = itemInstanceInfo.Description;
+
+        itemNode.SetPosition(itemInstance.Position with {
+            X = -itemInstance.Position.X,
+        });
+
+        var rotationRadians = GdlRadiansUtil
+                              .CreateQuaternion(itemInstance.Rotation)
+                              .ToEulerRadians();
+        itemNode.SetRotationRadians(rotationRadians);
 
         itemNode.AddComponent(component);
       }
