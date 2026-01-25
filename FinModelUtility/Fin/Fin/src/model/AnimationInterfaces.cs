@@ -205,6 +205,8 @@ public partial interface IMeshTracks {
 public partial interface ITextureTracks {
   new IReadOnlyTexture Texture { get; }
 
+  new IStairStepKeyframes<IReadOnlyTexture?>? Swaps { get; }
+
   new ISeparateVector3Keyframes<KeyframeWithTangents<float>>? Translations {
     get;
   }
@@ -215,6 +217,11 @@ public partial interface ITextureTracks {
 
   new ISeparateVector3Keyframes<KeyframeWithTangents<float>>? Scales { get; }
 
+  // Swaps
+  IStairStepKeyframes<IReadOnlyTexture?> UseSwapKeyframes(
+      int initialCapacity = 0,
+      int? animationLength = null);
+  
   // Translation
   ISeparateVector3Keyframes<KeyframeWithTangents<float>>
       UseSeparateTranslationKeyframesWithTangents(int initialCapacity = 0,
