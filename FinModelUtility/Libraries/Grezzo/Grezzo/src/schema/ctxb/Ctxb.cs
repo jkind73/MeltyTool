@@ -66,7 +66,7 @@ public sealed partial class CtxbTexEntry : IBinaryConvertible {
 
   [Skip]
   private bool IncludeExtraPadding 
-    => CmbHeader.FileVersion >= Version.LUIGIS_MANSION_3D;
+    => CmbHeader.Version >= Version.LUIGIS_MANSION_3D;
 
   [RIfBoolean(nameof(IncludeExtraPadding))]
   [SequenceLengthSource(56)]

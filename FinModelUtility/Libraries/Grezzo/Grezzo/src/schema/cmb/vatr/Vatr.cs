@@ -19,7 +19,7 @@ public partial class Vatr : IBinaryConvertible {
 
   [Skip]
   private bool HasTangent 
-    => CmbHeader.FileVersion > Version.OCARINA_OF_TIME_3D;
+    => CmbHeader.Version > Version.OCARINA_OF_TIME_3D;
 
   [RIfBoolean(nameof(HasTangent))]
   public AttributeSlice? tangent;

@@ -14,7 +14,7 @@ public sealed partial class Mesh : IBinaryConvertible {
   public byte id;
 
   [Skip]
-  private int UnknownLength => CmbHeader.FileVersion switch {
+  private int UnknownLength => CmbHeader.Version switch {
       Version.OCARINA_OF_TIME_3D => 0,
       Version.MAJORAS_MASK_3D    => 0x8,
       Version.EVER_OASIS         => 0xC,
