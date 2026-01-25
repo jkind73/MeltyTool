@@ -5,15 +5,15 @@ using readOnly;
 namespace fin.math.matrix.four;
 
 [GenerateReadOnly]
-public partial interface IFinMatrix4x4
-    : IFinMatrix<IFinMatrix4x4, IReadOnlyFinMatrix4x4, Matrix4x4> {
-IFinMatrix4x4 TransposeInPlace();
+public partial interface IFinMatrix4X4
+    : IFinMatrix<IFinMatrix4X4, IReadOnlyFinMatrix4x4, Matrix4x4> {
+IFinMatrix4X4 TransposeInPlace();
 
 [Const]
-new IFinMatrix4x4 CloneAndTranspose();
+new IFinMatrix4X4 CloneAndTranspose();
 
 [Const]
-new void TransposeIntoBuffer(IFinMatrix4x4 buffer);
+new void TransposeIntoBuffer(IFinMatrix4X4 buffer);
 
 [Const]
 new void CopyTranslationInto(out Vector3 dst);

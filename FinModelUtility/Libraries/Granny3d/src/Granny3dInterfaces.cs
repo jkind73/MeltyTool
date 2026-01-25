@@ -25,7 +25,7 @@ namespace granny3d {
     string Name { get; }
     int ParentIndex { get; }
     IGrannyTransform LocalTransform { get; }
-    IFinMatrix4x4 InverseWorld4x4 { get; }
+    IFinMatrix4X4 InverseWorld4X4 { get; }
     float LodError { get; }
   }
 

@@ -54,20 +54,20 @@ public static class UboUtil {
     offset += SIZE_OF_VECTOR4;
   }
 
-  public static void AppendMatrix4x4(Span<byte> buffer,
+  public static void AppendMatrix4X4(Span<byte> buffer,
                                      ref int offset,
-                                     Matrix4x4 matrix4x4) {
+                                     Matrix4x4 matrix4X4) {
     buffer.Slice(offset, SIZE_OF_MATRIX4_X4).Cast<byte, Matrix4x4>()[0]
-        = matrix4x4;
+        = matrix4X4;
     offset += SIZE_OF_MATRIX4_X4;
   }
 
-  public static void AppendMatrix4x4s(Span<byte> buffer,
+  public static void AppendMatrix4X4S(Span<byte> buffer,
                                       ref int offset,
-                                      ReadOnlySpan<Matrix4x4> matrix4x4s) {
-    matrix4x4s.CopyTo(
-        buffer.Slice(offset, matrix4x4s.Length * SIZE_OF_MATRIX4_X4)
+                                      ReadOnlySpan<Matrix4x4> matrix4X4S) {
+    matrix4X4S.CopyTo(
+        buffer.Slice(offset, matrix4X4S.Length * SIZE_OF_MATRIX4_X4)
               .Cast<byte, Matrix4x4>());
-    offset += matrix4x4s.Length * SIZE_OF_MATRIX4_X4;
+    offset += matrix4X4S.Length * SIZE_OF_MATRIX4_X4;
   }
 }

@@ -210,7 +210,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         }
 
         var scaledJointMatrix =
-            SystemMatrix4x4Util.FromTrs(jointTranslation * neckScale,
+            SystemMatrix4X4Util.FromTrs(jointTranslation * neckScale,
                                         forwardRotation,
                                         neckScale);
 

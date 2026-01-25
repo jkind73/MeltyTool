@@ -5,8 +5,8 @@ using readOnly;
 namespace fin.math.matrix.three;
 
 [GenerateReadOnly]
-public partial interface IFinMatrix3x2
-    : IFinMatrix<IFinMatrix3x2, IReadOnlyFinMatrix3x2, Matrix3x2> {
+public partial interface IFinMatrix3X2
+    : IFinMatrix<IFinMatrix3X2, IReadOnlyFinMatrix3x2, Matrix3x2> {
   [Const]
   new void CopyTranslationInto(out Vector2 dst);
 

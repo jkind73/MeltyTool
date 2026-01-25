@@ -26,7 +26,7 @@ namespace sm64.Scripts {
         return;
       }
 
-      var root = new GeoScriptNode(null, FinMatrix4x4.identity);
+      var root = new GeoScriptNode(null, FinMatrix4X4.identity);
       mdlLods.Node = root;
 
       this.Add_(mdlLods, lvl, commandList, root);
@@ -39,7 +39,7 @@ namespace sm64.Scripts {
         GeoScriptNode root) {
       GeoScriptNode parent = root;
 
-      var matrixStack = new Matrix4x4stack();
+      var matrixStack = new Matrix4X4Stack();
       matrixStack.Push(parent.Matrix.Impl);
 
       var id = 0;
@@ -55,7 +55,7 @@ namespace sm64.Scripts {
             GeoRotationCommand geoRotationCommand
                 => this.CreateRotationMatrix_(geoRotationCommand.Rotation),
             GeoScaleCommand geoScaleCommand
-                => FinMatrix4x4Util.FromScale(geoScaleCommand.Scale / 65536.0f),
+                => FinMatrix4X4Util.FromScale(geoScaleCommand.Scale / 65536.0f),
             GeoTranslateAndRotateCommand geoTranslateAndRotateCommand
                 => this.CreateTranslationAndRotationMatrix_(
                     geoTranslateAndRotateCommand.Translation,
@@ -63,13 +63,13 @@ namespace sm64.Scripts {
             GeoTranslationCommand geoTranslationCommand
                 => this.CreateTranslationMatrix_(
                     geoTranslationCommand.Translation),
-            _ => FinMatrix4x4.identity,
+            _ => FinMatrix4X4.identity,
         };
 
         matrixStack.Top *= mulMatrix.Impl;
 
         var current = new GeoScriptNode(parent,
-                                        new FinMatrix4x4(matrixStack.Top));
+                                        new FinMatrix4X4(matrixStack.Top));
         current.id = id++;
         current.parent = parent;
 
@@ -114,25 +114,25 @@ namespace sm64.Scripts {
       }
     }
 
-    public IFinMatrix4x4 CreateTranslationAndRotationMatrix_(
+    public IFinMatrix4X4 CreateTranslationAndRotationMatrix_(
         Vector3S position,
         Vector3S rotation)
       => this.CreateRotationMatrix_(rotation)
              .MultiplyInPlace(this.CreateTranslationMatrix_(position));
 
-    public IFinMatrix4x4 CreateTranslationMatrix_(Vector3S position)
-      => FinMatrix4x4Util.FromTranslation(
+    public IFinMatrix4X4 CreateTranslationMatrix_(Vector3S position)
+      => FinMatrix4X4Util.FromTranslation(
           new Vector3(position.X, position.Y, position.Z));
 
-    public IFinMatrix4x4 CreateRotationMatrix_(Vector3S rotation)
-      => FinMatrix4x4Util
+    public IFinMatrix4X4 CreateRotationMatrix_(Vector3S rotation)
+      => FinMatrix4X4Util
          .FromRotation(
              new RotationImpl().SetDegrees(0, 0, rotation.Z))
          .MultiplyInPlace(
-             FinMatrix4x4Util.FromRotation(
+             FinMatrix4X4Util.FromRotation(
                  new RotationImpl().SetDegrees(rotation.X, 0, 0)))
          .MultiplyInPlace(
-             FinMatrix4x4Util.FromRotation(
+             FinMatrix4X4Util.FromRotation(
                  new RotationImpl().SetDegrees(0, rotation.Y, 0)));
 
     public void AddDisplayList(

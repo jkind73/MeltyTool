@@ -352,7 +352,7 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
 
                 var bone = jointsAndBones[jointIndex].Item2;
                 weights = [
-                    new BoneWeight(bone, FinMatrix4x4Util.Identity, 1)
+                    new BoneWeight(bone, FinMatrix4X4Util.Identity, 1)
                 ];
               }
 
@@ -452,8 +452,8 @@ public sealed class BmdModelImporter : IModelImporter<BmdModelFileBundle> {
     DoneRendering: ;
   }
 
-  private static IFinMatrix4x4 ConvertSchemaToFin_(Matrix3x4f schemaMatrix) {
-    var finMatrix = new FinMatrix4x4().SetIdentity();
+  private static IFinMatrix4X4 ConvertSchemaToFin_(Matrix3X4F schemaMatrix) {
+    var finMatrix = new FinMatrix4X4().SetIdentity();
 
     for (var r = 0; r < 3; ++r) {
       for (var c = 0; c < 4; ++c) {

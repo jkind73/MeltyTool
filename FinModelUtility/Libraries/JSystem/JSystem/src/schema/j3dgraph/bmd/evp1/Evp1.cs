@@ -61,7 +61,7 @@ public sealed partial class Evp1Data : IBinaryConvertible {
 
   [RAtPosition(nameof(inverseBindMatricesOffset_))]
   [RSequenceLengthSource(nameof(MaxInverseBindMatrixIndex))]
-  public Matrix3x4f[] InverseBindMatrices { get; set; }
+  public Matrix3X4F[] InverseBindMatrices { get; set; }
 
   [Skip]
   public MultiMatrix[] WeightedIndices { get; private set; }

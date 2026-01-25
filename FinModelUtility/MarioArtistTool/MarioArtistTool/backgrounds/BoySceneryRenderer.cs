@@ -112,7 +112,7 @@ public sealed class BoySceneryRenderer : IRenderable {
       (Vector2 center, Vector2 size) tuple) {
     var (center, size) = tuple;
 
-    return SystemMatrix4x4Util.FromTrs(
+    return SystemMatrix4X4Util.FromTrs(
         new Vector3(center.X, center.Y, 0),
         (Quaternion?) null,
         new Vector3(size, 1));

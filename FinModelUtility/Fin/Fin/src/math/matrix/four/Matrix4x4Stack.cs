@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 
 namespace fin.math.matrix.four;
 
-public interface IMatrix4x4stack {
+public interface IMatrix4X4Stack {
   Matrix4x4 Top { get; set; }
 
   Matrix4x4 Pop();
@@ -15,7 +15,7 @@ public interface IMatrix4x4stack {
   void MultiplyInPlace(in Matrix4x4 other);
 }
 
-public sealed class Matrix4x4stack : IMatrix4x4stack {
+public sealed class Matrix4X4Stack : IMatrix4X4Stack {
   private readonly Stack<Matrix4x4> impl_ = new([Matrix4x4.Identity]);
 
   public Matrix4x4 Top {

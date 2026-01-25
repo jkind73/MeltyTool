@@ -44,7 +44,7 @@ public static class XmlExtensions {
                                              string name)
     => xmlObject.GetAttributeFloats_<Vector2>(name);
 
-  public static Matrix4x4 GetAttributeMatrix4x4(this XmlLevelObject xmlObject,
+  public static Matrix4x4 GetAttributeMatrix4X4(this XmlLevelObject xmlObject,
                                                 string name)
     => xmlObject.GetAttributeFloats_<Matrix4x4>(name);
 

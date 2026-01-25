@@ -10,65 +10,65 @@ namespace fin.math.matrix.three;
 public sealed class Matrix3x2Tests {
   [Test]
   public void TestFloatArrayConstructor() {
-    var values = new float[FinMatrix3x2.CELL_COUNT];
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        values[FinMatrix3x2.COLUMN_COUNT * r + c] =
-            FinMatrix3x2.COLUMN_COUNT * r + c;
+    var values = new float[FinMatrix3X2.CELL_COUNT];
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        values[FinMatrix3X2.COLUMN_COUNT * r + c] =
+            FinMatrix3X2.COLUMN_COUNT * r + c;
       }
     }
 
-    var mat = new FinMatrix3x2(values);
+    var mat = new FinMatrix3X2(values);
 
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        Assert.AreEqual(FinMatrix3x2.COLUMN_COUNT * r + c, mat[r, c]);
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        Assert.AreEqual(FinMatrix3X2.COLUMN_COUNT * r + c, mat[r, c]);
       }
     }
   }
 
   [Test]
   public void TestDoubleArrayConstructor() {
-    var values = new double[FinMatrix3x2.CELL_COUNT];
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        values[FinMatrix3x2.COLUMN_COUNT * r + c] =
-            FinMatrix3x2.COLUMN_COUNT * r + c;
+    var values = new double[FinMatrix3X2.CELL_COUNT];
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        values[FinMatrix3X2.COLUMN_COUNT * r + c] =
+            FinMatrix3X2.COLUMN_COUNT * r + c;
       }
     }
 
-    var mat = new FinMatrix3x2(values);
+    var mat = new FinMatrix3X2(values);
 
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        Assert.AreEqual(FinMatrix3x2.COLUMN_COUNT * r + c, mat[r, c]);
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        Assert.AreEqual(FinMatrix3X2.COLUMN_COUNT * r + c, mat[r, c]);
       }
     }
   }
 
   [Test]
   public void TestCopyConstructor() {
-    var values = new float[FinMatrix3x2.CELL_COUNT];
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        values[FinMatrix3x2.COLUMN_COUNT * r + c] =
-            FinMatrix3x2.COLUMN_COUNT * r + c;
+    var values = new float[FinMatrix3X2.CELL_COUNT];
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        values[FinMatrix3X2.COLUMN_COUNT * r + c] =
+            FinMatrix3X2.COLUMN_COUNT * r + c;
       }
     }
 
-    var first = new FinMatrix3x2(values);
-    var second = new FinMatrix3x2(first);
+    var first = new FinMatrix3X2(values);
+    var second = new FinMatrix3X2(first);
 
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; ++r) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; ++c) {
-        Assert.AreEqual(FinMatrix3x2.COLUMN_COUNT * r + c, second[r, c]);
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; ++r) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; ++c) {
+        Assert.AreEqual(FinMatrix3X2.COLUMN_COUNT * r + c, second[r, c]);
       }
     }
   }
 
   [Test]
   public void TestMultiplyByMatrix() {
-    var lhs = new FinMatrix3x2();
+    var lhs = new FinMatrix3X2();
     lhs[0, 0] = 1;
     lhs[0, 1] = 2;
 
@@ -78,7 +78,7 @@ public sealed class Matrix3x2Tests {
     lhs[2, 0] = 5;
     lhs[2, 1] = 6;
 
-    var rhs = new FinMatrix3x2();
+    var rhs = new FinMatrix3X2();
     rhs[0, 0] = 7;
     rhs[0, 1] = 8;
       
@@ -102,7 +102,7 @@ public sealed class Matrix3x2Tests {
 
   [Test]
   public void TestMultiplyByScalar() {
-    var inputMatrix = new FinMatrix3x2();
+    var inputMatrix = new FinMatrix3X2();
     inputMatrix[0, 0] = 1;
     inputMatrix[0, 1] = 2;
 
@@ -126,7 +126,7 @@ public sealed class Matrix3x2Tests {
 
   [Test]
   public void TestInvert() {
-    var inputMatrix = new FinMatrix3x2();
+    var inputMatrix = new FinMatrix3X2();
     inputMatrix[0, 0] = 2;
     inputMatrix[0, 1] = 5;
 
@@ -138,7 +138,7 @@ public sealed class Matrix3x2Tests {
 
     var actualMatrix = inputMatrix.CloneAndInvert();
 
-    var expectedMatrix = new FinMatrix3x2();
+    var expectedMatrix = new FinMatrix3X2();
     expectedMatrix[0, 0] = .5f;
     expectedMatrix[0, 1] = -2.5f;
 
@@ -148,8 +148,8 @@ public sealed class Matrix3x2Tests {
     expectedMatrix[2, 0] = -2;
     expectedMatrix[2, 1] = 8;
 
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; r++) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; c++) {
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; r++) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; c++) {
         Asserts.IsRoughly(expectedMatrix[r, c], actualMatrix[r, c]);
       }
     }
@@ -157,7 +157,7 @@ public sealed class Matrix3x2Tests {
 
   [Test]
   public void TestMultiplyByInverse() {
-    var inputMatrix = new FinMatrix3x2();
+    var inputMatrix = new FinMatrix3X2();
     inputMatrix[0, 0] = 2;
     inputMatrix[0, 1] = 5;
 
@@ -170,10 +170,10 @@ public sealed class Matrix3x2Tests {
     var inverseMatrix = inputMatrix.CloneAndInvert();
 
     var actualMatrix = inputMatrix.CloneAndMultiply(inverseMatrix);
-    var expectedMatrix = FinMatrix3x2.identity;
+    var expectedMatrix = FinMatrix3X2.identity;
 
-    for (var r = 0; r < FinMatrix3x2.ROW_COUNT; r++) {
-      for (var c = 0; c < FinMatrix3x2.COLUMN_COUNT; c++) {
+    for (var r = 0; r < FinMatrix3X2.ROW_COUNT; r++) {
+      for (var c = 0; c < FinMatrix3X2.COLUMN_COUNT; c++) {
         Asserts.IsRoughly(expectedMatrix[r, c], actualMatrix[r, c]);
       }
     }
@@ -181,14 +181,14 @@ public sealed class Matrix3x2Tests {
 
   [Test]
   public void TestCloseEquals() {
-    var identityMatrix = FinMatrix3x2.identity;
+    var identityMatrix = FinMatrix3X2.identity;
     var closeToIdentityMatrix = this.GetCloseToIdentityMatrix_();
     Assert.AreEqual(identityMatrix, closeToIdentityMatrix);
   }
 
   [Test]
   public void TestCloseHashCode() {
-    var identityMatrix = FinMatrix3x2.identity;
+    var identityMatrix = FinMatrix3X2.identity;
     var closeToIdentityMatrix = this.GetCloseToIdentityMatrix_();
     Assert.AreEqual(identityMatrix.GetHashCode(),
                     closeToIdentityMatrix.GetHashCode());
@@ -196,14 +196,14 @@ public sealed class Matrix3x2Tests {
 
   [Test]
   public void TestDifferentEquals() {
-    var identityMatrix = FinMatrix3x2.identity;
+    var identityMatrix = FinMatrix3X2.identity;
     var differentFromIdentityMatrix = this.GetDifferentFromIdentityMatrix_();
     Assert.AreNotEqual(identityMatrix, differentFromIdentityMatrix);
   }
 
   [Test]
   public void TestDifferentHashCode() {
-    var identityMatrix = FinMatrix3x2.identity;
+    var identityMatrix = FinMatrix3X2.identity;
     var differentFromIdentityMatrix = this.GetDifferentFromIdentityMatrix_();
     Assert.AreNotEqual(identityMatrix.GetHashCode(),
                        differentFromIdentityMatrix.GetHashCode());
@@ -211,7 +211,7 @@ public sealed class Matrix3x2Tests {
 
 
   private IReadOnlyFinMatrix3x2 GetCloseToIdentityMatrix_() {
-    var closeToIdentityMatrix = new FinMatrix3x2().SetZero();
+    var closeToIdentityMatrix = new FinMatrix3X2().SetZero();
 
     var error = FloatsExtensions.EPSILON * .1f;
     closeToIdentityMatrix[0, 0] = 1 + error;
@@ -227,7 +227,7 @@ public sealed class Matrix3x2Tests {
   }
 
   private IReadOnlyFinMatrix3x2 GetDifferentFromIdentityMatrix_() {
-    var closeToIdentityMatrix = new FinMatrix3x2().SetZero();
+    var closeToIdentityMatrix = new FinMatrix3X2().SetZero();
 
     var error = FloatsExtensions.EPSILON * 10;
     closeToIdentityMatrix[0, 0] = 1 + error;
