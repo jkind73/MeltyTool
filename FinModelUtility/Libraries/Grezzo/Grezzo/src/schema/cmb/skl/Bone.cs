@@ -33,7 +33,7 @@ public sealed partial class Bone : IBinaryConvertible {
   public Vector3 Translation { get; set; }
 
   [Skip]
-  private bool HasUnk => CmbHeader.Version > Version.OCARINA_OF_TIME_3D;
+  private bool HasUnk => CmbHeader.FileVersion > Version.OCARINA_OF_TIME_3D;
 
   [Unknown]
   [RIfBoolean(nameof(HasUnk))]

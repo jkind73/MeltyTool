@@ -190,7 +190,7 @@ namespace KSoft.Security.Cryptography
 				"TigerHash version is not recognized");
 		}
 
-		private void ProcessWords()
+		private void ProcessWords_()
 		{
 			int i = -1;
 			ulong a = this.mRegs_[0], b = this.mRegs_[1], c = this.mRegs_[2];
@@ -236,7 +236,7 @@ namespace KSoft.Security.Cryptography
 			this.mRegs_[2] += c;
 		}
 
-		void CopyBlock(byte[] inputBuffer, int inputOffset)
+		void CopyBlock_(byte[] inputBuffer, int inputOffset)
 		{
 			int remainingBytes = inputBuffer.Length - inputOffset;
 			int inputCount = Math.Min(this.BlockSize, remainingBytes);
@@ -247,19 +247,19 @@ namespace KSoft.Security.Cryptography
 			Bits.ArrayCopy(inputBuffer, inputOffset, this.mX_, 0, inputCount);
 		}
 
-		void ProcessBlockOfWords(byte[] inputBuffer, int inputOffset, int blockCount)
+		void ProcessBlockOfWords_(byte[] inputBuffer, int inputOffset, int blockCount)
 		{
 			for (int blockIndex = 0, blockOffsetInInput = inputOffset; blockIndex < blockCount; blockIndex++, blockOffsetInInput += this.BlockSize)
 			{
-				this.CopyBlock(inputBuffer, blockOffsetInInput);
+				this.CopyBlock_(inputBuffer, blockOffsetInInput);
 
-				this.ProcessWords();
+				this.ProcessWords_();
 			}
 		}
 
 		protected override void ProcessBlock(byte[] inputBuffer, int inputOffset, int blockCount)
 		{
-			this.ProcessBlockOfWords(inputBuffer, inputOffset, blockCount);
+			this.ProcessBlockOfWords_(inputBuffer, inputOffset, blockCount);
 		}
 
 		protected override byte[] ProcessFinalBlock(byte[] inputBuffer, int inputOffset, int inputCount)
@@ -274,33 +274,33 @@ namespace KSoft.Security.Cryptography
 				Array.Copy(inputBuffer, inputOffset, inputBuffer, 0, inputCount);
 			}
 
-			inputOffset = 0;
+            inputOffset = 0;
 
 			Array.Clear(inputBuffer, inputCount, this.BlockSize-inputCount);
 
 			// write the padding byte then align up to the next word boundary (proceeding bytes are already zero due to above Clear)
-			int inputOffset = inputCount;
-			inputBuffer[inputOffset++] = (byte) this.Version; // padding byte
-			inputOffset = IntegerMath.Align(IntegerMath.K_INT64_ALIGNMENT_BIT, inputOffset);
+			int input_offset = inputCount;
+			inputBuffer[input_offset ++] = (byte) this.Version; // padding byte
+			input_offset  = IntegerMath.Align(IntegerMath.K_INT64_ALIGNMENT_BIT, input_offset );
 
 			// if we don't have enough space to encode the length, process what we have now as a block.
 			// remaining bytes are still all zero, due to above Clear.
-			if (inputOffset > (this.BlockSize-sizeof(ulong)))
+			if (input_offset  > (this.BlockSize-sizeof(ulong)))
 			{
-				this.ProcessBlock(inputBuffer, inputOffset, 1);
+				this.ProcessBlock(inputBuffer, input_offset , 1);
 
-				inputOffset = 0;
+				input_offset  = 0;
 				Array.Clear(inputBuffer, 0, this.BlockSize);
 			}
 
 			// write out the number of bytes that were processed before finalization
-			for ( inputOffset = this.BlockSize - sizeof(ulong)
+			for ( input_offset  = this.BlockSize - sizeof(ulong)
 				; msgBitLength != 0
-				; inputBuffer[inputOffset] = (byte)msgBitLength, msgBitLength >>= 8, ++inputOffset)
+				; inputBuffer[input_offset ] = (byte)msgBitLength, msgBitLength >>= 8, ++input_offset )
 			{
 			}
 
-			this.ProcessBlock(inputBuffer, inputOffset, 1);
+			this.ProcessBlock(inputBuffer, input_offset , 1);
 
 			if (this.HashValue == null)
 			{

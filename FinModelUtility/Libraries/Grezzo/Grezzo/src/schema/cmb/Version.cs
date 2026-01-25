@@ -12,11 +12,11 @@ public static class VersionExtensions {
     => version > Version.OCARINA_OF_TIME_3D;
 
   public static bool SupportsMinAndMaxInSepd(this Version version)
-    => CmbHeader.Version > Version.EVER_OASIS;
+    => CmbHeader.FileVersion > Version.EVER_OASIS;
 
   public static bool SupportsInSepd(this Version version)
-    => CmbHeader.Version > Version.OCARINA_OF_TIME_3D;
+    => CmbHeader.FileVersion > Version.OCARINA_OF_TIME_3D;
 
   public static bool SupportsStencilBuffer(this Version version)
-    => CmbHeader.Version > Version.OCARINA_OF_TIME_3D;
+    => CmbHeader.FileVersion > Version.OCARINA_OF_TIME_3D;
 }

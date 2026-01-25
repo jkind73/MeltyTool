@@ -58,7 +58,7 @@ public sealed class Cmb : IBinaryDeserializable {
       br.Position = this.header.SklOffset;
       this.skl.Read(br);
 
-      if (CmbHeader.Version > Version.OCARINA_OF_TIME_3D) {
+      if (CmbHeader.FileVersion > Version.OCARINA_OF_TIME_3D) {
         br.Position = this.header.QtrsOffset;
         this.qtrs.Read(br);
       }

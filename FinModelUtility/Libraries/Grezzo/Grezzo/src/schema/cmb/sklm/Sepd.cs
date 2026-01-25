@@ -31,7 +31,7 @@ public sealed partial class Sepd : IBinaryConvertible {
   public float[] PositionOffset { get; } = new float[3];
 
   [Skip]
-  private bool HasMinAndMax => CmbHeader.Version.SupportsMinAndMaxInSepd();
+  private bool HasMinAndMax => CmbHeader.FileVersion.SupportsMinAndMaxInSepd();
 
   // Min coordinate of the shape
   [RIfBoolean(nameof(HasMinAndMax))]
@@ -47,7 +47,7 @@ public sealed partial class Sepd : IBinaryConvertible {
   public readonly VertexAttribute normal = new();
 
   [Skip]
-  private bool HasTangents => CmbHeader.Version.SupportsInSepd();
+  private bool HasTangents => CmbHeader.FileVersion.SupportsInSepd();
 
   [RIfBoolean(nameof(HasTangents))]
   public VertexAttribute? tangents;

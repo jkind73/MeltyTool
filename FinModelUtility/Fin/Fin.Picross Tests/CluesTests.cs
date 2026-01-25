@@ -9,7 +9,7 @@ public sealed class CluesTests {
   public void TestAllEmpty() {
     var picrossDefinition = new PicrossDefinition(5, 10);
 
-    var clues = new PicrossCluesGenerator().GenerateClues(picrossDefinition);
+    var clues = PicrossCluesGenerator.GenerateClues(picrossDefinition);
 
     var columns = clues.Columns;
     Assert.AreEqual(picrossDefinition.Width, columns.Count);
@@ -43,7 +43,7 @@ public sealed class CluesTests {
     var picrossDefinition = new PicrossDefinition(5, 10);
     picrossDefinition.Fill(true);
 
-    var clues = new PicrossCluesGenerator().GenerateClues(picrossDefinition);
+    var clues = PicrossCluesGenerator.GenerateClues(picrossDefinition);
 
     var columns = clues.Columns;
     Assert.AreEqual(picrossDefinition.Width, columns.Count);
@@ -82,7 +82,7 @@ public sealed class CluesTests {
       }
     }
 
-    var clues = new PicrossCluesGenerator().GenerateClues(picrossDefinition);
+    var clues = PicrossCluesGenerator.GenerateClues(picrossDefinition);
 
     var columns = clues.Columns;
     Assert.AreEqual(picrossDefinition.Width, columns.Count);

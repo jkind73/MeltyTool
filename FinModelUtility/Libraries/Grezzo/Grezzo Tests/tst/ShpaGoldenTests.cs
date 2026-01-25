@@ -19,7 +19,7 @@ public sealed class ShpaGoldenTests {
       IReadOnlySystemFile goldenFile) {
     var goldenGameDir = goldenFile.AssertGetParent();
 
-    CmbHeader.Version = goldenGameDir.Name switch {
+    CmbHeader.FileVersion = goldenGameDir.Name switch {
         "luigis_mansion_3d" => Version.LUIGIS_MANSION_3D,
     };
 
