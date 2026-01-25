@@ -52,14 +52,11 @@ public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
       (IReadOnlyModelAnimation, float)? animationAndFrame) {
     this.texturesToCurrentFlipbookSwaps_.Clear();
 
-    if (animationAndFrame == null) {
-      return;
-    }
-
-    var (animation, frame) = animationAndFrame.Value;
+    var allTextureTracks = animationAndFrame?.Item1.TextureTracks;
+    var frame = animationAndFrame?.Item2 ?? 0;
     foreach (var texture in this.textures_) {
       IReadOnlyTexture? flipbookSwap = null;
-      if (animation.TextureTracks.TryGetValue(texture, out var textureTracks)) {
+      if (allTextureTracks?.TryGetValue(texture, out var textureTracks) ?? false) {
         var flipbookSwaps = textureTracks.FlipbookSwaps;
         flipbookSwaps?.TryGetAtFrame(frame, out flipbookSwap);
       }

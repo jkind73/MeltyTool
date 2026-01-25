@@ -37,6 +37,7 @@ public sealed class CachedTextureUniformData {
       GlShaderProgram shaderProgram) {
     this.TextureIndex = textureIndex;
     this.FinTexture = finTexture;
+    this.FallbackGlTexture = fallbackGlTexture;
     this.textureTransformManager_ = textureTransformManager;
     this.textureFlipbookSwapManager_ = textureFlipbookSwapManager;
 
@@ -61,7 +62,7 @@ public sealed class CachedTextureUniformData {
     var glTexture = this.FinTexture != null ? this.textureFlipbookSwapManager_.GetCurrentFlipbookSwap(
             this.FinTexture)
         : this.FallbackGlTexture;
-    glTexture.Bind();
+    glTexture.Bind(this.TextureIndex);
     this.SamplerUniform.SetAndMaybeMarkDirty(this.TextureIndex);
 
     if (this.needsStruct_) {
