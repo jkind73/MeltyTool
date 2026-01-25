@@ -11,10 +11,14 @@ namespace fin.ui.rendering.gl.material;
 public sealed class CachedTextureUniformData {
   private readonly bool needsStruct_;
 
+  private readonly IReadOnlyTextureTransformManager? textureTransformManager_;
+
+  private readonly IReadOnlyTextureFlipbookSwapManager
+      textureFlipbookSwapManager_;
+
   public int TextureIndex { get; }
   public IReadOnlyTexture? FinTexture { get; }
-  public readonly IReadOnlyTextureTransformManager? textureTransformManager_;
-  public IGlTexture GlTexture { get; }
+  public IGlTexture FallbackGlTexture { get; }
 
   public IShaderUniform<int> SamplerUniform { get; }
   public IShaderUniform<Vector2> ClampMinUniform { get; }
@@ -26,14 +30,15 @@ public sealed class CachedTextureUniformData {
       string textureName,
       int textureIndex,
       IReadOnlyTexture? finTexture,
+      IGlTexture fallbackGlTexture,
       IReadOnlyList<IReadOnlyModelAnimation> animations,
       IReadOnlyTextureTransformManager? textureTransformManager,
-      IGlTexture glTexture,
+      IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager,
       GlShaderProgram shaderProgram) {
     this.TextureIndex = textureIndex;
     this.FinTexture = finTexture;
     this.textureTransformManager_ = textureTransformManager;
-    this.GlTexture = glTexture;
+    this.textureFlipbookSwapManager_ = textureFlipbookSwapManager;
 
     this.needsStruct_ = finTexture.NeedsTextureShaderStruct(animations);
     if (!this.needsStruct_) {
@@ -53,7 +58,10 @@ public sealed class CachedTextureUniformData {
   }
 
   public void BindTextureAndPassInUniforms() {
-    this.GlTexture.Bind(this.TextureIndex);
+    var glTexture = this.FinTexture != null ? this.textureFlipbookSwapManager_.GetCurrentFlipbookSwap(
+            this.FinTexture)
+        : this.FallbackGlTexture;
+    glTexture.Bind();
     this.SamplerUniform.SetAndMaybeMarkDirty(this.TextureIndex);
 
     if (this.needsStruct_) {
@@ -100,8 +108,8 @@ public sealed class CachedTextureUniformData {
             this.Transform3dUniform.SetAndMarkDirty(threeDMatrix);
           }
         }
-      } 
-      
+      }
+
       if (!setMatrix) {
         this.Transform2dUniform.SetAndMaybeMarkDirty(Matrix3x2.Identity);
       }

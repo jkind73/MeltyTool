@@ -1,6 +1,6 @@
-﻿using fin.model;
+﻿using fin.math;
+using fin.model;
 using fin.shaders.glsl;
-using fin.ui.rendering.gl.texture;
 
 
 namespace fin.ui.rendering.gl.material;
@@ -8,12 +8,15 @@ namespace fin.ui.rendering.gl.material;
 public sealed class GlShaderMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
-    IReadOnlyShaderMaterial shaderMaterial)
+    IReadOnlyShaderMaterial shaderMaterial,
+    IReadOnlyTextureTransformManager textureTransformManager,
+    IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
     : BGlMaterialShader<IReadOnlyShaderMaterial>(
         model,
         modelRequirements,
         shaderMaterial,
-        null) {
+        textureTransformManager,
+        textureFlipbookSwapManager) {
   protected override void DisposeInternal() { }
 
   protected override void Setup(IReadOnlyShaderMaterial material,
@@ -22,8 +25,10 @@ public sealed class GlShaderMaterialShader(
 
     var textureIndex = 0;
     foreach (var (uniformName, finTexture) in material.TextureByUniform) {
-      var glTexture = GlTexture.FromTexture(finTexture);
-      this.SetUpTexture(uniformName, textureIndex++, finTexture, glTexture);
+      this.SetUpTexture(uniformName,
+                        textureIndex++,
+                        finTexture,
+                        GlMaterialConstants.NULL_WHITE_TEXTURE);
     }
   }
 

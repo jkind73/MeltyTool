@@ -4,7 +4,6 @@ using fin.math;
 using fin.model;
 using fin.model.util;
 using fin.shaders.glsl;
-using fin.ui.rendering.gl.texture;
 
 namespace fin.ui.rendering.gl.material;
 
@@ -12,12 +11,14 @@ public sealed class GlTextureMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
     IReadOnlyTextureMaterial material,
-    IReadOnlyTextureTransformManager? textureTransformManager)
+    IReadOnlyTextureTransformManager textureTransformManager,
+    IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
     : BGlMaterialShader<IReadOnlyTextureMaterial>(
         model,
         modelRequirements,
         material,
-        textureTransformManager) {
+        textureTransformManager,
+        textureFlipbookSwapManager) {
   private IShaderUniform<Vector4> diffuseColorUniform_;
 
   protected override void DisposeInternal() { }
@@ -26,11 +27,10 @@ public sealed class GlTextureMaterialShader(
       IReadOnlyTextureMaterial material,
       GlShaderProgram shaderProgram) {
     var finTexture = PrimaryTextureFinder.GetFor(material);
-    var glTexture = finTexture != null
-        ? GlTexture.FromTexture(finTexture)
-        : GlMaterialConstants.NULL_WHITE_TEXTURE;
-
-    this.SetUpTexture("diffuseTexture", 0, finTexture, glTexture);
+    this.SetUpTexture("diffuseTexture",
+                      0,
+                      finTexture,
+                      GlMaterialConstants.NULL_WHITE_TEXTURE);
 
     this.diffuseColorUniform_ = shaderProgram.GetUniformVec4("diffuseColor");
   }

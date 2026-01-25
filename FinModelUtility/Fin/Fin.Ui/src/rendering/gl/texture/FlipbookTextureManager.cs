@@ -1,0 +1,74 @@
+﻿using fin.data.indexable;
+using fin.model;
+using fin.ui.rendering.gl.texture;
+
+using readOnly;
+
+
+namespace fin.math;
+
+[GenerateReadOnly]
+public partial interface ITextureFlipbookSwapManager : IDisposable {
+  void UpdateCurrentFlipbookSwaps(
+      (IReadOnlyModelAnimation, float)? animationAndFrame);
+
+  [Const]
+  public IGlTexture GetCurrentFlipbookSwap(IReadOnlyTexture texture);
+}
+
+public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
+  private readonly IReadOnlyList<IReadOnlyTexture> textures_;
+
+  private readonly IndexableDictionary<IReadOnlyTexture, IGlTexture>
+      texturesToGlTextures_;
+
+  private readonly IndexableDictionary<IReadOnlyTexture, IGlTexture>
+      texturesToCurrentFlipbookSwaps_;
+
+  public TextureFlipbookSwapManager(IReadOnlyList<IReadOnlyTexture> textures) {
+    this.textures_ = textures;
+    this.texturesToGlTextures_ = new(textures.Count);
+    this.texturesToCurrentFlipbookSwaps_ = new(textures.Count);
+
+    foreach (var texture in textures) {
+      this.texturesToGlTextures_[texture] = GlTexture.FromTexture(texture);
+    }
+  }
+
+  ~TextureFlipbookSwapManager() => this.ReleaseUnmanagedResources_();
+
+  public void Dispose() {
+    this.ReleaseUnmanagedResources_();
+    GC.SuppressFinalize(this);
+  }
+
+  private void ReleaseUnmanagedResources_() {
+    foreach (var glTexture in this.texturesToGlTextures_) {
+      glTexture.Dispose();
+    }
+  }
+
+  public void UpdateCurrentFlipbookSwaps(
+      (IReadOnlyModelAnimation, float)? animationAndFrame) {
+    this.texturesToCurrentFlipbookSwaps_.Clear();
+
+    if (animationAndFrame == null) {
+      return;
+    }
+
+    var (animation, frame) = animationAndFrame.Value;
+    foreach (var texture in this.textures_) {
+      IReadOnlyTexture? flipbookSwap = null;
+      if (animation.TextureTracks.TryGetValue(texture, out var textureTracks)) {
+        var flipbookSwaps = textureTracks.FlipbookSwaps;
+        flipbookSwaps?.TryGetAtFrame(frame, out flipbookSwap);
+      }
+
+      this.texturesToCurrentFlipbookSwaps_[texture] =
+          this.texturesToGlTextures_[flipbookSwap ?? texture];
+    }
+  }
+
+  public IGlTexture GetCurrentFlipbookSwap(IReadOnlyTexture texture)
+    => this.texturesToCurrentFlipbookSwaps_[texture];
+}

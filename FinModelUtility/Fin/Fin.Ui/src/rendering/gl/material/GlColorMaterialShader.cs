@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 
+using fin.math;
 using fin.model;
 using fin.shaders.glsl;
 
@@ -9,12 +10,15 @@ namespace fin.ui.rendering.gl.material;
 public sealed class GlColorMaterialShader(
     IReadOnlyModel model,
     IModelRequirements modelRequirements,
-    IReadOnlyColorMaterial colorMaterial)
+    IReadOnlyColorMaterial colorMaterial,
+    IReadOnlyTextureTransformManager textureTransformManager,
+    IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
     : BGlMaterialShader<IReadOnlyColorMaterial>(
         model,
         modelRequirements,
         colorMaterial,
-        null) {
+        textureTransformManager,
+        textureFlipbookSwapManager) {
   private IShaderUniform<Vector4> diffuseLightColorUniform_;
 
   protected override void DisposeInternal() { }

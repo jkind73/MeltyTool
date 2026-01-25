@@ -25,18 +25,22 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
   public static IModelRenderer CreateStatic(
       IReadOnlyModel model,
       IReadOnlyBoneTransformManager? boneTransformManager = null,
-      IReadOnlyTextureTransformManager? textureTransformManager = null)
+      IReadOnlyTextureTransformManager? textureTransformManager = null,
+      IReadOnlyTextureFlipbookSwapManager? textureFlipbookSwapManager = null)
     => new ModelRenderer(model,
                          boneTransformManager,
-                         textureTransformManager);
+                         textureTransformManager,
+                         textureFlipbookSwapManager);
 
   public static IDynamicModelRenderer CreateDynamic(
       IReadOnlyModel model,
       IReadOnlyBoneTransformManager? boneTransformManager = null,
-      IReadOnlyTextureTransformManager? textureTransformManager = null)
+      IReadOnlyTextureTransformManager? textureTransformManager = null,
+      IReadOnlyTextureFlipbookSwapManager? textureFlipbookSwapManager = null)
     => new ModelRenderer(model,
                          boneTransformManager,
                          textureTransformManager,
+                         textureFlipbookSwapManager,
                          true);
 
 
@@ -55,6 +59,7 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
       IReadOnlyModel model,
       IReadOnlyBoneTransformManager? boneTransformManager = null,
       IReadOnlyTextureTransformManager? textureTransformManager = null,
+      IReadOnlyTextureFlipbookSwapManager? textureFlipbookSwapManager = null,
       bool dynamic = false) {
     this.model_ = model;
     this.boneTransformManager_ = boneTransformManager;
@@ -64,7 +69,8 @@ public sealed partial class ModelRenderer : IDynamicModelRenderer {
     this.boneMatrices_[0] = Matrix4x4.Identity;
 
     this.impl_ = new MergedMaterialMeshesRenderer(model,
-                                                  textureTransformManager,
+                                                  textureTransformManager!,
+                                                  textureFlipbookSwapManager!,
                                                   dynamic);
   }
 

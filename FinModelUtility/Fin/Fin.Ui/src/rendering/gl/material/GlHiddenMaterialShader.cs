@@ -1,16 +1,22 @@
-﻿using fin.model;
+﻿using fin.math;
+using fin.model;
 using fin.shaders.glsl;
 using fin.shaders.glsl.source;
+
 
 namespace fin.ui.rendering.gl.material;
 
 public sealed class GlHiddenMaterialShader(
     IReadOnlyModel model,
-    IModelRequirements modelRequirements)
-    : BGlMaterialShader<IReadOnlyMaterial?>(model,
-                                            modelRequirements,
-                                            null,
-                                            null) {
+    IModelRequirements modelRequirements,
+    IReadOnlyTextureTransformManager textureTransformManager,
+    IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
+    : BGlMaterialShader<IReadOnlyMaterial?>(
+        model,
+        modelRequirements,
+        null,
+        textureTransformManager,
+        textureFlipbookSwapManager) {
   protected override void DisposeInternal() { }
 
   protected override IShaderSourceGlsl GenerateShaderSource(

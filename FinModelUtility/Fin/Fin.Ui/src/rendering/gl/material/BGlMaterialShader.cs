@@ -17,6 +17,8 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
 
   private readonly IReadOnlyModel model_;
   private readonly IReadOnlyTextureTransformManager? textureTransformManager_;
+  private readonly IReadOnlyTextureFlipbookSwapManager
+      textureFlipbookSwapManager_;
   private readonly GlShaderProgram impl_;
 
   private readonly IShaderUniform<Vector3> cameraPositionUniform_;
@@ -28,10 +30,12 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
       IReadOnlyModel model,
       IModelRequirements modelRequirements,
       TMaterial material,
-      IReadOnlyTextureTransformManager? textureTransformManager) {
+      IReadOnlyTextureTransformManager? textureTransformManager,
+      IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager) {
     this.model_ = model;
     this.Material = material;
     this.textureTransformManager_ = textureTransformManager;
+    this.textureFlipbookSwapManager_ = textureFlipbookSwapManager;
 
     var shaderSource
         = this.GenerateShaderSource(model, modelRequirements, material);
@@ -59,11 +63,6 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
 
   private void ReleaseUnmanagedResources_() {
     this.impl_?.Dispose();
-
-    foreach (var cachedTextureUniformData in this.cachedTextureUniformDatas_) {
-      cachedTextureUniformData.GlTexture.Dispose();
-    }
-
     this.DisposeInternal();
   }
 
@@ -104,13 +103,14 @@ public abstract class BGlMaterialShader<TMaterial> : IGlMaterialShader
       string textureName,
       int textureIndex,
       IReadOnlyTexture? finTexture,
-      IGlTexture glTexture)
+      IGlTexture fallbackGlTexture)
     => this.cachedTextureUniformDatas_.AddLast(
         new CachedTextureUniformData(textureName,
                                      textureIndex,
                                      finTexture,
+                                     fallbackGlTexture,
                                      this.model_.AnimationManager.Animations,
                                      this.textureTransformManager_,
-                                     glTexture,
+                                     this.textureFlipbookSwapManager_,
                                      this.impl_));
 }

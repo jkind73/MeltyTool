@@ -205,7 +205,7 @@ public partial interface IMeshTracks {
 public partial interface ITextureTracks {
   new IReadOnlyTexture Texture { get; }
 
-  new IStairStepKeyframes<IReadOnlyTexture?>? Swaps { get; }
+  new IStairStepKeyframes<IReadOnlyTexture?>? FlipbookSwaps { get; }
 
   new ISeparateVector3Keyframes<KeyframeWithTangents<float>>? Translations {
     get;
@@ -218,7 +218,7 @@ public partial interface ITextureTracks {
   new ISeparateVector3Keyframes<KeyframeWithTangents<float>>? Scales { get; }
 
   // Swaps
-  IStairStepKeyframes<IReadOnlyTexture?> UseSwapKeyframes(
+  IStairStepKeyframes<IReadOnlyTexture?> UseFlipbookSwapKeyframes(
       int initialCapacity = 0,
       int? animationLength = null);
   

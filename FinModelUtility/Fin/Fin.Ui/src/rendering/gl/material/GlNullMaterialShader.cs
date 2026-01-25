@@ -1,16 +1,21 @@
-﻿using fin.model;
+﻿using fin.math;
+using fin.model;
 using fin.shaders.glsl;
 using fin.shaders.glsl.source;
+
 
 namespace fin.ui.rendering.gl.material;
 
 public sealed class GlNullMaterialShader(
     IReadOnlyModel model,
-    IModelRequirements modelRequirements)
+    IModelRequirements modelRequirements,
+    IReadOnlyTextureTransformManager textureTransformManager,
+    IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
     : BGlMaterialShader<IReadOnlyMaterial?>(model,
                                             modelRequirements,
                                             null,
-                                            null) {
+                                            textureTransformManager,
+                                            textureFlipbookSwapManager) {
   protected override void DisposeInternal() { }
 
   protected override IShaderSourceGlsl GenerateShaderSource(

@@ -8,9 +8,12 @@ using fin.model.util;
 using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
+
 namespace fin.ui.rendering.gl.model;
 
-using VisibilityMeshMaterialTuple = (IReadOnlyMaterial? material, (IReadOnlyMesh mesh, bool isVisibilityAnimated)? meshTuple);
+using VisibilityMeshMaterialTuple =
+    (IReadOnlyMaterial? material, (IReadOnlyMesh mesh, bool isVisibilityAnimated
+    )? meshTuple);
 
 public partial class ModelRenderer {
   /// <summary>
@@ -33,7 +36,8 @@ public partial class ModelRenderer {
     public static MergedMaterialPrimitivesRenderer[] CreateFromPrimitives(
         IGlBufferManager bufferManager,
         IReadOnlyModel model,
-        IReadOnlyTextureTransformManager? textureTransformManager,
+        IReadOnlyTextureTransformManager textureTransformManager,
+        IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager,
         IModelRequirements modelRequirements,
         IReadOnlyMeshVisibilityDictionary? meshVisibility) {
       // Gathers up which meshes have visibility toggled on and off.
@@ -54,8 +58,10 @@ public partial class ModelRenderer {
       }
 
       var primitiveMerger = new PrimitiveMerger();
-      var mergedMaterialQueue = new RenderPriorityOrderedSet<VisibilityMeshMaterialTuple>();
-      var unmergedMaterialQueue = new RenderPriorityOrderedSet<VisibilityMeshMaterialTuple>();
+      var mergedMaterialQueue =
+          new RenderPriorityOrderedSet<VisibilityMeshMaterialTuple>();
+      var unmergedMaterialQueue =
+          new RenderPriorityOrderedSet<VisibilityMeshMaterialTuple>();
       var primitivesByMaterial
           = new ListDictionary<VisibilityMeshMaterialTuple, IReadOnlyPrimitive>(
               new NullFriendlyDictionary<VisibilityMeshMaterialTuple,
@@ -71,7 +77,8 @@ public partial class ModelRenderer {
                               TransparencyType.TRANSPARENT;
 
           if (!isVisibilityAnimated) {
-            VisibilityMeshMaterialTuple visibilityMeshMaterialTuple = (primitive.Material, null);
+            VisibilityMeshMaterialTuple visibilityMeshMaterialTuple =
+                (primitive.Material, null);
             primitivesByMaterial.Add(visibilityMeshMaterialTuple, primitive);
             mergedMaterialQueue.Add(
                 visibilityMeshMaterialTuple,
@@ -97,18 +104,23 @@ public partial class ModelRenderer {
 
       var mergedPrimitives = new List<MergedPrimitive>();
       var materialTuples
-          = new List<(bool isTransparent, int minPrimitiveIndex, uint inversePriority,
+          = new List<(bool isTransparent, int minPrimitiveIndex, uint
+              inversePriority,
               VisibilityMeshMaterialTuple visibilityMeshMaterialTuple)>();
       var mergedPrimitiveByMaterial
           = new NullFriendlyDictionary<IReadOnlyMaterial?, MergedPrimitive>();
 
       foreach (var meshTuple in
-               mergedMaterialQueue.Select(t => (t, true)).Concat(unmergedMaterialQueue.Select(t => (t, false)))) {
+               mergedMaterialQueue.Select(t => (t, true))
+                                  .Concat(
+                                      unmergedMaterialQueue
+                                          .Select(t => (t, false)))) {
         var (t, isMerged) = meshTuple;
         var (isTransparent, minPrimitiveIndex, inversePriority,
             visibilityMeshMaterialTuple) = t;
 
-        var materialPrimitives = primitivesByMaterial[visibilityMeshMaterialTuple];
+        var materialPrimitives =
+            primitivesByMaterial[visibilityMeshMaterialTuple];
         if (!primitiveMerger.TryToMergePrimitives(
                 materialPrimitives,
                 out var mergedPrimitive)) {
@@ -118,7 +130,8 @@ public partial class ModelRenderer {
         var material = visibilityMeshMaterialTuple.material;
         if (isMerged) {
           mergedPrimitiveByMaterial[material] = mergedPrimitive;
-        } else if (visibilityMeshMaterialTuple.meshTuple?.isVisibilityAnimated is
+        } else if (visibilityMeshMaterialTuple.meshTuple
+                                              ?.isVisibilityAnimated is
                    false) {
           mergedPrimitive.Base = mergedPrimitiveByMaterial.TryGetValue(
               material,
@@ -128,7 +141,8 @@ public partial class ModelRenderer {
         }
 
         mergedPrimitives.Add(mergedPrimitive);
-        materialTuples.Add((isTransparent, minPrimitiveIndex, inversePriority, visibilityMeshMaterialTuple));
+        materialTuples.Add((isTransparent, minPrimitiveIndex, inversePriority,
+                            visibilityMeshMaterialTuple));
       }
 
       var rendererByMergedPrimitive
@@ -137,14 +151,17 @@ public partial class ModelRenderer {
       return bufferManager
              .CreateRenderers(mergedPrimitives)
              .Select((bufferRenderer, i) => {
-               var (isTransparent, minPrimitiveIndex, inversePriority, visibilityMeshMaterialTuple)
+               var (isTransparent, minPrimitiveIndex, inversePriority,
+                       visibilityMeshMaterialTuple)
                    = materialTuples[i];
 
-               var (material, visibilityMeshTuple) = visibilityMeshMaterialTuple;
+               var (material, visibilityMeshTuple) =
+                   visibilityMeshMaterialTuple;
 
                var mergedPrimitive = mergedPrimitives[i];
                var renderer = new MergedMaterialPrimitivesRenderer(
                    textureTransformManager,
+                   textureFlipbookSwapManager,
                    model,
                    modelRequirements,
                    visibilityMeshTuple,
@@ -168,7 +185,8 @@ public partial class ModelRenderer {
     }
 
     public MergedMaterialPrimitivesRenderer(
-        IReadOnlyTextureTransformManager? textureTransformManager,
+        IReadOnlyTextureTransformManager textureTransformManager,
+        IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager,
         IReadOnlyModel model,
         IModelRequirements modelRequirements,
         (IReadOnlyMesh mesh, bool isVisibilityAnimated)? meshTuple,
@@ -185,7 +203,8 @@ public partial class ModelRenderer {
             gl.material.GlMaterialShader.FromMaterial(model,
               modelRequirements,
               material,
-              textureTransformManager);
+              textureTransformManager,
+              textureFlipbookSwapManager);
 
       this.bufferRenderer_ = bufferRenderer;
 
@@ -222,11 +241,12 @@ public partial class ModelRenderer {
         return;
       }
 
-      var isVisible = this.Mesh == null || (this.MeshVisibility?[this.Mesh] ?? true);
+      var isVisible = this.Mesh == null ||
+                      (this.MeshVisibility?[this.Mesh] ?? true);
       if (!isVisible) {
         return;
       }
-      
+
       this.RenderImpl_();
     }
 

@@ -3,6 +3,7 @@ using fin.model;
 using fin.shaders.glsl;
 using fin.util.asserts;
 
+
 namespace fin.ui.rendering.gl.material;
 
 public static class GlMaterialShader {
@@ -10,32 +11,46 @@ public static class GlMaterialShader {
       IReadOnlyModel model,
       IModelRequirements modelRequirements,
       IReadOnlyMaterial? material,
-      IReadOnlyTextureTransformManager? textureTransformManager = null)
+      IReadOnlyTextureTransformManager textureTransformManager,
+      IReadOnlyTextureFlipbookSwapManager textureFlipbookSwapManager)
     => material.GetShaderType() switch {
         FinShaderType.FIXED_FUNCTION => new GlFixedFunctionMaterialShader(
             model,
             modelRequirements,
             Asserts.AsA<IReadOnlyFixedFunctionMaterial>(material),
-            textureTransformManager),
+            textureTransformManager,
+            textureFlipbookSwapManager),
         FinShaderType.TEXTURE => new GlTextureMaterialShader(model,
           modelRequirements,
           Asserts.AsA<IReadOnlyTextureMaterial>(material),
-          textureTransformManager),
+          textureTransformManager,
+          textureFlipbookSwapManager),
         FinShaderType.COLOR => new GlColorMaterialShader(model,
           modelRequirements,
-          Asserts.AsA<IReadOnlyColorMaterial>(material)),
+          Asserts.AsA<IReadOnlyColorMaterial>(material),
+          textureTransformManager,
+          textureFlipbookSwapManager),
         FinShaderType.SHADER => new GlShaderMaterialShader(model,
           modelRequirements,
-          Asserts.AsA<IReadOnlyShaderMaterial>(material)),
+          Asserts.AsA<IReadOnlyShaderMaterial>(material),
+          textureTransformManager,
+          textureFlipbookSwapManager),
         FinShaderType.STANDARD => new GlStandardMaterialShader(model,
           modelRequirements,
           Asserts.AsA<IReadOnlyStandardMaterial>(material),
-          textureTransformManager),
+          textureTransformManager,
+          textureFlipbookSwapManager),
         FinShaderType.HIDDEN => new GlHiddenMaterialShader(
             model,
-            modelRequirements),
+            modelRequirements,
+            textureTransformManager,
+            textureFlipbookSwapManager),
         FinShaderType.NULL
-            => new GlNullMaterialShader(model, modelRequirements),
+            => new GlNullMaterialShader(
+                model,
+                modelRequirements,
+                textureTransformManager,
+                textureFlipbookSwapManager),
         _ => throw new ArgumentOutOfRangeException()
     };
 }

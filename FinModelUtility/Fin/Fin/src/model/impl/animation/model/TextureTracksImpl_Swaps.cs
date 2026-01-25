@@ -6,9 +6,9 @@ namespace fin.model.impl;
 
 public partial class ModelImpl<TVertex> {
   private partial class TextureTracksImpl {
-    public IStairStepKeyframes<IReadOnlyTexture?> Swaps { get; private set; }
+    public IStairStepKeyframes<IReadOnlyTexture?> FlipbookSwaps { get; private set; }
 
-    public IStairStepKeyframes<IReadOnlyTexture?> UseSwapKeyframes(
+    public IStairStepKeyframes<IReadOnlyTexture?> UseFlipbookSwapKeyframes(
         int initialCapacity = 0,
         int? animationLength = null) {
       var transform = texture.TextureTransform;
@@ -20,7 +20,7 @@ public partial class ModelImpl<TVertex> {
               DefaultValue = Optional.Of(() => (IReadOnlyTexture?) null),
           });
 
-      this.Swaps = keyframes;
+      this.FlipbookSwaps = keyframes;
 
       return keyframes;
     }
