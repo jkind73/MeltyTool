@@ -23,10 +23,10 @@ dotnet_diagnostic.ca1711.severity = none
 #dotnet_diagnostic.ca1725.severity = error
 
 # CA1822: Member does not access instance data and can be marked as static
-dotnet_diagnostic.ca1822.severity = error
+#dotnet_diagnostic.ca1822.severity = error
 
 # CA1852: Type can be sealed because it has no subtypes in its containing assembly and is not externally visible
-dotnet_diagnostic.ca1852.severity = error
+#dotnet_diagnostic.ca1852.severity = error
 
 # CA2201: Exception type System.Exception is not sufficiently specific
 #dotnet_diagnostic.ca2201.severity = error
@@ -62,12 +62,12 @@ dotnet_diagnostic.cs8604.severity = error
 # CS8618: Non-nullable property 'ImageNames' must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring the property as nullable. 
 #dotnet_diagnostic.cs8618.severity = error
 
-# IDE1005: Redundant using directive
-dotnet_diagnostic.ide0005.severity = error
+# IDE0005: Redundant using directive
+#dotnet_diagnostic.ide0005.severity = error
 
 # IDE1006: Naming Styles
-#dotnet_diagnostic.ide0006.severity = error
-dotnet_diagnostic.ide0006.severity = warning
+#dotnet_diagnostic.ide1006.severity = error
+dotnet_diagnostic.ide1006.severity = warning
 
 
 #### Core EditorConfig Options ####
