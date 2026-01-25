@@ -77,7 +77,7 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
 
     var material = model.MaterialManager.AddShaderMaterial(
         $$"""
-          #version {{GlslConstants.VertexShaderVersion}}
+          #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
           {{GlslUtil.GetMatricesHeaders(model)}}
 
@@ -99,7 +99,7 @@ public sealed class SkyboxRenderer : ISkyboxRenderer {
           }
           """,
         $$"""
-          #version {{GlslConstants.FragmentShaderVersion}}
+          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           {{GlslUtil.GetMatricesHeaders(model)}}

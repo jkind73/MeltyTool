@@ -19,26 +19,26 @@ namespace KSoft.IO
 		class MethodGenerationArgs
 		{
 			/// <summary>Integer-type to stream the enum value as</summary>
-			public readonly Type streamType;
+			public readonly Type StreamType;
 			/// <summary>Enum type to stream</summary>
-			public readonly Type enumType;
-			/// <summary><see cref="enumType"/>'s integer type used to represent its raw value</summary>
-			public readonly Type underlyingType;
-			/// <summary>True when <see cref="underlyingType"/> != <see cref="streamType"/></summary>
-			public readonly bool underlyingTypeNeedsConversion;
-			public readonly bool useUnderlyingType;
-			public readonly bool streamTypeIsSigned;
+			public readonly Type EnumType;
+			/// <summary><see cref="EnumType"/>'s integer type used to represent its raw value</summary>
+			public readonly Type UnderlyingType;
+			/// <summary>True when <see cref="UnderlyingType"/> != <see cref="StreamType"/></summary>
+			public readonly bool UnderlyingTypeNeedsConversion;
+			public readonly bool UseUnderlyingType;
+			public readonly bool StreamTypeIsSigned;
 
-			public TOptions options;
+			public TOptions Options;
 
 			void AssertStreamTypeIsValid(out bool isSigned)
 			{
-				var tc = Type.GetTypeCode(this.streamType);
+				var tc = Type.GetTypeCode(this.StreamType);
 				isSigned = tc.IsSigned();
 
 				if (!EnumUtils.TypeIsSupported(tc))
 				{
-					var message = string.Format(Util.InvariantCultureInfo, "{0} is an invalid stream type", this.streamType);
+					var message = string.Format(Util.InvariantCultureInfo, "{0} is an invalid stream type", this.StreamType);
 
 					throw new NotSupportedException(message);
 				}
@@ -46,52 +46,52 @@ namespace KSoft.IO
 
 			public MethodGenerationArgs()
 			{
-				this.enumType = typeof(TEnum);
-				this.streamType = typeof(TStreamType);
-				this.underlyingType = Enum.GetUnderlyingType(this.enumType);
+				this.EnumType = typeof(TEnum);
+				this.StreamType = typeof(TStreamType);
+				this.UnderlyingType = Enum.GetUnderlyingType(this.EnumType);
 
 				// Check if the user wants us to always use the underlying type
-				this.useUnderlyingType = this.streamType == typeof(EnumBinaryStreamerUseUnderlyingType);
-				if (this.useUnderlyingType)
-					this.streamType = this.underlyingType;
+				this.UseUnderlyingType = this.StreamType == typeof(EnumBinaryStreamerUseUnderlyingType);
+				if (this.UseUnderlyingType)
+					this.StreamType = this.UnderlyingType;
 
-				EnumUtils.AssertTypeIsEnum(this.enumType);
-				EnumUtils.AssertUnderlyingTypeIsSupported(this.enumType, this.underlyingType);
-				this.AssertStreamTypeIsValid(out this.streamTypeIsSigned);
+				EnumUtils.AssertTypeIsEnum(this.EnumType);
+				EnumUtils.AssertUnderlyingTypeIsSupported(this.EnumType, this.UnderlyingType);
+				this.AssertStreamTypeIsValid(out this.StreamTypeIsSigned);
 
-				this.underlyingTypeNeedsConversion = this.underlyingType != this.streamType;
+				this.UnderlyingTypeNeedsConversion = this.UnderlyingType != this.StreamType;
 
-				this.options = new TOptions();
+				this.Options = new TOptions();
 
-				if (this.options.UseNoneSentinelEncoding)
+				if (this.Options.UseNoneSentinelEncoding)
 				{
-					if (this.streamType == typeof(sbyte) || this.streamType == typeof(byte))
+					if (this.StreamType == typeof(sbyte) || this.StreamType == typeof(byte))
 						throw new ArgumentException(
 							"{0}: UseNoneSentinelEncoding can't operate on (s)byte types (StreamType)",
-							this.enumType.FullName);
+							this.EnumType.FullName);
 				}
 				#region Options.BitSwap
-				if (this.options.BitSwap)
+				if (this.Options.BitSwap)
 				{
-					if (this.streamTypeIsSigned)
+					if (this.StreamTypeIsSigned)
 						throw new ArgumentException(
 							"{0}: Bit-swapping only makes sense on flags/unsigned types, but StreamType is signed",
-							this.enumType.FullName);
+							this.EnumType.FullName);
 				}
 				else
 				{
-					if (this.options.BitSwapGuardAgainstOneBit)
-						Debug.Trace.Io.TraceInformation("{0}'s {1} says we should guard against one bit cases, but not bitswap",
-						                                this.enumType.FullName, typeof(TOptions).FullName);
+					if (this.Options.BitSwapGuardAgainstOneBit)
+						Debug.Trace.IO.TraceInformation("{0}'s {1} says we should guard against one bit cases, but not bitswap",
+						                                this.EnumType.FullName, typeof(TOptions).FullName);
 				}
 				#endregion
 			}
 		};
 
 		/// <summary>Auto-generated method for reading enum values</summary>
-		static readonly ReadDelegate KRead;
+		static readonly ReadDelegate kRead;
 		/// <summary>Auto-generated method for writing enum values</summary>
-		static readonly Action<BitStream, TEnum, int> KWrite;
+		static readonly Action<BitStream, TEnum, int> kWrite;
 
 		/// <summary>Object for referencing the streamer functionality as an instance instead of as a type</summary>
 		public static readonly IEnumBitStreamer<TEnum> Instance;
@@ -100,32 +100,32 @@ namespace KSoft.IO
 		[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 		static EnumBitStreamer()
 		{
-			var generationArgs = new MethodGenerationArgs();
-			MethodInfo readMethodInfo, writeMethodInfo, swapMethod;
+			var generation_args = new MethodGenerationArgs();
+			MethodInfo read_method_info, write_method_info, swap_method;
 			#region Get read/write method info
-			if (generationArgs.useUnderlyingType)
+			if (generation_args.UseUnderlyingType)
 			{
 				// Since we use a type-parameter hack to imply we want to use the underlying type
 				// for the TStreamType, we have to use reflection to instantiate StreamType<>
 				// using kUnderlyingType, which kStreamType is set to up above
-				var streamTypeGenClass = typeof(StreamType<>);
-				var streamTypeClass = streamTypeGenClass.MakeGenericType(generationArgs.streamType);
-				readMethodInfo = streamTypeClass.GetField("kRead").GetValue(null) as MethodInfo;
-				writeMethodInfo = streamTypeClass.GetField("kWrite").GetValue(null) as MethodInfo;
-				swapMethod = streamTypeClass.GetField("kBitSwap").GetValue(null) as MethodInfo;
+				var stream_type_gen_class = typeof(StreamType<>);
+				var stream_type_class = stream_type_gen_class.MakeGenericType(generation_args.StreamType);
+				read_method_info = stream_type_class.GetField("kRead").GetValue(null) as MethodInfo;
+				write_method_info = stream_type_class.GetField("kWrite").GetValue(null) as MethodInfo;
+				swap_method = stream_type_class.GetField("kBitSwap").GetValue(null) as MethodInfo;
 			}
 			else
 			{
 				// If we don't use the type-parameter hack and instead are explicitly given the
 				// integer type, we can safely instantiate StreamType<> without reflection
-				readMethodInfo = StreamType<TStreamType>.KRead;
-				writeMethodInfo = StreamType<TStreamType>.KWrite;
-				swapMethod = StreamType<TStreamType>.KBitSwap;
+				read_method_info = StreamType<TStreamType>.kRead;
+				write_method_info = StreamType<TStreamType>.kWrite;
+				swap_method = StreamType<TStreamType>.kBitSwap;
 			}
 			#endregion
 
-			KRead = GenerateReadMethod(generationArgs, readMethodInfo, swapMethod);
-			KWrite = GenerateWriteMethod(generationArgs, writeMethodInfo, swapMethod);
+			kRead = GenerateReadMethod(generation_args, read_method_info, swap_method);
+			kWrite = GenerateWriteMethod(generation_args, write_method_info, swap_method);
 
 			Instance = new EnumBitStreamer<TEnum, TStreamType, TOptions>();
 		}
@@ -155,57 +155,57 @@ namespace KSoft.IO
 		static ReadDelegate GenerateReadMethod(MethodGenerationArgs args, MethodInfo readMethodInfo, MethodInfo bitSwapMethod)
 		{
 			// Get a "ref type" of the enum we're dealing with so we can define the enum value as an 'out' parameter
-			var enumRef = args.enumType.MakeByRefType();
+			var enum_ref = args.EnumType.MakeByRefType();
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the generated method's parameters
-			var paramS =		Expr.Parameter(KBitStreamType, "s");					// BitStream s
-			var paramV =		Expr.Parameter(enumRef, "v");							// ref TEnum v
-			var paramBc =		Expr.Parameter(typeof(int), "bitCount");				// int bitCount
+			var param_s =		Expr.Parameter(kBitStreamType, "s");					// BitStream s
+			var param_v =		Expr.Parameter(enum_ref, "v");							// ref TEnum v
+			var param_bc =		Expr.Parameter(typeof(int), "bitCount");				// int bitCount
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the Read call
-			Expr callRead;
-			if (args.streamTypeIsSigned)
-				callRead =		Expr.Call(paramS, readMethodInfo, paramBc, Expr.Constant(args.options.SignExtend));
+			Expr call_read;
+			if (args.StreamTypeIsSigned)
+				call_read =		Expr.Call(param_s, readMethodInfo, param_bc, Expr.Constant(args.Options.SignExtend));
 			else
-				callRead =		Expr.Call(paramS, readMethodInfo, paramBc);			// i.e., 's.Read<Type>(bitCount)'
+				call_read =		Expr.Call(param_s, readMethodInfo, param_bc);			// i.e., 's.Read<Type>(bitCount)'
 
-			if (args.options.UseNoneSentinelEncoding)
-				callRead = Expr.Decrement(callRead);
+			if (args.Options.UseNoneSentinelEncoding)
+				call_read = Expr.Decrement(call_read);
 
 			#region options.BitSwap
-			if (args.options.BitSwap)
+			if (args.Options.BitSwap)
 			{
 				// i.e., Bits.BitSwap( Read(), bitCount-1 );
-				var startBitIndex = Expr.Decrement(paramBc);
-				Expr swapCall = Expr.Call(null, bitSwapMethod, callRead, startBitIndex);
+				var start_bit_index = Expr.Decrement(param_bc);
+				Expr swap_call = Expr.Call(null, bitSwapMethod, call_read, start_bit_index);
 
 				// i.e., bitCount-1 ? Bits.BitSwap( Read(), bitCount-1 ) : Read() ;
-				if (args.options.BitSwapGuardAgainstOneBit)
+				if (args.Options.BitSwapGuardAgainstOneBit)
 				{
-					var startBitIndexIsNotZero = Expr.NotEqual(startBitIndex, Expr.Constant(0, typeof(int)));
-					swapCall = Expr.Condition(startBitIndexIsNotZero,
-						swapCall, callRead);
+					var start_bit_index_is_not_zero = Expr.NotEqual(start_bit_index, Expr.Constant(0, typeof(int)));
+					swap_call = Expr.Condition(start_bit_index_is_not_zero,
+						swap_call, call_read);
 				}
 
-				callRead = swapCall;
+				call_read = swap_call;
 			}
 			#endregion
 
-			var readResult =	args.underlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're reading,
-									Expr.Convert(callRead, args.underlyingType) :		// we need to cast the Read result from TStreamType to UnderlyingType
-									(Expr)callRead;
+			var read_result =	args.UnderlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're reading,
+									Expr.Convert(call_read, args.UnderlyingType) :		// we need to cast the Read result from TStreamType to UnderlyingType
+									(Expr)call_read;
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the member assignment
-			var paramVMember =Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// i.e., 'v.value__'
+			var param_v_member =Expr.PropertyOrField(param_v, EnumUtils.kMemberName);	// i.e., 'v.value__'
 			// i.e., 'v.value__ = s.Read<Type>()' or 'v.value__ = (UnderlyingType)s.Read<Type>()'
-			var assign =		Expr.Assign(paramVMember, readResult);
+			var assign =		Expr.Assign(param_v_member, read_result);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Generate a method based on the expression tree we've built
-			var lambda =		Expr.Lambda<ReadDelegate>(assign, paramS, paramV, paramBc);
+			var lambda =		Expr.Lambda<ReadDelegate>(assign, param_s, param_v, param_bc);
 			return lambda.Compile();
 		}
 
@@ -228,47 +228,47 @@ namespace KSoft.IO
 		{
 			//////////////////////////////////////////////////////////////////////////
 			// Define the generated method's parameters
-			var paramS =		Expr.Parameter(KBitStreamType, "s");					// BitStream s
-			var paramV =		Expr.Parameter(args.enumType, "v");							// TEnum v
-			var paramBc =		Expr.Parameter(typeof(int), "bitCount");				// int bitCount
+			var param_s =		Expr.Parameter(kBitStreamType, "s");					// BitStream s
+			var param_v =		Expr.Parameter(args.EnumType, "v");							// TEnum v
+			var param_bc =		Expr.Parameter(typeof(int), "bitCount");				// int bitCount
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the member access
-			var paramVMember =Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// i.e., 'v.value__'
-			var writeParam =	args.underlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're writing,
-									Expr.Convert(paramVMember, args.streamType) :		// we need to cast the Write param from UnderlyingType to TStreamType
-									(Expr)paramVMember;
+			var param_v_member =Expr.PropertyOrField(param_v, EnumUtils.kMemberName);	// i.e., 'v.value__'
+			var write_param =	args.UnderlyingTypeNeedsConversion ?					// If the underlying type is different from the type we're writing,
+									Expr.Convert(param_v_member, args.StreamType) :		// we need to cast the Write param from UnderlyingType to TStreamType
+									(Expr)param_v_member;
 
-			if (args.options.UseNoneSentinelEncoding)
-				writeParam = Expr.Increment(writeParam);
+			if (args.Options.UseNoneSentinelEncoding)
+				write_param = Expr.Increment(write_param);
 
 			#region options.BitSwap
-			if (args.options.BitSwap)
+			if (args.Options.BitSwap)
 			{
 				// i.e., Bits.BitSwap( value, bitCount-1 );
-				var startBitIndex = Expr.Decrement(paramBc);
-				Expr swapCall = Expr.Call(null, bitSwapMethod, writeParam, startBitIndex);
+				var start_bit_index = Expr.Decrement(param_bc);
+				Expr swap_call = Expr.Call(null, bitSwapMethod, write_param, start_bit_index);
 
 				// i.e., bitCount-1 ? Bits.BitSwap( value, bitCount-1 ) : value ;
-				if (args.options.BitSwapGuardAgainstOneBit)
+				if (args.Options.BitSwapGuardAgainstOneBit)
 				{
-					var startBitIndexIsNotZero = Expr.NotEqual(startBitIndex, Expr.Constant(0, typeof(int)));
-					swapCall = Expr.Condition(startBitIndexIsNotZero,
-						swapCall, writeParam);
+					var start_bit_index_is_not_zero = Expr.NotEqual(start_bit_index, Expr.Constant(0, typeof(int)));
+					swap_call = Expr.Condition(start_bit_index_is_not_zero,
+						swap_call, write_param);
 				}
 
-				writeParam = swapCall;
+				write_param = swap_call;
 			}
 			#endregion
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the Write call
 			// i.e., 's.Write(v.value__, bitCount)' or 's.Write((TStreamType)v.value__, bitCount)'
-			var callWrite =	Expr.Call(paramS, writeMethodInfo, writeParam, paramBc);
+			var call_write =	Expr.Call(param_s, writeMethodInfo, write_param, param_bc);
 
 			//////////////////////////////////////////////////////////////////////////
 			// Generate a method based on the expression tree we've built
-			var lambda = Expr.Lambda<Action<BitStream, TEnum, int>>(callWrite, paramS, paramV, paramBc);
+			var lambda = Expr.Lambda<Action<BitStream, TEnum, int>>(call_write, param_s, param_v, param_bc);
 			return lambda.Compile();
 		}
 		#endregion
@@ -280,7 +280,7 @@ namespace KSoft.IO
 		/// <returns>Value read from the stream</returns>
 		public static TEnum Read(BitStream s, int bitCount)
 		{
-			KRead(s, out TEnum value, bitCount);
+			kRead(s, out TEnum value, bitCount);
 
 			return value;
 		}
@@ -288,12 +288,12 @@ namespace KSoft.IO
 		/// <param name="s">Reader we're streaming from</param>
 		/// <param name="value">Value read from the stream</param>
 		/// <param name="bitCount"></param>
-		public static void Read(BitStream s, out TEnum value, int bitCount)	{ KRead(s, out value, bitCount); }
+		public static void Read(BitStream s, out TEnum value, int bitCount)	{ kRead(s, out value, bitCount); }
 		/// <summary>Stream a <typeparamref name="TEnum"/> value to a <see cref="IO.BitStream"/></summary>
 		/// <param name="s">Writer we're streaming to</param>
 		/// <param name="value"></param>
 		/// <param name="bitCount"></param>
-		public static void Write(BitStream s, TEnum value, int bitCount)		{ KWrite(s, value, bitCount); }
+		public static void Write(BitStream s, TEnum value, int bitCount)		{ kWrite(s, value, bitCount); }
 
 		/// <summary>Serialize a <typeparamref name="TEnum"/> value using an <see cref="IO.BitStream"/></summary>
 		/// <param name="s">Stream we're using for serialization</param>

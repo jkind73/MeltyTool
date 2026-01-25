@@ -145,7 +145,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref byte value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref byte value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -155,7 +155,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref sbyte value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref sbyte value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -165,7 +165,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref ushort value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref ushort value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -175,7 +175,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref short value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref short value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -185,7 +185,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref uint value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref uint value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -195,7 +195,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref int value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref int value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -205,7 +205,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref ulong value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref ulong value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -215,7 +215,7 @@ namespace KSoft.IO
 		/// </summary>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadCursor(ref long value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadCursor(ref long value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			this.ReadElement(this.Cursor, ref value, fromBase);
 		}
@@ -277,7 +277,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  byte value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  byte value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -291,7 +291,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  sbyte value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  sbyte value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -305,7 +305,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  ushort value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  ushort value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -319,7 +319,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  short value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  short value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -333,7 +333,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  uint value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  uint value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -347,7 +347,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  int value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  int value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -361,7 +361,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  ulong value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  ulong value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -375,7 +375,7 @@ namespace KSoft.IO
 		/// <param name="name">Element name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public void ReadElement(TName name, ref  long value, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElement(TName name, ref  long value, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -414,7 +414,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref byte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref byte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -423,7 +423,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -432,7 +432,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -441,7 +441,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref short value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref short value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -450,7 +450,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref uint value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref uint value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -459,7 +459,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref int value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref int value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -468,7 +468,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -477,7 +477,7 @@ namespace KSoft.IO
 		/// <param name="name">Attribute name</param>
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
-		public abstract void ReadAttribute(TName name, ref long value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract void ReadAttribute(TName name, ref long value, NumeralBase fromBase = NumeralBase.Decimal);
 		#endregion
 
 
@@ -523,7 +523,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref byte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref byte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -534,7 +534,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -545,7 +545,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -556,7 +556,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref short value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref short value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -567,7 +567,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref uint value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref uint value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -578,7 +578,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref int value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref int value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -589,7 +589,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the InnerText of element <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -600,7 +600,7 @@ namespace KSoft.IO
 		/// <param name="value">value to receive the data</param>
 		/// <remarks>If inner text is just an empty string, the stream ignores its existence</remarks>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadElementOpt(TName name, ref long value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadElementOpt(TName name, ref long value, NumeralBase fromBase = NumeralBase.Decimal);
 		#endregion
 
 
@@ -640,7 +640,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref byte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref byte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -650,7 +650,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref sbyte value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -660,7 +660,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref ushort value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -670,7 +670,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref short value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref short value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -680,7 +680,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref uint value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref uint value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -690,7 +690,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref int value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref int value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -700,7 +700,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref ulong value, NumeralBase fromBase = NumeralBase.Decimal);
 		/// <summary>
 		/// Stream out the attribute data of <paramref name="name"/>
 		/// using numerical base of <paramref name="base"/> into
@@ -710,7 +710,7 @@ namespace KSoft.IO
 		/// <param name="fromBase">numerical base to use</param>
 		/// <param name="value">value to receive the data</param>
 		/// <returns>true if the value exists</returns>
-		public abstract bool ReadAttributeOpt(TName name, ref long value, NumeralBase fromBase = NumeralBase.DECIMAL);
+		public abstract bool ReadAttributeOpt(TName name, ref long value, NumeralBase fromBase = NumeralBase.Decimal);
 		#endregion
 
 
@@ -841,7 +841,7 @@ namespace KSoft.IO
 		}
 
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< byte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< byte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -852,13 +852,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< byte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< byte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< byte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< byte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -866,7 +866,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -877,13 +877,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< sbyte > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -891,7 +891,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -902,13 +902,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< ushort > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -916,7 +916,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< short > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< short > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -927,13 +927,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< short > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< short > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< short > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< short > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -941,7 +941,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< uint > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< uint > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -952,13 +952,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< uint > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< uint > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< uint > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< uint > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -966,7 +966,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< int > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< int > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -977,13 +977,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< int > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< int > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< int > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< int > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -991,7 +991,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -1002,13 +1002,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< ulong > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1016,7 +1016,7 @@ namespace KSoft.IO
 			this.ReadElements(this.ElementsByName(name), coll, fromBase);
 		}
 
-		void ReadElements(IEnumerable<TCursor> elements, ICollection< long > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		void ReadElements(IEnumerable<TCursor> elements, ICollection< long > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			foreach (var node in elements)
 				using (this.EnterCursorBookmark(node))
@@ -1027,13 +1027,13 @@ namespace KSoft.IO
 					coll.Add(value);
 				}
 		}
-		public void ReadElements(ICollection< long > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(ICollection< long > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(coll != null);
 
 			this.ReadElements(this.Elements, coll, fromBase);
 		}
-		public void ReadElements(TName name, ICollection< long > coll, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public void ReadElements(TName name, ICollection< long > coll, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1186,7 +1186,7 @@ namespace KSoft.IO
 		}
 
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, byte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, byte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1200,13 +1200,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(byte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(byte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, byte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, byte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1214,7 +1214,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, sbyte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, sbyte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1228,13 +1228,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(sbyte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(sbyte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, sbyte[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, sbyte[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1242,7 +1242,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, ushort[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, ushort[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1256,13 +1256,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(ushort[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(ushort[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, ushort[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, ushort[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1270,7 +1270,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, short[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, short[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1284,13 +1284,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(short[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(short[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, short[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, short[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1298,7 +1298,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, uint[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, uint[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1312,13 +1312,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(uint[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(uint[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, uint[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, uint[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1326,7 +1326,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, int[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, int[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1340,13 +1340,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(int[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(int[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, int[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, int[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1354,7 +1354,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, ulong[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, ulong[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1368,13 +1368,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(ulong[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(ulong[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, ulong[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, ulong[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -1382,7 +1382,7 @@ namespace KSoft.IO
 			return this.ReadFixedArray(this.ElementsByName(name), array, fromBase);
 		}
 
-		int ReadFixedArray(IEnumerable<TCursor> elements, long[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		int ReadFixedArray(IEnumerable<TCursor> elements, long[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			int count = 0;
 			foreach (var node in elements)
@@ -1396,13 +1396,13 @@ namespace KSoft.IO
 
 			return count;
 		}
-		public int ReadFixedArray(long[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(long[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires<ArgumentNullException>(array != null);
 
 			return this.ReadFixedArray(this.Elements, array, fromBase);
 		}
-		public int ReadFixedArray(TName name, long[] array, NumeralBase fromBase = NumeralBase.DECIMAL)
+		public int ReadFixedArray(TName name, long[] array, NumeralBase fromBase = NumeralBase.Decimal)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);

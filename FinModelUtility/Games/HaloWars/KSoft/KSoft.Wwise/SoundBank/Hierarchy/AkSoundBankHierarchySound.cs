@@ -4,25 +4,25 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankHierarchySound
 		: AkSoundBankHierarchyObjectBase
 	{
-		public AkBankSourceData source = new AkBankSourceData();
+		public AkBankSourceData Source = new AkBankSourceData();
 
-		public string name;
-		public uint bankId;
+		public string Name;
+		public uint BankId;
 
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(this.source);
+			s.Stream(this.Source);
 			// There's more...
 		}
 
 		internal void PrepareForExtraction(AkSoundBank bank)
 		{
-			if (this.source.streamType != AkBankSourceData.SourceType.DATA)
-				this.bankId = bank.Id;
+			if (this.Source.StreamType != AkBankSourceData.SourceType.Data)
+				this.BankId = bank.Id;
 			else
-				this.bankId = this.source.mediaInfo.fileId;
+				this.BankId = this.Source.MediaInfo.FileID;
 		}
 	};
 }

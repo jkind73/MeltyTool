@@ -13,10 +13,10 @@ namespace KSoft.IO
 		/// <param name="value">value to serialize</param>
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref char value, int bitCount = Bits.K_CHAR_BIT_COUNT
+		public BitStream Stream(ref char value, int bitCount = Bits.kCharBitCount
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_CHAR_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kCharBitCount);
 
 				 if (this.IsReading) value = this.ReadChar(bitCount);
 			else if (this.IsWriting)
@@ -28,10 +28,10 @@ namespace KSoft.IO
 		/// <param name="value">value to serialize</param>
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref byte value, int bitCount = Bits.K_BYTE_BIT_COUNT
+		public BitStream Stream(ref byte value, int bitCount = Bits.kByteBitCount
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 
 				 if (this.IsReading) value = this.ReadByte(bitCount);
 			else if (this.IsWriting)
@@ -44,11 +44,11 @@ namespace KSoft.IO
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <param name="signExtend">If true, the result will have the MSB extended</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref sbyte value, int bitCount = Bits.K_S_BYTE_BIT_COUNT
+		public BitStream Stream(ref sbyte value, int bitCount = Bits.kSByteBitCount
 			, bool signExtend = false
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_S_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kSByteBitCount);
 
 				 if (this.IsReading) value = this.ReadSByte(bitCount, signExtend);
 			else if (this.IsWriting)
@@ -60,10 +60,10 @@ namespace KSoft.IO
 		/// <param name="value">value to serialize</param>
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref ushort value, int bitCount = Bits.K_U_INT16_BIT_COUNT
+		public BitStream Stream(ref ushort value, int bitCount = Bits.kUInt16BitCount
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_U_INT16_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kUInt16BitCount);
 
 				 if (this.IsReading) value = this.ReadUInt16(bitCount);
 			else if (this.IsWriting)
@@ -76,11 +76,11 @@ namespace KSoft.IO
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <param name="signExtend">If true, the result will have the MSB extended</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref short value, int bitCount = Bits.K_INT16_BIT_COUNT
+		public BitStream Stream(ref short value, int bitCount = Bits.kInt16BitCount
 			, bool signExtend = false
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT16_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt16BitCount);
 
 				 if (this.IsReading) value = this.ReadInt16(bitCount, signExtend);
 			else if (this.IsWriting)
@@ -92,10 +92,10 @@ namespace KSoft.IO
 		/// <param name="value">value to serialize</param>
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref uint value, int bitCount = Bits.K_U_INT32_BIT_COUNT
+		public BitStream Stream(ref uint value, int bitCount = Bits.kUInt32BitCount
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_U_INT32_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kUInt32BitCount);
 
 				 if (this.IsReading) value = this.ReadUInt32(bitCount);
 			else if (this.IsWriting)
@@ -108,11 +108,11 @@ namespace KSoft.IO
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <param name="signExtend">If true, the result will have the MSB extended</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref int value, int bitCount = Bits.K_INT32_BIT_COUNT
+		public BitStream Stream(ref int value, int bitCount = Bits.kInt32BitCount
 			, bool signExtend = false
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt32BitCount);
 
 				 if (this.IsReading) value = this.ReadInt32(bitCount, signExtend);
 			else if (this.IsWriting)
@@ -124,10 +124,10 @@ namespace KSoft.IO
 		/// <param name="value">value to serialize</param>
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref ulong value, int bitCount = Bits.K_U_INT64_BIT_COUNT
+		public BitStream Stream(ref ulong value, int bitCount = Bits.kUInt64BitCount
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_U_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kUInt64BitCount);
 
 				 if (this.IsReading) value = this.ReadUInt64(bitCount);
 			else if (this.IsWriting)
@@ -140,11 +140,11 @@ namespace KSoft.IO
 		/// <param name="bitCount">Number of bits to use</param>
 		/// <param name="signExtend">If true, the result will have the MSB extended</param>
 		/// <returns>Returns this instance</returns>
-		public BitStream Stream(ref long value, int bitCount = Bits.K_INT64_BIT_COUNT
+		public BitStream Stream(ref long value, int bitCount = Bits.kInt64BitCount
 			, bool signExtend = false
 			)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt64BitCount);
 
 				 if (this.IsReading) value = this.ReadInt64(bitCount, signExtend);
 			else if (this.IsWriting)
@@ -190,11 +190,11 @@ namespace KSoft.IO
 
 		#region StreamFixedArray
 		public BitStream StreamFixedArray(char[] array,
-			int elementBitSize = Bits.K_CHAR_BIT_COUNT
+			int elementBitSize = Bits.kCharBitCount
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_CHAR_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kCharBitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize);
@@ -202,11 +202,11 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(byte[] array,
-			int elementBitSize = Bits.K_BYTE_BIT_COUNT
+			int elementBitSize = Bits.kByteBitCount
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kByteBitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize);
@@ -214,12 +214,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(sbyte[] array,
-			int elementBitSize = Bits.K_S_BYTE_BIT_COUNT
+			int elementBitSize = Bits.kSByteBitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_S_BYTE_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kSByteBitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize, signExtend);
@@ -227,11 +227,11 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(ushort[] array,
-			int elementBitSize = Bits.K_U_INT16_BIT_COUNT
+			int elementBitSize = Bits.kUInt16BitCount
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT16_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kUInt16BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize);
@@ -239,12 +239,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(short[] array,
-			int elementBitSize = Bits.K_INT16_BIT_COUNT
+			int elementBitSize = Bits.kInt16BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_INT16_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kInt16BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize, signExtend);
@@ -252,11 +252,11 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(uint[] array,
-			int elementBitSize = Bits.K_U_INT32_BIT_COUNT
+			int elementBitSize = Bits.kUInt32BitCount
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT32_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kUInt32BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize);
@@ -264,12 +264,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(int[] array,
-			int elementBitSize = Bits.K_INT32_BIT_COUNT
+			int elementBitSize = Bits.kInt32BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kInt32BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize, signExtend);
@@ -277,11 +277,11 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(ulong[] array,
-			int elementBitSize = Bits.K_U_INT64_BIT_COUNT
+			int elementBitSize = Bits.kUInt64BitCount
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT64_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kUInt64BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize);
@@ -289,12 +289,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamFixedArray(long[] array,
-			int elementBitSize = Bits.K_INT64_BIT_COUNT
+			int elementBitSize = Bits.kInt64BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(array != null);
-			Contract.Requires(elementBitSize <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(elementBitSize <= Bits.kInt64BitCount);
 
 			for (int x = 0; x < array.Length; x++)
 				this.Stream(ref array[x], elementBitSize, signExtend);
@@ -334,12 +334,12 @@ namespace KSoft.IO
 
 		#region StreamArray
 		public BitStream StreamArray(ref char[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_CHAR_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kCharBitCount
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_CHAR_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kCharBitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -353,12 +353,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref byte[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_BYTE_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kByteBitCount
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kByteBitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -372,13 +372,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref sbyte[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_S_BYTE_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kSByteBitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_S_BYTE_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kSByteBitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -392,12 +392,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref ushort[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_U_INT16_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kUInt16BitCount
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT16_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt16BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -411,13 +411,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref short[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_INT16_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kInt16BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT16_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt16BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -431,12 +431,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref uint[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_U_INT32_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kUInt32BitCount
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT32_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt32BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -450,13 +450,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref int[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_INT32_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kInt32BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt32BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -470,12 +470,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref ulong[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_U_INT64_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kUInt64BitCount
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT64_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt64BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -489,13 +489,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamArray(ref long[] array,
-			int lengthBitSize, int elementBitSize = Bits.K_INT64_BIT_COUNT
+			int lengthBitSize, int elementBitSize = Bits.kInt64BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt64BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -513,7 +513,7 @@ namespace KSoft.IO
 			int lengthBitSize)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -530,7 +530,7 @@ namespace KSoft.IO
 			int lengthBitSize)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -547,7 +547,7 @@ namespace KSoft.IO
 			int lengthBitSize)
 		{
 			Contract.Requires(this.IsReading || array != null);
-			Contract.Requires(lengthBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(lengthBitSize <= Bits.kInt32BitCount);
 
 			int count = this.IsReading ? 0 : array.Length;
 			this.Stream(ref count, lengthBitSize);
@@ -565,12 +565,12 @@ namespace KSoft.IO
 
 		#region StreamList
 		public BitStream StreamElements(ICollection< char > list,
-			int countBitSize, int elementBitSize = Bits.K_CHAR_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kCharBitCount
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_CHAR_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kCharBitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -592,12 +592,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< byte > list,
-			int countBitSize, int elementBitSize = Bits.K_BYTE_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kByteBitCount
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kByteBitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -619,13 +619,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< sbyte > list,
-			int countBitSize, int elementBitSize = Bits.K_S_BYTE_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kSByteBitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_S_BYTE_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kSByteBitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -647,12 +647,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< ushort > list,
-			int countBitSize, int elementBitSize = Bits.K_U_INT16_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kUInt16BitCount
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT16_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt16BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -674,13 +674,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< short > list,
-			int countBitSize, int elementBitSize = Bits.K_INT16_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kInt16BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT16_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt16BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -702,12 +702,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< uint > list,
-			int countBitSize, int elementBitSize = Bits.K_U_INT32_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kUInt32BitCount
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT32_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt32BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -729,13 +729,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< int > list,
-			int countBitSize, int elementBitSize = Bits.K_INT32_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kInt32BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt32BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -757,12 +757,12 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< ulong > list,
-			int countBitSize, int elementBitSize = Bits.K_U_INT64_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kUInt64BitCount
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_U_INT64_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kUInt64BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -784,13 +784,13 @@ namespace KSoft.IO
 			return this;
 		}
 		public BitStream StreamElements(ICollection< long > list,
-			int countBitSize, int elementBitSize = Bits.K_INT64_BIT_COUNT
+			int countBitSize, int elementBitSize = Bits.kInt64BitCount
 			, bool signExtend = false
 			)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
-			Contract.Requires(elementBitSize <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
+			Contract.Requires(elementBitSize <= Bits.kInt64BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -816,7 +816,7 @@ namespace KSoft.IO
 			int countBitSize)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -841,7 +841,7 @@ namespace KSoft.IO
 			int countBitSize)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);
@@ -866,7 +866,7 @@ namespace KSoft.IO
 			int countBitSize)
 		{
 			Contract.Requires(list != null);
-			Contract.Requires(countBitSize <= Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(countBitSize <= Bits.kInt32BitCount);
 
 			int count = list.Count;
 			this.Stream(ref count, countBitSize);

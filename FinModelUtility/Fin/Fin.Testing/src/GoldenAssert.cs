@@ -15,7 +15,7 @@ using SixLabors.ImageSharp.PixelFormats;
 namespace fin.testing;
 
 public static partial class GoldenAssert {
-  private const string TMP_NAME_ = "tmp";
+  private const string TMP_NAME = "tmp";
 
   public static ISystemDirectory GetRootGoldensDirectory(
       Assembly executingAssembly) {
@@ -43,7 +43,7 @@ public static partial class GoldenAssert {
       ISystemDirectory rootGoldenDirectory) {
     var hierarchy = FileHierarchy.From(rootGoldenDirectory);
     return hierarchy.Root.GetExistingSubdirs()
-                    .Where(subdir => !subdir.Name.SequenceEqual(TMP_NAME_));
+                    .Where(subdir => !subdir.Name.SequenceEqual(TMP_NAME));
   }
 
   public static async Task AssertGoldenFiles(

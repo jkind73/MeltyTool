@@ -10,22 +10,22 @@ namespace KSoft
 	partial class Bits
 	{
 		[Contracts.Pure]
-		public static byte BitSwap(byte value, int startBitIndex = K_BYTE_BIT_COUNT-1)
+		public static byte BitSwap(byte value, int startBitIndex = kByteBitCount-1)
 		{
-			Contract.Requires(startBitIndex > 0, K_BIT_SWAP_START_BIT_INDEX_NOT_GREATER_THAN_ZERO_);
-			Contract.Requires(startBitIndex < K_BYTE_BIT_COUNT);
+			Contract.Requires(startBitIndex > 0, kBitSwap_StartBitIndexNotGreaterThanZero);
+			Contract.Requires(startBitIndex < kByteBitCount);
 
 			if (value != 0 && value != byte.MaxValue)
 			{
 				uint bits = 0;
-				const uint kOne = 1U;
+				const uint k_one = 1U;
 
-				int bitsShift = 0;
-				int valueShift = startBitIndex;
-				for (var valueMask = kOne << startBitIndex;
-					valueShift >= 0;
-					valueMask >>= 1, valueShift--, bitsShift++)
-					bits |= ((value & valueMask) >> valueShift) << bitsShift;
+				int bits_shift = 0;
+				int value_shift = startBitIndex;
+				for (var value_mask = k_one << startBitIndex;
+					value_shift >= 0;
+					value_mask >>= 1, value_shift--, bits_shift++)
+					bits |= ((value & value_mask) >> value_shift) << bits_shift;
 
 				value = (byte)bits;
 			}
@@ -33,22 +33,22 @@ namespace KSoft
 		}
 
 		[Contracts.Pure]
-		public static ushort BitSwap(ushort value, int startBitIndex = K_INT16_BIT_COUNT-1)
+		public static ushort BitSwap(ushort value, int startBitIndex = kInt16BitCount-1)
 		{
-			Contract.Requires(startBitIndex > 0, K_BIT_SWAP_START_BIT_INDEX_NOT_GREATER_THAN_ZERO_);
-			Contract.Requires(startBitIndex < K_INT16_BIT_COUNT);
+			Contract.Requires(startBitIndex > 0, kBitSwap_StartBitIndexNotGreaterThanZero);
+			Contract.Requires(startBitIndex < kInt16BitCount);
 
 			if (value != 0 && value != ushort.MaxValue)
 			{
 				uint bits = 0;
-				const uint kOne = 1U;
+				const uint k_one = 1U;
 
-				int bitsShift = 0;
-				int valueShift = startBitIndex;
-				for (var valueMask = kOne << startBitIndex;
-					valueShift >= 0;
-					valueMask >>= 1, valueShift--, bitsShift++)
-					bits |= ((value & valueMask) >> valueShift) << bitsShift;
+				int bits_shift = 0;
+				int value_shift = startBitIndex;
+				for (var value_mask = k_one << startBitIndex;
+					value_shift >= 0;
+					value_mask >>= 1, value_shift--, bits_shift++)
+					bits |= ((value & value_mask) >> value_shift) << bits_shift;
 
 				value = (ushort)bits;
 			}
@@ -56,22 +56,22 @@ namespace KSoft
 		}
 
 		[Contracts.Pure]
-		public static uint BitSwap(uint value, int startBitIndex = K_INT32_BIT_COUNT-1)
+		public static uint BitSwap(uint value, int startBitIndex = kInt32BitCount-1)
 		{
-			Contract.Requires(startBitIndex > 0, K_BIT_SWAP_START_BIT_INDEX_NOT_GREATER_THAN_ZERO_);
-			Contract.Requires(startBitIndex < K_INT32_BIT_COUNT);
+			Contract.Requires(startBitIndex > 0, kBitSwap_StartBitIndexNotGreaterThanZero);
+			Contract.Requires(startBitIndex < kInt32BitCount);
 
 			if (value != 0 && value != uint.MaxValue)
 			{
 				uint bits = 0;
-				const uint kOne = 1U;
+				const uint k_one = 1U;
 
-				int bitsShift = 0;
-				int valueShift = startBitIndex;
-				for (var valueMask = kOne << startBitIndex;
-					valueShift >= 0;
-					valueMask >>= 1, valueShift--, bitsShift++)
-					bits |= ((value & valueMask) >> valueShift) << bitsShift;
+				int bits_shift = 0;
+				int value_shift = startBitIndex;
+				for (var value_mask = k_one << startBitIndex;
+					value_shift >= 0;
+					value_mask >>= 1, value_shift--, bits_shift++)
+					bits |= ((value & value_mask) >> value_shift) << bits_shift;
 
 				value = (uint)bits;
 			}
@@ -79,22 +79,22 @@ namespace KSoft
 		}
 
 		[Contracts.Pure]
-		public static ulong BitSwap(ulong value, int startBitIndex = K_INT64_BIT_COUNT-1)
+		public static ulong BitSwap(ulong value, int startBitIndex = kInt64BitCount-1)
 		{
-			Contract.Requires(startBitIndex > 0, K_BIT_SWAP_START_BIT_INDEX_NOT_GREATER_THAN_ZERO_);
-			Contract.Requires(startBitIndex < K_INT64_BIT_COUNT);
+			Contract.Requires(startBitIndex > 0, kBitSwap_StartBitIndexNotGreaterThanZero);
+			Contract.Requires(startBitIndex < kInt64BitCount);
 
 			if (value != 0 && value != ulong.MaxValue)
 			{
 				ulong bits = 0;
-				const ulong kOne = 1UL;
+				const ulong k_one = 1UL;
 
-				int bitsShift = 0;
-				int valueShift = startBitIndex;
-				for (var valueMask = kOne << startBitIndex;
-					valueShift >= 0;
-					valueMask >>= 1, valueShift--, bitsShift++)
-					bits |= ((value & valueMask) >> valueShift) << bitsShift;
+				int bits_shift = 0;
+				int value_shift = startBitIndex;
+				for (var value_mask = k_one << startBitIndex;
+					value_shift >= 0;
+					value_mask >>= 1, value_shift--, bits_shift++)
+					bits |= ((value & value_mask) >> value_shift) << bits_shift;
 
 				value = (ulong)bits;
 			}

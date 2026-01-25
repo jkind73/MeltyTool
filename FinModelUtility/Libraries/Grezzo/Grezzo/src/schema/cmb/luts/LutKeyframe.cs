@@ -4,8 +4,8 @@ namespace grezzo.schema.cmb.luts;
 
 [BinarySchema]
 public sealed partial class LutKeyframe : IBinaryConvertible {
-  public float inSlope;
-  public float outSlope;
-  public int frame;
-  public float value;
+  public float InSlope;
+  public float OutSlope;
+  public int Frame;
+  public float Value;
 }

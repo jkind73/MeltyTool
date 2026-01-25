@@ -3,10 +3,10 @@ namespace KSoft.Wwise.SoundBank
 {
 	partial class AkSoundBankObjectBase
 	{
-		static readonly Values.GroupTagData32 KMediaIndexSignature =
+		static readonly Values.GroupTagData32 kMediaIndexSignature =
 					new Values.GroupTagData32("DIDX", "audiokinetic_sound_bank_data_index"); // BankDataIndexChunkID
 
-		static AkSoundBankObjectBase NewDidx(uint generatorVersion)
+		static AkSoundBankObjectBase NewDIDX(uint generatorVersion)
 		{
 			return new AkSoundBankDataIndex();
 		}
@@ -15,14 +15,14 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankDataIndex
 		: AkSoundBankObjectBase
 	{
-		public AkMediaHeader[] loadedMedia;
+		public AkMediaHeader[] LoadedMedia;
 
 		public override void Serialize(IO.EndianStream s, AkSubchunkHeader header)
 		{
 			if (s.IsReading)
-				this.loadedMedia = new AkMediaHeader[header.chunkSize / AkMediaHeader.K_SIZE_OF];
+				this.LoadedMedia = new AkMediaHeader[header.ChunkSize / AkMediaHeader.kSizeOf];
 
-			s.StreamArray(this.loadedMedia);
+			s.StreamArray(this.LoadedMedia);
 		}
 	};
 }

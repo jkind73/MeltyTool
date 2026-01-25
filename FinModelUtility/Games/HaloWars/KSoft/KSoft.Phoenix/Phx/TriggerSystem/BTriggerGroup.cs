@@ -5,11 +5,11 @@ namespace KSoft.Phoenix.Phx
 		: TriggerScriptIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			rootName = "TriggerGroups",
-			elementName = "Group",
-			dataName = DatabaseNamedObject.K_XML_ATTR_NAME_N,
+			RootName = "TriggerGroups",
+			ElementName = "Group",
+			DataName = DatabaseNamedObject.kXmlAttrNameN,
 		};
 	#endregion
 

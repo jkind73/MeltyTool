@@ -6,25 +6,25 @@ using fin.ui.rendering.gl.texture;
 namespace fin.ui.rendering.gl.material;
 
 public static class GlMaterialConstants {
-  public static IGlTexture NullWhiteTexture { get; private set; }
-  public static IGlTexture NullGrayTexture { get; private set;}
-  public static IGlTexture NullBlackTexture { get; private set;}
+  public static IGlTexture NULL_WHITE_TEXTURE { get; private set; }
+  public static IGlTexture NULL_GRAY_TEXTURE { get; private set;}
+  public static IGlTexture NULL_BLACK_TEXTURE { get; private set;}
 
   public static void Initialize() {
-    if (NullWhiteTexture != null) {
+    if (NULL_WHITE_TEXTURE != null) {
       return;
     }
 
-    NullWhiteTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.White));
-    NullGrayTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.Gray));
-    NullBlackTexture =
-        new GlTexture(FinImage.Create1X1FromColor(Color.Black));
+    NULL_WHITE_TEXTURE =
+        new GlTexture(FinImage.Create1x1FromColor(Color.White));
+    NULL_GRAY_TEXTURE =
+        new GlTexture(FinImage.Create1x1FromColor(Color.Gray));
+    NULL_BLACK_TEXTURE =
+        new GlTexture(FinImage.Create1x1FromColor(Color.Black));
   }
 
   public static bool IsCommonTexture(IGlTexture texture)
-    => texture == NullWhiteTexture ||
-       texture == NullGrayTexture ||
-       texture == NullBlackTexture;
+    => texture == NULL_WHITE_TEXTURE ||
+       texture == NULL_GRAY_TEXTURE ||
+       texture == NULL_BLACK_TEXTURE;
 }

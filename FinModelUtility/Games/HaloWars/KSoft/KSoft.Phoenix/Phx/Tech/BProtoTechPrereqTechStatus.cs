@@ -5,31 +5,31 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "TechStatus",
+			ElementName = "TechStatus",
 		};
 		#endregion
 
 		#region TechStatus
-		BProtoTechStatus mTechStatus_ = BProtoTechStatus.INVALID;
+		BProtoTechStatus mTechStatus = BProtoTechStatus.Invalid;
 		[Meta.UnusedData("Not actually parsed by the engine")]
 		public BProtoTechStatus TechStatus
 		{
-			get { return this.mTechStatus_; }
-			set { this.mTechStatus_ = value; }
+			get { return this.mTechStatus; }
+			set { this.mTechStatus = value; }
 		}
 
-		static System.Predicate<BProtoTechStatus> bProtoTechStatusIsNotInvalid_ = (BProtoTechStatus v) => v != BProtoTechStatus.INVALID;
+		static System.Predicate<BProtoTechStatus> BProtoTechStatusIsNotInvalid = (BProtoTechStatus v) => v != BProtoTechStatus.Invalid;
 		#endregion
 
 		#region TechID
-		int mTechId_ = TypeExtensions.K_NONE;
+		int mTechID = TypeExtensions.kNone;
 		[Meta.BProtoTechReference]
-		public int TechId
+		public int TechID
 		{
-			get { return this.mTechId_; }
-			set { this.mTechId_ = value; }
+			get { return this.mTechID; }
+			set { this.mTechID = value; }
 		}
 		#endregion
 
@@ -40,8 +40,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnumOpt("status", ref this.mTechStatus_, bProtoTechStatusIsNotInvalid_);
-			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mTechId_, DatabaseObjectKind.TECH, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			s.StreamAttributeEnumOpt("status", ref this.mTechStatus, BProtoTechStatusIsNotInvalid);
+			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mTechID, DatabaseObjectKind.Tech, false, XML.XmlUtil.kSourceCursor);
 		}
 		#endregion
 	};

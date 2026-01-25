@@ -5,26 +5,26 @@ namespace KSoft.Phoenix.Resource
 		: IO.IEndianStreamSerializable
 		//, IO.IIndentedTextWritable
 	{
-		Runtime.BSettings mSettings_ = new Runtime.BSettings();
-		Runtime.BSaveGame mSaveGame_ = new Runtime.BSaveGame();
+		Runtime.BSettings mSettings = new Runtime.BSettings();
+		Runtime.BSaveGame mSaveGame = new Runtime.BSaveGame();
 
-		long mLeftoversPos_;
-		byte[] mLeftovers_;
+		long mLeftoversPos;
+		byte[] mLeftovers;
 
 		#region IEndianStreamSerializable Members
 		void SerializeLeftovers(IO.EndianStream s)
 		{
-			s.TraceAndDebugPosition(ref this.mLeftoversPos_);
+			s.TraceAndDebugPosition(ref this.mLeftoversPos);
 
 			if (s.IsReading)
-				this.mLeftovers_ = new byte[s.BaseStream.Length - s.BaseStream.Position];
+				this.mLeftovers = new byte[s.BaseStream.Length - s.BaseStream.Position];
 
-			s.Stream(this.mLeftovers_, 0, this.mLeftovers_.Length);
+			s.Stream(this.mLeftovers, 0, this.mLeftovers.Length);
 		}
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(this.mSettings_);
-			s.Stream(this.mSaveGame_);
+			s.Stream(this.mSettings);
+			s.Stream(this.mSaveGame);
 			this.SerializeLeftovers(s);
 		}
 		#endregion

@@ -24,19 +24,19 @@ namespace KSoft
 		public void BitEncode(TEnum value, ref ulong bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt64BitCount);
 
 			ulong v = Reflection.EnumValue<TEnum>.ToUInt32(value);
-			if (KHasNone)
+			if (kHasNone)
 				v++;
 
-			Contract.Assert(v <= KMaxValue);
+			Contract.Assert(v <= kMaxValue);
 			bits = Reflection.EnumUtil<TEnum>.IsFlags ?
-				Bits.BitEncodeFlags(v, bits, bitIndex, KBitmask) :
-				Bits.BitEncodeEnum (v, bits, bitIndex, KBitmask);
+				Bits.BitEncodeFlags(v, bits, bitIndex, kBitmask) :
+				Bits.BitEncodeEnum (v, bits, bitIndex, kBitmask);
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 		}
 
 		// Only added this really to ease the coding of HandleBitEncoder
@@ -51,16 +51,16 @@ namespace KSoft
 		public TEnum BitDecode(ulong bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt64BitCount);
 
-			ulong v = Bits.BitDecode(bits, bitIndex, KBitmask);
-			if (KHasNone)
+			ulong v = Bits.BitDecode(bits, bitIndex, kBitmask);
+			if (kHasNone)
 				v--;
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 
-			Contract.Assert(v <= KMaxValue || (KHasNone && v == ulong.MaxValue));
+			Contract.Assert(v <= kMaxValue || (kHasNone && v == ulong.MaxValue));
 			return Reflection.EnumValue<TEnum>.FromUInt64(v);
 		}
 
@@ -79,16 +79,16 @@ namespace KSoft
 	{
 		[SuppressMessage("Microsoft.Design", "CA1823:AvoidUnusedPrivateFields",
 			Justification = "This could probably just be wrapped in #if DEBUG...but what if you don't ever run debug?")]
-		static readonly EnumBitEncoder32<TEnum> X32 = new EnumBitEncoder32<TEnum>();
-		static readonly EnumBitEncoder64<TEnum> X64 = new EnumBitEncoder64<TEnum>();
+		static readonly EnumBitEncoder32<TEnum> x32 = new EnumBitEncoder32<TEnum>();
+		static readonly EnumBitEncoder64<TEnum> x64 = new EnumBitEncoder64<TEnum>();
 
-		public bool IsFlags { get => X64.IsFlags; }
-		public bool HasNone { get => X64.HasNone; }
+		public bool IsFlags { get => x64.IsFlags; }
+		public bool HasNone { get => x64.HasNone; }
 		/// <see cref="kBitmask"/>
-		public ulong MaxValueTrait { get => X64.MaxValueTrait; }
+		public ulong MaxValueTrait { get => x64.MaxValueTrait; }
 		/// <see cref="kBitmask"/>
-		public ulong BitmaskTrait { get => X64.BitmaskTrait; }
+		public ulong BitmaskTrait { get => x64.BitmaskTrait; }
 		/// <see cref="kBitCount"/>
-		public int BitCountTrait { get => X64.BitCountTrait; }
+		public int BitCountTrait { get => x64.BitCountTrait; }
 	};
 }

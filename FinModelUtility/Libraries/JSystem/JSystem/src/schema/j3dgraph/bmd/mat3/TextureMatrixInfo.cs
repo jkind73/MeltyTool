@@ -19,7 +19,7 @@ public sealed partial class TextureMatrixInfo
   public Vector3 Center { get; private set; }
   public Vector2 Scale { get; private set; }
   public short Rotation { get; set; }
-  public readonly ushort padding2 = ushort.MaxValue;
+  public readonly ushort padding2_ = ushort.MaxValue;
   public Vector2 Translation { get; private set; }
   public Matrix4x4 Matrix { get; private set; }
 

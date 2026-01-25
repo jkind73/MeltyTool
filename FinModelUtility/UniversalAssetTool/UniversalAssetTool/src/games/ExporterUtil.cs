@@ -24,10 +24,10 @@ namespace uni.games;
 
 public static class ExporterUtil {
   static ExporterUtil() {
-    LOGGER_ = Logging.Create("exportor");
+    logger_ = Logging.Create("exportor");
   }
 
-  private static readonly ILogger LOGGER_;
+  private static readonly ILogger logger_;
 
   public static bool CheckIfFilesAlreadyExist(
       IEnumerable<ISystemFile> outputFiles,
@@ -225,7 +225,7 @@ public static class ExporterUtil {
                                Func<IModel> loaderHandler,
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile)
-      where T : I3DFileBundle {
+      where T : I3dFileBundle {
     var mainFile = Asserts.CastNonnull(threeDFileBundle.FileBundle.MainFile);
 
     var parentOutputDirectory =
@@ -248,7 +248,7 @@ public static class ExporterUtil {
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile,
                                string? overrideName = null)
-      where T : I3DFileBundle
+      where T : I3dFileBundle
     => Export(threeDFileBundle,
               loaderHandler,
               outputDirectory,
@@ -265,7 +265,7 @@ public static class ExporterUtil {
       IReadOnlyList<ExportFormatDescription> formats,
       bool overwriteExistingFile,
       string? overrideName = null)
-      where T : I3DFileBundle {
+      where T : I3dFileBundle {
     var mainFile = Asserts.CastNonnull(threeDFileBundle.MainFile);
     var name = (overrideName ?? mainFile.NameWithoutExtension).ToString();
 
@@ -278,12 +278,12 @@ public static class ExporterUtil {
                                                    $"{name}.{format.FileExtension}")));
     if (!overwriteExistingFile &&
         targetFiles.All(targetFile => targetFile.Exists)) {
-      MessageUtil.LogAlreadyProcessed(LOGGER_, mainFile);
+      MessageUtil.LogAlreadyProcessed(logger_, mainFile);
       return;
     }
 
     outputDirectory.Create();
-    MessageUtil.LogExporting(LOGGER_, mainFile);
+    MessageUtil.LogExporting(logger_, mainFile);
 
     try {
       var model = loaderHandler();
@@ -312,9 +312,9 @@ public static class ExporterUtil {
             model);
       }
     } catch (Exception e) {
-      LOGGER_.LogError(e.ToString());
+      logger_.LogError(e.ToString());
     }
 
-    LOGGER_.LogInformation(" ");
+    logger_.LogInformation(" ");
   }
 }

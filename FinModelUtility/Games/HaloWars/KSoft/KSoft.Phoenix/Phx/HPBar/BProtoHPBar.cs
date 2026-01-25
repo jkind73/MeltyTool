@@ -1,18 +1,18 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public sealed class BProtoHpBar
+	public sealed class BProtoHPBar
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "HPBar",
-			dataName = "name",
+			ElementName = "HPBar",
+			DataName = "name",
 		};
 		#endregion
 
-		public BProtoHpBar()
+		public BProtoHPBar()
 		{
 		}
 

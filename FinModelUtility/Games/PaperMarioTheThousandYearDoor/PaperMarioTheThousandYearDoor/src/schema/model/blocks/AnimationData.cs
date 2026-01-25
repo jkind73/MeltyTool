@@ -19,7 +19,7 @@ public partial class AnimationData : IBinaryConvertible {
   private uint TextureCoordinateTransformDeltaCount { get; set; }
   private uint VisibilityGroupDeltaCount { get; set; }
   private uint GroupTransformDataDeltaCount { get; set; }
-  private uint WAnimDataType8Count { get; set; }
+  private uint wAnimDataType8Count { get; set; }
 
   private uint BaseInfoOffset { get; set; }
   private uint KeyframeOffset { get; set; }
@@ -28,7 +28,7 @@ public partial class AnimationData : IBinaryConvertible {
   private uint TextureCoordinateTransformDeltaOffset { get; set; }
   private uint VisibilityGroupDeltaOffset { get; set; }
   private uint GroupTransformDataDeltaOffset { get; set; }
-  private uint WAnimDataType8Offset { get; set; }
+  private uint wAnimDataType8Offset { get; set; }
 
   [SequenceLengthSource(6)]
   private float[] unk_;
@@ -117,7 +117,7 @@ public sealed partial class
     AnimationModelFileAnimationTextureCoordinateTransformDelta
     : IBinaryConvertible {
   public byte IndexDelta { get; set; }
-  public sbyte WFrameExtDelta { get; set; }
+  public sbyte wFrameExtDelta { get; set; }
   private short padding_;
   public float TranslateXDelta { get; set; }
   public float TranslateYDelta { get; set; }

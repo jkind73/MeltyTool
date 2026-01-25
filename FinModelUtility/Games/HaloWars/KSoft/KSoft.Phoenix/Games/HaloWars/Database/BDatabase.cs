@@ -4,35 +4,35 @@ namespace KSoft.Phoenix.HaloWars
 	public sealed partial class BDatabase
 		: Phx.BDatabaseBase
 	{
-		static readonly Collections.CodeEnum<BCodeObjectType> KGameObjectTypes = new Collections.CodeEnum<BCodeObjectType>();
-		static readonly Collections.CodeEnum<BCodeProtoObject> KGameProtoObjectTypes = new Collections.CodeEnum<BCodeProtoObject>();
-		static readonly Collections.CodeEnum<BScenarioWorld> KGameScenarioWorlds = new Collections.CodeEnum<BScenarioWorld>();
+		static readonly Collections.CodeEnum<BCodeObjectType> kGameObjectTypes = new Collections.CodeEnum<BCodeObjectType>();
+		static readonly Collections.CodeEnum<BCodeProtoObject> kGameProtoObjectTypes = new Collections.CodeEnum<BCodeProtoObject>();
+		static readonly Collections.CodeEnum<BScenarioWorld> kGameScenarioWorlds = new Collections.CodeEnum<BScenarioWorld>();
 
-		public override Collections.IProtoEnum GameObjectTypes { get { return KGameObjectTypes; } }
-		public override Collections.IProtoEnum GameProtoObjectTypes { get { return KGameProtoObjectTypes; } }
-		public override Collections.IProtoEnum GameScenarioWorlds { get { return KGameScenarioWorlds; } }
+		public override Collections.IProtoEnum GameObjectTypes { get { return kGameObjectTypes; } }
+		public override Collections.IProtoEnum GameProtoObjectTypes { get { return kGameProtoObjectTypes; } }
+		public override Collections.IProtoEnum GameScenarioWorlds { get { return kGameScenarioWorlds; } }
 
 		[Phx.Meta.BProtoPowerReference]
-		public int RepairPowerId { get; private set; }
+		public int RepairPowerID { get; private set; }
 		[Phx.Meta.BProtoPowerReference]
-		public int RallyPointPowerId { get; private set; }
+		public int RallyPointPowerID { get; private set; }
 		[Phx.Meta.BProtoPowerReference]
-		public int HookRepairPowerId { get; private set; }
+		public int HookRepairPowerID { get; private set; }
 		[Phx.Meta.BProtoPowerReference]
-		public int UnscOdstDropPowerId { get; private set; }
+		public int UnscOdstDropPowerID { get; private set; }
 
-		public BDatabase(Engine.PhxEngine engine) : base(engine, KGameObjectTypes)
+		public BDatabase(Engine.PhxEngine engine) : base(engine, kGameObjectTypes)
 		{
-			this.RepairPowerId = this.RallyPointPowerId = this.HookRepairPowerId = this.UnscOdstDropPowerId =
-				TypeExtensions.K_NONE;
+			this.RepairPowerID = this.RallyPointPowerID = this.HookRepairPowerID = this.UnscOdstDropPowerID =
+				TypeExtensions.kNone;
 		}
 
-		internal void SetupDbiDs()
+		internal void SetupDBIDs()
 		{
-			this.RepairPowerId = this.GetId(Phx.DatabaseObjectKind.POWER, "_Repair");
-			this.RallyPointPowerId = this.GetId(Phx.DatabaseObjectKind.POWER, "_RallyPoint");
-			this.HookRepairPowerId = this.GetId(Phx.DatabaseObjectKind.POWER, "HookRepair");
-			this.UnscOdstDropPowerId = this.GetId(Phx.DatabaseObjectKind.POWER, "UnscOdstDrop");
+			this.RepairPowerID = this.GetId(Phx.DatabaseObjectKind.Power, "_Repair");
+			this.RallyPointPowerID = this.GetId(Phx.DatabaseObjectKind.Power, "_RallyPoint");
+			this.HookRepairPowerID = this.GetId(Phx.DatabaseObjectKind.Power, "HookRepair");
+			this.UnscOdstDropPowerID = this.GetId(Phx.DatabaseObjectKind.Power, "UnscOdstDrop");
 		}
 	};
 }

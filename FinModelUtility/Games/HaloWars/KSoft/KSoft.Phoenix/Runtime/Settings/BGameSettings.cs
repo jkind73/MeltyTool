@@ -5,16 +5,16 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BGameSettings
 		: IO.IEndianStreamSerializable
 	{
-		const uint K_VERSION_ = 1;
-		const int K_DEFAULT_SETTINGS_CAPACITY_ = 113;
+		const uint kVersion = 1;
+		const int kDefaultSettingsCapacity = 113;
 
-		public List<BGameSetting> Settings { get; private set; } = new List<BGameSetting>(K_DEFAULT_SETTINGS_CAPACITY_);
+		public List<BGameSetting> Settings { get; private set; } = new List<BGameSetting>(kDefaultSettingsCapacity);
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
 			s.Pad8();
-			s.StreamVersion(K_VERSION_);
+			s.StreamVersion(kVersion);
 			BSaveGame.StreamCollection(s, this.Settings);
 		}
 		#endregion

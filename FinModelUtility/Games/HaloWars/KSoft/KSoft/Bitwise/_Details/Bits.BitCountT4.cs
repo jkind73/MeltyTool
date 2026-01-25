@@ -126,9 +126,9 @@ namespace KSoft
 		[Contracts.Pure]
 		public static uint BitCountToMask32(int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount >= 0 && bitCount <= K_U_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount >= 0 && bitCount <= kUInt32BitCount);
 
-			return uint.MaxValue >> (K_U_INT32_BIT_COUNT-bitCount);
+			return uint.MaxValue >> (kUInt32BitCount-bitCount);
 		}
 
 		/// <summary>Calculate the bit-mask needed for a number of bits</summary>
@@ -137,9 +137,9 @@ namespace KSoft
 		[Contracts.Pure]
 		public static ulong BitCountToMask64(int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount >= 0 && bitCount <= K_U_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount >= 0 && bitCount <= kUInt64BitCount);
 
-			return ulong.MaxValue >> (K_U_INT64_BIT_COUNT-bitCount);
+			return ulong.MaxValue >> (kUInt64BitCount-bitCount);
 		}
 
 	};

@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum GameDataObjectKind
 	{
-		NONE = PhxUtil.K_OBJECT_KIND_NONE,
+		None = PhxUtil.kObjectKindNone,
 
-		COST,
-		POP,
-		RATE,
+		Cost,
+		Pop,
+		Rate,
 	};
 }

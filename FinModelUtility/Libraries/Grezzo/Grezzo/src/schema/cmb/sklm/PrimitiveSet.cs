@@ -13,11 +13,11 @@ public sealed partial class PrimitiveSet : IBinaryConvertible {
   public readonly uint primitiveCount = 1;
     
   public SkinningMode skinningMode;
-  private ushort boneTableCount_;
+  private ushort boneTableCount;
   public uint boneTableOffset;
   public uint primitiveOffset;
 
-  [RSequenceLengthSource(nameof(boneTableCount_))]
+  [RSequenceLengthSource(nameof(boneTableCount))]
   public short[] boneTable;
 
   [AlignStart(4)] public readonly Primitive primitive = new();

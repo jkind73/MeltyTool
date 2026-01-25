@@ -8,22 +8,22 @@ namespace KSoft.Collections
 		: IProtoEnum
 		where TEnum : struct
 	{
-		static readonly string[] KNames;
-		static readonly string KUnregisteredMessage;
+		static readonly string[] kNames;
+		static readonly string kUnregisteredMessage;
 
 		static CodeEnum()
 		{
-			var enumType = typeof(TEnum);
+			var enum_type = typeof(TEnum);
 
-			KNames = Enum.GetNames(enumType);
+			kNames = Enum.GetNames(enum_type);
 
-			KUnregisteredMessage = string.Format("Unregistered {0}!", enumType.Name);
+			kUnregisteredMessage = string.Format("Unregistered {0}!", enum_type.Name);
 		}
 
 		#region IProtoEnum Members
 		public int TryGetMemberId(string memberName)
 		{
-			return Array.FindIndex(KNames, n => PhxUtil.StrEqualsIgnoreCase(n, memberName));
+			return Array.FindIndex(kNames, n => PhxUtil.StrEqualsIgnoreCase(n, memberName));
 		}
 		public string TryGetMemberName(int memberId)
 		{
@@ -33,7 +33,7 @@ namespace KSoft.Collections
 		}
 		public bool IsValidMemberId(int memberId)
 		{
-			return memberId >= 0 && memberId < KNames.Length;
+			return memberId >= 0 && memberId < kNames.Length;
 		}
 		public bool IsValidMemberName(string memberName)
 		{
@@ -47,16 +47,16 @@ namespace KSoft.Collections
 			int index = this.TryGetMemberId(memberName);
 
 			if (index.IsNone())
-				throw new ArgumentException(KUnregisteredMessage, memberName);
+				throw new ArgumentException(kUnregisteredMessage, memberName);
 
 			return index;
 		}
 		public string GetMemberName(int memberId)
 		{
-			return KNames[memberId];
+			return kNames[memberId];
 		}
 
-		public int MemberCount { get { return KNames.Length; } }
+		public int MemberCount { get { return kNames.Length; } }
 		#endregion
 	};
 }

@@ -1,6 +1,6 @@
 ﻿namespace HaloWarsTools;
 
-public sealed class HwModel(string name, HwUgxResource resource) {
-  public string name = name;
-  public HwUgxResource resource = resource;
+public sealed class HWModel(string name, HWUgxResource resource) {
+  public string Name = name;
+  public HWUgxResource Resource = resource;
 }

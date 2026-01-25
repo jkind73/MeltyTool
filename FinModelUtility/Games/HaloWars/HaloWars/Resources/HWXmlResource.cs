@@ -2,7 +2,7 @@
 
 namespace HaloWarsTools;
 
-public class HwXmlResource : HwResource {
+public class HWXmlResource : HWResource {
   protected XElement XmlData { get; private set; }
 
   protected override void Load(byte[] bytes) {

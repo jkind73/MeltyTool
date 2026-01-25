@@ -9,21 +9,21 @@ namespace KSoft.Phoenix.Resource.ECF
 	public sealed class EcfFileXmb
 		: EcfFile
 	{
-		const uint K_SIGNATURE_ = 0xE43ABC00;
-		const ulong K_CHUNK_ID_ = 0x00000000A9C96500;
+		const uint kSignature = 0xE43ABC00;
+		const ulong kChunkId = 0x00000000A9C96500;
 
-		public byte[] fileData;
+		public byte[] FileData;
 
 		public EcfFileXmb()
 		{
-			this.InitializeChunkInfo(K_SIGNATURE_);
+			this.InitializeChunkInfo(kSignature);
 		}
 
 		public override void Dispose()
 		{
 			base.Dispose();
 
-			this.fileData = null;
+			this.FileData = null;
 		}
 
 		public override void Serialize(IO.EndianStream s)
@@ -37,19 +37,19 @@ namespace KSoft.Phoenix.Resource.ECF
 					chunk.SeekTo(s);
 				}
 
-				switch (chunk.entryId)
+				switch (chunk.EntryId)
 				{
-					case K_CHUNK_ID_:
+					case kChunkId:
 						this.SerializeMainChunk(chunk, s);
 						break;
 
 					// chunk.IsResourceTag
-					case ResourceTagHeader.K_CHUNK_ID:
+					case ResourceTagHeader.kChunkId:
 						// #TODO
 						break;
 
 					default:
-						throw new KSoft.Debug.UnreachableException(chunk.entryId.ToString("X16"));
+						throw new KSoft.Debug.UnreachableException(chunk.EntryId.ToString("X16"));
 				}
 			}
 		}
@@ -61,10 +61,10 @@ namespace KSoft.Phoenix.Resource.ECF
 				if (!chunk.IsDeflateStream)
 				{
 					throw new System.IO.InvalidDataException(string.Format("{0}'s is supposed to be an XMB but isn't compressed",
-						chunk.entryId.ToString("X16")));
+						chunk.EntryId.ToString("X16")));
 				}
 
-				this.fileData = CompressedStream.DecompressFromStream(s);
+				this.FileData = CompressedStream.DecompressFromStream(s);
 			}
 			else if (s.IsWriting)
 			{
@@ -82,12 +82,12 @@ namespace KSoft.Phoenix.Resource.ECF
 			{
 				xmb.Serialize(xmbStream);
 
-				xmbBytes = xmb.fileData;
+				xmbBytes = xmb.FileData;
 			}
 
 			var context = new Xmb.XmbFileContext()
 			{
-				pointerSize = vaSize,
+				PointerSize = vaSize,
 			};
 
 			using (var ms = new System.IO.MemoryStream(xmbBytes, false))

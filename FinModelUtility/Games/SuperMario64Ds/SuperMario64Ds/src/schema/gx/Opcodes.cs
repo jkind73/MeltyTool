@@ -81,8 +81,8 @@ public interface IVertexOpcode : IOpcode {
   float? Z { get; set; }
 }
 
-public sealed class Vertex0X23Opcode : IVertexOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X23;
+public sealed class Vertex0x23Opcode : IVertexOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x23;
 
   public float? X { get; set; }
   public float? Y { get; set; }
@@ -102,8 +102,8 @@ public sealed class Vertex0X23Opcode : IVertexOpcode {
   }
 }
 
-public sealed class Vertex0X24Opcode : IVertexOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X24;
+public sealed class Vertex0x24Opcode : IVertexOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x24;
   public Vector3 Position { get; set; }
 
   public float? X { get; set; }
@@ -123,8 +123,8 @@ public sealed class Vertex0X24Opcode : IVertexOpcode {
   }
 }
 
-public sealed class Vertex0X25Opcode : IVertexOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X25;
+public sealed class Vertex0x25Opcode : IVertexOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x25;
 
   public float? X { get; set; }
   public float? Y { get; set; }
@@ -141,8 +141,8 @@ public sealed class Vertex0X25Opcode : IVertexOpcode {
   }
 }
 
-public sealed class Vertex0X26Opcode : IVertexOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X26;
+public sealed class Vertex0x26Opcode : IVertexOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x26;
 
   public float? X { get; set; }
   public float? Y { get; set; }
@@ -159,8 +159,8 @@ public sealed class Vertex0X26Opcode : IVertexOpcode {
   }
 }
 
-public sealed class Vertex0X27Opcode : IVertexOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X27;
+public sealed class Vertex0x27Opcode : IVertexOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x27;
   public Vector3 Position { get; set; }
 
   public float? X { get; set; }
@@ -178,8 +178,8 @@ public sealed class Vertex0X27Opcode : IVertexOpcode {
   }
 }
 
-public sealed class Vertex0X28Opcode : IOpcode {
-  public OpcodeType Type => OpcodeType.VERTEX_0_X28;
+public sealed class Vertex0x28Opcode : IOpcode {
+  public OpcodeType Type => OpcodeType.VERTEX_0x28;
 
   public Vector3 DeltaPosition { get; set; }
 

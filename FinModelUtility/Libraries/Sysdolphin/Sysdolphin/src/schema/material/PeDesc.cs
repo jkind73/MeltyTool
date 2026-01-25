@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace sysdolphin.schema.material;
 
 [Flags]
-public enum PixelProcessEnable : byte {
+public enum PIXEL_PROCESS_ENABLE : byte {
   COLOR_UPDATE = (1 << 0),
   ALPHA_UPDATE = (1 << 1),
   DST_ALPHA = (1 << 2),
@@ -18,7 +18,7 @@ public enum PixelProcessEnable : byte {
 
 [BinarySchema]
 public sealed partial class PeDesc : IBinaryDeserializable {
-  public PixelProcessEnable Flags { get; set; }
+  public PIXEL_PROCESS_ENABLE Flags { get; set; }
 
   [NumberFormat(SchemaNumberType.UN8)]
   public float AlphaRef0 { get; set; }

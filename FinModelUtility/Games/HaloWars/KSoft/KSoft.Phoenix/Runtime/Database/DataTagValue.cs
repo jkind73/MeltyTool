@@ -6,16 +6,16 @@ namespace KSoft.Phoenix.Runtime
 		public struct DataTagValue
 			: IO.IEndianStreamSerializable
 		{
-			public string name;
+			public string Name;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamPascalString32(ref this.name);
+				s.StreamPascalString32(ref this.Name);
 			}
 			#endregion
 		};
-		static readonly CondensedListInfo KDataTagsListInfo = new CondensedListInfo()
+		static readonly CondensedListInfo kDataTagsListInfo = new CondensedListInfo()
 		{
 			SerializeCapacity=true,
 			IndexSize=sizeof(int),

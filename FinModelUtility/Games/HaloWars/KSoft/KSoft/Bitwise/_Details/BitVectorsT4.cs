@@ -10,49 +10,49 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	[System.Diagnostics.DebuggerDisplay("Data = {mWord_}, Cardinality = {Cardinality}")]
+	[System.Diagnostics.DebuggerDisplay("Data = {mWord}, Cardinality = {Cardinality}")]
 	public struct BitVector32
 		: IComparable<BitVector32>
 		, IEquatable<BitVector32>
 	{
-		const int K_NUMBER_OF_BITS_ = Bits.K_INT32_BIT_COUNT;
+		const int kNumberOfBits = Bits.kInt32BitCount;
 		// for Enumerators impl
-		const int K_LAST_INDEX_ = K_NUMBER_OF_BITS_ - 1;
-		const Shell.EndianFormat K_VECTOR_WORD_FORMAT_ = Shell.EndianFormat.LITTLE;
+		const int kLastIndex = kNumberOfBits - 1;
+		const Shell.EndianFormat kVectorWordFormat = Shell.EndianFormat.Little;
 
-		uint mWord_;
+		uint mWord;
 
 		public BitVector32(uint bits)
 		{
-			this.mWord_ = bits;
+			this.mWord = bits;
 		}
 		public BitVector32(int bits)
 		{
-			this.mWord_ = (uint)bits;
+			this.mWord = (uint)bits;
 		}
 
-		public int Data { get { return (int) this.mWord_; } }
+		public int Data { get { return (int) this.mWord; } }
 
 		/// <summary>Length in bits. Always returns 32</summary>
 		[SuppressMessage("Microsoft.Design", "CA1822:MarkMembersAsStatic")]
-		public int Length	{ get { return K_NUMBER_OF_BITS_; } }
+		public int Length	{ get { return kNumberOfBits; } }
 		/// <summary>Number of bits set to true</summary>
-		public int Cardinality		{ get { return Bits.BitCount(this.mWord_); } }
+		public int Cardinality		{ get { return Bits.BitCount(this.mWord); } }
 		/// <summary>Number of bits set to false</summary>
 		public int CardinalityZeros	{ get { return this.Length - this.Cardinality; } }
 
 		/// <summary>Are all the bits in this set currently false?</summary>
-		public bool IsAllClear	{ get { return this.mWord_ == uint.MinValue; } }
+		public bool IsAllClear	{ get { return this.mWord == uint.MinValue; } }
 		/// <summary>Are all the bits in this set currently true?</summary>
-		public bool IsAllSet	{ get { return this.mWord_ == uint.MaxValue; } }
+		public bool IsAllSet	{ get { return this.mWord == uint.MaxValue; } }
 
-		public int TrailingZerosCount	{ get { return Bits.TrailingZerosCount(this.mWord_); } }
-		public int IndexOfHighestBitSet	{ get { return Bits.IndexOfHighestBitSet(this.mWord_); } }
+		public int TrailingZerosCount	{ get { return Bits.TrailingZerosCount(this.mWord); } }
+		public int IndexOfHighestBitSet	{ get { return Bits.IndexOfHighestBitSet(this.mWord); } }
 
 		#region Overrides
 		public bool Equals(BitVector32 other)
 		{
-			return this.mWord_ == other.mWord_;
+			return this.mWord == other.mWord;
 		}
 		public override bool Equals(object o)
 		{
@@ -89,19 +89,19 @@ namespace KSoft.Collections
 
 		public override int GetHashCode()
 		{
-			return this.mWord_.GetHashCode();
+			return this.mWord.GetHashCode();
 		}
 
 		public static string ToString(BitVector32 value)
 		{
-			const int kMsb = 1 << (K_NUMBER_OF_BITS_-1);
+			const int k_msb = 1 << (kNumberOfBits-1);
 
-			var sb = new System.Text.StringBuilder(/*"BitVector32{".Length*/12 + K_NUMBER_OF_BITS_ + /*"}".Length"*/1);
+			var sb = new System.Text.StringBuilder(/*"BitVector32{".Length*/12 + kNumberOfBits + /*"}".Length"*/1);
 			sb.Append("BitVector32{");
 			var word = value.Data;
-			for (int i = 0; i < K_NUMBER_OF_BITS_; i++)
+			for (int i = 0; i < kNumberOfBits; i++)
 			{
-				sb.Append((word & kMsb) != 0
+				sb.Append((word & k_msb) != 0
 					? "1"
 					: "0");
 
@@ -121,17 +121,17 @@ namespace KSoft.Collections
 		{
 			get
 			{
-				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.K_INT32_BIT_COUNT);
+				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.kInt32BitCount);
 
-				return Bitwise.Flags.Test(this.mWord_, ((uint)1) << bitIndex);
+				return Bitwise.Flags.Test(this.mWord, ((uint)1) << bitIndex);
 			}
 			set
 			{
-				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.K_INT32_BIT_COUNT);
+				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.kInt32BitCount);
 
 				var flag = ((uint)1) << bitIndex;
 
-				Bitwise.Flags.Modify(value, ref this.mWord_, flag);
+				Bitwise.Flags.Modify(value, ref this.mWord, flag);
 			}
 		}
 		/// <summary>Tests the states of a range of bits</summary>
@@ -170,17 +170,17 @@ namespace KSoft.Collections
 
 		[Contracts.Pure]
 		public int NextBitIndex(
-			int prevBitIndex = TypeExtensions.K_NONE, bool stateFilter = true)
+			int prevBitIndex = TypeExtensions.kNone, bool stateFilter = true)
 		{
-			Contract.Requires(prevBitIndex.IsNoneOrPositive() && prevBitIndex < Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(prevBitIndex.IsNoneOrPositive() && prevBitIndex < Bits.kInt32BitCount);
 
-			for (int bitIndex = prevBitIndex+1; bitIndex < K_NUMBER_OF_BITS_; bitIndex++)
+			for (int bit_index = prevBitIndex+1; bit_index < kNumberOfBits; bit_index++)
 			{
-				if (this[bitIndex] == stateFilter)
-					return bitIndex;
+				if (this[bit_index] == stateFilter)
+					return bit_index;
 			}
 
-			return TypeExtensions.K_NONE;
+			return TypeExtensions.kNone;
 		}
 		#endregion
 
@@ -193,13 +193,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt32(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Remove(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Remove(ref this.mWord, mask);
 		}
 
 		public void SetBits(int startBitIndex, int bitCount)
@@ -210,13 +210,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt32(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Add(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Add(ref this.mWord, mask);
 		}
 
 		public void ToggleBits(int startBitIndex, int bitCount)
@@ -227,13 +227,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt32(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Toggle(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Toggle(ref this.mWord, mask);
 		}
 
 		[Contracts.Pure]
@@ -245,13 +245,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return false;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt32(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt32(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			return Bitwise.Flags.TestAny(this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			return Bitwise.Flags.TestAny(this.mWord, mask);
 		}
 
 		#endregion
@@ -263,12 +263,12 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector32 And(BitVector32 vector)
 		{
-			return new BitVector32(this.mWord_ & vector.mWord_);
+			return new BitVector32(this.mWord & vector.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector32 BitwiseAnd(BitVector32 vector)
 		{
-			return new BitVector32(this.mWord_ & vector.mWord_);
+			return new BitVector32(this.mWord & vector.mWord);
 		}
 		/// <summary>Clears all of the bits in this vector whose corresponding bit is set in the specified vector</summary>
 		/// <param name="vector">vector with which to mask this vector</param>
@@ -276,7 +276,7 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector32 AndNot(BitVector32 vector)
 		{
-			return new BitVector32(Bitwise.Flags.Remove(this.mWord_, vector.mWord_));
+			return new BitVector32(Bitwise.Flags.Remove(this.mWord, vector.mWord));
 		}
 		/// <summary>Bit OR this set with another</summary>
 		/// <param name="vector">Vector with the bits to OR with</param>
@@ -284,12 +284,12 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector32 Or(BitVector32 vector)
 		{
-			return new BitVector32(this.mWord_ | vector.mWord_);
+			return new BitVector32(this.mWord | vector.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector32 BitwiseOr(BitVector32 vector)
 		{
-			return new BitVector32(this.mWord_ | vector.mWord_);
+			return new BitVector32(this.mWord | vector.mWord);
 		}
 		/// <summary>Bit XOR this vector with another</summary>
 		/// <param name="vector">Vector with the bits to XOR with</param>
@@ -297,7 +297,7 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector32 Xor(BitVector32 vector)
 		{
-			return new BitVector32(Bitwise.Flags.Toggle(this.mWord_, vector.mWord_));
+			return new BitVector32(Bitwise.Flags.Toggle(this.mWord, vector.mWord));
 		}
 
 		/// <summary>Inverts all bits in this vector</summary>
@@ -305,52 +305,52 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector32 Not()
 		{
-			return new BitVector32(~this.mWord_);
+			return new BitVector32(~this.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector32 OnesComplement()
 		{
-			return new BitVector32(~this.mWord_);
+			return new BitVector32(~this.mWord);
 		}
 		#endregion
 
 		/// <summary>Set all the bits to zero</summary>
 		public void Clear()
 		{
-			this.mWord_ = 0;
+			this.mWord = 0;
 		}
 
 		public void SetAll(bool value)
 		{
-			var fillValue = value
+			var fill_value = value
 				? uint.MaxValue
 				: uint.MinValue;
 
-			this.mWord_ = fillValue;
+			this.mWord = fill_value;
 		}
 
 		public int CompareTo(BitVector32 other)
 		{
-			return this.mWord_.CompareTo(other.mWord_);
+			return this.mWord.CompareTo(other.mWord);
 		}
 
 		#region Math operators
 		public static BitVector32 operator &(BitVector32 lhs, BitVector32 rhs)
 		{
-			return new BitVector32(lhs.mWord_ & rhs.mWord_);
+			return new BitVector32(lhs.mWord & rhs.mWord);
 		}
 		public static BitVector32 operator |(BitVector32 lhs, BitVector32 rhs)
 		{
-			return new BitVector32(lhs.mWord_ | rhs.mWord_);
+			return new BitVector32(lhs.mWord | rhs.mWord);
 		}
 		public static BitVector32 operator ^(BitVector32 lhs, BitVector32 rhs)
 		{
-			return new BitVector32(lhs.mWord_ ^ rhs.mWord_);
+			return new BitVector32(lhs.mWord ^ rhs.mWord);
 		}
 
 		public static BitVector32 operator ~(BitVector32 value)
 		{
-			return new BitVector32(~value.mWord_);
+			return new BitVector32(~value.mWord);
 		}
 		#endregion
 
@@ -385,42 +385,42 @@ namespace KSoft.Collections
 		public struct StateEnumerator
 			: IEnumerator< bool >
 		{
-			readonly BitVector32 mVector_;
-			int mBitIndex_;
-			bool mCurrent_;
+			readonly BitVector32 mVector;
+			int mBitIndex;
+			bool mCurrent;
 
 			public StateEnumerator(BitVector32 vector
 				)
 			{
-				this.mVector_ = vector;
-				this.mBitIndex_ = TypeExtensions.K_NONE;
-				this.mCurrent_ = false;
+				this.mVector = vector;
+				this.mBitIndex = TypeExtensions.kNone;
+				this.mCurrent = false;
 			}
 
 			public bool Current { get {
-				if (this.mBitIndex_.IsNone())			throw new InvalidOperationException("Enumeration has not started");
-				if (this.mBitIndex_ > K_LAST_INDEX_)		throw new InvalidOperationException("Enumeration already finished");
+				if (this.mBitIndex.IsNone())			throw new InvalidOperationException("Enumeration has not started");
+				if (this.mBitIndex > kLastIndex)		throw new InvalidOperationException("Enumeration already finished");
 
-				return this.mCurrent_;
+				return this.mCurrent;
 			} }
 			object System.Collections.IEnumerator.Current { get { return this.Current; } }
 
 			public void Reset()
 			{
-				this.mBitIndex_ = TypeExtensions.K_NONE;
+				this.mBitIndex = TypeExtensions.kNone;
 			}
 
 			public void Dispose()	{ }
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_ < K_LAST_INDEX_)
+				if (this.mBitIndex < kLastIndex)
 				{
-					this.mCurrent_ = this.mVector_[++this.mBitIndex_];
+					this.mCurrent = this.mVector[++this.mBitIndex];
 					return true;
 				}
 
-				this.mBitIndex_ = K_NUMBER_OF_BITS_;
+				this.mBitIndex = kNumberOfBits;
 				return false;
 			}
 		};
@@ -428,11 +428,11 @@ namespace KSoft.Collections
 		public struct StateFilterEnumerator
 			: IEnumerator< int >
 		{
-			readonly BitVector32 mVector_;
-			int mBitIndex_;
-			int mCurrent_;
-			readonly bool mStateFilter_;
-			readonly int mStartBitIndex_;
+			readonly BitVector32 mVector;
+			int mBitIndex;
+			int mCurrent;
+			readonly bool mStateFilter;
+			readonly int mStartBitIndex;
 
 			public StateFilterEnumerator(BitVector32 vector
 				, bool stateFilter, int startBitIndex = 0
@@ -441,45 +441,45 @@ namespace KSoft.Collections
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex >= 0);
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex < vector.Length);
 
-				this.mStateFilter_ = stateFilter;
-				this.mStartBitIndex_ = startBitIndex-1;
-				this.mVector_ = vector;
-				this.mBitIndex_ = TypeExtensions.K_NONE;
-				this.mCurrent_ = 0;
+				this.mStateFilter = stateFilter;
+				this.mStartBitIndex = startBitIndex-1;
+				this.mVector = vector;
+				this.mBitIndex = TypeExtensions.kNone;
+				this.mCurrent = 0;
 			}
 
 			public int Current { get {
-				if (this.mBitIndex_.IsNone())			throw new InvalidOperationException("Enumeration has not started");
-				if (this.mBitIndex_ > K_LAST_INDEX_)		throw new InvalidOperationException("Enumeration already finished");
+				if (this.mBitIndex.IsNone())			throw new InvalidOperationException("Enumeration has not started");
+				if (this.mBitIndex > kLastIndex)		throw new InvalidOperationException("Enumeration already finished");
 
-				return this.mCurrent_;
+				return this.mCurrent;
 			} }
 			object System.Collections.IEnumerator.Current { get { return this.Current; } }
 
 			public void Reset()
 			{
-				this.mBitIndex_ = TypeExtensions.K_NONE;
+				this.mBitIndex = TypeExtensions.kNone;
 			}
 
 			public void Dispose()	{ }
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_.IsNone())
-					this.mBitIndex_ = this.mStartBitIndex_;
+				if (this.mBitIndex.IsNone())
+					this.mBitIndex = this.mStartBitIndex;
 
-				if (this.mBitIndex_ < K_LAST_INDEX_)
+				if (this.mBitIndex < kLastIndex)
 				{
-					this.mCurrent_ = this.mVector_.NextBitIndex(this.mBitIndex_, this.mStateFilter_);
+					this.mCurrent = this.mVector.NextBitIndex(this.mBitIndex, this.mStateFilter);
 
-					if (this.mCurrent_ >= 0)
+					if (this.mCurrent >= 0)
 					{
-						this.mBitIndex_ = this.mCurrent_;
+						this.mBitIndex = this.mCurrent;
 						return true;
 					}
 				}
 
-				this.mBitIndex_ = K_NUMBER_OF_BITS_;
+				this.mBitIndex = kNumberOfBits;
 				return false;
 			}
 		};
@@ -506,7 +506,7 @@ namespace KSoft.Collections
 
 			var flag = ((uint)1) << bitIndex;
 
-			return Bitwise.Flags.Test(this.mWord_, flag);
+			return Bitwise.Flags.Test(this.mWord, flag);
 		}
 
 		/// <typeparam name="TEnum">Members should be bit indices, not literal flag values</typeparam>
@@ -518,7 +518,7 @@ namespace KSoft.Collections
 
 			var flag = ((uint)1) << bitIndex;
 
-			Bitwise.Flags.Modify(value, ref this.mWord_, flag);
+			Bitwise.Flags.Modify(value, ref this.mWord, flag);
 			return this;
 		}
 
@@ -657,13 +657,13 @@ namespace KSoft.Collections
 			, ICollection<string> errorsOutput = null)
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
-			const bool ignoreCase = true;
+			const bool ignore_case = true;
 
 			// Enum.TryParse will call Trim on the value anyway, so don't add yet another allocation when we can check for whitespace
 			if (string.IsNullOrWhiteSpace(flagStr))
 				return null;
 
-			if (!Enum.TryParse<TEnum>(flagStr, ignoreCase, out TEnum flag))
+			if (!Enum.TryParse<TEnum>(flagStr, ignore_case, out TEnum flag))
 			{
 				if (errorsOutput != null)
 				{
@@ -690,49 +690,49 @@ namespace KSoft.Collections
 		#endregion
 	};
 
-	[System.Diagnostics.DebuggerDisplay("Data = {mWord_}, Cardinality = {Cardinality}")]
+	[System.Diagnostics.DebuggerDisplay("Data = {mWord}, Cardinality = {Cardinality}")]
 	public struct BitVector64
 		: IComparable<BitVector64>
 		, IEquatable<BitVector64>
 	{
-		const int K_NUMBER_OF_BITS_ = Bits.K_INT64_BIT_COUNT;
+		const int kNumberOfBits = Bits.kInt64BitCount;
 		// for Enumerators impl
-		const int K_LAST_INDEX_ = K_NUMBER_OF_BITS_ - 1;
-		const Shell.EndianFormat K_VECTOR_WORD_FORMAT_ = Shell.EndianFormat.LITTLE;
+		const int kLastIndex = kNumberOfBits - 1;
+		const Shell.EndianFormat kVectorWordFormat = Shell.EndianFormat.Little;
 
-		ulong mWord_;
+		ulong mWord;
 
 		public BitVector64(ulong bits)
 		{
-			this.mWord_ = bits;
+			this.mWord = bits;
 		}
 		public BitVector64(long bits)
 		{
-			this.mWord_ = (ulong)bits;
+			this.mWord = (ulong)bits;
 		}
 
-		public long Data { get { return (long) this.mWord_; } }
+		public long Data { get { return (long) this.mWord; } }
 
 		/// <summary>Length in bits. Always returns 64</summary>
 		[SuppressMessage("Microsoft.Design", "CA1822:MarkMembersAsStatic")]
-		public int Length	{ get { return K_NUMBER_OF_BITS_; } }
+		public int Length	{ get { return kNumberOfBits; } }
 		/// <summary>Number of bits set to true</summary>
-		public int Cardinality		{ get { return Bits.BitCount(this.mWord_); } }
+		public int Cardinality		{ get { return Bits.BitCount(this.mWord); } }
 		/// <summary>Number of bits set to false</summary>
 		public int CardinalityZeros	{ get { return this.Length - this.Cardinality; } }
 
 		/// <summary>Are all the bits in this set currently false?</summary>
-		public bool IsAllClear	{ get { return this.mWord_ == ulong.MinValue; } }
+		public bool IsAllClear	{ get { return this.mWord == ulong.MinValue; } }
 		/// <summary>Are all the bits in this set currently true?</summary>
-		public bool IsAllSet	{ get { return this.mWord_ == ulong.MaxValue; } }
+		public bool IsAllSet	{ get { return this.mWord == ulong.MaxValue; } }
 
-		public int TrailingZerosCount	{ get { return Bits.TrailingZerosCount(this.mWord_); } }
-		public int IndexOfHighestBitSet	{ get { return Bits.IndexOfHighestBitSet(this.mWord_); } }
+		public int TrailingZerosCount	{ get { return Bits.TrailingZerosCount(this.mWord); } }
+		public int IndexOfHighestBitSet	{ get { return Bits.IndexOfHighestBitSet(this.mWord); } }
 
 		#region Overrides
 		public bool Equals(BitVector64 other)
 		{
-			return this.mWord_ == other.mWord_;
+			return this.mWord == other.mWord;
 		}
 		public override bool Equals(object o)
 		{
@@ -769,19 +769,19 @@ namespace KSoft.Collections
 
 		public override int GetHashCode()
 		{
-			return this.mWord_.GetHashCode();
+			return this.mWord.GetHashCode();
 		}
 
 		public static string ToString(BitVector64 value)
 		{
-			const long kMsb = 1 << (K_NUMBER_OF_BITS_-1);
+			const long k_msb = 1 << (kNumberOfBits-1);
 
-			var sb = new System.Text.StringBuilder(/*"BitVector64{".Length*/12 + K_NUMBER_OF_BITS_ + /*"}".Length"*/1);
+			var sb = new System.Text.StringBuilder(/*"BitVector64{".Length*/12 + kNumberOfBits + /*"}".Length"*/1);
 			sb.Append("BitVector64{");
 			var word = value.Data;
-			for (int i = 0; i < K_NUMBER_OF_BITS_; i++)
+			for (int i = 0; i < kNumberOfBits; i++)
 			{
-				sb.Append((word & kMsb) != 0
+				sb.Append((word & k_msb) != 0
 					? "1"
 					: "0");
 
@@ -801,17 +801,17 @@ namespace KSoft.Collections
 		{
 			get
 			{
-				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.K_INT64_BIT_COUNT);
+				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.kInt64BitCount);
 
-				return Bitwise.Flags.Test(this.mWord_, ((ulong)1) << bitIndex);
+				return Bitwise.Flags.Test(this.mWord, ((ulong)1) << bitIndex);
 			}
 			set
 			{
-				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.K_INT64_BIT_COUNT);
+				Contract.Requires(bitIndex >= 0 && bitIndex < Bits.kInt64BitCount);
 
 				var flag = ((ulong)1) << bitIndex;
 
-				Bitwise.Flags.Modify(value, ref this.mWord_, flag);
+				Bitwise.Flags.Modify(value, ref this.mWord, flag);
 			}
 		}
 		/// <summary>Tests the states of a range of bits</summary>
@@ -850,17 +850,17 @@ namespace KSoft.Collections
 
 		[Contracts.Pure]
 		public int NextBitIndex(
-			int prevBitIndex = TypeExtensions.K_NONE, bool stateFilter = true)
+			int prevBitIndex = TypeExtensions.kNone, bool stateFilter = true)
 		{
-			Contract.Requires(prevBitIndex.IsNoneOrPositive() && prevBitIndex < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(prevBitIndex.IsNoneOrPositive() && prevBitIndex < Bits.kInt64BitCount);
 
-			for (int bitIndex = prevBitIndex+1; bitIndex < K_NUMBER_OF_BITS_; bitIndex++)
+			for (int bit_index = prevBitIndex+1; bit_index < kNumberOfBits; bit_index++)
 			{
-				if (this[bitIndex] == stateFilter)
-					return bitIndex;
+				if (this[bit_index] == stateFilter)
+					return bit_index;
 			}
 
-			return TypeExtensions.K_NONE;
+			return TypeExtensions.kNone;
 		}
 		#endregion
 
@@ -873,13 +873,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt64(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Remove(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Remove(ref this.mWord, mask);
 		}
 
 		public void SetBits(int startBitIndex, int bitCount)
@@ -890,13 +890,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt64(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Add(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Add(ref this.mWord, mask);
 		}
 
 		public void ToggleBits(int startBitIndex, int bitCount)
@@ -907,13 +907,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return ;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt64(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			Bitwise.Flags.Toggle(ref this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			Bitwise.Flags.Toggle(ref this.mWord, mask);
 		}
 
 		[Contracts.Pure]
@@ -925,13 +925,13 @@ namespace KSoft.Collections
 			if (bitCount <= 0)
 				return false;
 
-			var fromWordMask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, K_VECTOR_WORD_FORMAT_);
+			var from_word_mask = Bits.VectorElementSectionBitMaskInInt64(startBitIndex, kVectorWordFormat);
 //			var last_word_mask = Bits.VectorElementBitMaskInInt64(startBitIndex+bitCount, kVectorWordFormat);
 			// create a mask for all bits below the given length in a caboose word
 //			last_word_mask -= 1;
 
-			var mask = fromWordMask;// & last_word_mask;
-			return Bitwise.Flags.TestAny(this.mWord_, mask);
+			var mask = from_word_mask;// & last_word_mask;
+			return Bitwise.Flags.TestAny(this.mWord, mask);
 		}
 
 		#endregion
@@ -943,12 +943,12 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector64 And(BitVector64 vector)
 		{
-			return new BitVector64(this.mWord_ & vector.mWord_);
+			return new BitVector64(this.mWord & vector.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector64 BitwiseAnd(BitVector64 vector)
 		{
-			return new BitVector64(this.mWord_ & vector.mWord_);
+			return new BitVector64(this.mWord & vector.mWord);
 		}
 		/// <summary>Clears all of the bits in this vector whose corresponding bit is set in the specified vector</summary>
 		/// <param name="vector">vector with which to mask this vector</param>
@@ -956,7 +956,7 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector64 AndNot(BitVector64 vector)
 		{
-			return new BitVector64(Bitwise.Flags.Remove(this.mWord_, vector.mWord_));
+			return new BitVector64(Bitwise.Flags.Remove(this.mWord, vector.mWord));
 		}
 		/// <summary>Bit OR this set with another</summary>
 		/// <param name="vector">Vector with the bits to OR with</param>
@@ -964,12 +964,12 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector64 Or(BitVector64 vector)
 		{
-			return new BitVector64(this.mWord_ | vector.mWord_);
+			return new BitVector64(this.mWord | vector.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector64 BitwiseOr(BitVector64 vector)
 		{
-			return new BitVector64(this.mWord_ | vector.mWord_);
+			return new BitVector64(this.mWord | vector.mWord);
 		}
 		/// <summary>Bit XOR this vector with another</summary>
 		/// <param name="vector">Vector with the bits to XOR with</param>
@@ -977,7 +977,7 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector64 Xor(BitVector64 vector)
 		{
-			return new BitVector64(Bitwise.Flags.Toggle(this.mWord_, vector.mWord_));
+			return new BitVector64(Bitwise.Flags.Toggle(this.mWord, vector.mWord));
 		}
 
 		/// <summary>Inverts all bits in this vector</summary>
@@ -985,52 +985,52 @@ namespace KSoft.Collections
 		[Contracts.Pure]
 		public BitVector64 Not()
 		{
-			return new BitVector64(~this.mWord_);
+			return new BitVector64(~this.mWord);
 		}
 		[Contracts.Pure]
 		public BitVector64 OnesComplement()
 		{
-			return new BitVector64(~this.mWord_);
+			return new BitVector64(~this.mWord);
 		}
 		#endregion
 
 		/// <summary>Set all the bits to zero</summary>
 		public void Clear()
 		{
-			this.mWord_ = 0;
+			this.mWord = 0;
 		}
 
 		public void SetAll(bool value)
 		{
-			var fillValue = value
+			var fill_value = value
 				? ulong.MaxValue
 				: ulong.MinValue;
 
-			this.mWord_ = fillValue;
+			this.mWord = fill_value;
 		}
 
 		public int CompareTo(BitVector64 other)
 		{
-			return this.mWord_.CompareTo(other.mWord_);
+			return this.mWord.CompareTo(other.mWord);
 		}
 
 		#region Math operators
 		public static BitVector64 operator &(BitVector64 lhs, BitVector64 rhs)
 		{
-			return new BitVector64(lhs.mWord_ & rhs.mWord_);
+			return new BitVector64(lhs.mWord & rhs.mWord);
 		}
 		public static BitVector64 operator |(BitVector64 lhs, BitVector64 rhs)
 		{
-			return new BitVector64(lhs.mWord_ | rhs.mWord_);
+			return new BitVector64(lhs.mWord | rhs.mWord);
 		}
 		public static BitVector64 operator ^(BitVector64 lhs, BitVector64 rhs)
 		{
-			return new BitVector64(lhs.mWord_ ^ rhs.mWord_);
+			return new BitVector64(lhs.mWord ^ rhs.mWord);
 		}
 
 		public static BitVector64 operator ~(BitVector64 value)
 		{
-			return new BitVector64(~value.mWord_);
+			return new BitVector64(~value.mWord);
 		}
 		#endregion
 
@@ -1065,42 +1065,42 @@ namespace KSoft.Collections
 		public struct StateEnumerator
 			: IEnumerator< bool >
 		{
-			readonly BitVector64 mVector_;
-			int mBitIndex_;
-			bool mCurrent_;
+			readonly BitVector64 mVector;
+			int mBitIndex;
+			bool mCurrent;
 
 			public StateEnumerator(BitVector64 vector
 				)
 			{
-				this.mVector_ = vector;
-				this.mBitIndex_ = TypeExtensions.K_NONE;
-				this.mCurrent_ = false;
+				this.mVector = vector;
+				this.mBitIndex = TypeExtensions.kNone;
+				this.mCurrent = false;
 			}
 
 			public bool Current { get {
-				if (this.mBitIndex_.IsNone())			throw new InvalidOperationException("Enumeration has not started");
-				if (this.mBitIndex_ > K_LAST_INDEX_)		throw new InvalidOperationException("Enumeration already finished");
+				if (this.mBitIndex.IsNone())			throw new InvalidOperationException("Enumeration has not started");
+				if (this.mBitIndex > kLastIndex)		throw new InvalidOperationException("Enumeration already finished");
 
-				return this.mCurrent_;
+				return this.mCurrent;
 			} }
 			object System.Collections.IEnumerator.Current { get { return this.Current; } }
 
 			public void Reset()
 			{
-				this.mBitIndex_ = TypeExtensions.K_NONE;
+				this.mBitIndex = TypeExtensions.kNone;
 			}
 
 			public void Dispose()	{ }
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_ < K_LAST_INDEX_)
+				if (this.mBitIndex < kLastIndex)
 				{
-					this.mCurrent_ = this.mVector_[++this.mBitIndex_];
+					this.mCurrent = this.mVector[++this.mBitIndex];
 					return true;
 				}
 
-				this.mBitIndex_ = K_NUMBER_OF_BITS_;
+				this.mBitIndex = kNumberOfBits;
 				return false;
 			}
 		};
@@ -1108,11 +1108,11 @@ namespace KSoft.Collections
 		public struct StateFilterEnumerator
 			: IEnumerator< int >
 		{
-			readonly BitVector64 mVector_;
-			int mBitIndex_;
-			int mCurrent_;
-			readonly bool mStateFilter_;
-			readonly int mStartBitIndex_;
+			readonly BitVector64 mVector;
+			int mBitIndex;
+			int mCurrent;
+			readonly bool mStateFilter;
+			readonly int mStartBitIndex;
 
 			public StateFilterEnumerator(BitVector64 vector
 				, bool stateFilter, int startBitIndex = 0
@@ -1121,45 +1121,45 @@ namespace KSoft.Collections
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex >= 0);
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex < vector.Length);
 
-				this.mStateFilter_ = stateFilter;
-				this.mStartBitIndex_ = startBitIndex-1;
-				this.mVector_ = vector;
-				this.mBitIndex_ = TypeExtensions.K_NONE;
-				this.mCurrent_ = 0;
+				this.mStateFilter = stateFilter;
+				this.mStartBitIndex = startBitIndex-1;
+				this.mVector = vector;
+				this.mBitIndex = TypeExtensions.kNone;
+				this.mCurrent = 0;
 			}
 
 			public int Current { get {
-				if (this.mBitIndex_.IsNone())			throw new InvalidOperationException("Enumeration has not started");
-				if (this.mBitIndex_ > K_LAST_INDEX_)		throw new InvalidOperationException("Enumeration already finished");
+				if (this.mBitIndex.IsNone())			throw new InvalidOperationException("Enumeration has not started");
+				if (this.mBitIndex > kLastIndex)		throw new InvalidOperationException("Enumeration already finished");
 
-				return this.mCurrent_;
+				return this.mCurrent;
 			} }
 			object System.Collections.IEnumerator.Current { get { return this.Current; } }
 
 			public void Reset()
 			{
-				this.mBitIndex_ = TypeExtensions.K_NONE;
+				this.mBitIndex = TypeExtensions.kNone;
 			}
 
 			public void Dispose()	{ }
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_.IsNone())
-					this.mBitIndex_ = this.mStartBitIndex_;
+				if (this.mBitIndex.IsNone())
+					this.mBitIndex = this.mStartBitIndex;
 
-				if (this.mBitIndex_ < K_LAST_INDEX_)
+				if (this.mBitIndex < kLastIndex)
 				{
-					this.mCurrent_ = this.mVector_.NextBitIndex(this.mBitIndex_, this.mStateFilter_);
+					this.mCurrent = this.mVector.NextBitIndex(this.mBitIndex, this.mStateFilter);
 
-					if (this.mCurrent_ >= 0)
+					if (this.mCurrent >= 0)
 					{
-						this.mBitIndex_ = this.mCurrent_;
+						this.mBitIndex = this.mCurrent;
 						return true;
 					}
 				}
 
-				this.mBitIndex_ = K_NUMBER_OF_BITS_;
+				this.mBitIndex = kNumberOfBits;
 				return false;
 			}
 		};
@@ -1186,7 +1186,7 @@ namespace KSoft.Collections
 
 			var flag = ((ulong)1) << bitIndex;
 
-			return Bitwise.Flags.Test(this.mWord_, flag);
+			return Bitwise.Flags.Test(this.mWord, flag);
 		}
 
 		/// <typeparam name="TEnum">Members should be bit indices, not literal flag values</typeparam>
@@ -1198,7 +1198,7 @@ namespace KSoft.Collections
 
 			var flag = ((ulong)1) << bitIndex;
 
-			Bitwise.Flags.Modify(value, ref this.mWord_, flag);
+			Bitwise.Flags.Modify(value, ref this.mWord, flag);
 			return this;
 		}
 
@@ -1337,13 +1337,13 @@ namespace KSoft.Collections
 			, ICollection<string> errorsOutput = null)
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
-			const bool ignoreCase = true;
+			const bool ignore_case = true;
 
 			// Enum.TryParse will call Trim on the value anyway, so don't add yet another allocation when we can check for whitespace
 			if (string.IsNullOrWhiteSpace(flagStr))
 				return null;
 
-			if (!Enum.TryParse<TEnum>(flagStr, ignoreCase, out TEnum flag))
+			if (!Enum.TryParse<TEnum>(flagStr, ignore_case, out TEnum flag))
 			{
 				if (errorsOutput != null)
 				{

@@ -8,17 +8,17 @@ namespace KSoft.IO
 		/// <returns>Virtual address from the stream in physical address form</returns>
 		public Values.PtrHandle ReadVirtualAddress()
 		{
-			this.VerifyVat();
+			this.VerifyVAT();
 
-			return this.mVat_.ReadVirtualAsPhysicalAddress(this);
+			return this.mVAT.ReadVirtualAsPhysicalAddress(this);
 		}
 		/// <summary>Read and translate a VA from the stream into a physical address</summary>
 		/// <param name="physicalAddress">Virtual address from the stream in physical address form</param>
 		public void ReadVirtualAddress(out Values.PtrHandle physicalAddress)
 		{
-			this.VerifyVat();
+			this.VerifyVAT();
 
-			physicalAddress = this.mVat_.ReadVirtualAsPhysicalAddress(this);
+			physicalAddress = this.mVAT.ReadVirtualAsPhysicalAddress(this);
 		}
 		#endregion
 	};
@@ -35,9 +35,9 @@ namespace KSoft.IO
 
 			switch (ptrSize)
 			{
-				case Shell.ProcessorSize.X32:
+				case Shell.ProcessorSize.x32:
 					this.Write(uint.MinValue); break;
-				case Shell.ProcessorSize.X64:
+				case Shell.ProcessorSize.x64:
 					this.Write(ulong.MinValue); break;
 
 				default:
@@ -49,20 +49,20 @@ namespace KSoft.IO
 		/// <summary>Mark a position as a 32-bit VA</summary>
 		/// <returns>Position of the stream before the 'mark' was written</returns>
 		/// <remarks>Up to caller to write VA value later</remarks>
-		public Values.PtrHandle MarkVirtualAddress32() { return this.MarkVirtualAddress(Shell.ProcessorSize.X32); }
+		public Values.PtrHandle MarkVirtualAddress32() { return this.MarkVirtualAddress(Shell.ProcessorSize.x32); }
 		/// <summary>Mark a position as a 64-bit VA</summary>
 		/// <returns>Position of the stream before the 'mark' was written</returns>
 		/// <remarks>Up to caller to write VA value later</remarks>
-		public Values.PtrHandle MarkVirtualAddress64() { return this.MarkVirtualAddress(Shell.ProcessorSize.X64); }
+		public Values.PtrHandle MarkVirtualAddress64() { return this.MarkVirtualAddress(Shell.ProcessorSize.x64); }
 
 		#region Write Pointer
 		/// <summary>Write a physical address, translating it into a VA first, to the stream</summary>
 		/// <param name="physicalAddress">Physical address to be translated into virtual address</param>
 		public void WriteVirtualAddress(Values.PtrHandle physicalAddress)
 		{
-			this.VerifyVat();
+			this.VerifyVAT();
 
-			this.mVat_.WritePhysicalAsVirtualAddress(this, physicalAddress);
+			this.mVAT.WritePhysicalAsVirtualAddress(this, physicalAddress);
 		}
 		#endregion
 	};

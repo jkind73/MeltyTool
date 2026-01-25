@@ -3,8 +3,8 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BTriggerParamType
 	{
-		INVALID = TypeExtensions.K_NONE,
-		INPUT,
-		OUTPUT,
+		Invalid = TypeExtensions.kNone,
+		Input,
+		Output,
 	};
 }

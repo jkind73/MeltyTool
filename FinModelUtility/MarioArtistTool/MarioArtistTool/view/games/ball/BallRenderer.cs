@@ -36,7 +36,7 @@ public sealed class BallRenderer(float radius) : IRenderable {
     var blackMaterial = model.MaterialManager.AddColorMaterial(Color.Black);
 
     whiteMaterial.DepthCompareType
-        = blackMaterial.DepthCompareType = DepthCompareType.ALWAYS;
+        = blackMaterial.DepthCompareType = DepthCompareType.Always;
 
     var mesh = model.Skin.AddMesh();
     mesh.AddSimpleSphere(model.Skin, Vector3.Zero, radius, 30, whiteMaterial);

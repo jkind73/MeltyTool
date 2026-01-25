@@ -6,17 +6,17 @@ namespace KSoft.Phoenix.Runtime
 		public sealed class Tactic
 			: IO.IEndianStreamSerializable
 		{
-			public string[] protoActions, weapons;
+			public string[] ProtoActions, Weapons;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				BSaveGame.StreamArray(s, ref this.protoActions);
-				BSaveGame.StreamArray(s, ref this.weapons);
+				BSaveGame.StreamArray(s, ref this.ProtoActions);
+				BSaveGame.StreamArray(s, ref this.Weapons);
 			}
 			#endregion
 		};
-		static readonly CondensedListInfo KTacticsListInfo = new CondensedListInfo()
+		static readonly CondensedListInfo kTacticsListInfo = new CondensedListInfo()
 		{
 			IndexSize=sizeof(short),
 		};

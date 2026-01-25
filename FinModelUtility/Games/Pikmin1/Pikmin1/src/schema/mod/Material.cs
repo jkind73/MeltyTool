@@ -28,7 +28,7 @@ namespace pikmin1.schema.mod;
 
 [BinarySchema]
 public sealed partial class KeyInfoU8 : IBinaryConvertible {
-  public byte frame = 0;
+  public byte Frame = 0;
 
   [Unknown]
   public byte unknownA = 0;
@@ -36,57 +36,57 @@ public sealed partial class KeyInfoU8 : IBinaryConvertible {
   [Unknown]
   public ushort unknownB = 0;
 
-  public float startValue = 0;
-  public float endValue = 0;
+  public float StartValue = 0;
+  public float EndValue = 0;
 
   public new string? ToString()
-    => $"{this.frame} {this.startValue} {this.endValue}";
+    => $"{this.Frame} {this.StartValue} {this.EndValue}";
 }
 
 [BinarySchema]
 public sealed partial class KeyInfoF32 : IBinaryConvertible {
   [Unknown]
-  public float value = 0;
+  public float Value = 0;
 
   [Unknown]
-  public float inTangent = 0;
+  public float InTangent = 0;
 
   [Unknown]
-  public float outTangent = 0;
+  public float OutTangent = 0;
 
   public new string? ToString()
-    => $"{this.value} {this.inTangent} {this.outTangent}";
+    => $"{this.Value} {this.InTangent} {this.OutTangent}";
 }
 
 [BinarySchema]
 public sealed partial class KeyInfoS10 : IBinaryConvertible {
-  public short frame = 0;
+  public short Frame = 0;
 
   public readonly short padding = 0; // TODO: Is this right?
 
-  public float startValue = 0;
-  public float endValue = 0;
+  public float StartValue = 0;
+  public float EndValue = 0;
 
   public new string? ToString()
-    => $"{this.frame} {this.startValue} {this.endValue}";
+    => $"{this.Frame} {this.StartValue} {this.EndValue}";
 };
 
 [BinarySchema]
 public sealed partial class ColorAnimationInfo : IBinaryConvertible {
   [Unknown]
-  public int index = 0;
+  public int Index = 0;
 
-  public readonly KeyInfoU8 r = new();
-  public readonly KeyInfoU8 g = new();
-  public readonly KeyInfoU8 b = new();
+  public readonly KeyInfoU8 R = new();
+  public readonly KeyInfoU8 G = new();
+  public readonly KeyInfoU8 B = new();
 }
 
 [BinarySchema]
 public sealed partial class AlphaAnimationInfo : IBinaryConvertible {
   [Unknown]
-  public int index = 0;
+  public int Index = 0;
 
-  public readonly KeyInfoU8 a = new();
+  public readonly KeyInfoU8 A = new();
 }
 
 [BinarySchema]
@@ -95,18 +95,18 @@ public sealed partial class PolygonColorInfo
   public Rgba32 DiffuseColour { get; set; }
 
   [Unknown]
-  public int animationLength = 0;
+  public int AnimationLength = 0;
 
   [Unknown]
-  public float animationSpeed = 0;
-
-  [Unknown]
-  [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public ColorAnimationInfo[] colorAnimationInfo;
+  public float AnimationSpeed = 0;
 
   [Unknown]
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public AlphaAnimationInfo[] alphaAnimationInfo;
+  public ColorAnimationInfo[] ColorAnimationInfo;
+
+  [Unknown]
+  [SequenceLengthSource(SchemaIntegerType.UINT32)]
+  public AlphaAnimationInfo[] AlphaAnimationInfo;
 
   public bool Equals(PolygonColorInfo? other) {
     if (ReferenceEquals(null, other)) {
@@ -118,8 +118,8 @@ public sealed partial class PolygonColorInfo
     }
 
     return this.DiffuseColour.Equals(other.DiffuseColour) &&
-           this.animationLength == other.animationLength &&
-           this.animationSpeed.Equals(other.animationSpeed);
+           this.AnimationLength == other.AnimationLength &&
+           this.AnimationSpeed.Equals(other.AnimationSpeed);
   }
 
   public override bool Equals(object? obj) {
@@ -140,10 +140,10 @@ public sealed partial class PolygonColorInfo
 
   public override int GetHashCode() {
     return HashCode.Combine(this.DiffuseColour,
-                            this.animationLength,
-                            this.animationSpeed,
-                            this.colorAnimationInfo,
-                            this.alphaAnimationInfo);
+                            this.AnimationLength,
+                            this.AnimationSpeed,
+                            this.ColorAnimationInfo,
+                            this.AlphaAnimationInfo);
   }
 }
 
@@ -202,7 +202,7 @@ public enum PeInfoFlags : int {
 
 [BinarySchema]
 public sealed partial record PeInfo : IBinaryConvertible {
-  public PeInfoFlags flags = 0;
+  public PeInfoFlags Flags = 0;
 
   public int AlphaCompareFunctionBits { get; set; }
 
@@ -227,17 +227,17 @@ public sealed partial record PeInfo : IBinaryConvertible {
     => ((this.AlphaCompareFunctionBits >> 24) & 0xFF) / 255f;
 
 
-  public int zModeBits = 0;
+  public int ZModeBits = 0;
 
   [Skip]
-  public bool Enable => ((this.zModeBits >> 0) & 0x1) == 0x1;
+  public bool Enable => ((this.ZModeBits >> 0) & 0x1) == 0x1;
 
   [Skip]
-  public bool WriteNewIntoBuffer => ((this.zModeBits >> 1) & 0x1) == 0x1;
+  public bool WriteNewIntoBuffer => ((this.ZModeBits >> 1) & 0x1) == 0x1;
 
   [Skip]
   public GxCompareType DepthCompareType
-    => (GxCompareType) ((this.zModeBits >> 8) & 0xFF);
+    => (GxCompareType) ((this.ZModeBits >> 8) & 0xFF);
 
   public int BlendModeBits { get; set; }
 
@@ -260,7 +260,7 @@ public sealed partial record PeInfo : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class TextureAnimationData : IBinaryConvertible {
-  public int frame = 0;
+  public int Frame = 0;
   public KeyInfoF32 X { get; } = new();
   public KeyInfoF32 Y { get; } = new();
   public KeyInfoF32 Z { get; } = new();
@@ -269,7 +269,7 @@ public sealed partial class TextureAnimationData : IBinaryConvertible {
 [BinarySchema]
 public sealed partial class TextureData
     : IBinaryConvertible, IEquatable<TextureData> {
-  public int texAttrIndex = 0;
+  public int TexAttrIndex = 0;
 
   [IntegerFormat(SchemaIntegerType.UINT16)]
   public GxWrapMode WrapModeS { get; set; }
@@ -290,24 +290,24 @@ public sealed partial class TextureData
   public byte unknown7 = 0;
 
   [Unknown]
-  public uint textureMatrixIdx = 0;
+  public uint TextureMatrixIdx = 0;
 
-  public int animationLength = 0;
-  public float animationSpeed = 0;
+  public int AnimationLength = 0;
+  public float AnimationSpeed = 0;
 
   public Vector2 Scale { get; private set; }
-  public float rotation = 0;
+  public float Rotation = 0;
   public Vector2 Translation { get; private set; }
   public Vector2 Center { get; private set; }
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TextureAnimationData[] scaleAnimationData;
+  public TextureAnimationData[] ScaleAnimationData;
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TextureAnimationData[] rotationAnimationData;
+  public TextureAnimationData[] RotationAnimationData;
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TextureAnimationData[] translationAnimationData;
+  public TextureAnimationData[] TranslationAnimationData;
 
   public bool Equals(TextureData? other) {
     if (ReferenceEquals(null, other)) {
@@ -318,18 +318,18 @@ public sealed partial class TextureData
       return true;
     }
 
-    return this.texAttrIndex == other.texAttrIndex &&
+    return this.TexAttrIndex == other.TexAttrIndex &&
            this.WrapModeS == other.WrapModeS &&
            this.WrapModeT == other.WrapModeT &&
            this.unknown4 == other.unknown4 &&
            this.unknown5 == other.unknown5 &&
            this.unknown6 == other.unknown6 &&
            this.unknown7 == other.unknown7 &&
-           this.textureMatrixIdx == other.textureMatrixIdx &&
-           this.animationLength == other.animationLength &&
-           this.animationSpeed.Equals(other.animationSpeed) &&
+           this.TextureMatrixIdx == other.TextureMatrixIdx &&
+           this.AnimationLength == other.AnimationLength &&
+           this.AnimationSpeed.Equals(other.AnimationSpeed) &&
            this.Scale.Equals(other.Scale) &&
-           this.rotation.Equals(other.rotation) &&
+           this.Rotation.Equals(other.Rotation) &&
            this.Translation.Equals(other.Translation) &&
            this.Center.Equals(other.Center);
   }
@@ -352,30 +352,30 @@ public sealed partial class TextureData
 
   public override int GetHashCode() {
     var hashCode = new HashCode();
-    hashCode.Add(this.texAttrIndex);
+    hashCode.Add(this.TexAttrIndex);
     hashCode.Add(this.WrapModeS);
     hashCode.Add(this.WrapModeT);
     hashCode.Add(this.unknown4);
     hashCode.Add(this.unknown5);
     hashCode.Add(this.unknown6);
     hashCode.Add(this.unknown7);
-    hashCode.Add(this.textureMatrixIdx);
-    hashCode.Add(this.animationLength);
-    hashCode.Add(this.animationSpeed);
+    hashCode.Add(this.TextureMatrixIdx);
+    hashCode.Add(this.AnimationLength);
+    hashCode.Add(this.AnimationSpeed);
     hashCode.Add(this.Scale);
-    hashCode.Add(this.rotation);
+    hashCode.Add(this.Rotation);
     hashCode.Add(this.Translation);
     hashCode.Add(this.Center);
-    hashCode.Add(this.translationAnimationData);
-    hashCode.Add(this.rotationAnimationData);
-    hashCode.Add(this.scaleAnimationData);
+    hashCode.Add(this.TranslationAnimationData);
+    hashCode.Add(this.RotationAnimationData);
+    hashCode.Add(this.ScaleAnimationData);
     return hashCode.ToHashCode();
   }
 }
 
 public sealed class MaterialContainer {
   public readonly List<Material> materials = [];
-  public readonly List<TevInfo> texEnvironments = [];
+  public readonly List<TEVInfo> texEnvironments = [];
 }
 
 [Flags]
@@ -394,8 +394,8 @@ public record Material : IBinaryConvertible {
   [Unknown]
   public int unknown1 = 0;
 
-  public uint tevGroupId = 0;
-  public readonly PolygonColorInfo colorInfo = new();
+  public uint TevGroupId = 0;
+  public readonly PolygonColorInfo ColorInfo = new();
   public LightingInfo? LightingInfo { get; private set; }
   public readonly PeInfo peInfo = new();
   public readonly TextureInfo texInfo = new();
@@ -403,11 +403,11 @@ public record Material : IBinaryConvertible {
   public void Read(IBinaryReader br) {
     this.flags = (MaterialFlags) br.ReadUInt32();
     this.unknown1 = br.ReadInt32();
-    this.colorInfo.DiffuseColour.Read(br);
+    this.ColorInfo.DiffuseColour.Read(br);
 
     if (this.flags.CheckFlag(MaterialFlags.ENABLED)) {
-      this.tevGroupId = br.ReadUInt32();
-      this.colorInfo.Read(br);
+      this.TevGroupId = br.ReadUInt32();
+      this.ColorInfo.Read(br);
       this.LightingInfo = br.ReadNew<LightingInfo>();
       this.peInfo.Read(br);
       this.texInfo.Read(br);
@@ -419,7 +419,7 @@ public record Material : IBinaryConvertible {
   }
 
   public override string ToString()
-    => $"[{this.flags}] --> lightingFlags:{this.LightingInfo.lightingInfoFlags}, peFlags:{this.peInfo.flags}, writeDepth:{this.peInfo.WriteNewIntoBuffer}, priority:{this.unknown1}";
+    => $"[{this.flags}] --> lightingFlags:{this.LightingInfo.lightingInfoFlags}, peFlags:{this.peInfo.Flags}, writeDepth:{this.peInfo.WriteNewIntoBuffer}, priority:{this.unknown1}";
 }
 
 [BinarySchema]
@@ -432,10 +432,10 @@ public sealed partial class TextureInfo : IBinaryConvertible, IEquatable<Texture
 
   [Unknown]
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TexGenData[] texGenData = [];
+  public TexGenData[] TexGenData = [];
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TextureData[] texturesInMaterial = [];
+  public TextureData[] TexturesInMaterial = [];
 
   public bool Equals(TextureInfo? other) {
     if (ReferenceEquals(null, other)) {
@@ -448,8 +448,8 @@ public sealed partial class TextureInfo : IBinaryConvertible, IEquatable<Texture
 
     return this.unknown1 == other.unknown1 &&
            this.unknown2.Equals(other.unknown2) &&
-           this.texGenData.SequenceEqual(other.texGenData) &&
-           this.texturesInMaterial.SequenceEqual(other.texturesInMaterial);
+           this.TexGenData.SequenceEqual(other.TexGenData) &&
+           this.TexturesInMaterial.SequenceEqual(other.TexturesInMaterial);
   }
 
   public override bool Equals(object? obj) {
@@ -471,36 +471,36 @@ public sealed partial class TextureInfo : IBinaryConvertible, IEquatable<Texture
   public override int GetHashCode() {
     return HashCode.Combine(this.unknown1,
                             this.unknown2,
-                            this.texGenData,
-                            this.texturesInMaterial);
+                            this.TexGenData,
+                            this.TexturesInMaterial);
   }
 }
 
 [BinarySchema]
 public sealed partial record TexGenData : IBinaryConvertible {
-  public GxTexCoord texCoordId = 0;
-  public GxTexGenType texGenType = 0;
+  public GxTexCoord TexCoordId = 0;
+  public GxTexGenType TexGenType = 0;
   public GxTexGenSrc TexGenSrc { get; set; }
 
-  public byte texMatrix = 0;
+  public byte TexMatrix = 0;
 }
 
 [BinarySchema]
-public sealed partial class TevInfo : IBinaryConvertible {
+public sealed partial class TEVInfo : IBinaryConvertible {
   [SequenceLengthSource(3)]
-  public TevColReg[] ColorRegisters { get; set; }
+  public TEVColReg[] ColorRegisters { get; set; }
 
   [SequenceLengthSource(4)]
   public Rgba32[] KonstColors { get; set; }
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TevStage[] tevStages;
+  public TEVStage[] TevStages;
 }
 
 [BinarySchema]
-public sealed partial class TevColReg : IBinaryConvertible {
+public sealed partial class TEVColReg : IBinaryConvertible {
   [Unknown]
-  public readonly RgbaS10 color = new();
+  public readonly RgbaS10 Color = new();
 
   [Unknown]
   public int unknown2 = 0;
@@ -510,17 +510,17 @@ public sealed partial class TevColReg : IBinaryConvertible {
 
   [Unknown]
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TcrUnk1[] unknown4;
+  public TCR_Unk1[] unknown4;
 
   [Unknown]
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public TcrUnk2[] unknown5;
+  public TCR_Unk2[] unknown5;
 
-  public override string ToString() => $"TEVColReg({this.color})";
+  public override string ToString() => $"TEVColReg({this.Color})";
 }
 
 [BinarySchema]
-public sealed partial class TcrUnk1 : IBinaryConvertible {
+public sealed partial class TCR_Unk1 : IBinaryConvertible {
   [Unknown]
   public int unknown1 = 0;
 
@@ -541,7 +541,7 @@ public sealed partial class TcrUnk1 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public sealed partial class TcrUnk2 : IBinaryConvertible {
+public sealed partial class TCR_Unk2 : IBinaryConvertible {
   [Unknown]
   public int unknown1 = 0;
 
@@ -550,9 +550,9 @@ public sealed partial class TcrUnk2 : IBinaryConvertible {
 }
 
 [BinarySchema]
-public sealed partial class TevStage : IBinaryConvertible {
+public sealed partial class TEVStage : IBinaryConvertible {
   [Unknown]
-  public byte unknown = 0;
+  public byte Unknown = 0;
 
   public GxTexCoord TexCoord { get; set; }
   public GxTexMap TexMap { get; set; }

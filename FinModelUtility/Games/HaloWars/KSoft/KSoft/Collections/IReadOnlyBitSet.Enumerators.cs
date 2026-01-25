@@ -7,7 +7,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Collections
 {
-	public static partial class ReadOnlyBitSetEnumerators
+	public static partial class IReadOnlyBitSetEnumerators
 	{
 		public partial struct StateEnumerator
 		{
@@ -19,13 +19,13 @@ namespace KSoft.Collections
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_ < this.mLastIndex_)
+				if (this.mBitIndex < this.mLastIndex)
 				{
-					this.mCurrent_ = this.mSet_.Get(++this.mBitIndex_);
+					this.mCurrent = this.mSet.Get(++this.mBitIndex);
 					return true;
 				}
 
-				this.mBitIndex_ = this.mSet_.Length;
+				this.mBitIndex = this.mSet.Length;
 				return false;
 			}
 		};
@@ -39,27 +39,27 @@ namespace KSoft.Collections
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex >= 0);
 				Contract.Requires<ArgumentOutOfRangeException>(startBitIndex < bitset.Length || bitset.Length == 0);
 
-				this.mStateFilter_ = stateFilter;
-				this.mStartBitIndex_ = startBitIndex-1;
+				this.mStateFilter = stateFilter;
+				this.mStartBitIndex = startBitIndex-1;
 			}
 
 			public bool MoveNext()
 			{
-				if (this.mBitIndex_.IsNone())
-					this.mBitIndex_ = this.mStartBitIndex_;
+				if (this.mBitIndex.IsNone())
+					this.mBitIndex = this.mStartBitIndex;
 
-				if (this.mBitIndex_ < this.mLastIndex_)
+				if (this.mBitIndex < this.mLastIndex)
 				{
-					this.mCurrent_ = this.mSet_.NextBitIndex(++this.mBitIndex_, this.mStateFilter_);
+					this.mCurrent = this.mSet.NextBitIndex(++this.mBitIndex, this.mStateFilter);
 
-					if (this.mCurrent_ >= 0)
+					if (this.mCurrent >= 0)
 					{
-						this.mBitIndex_ = this.mCurrent_;
+						this.mBitIndex = this.mCurrent;
 						return true;
 					}
 				}
 
-				this.mBitIndex_ = this.mSet_.Length;
+				this.mBitIndex = this.mSet.Length;
 				return false;
 			}
 		};

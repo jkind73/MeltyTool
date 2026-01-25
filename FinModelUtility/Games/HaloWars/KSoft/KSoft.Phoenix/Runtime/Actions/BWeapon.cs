@@ -9,30 +9,30 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BWeapon
 		: IO.IEndianStreamSerializable
 	{
-		public const int K_MAX_COUNT = 0xC8;
+		public const int kMaxCount = 0xC8;
 
-		public /*float*/uint damagePerSecond;
-		public float doTrate, doTduration, 
-			maxRange, minRange, aoeRadius, 
-			aoePrimaryTargetFactor, aoeDistanceFactor, aoeDamageFactor, 
-			accuracy, movingAccuracy, maxDeviation,
-			movingMaxDeviation, accuracyDistanceFactor, accuracyDeviationFactor,
-			maxVelocityLead, maxDamagePerRam, reflectDamageFactor, 
-			airBurstSpan;
-		public int projectileObjectId, impactEffectProtoId;
+		public /*float*/uint DamagePerSecond;
+		public float DOTrate, DOTduration, 
+			MaxRange, MinRange, AOERadius, 
+			AOEPrimaryTargetFactor, AOEDistanceFactor, AOEDamageFactor, 
+			Accuracy, MovingAccuracy, MaxDeviation,
+			MovingMaxDeviation, AccuracyDistanceFactor, AccuracyDeviationFactor,
+			MaxVelocityLead, MaxDamagePerRam, ReflectDamageFactor, 
+			AirBurstSpan;
+		public int ProjectileObjectID, ImpactEffectProtoID;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.damagePerSecond); s.Stream(ref this.doTrate); s.Stream(ref this.doTduration); 
-			s.Stream(ref this.maxRange); s.Stream(ref this.minRange); s.Stream(ref this.aoeRadius); 
-			s.Stream(ref this.aoePrimaryTargetFactor); s.Stream(ref this.aoeDistanceFactor); s.Stream(ref this.aoeDamageFactor); 
-			s.Stream(ref this.accuracy); s.Stream(ref this.movingAccuracy); s.Stream(ref this.maxDeviation);
-			s.Stream(ref this.movingMaxDeviation); s.Stream(ref this.accuracyDistanceFactor); s.Stream(ref this.accuracyDeviationFactor);
-			s.Stream(ref this.maxVelocityLead); s.Stream(ref this.maxDamagePerRam); s.Stream(ref this.reflectDamageFactor); 
-			s.Stream(ref this.airBurstSpan);
-			s.Stream(ref this.projectileObjectId); s.Stream(ref this.impactEffectProtoId);
-			s.StreamSignature(CSaveMarker.WEAPON);
+			s.Stream(ref this.DamagePerSecond); s.Stream(ref this.DOTrate); s.Stream(ref this.DOTduration); 
+			s.Stream(ref this.MaxRange); s.Stream(ref this.MinRange); s.Stream(ref this.AOERadius); 
+			s.Stream(ref this.AOEPrimaryTargetFactor); s.Stream(ref this.AOEDistanceFactor); s.Stream(ref this.AOEDamageFactor); 
+			s.Stream(ref this.Accuracy); s.Stream(ref this.MovingAccuracy); s.Stream(ref this.MaxDeviation);
+			s.Stream(ref this.MovingMaxDeviation); s.Stream(ref this.AccuracyDistanceFactor); s.Stream(ref this.AccuracyDeviationFactor);
+			s.Stream(ref this.MaxVelocityLead); s.Stream(ref this.MaxDamagePerRam); s.Stream(ref this.ReflectDamageFactor); 
+			s.Stream(ref this.AirBurstSpan);
+			s.Stream(ref this.ProjectileObjectID); s.Stream(ref this.ImpactEffectProtoID);
+			s.StreamSignature(cSaveMarker.Weapon);
 		}
 		#endregion
 	};

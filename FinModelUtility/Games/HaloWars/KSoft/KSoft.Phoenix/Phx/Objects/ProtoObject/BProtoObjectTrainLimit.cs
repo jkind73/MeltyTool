@@ -5,56 +5,56 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "TrainLimit",
+			ElementName = "TrainLimit",
 		};
 		#endregion
 
 		#region Type
-		LimitType mType_ = LimitType.INVALID;
+		LimitType mType = LimitType.Invalid;
 		public LimitType Type
 		{
-			get { return this.mType_; }
-			set { this.mType_ = value; }
+			get { return this.mType; }
+			set { this.mType = value; }
 		}
 		#endregion
 
 		#region ID
-		int mId_ = TypeExtensions.K_NONE;
-		public int Id
+		int mID = TypeExtensions.kNone;
+		public int ID
 		{
-			get { return this.mId_; }
-			set { this.mId_ = value; }
+			get { return this.mID; }
+			set { this.mID = value; }
 		}
 		#endregion
 
 		#region Count
-		int mCount_;
+		int mCount;
 		public int Count
 		{
-			get { return this.mCount_; }
-			set { this.mCount_ = value; }
+			get { return this.mCount; }
+			set { this.mCount = value; }
 		}
 
 		public bool IsCountValid { get { return this.Count >= byte.MinValue && this.Count < byte.MaxValue; } }
 		#endregion
 
 		#region Bucket
-		int mBucket_;
+		int mBucket;
 		public int Bucket
 		{
-			get { return this.mBucket_; }
-			set { this.mBucket_ = value; }
+			get { return this.mBucket; }
+			set { this.mBucket = value; }
 		}
 
 		public bool IsBucketValid { get { return this.Bucket >= byte.MinValue && this.Bucket < byte.MaxValue; } }
 		#endregion
 
 		public bool IsValid { get {
-			return this.Type != LimitType.INVALID
+			return this.Type != LimitType.Invalid
 				&&
-				this.Id.IsNotNone()
+				this.ID.IsNotNone()
 				&&
 				this.IsCountValid
 				&&
@@ -68,20 +68,20 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnum("Type", ref this.mType_);
+			s.StreamAttributeEnum("Type", ref this.mType);
 
-			switch (this.mType_)
+			switch (this.mType)
 			{
-				case LimitType.UNIT:
-					xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
+				case LimitType.Unit:
+					xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
 					break;
-				case LimitType.SQUAD:
-					xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_CURSOR);
+				case LimitType.Squad:
+					xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceCursor);
 					break;
 			}
 
-			s.StreamAttributeOpt("Count", ref this.mCount_, Predicates.IsNotZero);
-			s.StreamAttributeOpt("Bucket", ref this.mBucket_, Predicates.IsNotZero);
+			s.StreamAttributeOpt("Count", ref this.mCount, Predicates.IsNotZero);
+			s.StreamAttributeOpt("Bucket", ref this.mBucket, Predicates.IsNotZero);
 		}
 		#endregion
 	};

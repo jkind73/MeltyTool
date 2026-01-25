@@ -21,19 +21,19 @@ namespace KSoft
 	{
 		enum ParseErrorType
 		{
-			NONE,
+			None,
 			/// <summary>Input string is null or empty</summary>
-			NO_INPUT,
+			NoInput,
 			/// <summary>The input can't be parsed as-is</summary>
-			INVALID_VALUE,
-			INVALID_START_INDEX,
+			InvalidValue,
+			InvalidStartIndex,
 		};
 
-		public const int K_BASE10 = 10;
-		public const int K_BASE36 = 36;
-		public const int K_BASE64 = 64;
-		public const string K_BASE_64DIGITS = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
-		public const string K_BASE_64DIGITS_RFC4648 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+		public const int kBase10 = 10;
+		public const int kBase36 = 36;
+		public const int kBase64 = 64;
+		public const string kBase64Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/";
+		public const string kBase64DigitsRfc4648 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 		[Contracts.Pure]
 		static bool HandleParseError(ParseErrorType errorType, bool noThrow, string s, int startIndex
@@ -43,7 +43,7 @@ namespace KSoft
 
 			switch (errorType)
 			{
-			case ParseErrorType.NO_INPUT:
+			case ParseErrorType.NoInput:
 				if (noThrow)
 					return false;
 
@@ -51,12 +51,12 @@ namespace KSoft
 					("Input null or empty", nameof(s));
 				break;
 
-			case ParseErrorType.INVALID_VALUE:
+			case ParseErrorType.InvalidValue:
 				detailsException = new ArgumentException(string.Format
 					(Util.InvariantCultureInfo, "Couldn't parse '{0}'", s), nameof(s));
 				break;
 
-			case ParseErrorType.INVALID_START_INDEX:
+			case ParseErrorType.InvalidStartIndex:
 				detailsException = new ArgumentOutOfRangeException(nameof(s), string.Format
 					(Util.InvariantCultureInfo, "'{0}' is out of range of the input length of '{1}'", startIndex, s.Length));
 				break;
@@ -78,12 +78,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static bool IsValidLookupTable(NumeralBase radix, string digits)
 		{
-			return radix >= NumeralBase.BINARY && (int)radix <= digits.Length;
+			return radix >= NumeralBase.Binary && (int)radix <= digits.Length;
 		}
 		[Contracts.Pure]
 		public static bool IsValidLookupTable(NumbersRadix radix, string digits)
 		{
-			return radix >= NumbersRadix.BINARY && (int)radix <= digits.Length;
+			return radix >= NumbersRadix.Binary && (int)radix <= digits.Length;
 		}
 
 
@@ -91,30 +91,30 @@ namespace KSoft
 		[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct StringListDesc
 		{
-			public const char K_DEFAULT_SEPARATOR = ',';
-			public const char K_DEFAULT_TERMINATOR = ';';
-			public static StringListDesc Default { get => new StringListDesc(K_DEFAULT_SEPARATOR); }
+			public const char kDefaultSeparator = ',';
+			public const char kDefaultTerminator = ';';
+			public static StringListDesc Default { get => new StringListDesc(kDefaultSeparator); }
 
-			public string digits;
-			public NumbersRadix radix;
+			public string Digits;
+			public NumbersRadix Radix;
 			/// <remarks><b>false</b> by default</remarks>
-			public bool requiresTerminator;
+			public bool RequiresTerminator;
 
-			public char separator;
-			public char terminator;
+			public char Separator;
+			public char Terminator;
 
-			public StringListDesc(char separator, char terminator = K_DEFAULT_TERMINATOR,
-				NumbersRadix radix = NumbersRadix.DECIMAL, string digits = K_BASE_64DIGITS)
+			public StringListDesc(char separator, char terminator = kDefaultTerminator,
+				NumbersRadix radix = NumbersRadix.Decimal, string digits = kBase64Digits)
 			{
 				Contract.Requires(!string.IsNullOrEmpty(digits));
 				Contract.Requires(IsValidLookupTable(radix, digits));
 
-				this.digits = digits;
-				this.radix = radix;
-				this.requiresTerminator = false;
+				this.Digits = digits;
+				this.Radix = radix;
+				this.RequiresTerminator = false;
 
-				this.separator = separator;
-				this.terminator = terminator;
+				this.Separator = separator;
+				this.Terminator = terminator;
 			}
 
 			[Contracts.Pure]
@@ -128,9 +128,9 @@ namespace KSoft
 				var sseg = new Collections.StringSegment(values);
 				foreach (char c in sseg)
 				{
-					if (c == this.separator)
+					if (c == this.Separator)
 						count++;
-					else if (c == this.terminator)
+					else if (c == this.Terminator)
 						break;
 				}
 
@@ -162,8 +162,8 @@ namespace KSoft
 			void InitializeList()
 			{
 				// ReSharper disable once ImpureMethodCallOnReadonlyValueField - yes IT IS fucking Pure you POS
-				int predicatedCount = this.mDesc.PredictedCount(this.mValues);
-				this.mList = new List<TListItem>(predicatedCount);
+				int predicated_count = this.mDesc.PredictedCount(this.mValues);
+				this.mList = new List<TListItem>(predicated_count);
 			}
 
 			protected abstract TListItem CreateItem(int start, int length);
@@ -177,22 +177,22 @@ namespace KSoft
 
 				this.InitializeList();
 
-				bool foundTerminator = false;
-				int valueLength = this.mValues.Length;
-				for (int start = 0; !foundTerminator && start < valueLength; )
+				bool found_terminator = false;
+				int value_length = this.mValues.Length;
+				for (int start = 0; !found_terminator && start < value_length; )
 				{
 					// Skip any starting whitespace
-					while (start < valueLength && char.IsWhiteSpace(this.mValues[start]))
+					while (start < value_length && char.IsWhiteSpace(this.mValues[start]))
 						++start;
 
 					int end = start;
 					int length = 0;
-					while (end < valueLength)
+					while (end < value_length)
 					{
 						char c = this.mValues[end];
-						foundTerminator = c == this.mDesc.terminator;
+						found_terminator = c == this.mDesc.Terminator;
 						// NOTE: TryParseImpl actually handles leading and trailing whitespace
-						if (c == this.mDesc.separator || foundTerminator)
+						if (c == this.mDesc.Separator || found_terminator)
 							break;
 
 						// NOTE: we wouldn't want to update length if we hit ws before the separator and the TryParseImpl assumes no ws
@@ -215,33 +215,33 @@ namespace KSoft
 		};
 
 		// Single.ToString(string): "if format is null or an empty string, the return value for this isntance is formatted with the general numeric format specifier ("G")
-		public const string K_FLOAT_DEFAULT_FORMAT_SPECIFIER = null;
-		public const string K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER = "G9";
-		public const string K_SINGLE_ROUND_TRIP_FORMAT_SPECIFIER = K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER;
-		public const string K_DOUBLE_ROUND_TRIP_FORMAT_SPECIFIER = "G17";
+		public const string kFloatDefaultFormatSpecifier = null;
+		public const string kFloatRoundTripFormatSpecifier = "G9";
+		public const string kSingleRoundTripFormatSpecifier = kFloatRoundTripFormatSpecifier;
+		public const string kDoubleRoundTripFormatSpecifier = "G17";
 
 		// based on the reference source, this is what the default number styles are
-		public const NumberStyles K_FLOAT_TRY_PARSE_NUMBER_STYLES = 0
+		public const NumberStyles kFloatTryParseNumberStyles = 0
 			| NumberStyles.Float
 			| NumberStyles.AllowThousands;
 		public static bool FloatTryParseInvariant(string s, out float result)
 		{
-			return float.TryParse(s, K_FLOAT_TRY_PARSE_NUMBER_STYLES, CultureInfo.InvariantCulture, out result);
+			return float.TryParse(s, kFloatTryParseNumberStyles, CultureInfo.InvariantCulture, out result);
 		}
 		public static float FloatParseInvariant(string s)
 		{
-			return float.Parse(s, K_FLOAT_TRY_PARSE_NUMBER_STYLES, CultureInfo.InvariantCulture);
+			return float.Parse(s, kFloatTryParseNumberStyles, CultureInfo.InvariantCulture);
 		}
 
 		// based on the reference source, this is what the default number styles are
-		public const NumberStyles K_DOUBLE_TRY_PARSE_NUMBER_STYLES = K_FLOAT_TRY_PARSE_NUMBER_STYLES;
+		public const NumberStyles kDoubleTryParseNumberStyles = kFloatTryParseNumberStyles;
 		public static bool DoubleTryParseInvariant(string s, out double result)
 		{
-			return double.TryParse(s, K_DOUBLE_TRY_PARSE_NUMBER_STYLES, CultureInfo.InvariantCulture, out result);
+			return double.TryParse(s, kDoubleTryParseNumberStyles, CultureInfo.InvariantCulture, out result);
 		}
 		public static double DoubleParseInvariant(string s)
 		{
-			return double.Parse(s, K_DOUBLE_TRY_PARSE_NUMBER_STYLES, CultureInfo.InvariantCulture);
+			return double.Parse(s, kDoubleTryParseNumberStyles, CultureInfo.InvariantCulture);
 		}
 	};
 };

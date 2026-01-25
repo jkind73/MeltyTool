@@ -15,32 +15,32 @@ namespace KSoft.Phoenix.Resource
 	{
 		static class InMemoryRep
 		{
-			const int K_OFFSET_SOURCE_SIZE_ = 0;
-			const int K_OFFSET_SOURCE_ADLER_ = K_OFFSET_SOURCE_SIZE_ + sizeof(ulong);
-			const int K_OFFSET_COMPRESSED_SIZE_ = K_OFFSET_SOURCE_ADLER_ + sizeof(uint);
-			const int K_OFFSET_COMPRESSED_ADLER_ = K_OFFSET_COMPRESSED_SIZE_ + sizeof(ulong);
-			const int K_OFFSET_MODE_ = K_OFFSET_COMPRESSED_ADLER_ + sizeof(uint);
+			const int kOffsetSourceSize = 0;
+			const int kOffsetSourceAdler = kOffsetSourceSize + sizeof(ulong);
+			const int kOffsetCompressedSize = kOffsetSourceAdler + sizeof(uint);
+			const int kOffsetCompressedAdler = kOffsetCompressedSize + sizeof(ulong);
+			const int kOffsetMode = kOffsetCompressedAdler + sizeof(uint);
 
 	  public static uint Checksum(ulong srcSize, uint srcAdler, ulong cmpSize, uint cmpAdler,
 				uint mode = 0)
 			{
 				var bc = Adler32.BitComputer.New;
 
-				bc.ComputeBe(srcSize);
-				bc.ComputeBe(srcAdler);
-				bc.ComputeBe(cmpSize);
-				bc.ComputeBe(cmpAdler);
-				bc.ComputeBe(mode);
+				bc.ComputeBE(srcSize);
+				bc.ComputeBE(srcAdler);
+				bc.ComputeBE(cmpSize);
+				bc.ComputeBE(cmpAdler);
+				bc.ComputeBE(mode);
 
 				return bc.ComputeFinish();
 			}
 		};
 
-		static readonly Header KBufferedHeader = new Header() {
-			headerAdler32 = 0x00330004,
-			streamMode = (uint)Mode.BUFFERED,
-			uncompressedSize = 0,	compressedSize = 0,
-			uncompressedAdler32 = 1,	compressedAdler32 = 1,
+		static readonly Header kBufferedHeader = new Header() {
+			HeaderAdler32 = 0x00330004,
+			StreamMode = (uint)Mode.Buffered,
+			UncompressedSize = 0,	CompressedSize = 0,
+			UncompressedAdler32 = 1,	CompressedAdler32 = 1,
 		};
 
 		public static void CompressFromStream(IO.EndianWriter blockStream, System.IO.Stream source,
@@ -49,8 +49,8 @@ namespace KSoft.Phoenix.Resource
 			Contract.Requires<ArgumentNullException>(blockStream != null);
 			Contract.Requires<ArgumentNullException>(source != null);
 
-			using (var ms = new System.IO.MemoryStream((int)source.Length + Header.K_SIZE_OF))
-			using (var s = new IO.EndianStream(ms, Shell.EndianFormat.BIG, permissions: FA.Write))
+			using (var ms = new System.IO.MemoryStream((int)source.Length + Header.kSizeOf))
+			using (var s = new IO.EndianStream(ms, Shell.EndianFormat.Big, permissions: FA.Write))
 			using (var cs = new CompressedStream())
 			{
 				s.StreamMode = FA.Write;

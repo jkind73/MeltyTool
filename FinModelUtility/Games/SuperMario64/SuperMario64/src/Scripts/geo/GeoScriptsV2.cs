@@ -13,7 +13,7 @@ using sm64.scripts.geo;
 
 namespace sm64.Scripts {
   public sealed class GeoScriptsV2 : IGeoScripts {
-    public void Parse(
+    public void parse(
         IReadOnlySm64Memory n64Memory,
         Model3DLods mdlLods,
         ref Level lvl,
@@ -26,7 +26,7 @@ namespace sm64.Scripts {
         return;
       }
 
-      var root = new GeoScriptNode(null, FinMatrix4X4.identity);
+      var root = new GeoScriptNode(null, FinMatrix4x4.IDENTITY);
       mdlLods.Node = root;
 
       this.Add_(mdlLods, lvl, commandList, root);
@@ -39,8 +39,8 @@ namespace sm64.Scripts {
         GeoScriptNode root) {
       GeoScriptNode parent = root;
 
-      var matrixStack = new Matrix4X4Stack();
-      matrixStack.Push(parent.Matrix.Impl);
+      var matrixStack = new Matrix4x4Stack();
+      matrixStack.Push(parent.matrix.Impl);
 
       var id = 0;
 
@@ -55,7 +55,7 @@ namespace sm64.Scripts {
             GeoRotationCommand geoRotationCommand
                 => this.CreateRotationMatrix_(geoRotationCommand.Rotation),
             GeoScaleCommand geoScaleCommand
-                => FinMatrix4X4Util.FromScale(geoScaleCommand.Scale / 65536.0f),
+                => FinMatrix4x4Util.FromScale(geoScaleCommand.Scale / 65536.0f),
             GeoTranslateAndRotateCommand geoTranslateAndRotateCommand
                 => this.CreateTranslationAndRotationMatrix_(
                     geoTranslateAndRotateCommand.Translation,
@@ -63,14 +63,14 @@ namespace sm64.Scripts {
             GeoTranslationCommand geoTranslationCommand
                 => this.CreateTranslationMatrix_(
                     geoTranslationCommand.Translation),
-            _ => FinMatrix4X4.identity,
+            _ => FinMatrix4x4.IDENTITY,
         };
 
         matrixStack.Top *= mulMatrix.Impl;
 
         var current = new GeoScriptNode(parent,
-                                        new FinMatrix4X4(matrixStack.Top));
-        current.id = id++;
+                                        new FinMatrix4x4(matrixStack.Top));
+        current.ID = id++;
         current.parent = parent;
 
         mdlLods.Node = current;
@@ -114,25 +114,25 @@ namespace sm64.Scripts {
       }
     }
 
-    public IFinMatrix4X4 CreateTranslationAndRotationMatrix_(
-        Vector3S position,
-        Vector3S rotation)
+    public IFinMatrix4x4 CreateTranslationAndRotationMatrix_(
+        Vector3s position,
+        Vector3s rotation)
       => this.CreateRotationMatrix_(rotation)
              .MultiplyInPlace(this.CreateTranslationMatrix_(position));
 
-    public IFinMatrix4X4 CreateTranslationMatrix_(Vector3S position)
-      => FinMatrix4X4Util.FromTranslation(
+    public IFinMatrix4x4 CreateTranslationMatrix_(Vector3s position)
+      => FinMatrix4x4Util.FromTranslation(
           new Vector3(position.X, position.Y, position.Z));
 
-    public IFinMatrix4X4 CreateRotationMatrix_(Vector3S rotation)
-      => FinMatrix4X4Util
+    public IFinMatrix4x4 CreateRotationMatrix_(Vector3s rotation)
+      => FinMatrix4x4Util
          .FromRotation(
              new RotationImpl().SetDegrees(0, 0, rotation.Z))
          .MultiplyInPlace(
-             FinMatrix4X4Util.FromRotation(
+             FinMatrix4x4Util.FromRotation(
                  new RotationImpl().SetDegrees(rotation.X, 0, 0)))
          .MultiplyInPlace(
-             FinMatrix4X4Util.FromRotation(
+             FinMatrix4x4Util.FromRotation(
                  new RotationImpl().SetDegrees(0, rotation.Y, 0)));
 
     public void AddDisplayList(

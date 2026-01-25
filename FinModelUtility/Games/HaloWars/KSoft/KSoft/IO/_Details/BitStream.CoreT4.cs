@@ -13,73 +13,73 @@ namespace KSoft.IO
 		#region Read\Write uint Impl
 		internal void ReadWord(out uint word, int bitCount)
 		{
-			Contract.Requires(bitCount <= K_WORD_BIT_COUNT_);
+			Contract.Requires(bitCount <= kWordBitCount);
 
-			int bitsRemaining = this.CacheBitsRemaining;
+			int bits_remaining = this.CacheBitsRemaining;
 
 			// if the requested bits are contained entirely in the cache...
-			if (bitCount <= bitsRemaining)
+			if (bitCount <= bits_remaining)
 			{
 				word = (uint) this.ExtractWordFromCache(bitCount);
-				this.mCacheBitIndex_ += bitCount;
+				this.mCacheBitIndex += bitCount;
 
 				// If we consumed the rest of the cache after that last extraction
-				if (this.mCacheBitIndex_ == K_WORD_BIT_COUNT_ && !this.IsEndOfStream)
+				if (this.mCacheBitIndex == kWordBitCount && !this.IsEndOfStream)
 					this.FillCache();
 			}
 			else // else the cache only has a portion of the bits (or needs to be re-filled)
 			{
-				int wordBitsRemaining = bitCount;
+				int word_bits_remaining = bitCount;
 
 				// will always be negative, so abs it
-				int msbShift = -(bitsRemaining - wordBitsRemaining);
+				int msb_shift = -(bits_remaining - word_bits_remaining);
 				// get the word bits (MSB) that are left in the cache
-				word = (uint) this.ExtractWordFromCache(bitsRemaining);
-				wordBitsRemaining -= bitsRemaining;
+				word = (uint) this.ExtractWordFromCache(bits_remaining);
+				word_bits_remaining -= bits_remaining;
 				// adjust the bits to the MSB
-				word <<= msbShift;
+				word <<= msb_shift;
 
 				this.FillCache(); // fill the cache with the next round of bits
 
 				// get the 'rest' of the bits that weren't initially in our cache
-				TWord moreBits = this.ExtractWordFromCache(wordBitsRemaining);
+				TWord more_bits = this.ExtractWordFromCache(word_bits_remaining);
 
-				word |= (uint)moreBits;
-				this.mCacheBitIndex_ = wordBitsRemaining;
+				word |= (uint)more_bits;
+				this.mCacheBitIndex = word_bits_remaining;
 			}
 		}
 		internal void WriteWord(uint word, int bitCount)
 		{
-			Contract.Requires(bitCount <= K_WORD_BIT_COUNT_);
+			Contract.Requires(bitCount <= kWordBitCount);
 
-			int bitsRemaining = this.CacheBitsRemaining;
+			int bits_remaining = this.CacheBitsRemaining;
 
 			// if the bits to write can be held entirely in the cache...
-			if (bitCount <= bitsRemaining)
+			if (bitCount <= bits_remaining)
 			{
 				this.PutWordInCache((TWord)word, bitCount);
-				this.mCacheBitIndex_ += bitCount;
+				this.mCacheBitIndex += bitCount;
 
-				if (this.mCacheBitIndex_ == K_WORD_BIT_COUNT_)
+				if (this.mCacheBitIndex == kWordBitCount)
 					this.FlushCache();
 			}
 			else // else we have to split the cache writes between a flush
 			{
-				int wordBitsRemaining = bitCount;
+				int word_bits_remaining = bitCount;
 
 				// will always be negative, so abs it
-				int msbShift = -(bitsRemaining - wordBitsRemaining);
+				int msb_shift = -(bits_remaining - word_bits_remaining);
 				// write the upper (MSB) word bits to the remaining cache bits
-				this.PutWordInCache((TWord)(word >> msbShift), bitsRemaining);
-				wordBitsRemaining -= bitsRemaining;
+				this.PutWordInCache((TWord)(word >> msb_shift), bits_remaining);
+				word_bits_remaining -= bits_remaining;
 
 				// Flush determines the amount of bytes to write based on the current
 				// bit index. This causes it to write all the bytes of the TWord
-				this.mCacheBitIndex_ += bitsRemaining;
+				this.mCacheBitIndex += bits_remaining;
 				this.FlushCache(); // flush the MSB results and reset the cache
 
-				this.PutWordInCache((TWord)word, wordBitsRemaining);
-				this.mCacheBitIndex_ = wordBitsRemaining;
+				this.PutWordInCache((TWord)word, word_bits_remaining);
+				this.mCacheBitIndex = word_bits_remaining;
 			}
 		}
 		#endregion
@@ -87,73 +87,73 @@ namespace KSoft.IO
 		#region Read\Write ulong Impl
 		internal void ReadWord(out ulong word, int bitCount)
 		{
-			Contract.Requires(bitCount <= K_WORD_BIT_COUNT_);
+			Contract.Requires(bitCount <= kWordBitCount);
 
-			int bitsRemaining = this.CacheBitsRemaining;
+			int bits_remaining = this.CacheBitsRemaining;
 
 			// if the requested bits are contained entirely in the cache...
-			if (bitCount <= bitsRemaining)
+			if (bitCount <= bits_remaining)
 			{
 				word = (ulong) this.ExtractWordFromCache(bitCount);
-				this.mCacheBitIndex_ += bitCount;
+				this.mCacheBitIndex += bitCount;
 
 				// If we consumed the rest of the cache after that last extraction
-				if (this.mCacheBitIndex_ == K_WORD_BIT_COUNT_ && !this.IsEndOfStream)
+				if (this.mCacheBitIndex == kWordBitCount && !this.IsEndOfStream)
 					this.FillCache();
 			}
 			else // else the cache only has a portion of the bits (or needs to be re-filled)
 			{
-				int wordBitsRemaining = bitCount;
+				int word_bits_remaining = bitCount;
 
 				// will always be negative, so abs it
-				int msbShift = -(bitsRemaining - wordBitsRemaining);
+				int msb_shift = -(bits_remaining - word_bits_remaining);
 				// get the word bits (MSB) that are left in the cache
-				word = (ulong) this.ExtractWordFromCache(bitsRemaining);
-				wordBitsRemaining -= bitsRemaining;
+				word = (ulong) this.ExtractWordFromCache(bits_remaining);
+				word_bits_remaining -= bits_remaining;
 				// adjust the bits to the MSB
-				word <<= msbShift;
+				word <<= msb_shift;
 
 				this.FillCache(); // fill the cache with the next round of bits
 
 				// get the 'rest' of the bits that weren't initially in our cache
-				TWord moreBits = this.ExtractWordFromCache(wordBitsRemaining);
+				TWord more_bits = this.ExtractWordFromCache(word_bits_remaining);
 
-				word |= (ulong)moreBits;
-				this.mCacheBitIndex_ = wordBitsRemaining;
+				word |= (ulong)more_bits;
+				this.mCacheBitIndex = word_bits_remaining;
 			}
 		}
 		internal void WriteWord(ulong word, int bitCount)
 		{
-			Contract.Requires(bitCount <= K_WORD_BIT_COUNT_);
+			Contract.Requires(bitCount <= kWordBitCount);
 
-			int bitsRemaining = this.CacheBitsRemaining;
+			int bits_remaining = this.CacheBitsRemaining;
 
 			// if the bits to write can be held entirely in the cache...
-			if (bitCount <= bitsRemaining)
+			if (bitCount <= bits_remaining)
 			{
 				this.PutWordInCache((TWord)word, bitCount);
-				this.mCacheBitIndex_ += bitCount;
+				this.mCacheBitIndex += bitCount;
 
-				if (this.mCacheBitIndex_ == K_WORD_BIT_COUNT_)
+				if (this.mCacheBitIndex == kWordBitCount)
 					this.FlushCache();
 			}
 			else // else we have to split the cache writes between a flush
 			{
-				int wordBitsRemaining = bitCount;
+				int word_bits_remaining = bitCount;
 
 				// will always be negative, so abs it
-				int msbShift = -(bitsRemaining - wordBitsRemaining);
+				int msb_shift = -(bits_remaining - word_bits_remaining);
 				// write the upper (MSB) word bits to the remaining cache bits
-				this.PutWordInCache((TWord)(word >> msbShift), bitsRemaining);
-				wordBitsRemaining -= bitsRemaining;
+				this.PutWordInCache((TWord)(word >> msb_shift), bits_remaining);
+				word_bits_remaining -= bits_remaining;
 
 				// Flush determines the amount of bytes to write based on the current
 				// bit index. This causes it to write all the bytes of the TWord
-				this.mCacheBitIndex_ += bitsRemaining;
+				this.mCacheBitIndex += bits_remaining;
 				this.FlushCache(); // flush the MSB results and reset the cache
 
-				this.PutWordInCache((TWord)word, wordBitsRemaining);
-				this.mCacheBitIndex_ = wordBitsRemaining;
+				this.PutWordInCache((TWord)word, word_bits_remaining);
+				this.mCacheBitIndex = word_bits_remaining;
 			}
 		}
 		#endregion

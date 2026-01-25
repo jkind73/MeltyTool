@@ -1,25 +1,25 @@
 ﻿namespace KSoft.IO
 {
-	/// <remarks>If the <see cref="BINARY"/> flag is not set, assume 'Text'</remarks>
+	/// <remarks>If the <see cref="TagElementStreamFormat.Binary"/> flag is not set, assume 'Text'</remarks>
 	public enum TagElementStreamFormat
 	{
-		UNDEFINED,
+		Undefined,
 
-		XML,
+		Xml,
 		/// <summary>Currently unsupported</summary>
-		JSON,
+		Json,
 		/// <summary>Currently unsupported</summary>
-		YAML,
+		Yaml,
 
-		K_CUSTOM_START,
-		K_CUSTOM_END = 1<<6,
-		K_CUSTOM_MAX = K_CUSTOM_END - K_CUSTOM_START,
+		kCustomStart,
+		kCustomEnd = 1<<6,
+		kCustomMax = kCustomEnd - kCustomStart,
 
-		BINARY = 1<<7,
+		Binary = 1<<7,
 
-		K_TYPE_FLAGS = BINARY,
+		kTypeFlags = Binary,
 
 		/// <summary>Currently unsupported</summary>
-		BSON = BINARY | JSON,
+		Bson = Binary | Json,
 	};
 }

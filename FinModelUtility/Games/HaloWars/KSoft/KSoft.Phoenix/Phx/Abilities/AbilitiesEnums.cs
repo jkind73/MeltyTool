@@ -3,41 +3,41 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BAbilityTargetType
 	{
-		NONE,
-		LOCATION,
-		UNIT,
-		UNIT_OR_LOCATION,
+		None,
+		Location,
+		Unit,
+		UnitOrLocation,
 	};
 
 	public enum BMovementModifierType
 	{
-		ABILITY,
-		MODE,
+		Ability,
+		Mode,
 	};
 
 	public enum BRecoverType
 	{
-		MOVE,
-		ATTACK,
-		ABILITY,
+		Move,
+		Attack,
+		Ability,
 	};
 
 	public enum BSquadMode
 	{
-		INVALID = TypeExtensions.K_NONE,
+		Invalid = TypeExtensions.kNone,
 
-		NORMAL = 0,
-		STAND_GROUND,
-		LOCKDOWN,
-		SNIPER,
-		HIT_AND_RUN,
-		PASSIVE,
-		COVER,
-		ABILITY,
-		CARRYING_OBJECT,
-		POWER,
-		SCARAB_SCAN,
-		SCARAB_TARGET,
-		SCARAB_KILL,
+		Normal = 0,
+		StandGround,
+		Lockdown,
+		Sniper,
+		HitAndRun,
+		Passive,
+		Cover,
+		Ability,
+		CarryingObject,
+		Power,
+		ScarabScan,
+		ScarabTarget,
+		ScarabKill,
 	};
 }

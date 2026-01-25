@@ -34,13 +34,13 @@ namespace KSoft.Phoenix.Xmb
 		[Interop.FieldOffset(16)]
 		public Array OpaqueArrayRef;
 
-		public BinaryDataTreeVariantType Type { get { return this.TypeDesc.type; } }
+		public BinaryDataTreeVariantType Type { get { return this.TypeDesc.Type; } }
 		public bool IsUnicode { get { return this.TypeDesc.IsUnicode; } }
 
 		public bool UseDirectEncoding { get { return this.TypeDesc.SizeOf <= sizeof(uint) && this.ArrayLength <= 1; } }
 
 		public int StringOrArrayLength { get {
-			if (this.Type == BinaryDataTreeVariantType.STRING)
+			if (this.Type == BinaryDataTreeVariantType.String)
 				return this.String != null ? this.String.Length : 0;
 
 			return this.OpaqueArrayRef != null ? this.OpaqueArrayRef.Length : 0;
@@ -50,31 +50,31 @@ namespace KSoft.Phoenix.Xmb
 		{
 			this.TypeDesc = nameValue.GuessTypeDesc();
 
-			bool directEncoding = nameValue.DirectEncoding;
+			bool direct_encoding = nameValue.DirectEncoding;
 
-			uint totalDataSize = nameValue.Size;
+			uint total_data_size = nameValue.Size;
 			if (nameValue.SizeIsIndirect)
 			{
-				if (directEncoding)
+				if (direct_encoding)
 					throw new InvalidOperationException();
 
-				totalDataSize = pool.GetSizeValue(nameValue.Offset);
+				total_data_size = pool.GetSizeValue(nameValue.Offset);
 
-				if (totalDataSize < BinaryDataTreeNameValue.K_INDIRECT_SIZE_THRESHOLD)
+				if (total_data_size < BinaryDataTreeNameValue.kIndirectSizeThreshold)
 					throw new InvalidOperationException();
 			}
 
 			if (this.TypeDesc.SizeOf > 0)
 			{
-				if ((totalDataSize % this.TypeDesc.SizeOf) != 0)
+				if ((total_data_size % this.TypeDesc.SizeOf) != 0)
 					throw new InvalidOperationException(nameValue.ToString());
 
-				this.ArrayLength = (int)(totalDataSize / this.TypeDesc.SizeOf);
+				this.ArrayLength = (int)(total_data_size / this.TypeDesc.SizeOf);
 			}
 
 			if (this.ArrayLength > 1)
 			{
-				if (this.Type != BinaryDataTreeVariantType.STRING)
+				if (this.Type != BinaryDataTreeVariantType.String)
 					this.OpaqueArrayRef = this.TypeDesc.MakeArray(this.ArrayLength);
 
 				pool.InternalBuffer.Seek(nameValue.Offset);
@@ -82,17 +82,17 @@ namespace KSoft.Phoenix.Xmb
 
 			switch (this.Type)
 			{
-				case BinaryDataTreeVariantType.NULL:
+				case BinaryDataTreeVariantType.Null:
 					break;
 
-				case BinaryDataTreeVariantType.BOOL:
+				case BinaryDataTreeVariantType.Bool:
 					if (this.ArrayLength > 1)
 						this.TypeDesc.ReadArray(pool.InternalBuffer, this.OpaqueArrayRef);
 					else
 						this.Bool = nameValue.Bool;
 					break;
 
-				case BinaryDataTreeVariantType.INT:
+				case BinaryDataTreeVariantType.Int:
 					if (this.ArrayLength > 1)
 						this.TypeDesc.ReadArray(pool.InternalBuffer, this.OpaqueArrayRef);
 					else
@@ -104,7 +104,7 @@ namespace KSoft.Phoenix.Xmb
 					}
 					break;
 
-				case BinaryDataTreeVariantType.FLOAT:
+				case BinaryDataTreeVariantType.Float:
 					if (this.ArrayLength > 1)
 						this.TypeDesc.ReadArray(pool.InternalBuffer, this.OpaqueArrayRef);
 					else
@@ -116,12 +116,12 @@ namespace KSoft.Phoenix.Xmb
 					}
 					break;
 
-				case BinaryDataTreeVariantType.STRING:
+				case BinaryDataTreeVariantType.String:
 					this.ArrayLength = 1;
-					if (!this.IsUnicode && totalDataSize <= sizeof(uint))
+					if (!this.IsUnicode && total_data_size <= sizeof(uint))
 					{
 						var sb = new System.Text.StringBuilder();
-						for (uint x = 0, v = nameValue.Int; x < sizeof(uint); x++, v >>= Bits.K_BYTE_BIT_COUNT)
+						for (uint x = 0, v = nameValue.Int; x < sizeof(uint); x++, v >>= Bits.kByteBitCount)
 						{
 							sb.Append((char)(v & 0xFF));
 						}
@@ -144,36 +144,36 @@ namespace KSoft.Phoenix.Xmb
 			where TDoc : class
 			where TCursor : class
 		{
-			if (this.Type == BinaryDataTreeVariantType.NULL)
+			if (this.Type == BinaryDataTreeVariantType.Null)
 				return;
 
 			this.TypeDesc.ToStream(s, this.ArrayLength);
 
-			if (this.ArrayLength > 1 && this.Type != BinaryDataTreeVariantType.STRING)
+			if (this.ArrayLength > 1 && this.Type != BinaryDataTreeVariantType.String)
 			{
-				var arrayStr = this.TypeDesc.ArrayToString(this.OpaqueArrayRef);
-				s.WriteCursor(arrayStr);
+				var array_str = this.TypeDesc.ArrayToString(this.OpaqueArrayRef);
+				s.WriteCursor(array_str);
 				return;
 			}
 
 			switch (this.Type)
 			{
-				case BinaryDataTreeVariantType.BOOL:
+				case BinaryDataTreeVariantType.Bool:
 					s.WriteCursor(this.Bool);
 					break;
 
-				case BinaryDataTreeVariantType.INT:
+				case BinaryDataTreeVariantType.Int:
 					s.WriteCursor(this.Int64);
 					break;
 
-				case BinaryDataTreeVariantType.FLOAT:
+				case BinaryDataTreeVariantType.Float:
 					if (this.TypeDesc.SizeOf < sizeof(double))
 						s.WriteCursor(this.Single);
 					else
 						s.WriteCursor(this.Double);
 					break;
 
-				case BinaryDataTreeVariantType.STRING:
+				case BinaryDataTreeVariantType.String:
 					if (this.String.IsNotNullOrEmpty())
 						s.WriteCursor(this.String);
 					break;
@@ -186,34 +186,34 @@ namespace KSoft.Phoenix.Xmb
 			where TDoc : class
 			where TCursor : class
 		{
-			if (this.Type == BinaryDataTreeVariantType.NULL)
+			if (this.Type == BinaryDataTreeVariantType.Null)
 				return;
 
-			if (this.ArrayLength > 1 && this.Type != BinaryDataTreeVariantType.STRING)
+			if (this.ArrayLength > 1 && this.Type != BinaryDataTreeVariantType.String)
 			{
-				var arrayStr = this.TypeDesc.ArrayToString(this.OpaqueArrayRef);
-				s.WriteAttribute(attributeName, arrayStr);
+				var array_str = this.TypeDesc.ArrayToString(this.OpaqueArrayRef);
+				s.WriteAttribute(attributeName, array_str);
 				return;
 			}
 
 			switch (this.Type)
 			{
-				case BinaryDataTreeVariantType.BOOL:
+				case BinaryDataTreeVariantType.Bool:
 					s.WriteAttribute(attributeName, this.Bool);
 					break;
 
-				case BinaryDataTreeVariantType.INT:
+				case BinaryDataTreeVariantType.Int:
 					s.WriteAttribute(attributeName, this.Int64);
 					break;
 
-				case BinaryDataTreeVariantType.FLOAT:
+				case BinaryDataTreeVariantType.Float:
 					if (this.TypeDesc.SizeOf < sizeof(double))
 						s.WriteAttribute(attributeName, this.Single);
 					else
 						s.WriteAttribute(attributeName, this.Double);
 					break;
 
-				case BinaryDataTreeVariantType.STRING:
+				case BinaryDataTreeVariantType.String:
 					if (this.String.IsNotNullOrEmpty())
 						s.WriteAttribute(attributeName, this.String);
 					break;

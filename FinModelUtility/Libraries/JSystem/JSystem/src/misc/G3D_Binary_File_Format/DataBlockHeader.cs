@@ -13,13 +13,13 @@ public sealed class DataBlockHeader {
   public string kind;
   public uint size;
 
-  public DataBlockHeader(IBinaryReader br, string signature, out bool ok) {
+  public DataBlockHeader(IBinaryReader br, string Signature, out bool OK) {
     this.kind = br.ReadString(4);
-    if (this.kind != signature) {
-      ok = false;
+    if (this.kind != Signature) {
+      OK = false;
     } else {
       this.size = br.ReadUInt32();
-      ok = true;
+      OK = true;
     }
   }
 

@@ -16,7 +16,7 @@ public sealed class Packet : ITextDeserializable {
     var numPrimitives = tr.ReadInt32();
     var numMatrices = tr.ReadInt32();
 
-    tr.ReadUpToAndPastTerminator(TextReaderUtils.openBrace);
+    tr.ReadUpToAndPastTerminator(TextReaderUtils.OPEN_BRACE);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
 
     this.Adjuncts = tr.ReadNews<Adjunct>(numAdjuncts);
@@ -27,7 +27,7 @@ public sealed class Packet : ITextDeserializable {
         TextReaderConstants.WHITESPACE_STRINGS,
         TextReaderConstants.NEWLINE_STRINGS);
 
-    tr.ReadUpToAndPastTerminator(TextReaderUtils.closingBrace);
+    tr.ReadUpToAndPastTerminator(TextReaderUtils.CLOSING_BRACE);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
   }
 }

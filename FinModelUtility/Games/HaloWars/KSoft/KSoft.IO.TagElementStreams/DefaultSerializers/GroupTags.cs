@@ -16,7 +16,7 @@ namespace KSoft.IO
 		{
 			bool reading = s.IsReading;
 
-			var groupTag = reading
+			var group_tag = reading
 				? null
 				: value.TagString;
 			var name = reading
@@ -26,13 +26,13 @@ namespace KSoft.IO
 				? Values.KGuid.Empty
 				: value.Uuid;
 
-			s.StreamAttribute("tag", ref groupTag);
+			s.StreamAttribute("tag", ref group_tag);
 			s.StreamAttributeOpt("guid", ref guid, Predicates.IsNotEmpty);
 			s.StreamAttribute("name", ref name);
 
 			if(reading)
 			{
-				value = new Values.GroupTagData32(groupTag, name, guid);
+				value = new Values.GroupTagData32(group_tag, name, guid);
 			}
 		}
 
@@ -41,13 +41,13 @@ namespace KSoft.IO
 			where TDoc : class
 			where TCursor : class
 		{
-			const string kElementName = "Group";
+			const string k_element_name = "Group";
 
 			if (s.IsReading)
 			{
 				var list = new List<Values.GroupTagData32>();
 
-				foreach (var node in s.ElementsByName(kElementName))
+				foreach (var node in s.ElementsByName(k_element_name))
 					using (s.EnterCursorBookmark(node))
 					{
 						Values.GroupTagData32 data = null;
@@ -61,7 +61,7 @@ namespace KSoft.IO
 			else if (s.IsWriting)
 			{
 				foreach (Values.GroupTagData32 data in tags)
-					using (s.EnterCursorBookmark(kElementName))
+					using (s.EnterCursorBookmark(k_element_name))
 					{
 						var temp = data; // can't pass a foreach value by ref
 						Serialize(s, ref temp);

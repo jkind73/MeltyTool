@@ -12,7 +12,7 @@ namespace KSoft.IO
 	/// Interface for using an <see cref="EnumBinaryStreamer{TEnum,TStreamType}"/>'s functionality via an instance object
 	/// </summary>
 	/// <typeparam name="TEnum">Enum type to stream</typeparam>
-	[Contracts.ContractClass(typeof(EnumBitStreamerContract<>))]
+	[Contracts.ContractClass(typeof(IEnumBitStreamerContract<>))]
 	public interface IEnumBitStreamer<TEnum>
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
@@ -41,7 +41,7 @@ namespace KSoft.IO
 	};
 
 	[Contracts.ContractClassFor(typeof(IEnumBitStreamer<>))]
-	abstract class EnumBitStreamerContract<TEnum> : IEnumBitStreamer<TEnum>
+	abstract class IEnumBitStreamerContract<TEnum> : IEnumBitStreamer<TEnum>
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
 		public TEnum Read(BitStream s, int bitCount)

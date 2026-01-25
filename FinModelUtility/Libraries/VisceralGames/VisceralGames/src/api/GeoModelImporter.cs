@@ -53,7 +53,7 @@ public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
 
     // Gets materials
     var mtlbFileIdsDictionary = modelFileBundle.MtlbFileIdsDictionary;
-    var tg4HFileIdDictionary = modelFileBundle.Tg4HFileIdDictionary;
+    var tg4hFileIdDictionary = modelFileBundle.Tg4hFileIdDictionary;
 
     var tg4ImageReader = new Tg4ImageReader();
     var lazyTextureByBundleDictionary
@@ -61,7 +61,7 @@ public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
             bundle => {
               var image = tg4ImageReader.ReadImage(bundle);
               var finTexture = finModel.MaterialManager.CreateTexture(image);
-              finTexture.Name = bundle.Tg4HFile.NameWithoutExtension.ToString();
+              finTexture.Name = bundle.Tg4hFile.NameWithoutExtension.ToString();
 
               // TODO: How is this set??
               finTexture.WrapModeU = WrapMode.REPEAT;
@@ -71,14 +71,14 @@ public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
             });
     var lazyTextureByIdDictionary = new LazyDictionary<uint, ITexture>(
         id => {
-          var tg4HFile = tg4HFileIdDictionary[id];
+          var tg4hFile = tg4hFileIdDictionary[id];
           var tg4dFile
-              = new FinFile(tg4HFile.FullNameWithoutExtension + ".tg4d");
-          files.Add(tg4HFile);
+              = new FinFile(tg4hFile.FullNameWithoutExtension + ".tg4d");
+          files.Add(tg4hFile);
           files.Add(tg4dFile);
 
           return lazyTextureByBundleDictionary[new Tg4ImageFileBundle {
-              Tg4HFile = tg4HFile,
+              Tg4hFile = tg4hFile,
               Tg4dFile = tg4dFile,
           }];
         });
@@ -104,7 +104,7 @@ public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
           var samplerChannels =
               mtlb.HighLodMaterialChannels
                   .Where(c => c.MtlbChannelCategory ==
-                              MtlbChannelCategory.SAMPLER)
+                              MtlbChannelCategory.Sampler)
                   .Where(c => c.Path != "(null)" && c.Path.Contains('.'))
                   .DistinctBy(c => FluentHash.Start()
                                              .With(c.Type)
@@ -116,23 +116,23 @@ public sealed class GeoModelImporter : IModelImporter<GeoModelFileBundle> {
           material.DiffuseTexture = lazyTextureByChannelDictionary[
               samplerChannels.SingleOrDefault(
                   channel => channel.Type ==
-                             MtlbChannelType.DIFFUSE_SAMPLER)];
+                             MtlbChannelType.DiffuseSampler)];
           material.NormalTexture = lazyTextureByChannelDictionary[
               samplerChannels.SingleOrDefault(
                   channel => channel.Type ==
-                             MtlbChannelType.NORMAL_SAMPLER)];
+                             MtlbChannelType.NormalSampler)];
           material.AmbientOcclusionTexture = lazyTextureByChannelDictionary[
               samplerChannels.SingleOrDefault(
                   channel => channel.Type ==
-                             MtlbChannelType.OCCLUSION_SAMPLER)];
+                             MtlbChannelType.OcclusionSampler)];
           material.SpecularTexture = lazyTextureByChannelDictionary[
               samplerChannels.SingleOrDefault(
                   channel => channel.Type ==
-                             MtlbChannelType.SPECULAR_TEX_SAMPLER)];
+                             MtlbChannelType.SpecularTexSampler)];
           material.EmissiveTexture = lazyTextureByChannelDictionary[
               samplerChannels.SingleOrDefault(
                   channel => channel.Type ==
-                             MtlbChannelType.EMISSIVE_SAMPLER)];
+                             MtlbChannelType.EmissiveSampler)];
 
           material.Name = mtlb.Name;
 

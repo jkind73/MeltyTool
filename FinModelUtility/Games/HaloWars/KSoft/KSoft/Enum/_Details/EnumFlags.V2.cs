@@ -14,36 +14,36 @@ namespace KSoft
 		static class V2
 		{
 			public static readonly ModifyDelegate
-				KAddFlags = GenerateAddFlagsMethod(),
-				KRemoveFlags = GenerateRemoveFlagsMethod();
+				kAddFlags = GenerateAddFlagsMethod(),
+				kRemoveFlags = GenerateRemoveFlagsMethod();
 			public static readonly ModifyByRefDelegate
-				KAddFlagsByRef = GenerateAddFlagsMethodByRef(),
-				KRemoveFlagsByRef = GenerateRemoveFlagsMethodByRef();
+				kAddFlagsByRef = GenerateAddFlagsMethodByRef(),
+				kRemoveFlagsByRef = GenerateRemoveFlagsMethodByRef();
 
-			public static readonly ModifyCondDelegate KModifyFlags = GenerateModifyFlagsMethod();
-			public static readonly ModifyByRefCondDelegate KModifyFlagsByRef = GenerateModifyFlagsMethodByRef();
+			public static readonly ModifyCondDelegate kModifyFlags = GenerateModifyFlagsMethod();
+			public static readonly ModifyByRefCondDelegate kModifyFlagsByRef = GenerateModifyFlagsMethodByRef();
 
-			public static readonly ReadDelegate KTestFlags = GenerateTestFlagsMethod();
+			public static readonly ReadDelegate kTestFlags = GenerateTestFlagsMethod();
 
 
 			static Expr GenerateAddFlagsGuts(ExprParam paramV, ExprParam paramF)
 			{
-				var paramVMember=Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// value.value__
-				var paramFMember=Expr.PropertyOrField(paramF, EnumUtils.K_MEMBER_NAME);	// flags.value__
+				var param_v_member=Expr.PropertyOrField(paramV, EnumUtils.kMemberName);	// value.value__
+				var param_f_member=Expr.PropertyOrField(paramF, EnumUtils.kMemberName);	// flags.value__
 
-				var or = Expr.Or(paramVMember, paramFMember);
-				return Expr.Assign(paramVMember, or);
+				var or = Expr.Or(param_v_member, param_f_member);
+				return Expr.Assign(param_v_member, or);
 				//return Expr.OrAssign(param_v_member, param_f_member);					// value.value__ |= flags.value__
 			}
 			static Expr GenerateRemoveFlagsGuts(ExprParam paramV, ExprParam paramF)
 			{
-				var paramVMember=Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);	// value.value__
-				var paramFMember=Expr.PropertyOrField(paramF, EnumUtils.K_MEMBER_NAME);	// flags.value__
+				var param_v_member=Expr.PropertyOrField(paramV, EnumUtils.kMemberName);	// value.value__
+				var param_f_member=Expr.PropertyOrField(paramF, EnumUtils.kMemberName);	// flags.value__
 
-				var fComplement = Expr.Not(paramFMember);							// ~flags.value__
+				var f_complement = Expr.Not(param_f_member);							// ~flags.value__
 
-				var and = Expr.And(paramVMember, fComplement);
-				return Expr.Assign(paramVMember, and);
+				var and = Expr.And(param_v_member, f_complement);
+				return Expr.Assign(param_v_member, and);
 				//return Expr.AndAssign(param_v_member, f_complement);					// value.value__ &= ~flags.value__
 			}
 			static Expr GenerateModifyFlagsGuts(ExprParam paramV, ExprParam paramF, ExprParam paramCond)
@@ -57,32 +57,32 @@ namespace KSoft
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(false);
-				var paramF = GenerateParamFlags();
+				var param_v = GenerateParamValue(false);
+				var param_f = GenerateParamFlags();
 
 				//////////////////////////////////////////////////////////////////////////
 				// return value | flags
-				var ret = Expr.Convert(GenerateAddFlagsGuts(paramV, paramF), KEnumType);
+				var ret = Expr.Convert(GenerateAddFlagsGuts(param_v, param_f), kEnumType);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyDelegate>(ret, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyDelegate>(ret, param_v, param_f);
 				return lambda.Compile();
 			}
 			static ModifyByRefDelegate GenerateAddFlagsMethodByRef()
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(true);
-				var paramF = GenerateParamFlags();
+				var param_v = GenerateParamValue(true);
+				var param_f = GenerateParamFlags();
 
 				//////////////////////////////////////////////////////////////////////////
 				// value = value | flags
-				var assign = GenerateAddFlagsGuts(paramV, paramF);
+				var assign = GenerateAddFlagsGuts(param_v, param_f);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyByRefDelegate>(assign, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyByRefDelegate>(assign, param_v, param_f);
 				return lambda.Compile();
 			}
 
@@ -90,32 +90,32 @@ namespace KSoft
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(false);
-				var paramF = GenerateParamFlags();
+				var param_v = GenerateParamValue(false);
+				var param_f = GenerateParamFlags();
 
 				//////////////////////////////////////////////////////////////////////////
 				// return value & flags
-				var ret = Expr.Convert(GenerateRemoveFlagsGuts(paramV, paramF), KEnumType);
+				var ret = Expr.Convert(GenerateRemoveFlagsGuts(param_v, param_f), kEnumType);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyDelegate>(ret, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyDelegate>(ret, param_v, param_f);
 				return lambda.Compile();
 			}
 			static ModifyByRefDelegate GenerateRemoveFlagsMethodByRef()
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(true);
-				var paramF = GenerateParamFlags();
+				var param_v = GenerateParamValue(true);
+				var param_f = GenerateParamFlags();
 
 				//////////////////////////////////////////////////////////////////////////
 				// value = value & flags
-				var assign = GenerateRemoveFlagsGuts(paramV, paramF);
+				var assign = GenerateRemoveFlagsGuts(param_v, param_f);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyByRefDelegate>(assign, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyByRefDelegate>(assign, param_v, param_f);
 				return lambda.Compile();
 			}
 
@@ -123,34 +123,34 @@ namespace KSoft
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(false);
-				var paramF = GenerateParamFlags();
-				var paramC = GenerateParamAddOrRemove();
+				var param_v = GenerateParamValue(false);
+				var param_f = GenerateParamFlags();
+				var param_c = GenerateParamAddOrRemove();
 
 				//////////////////////////////////////////////////////////////////////////
 				// return value & flags
-				var ret = Expr.Convert(GenerateModifyFlagsGuts(paramV, paramF, paramC), KEnumType);
+				var ret = Expr.Convert(GenerateModifyFlagsGuts(param_v, param_f, param_c), kEnumType);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyCondDelegate>(ret, paramC, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyCondDelegate>(ret, param_c, param_v, param_f);
 				return lambda.Compile();
 			}
 			static ModifyByRefCondDelegate GenerateModifyFlagsMethodByRef()
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters
-				var paramV = GenerateParamValue(true);
-				var paramF = GenerateParamFlags();
-				var paramC = GenerateParamAddOrRemove();
+				var param_v = GenerateParamValue(true);
+				var param_f = GenerateParamFlags();
+				var param_c = GenerateParamAddOrRemove();
 
 				//////////////////////////////////////////////////////////////////////////
 				// return value & flags
-				var assign = GenerateModifyFlagsGuts(paramV, paramF, paramC);
+				var assign = GenerateModifyFlagsGuts(param_v, param_f, param_c);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ModifyByRefCondDelegate>(assign, paramC, paramV, paramF);
+				var lambda = Expr.Lambda<ModifyByRefCondDelegate>(assign, param_c, param_v, param_f);
 				return lambda.Compile();
 			}
 
@@ -158,20 +158,20 @@ namespace KSoft
 			{
 				//////////////////////////////////////////////////////////////////////////
 				// Define the generated method's parameters and return constructs
-				var paramV = GenerateParamValue(false);
-				var paramF = GenerateParamFlags();
+				var param_v = GenerateParamValue(false);
+				var param_f = GenerateParamFlags();
 
 				//////////////////////////////////////////////////////////////////////////
 				// return (value & flags) == flags
-				var paramVMember = Expr.PropertyOrField(paramV, EnumUtils.K_MEMBER_NAME);
-				var paramFMember = Expr.PropertyOrField(paramF, EnumUtils.K_MEMBER_NAME);
+				var param_v_member = Expr.PropertyOrField(param_v, EnumUtils.kMemberName);
+				var param_f_member = Expr.PropertyOrField(param_f, EnumUtils.kMemberName);
 
-				var and = Expr.And(paramVMember, paramFMember);
-				var equ = Expr.Equal(and, paramFMember);
+				var and = Expr.And(param_v_member, param_f_member);
+				var equ = Expr.Equal(and, param_f_member);
 
 				//////////////////////////////////////////////////////////////////////////
 				// Generate a method based on the expression tree we've built
-				var lambda = Expr.Lambda<ReadDelegate>(equ, paramV, paramF);
+				var lambda = Expr.Lambda<ReadDelegate>(equ, param_v, param_f);
 				return lambda.Compile();
 			}
 		};

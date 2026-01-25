@@ -19,10 +19,10 @@ public sealed class _3dsImageTools {
     L4,
     A4,
     ETC1,
-    ETC1_A4
+    ETC1a4
   }
 
-  public static readonly int[] Z_ORDER_ = [
+  public static readonly int[] zOrder_ = [
       0, 1, 4, 5, 16, 17, 20, 21,
       2, 3, 6, 7, 18, 19, 22, 23,
       8, 9, 12, 13, 24, 25, 28, 29,
@@ -48,7 +48,7 @@ public sealed class _3dsImageTools {
               case TexFormat.RGBA8: colors[i] = Decode8888_(data[p++], data[p++], data[p++], data[p++]); break;
               case TexFormat.RGB8: colors[i] = Decode888_(data[p++], data[p++], data[p++]); break;
               case TexFormat.RGBA5551: colors[i] = Decode5551_(data[p++], data[p++]); break;
-              case TexFormat.RGB565: colors[i] = Decode565_(data[p++], data[p++]); break;
+              case TexFormat.RGB565: colors[i] = Decode565(data[p++], data[p++]); break;
               case TexFormat.RGBA4444: colors[i] = Decode4444(data[p++], data[p++]); break;
               case TexFormat.LA8: colors[i] = DecodeLa8_(data[p++], data[p++]); break;
               case TexFormat.HILO8: colors[i] = DecodeHiLo8(data[p++], data[p++]); break;
@@ -106,21 +106,21 @@ public sealed class _3dsImageTools {
                 case TexFormat.RGBA8: colors.Add(Encode8888(pixels[(w + bw) + (h + bh) * img.Width])); break;
                 case TexFormat.RGB8: colors.Add(Encode8(pixels[(w + bw) + (h + bh) * img.Width])); break;
                 case TexFormat.RGBA4444: colors.Add(Encode4444(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.RGBA5551: colors.Add(Encode5551(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.RGB565: colors.Add(Encode565(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.LA8: colors.Add(EncodeLa8(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.HILO8: colors.Add(EncodeHilo8(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.L8: colors.Add(EncodeL8(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.A8: colors.Add(EncodeA8(pixels[(w + bw) + (h + bh) * img.Width])); break;
-                case TexFormat.LA4: colors.Add(EncodeLa4(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.RGBA5551: colors.Add(encode5551(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.RGB565: colors.Add(encode565(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.LA8: colors.Add(encodeLA8(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.HILO8: colors.Add(encodeHILO8(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.L8: colors.Add(encodeL8(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.A8: colors.Add(encodeA8(pixels[(w + bw) + (h + bh) * img.Width])); break;
+                case TexFormat.LA4: colors.Add(encodeLA4(pixels[(w + bw) + (h + bh) * img.Width])); break;
                 case TexFormat.L4: {
-                    colors.Add([(byte)((EncodeL8(pixels[(w + bw) + (h + bh) * img.Width])[0] / 0x11) & 0xF | ((EncodeL8(pixels[(w + bw) + (h + bh) * img.Width + 1])[0] / 0x11) << 4))
+                    colors.Add([(byte)((encodeL8(pixels[(w + bw) + (h + bh) * img.Width])[0] / 0x11) & 0xF | ((encodeL8(pixels[(w + bw) + (h + bh) * img.Width + 1])[0] / 0x11) << 4))
                                ]);
                     bw++;
                     break;
                   }
                 case TexFormat.A4: {
-                    colors.Add([(byte)((EncodeA8(pixels[(w + bw) + (h + bh) * img.Width])[0] / 0x11) & 0xF | ((EncodeA8(pixels[(w + bw) + (h + bh) * img.Width + 1])[0] / 0x11) << 4))
+                    colors.Add([(byte)((encodeA8(pixels[(w + bw) + (h + bh) * img.Width])[0] / 0x11) & 0xF | ((encodeA8(pixels[(w + bw) + (h + bh) * img.Width + 1])[0] / 0x11) << 4))
                                ]);
                     bw++;
                     break;
@@ -132,8 +132,8 @@ public sealed class _3dsImageTools {
           for (int bh = 0; bh < 8; bh++)
             for (int bw = 0; bw < 8; bw++) {
               int pos = bw + bh * 8;
-              for (int i = 0; i < Z_ORDER_.Length; i++)
-                if (Z_ORDER_[i] == pos) {
+              for (int i = 0; i < zOrder_.Length; i++)
+                if (zOrder_[i] == pos) {
                   if (type == TexFormat.L4 || type == TexFormat.A4) { i /= 2; bw++; }
                   o.AddRange(colors[i]);
                   break;
@@ -144,11 +144,11 @@ public sealed class _3dsImageTools {
       return o.ToArray();
     }
 
-  private static readonly int[] SHIFT_ = [0x00, 0x01, 0x04, 0x05, 0x10, 0x11, 0x14, 0x15
+  private static readonly int[] shift_ = [0x00, 0x01, 0x04, 0x05, 0x10, 0x11, 0x14, 0x15
   ];
   public static int CalcZOrder(int xPos, int yPos) {
-      int x = SHIFT_[xPos];
-      int y = SHIFT_[yPos] << 1;
+      int x = shift_[xPos];
+      int y = shift_[yPos] << 1;
 
       return x | y;
     }
@@ -173,7 +173,7 @@ public sealed class _3dsImageTools {
       return (a * 255 << 24) | (fst << 16) | (scn << 8) | (thd);
     }
 
-  private static int Decode565_(int b1, int b2) {
+  private static int Decode565(int b1, int b2) {
       int bt = (b2 << 8) | b1;
 
       int a = 255;
@@ -248,33 +248,33 @@ public sealed class _3dsImageTools {
       return [(byte)(val & 0xFF), (byte)(val >> 8)];
     }
 
-  public static byte[] EncodeA8(int color) {
+  public static byte[] encodeA8(int color) {
       return [(byte)((color >> 24) & 0xFF)];
     }
 
-  public static byte[] EncodeL8(int color) {
+  public static byte[] encodeL8(int color) {
       return [(byte)(((0x4CB2 * (color & 0xFF) + 0x9691 * ((color >> 8) & 0xFF) + 0x1D3E * ((color >> 8) & 0xFF)) >> 16) & 0xFF)
       ];
     }
 
-  public static byte CalLum(int color) {
+  public static byte calLum(int color) {
       return (byte)(((0x4CB2 * (color & 0xFF) + 0x9691 * ((color >> 8) & 0xFF) + 0x1D3E * ((color >> 8) & 0xFF)) >> 16) & 0xFF);
     }
 
-  public static byte[] EncodeLa4(int color) {
+  public static byte[] encodeLA4(int color) {
       return [(byte)((((color >> 24) / 0x11) & 0xF | ((color >> 16) / 0x11) & 0xF << 4))
       ];
     }
 
-  public static byte[] EncodeLa8(int color) {
+  public static byte[] encodeLA8(int color) {
       return [(byte)((color >> 24) & 0xFF), (byte)((color >> 16) & 0xFF)];
     }
 
-  public static byte[] EncodeHilo8(int color) {
+  public static byte[] encodeHILO8(int color) {
       return [(byte)((color) & 0xFF), (byte)((color >> 8) & 0xFF)];
     }
 
-  public static byte[] Encode565(int c) {
+  public static byte[] encode565(int c) {
       int r = ((c >> 16) & 0xFF) >> 3;
       int g = ((c >> 8) & 0xFF) >> 2;
       int b = ((c) & 0xFF) >> 3;
@@ -282,27 +282,27 @@ public sealed class _3dsImageTools {
       return [(byte)(val & 0xFF), (byte)(val >> 8)];
     }
 
-  public static byte[] Encode5551(int c) {
+  public static byte[] encode5551(int c) {
       int val = 0;
       val += (byte)(((c >> 24) & 0xFF) > 0x80 ? 1 : 0);
-      val += Convert8To5_(((c >> 16) & 0xFF)) << 11;
-      val += Convert8To5_(((c >> 8) & 0xFF)) << 6;
-      val += Convert8To5_(((c) & 0xFF)) << 1;
+      val += convert8to5(((c >> 16) & 0xFF)) << 11;
+      val += convert8to5(((c >> 8) & 0xFF)) << 6;
+      val += convert8to5(((c) & 0xFF)) << 1;
       ushort v = (ushort)val;
       return [(byte)(val & 0xFF), (byte)(val >> 8)];
     }
 
   #endregion
 
-  static byte Convert8To5_(int col) {
-      byte[] convert8To5 = [
+  static byte convert8to5(int col) {
+      byte[] Convert8to5 = [
           0x00,0x08,0x10,0x18,0x20,0x29,0x31,0x39,
                                    0x41,0x4A,0x52,0x5A,0x62,0x6A,0x73,0x7B,
                                    0x83,0x8B,0x94,0x9C,0xA4,0xAC,0xB4,0xBD,
                                    0xC5,0xCD,0xD5,0xDE,0xE6,0xEE,0xF6,0xFF
       ];
       byte i = 0;
-      while (col > convert8To5[i]) i++;
+      while (col > Convert8to5[i]) i++;
       return i;
     }
 }

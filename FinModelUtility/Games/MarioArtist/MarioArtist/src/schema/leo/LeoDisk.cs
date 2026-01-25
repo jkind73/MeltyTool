@@ -17,36 +17,36 @@ public sealed class LeoDisk {
     RAM,
     N64,
     MAME,
-    INVALID
+    Invalid
   }
 
   public enum FileSystem {
     MFS,
     ATNFS,
-    INVALID
+    Invalid
   }
 
-  public DiskFormat format;
-  public FileSystem ramFileSystem;
-  public int offsetToRamArea;
-  public int offsetToSysData;
-  public int diskType;
-  public byte[] data;
+  public DiskFormat Format;
+  public FileSystem RAMFileSystem;
+  public int OffsetToRamArea;
+  public int OffsetToSysData;
+  public int DiskType;
+  public byte[] Data;
 
   public LeoDisk(IBinaryReader br) {
-    this.Load_(br);
+    this.Load(br);
   }
 
-  void Load_(IBinaryReader br) {
+  void Load(IBinaryReader br) {
     //Assume file is bad first
-    this.format = DiskFormat.INVALID;
-    this.ramFileSystem = FileSystem.INVALID;
-    this.offsetToSysData = -1;
-    this.offsetToRamArea = -1;
+    this.Format = DiskFormat.Invalid;
+    this.RAMFileSystem = FileSystem.Invalid;
+    this.OffsetToSysData = -1;
+    this.OffsetToRamArea = -1;
 
     var fileLength = br.Length;
 
-    if (fileLength > Leo.RAM_SIZE[0]) {
+    if (fileLength > Leo.RamSize[0]) {
       //Perform System Area heuristics if the file size is MAME or SDK
       bool correctSysData = false;
       byte[] sysData = new byte[Leo.SECTOR_SIZE[0]];
@@ -56,8 +56,8 @@ public sealed class LeoDisk {
 
         //Check Retail SysData
         foreach (int lba in Leo.LBA_SYS_PROD) {
-          this.offsetToSysData = Leo.BLOCK_SIZE[0] * lba;
-          br.Position = this.offsetToSysData;
+          this.OffsetToSysData = Leo.BLOCK_SIZE[0] * lba;
+          br.Position = this.OffsetToSysData;
           br.ReadBytes(sysData);
 
           bool isEqual = true;
@@ -87,8 +87,8 @@ public sealed class LeoDisk {
         if (!correctSysData) {
           sysData = new byte[Leo.SECTOR_SIZE[3]];
           foreach (int lba in Leo.LBA_SYS_DEV) {
-            this.offsetToSysData = Leo.BLOCK_SIZE[0] * lba;
-            br.Position = this.offsetToSysData;
+            this.OffsetToSysData = Leo.BLOCK_SIZE[0] * lba;
+            br.Position = this.OffsetToSysData;
             br.ReadBytes(sysData);
 
             bool isEqual = true;
@@ -121,9 +121,9 @@ public sealed class LeoDisk {
 
         //if SysData found
         if (correctSysData) {
-          this.diskType = sysData[0x5] & 0xF;
-          this.format = DiskFormat.MAME;
-          this.offsetToRamArea = 0;
+          this.DiskType = sysData[0x5] & 0xF;
+          this.Format = DiskFormat.MAME;
+          this.OffsetToRamArea = 0;
           //Data is good.
         }
       } else if (fileLength == Leo.DISK_SIZE_SDK) {
@@ -131,10 +131,10 @@ public sealed class LeoDisk {
 
         //if SysData found
         if (correctSysData) {
-          this.diskType = sysData[0x5] & 0xF;
-          this.format = DiskFormat.SDK;
-          this.offsetToRamArea
-            = Leo.LbaToByte(this.diskType, 0, Leo.RAM_START_LBA[this.diskType]);
+          this.DiskType = sysData[0x5] & 0xF;
+          this.Format = DiskFormat.SDK;
+          this.OffsetToRamArea
+            = Leo.LBAToByte(this.DiskType, 0, Leo.RamStartLBA[this.DiskType]);
           //Data is good.
         }
       } else {
@@ -165,90 +165,90 @@ public sealed class LeoDisk {
           br.Position = 0x1000;
           br.ReadBytes(sysData);
 
-          this.diskType = sysData[0x5] & 0xF;
-          this.format = DiskFormat.N64;
-          this.offsetToRamArea
-            = Leo.LbaToByte(this.diskType,
+          this.DiskType = sysData[0x5] & 0xF;
+          this.Format = DiskFormat.N64;
+          this.OffsetToRamArea
+            = Leo.LBAToByte(this.DiskType,
                             0,
-                            Leo.RAM_START_LBA[this.diskType]) -
+                            Leo.RamStartLBA[this.DiskType]) -
               offsetStart;
-          this.offsetToSysData = 0x1000;
+          this.OffsetToSysData = 0x1000;
           //Data is good.
         }
       }
     } else {
       /* --- Check if it's RAM Format --- */
-      if (Array.Exists(Leo.RAM_SIZE, x => x == fileLength)) {
-        this.diskType = Array.FindIndex(Leo.RAM_SIZE, x => x == fileLength);
-        this.format = DiskFormat.RAM;
-        this.offsetToRamArea = 0;
+      if (Array.Exists(Leo.RamSize, x => x == fileLength)) {
+        this.DiskType = Array.FindIndex(Leo.RamSize, x => x == fileLength);
+        this.Format = DiskFormat.RAM;
+        this.OffsetToRamArea = 0;
         //Data is good.
       }
     }
 
-    if (this.format != DiskFormat.INVALID) {
+    if (this.Format != DiskFormat.Invalid) {
       //Copy full file
-      this.data = new byte[fileLength];
+      this.Data = new byte[fileLength];
       br.Position = 0;
-      br.ReadBytes(this.data);
+      br.ReadBytes(this.Data);
       //Disk is considered loaded here.
     }
 
     /* Check RAM FileSystem */
-    if (this.format != DiskFormat.INVALID) {
+    if (this.Format != DiskFormat.Invalid) {
       //Only check if RAM Area exists (Disk Type 6 has no RAM area)
-      if (this.diskType < 6) {
+      if (this.DiskType < 6) {
         //MultiFileSystem
         byte[] test = new byte[Mfs.RAM_ID.Length];
-        var firstRam = this.ReadLba(Leo.RAM_START_LBA[this.diskType]);
-        firstRam.Slice(0, test.Length).CopyTo(test);
+        var firstRAM = this.ReadLBA(Leo.RamStartLBA[this.DiskType]);
+        firstRAM.Slice(0, test.Length).CopyTo(test);
 
         //See if equal to RAM_ID, and if so, it is found.
         if (Encoding.ASCII.GetString(test).Equals(Mfs.RAM_ID)) {
-          this.ramFileSystem = FileSystem.MFS;
+          this.RAMFileSystem = FileSystem.MFS;
         }
       }
     }
   }
 
-  public ReadOnlySpan<byte> ReadLba(int lba) {
+  public ReadOnlySpan<byte> ReadLBA(int lba) {
     //Do not read anywhere before RAM Area
-    Asserts.True(lba >= Leo.RAM_START_LBA[this.diskType]);
+    Asserts.True(lba >= Leo.RamStartLBA[this.DiskType]);
     Asserts.True(lba <= Leo.MAX_LBA);
 
     //Read Block
-    var outputLength = Leo.LbaToByte(this.diskType, lba, 1);
-    if (this.format == DiskFormat.MAME) {
-      int sourceOffset = Leo.LbaToMameOffset(lba, this.GetSystemData());
-      return this.data.AsSpan(sourceOffset, outputLength);
+    var outputLength = Leo.LBAToByte(this.DiskType, lba, 1);
+    if (this.Format == DiskFormat.MAME) {
+      int sourceOffset = Leo.LBAToMAMEOffset(lba, this.GetSystemData());
+      return this.Data.AsSpan(sourceOffset, outputLength);
     } else {
-      Asserts.True(this.offsetToRamArea >= 0);
+      Asserts.True(this.OffsetToRamArea >= 0);
       int sourceOffset
-        = Leo.LbaToByte(this.diskType,
-                        Leo.RAM_START_LBA[this.diskType],
-                        lba - Leo.RAM_START_LBA[this.diskType]) +
-          this.offsetToRamArea;
-      return this.data.AsSpan(sourceOffset, outputLength);
+        = Leo.LBAToByte(this.DiskType,
+                        Leo.RamStartLBA[this.DiskType],
+                        lba - Leo.RamStartLBA[this.DiskType]) +
+          this.OffsetToRamArea;
+      return this.Data.AsSpan(sourceOffset, outputLength);
     }
   }
 
   public ReadOnlySpan<byte> GetSystemData() {
-    Asserts.True(this.offsetToSysData >= 0);
-    return this.data.AsSpan(this.offsetToSysData, Leo.SECTOR_SIZE[0]);
+    Asserts.True(this.OffsetToSysData >= 0);
+    return this.Data.AsSpan(this.OffsetToSysData, Leo.SECTOR_SIZE[0]);
   }
 
-  public byte[]? GetRamAreaArray() {
-    if (this.offsetToRamArea < 0) return null;
+  public byte[]? GetRAMAreaArray() {
+    if (this.OffsetToRamArea < 0) return null;
 
     var totalLength = 0;
-    for (int lba = Leo.RAM_START_LBA[this.diskType]; lba <= Leo.MAX_LBA; lba++) {
-      totalLength += Leo.LbaToByte(this.diskType, lba, 1);
+    for (int lba = Leo.RamStartLBA[this.DiskType]; lba <= Leo.MAX_LBA; lba++) {
+      totalLength += Leo.LBAToByte(this.DiskType, lba, 1);
     }
 
     var i = 0;
     var array = new byte[totalLength];
-    for (int lba = Leo.RAM_START_LBA[this.diskType]; lba <= Leo.MAX_LBA; lba++) {
-      var readSlice = this.ReadLba(lba);
+    for (int lba = Leo.RamStartLBA[this.DiskType]; lba <= Leo.MAX_LBA; lba++) {
+      var readSlice = this.ReadLBA(lba);
 
       var dst = array.AsSpan(i, readSlice.Length);
       readSlice.CopyTo(dst);

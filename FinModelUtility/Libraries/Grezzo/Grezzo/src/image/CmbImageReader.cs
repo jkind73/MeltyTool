@@ -78,8 +78,8 @@ public sealed class CmbImageReader : IImageReader {
       IPixelReader<La16> pixelReader = format switch {
           GlTextureFormat.L4 => new I4PixelReader(),
           GlTextureFormat.L8 or
-              GlTextureFormat.GAS or
-              GlTextureFormat.SHADOW => new I8PixelReader(),
+              GlTextureFormat.Gas or
+              GlTextureFormat.Shadow => new I8PixelReader(),
           _ => throw new ArgumentOutOfRangeException(
               nameof(format),
               format,

@@ -28,28 +28,28 @@ using schema.binary;
 
 namespace HaloWarsTools;
 
-public sealed class HwUgxResource : HwBinaryResource {
+public sealed class HWUgxResource : HWBinaryResource {
   public ModelImpl Mesh { get; private set; }
-  private bool FlipFaces { get; set; }
+  private bool FlipFaces_ { get; set; }
 
-  public static HwUgxResource? FromFile(
-      HwContext context,
+  public static HWUgxResource? FromFile(
+      HWContext context,
       string filename,
       bool flipFaces) {
     // Set the extension based on the resource type if the filename doesn't have one
     if (string.IsNullOrEmpty(Path.GetExtension(filename)) &&
-        TypeExtensions.TryGetValue(HwResourceType.UGX,
+        TypeExtensions.TryGetValue(HWResourceType.Ugx,
                                    out string defaultExtension)) {
       filename = Path.ChangeExtension(filename, defaultExtension);
     }
 
-    var resource = (HwUgxResource) CreateResource(context, filename);
+    var resource = (HWUgxResource) CreateResource(context, filename);
     resource.Mesh = new ModelImpl {
         // TODO: Fix this
         FileBundle = null,
         Files = new HashSet<IReadOnlyGenericFile>(),
     };
-    resource.FlipFaces = flipFaces;
+    resource.FlipFaces_ = flipFaces;
     resource?.Load(File.ReadAllBytes(resource.AbsolutePath));
 
     return resource;
@@ -58,32 +58,32 @@ public sealed class HwUgxResource : HwBinaryResource {
   protected override void Load(byte[] bytes) {
     base.Load(bytes);
 
-    this.ImportMesh_(bytes, this.Mesh);
+    ImportMesh(bytes, this.Mesh);
   }
 
-  private IList<IMaterial> GetMaterials_(IMaterialManager materialManager,
+  private IList<IMaterial> GetMaterials(IMaterialManager materialManager,
                                         byte[] bytes) {
     var textureFiles = new List<IReadOnlySystemFile>();
-    HwBinaryResourceChunk materialChunk =
-        GetFirstChunkOfType(HwBinaryResourceChunkType.UGX_MATERIAL_CHUNK);
+    HWBinaryResourceChunk materialChunk =
+        GetFirstChunkOfType(HWBinaryResourceChunkType.UGX_MaterialChunk);
 
     var bdt = new BinaryDataTree();
     bdt.ValidateData = false;
 
     var chunkStream = new MemoryStream(
         bytes,
-        (int) materialChunk.offset,
-        (int) materialChunk.size,
+        (int) materialChunk.Offset,
+        (int) materialChunk.Size,
         false);
     using (chunkStream) {
-      var es = new EndianStream(chunkStream, EndianFormat.LITTLE,
+      var es = new EndianStream(chunkStream, EndianFormat.Little,
                                 permissions: FileAccess.Read);
       es.StreamMode = FileAccess.Read;
       bdt.Serialize(es);
     }
 
     var lazyTextureDictionary = new LazyCaseInvariantStringDictionary<ITexture>(name
-        => this.LoadTexture_(materialManager, name));
+        => LoadTexture(materialManager, name));
     var materials = new List<IMaterial>();
 
     var xml = bdt.ToXmlDocument();
@@ -142,11 +142,11 @@ public sealed class HwUgxResource : HwBinaryResource {
     return materials;
   }
 
-  private ITexture LoadTexture_(IMaterialManager materialManager,
+  private ITexture LoadTexture(IMaterialManager materialManager,
                                string name) {
     var localTexturePath = $"art{name}.ddx";
     var absoluteTexturePath =
-        Path.Combine(this.Context.scratchDirectory, localTexturePath);
+        Path.Combine(this.Context.ScratchDirectory, localTexturePath);
 
     var textureFile = new FinFile(absoluteTexturePath);
     var (textureType, dxt) = DxtDecoder.ReadDds(textureFile);
@@ -161,7 +161,7 @@ public sealed class HwUgxResource : HwBinaryResource {
     return texture;
   }
 
-  private string GetStringAt_(byte[] bytes, int offset) {
+  private string GetStringAt(byte[] bytes, int offset) {
     StringBuilder current = new StringBuilder();
     for (int i = offset; i < bytes.Length; i++) {
       char value = (char) bytes[i];
@@ -175,10 +175,10 @@ public sealed class HwUgxResource : HwBinaryResource {
     return current.ToString();
   }
 
-  private void ImportMesh_(byte[] bytes, ModelImpl finModel) {
+  private void ImportMesh(byte[] bytes, ModelImpl finModel) {
     var finSkin = finModel.Skin;
 
-    var finMaterials = this.GetMaterials_(finModel.MaterialManager, bytes);
+    var finMaterials = GetMaterials(finModel.MaterialManager, bytes);
     var nullMaterial = finModel.MaterialManager.AddStandardMaterial();
 
     int offset = 0;
@@ -226,12 +226,12 @@ public sealed class HwUgxResource : HwBinaryResource {
 
     for (int i = 0; i < tableCount; i++) {
       var tableChunk = tableData[i];
-      offset = tableChunk.offset;
+      offset = tableChunk.Offset;
 
-      switch (tableChunk.type) {
-        case MeshDataType.GRX_CHUNK: {
+      switch (tableChunk.Type) {
+        case MeshDataType.GrxChunk: {
           var grxStream =
-              new MemoryStream(bytes, tableChunk.offset, tableChunk.length);
+              new MemoryStream(bytes, tableChunk.Offset, tableChunk.Length);
 
           using var grxEr =
               new SchemaBinaryReader(grxStream, Endianness.LittleEndian);
@@ -258,7 +258,7 @@ public sealed class HwUgxResource : HwBinaryResource {
 
             // Halo Wars coordinates have opposite handedness, so we must flip
             // X depending on how many submodels down we are.
-            var xSign = this.FlipFaces ? -1 : 1;
+            var xSign = this.FlipFaces_ ? -1 : 1;
 
             var finBone = 
                 isRoot ?
@@ -281,7 +281,7 @@ public sealed class HwUgxResource : HwBinaryResource {
           break;
         }
 
-        case MeshDataType.MESH_INFO:
+        case MeshDataType.MeshInfo:
           offset += 2;  // 2 byte reserved
           offset += 2;  // 2 byte reserved
           offset += 4;  // 4 byte reserved
@@ -296,7 +296,7 @@ public sealed class HwUgxResource : HwBinaryResource {
             int dataCount =
                 (int) BinaryUtils.ReadInt64LittleEndian(bytes, offset);
             offset += 8;
-            int dataOffset = tableData[i].offset +
+            int dataOffset = tableData[i].Offset +
                              (int) BinaryUtils.ReadInt64LittleEndian(
                                  bytes, offset);
             offset += 8;
@@ -304,38 +304,38 @@ public sealed class HwUgxResource : HwBinaryResource {
             subDataList.Add((MeshSubDataType) (j + 1), subData);
           }
 
-          var boneData = subDataList[MeshSubDataType.BONE_DATA];
+          var boneData = subDataList[MeshSubDataType.BoneData];
 
-          var data = subDataList[MeshSubDataType.MESH_DATA];
-          offset = data.offset;
-          for (int j = 0; j < data.count; j++) {
+          var data = subDataList[MeshSubDataType.MeshData];
+          offset = data.Offset;
+          for (int j = 0; j < data.Count; j++) {
             var polyInfo = new MeshPolygonInfo();
-            polyInfo.materialId =
+            polyInfo.MaterialId =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.polygonId =
+            polyInfo.PolygonId =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
             offset += 4; // 4 byte reserved
-            polyInfo.boneId =
+            polyInfo.BoneId =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.faceOffset =
+            polyInfo.FaceOffset =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.faceCount =
+            polyInfo.FaceCount =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.vertOffset =
+            polyInfo.VertOffset =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.vertLength =
+            polyInfo.VertLength =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.vertSize =
+            polyInfo.VertSize =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
-            polyInfo.vertCount =
+            polyInfo.VertCount =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
 
@@ -346,27 +346,27 @@ public sealed class HwUgxResource : HwBinaryResource {
             offset += 4;
             int location =
                 BinaryUtils.ReadInt32LittleEndian(
-                    bytes, tableData[i].offset + nameOffset);
-            polyInfo.name =
-                this.GetStringAt_(bytes, tableData[i].offset + nameOffset);
+                    bytes, tableData[i].Offset + nameOffset);
+            polyInfo.Name =
+                GetStringAt(bytes, tableData[i].Offset + nameOffset);
 
             offset += 92; // 92 byte reserved
 
-            if (!meshArr.ContainsKey(polyInfo.polygonId)) {
-              meshArr.Add(polyInfo.polygonId, []);
+            if (!meshArr.ContainsKey(polyInfo.PolygonId)) {
+              meshArr.Add(polyInfo.PolygonId, []);
             }
 
-            meshArr[polyInfo.polygonId].Add(polyInfo);
+            meshArr[polyInfo.PolygonId].Add(polyInfo);
           }
 
-          data = subDataList[MeshSubDataType.BONE_DATA];
-          offset = data.offset;
-          for (int j = 0; j < data.count; j++) {
+          data = subDataList[MeshSubDataType.BoneData];
+          offset = data.Offset;
+          for (int j = 0; j < data.Count; j++) {
             int nameOffset =
                 BinaryUtils.ReadInt32LittleEndian(bytes, offset);
             offset += 4;
             string boneName =
-                this.GetStringAt_(bytes, tableData[i].offset + nameOffset);
+                GetStringAt(bytes, tableData[i].Offset + nameOffset);
 
             offset += 4; // 4 byte reserved
 
@@ -395,10 +395,10 @@ public sealed class HwUgxResource : HwBinaryResource {
           }
 
           break;
-        case MeshDataType.INDEX_DATA:
+        case MeshDataType.IndexData:
           faceStart = offset;
           break;
-        case MeshDataType.VERTEX_DATA:
+        case MeshDataType.VertexData:
           vertStart = offset;
           break;
       }
@@ -410,30 +410,30 @@ public sealed class HwUgxResource : HwBinaryResource {
       var polygonInfoList = entry.Value;
       for (int i = 0; i < polygonInfoList.Count; i++) {
         var polygonInfo = polygonInfoList[i];
-        offset = polygonInfo.vertOffset + vertStart;
+        offset = polygonInfo.VertOffset + vertStart;
 
         var finVertices = new List<IVertex>();
-        for (int j = 0; j < polygonInfo.vertCount; j++) {
+        for (int j = 0; j < polygonInfo.VertCount; j++) {
           Vector3 position = Vector3.Zero;
           Vector3 normal = Vector3.Zero;
           Vector3 texcoord = Vector3.Zero;
 
           bool hasBones = false;
 
-          switch (polygonInfo.vertSize) {
+          switch (polygonInfo.VertSize) {
             case 0x18:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               texcoord.X = BinaryUtils.ReadHalfLittleEndian(bytes, offset);
               offset += 2;
               texcoord.Y = BinaryUtils.ReadHalfLittleEndian(bytes, offset);
               offset += 2;
               break;
             case 0x1c:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               texcoord.X = BinaryUtils.ReadHalfLittleEndian(bytes, offset);
               offset += 2;
               texcoord.Y = BinaryUtils.ReadHalfLittleEndian(bytes, offset);
@@ -442,9 +442,9 @@ public sealed class HwUgxResource : HwBinaryResource {
               offset += 2; // 2 byte reserved
               break;
             case 0x20:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
 
               hasBones = true;
               for (var b = 0; b < 4; ++b) {
@@ -462,9 +462,9 @@ public sealed class HwUgxResource : HwBinaryResource {
               offset += 2;
               break;
             case 0x24:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
@@ -474,9 +474,9 @@ public sealed class HwUgxResource : HwBinaryResource {
               offset += 2;
               break;
             case 0x28:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
@@ -487,9 +487,9 @@ public sealed class HwUgxResource : HwBinaryResource {
               offset += 4; // 4 byte reserved
               break;
             case 0x2c:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
@@ -511,9 +511,9 @@ public sealed class HwUgxResource : HwBinaryResource {
               offset += 2;
               break;
             case 0x30:
-              this.ReadPosition_(ref position, bytes, ref offset);
+              ReadPosition(ref position, bytes, ref offset);
               offset += 2; // 2 byte reserved
-              this.ReadNormal_(ref normal, bytes, ref offset);
+              ReadNormal(ref normal, bytes, ref offset);
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
               offset += 4; // 4 byte reserved
@@ -571,10 +571,10 @@ public sealed class HwUgxResource : HwBinaryResource {
         }
 
         var triangles =
-            new (IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)[polygonInfo.faceCount];
+            new (IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex)[polygonInfo.FaceCount];
 
-        offset = ((polygonInfo.faceOffset * 2) + faceStart);
-        for (var j = 0; j < polygonInfo.faceCount; j++) {
+        offset = ((polygonInfo.FaceOffset * 2) + faceStart);
+        for (var j = 0; j < polygonInfo.FaceCount; j++) {
           var fa = BinaryUtils.ReadUInt16LittleEndian(bytes, offset);
           offset += 2;
           var fb = BinaryUtils.ReadUInt16LittleEndian(bytes, offset);
@@ -584,7 +584,7 @@ public sealed class HwUgxResource : HwBinaryResource {
 
           // Halo Wars coordinates have opposite handedness, so we must flip
           // the faces depending on how many submodels down we are.
-          if (this.FlipFaces) {
+          if (FlipFaces_) {
             triangles[j] = (finVertices[fa],
                             finVertices[fb],
                             finVertices[fc]);
@@ -609,7 +609,7 @@ public sealed class HwUgxResource : HwBinaryResource {
 
         var finPrimitive = mesh.AddTriangles(triangles);
 
-        var materialId = polygonInfo.materialId;
+        var materialId = polygonInfo.MaterialId;
         if (materialId < finMaterials.Count) {
           finPrimitive.SetMaterial(finMaterials[materialId]);
         } else {
@@ -619,12 +619,12 @@ public sealed class HwUgxResource : HwBinaryResource {
     }
   }
 
-  private void ReadPosition_(ref Vector3 position,
+  private void ReadPosition(ref Vector3 position,
                             byte[] bytes,
                             ref int offset) {
     // Halo Wars coordinates have opposite handedness, so we must flip X
     // depending on how many submodels down we are.
-    var xSign = this.FlipFaces ? -1 : 1;
+    var xSign = this.FlipFaces_ ? -1 : 1;
     position.X = xSign * BinaryUtils.ReadHalfLittleEndian(bytes, offset);
     offset += 2;
     position.Y = BinaryUtils.ReadHalfLittleEndian(bytes, offset);
@@ -633,12 +633,12 @@ public sealed class HwUgxResource : HwBinaryResource {
     offset += 2;
   }
 
-  private void ReadNormal_(ref Vector3 normal,
+  private void ReadNormal(ref Vector3 normal,
                           byte[] bytes,
                           ref int offset) {
     // Halo Wars coordinates have opposite handedness, so we must flip X
     // depending on how many submodels down we are.
-    var xSign = this.FlipFaces ? -1 : 1;
+    var xSign = this.FlipFaces_ ? -1 : 1;
     normal.X = xSign * BinaryUtils.ReadFloatLittleEndian(bytes, offset);
     offset += 4;
     normal.Y = BinaryUtils.ReadFloatLittleEndian(bytes, offset);
@@ -648,42 +648,42 @@ public sealed class HwUgxResource : HwBinaryResource {
   }
 
   public struct MeshPolygonInfo {
-    public int materialId;
-    public int polygonId;
-    public int boneId;
-    public int faceOffset;
-    public int faceCount;
-    public int vertOffset;
-    public int vertLength;
-    public int vertSize;
-    public int vertCount;
-    public string name;
+    public int MaterialId;
+    public int PolygonId;
+    public int BoneId;
+    public int FaceOffset;
+    public int FaceCount;
+    public int VertOffset;
+    public int VertLength;
+    public int VertSize;
+    public int VertCount;
+    public string Name;
   }
 
   public struct MeshTableData(int dataType, int dataOffset, int dataLength) {
-    public MeshDataType type = (MeshDataType) dataType;
-    public int offset = dataOffset;
-    public int length = dataLength;
+    public MeshDataType Type = (MeshDataType) dataType;
+    public int Offset = dataOffset;
+    public int Length = dataLength;
   }
 
   public struct MeshTableSubData(int dataCount, int dataOffset) {
-    public int offset = dataOffset;
-    public int count = dataCount;
+    public int Offset = dataOffset;
+    public int Count = dataCount;
   }
 
   public enum MeshDataType {
-    MESH_INFO = 0x700,
-    INDEX_DATA = 0x701,
-    VERTEX_DATA = 0x702,
-    GRX_CHUNK = 0x703,
+    MeshInfo = 0x700,
+    IndexData = 0x701,
+    VertexData = 0x702,
+    GrxChunk = 0x703,
   }
 
   public enum MeshSubDataType {
-    MESH_DATA = 1,
-    BONE_DATA = 2,
-    LINK_DATA = 3,
-    MESH_ID = 4,
-    MIN_BOUND = 5,
-    MAX_BOUND = 6
+    MeshData = 1,
+    BoneData = 2,
+    LinkData = 3,
+    MeshId = 4,
+    MinBound = 5,
+    MaxBound = 6
   }
 }

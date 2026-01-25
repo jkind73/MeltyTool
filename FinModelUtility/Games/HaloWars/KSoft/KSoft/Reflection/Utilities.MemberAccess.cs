@@ -12,8 +12,8 @@ namespace KSoft.Reflection
 {
 	public partial class Util
 	{
-		const string K_THIS_NAME_ = "this";
-		const string K_VALUE_NAME_ = "value";
+		const string kThisName = "this";
+		const string kValueName = "value";
 
 		#region Generate Field Accessor Utils
 		// ALT: http://forums.asp.net/post/5109977.aspx
@@ -39,7 +39,7 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(memberName));
 			Contract.Ensures(Contract.Result<Func<T, TResult>>() != null);
 
-			var param =		Expr.Parameter(typeof(T), K_THIS_NAME_);
+			var param =		Expr.Parameter(typeof(T), kThisName);
 			var member =	Expr.PropertyOrField(param, memberName);	// basically 'this.memberName'
 			var lambda =	Expr.Lambda<Func<T, TResult>>(member, param);
 
@@ -112,9 +112,9 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(memberName));
 			Contract.Ensures(Contract.Result<Func<object, TResult>>() != null);
 
-			var param =		Expr.Parameter(typeof(object), K_THIS_NAME_);
-			var castParam =Expr.Convert(param, type);						// '((type)this)'
-			var member =	Expr.PropertyOrField(castParam, memberName);	// basically 'this.memberName'
+			var param =		Expr.Parameter(typeof(object), kThisName);
+			var cast_param =Expr.Convert(param, type);						// '((type)this)'
+			var member =	Expr.PropertyOrField(cast_param, memberName);	// basically 'this.memberName'
 			var lambda =	Expr.Lambda<Func<object, TResult>>(member, param);
 
 			return lambda.Compile();
@@ -138,8 +138,8 @@ namespace KSoft.Reflection
 			if (member.MemberType != Reflect.MemberTypes.Property)
 				return;
 
-			var propInfo = (Reflect.PropertyInfo)member;
-			if (!propInfo.CanWrite)
+			var prop_info = (Reflect.PropertyInfo)member;
+			if (!prop_info.CanWrite)
 				throw new MemberAccessException("Tried to generate setter for get-only property " +
 					member.Name + " in " + member.ReflectedType);
 		}
@@ -149,8 +149,8 @@ namespace KSoft.Reflection
 			{
 			case Reflect.MemberTypes.Field:
 			{
-				var fieldMember = (Reflect.FieldInfo)member;
-				if (fieldMember.IsInitOnly)
+				var field_member = (Reflect.FieldInfo)member;
+				if (field_member.IsInitOnly)
 				{
 					throw new MemberAccessException("Tried to generate setter for readonly field " +
 						member.Name + " in " + member.ReflectedType);
@@ -188,17 +188,17 @@ namespace KSoft.Reflection
 
 			// Get a "ref type" of the value-type we're dealing with
 			// Eg: Guid => "System.Guid&"
-			var thisRef = typeof(T).MakeByRefType();
+			var this_ref = typeof(T).MakeByRefType();
 
-			var paramThis =	Expr.Parameter(thisRef, K_THIS_NAME_);
-			var paramValue =	Expr.Parameter(typeof(TValue), K_VALUE_NAME_);		// the member's new value
-			var member =		Expr.PropertyOrField(paramThis, memberName);	// i.e., 'this.memberName'
+			var param_this =	Expr.Parameter(this_ref, kThisName);
+			var param_value =	Expr.Parameter(typeof(TValue), kValueName);		// the member's new value
+			var member =		Expr.PropertyOrField(param_this, memberName);	// i.e., 'this.memberName'
 
 			ValidateMemberForGenerateSetter(member.Member);
 
-			var assign =		Expr.Assign(member, paramValue);				// i.e., 'this.memberName = value'
+			var assign =		Expr.Assign(member, param_value);				// i.e., 'this.memberName = value'
 			var lambda =		Expr.Lambda<ValueTypeMemberSetterDelegate<T, TValue>>(
-									assign, paramThis, paramValue);
+									assign, param_this, param_value);
 
 			return lambda.Compile();
 		}
@@ -223,15 +223,15 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(memberName));
 			Contract.Ensures(Contract.Result<ReferenceTypeMemberSetterDelegate<T, TValue>>() != null);
 
-			var paramThis =	Expr.Parameter(typeof(T), K_THIS_NAME_);
-			var paramValue =	Expr.Parameter(typeof(TValue), K_VALUE_NAME_);		// the member's new value
-			var member =		Expr.PropertyOrField(paramThis, memberName);	// i.e., 'this.memberName'
+			var param_this =	Expr.Parameter(typeof(T), kThisName);
+			var param_value =	Expr.Parameter(typeof(TValue), kValueName);		// the member's new value
+			var member =		Expr.PropertyOrField(param_this, memberName);	// i.e., 'this.memberName'
 
 			ValidateMemberForGenerateSetter(member.Member);
 
-			var assign =		Expr.Assign(member, paramValue);				// i.e., 'this.memberName = value'
+			var assign =		Expr.Assign(member, param_value);				// i.e., 'this.memberName = value'
 			var lambda =		Expr.Lambda<ReferenceTypeMemberSetterDelegate<T, TValue>>(
-									assign, paramThis, paramValue);
+									assign, param_this, param_value);
 
 			return lambda.Compile();
 		}
@@ -257,16 +257,16 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!type.IsValueType, "Type must be a reference type");
 			Contract.Ensures(Contract.Result<ReferenceTypeMemberSetterDelegate<object, TValue>>() != null);
 
-			var paramThis =	Expr.Parameter(typeof(object), K_THIS_NAME_);
-			var paramValue =	Expr.Parameter(typeof(TValue), K_VALUE_NAME_);		// the member's new value
-			var castThis =		Expr.Convert(paramThis, type);					// i.e., '((type)this)'
-			var member =		Expr.PropertyOrField(castThis, memberName);	// i.e., 'this.memberName'
+			var param_this =	Expr.Parameter(typeof(object), kThisName);
+			var param_value =	Expr.Parameter(typeof(TValue), kValueName);		// the member's new value
+			var cast_this =		Expr.Convert(param_this, type);					// i.e., '((type)this)'
+			var member =		Expr.PropertyOrField(cast_this, memberName);	// i.e., 'this.memberName'
 
 			ValidateMemberForGenerateSetter(member.Member);
 
-			var assign =		Expr.Assign(member, paramValue);				// i.e., 'this.memberName = value'
+			var assign =		Expr.Assign(member, param_value);				// i.e., 'this.memberName = value'
 			var lambda =		Expr.Lambda<ReferenceTypeMemberSetterDelegate<object, TValue>>(
-									assign, paramThis, paramValue);
+									assign, param_this, param_value);
 
 			return lambda.Compile();
 		}
@@ -290,13 +290,13 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(memberName));
 			Contract.Ensures(Contract.Result<Action<TValue>>() != null);
 
-			var paramValue =	Expr.Parameter(typeof(TValue), K_VALUE_NAME_);	// the member's new value
+			var param_value =	Expr.Parameter(typeof(TValue), kValueName);	// the member's new value
 			var member =		Expr.Property(null, typeof(T), memberName);	// i.e., 'T.memberName'
 
 			ValidatePropertyForGenerateSetter(member.Member);
 
-			var assign =		Expr.Assign(member, paramValue);			// i.e., 'T.memberName = value'
-			var lambda =		Expr.Lambda<Action<TValue>>(assign, paramValue);
+			var assign =		Expr.Assign(member, param_value);			// i.e., 'T.memberName = value'
+			var lambda =		Expr.Lambda<Action<TValue>>(assign, param_value);
 
 			return lambda.Compile();
 		}
@@ -320,13 +320,13 @@ namespace KSoft.Reflection
 			Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(memberName));
 			Contract.Ensures(Contract.Result<Action<TValue>>() != null);
 
-			var paramValue =	Expr.Parameter(typeof(TValue), K_VALUE_NAME_);	// the member's new value
+			var param_value =	Expr.Parameter(typeof(TValue), kValueName);	// the member's new value
 			var member =		Expr.Field(null, typeof(T), memberName);	// i.e., 'T.memberName'
 
 			ValidateMemberForGenerateSetter(member.Member);
 
-			var assign =		Expr.Assign(member, paramValue);			// i.e., 'T.memberName = value'
-			var lambda =		Expr.Lambda<Action<TValue>>(assign, paramValue);
+			var assign =		Expr.Assign(member, param_value);			// i.e., 'T.memberName = value'
+			var lambda =		Expr.Lambda<Action<TValue>>(assign, param_value);
 
 			return lambda.Compile();
 		}
@@ -340,9 +340,9 @@ namespace KSoft.Reflection
 			if (expr.NodeType == Exprs.ExpressionType.ArrayLength)
 				return "Length";
 
-			var memExpr = expr.Operand as Exprs.MemberExpression;
+			var mem_expr = expr.Operand as Exprs.MemberExpression;
 
-			return PropertyNameFromMemberExpr(memExpr);
+			return PropertyNameFromMemberExpr(mem_expr);
 		}
 
 		static string PropertyNameFromLambdaExpr(Exprs.LambdaExpression expr)
@@ -382,9 +382,9 @@ namespace KSoft.Reflection
 			if (expr.NodeType == Exprs.ExpressionType.ArrayLength)
 				throw new NotSupportedException();
 
-			var memExpr = expr.Operand as Exprs.MemberExpression;
+			var mem_expr = expr.Operand as Exprs.MemberExpression;
 
-			return MemberFromExprMemberExpr(memExpr);
+			return MemberFromExprMemberExpr(mem_expr);
 		}
 		static Reflect.MemberInfo MemberFromLambdaExpr(Exprs.LambdaExpression expr)
 		{

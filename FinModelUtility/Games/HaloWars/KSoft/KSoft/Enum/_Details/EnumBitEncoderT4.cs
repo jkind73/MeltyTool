@@ -28,16 +28,16 @@ namespace KSoft
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
 		/// <remarks>Only made public for some Contracts in <see cref="Collections.EnumBitSet"/></remarks>
-		public static readonly bool KHasNone;
+		public static readonly bool kHasNone;
 		/// <summary>
 		/// The <see cref="kEnumMaxMemberName"/>\<see cref="kFlagsMaxMemberName"/>
 		/// value or the member value whom this class assumed would be the max
 		/// </summary>
-		static readonly uint KMaxValue;
+		static readonly uint kMaxValue;
 		/// <summary>Masking value that can be used to single out this enumeration's value(s)</summary>
-		public static readonly uint KBitmask;
+		public static readonly uint kBitmask;
 		/// <summary>How many bits the enumeration consumes</summary>
-		public static readonly int KBitCount;
+		public static readonly int kBitCount;
 
 		#region Static Initialize
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2208:InstantiateArgumentExceptionsCorrectly")]
@@ -49,7 +49,7 @@ namespace KSoft
 			var mnames = Reflection.EnumUtil<TEnum>.Names;
 
 			#region is_type_signed
-			bool FuncIsTypeSigned()
+			bool func_is_type_signed()
 			{
 				switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 				{
@@ -60,35 +60,35 @@ namespace KSoft
 					default: return false;
 				}
 			}
-			bool isTypeSigned = FuncIsTypeSigned();
+			bool is_type_signed = func_is_type_signed();
 			#endregion
 
 			uint greatest = 0, temp;
 			for (int x = 0; x < mvalues.Length; x++)
 			{
-				bool mvalueIsNone = false;
+				bool mvalue_is_none = false;
 
 				// Validate members when the underlying type is signed
-				if (!Reflection.EnumUtil<TEnum>.IsFlags && isTypeSigned)
+				if (!Reflection.EnumUtil<TEnum>.IsFlags && is_type_signed)
 				{
-					int intValue = Convert.ToInt32(mvalues.GetValue(x), Util.InvariantCultureInfo);
+					int int_value = Convert.ToInt32(mvalues.GetValue(x), Util.InvariantCultureInfo);
 
-					if (intValue < TypeExtensions.K_NONE_INT32)
+					if (int_value < TypeExtensions.kNoneInt32)
 					{
 						// CA2208
 						throw new ArgumentOutOfRangeException(nameof(TEnum),
 							string.Format(Util.InvariantCultureInfo,
 								"{0}:{1} is invalid (negative, less than NONE)!", t.FullName, mnames[x]));
 					}
-					else if (intValue.IsNone())
+					else if (int_value.IsNone())
 					{
-						hasNone = mvalueIsNone = true;
+						hasNone = mvalue_is_none = true;
 					}
 				}
 
 				ProcessMembers_DebugCheckMemberName(t, Reflection.EnumUtil<TEnum>.IsFlags, mnames[x]);
 
-				if (mvalueIsNone) // don't perform greatest value checking on NONE values
+				if (mvalue_is_none) // don't perform greatest value checking on NONE values
 					continue;
 
 				temp = Convert.ToUInt32(mvalues.GetValue(x), Util.InvariantCultureInfo);
@@ -130,29 +130,29 @@ namespace KSoft
 			Type t = typeof(TEnum);
 			InitializeBase(t);
 
-			ProcessMembers(t, out KMaxValue, out KHasNone);
+			ProcessMembers(t, out kMaxValue, out kHasNone);
 			if (Reflection.EnumUtil<TEnum>.IsFlags)
-				KBitmask = KMaxValue;
+				kBitmask = kMaxValue;
 			else
-				KBitmask = Bits.GetBitmaskEnum(KHasNone ? KMaxValue+1 : KMaxValue);
-			KBitCount = Bits.BitCount(KBitmask);
+				kBitmask = Bits.GetBitmaskEnum(kHasNone ? kMaxValue+1 : kMaxValue);
+			kBitCount = Bits.BitCount(kBitmask);
 		}
 		#endregion
 
 		#region IEnumBitEncoder<TUInt>
 		public bool IsFlags { get { return Reflection.EnumUtil<TEnum>.IsFlags; } }
-		public bool HasNone { get { return KHasNone; } }
-		public uint MaxValueTrait { get { return KMaxValue; } }
-		/// <see cref="KBitmask"/>
-		public uint BitmaskTrait { get { return KBitmask; } }
-		/// <see cref="KBitCount"/>
-		public override int BitCountTrait { get { return KBitCount; } }
+		public bool HasNone { get { return kHasNone; } }
+		public uint MaxValueTrait { get { return kMaxValue; } }
+		/// <see cref="kBitmask"/>
+		public uint BitmaskTrait { get { return kBitmask; } }
+		/// <see cref="kBitCount"/>
+		public override int BitCountTrait { get { return kBitCount; } }
 		#endregion
 
 		#region DefaultBitIndex
-		readonly int mDefaultBitIndex_;
+		readonly int mDefaultBitIndex;
 		/// <summary>The bit index assumed when one isn't provided</summary>
-		public int DefaultBitIndex { get { return this.mDefaultBitIndex_; } }
+		public int DefaultBitIndex { get { return this.mDefaultBitIndex; } }
 		#endregion
 
 		public EnumBitEncoder32() : this(0) {}
@@ -160,7 +160,7 @@ namespace KSoft
 		{
 			Contract.Requires(defaultBitIndex >= 0);
 
-			this.mDefaultBitIndex_ = defaultBitIndex;
+			this.mDefaultBitIndex = defaultBitIndex;
 		}
 
 		#region Encode
@@ -172,7 +172,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public uint BitEncode(TEnum value, uint bits)
 		{
-			return this.BitEncode(value, bits, this.mDefaultBitIndex_);
+			return this.BitEncode(value, bits, this.mDefaultBitIndex);
 		}
 		/// <summary>Bit encode an enumeration value into an unsigned integer</summary>
 		/// <param name="value">Enumeration value to encode</param>
@@ -183,16 +183,16 @@ namespace KSoft
 		public uint BitEncode(TEnum value, uint bits, int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt32BitCount);
 
 			uint v = Reflection.EnumValue<TEnum>.ToUInt32(value);
-			if (KHasNone)
+			if (kHasNone)
 				v++;
 
-			Contract.Assert(v <= KMaxValue);
+			Contract.Assert(v <= kMaxValue);
 			return Reflection.EnumUtil<TEnum>.IsFlags ?
-				Bits.BitEncodeFlags(v, bits, bitIndex, KBitmask) :
-				Bits.BitEncodeEnum (v, bits, bitIndex, KBitmask);
+				Bits.BitEncodeFlags(v, bits, bitIndex, kBitmask) :
+				Bits.BitEncodeEnum (v, bits, bitIndex, kBitmask);
 		}
 		/// <summary>Bit encode an enumeration value into an unsigned integer</summary>
 		/// <param name="value">Enumeration value to encode</param>
@@ -218,19 +218,19 @@ namespace KSoft
 		public void BitEncode(TEnum value, ref uint bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT32_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt32BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt32BitCount);
 
 			uint v = Reflection.EnumValue<TEnum>.ToUInt32(value);
-			if (KHasNone)
+			if (kHasNone)
 				v++;
 
-			Contract.Assert(v <= KMaxValue);
+			Contract.Assert(v <= kMaxValue);
 			bits = Reflection.EnumUtil<TEnum>.IsFlags ?
-				Bits.BitEncodeFlags(v, bits, bitIndex, KBitmask) :
-				Bits.BitEncodeEnum (v, bits, bitIndex, KBitmask);
+				Bits.BitEncodeFlags(v, bits, bitIndex, kBitmask) :
+				Bits.BitEncodeEnum (v, bits, bitIndex, kBitmask);
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 		}
 		#endregion
 
@@ -242,7 +242,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public TEnum BitDecode(uint bits)
 		{
-			return this.BitDecode(bits, this.mDefaultBitIndex_);
+			return this.BitDecode(bits, this.mDefaultBitIndex);
 		}
 		/// <summary>Bit decode an enumeration value from an unsigned integer</summary>
 		/// <param name="bits">Unsigned integer to decode from</param>
@@ -252,13 +252,13 @@ namespace KSoft
 		public TEnum BitDecode(uint bits, int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt32BitCount);
 
-			uint v = Bits.BitDecode(bits, bitIndex, KBitmask);
-			if (KHasNone)
+			uint v = Bits.BitDecode(bits, bitIndex, kBitmask);
+			if (kHasNone)
 				v--;
 
-			Contract.Assert(v <= KMaxValue || (KHasNone && v == uint.MaxValue));
+			Contract.Assert(v <= kMaxValue || (kHasNone && v == uint.MaxValue));
 			return Reflection.EnumValue<TEnum>.FromUInt32(v);
 		}
 		/// <summary>Bit decode an enumeration value from an unsigned integer</summary>
@@ -283,16 +283,16 @@ namespace KSoft
 		public TEnum BitDecode(uint bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT32_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT32_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt32BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt32BitCount);
 
-			uint v = Bits.BitDecode(bits, bitIndex, KBitmask);
-			if (KHasNone)
+			uint v = Bits.BitDecode(bits, bitIndex, kBitmask);
+			if (kHasNone)
 				v--;
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 
-			Contract.Assert(v <= KMaxValue || (KHasNone && v == uint.MaxValue));
+			Contract.Assert(v <= kMaxValue || (kHasNone && v == uint.MaxValue));
 			return Reflection.EnumValue<TEnum>.FromUInt32(v);
 		}
 		#endregion
@@ -309,24 +309,24 @@ namespace KSoft
 		{
 			Contract.Requires(s != null);
 
-			uint streamValue;
+			uint stream_value;
 			switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 			{
 				case TypeCode.Byte:
-				case TypeCode.SByte: streamValue = s.ReadByte();
+				case TypeCode.SByte: stream_value = s.ReadByte();
 					break;
 				case TypeCode.Int16:
-				case TypeCode.UInt16: streamValue = s.ReadUInt16();
+				case TypeCode.UInt16: stream_value = s.ReadUInt16();
 					break;
 				case TypeCode.Int32:
-				case TypeCode.UInt32: streamValue = s.ReadUInt32();
+				case TypeCode.UInt32: stream_value = s.ReadUInt32();
 					break;
 
 				default:
 					throw new Debug.UnreachableException();
 			}
 
-			value = Reflection.EnumValue<TEnum>.FromUInt64(streamValue);
+			value = Reflection.EnumValue<TEnum>.FromUInt64(stream_value);
 		}
 		/// <summary>Write a <typeparamref name="TEnum"/> value to a stream</summary>
 		/// <param name="s">Stream to write to</param>
@@ -339,17 +339,17 @@ namespace KSoft
 		{
 			Contract.Requires(s != null);
 
-			uint streamValue = Reflection.EnumValue<TEnum>.ToUInt32(value);
+			uint stream_value = Reflection.EnumValue<TEnum>.ToUInt32(value);
 			switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 			{
 				case TypeCode.Byte:
-				case TypeCode.SByte: s.Write((byte)streamValue);
+				case TypeCode.SByte: s.Write((byte)stream_value);
 					break;
 				case TypeCode.Int16:
-				case TypeCode.UInt16: s.Write((ushort)streamValue);
+				case TypeCode.UInt16: s.Write((ushort)stream_value);
 					break;
 				case TypeCode.Int32:
-				case TypeCode.UInt32: s.Write((uint)streamValue);
+				case TypeCode.UInt32: s.Write((uint)stream_value);
 					break;
 
 				default:
@@ -379,16 +379,16 @@ namespace KSoft
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
 		/// <remarks>Only made public for some Contracts in <see cref="Collections.EnumBitSet"/></remarks>
-		public static readonly bool KHasNone;
+		public static readonly bool kHasNone;
 		/// <summary>
 		/// The <see cref="kEnumMaxMemberName"/>\<see cref="kFlagsMaxMemberName"/>
 		/// value or the member value whom this class assumed would be the max
 		/// </summary>
-		static readonly ulong KMaxValue;
+		static readonly ulong kMaxValue;
 		/// <summary>Masking value that can be used to single out this enumeration's value(s)</summary>
-		public static readonly ulong KBitmask;
+		public static readonly ulong kBitmask;
 		/// <summary>How many bits the enumeration consumes</summary>
-		public static readonly int KBitCount;
+		public static readonly int kBitCount;
 
 		#region Static Initialize
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2208:InstantiateArgumentExceptionsCorrectly")]
@@ -400,7 +400,7 @@ namespace KSoft
 			var mnames = Reflection.EnumUtil<TEnum>.Names;
 
 			#region is_type_signed
-			bool FuncIsTypeSigned()
+			bool func_is_type_signed()
 			{
 				switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 				{
@@ -412,35 +412,35 @@ namespace KSoft
 					default: return false;
 				}
 			}
-			bool isTypeSigned = FuncIsTypeSigned();
+			bool is_type_signed = func_is_type_signed();
 			#endregion
 
 			ulong greatest = 0, temp;
 			for (int x = 0; x < mvalues.Length; x++)
 			{
-				bool mvalueIsNone = false;
+				bool mvalue_is_none = false;
 
 				// Validate members when the underlying type is signed
-				if (!Reflection.EnumUtil<TEnum>.IsFlags && isTypeSigned)
+				if (!Reflection.EnumUtil<TEnum>.IsFlags && is_type_signed)
 				{
-					long intValue = Convert.ToInt64(mvalues.GetValue(x), Util.InvariantCultureInfo);
+					long int_value = Convert.ToInt64(mvalues.GetValue(x), Util.InvariantCultureInfo);
 
-					if (intValue < TypeExtensions.K_NONE_INT64)
+					if (int_value < TypeExtensions.kNoneInt64)
 					{
 						// CA2208
 						throw new ArgumentOutOfRangeException(nameof(TEnum),
 							string.Format(Util.InvariantCultureInfo,
 								"{0}:{1} is invalid (negative, less than NONE)!", t.FullName, mnames[x]));
 					}
-					else if (intValue.IsNone())
+					else if (int_value.IsNone())
 					{
-						hasNone = mvalueIsNone = true;
+						hasNone = mvalue_is_none = true;
 					}
 				}
 
 				ProcessMembers_DebugCheckMemberName(t, Reflection.EnumUtil<TEnum>.IsFlags, mnames[x]);
 
-				if (mvalueIsNone) // don't perform greatest value checking on NONE values
+				if (mvalue_is_none) // don't perform greatest value checking on NONE values
 					continue;
 
 				temp = Convert.ToUInt64(mvalues.GetValue(x), Util.InvariantCultureInfo);
@@ -482,29 +482,29 @@ namespace KSoft
 			Type t = typeof(TEnum);
 			InitializeBase(t);
 
-			ProcessMembers(t, out KMaxValue, out KHasNone);
+			ProcessMembers(t, out kMaxValue, out kHasNone);
 			if (Reflection.EnumUtil<TEnum>.IsFlags)
-				KBitmask = KMaxValue;
+				kBitmask = kMaxValue;
 			else
-				KBitmask = Bits.GetBitmaskEnum(KHasNone ? KMaxValue+1 : KMaxValue);
-			KBitCount = Bits.BitCount(KBitmask);
+				kBitmask = Bits.GetBitmaskEnum(kHasNone ? kMaxValue+1 : kMaxValue);
+			kBitCount = Bits.BitCount(kBitmask);
 		}
 		#endregion
 
 		#region IEnumBitEncoder<TUInt>
 		public bool IsFlags { get { return Reflection.EnumUtil<TEnum>.IsFlags; } }
-		public bool HasNone { get { return KHasNone; } }
-		public ulong MaxValueTrait { get { return KMaxValue; } }
-		/// <see cref="KBitmask"/>
-		public ulong BitmaskTrait { get { return KBitmask; } }
-		/// <see cref="KBitCount"/>
-		public override int BitCountTrait { get { return KBitCount; } }
+		public bool HasNone { get { return kHasNone; } }
+		public ulong MaxValueTrait { get { return kMaxValue; } }
+		/// <see cref="kBitmask"/>
+		public ulong BitmaskTrait { get { return kBitmask; } }
+		/// <see cref="kBitCount"/>
+		public override int BitCountTrait { get { return kBitCount; } }
 		#endregion
 
 		#region DefaultBitIndex
-		readonly int mDefaultBitIndex_;
+		readonly int mDefaultBitIndex;
 		/// <summary>The bit index assumed when one isn't provided</summary>
-		public int DefaultBitIndex { get { return this.mDefaultBitIndex_; } }
+		public int DefaultBitIndex { get { return this.mDefaultBitIndex; } }
 		#endregion
 
 		public EnumBitEncoder64() : this(0) {}
@@ -512,7 +512,7 @@ namespace KSoft
 		{
 			Contract.Requires(defaultBitIndex >= 0);
 
-			this.mDefaultBitIndex_ = defaultBitIndex;
+			this.mDefaultBitIndex = defaultBitIndex;
 		}
 
 		#region Encode
@@ -524,7 +524,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public ulong BitEncode(TEnum value, ulong bits)
 		{
-			return this.BitEncode(value, bits, this.mDefaultBitIndex_);
+			return this.BitEncode(value, bits, this.mDefaultBitIndex);
 		}
 		/// <summary>Bit encode an enumeration value into an unsigned integer</summary>
 		/// <param name="value">Enumeration value to encode</param>
@@ -535,16 +535,16 @@ namespace KSoft
 		public ulong BitEncode(TEnum value, ulong bits, int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
 
 			ulong v = Reflection.EnumValue<TEnum>.ToUInt64(value);
-			if (KHasNone)
+			if (kHasNone)
 				v++;
 
-			Contract.Assert(v <= KMaxValue);
+			Contract.Assert(v <= kMaxValue);
 			return Reflection.EnumUtil<TEnum>.IsFlags ?
-				Bits.BitEncodeFlags(v, bits, bitIndex, KBitmask) :
-				Bits.BitEncodeEnum (v, bits, bitIndex, KBitmask);
+				Bits.BitEncodeFlags(v, bits, bitIndex, kBitmask) :
+				Bits.BitEncodeEnum (v, bits, bitIndex, kBitmask);
 		}
 		/// <summary>Bit encode an enumeration value into an unsigned integer</summary>
 		/// <param name="value">Enumeration value to encode</param>
@@ -570,19 +570,19 @@ namespace KSoft
 		public void BitEncode(TEnum value, ref ulong bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt64BitCount);
 
 			ulong v = Reflection.EnumValue<TEnum>.ToUInt64(value);
-			if (KHasNone)
+			if (kHasNone)
 				v++;
 
-			Contract.Assert(v <= KMaxValue);
+			Contract.Assert(v <= kMaxValue);
 			bits = Reflection.EnumUtil<TEnum>.IsFlags ?
-				Bits.BitEncodeFlags(v, bits, bitIndex, KBitmask) :
-				Bits.BitEncodeEnum (v, bits, bitIndex, KBitmask);
+				Bits.BitEncodeFlags(v, bits, bitIndex, kBitmask) :
+				Bits.BitEncodeEnum (v, bits, bitIndex, kBitmask);
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 		}
 		#endregion
 
@@ -594,7 +594,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public TEnum BitDecode(ulong bits)
 		{
-			return this.BitDecode(bits, this.mDefaultBitIndex_);
+			return this.BitDecode(bits, this.mDefaultBitIndex);
 		}
 		/// <summary>Bit decode an enumeration value from an unsigned integer</summary>
 		/// <param name="bits">Unsigned integer to decode from</param>
@@ -604,13 +604,13 @@ namespace KSoft
 		public TEnum BitDecode(ulong bits, int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
 
-			ulong v = Bits.BitDecode(bits, bitIndex, KBitmask);
-			if (KHasNone)
+			ulong v = Bits.BitDecode(bits, bitIndex, kBitmask);
+			if (kHasNone)
 				v--;
 
-			Contract.Assert(v <= KMaxValue || (KHasNone && v == ulong.MaxValue));
+			Contract.Assert(v <= kMaxValue || (kHasNone && v == ulong.MaxValue));
 			return Reflection.EnumValue<TEnum>.FromUInt64(v);
 		}
 		/// <summary>Bit decode an enumeration value from an unsigned integer</summary>
@@ -635,16 +635,16 @@ namespace KSoft
 		public TEnum BitDecode(ulong bits, ref int bitIndex)
 		{
 			Contract.Requires(bitIndex >= 0);
-			Contract.Requires(bitIndex < Bits.K_INT64_BIT_COUNT);
-			Contract.Requires((bitIndex+KBitCount) < Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitIndex < Bits.kInt64BitCount);
+			Contract.Requires((bitIndex+kBitCount) < Bits.kInt64BitCount);
 
-			ulong v = Bits.BitDecode(bits, bitIndex, KBitmask);
-			if (KHasNone)
+			ulong v = Bits.BitDecode(bits, bitIndex, kBitmask);
+			if (kHasNone)
 				v--;
 
-			bitIndex += KBitCount;
+			bitIndex += kBitCount;
 
-			Contract.Assert(v <= KMaxValue || (KHasNone && v == ulong.MaxValue));
+			Contract.Assert(v <= kMaxValue || (kHasNone && v == ulong.MaxValue));
 			return Reflection.EnumValue<TEnum>.FromUInt64(v);
 		}
 		#endregion
@@ -661,27 +661,27 @@ namespace KSoft
 		{
 			Contract.Requires(s != null);
 
-			ulong streamValue;
+			ulong stream_value;
 			switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 			{
 				case TypeCode.Byte:
-				case TypeCode.SByte: streamValue = s.ReadByte();
+				case TypeCode.SByte: stream_value = s.ReadByte();
 					break;
 				case TypeCode.Int16:
-				case TypeCode.UInt16: streamValue = s.ReadUInt16();
+				case TypeCode.UInt16: stream_value = s.ReadUInt16();
 					break;
 				case TypeCode.Int32:
-				case TypeCode.UInt32: streamValue = s.ReadUInt32();
+				case TypeCode.UInt32: stream_value = s.ReadUInt32();
 					break;
 				case TypeCode.Int64:
-				case TypeCode.UInt64: streamValue = s.ReadUInt64();
+				case TypeCode.UInt64: stream_value = s.ReadUInt64();
 					break;
 
 				default:
 					throw new Debug.UnreachableException();
 			}
 
-			value = Reflection.EnumValue<TEnum>.FromUInt64(streamValue);
+			value = Reflection.EnumValue<TEnum>.FromUInt64(stream_value);
 		}
 		/// <summary>Write a <typeparamref name="TEnum"/> value to a stream</summary>
 		/// <param name="s">Stream to write to</param>
@@ -694,20 +694,20 @@ namespace KSoft
 		{
 			Contract.Requires(s != null);
 
-			ulong streamValue = Reflection.EnumValue<TEnum>.ToUInt64(value);
+			ulong stream_value = Reflection.EnumValue<TEnum>.ToUInt64(value);
 			switch (Reflection.EnumUtil<TEnum>.UnderlyingTypeCode)
 			{
 				case TypeCode.Byte:
-				case TypeCode.SByte: s.Write((byte)streamValue);
+				case TypeCode.SByte: s.Write((byte)stream_value);
 					break;
 				case TypeCode.Int16:
-				case TypeCode.UInt16: s.Write((ushort)streamValue);
+				case TypeCode.UInt16: s.Write((ushort)stream_value);
 					break;
 				case TypeCode.Int32:
-				case TypeCode.UInt32: s.Write((uint)streamValue);
+				case TypeCode.UInt32: s.Write((uint)stream_value);
 					break;
 				case TypeCode.Int64:
-				case TypeCode.UInt64: s.Write(streamValue);
+				case TypeCode.UInt64: s.Write(stream_value);
 					break;
 
 				default:

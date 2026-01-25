@@ -6,13 +6,13 @@ namespace KSoft.Phoenix.Runtime
 		public struct ProtoIcon
 			: IO.IEndianStreamSerializable
 		{
-			public string type, name;
+			public string Type, Name;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamPascalString32(ref this.type);
-				s.StreamPascalString32(ref this.name);
+				s.StreamPascalString32(ref this.Type);
+				s.StreamPascalString32(ref this.Name);
 			}
 			#endregion
 		};

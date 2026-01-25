@@ -8,19 +8,19 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Phoenix.Engine
 {
-	public static class EditorUtilsDll
+	public static class EditorUtilsDLL
 	{
 		public enum LibraryMode : uint
 		{
-			DEBUG,
-			RELEASE,
+			Debug,
+			Release,
 		};
 
-		const uint K_VERSION_ = 3;
+		const uint kVersion = 3;
 
-		const string K_DLL_NAME_ = @"Engine\EditorUtils.dll";
-		const CallingConvention K_CALL_CONV_ = CallingConvention.Cdecl;
-		const CharSet K_CHAR_SET_ = CharSet.Ansi;
+		const string kDllName = @"Engine\EditorUtils.dll";
+		const CallingConvention kCallConv = CallingConvention.Cdecl;
+		const CharSet kCharSet = CharSet.Ansi;
 
 		public static bool Initialized { get; private set; }
 
@@ -29,7 +29,7 @@ namespace KSoft.Phoenix.Engine
 		{
 			get
 			{
-				if (!Initialized && !gEntryPointsNotFound && !gIsInitializing_)
+				if (!Initialized && !gEntryPointsNotFound && !gIsInitializing)
 					Initialize();
 
 				return gEntryPointsNotFound;
@@ -43,12 +43,12 @@ namespace KSoft.Phoenix.Engine
 				return;
 
 			EntryPointsNotFound = true;
-			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 				"Failed to find a EditorUtils method",
 				ex);
 		}
 
-		private static bool gIsInitializing_;
+		private static bool gIsInitializing;
 		public static void Initialize()
 		{
 			if (Initialized)
@@ -56,12 +56,12 @@ namespace KSoft.Phoenix.Engine
 
 			try
 			{
-				gIsInitializing_ = true;
+				gIsInitializing = true;
 
 				var libPointerSize = GetPointerSize();
 				if (libPointerSize != IntPtr.Size)
 				{
-					Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+					Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 						"EditorUtils was built for a platform that doesn't match what we're currently running in",
 						libPointerSize,
 						IntPtr.Size);
@@ -69,17 +69,17 @@ namespace KSoft.Phoenix.Engine
 				}
 
 				var version = GetLibraryVersion();
-				if (version != K_VERSION_)
+				if (version != kVersion)
 				{
-					Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+					Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 						"EditorUtils version doesn't match what we expected",
 						version,
-						K_VERSION_);
+						kVersion);
 					return;
 				}
 
 				var libMode = GetLibraryMode();
-				Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Information, TypeExtensions.K_NONE,
+				Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Information, TypeExtensions.kNone,
 					"Finished loading EditorUtils",
 					libMode,
 					version);
@@ -92,7 +92,7 @@ namespace KSoft.Phoenix.Engine
 			}
 			finally
 			{
-				gIsInitializing_ = false;
+				gIsInitializing = false;
 			}
 		}
 
@@ -105,34 +105,34 @@ namespace KSoft.Phoenix.Engine
 			EntryPointsNotFound = false;
 		}
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		static extern uint GetPointerSize();
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		static extern LibraryMode GetLibraryMode();
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		static extern uint GetLibraryVersion();
 
 		#region Tile/Untile and copy data
 		public enum TileCopyFormat : int
 		{
-			R16_F = 0,
-			R8_G8 = 1,
+			R16F = 0,
+			R8G8 = 1,
 			DXN = 2,
 			L8 = 3,
-			DXT5_A = 4,
-			R11_G11_B10 = 5,
+			DXT5A = 4,
+			R11G11B10 = 5,
 			DXT1 = 6,
-			G16_R16 = 7,
+			G16R16 = 7,
 		};
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool TileCopyData(
 			[Out] byte[] dst,
 			[In] byte[] src,
 			int width,
 			int height,
 			TileCopyFormat dxtFormat);
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool UntileCopyData(
 			[Out] byte[] dst,
 			[In] byte[] src,
@@ -140,14 +140,14 @@ namespace KSoft.Phoenix.Engine
 			int height,
 			TileCopyFormat dxtFormat);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool TileCopyData(
 			[Out] short[] dst,
 			[In] short[] src,
 			int width,
 			int height,
 			TileCopyFormat dxtFormat);
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool UntileCopyData(
 			[Out] short[] dst,
 			[In] short[] src,
@@ -155,20 +155,20 @@ namespace KSoft.Phoenix.Engine
 			int height,
 			TileCopyFormat dxtFormat);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool TileCopyData(
 			[Out] uint[] dst,
 			[In] uint[] src,
 			int width,
 			int height,
-			TileCopyFormat dxtFormat = TileCopyFormat.R11_G11_B10);
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, SetLastError=true)]
+			TileCopyFormat dxtFormat = TileCopyFormat.R11G11B10);
+		[DllImport(kDllName, CallingConvention=kCallConv, SetLastError=true)]
 		static extern bool UntileCopyData(
 			[Out] uint[] dst,
 			[In] uint[] src,
 			int width,
 			int height,
-			TileCopyFormat dxtFormat = TileCopyFormat.R11_G11_B10);
+			TileCopyFormat dxtFormat = TileCopyFormat.R11G11B10);
 
 		public static bool TileCopyData(
 			Array dstArray,
@@ -201,7 +201,7 @@ namespace KSoft.Phoenix.Engine
 				return false;
 			}
 
-			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 				"EditorUtils.TileCopyData called with a destination and/or source array type that is not supported",
 				dstArray.GetType(),
 				srcArray.GetType(),
@@ -240,7 +240,7 @@ namespace KSoft.Phoenix.Engine
 				return false;
 			}
 
-			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+			Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 				"EditorUtils.UntileCopyData called with a destination and/or source array type that is not supported",
 				dstArray.GetType(),
 				srcArray.GetType(),

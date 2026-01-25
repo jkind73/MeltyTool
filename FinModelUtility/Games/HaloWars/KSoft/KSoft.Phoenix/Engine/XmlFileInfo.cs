@@ -4,26 +4,26 @@ namespace KSoft.Phoenix.Engine
 {
 	public enum XmlFilePriority
 	{
-		NONE,
+		None,
 
-		LISTS,
-		GAME_DATA,
-		PROTO_DATA,
+		Lists,
+		GameData,
+		ProtoData,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public enum XmlFileLoadState
 	{
-		NOT_LOADED,
-		FILE_DOES_NOT_EXIST,
-		FAILED,
-		PRELOADING,
-		PRELOADED,
-		LOADING,
-		LOADED,
+		NotLoaded,
+		FileDoesNotExist,
+		Failed,
+		Preloading,
+		Preloaded,
+		Loading,
+		Loaded,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public sealed class XmlFileInfo
@@ -104,23 +104,23 @@ namespace KSoft.Phoenix.Engine
 	[System.Diagnostics.DebuggerDisplay("{"+ nameof(DebuggerDisplay)  +"}")]
 	public sealed class ProtoDataXmlFileInfo
 	{
-		public XmlFilePriority priority;
-		public XmlFileInfo fileInfo;
-		public XmlFileInfo fileInfoWithUpdates;
+		public XmlFilePriority Priority;
+		public XmlFileInfo FileInfo;
+		public XmlFileInfo FileInfoWithUpdates;
 
 		public ProtoDataXmlFileInfo(XmlFilePriority priority
 			, XmlFileInfo fileInfo
 			, XmlFileInfo fileInfoWithUpdates = null)
 		{
-			this.priority = priority;
-			this.fileInfo = fileInfo;
-			this.fileInfoWithUpdates = fileInfoWithUpdates;
+			this.Priority = priority;
+			this.FileInfo = fileInfo;
+			this.FileInfoWithUpdates = fileInfoWithUpdates;
 		}
 
 		public string DebuggerDisplay { get {
 			return string.Format("{0} {1}",
-			                     this.priority,
-			                     this.fileInfo);
+			                     this.Priority,
+			                     this.FileInfo);
 		} }
 	};
 }

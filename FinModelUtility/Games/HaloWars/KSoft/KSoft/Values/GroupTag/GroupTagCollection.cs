@@ -184,10 +184,10 @@ namespace KSoft.Values
 		[Contracts.Pure]
 		public bool ContainsDuplicates()
 		{
-			var allTags =	from gt in this.BaseGroupTags select gt.TagString;
-			var allNames = from gt in this.BaseGroupTags select gt.Name;
+			var all_tags =	from gt in this.BaseGroupTags select gt.TagString;
+			var all_names = from gt in this.BaseGroupTags select gt.Name;
 
-			return allTags.ContainsDuplicates() || allNames.ContainsDuplicates();
+			return all_tags.ContainsDuplicates() || all_names.ContainsDuplicates();
 		}
 
 		#region IEndianStreamable Members

@@ -1,5 +1,4 @@
 ﻿using System;
-using KSoft.Shell;
 #if CONTRACTS_FULL_SHIM
 using Contract = System.Diagnostics.ContractsShim.Contract;
 #else
@@ -20,18 +19,18 @@ namespace KSoft.Memory.Strings
 		/// <param name="byteOrder"></param>
 		/// <param name="fixedLength">The storage fixed length (in characters) of this string type</param>
 		public StringStorageMarkupAttribute(StringStorageWidthType widthType, StringStorageType type,
-			Shell.EndianFormat byteOrder = Shell.EndianFormat.LITTLE, short fixedLength = 0)
+			Shell.EndianFormat byteOrder = Shell.EndianFormat.Little, short fixedLength = 0)
 		{
 			Contract.Requires(fixedLength >= 0);
 
 			this.Storage = new StringStorage(widthType, type, byteOrder, fixedLength);
 		}
-		/// <summary>Define a string storage markup (in <see cref="EndianFormat.LITTLE"/> byte order)</summary>
+		/// <summary>Define a string storage markup (in <see cref="Shell.EndianFormat.Little"/> byte order)</summary>
 		/// <param name="widthType">Width size of a single character of this string type</param>
 		/// <param name="type">Storage method for this string type</param>
 		/// <param name="fixedLength">The storage fixed length (in characters) of this string type</param>
 		public StringStorageMarkupAttribute(StringStorageWidthType widthType, StringStorageType type, short fixedLength) :
-			this(widthType, type, Shell.EndianFormat.LITTLE, fixedLength)
+			this(widthType, type, Shell.EndianFormat.Little, fixedLength)
 		{
 			Contract.Requires(fixedLength >= 0);
 		}
@@ -43,21 +42,21 @@ namespace KSoft.Memory.Strings
 	public sealed class CStringStorageMarkupAsciiAttribute : StringStorageMarkupAttribute
 	{
 		public CStringStorageMarkupAsciiAttribute()
-			: base(StringStorageWidthType.ASCII, StringStorageType.C_STRING) { }
+			: base(StringStorageWidthType.Ascii, StringStorageType.CString) { }
 	};
 	/// <summary>CString, Unicode</summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
 	public sealed class CStringStorageMarkupUnicodeAttribute : StringStorageMarkupAttribute
 	{
 		public CStringStorageMarkupUnicodeAttribute()
-			: base(StringStorageWidthType.UNICODE, StringStorageType.C_STRING) { }
+			: base(StringStorageWidthType.Unicode, StringStorageType.CString) { }
 	};
 	/// <summary>CString, Unicode-BE</summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
-	public sealed class CStringStorageMarkupUnicodeBeAttribute : StringStorageMarkupAttribute
+	public sealed class CStringStorageMarkupUnicodeBEAttribute : StringStorageMarkupAttribute
 	{
-		public CStringStorageMarkupUnicodeBeAttribute()
-			: base(StringStorageWidthType.UNICODE, StringStorageType.C_STRING, Shell.EndianFormat.BIG) { }
+		public CStringStorageMarkupUnicodeBEAttribute()
+			: base(StringStorageWidthType.Unicode, StringStorageType.CString, Shell.EndianFormat.Big) { }
 	};
 
 	/// <summary>CharArray, Ascii</summary>
@@ -65,20 +64,20 @@ namespace KSoft.Memory.Strings
 	public sealed class StringStorageMarkupAsciiAttribute : StringStorageMarkupAttribute
 	{
 		public StringStorageMarkupAsciiAttribute()
-			: base(StringStorageWidthType.ASCII, StringStorageType.CHAR_ARRAY) { }
+			: base(StringStorageWidthType.Ascii, StringStorageType.CharArray) { }
 	};
 	/// <summary>CharArray, Unicode</summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
 	public sealed class StringStorageMarkupUnicodeAttribute : StringStorageMarkupAttribute
 	{
 		public StringStorageMarkupUnicodeAttribute()
-			: base(StringStorageWidthType.UNICODE, StringStorageType.CHAR_ARRAY) { }
+			: base(StringStorageWidthType.Unicode, StringStorageType.CharArray) { }
 	};
 	/// <summary>CharArray, Unicode-BE</summary>
 	[AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = false)]
-	public sealed class StringStorageMarkupUnicodeBeAttribute : StringStorageMarkupAttribute
+	public sealed class StringStorageMarkupUnicodeBEAttribute : StringStorageMarkupAttribute
 	{
-		public StringStorageMarkupUnicodeBeAttribute()
-			: base(StringStorageWidthType.UNICODE, StringStorageType.CHAR_ARRAY, Shell.EndianFormat.BIG) { }
+		public StringStorageMarkupUnicodeBEAttribute()
+			: base(StringStorageWidthType.Unicode, StringStorageType.CharArray, Shell.EndianFormat.Big) { }
 	};
 }

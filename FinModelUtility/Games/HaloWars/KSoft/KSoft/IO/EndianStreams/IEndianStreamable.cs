@@ -8,7 +8,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 namespace KSoft.IO
 {
 	/// <summary>Interfaces object serialization with the endian streams</summary>
-	[Contracts.ContractClass(typeof(EndianStreamableContract))]
+	[Contracts.ContractClass(typeof(IEndianStreamableContract))]
 	public interface IEndianStreamable
 	{
 		/// <summary>Reads the object from the endian stream object</summary>
@@ -20,7 +20,7 @@ namespace KSoft.IO
 	};
 
 	[Contracts.ContractClassFor(typeof(IEndianStreamable))]
-	abstract class EndianStreamableContract : IEndianStreamable
+	abstract class IEndianStreamableContract : IEndianStreamable
 	{
 		public void Read(EndianReader s)	{ Contract.Requires(s != null); }
 		public void Write(EndianWriter s)	{ Contract.Requires(s != null); }

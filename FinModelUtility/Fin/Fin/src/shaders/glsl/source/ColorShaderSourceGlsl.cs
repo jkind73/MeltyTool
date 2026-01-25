@@ -22,14 +22,14 @@ public sealed class ColorShaderSourceGlsl : IShaderSourceGlsl {
     this.hasLighting_ = !material.IgnoreLights && hasNormals;
 
     var sb = new IndentedStringBuilder();
-    sb.AppendLine($"#version {GlslConstants.FragmentShaderVersion}");
+    sb.AppendLine($"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
 
     if (this.hasLighting_) {
       sb.AppendLine(
           $"""
-           {GlslUtil.LightHeader}
+           {GlslUtil.LIGHT_HEADER}
 
            """);
     }

@@ -2,11 +2,11 @@
 namespace KSoft.Security.Cryptography
 {
 	// http://code.google.com/p/h2database/source/browse/trunk/h2/src/main/org/h2/security/XTEA.java
-	public abstract class XteaBase
+	public abstract class XTEABase
 	{
-		protected const uint K_DELTA = 0x9E3779B9;
+		protected const uint kDelta = 0x9E3779B9;
 
-		protected static readonly uint[] KDeltas = [
+		protected static readonly uint[] kDeltas = [
 			//       0           1           2           3           4           5
 			0x00000000, 0x9E3779B9, 0x9E3779B9, 0x3C6EF372, 0x3C6EF372, 0xDAA66D2B, // 0
 			0xDAA66D2B, 0x78DDE6E4, 0x78DDE6E4, 0x1715609D, 0x1715609D, 0xB54CDA56, // 6
@@ -20,7 +20,7 @@ namespace KSoft.Security.Cryptography
 			0xAFD9D683, 0x4E11503C, 0x4E11503C, 0xEC48C9F5, 0xEC48C9F5, 0x8A8043AE, // 54
 			0x8A8043AE, 0x28B7BD67, 0x28B7BD67, 0xC6EF3720							// 60
 		];
-		protected static readonly byte[] KKeyIndex = [
+		protected static readonly byte[] kKeyIndex = [
 			0x00, 0x03, 0x01, 0x02, 0x02, 0x01, 0x03, 0x00, 0x00, 0x00, 0x01, 0x03,
 			0x02, 0x02, 0x03, 0x01, 0x00, 0x00, 0x01, 0x00, 0x02, 0x03, 0x03, 0x02,
 			0x00, 0x01, 0x01, 0x01, 0x02, 0x00, 0x03, 0x03, 0x00, 0x02, 0x01, 0x01,
@@ -50,7 +50,7 @@ namespace KSoft.Security.Cryptography
 		{
 			uint[] r = new uint[32];
 			for (int i = 1; i <= 32; i++)
-				r[i - 1] = KDeltas[i];
+				r[i - 1] = kDeltas[i];
 
 			this.k0 = r[0];
 			this.k1 = r[1];
@@ -88,8 +88,8 @@ namespace KSoft.Security.Cryptography
 		public void SetKeyHackDec()
 		{
 			uint[] r = new uint[32];
-			for (int rI = 0, dI = 32; rI < 32; rI++, dI--)
-				r[rI] = KDeltas[dI];
+			for (int r_i = 0, d_i = 32; r_i < 32; r_i++, d_i--)
+				r[r_i] = kDeltas[d_i];
 
 			this.k0 = r[0];
 			this.k1 = r[1];

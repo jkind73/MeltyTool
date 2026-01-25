@@ -6,7 +6,7 @@
 #endif
 public class ImaginaryDriveInfo : DriveInfoBase {
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
-  private readonly string name_;
+  private readonly string name;
 
   /// <inheritdoc />
   public ImaginaryDriveInfo(IImaginaryFileDataAccessor imaginaryFileDataAccessor,
@@ -15,13 +15,13 @@ public class ImaginaryDriveInfo : DriveInfoBase {
     this.imaginaryFileDataAccessor_ = imaginaryFileDataAccessor ??
                                       throw new ArgumentNullException(
                                           nameof(imaginaryFileDataAccessor));
-    this.name_ = imaginaryFileDataAccessor.ImaginaryPathVerifier.NormalizeDriveName(name);
+    this.name = imaginaryFileDataAccessor.ImaginaryPathVerifier.NormalizeDriveName(name);
   }
 
   /// <inheritdoc />
   public override long AvailableFreeSpace {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.AvailableFreeSpace;
     }
   }
@@ -29,7 +29,7 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override string DriveFormat {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.DriveFormat;
     }
   }
@@ -37,7 +37,7 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override DriveType DriveType {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.DriveType;
     }
   }
@@ -45,14 +45,14 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override bool IsReady {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.IsReady;
     }
   }
 
   /// <inheritdoc />
   public override string Name {
-    get { return this.name_; }
+    get { return name; }
   }
 
   /// <inheritdoc />
@@ -63,7 +63,7 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override long TotalFreeSpace {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.TotalFreeSpace;
     }
   }
@@ -71,7 +71,7 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override long TotalSize {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.TotalSize;
     }
   }
@@ -79,11 +79,11 @@ public class ImaginaryDriveInfo : DriveInfoBase {
   /// <inheritdoc />
   public override string VolumeLabel {
     get {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       return mockDriveData.VolumeLabel;
     }
     set {
-      var mockDriveData = this.GetMockDriveData_();
+      var mockDriveData = GetMockDriveData();
       mockDriveData.VolumeLabel = value;
     }
   }
@@ -93,8 +93,8 @@ public class ImaginaryDriveInfo : DriveInfoBase {
     return Name;
   }
 
-  private ImaginaryDriveData GetMockDriveData_() {
-    return this.imaginaryFileDataAccessor_.GetDrive(this.name_) ??
-           throw CommonExceptions.FileNotFound(this.name_);
+  private ImaginaryDriveData GetMockDriveData() {
+    return this.imaginaryFileDataAccessor_.GetDrive(name) ??
+           throw CommonExceptions.FileNotFound(name);
   }
 }

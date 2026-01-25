@@ -20,92 +20,92 @@ namespace KSoft.Phoenix.Phx
 		#region Flags
 		private enum Flags
 		{
-			HAS_NAME_ID,
-			HAS_DISPLAY_NAME_ID,
-			HAS_DISPLAY_NAME2_ID, // BAbility only
-			HAS_DESCRIPTION_ID,
-			HAS_LONG_DESCRIPTION_ID,
-			HAS_PREREQ_TEXT_ID,
-			HAS_STATS_NAME_ID,
-			HAS_ROLE_TEXT_ID,
-			HAS_ROLLOVER_TEXT_ID,
+			HasNameID,
+			HasDisplayNameID,
+			HasDisplayName2ID, // BAbility only
+			HasDescriptionID,
+			HasLongDescriptionID,
+			HasPrereqTextID,
+			HasStatsNameID,
+			HasRoleTextID,
+			HasRolloverTextID,
 
 			// ProtoObject specific:
-			HAS_ENEMY_ROLLOVER_TEXT_ID,
-			HAS_GAIA_ROLLOVER_TEXT_ID,
+			HasEnemyRolloverTextID,
+			HasGaiaRolloverTextID,
 
 			// ProtoPower specific:
-			HAS_CHOOSE_TEXT_ID,
+			HasChooseTextID,
 
-			K_NUMBER_OF
+			kNumberOf
 		};
-		private BitVector32 mFlags_;
+		private BitVector32 mFlags;
 
-		public bool HasNameId
+		public bool HasNameID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_NAME_ID); }
-			set { this.mFlags_.Set(Flags.HAS_NAME_ID, value); }
+			get { return this.mFlags.Test(Flags.HasNameID); }
+			set { this.mFlags.Set(Flags.HasNameID, value); }
 		}
 
-		public bool HasDisplayNameId
+		public bool HasDisplayNameID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_DISPLAY_NAME_ID); }
-			set { this.mFlags_.Set(Flags.HAS_DISPLAY_NAME_ID, value); }
+			get { return this.mFlags.Test(Flags.HasDisplayNameID); }
+			set { this.mFlags.Set(Flags.HasDisplayNameID, value); }
 		}
 
-		public bool HasDisplayName2Id
+		public bool HasDisplayName2ID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_DISPLAY_NAME2_ID); }
-			set { this.mFlags_.Set(Flags.HAS_DISPLAY_NAME2_ID, value); }
+			get { return this.mFlags.Test(Flags.HasDisplayName2ID); }
+			set { this.mFlags.Set(Flags.HasDisplayName2ID, value); }
 		}
 
-		public bool HasDescriptionId
+		public bool HasDescriptionID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_DESCRIPTION_ID); }
-			set { this.mFlags_.Set(Flags.HAS_DESCRIPTION_ID, value); }
+			get { return this.mFlags.Test(Flags.HasDescriptionID); }
+			set { this.mFlags.Set(Flags.HasDescriptionID, value); }
 		}
 
-		public bool HasLongDescriptionId
+		public bool HasLongDescriptionID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_LONG_DESCRIPTION_ID); }
-			set { this.mFlags_.Set(Flags.HAS_LONG_DESCRIPTION_ID, value); }
+			get { return this.mFlags.Test(Flags.HasLongDescriptionID); }
+			set { this.mFlags.Set(Flags.HasLongDescriptionID, value); }
 		}
 
-		public bool HasPrereqTextId
+		public bool HasPrereqTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_PREREQ_TEXT_ID); }
-			set { this.mFlags_.Set(Flags.HAS_PREREQ_TEXT_ID, value); }
+			get { return this.mFlags.Test(Flags.HasPrereqTextID); }
+			set { this.mFlags.Set(Flags.HasPrereqTextID, value); }
 		}
 
-		public bool HasStatsNameId
+		public bool HasStatsNameID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_STATS_NAME_ID); }
-			set { this.mFlags_.Set(Flags.HAS_STATS_NAME_ID, value); }
+			get { return this.mFlags.Test(Flags.HasStatsNameID); }
+			set { this.mFlags.Set(Flags.HasStatsNameID, value); }
 		}
 
-		public bool HasRoleTextId
+		public bool HasRoleTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_ROLE_TEXT_ID); }
-			set { this.mFlags_.Set(Flags.HAS_ROLE_TEXT_ID, value); }
+			get { return this.mFlags.Test(Flags.HasRoleTextID); }
+			set { this.mFlags.Set(Flags.HasRoleTextID, value); }
 		}
 
-		public bool HasRolloverTextId
+		public bool HasRolloverTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_ROLLOVER_TEXT_ID); }
-			set { this.mFlags_.Set(Flags.HAS_ROLLOVER_TEXT_ID, value); }
+			get { return this.mFlags.Test(Flags.HasRolloverTextID); }
+			set { this.mFlags.Set(Flags.HasRolloverTextID, value); }
 		}
 
-		public bool HasEnemyRolloverTextId
+		public bool HasEnemyRolloverTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_ENEMY_ROLLOVER_TEXT_ID); }
-			set { this.mFlags_.Set(Flags.HAS_ENEMY_ROLLOVER_TEXT_ID, value); }
+			get { return this.mFlags.Test(Flags.HasEnemyRolloverTextID); }
+			set { this.mFlags.Set(Flags.HasEnemyRolloverTextID, value); }
 		}
 
-		public bool HasGaiaRolloverTextId
+		public bool HasGaiaRolloverTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_GAIA_ROLLOVER_TEXT_ID); }
+			get { return this.mFlags.Test(Flags.HasGaiaRolloverTextID); }
 			set {
-				this.mFlags_.Set(Flags.HAS_GAIA_ROLLOVER_TEXT_ID, value);
+				this.mFlags.Set(Flags.HasGaiaRolloverTextID, value);
 
 				if (value)
 					this.GaiaRolloverText = new BListArray<GaiaRolloverTextData>();
@@ -114,190 +114,190 @@ namespace KSoft.Phoenix.Phx
 			}
 		}
 
-		public bool HasChooseTextId
+		public bool HasChooseTextID
 		{
-			get { return this.mFlags_.Test(Flags.HAS_CHOOSE_TEXT_ID); }
-			set { this.mFlags_.Set(Flags.HAS_CHOOSE_TEXT_ID, value); }
+			get { return this.mFlags.Test(Flags.HasChooseTextID); }
+			set { this.mFlags.Set(Flags.HasChooseTextID, value); }
 		}
 		#endregion
 
 		#region NameID
-		int mNameId_ = TypeExtensions.K_NONE;
+		int mNameID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int NameId
+		public int NameID
 		{
 			get {
-				if (!this.HasNameId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasNameID)
+					return TypeExtensions.kNone;
 
-				return this.mNameId_;
+				return this.mNameID;
 			}
 			set {
-				Contract.Requires(this.HasNameId);
-				this.mNameId_ = value;
+				Contract.Requires(this.HasNameID);
+				this.mNameID = value;
 			}
 		}
 		#endregion
 
 		#region DisplayNameID
-		int mDisplayNameId_ = TypeExtensions.K_NONE;
+		int mDisplayNameID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int DisplayNameId
+		public int DisplayNameID
 		{
 			get {
-				if (!this.HasDisplayNameId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasDisplayNameID)
+					return TypeExtensions.kNone;
 
-				return this.mDisplayNameId_;
+				return this.mDisplayNameID;
 			}
 			set {
-				Contract.Requires(this.HasDisplayNameId);
-				this.mDisplayNameId_ = value;
+				Contract.Requires(this.HasDisplayNameID);
+				this.mDisplayNameID = value;
 			}
 		}
 		#endregion
 
 		#region DisplayName2ID
-		int mDisplayName2Id_ = TypeExtensions.K_NONE;
+		int mDisplayName2ID = TypeExtensions.kNone;
 		[Meta.UnusedData("unused in code")]
 		[Meta.LocStringReference]
-		public int DisplayName2Id
+		public int DisplayName2ID
 		{
 			get {
-				if (!this.HasDisplayName2Id)
-					return TypeExtensions.K_NONE;
+				if (!this.HasDisplayName2ID)
+					return TypeExtensions.kNone;
 
-				return this.mDisplayName2Id_;
+				return this.mDisplayName2ID;
 			}
 			set {
-				Contract.Requires(this.HasDisplayName2Id);
-				this.mDisplayName2Id_ = value;
+				Contract.Requires(this.HasDisplayName2ID);
+				this.mDisplayName2ID = value;
 			}
 		}
 		#endregion
 
 		#region DescriptionID
-		int mDescriptionId_ = TypeExtensions.K_NONE;
+		int mDescriptionID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int DescriptionId
+		public int DescriptionID
 		{
 			get {
-				if (!this.HasDescriptionId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasDescriptionID)
+					return TypeExtensions.kNone;
 
-				return this.mDescriptionId_;
+				return this.mDescriptionID;
 			}
 			set {
-				Contract.Requires(this.HasDescriptionId);
-				this.mDescriptionId_ = value;
+				Contract.Requires(this.HasDescriptionID);
+				this.mDescriptionID = value;
 			}
 		}
 		#endregion
 
 		#region LongDescriptionID
-		int mLongDescriptionId_ = TypeExtensions.K_NONE;
+		int mLongDescriptionID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int LongDescriptionId
+		public int LongDescriptionID
 		{
 			get {
-				if (!this.HasLongDescriptionId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasLongDescriptionID)
+					return TypeExtensions.kNone;
 
-				return this.mLongDescriptionId_;
+				return this.mLongDescriptionID;
 			}
 			set {
-				Contract.Requires(this.HasLongDescriptionId);
-				this.mLongDescriptionId_ = value;
+				Contract.Requires(this.HasLongDescriptionID);
+				this.mLongDescriptionID = value;
 			}
 		}
 		#endregion
 
 		#region PrereqTextID
-		int mPrereqTextId_ = TypeExtensions.K_NONE;
+		int mPrereqTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int PrereqTextId
+		public int PrereqTextID
 		{
 			get {
-				if (!this.HasPrereqTextId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasPrereqTextID)
+					return TypeExtensions.kNone;
 
-				return this.mPrereqTextId_;
+				return this.mPrereqTextID;
 			}
 			set {
-				Contract.Requires(this.HasPrereqTextId);
-				this.mPrereqTextId_ = value;
+				Contract.Requires(this.HasPrereqTextID);
+				this.mPrereqTextID = value;
 			}
 		}
 		#endregion
 
 		#region StatsNameID
-		int mStatsNameId_ = TypeExtensions.K_NONE;
+		int mStatsNameID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int StatsNameId
+		public int StatsNameID
 		{
 			get {
-				if (!this.HasStatsNameId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasStatsNameID)
+					return TypeExtensions.kNone;
 
-				return this.mStatsNameId_;
+				return this.mStatsNameID;
 			}
 			set {
-				Contract.Requires(this.HasStatsNameId);
-				this.mStatsNameId_ = value;
+				Contract.Requires(this.HasStatsNameID);
+				this.mStatsNameID = value;
 			}
 		}
 		#endregion
 
 		#region RoleTextID
-		int mRoleTextId_ = TypeExtensions.K_NONE;
+		int mRoleTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int RoleTextId
+		public int RoleTextID
 		{
 			get {
-				if (!this.HasRoleTextId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasRoleTextID)
+					return TypeExtensions.kNone;
 
-				return this.mRoleTextId_;
+				return this.mRoleTextID;
 			}
 			set {
-				Contract.Requires(this.HasRoleTextId);
-				this.mRoleTextId_ = value;
+				Contract.Requires(this.HasRoleTextID);
+				this.mRoleTextID = value;
 			}
 		}
 		#endregion
 
 		#region RolloverTextID
-		int mRolloverTextId_ = TypeExtensions.K_NONE;
+		int mRolloverTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int RolloverTextId
+		public int RolloverTextID
 		{
 			get {
-				if (!this.HasRolloverTextId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasRolloverTextID)
+					return TypeExtensions.kNone;
 
-				return this.mRolloverTextId_;
+				return this.mRolloverTextID;
 			}
 			set {
-				Contract.Requires(this.HasRolloverTextId);
-				this.mRolloverTextId_ = value;
+				Contract.Requires(this.HasRolloverTextID);
+				this.mRolloverTextID = value;
 			}
 		}
 		#endregion
 
 		#region EnemyRolloverTextID
-		int mEnemyRolloverTextId_ = TypeExtensions.K_NONE;
+		int mEnemyRolloverTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int EnemyRolloverTextId
+		public int EnemyRolloverTextID
 		{
 			get {
-				if (!this.HasEnemyRolloverTextId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasEnemyRolloverTextID)
+					return TypeExtensions.kNone;
 
-				return this.mEnemyRolloverTextId_;
+				return this.mEnemyRolloverTextID;
 			}
 			set {
-				Contract.Requires(this.HasEnemyRolloverTextId);
-				this.mEnemyRolloverTextId_ = value;
+				Contract.Requires(this.HasEnemyRolloverTextID);
+				this.mEnemyRolloverTextID = value;
 			}
 		}
 		#endregion
@@ -305,19 +305,19 @@ namespace KSoft.Phoenix.Phx
 		public BListArray<GaiaRolloverTextData> GaiaRolloverText { get; private set; }
 
 		#region ChooseTextID
-		int mChooseTextId_ = TypeExtensions.K_NONE;
+		int mChooseTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int ChooseTextId
+		public int ChooseTextID
 		{
 			get {
-				if (!this.HasChooseTextId)
-					return TypeExtensions.K_NONE;
+				if (!this.HasChooseTextID)
+					return TypeExtensions.kNone;
 
-				return this.mChooseTextId_;
+				return this.mChooseTextID;
 			}
 			set {
-				Contract.Requires(this.HasChooseTextId);
-				this.mChooseTextId_ = value;
+				Contract.Requires(this.HasChooseTextID);
+				this.mChooseTextID = value;
 			}
 		}
 		#endregion
@@ -329,30 +329,30 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			if (this.HasNameId)
-				xs.StreamStringId(s, "NameID", ref this.mNameId_);
-			if (this.HasDisplayNameId)
-				xs.StreamStringId(s, "DisplayNameID", ref this.mDisplayNameId_);
-			if (this.HasDisplayName2Id)
-				xs.StreamStringId(s, "DisplayName2ID", ref this.mDisplayName2Id_);
-			if (this.HasDescriptionId)
-				xs.StreamStringId(s, "DescriptionID", ref this.mDescriptionId_);
-			if (this.HasLongDescriptionId)
-				xs.StreamStringId(s, "LongDescriptionID", ref this.mLongDescriptionId_);
-			if (this.HasPrereqTextId)
-				xs.StreamStringId(s, "PrereqTextID", ref this.mPrereqTextId_);
-			if (this.HasRoleTextId)
-				xs.StreamStringId(s, "RoleTextID", ref this.mRoleTextId_);
-			if (this.HasRolloverTextId)
-				xs.StreamStringId(s, "RolloverTextID", ref this.mRolloverTextId_);
-			if (this.HasEnemyRolloverTextId)
-				xs.StreamStringId(s, "EnemyRolloverTextID", ref this.mEnemyRolloverTextId_);
-			if (this.HasGaiaRolloverTextId)
-				XML.XmlUtil.Serialize(s, this.GaiaRolloverText, GaiaRolloverTextData.KBListXmlParams);
-			if (this.HasStatsNameId)
-				xs.StreamStringId(s, "StatsNameID", ref this.mStatsNameId_);
-			if (this.HasChooseTextId)
-				xs.StreamStringId(s, "ChooseTextID", ref this.mChooseTextId_);
+			if (this.HasNameID)
+				xs.StreamStringID(s, "NameID", ref this.mNameID);
+			if (this.HasDisplayNameID)
+				xs.StreamStringID(s, "DisplayNameID", ref this.mDisplayNameID);
+			if (this.HasDisplayName2ID)
+				xs.StreamStringID(s, "DisplayName2ID", ref this.mDisplayName2ID);
+			if (this.HasDescriptionID)
+				xs.StreamStringID(s, "DescriptionID", ref this.mDescriptionID);
+			if (this.HasLongDescriptionID)
+				xs.StreamStringID(s, "LongDescriptionID", ref this.mLongDescriptionID);
+			if (this.HasPrereqTextID)
+				xs.StreamStringID(s, "PrereqTextID", ref this.mPrereqTextID);
+			if (this.HasRoleTextID)
+				xs.StreamStringID(s, "RoleTextID", ref this.mRoleTextID);
+			if (this.HasRolloverTextID)
+				xs.StreamStringID(s, "RolloverTextID", ref this.mRolloverTextID);
+			if (this.HasEnemyRolloverTextID)
+				xs.StreamStringID(s, "EnemyRolloverTextID", ref this.mEnemyRolloverTextID);
+			if (this.HasGaiaRolloverTextID)
+				XML.XmlUtil.Serialize(s, this.GaiaRolloverText, GaiaRolloverTextData.kBListXmlParams);
+			if (this.HasStatsNameID)
+				xs.StreamStringID(s, "StatsNameID", ref this.mStatsNameID);
+			if (this.HasChooseTextID)
+				xs.StreamStringID(s, "ChooseTextID", ref this.mChooseTextID);
 		}
 		#endregion
 	};
@@ -363,33 +363,33 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<GaiaRolloverTextData>
 	{
 		/// <summary>HW1 is hard coded to only support 4 (for the first four Civs)</summary>
-		public const int C_MAX_GAIA_ROLLOVER_TEXT_INDICES = 4;
+		public const int cMaxGaiaRolloverTextIndices = 4;
 
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "GaiaRolloverTextID",
+			ElementName = "GaiaRolloverTextID",
 		};
 		#endregion
 
 		#region CivID
-		int mCivId_ = TypeExtensions.K_NONE;
+		int mCivID = TypeExtensions.kNone;
 		/// <summary>No CivID means it applies to all Civs</summary>
 		[Meta.BCivReference]
-		public int CivId
+		public int CivID
 		{
-			get { return this.mCivId_; }
-			set { this.mCivId_ = value; }
+			get { return this.mCivID; }
+			set { this.mCivID = value; }
 		}
 		#endregion
 
 		#region TextID
-		int mTextId_ = TypeExtensions.K_NONE;
+		int mTextID = TypeExtensions.kNone;
 		[Meta.LocStringReference]
-		public int TextId
+		public int TextID
 		{
-			get { return this.mTextId_; }
-			set { this.mTextId_ = value; }
+			get { return this.mTextID; }
+			set { this.mTextID = value; }
 		}
 		#endregion
 
@@ -400,27 +400,27 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDbid(s, "civ", ref this.mCivId_, DatabaseObjectKind.CIV, true, XML.XmlUtil.K_SOURCE_ATTR);
-			xs.StreamStringId(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mTextId_, XML.XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, "civ", ref this.mCivID, DatabaseObjectKind.Civ, true, XML.XmlUtil.kSourceAttr);
+			xs.StreamStringID(s, XML.XmlUtil.kNoXmlName, ref this.mTextID, XML.XmlUtil.kSourceCursor);
 		}
 		#endregion
 
 		#region IComparable Members
 		public int CompareTo(GaiaRolloverTextData other)
 		{
-			if (this.CivId != other.CivId)
-				this.CivId.CompareTo(other.CivId);
+			if (this.CivID != other.CivID)
+				this.CivID.CompareTo(other.CivID);
 
-			return this.TextId.CompareTo(other.TextId);
+			return this.TextID.CompareTo(other.TextID);
 		}
 		#endregion
 
 		#region IEquatable Members
 		public bool Equals(GaiaRolloverTextData other)
 		{
-			return this.CivId == other.CivId
+			return this.CivID == other.CivID
 				&&
-				this.TextId == other.TextId;
+				this.TextID == other.TextID;
 		}
 		#endregion
 	};

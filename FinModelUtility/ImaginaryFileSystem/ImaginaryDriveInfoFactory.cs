@@ -50,7 +50,7 @@ public class ImaginaryDriveInfoFactory : IDriveInfoFactory {
     return New(driveInfo.Name);
   }
 
-  private string NormalizeDriveName_(string driveName) {
+  private string NormalizeDriveName(string driveName) {
     if (driveName.Length == 3 &&
         this.imaginaryFileSystem_.StringOperations.EndsWith(driveName, @":\")) {
       return this.imaginaryFileSystem_.StringOperations.ToUpper(driveName[0]) +
@@ -77,12 +77,12 @@ public class ImaginaryDriveInfoFactory : IDriveInfoFactory {
 
     public bool Equals(string x, string y) {
       return ReferenceEquals(x, y) ||
-             (HasDrivePrefix_(x) &&
-              HasDrivePrefix_(y) &&
+             (HasDrivePrefix(x) &&
+              HasDrivePrefix(y) &&
               this.imaginaryFileSystem_.StringOperations.Equals(x[0], y[0]));
     }
 
-    private static bool HasDrivePrefix_(string x) {
+    private static bool HasDrivePrefix(string x) {
       return x != null && x.Length >= 2 && x[1] == ':';
     }
 

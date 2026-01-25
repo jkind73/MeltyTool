@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum TacticDataObjectKind
 	{
-		NONE = PhxUtil.K_OBJECT_KIND_NONE,
+		None = PhxUtil.kObjectKindNone,
 
-		WEAPON,
-		TACTIC_STATE,
-		ACTION,
+		Weapon,
+		TacticState,
+		Action,
 	};
 }

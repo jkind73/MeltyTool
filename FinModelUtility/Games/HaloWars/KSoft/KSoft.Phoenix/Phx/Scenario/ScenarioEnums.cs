@@ -3,64 +3,64 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BGameType
 	{
-		SKIRMISH,
-		CAMPAIGN,
-		SCENARIO,
+		Skirmish,
+		Campaign,
+		Scenario,
 	};
 
 	public enum BMapType
 	{
-		UNKNOWN,
+		Unknown,
 
-		FINAL,
-		PLAYTEST,
-		DEVELOPMENT,
-		CAMPAIGN,
+		Final,
+		Playtest,
+		Development,
+		Campaign,
 
-		DLC = FINAL,
+		DLC = Final,
 	};
 
 	public enum BScenarioObjectFlags
 	{
-		NO_TIE_TO_GROUND,
-		INCLUDE_IN_SIM_REP,
+		NoTieToGround,
+		IncludeInSimRep,
 	};
 
 	public enum BScenarioPlayerPlacementType
 	{
-		INVALID,
+		Invalid,
 
-		GROUPED,
-		CONSECUTIVE, // int "Spacing" attribute
-		RANDOM,
+		Grouped,
+		Consecutive, // int "Spacing" attribute
+		Random,
 	};
 
 	public enum BMissionType
 	{
-		INVALID,
-		ATTACK,
-		DEFEND,
-		SCOUT,
-		CLAIM,
-		POWER,
+		Invalid,
+		Attack,
+		Defend,
+		Scout,
+		Claim,
+		Power,
 	};
 
 	public enum BMissionState
 	{
-		INVALID,
-		SUCCESS,
-		FAILURE,
-		CREATE,
-		WORKING,
-		WITHDRAW,
-		RETREAT,
+		Invalid,
+		Success,
+		Failure,
+		Create,
+		Working,
+		Withdraw,
+		Retreat,
 	};
 
 	public enum BMissionTargetType
 	{
-		INVALID,
-		AREA,
-		KB_BASE,
-		CAPTURE_NODE,
+		Invalid,
+		Area,
+		KBBase,
+		CaptureNode,
 	};
 }

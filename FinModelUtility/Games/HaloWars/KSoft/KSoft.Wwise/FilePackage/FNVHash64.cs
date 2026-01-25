@@ -1,7 +1,7 @@
 ﻿
 namespace KSoft.Wwise.FilePackage
 {
-	static class FnvHash64 // http://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
+	static class FNVHash64 // http://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
 	{
 		public static ulong Compute(string text)
 		{

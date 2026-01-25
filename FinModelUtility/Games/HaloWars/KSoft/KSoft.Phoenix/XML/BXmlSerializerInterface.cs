@@ -17,11 +17,11 @@ namespace KSoft.Phoenix.XML
 		#region NullInterface
 		sealed class NullInterface : BXmlSerializerInterface
 		{
-			Phx.BDatabaseBase mDatabase_;
-			internal override Phx.BDatabaseBase Database { get { return this.mDatabase_; } }
+			Phx.BDatabaseBase mDatabase;
+			internal override Phx.BDatabaseBase Database { get { return this.mDatabase; } }
 
 			public NullInterface(Phx.BDatabaseBase db) {
-				this.mDatabase_ = db; }
+				this.mDatabase = db; }
 
 			public override void Dispose() {}
 		};
@@ -64,27 +64,27 @@ namespace KSoft.Phoenix.XML
 			{
 				result = true;
 				System.IO.FileInfo file;
-				var xmlOrXmb = this.GameEngine.Directories.TryGetXmlOrXmbFile(xfi.Location, xfi.Directory, xfi.FileName, out file, ext);
+				var xml_or_xmb = this.GameEngine.Directories.TryGetXmlOrXmbFile(xfi.Location, xfi.Directory, xfi.FileName, out file, ext);
 
-				if (xmlOrXmb == Engine.GetXmlOrXmbFileResult.FILE_NOT_FOUND)
+				if (xml_or_xmb == Engine.GetXmlOrXmbFileResult.FileNotFound)
 				{
-					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FILE_DOES_NOT_EXIST);
+					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FileDoesNotExist);
 					throw new System.IO.FileNotFoundException("Neither XML or XMB exists: " + file.FullName);
 				}
 
 				try
 				{
-					if (result) using (var s = this.GameEngine.OpenXmlOrXmbForRead(xmlOrXmb, file.FullName))
+					if (result) using (var s = this.GameEngine.OpenXmlOrXmbForRead(xml_or_xmb, file.FullName))
 					{
 						SetupStream(s, mode, this);
 						streamProc(s, ctxt);
 
-						this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.LOADED);
+						this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.Loaded);
 					}
 				} catch (Exception ex)
 				{
 					ex.UnusedExceptionVar();
-					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FAILED);
+					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.Failed);
 					throw;
 				}
 			}
@@ -120,27 +120,27 @@ namespace KSoft.Phoenix.XML
 			{
 				result = true;
 				System.IO.FileInfo file;
-				var xmlOrXmb = this.GameEngine.Directories.TryGetXmlOrXmbFile(xfi.Location, xfi.Directory, xfi.FileName, out file, ext);
+				var xml_or_xmb = this.GameEngine.Directories.TryGetXmlOrXmbFile(xfi.Location, xfi.Directory, xfi.FileName, out file, ext);
 
-				if (xmlOrXmb == Engine.GetXmlOrXmbFileResult.FILE_NOT_FOUND)
+				if (xml_or_xmb == Engine.GetXmlOrXmbFileResult.FileNotFound)
 				{
-					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FILE_DOES_NOT_EXIST);
+					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FileDoesNotExist);
 					throw new System.IO.FileNotFoundException("Neither XML or XMB exists: " + file.FullName);
 				}
 
 				try
 				{
-					if (result) using (var s = this.GameEngine.OpenXmlOrXmbForRead(xmlOrXmb, file.FullName))
+					if (result) using (var s = this.GameEngine.OpenXmlOrXmbForRead(xml_or_xmb, file.FullName))
 					{
 						SetupStream(s, mode, this);
 						streamProc(s);
 
-						this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.LOADED);
+						this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.Loaded);
 					}
 				} catch (Exception ex)
 				{
 					ex.UnusedExceptionVar();
-					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.FAILED);
+					this.GameEngine.UpdateFileLoadStatus(xfi, Engine.XmlFileLoadState.Failed);
 					throw;
 				}
 			}
@@ -171,43 +171,43 @@ namespace KSoft.Phoenix.XML
 
 			result = Parallel.ForEach(this.GameEngine.Directories.GetFiles(loc, gameDir, searchPattern), (filename) =>
 			{
-				const FA kMode = FA.Read;
+				const FA k_mode = FA.Read;
 
-				using (var s = new IO.XmlElementStream(filename, kMode))
+				using (var s = new IO.XmlElementStream(filename, k_mode))
 				{
-					SetupStream(s, kMode, this);
+					SetupStream(s, k_mode, this);
 					streamProc(s);
 				}
 			});
 		}
 		#endregion
 
-		public bool StreamStringId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, string xmlName,
-			ref int value, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+		public bool StreamStringID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, string xmlName,
+			ref int value, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
 
-			bool wasStreamed = false;
+			bool was_streamed = false;
 
-			if (xmlSource == XmlUtil.K_SOURCE_ELEMENT)
-				wasStreamed = s.StreamElementOpt(xmlName, ref value, Predicates.IsNotNone);
-			else if (xmlSource == XmlUtil.K_SOURCE_ATTR)
-				wasStreamed = s.StreamAttributeOpt(xmlName, ref value, Predicates.IsNotNone);
-			else if (xmlSource == XmlUtil.K_SOURCE_CURSOR)
+			if (xmlSource == XmlUtil.kSourceElement)
+				was_streamed = s.StreamElementOpt(xmlName, ref value, Predicates.IsNotNone);
+			else if (xmlSource == XmlUtil.kSourceAttr)
+				was_streamed = s.StreamAttributeOpt(xmlName, ref value, Predicates.IsNotNone);
+			else if (xmlSource == XmlUtil.kSourceCursor)
 			{
-				wasStreamed = true;
+				was_streamed = true;
 				s.StreamCursor(ref value);
 			}
 
 			if (s.IsReading)
 			{
 				if (value.IsNotNone())
-					this.Database.AddStringIdReference(value);
+					this.Database.AddStringIDReference(value);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
 		[System.Diagnostics.Conditional("TRACE")]
@@ -219,19 +219,19 @@ namespace KSoft.Phoenix.XML
 		{
 			Contract.Assert(s.IsReading);
 
-			var lineInfo = Text.TextLineInfo.Empty;
-			var cursorName = "<unknown element>";
-			var textStream = s as IO.TagElementTextStream<TDoc, TCursor>;
-			if (textStream != null)
+			var line_info = Text.TextLineInfo.Empty;
+			var cursor_name = "<unknown element>";
+			var text_stream = s as IO.TagElementTextStream<TDoc, TCursor>;
+			if (text_stream != null)
 			{
-				cursorName = textStream.CursorName;
-				lineInfo = textStream.TryGetLastReadLineInfo();
+				cursor_name = text_stream.CursorName;
+				line_info = text_stream.TryGetLastReadLineInfo();
 			}
 
-			Debug.Trace.Xml.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.K_NONE,
+			Debug.Trace.XML.TraceEvent(System.Diagnostics.TraceEventType.Warning, TypeExtensions.kNone,
 				"{0} ({1}): Generated UndefinedHandle for '{2}.{3}' ({4}). {5}={6}",
-				s.StreamName, Text.TextLineInfo.ToString(lineInfo, verboseString: true),
-				cursorName, xmlName ?? "InnerText",
+				s.StreamName, Text.TextLineInfo.ToString(line_info, verboseString: true),
+				cursor_name, xmlName ?? "InnerText",
 				kind, name, PhxUtil.GetUndefinedReferenceDataIndex(id).ToString());
 		}
 
@@ -259,162 +259,162 @@ namespace KSoft.Phoenix.XML
 		public bool StreamTypeName<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string xmlName, ref int dbid,
 			Phx.GameDataObjectKind kind,
-			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
 
-			string idName = null;
-			bool wasStreamed = true;
-			bool toLower = false;
+			string id_name = null;
+			bool was_streamed = true;
+			bool to_lower = false;
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					was_streamed = s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					dbid = this.Database.GetId(kind, idName);
+					dbid = this.Database.GetId(kind, id_name);
 					Contract.Assert(dbid.IsNotNone());
 					if (PhxUtil.IsUndefinedReferenceHandle(dbid))
-						TraceUndefinedHandle(s, idName, xmlName, dbid, kind.ToString());
+						TraceUndefinedHandle(s, id_name, xmlName, dbid, kind.ToString());
 				}
 				else
-					dbid = TypeExtensions.K_NONE;
+					dbid = TypeExtensions.kNone;
 			}
 			else if (s.IsWriting)
 			{
 				if (dbid.IsNone())
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				idName = this.Database.GetName(kind, dbid);
-				Contract.Assert(!string.IsNullOrEmpty(idName));
+				id_name = this.Database.GetName(kind, dbid);
+				Contract.Assert(!string.IsNullOrEmpty(id_name));
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
-		public bool StreamHpBarName<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
+		public bool StreamHPBarName<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string xmlName, ref int dbid,
-			Phx.HpBarDataObjectKind kind,
-			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+			Phx.HPBarDataObjectKind kind,
+			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
 
-			string idName = null;
-			bool wasStreamed = true;
-			bool toLower = false;
+			string id_name = null;
+			bool was_streamed = true;
+			bool to_lower = false;
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					was_streamed = s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					dbid = this.Database.GetId(kind, idName);
+					dbid = this.Database.GetId(kind, id_name);
 					Contract.Assert(dbid.IsNotNone());
 					if (PhxUtil.IsUndefinedReferenceHandle(dbid))
-						TraceUndefinedHandle(s, idName, xmlName, dbid, kind.ToString());
+						TraceUndefinedHandle(s, id_name, xmlName, dbid, kind.ToString());
 				}
 				else
-					dbid = TypeExtensions.K_NONE;
+					dbid = TypeExtensions.kNone;
 			}
 			else if (s.IsWriting)
 			{
 				if (dbid.IsNone())
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				idName = this.Database.GetName(kind, dbid);
-				Contract.Assert(!string.IsNullOrEmpty(idName));
+				id_name = this.Database.GetName(kind, dbid);
+				Contract.Assert(!string.IsNullOrEmpty(id_name));
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
-		public bool StreamDbid<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
+		public bool StreamDBID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			string xmlName, ref int dbid,
 			Phx.DatabaseObjectKind kind,
-			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+			bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
 
-			string idName = null;
-			bool wasStreamed = true;
-			bool toLower = ToLowerName(kind);
+			string id_name = null;
+			bool was_streamed = true;
+			bool to_lower = ToLowerName(kind);
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					was_streamed = s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					dbid = this.Database.GetId(kind, idName);
+					dbid = this.Database.GetId(kind, id_name);
 					Contract.Assert(dbid.IsNotNone());
 					if (PhxUtil.IsUndefinedReferenceHandle(dbid))
-						TraceUndefinedHandle(s, idName, xmlName, dbid, kind.ToString());
+						TraceUndefinedHandle(s, id_name, xmlName, dbid, kind.ToString());
 				}
 				else
-					dbid = TypeExtensions.K_NONE;
+					dbid = TypeExtensions.kNone;
 			}
 			else if (s.IsWriting)
 			{
 				if (dbid.IsNone())
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				idName = this.Database.GetName(kind, dbid);
-				Contract.Assert(!string.IsNullOrEmpty(idName));
+				id_name = this.Database.GetName(kind, dbid);
+				Contract.Assert(!string.IsNullOrEmpty(id_name));
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
-		public bool StreamDbid<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s
+		public bool StreamDBID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s
 			, string xmlName, List<int> dbidList
 			, Phx.DatabaseObjectKind kind
-			, bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+			, bool isOptional = true, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
-			Contract.Requires(xmlSource != IO.TagElementNodeType.ATTRIBUTE);
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
+			Contract.Requires(xmlSource != IO.TagElementNodeType.Attribute);
 
-			bool wasStreamed = false;
+			bool was_streamed = false;
 
 			if (s.IsReading)
 			{
@@ -424,10 +424,10 @@ namespace KSoft.Phoenix.XML
 				{
 					using (s.EnterCursorBookmark(n))
 					{
-						int dbid = TypeExtensions.K_NONE;
-						if (this.StreamDbid(s, xmlName, ref dbid, kind, isOptional, xmlSource))
+						int dbid = TypeExtensions.kNone;
+						if (this.StreamDBID(s, xmlName, ref dbid, kind, isOptional, xmlSource))
 						{
-							wasStreamed = true;
+							was_streamed = true;
 							dbidList.Add(dbid);
 						}
 					}
@@ -435,65 +435,65 @@ namespace KSoft.Phoenix.XML
 			}
 			else if (s.IsWriting && dbidList.Count > 0)
 			{
-				wasStreamed = true;
+				was_streamed = true;
 
 				foreach (int dbid in dbidList)
 				{
 					int dbidCopy = dbid;
 					using (s.EnterCursorBookmark(xmlName))
-						this.StreamDbid(s, xmlName, ref dbidCopy, kind, isOptional, xmlSource);
+						this.StreamDBID(s, xmlName, ref dbidCopy, kind, isOptional, xmlSource);
 				}
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
 		public bool StreamTactic<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s
 			, string xmlName
 			, ref int dbid
-			, IO.TagElementNodeType xmlSource = XmlUtil.K_SOURCE_ELEMENT)
+			, IO.TagElementNodeType xmlSource = XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			const Phx.DatabaseObjectKind kDbKind = Phx.DatabaseObjectKind.TACTIC;
+			const Phx.DatabaseObjectKind kDbKind = Phx.DatabaseObjectKind.Tactic;
 
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XmlUtil.kNoXmlName));
 
-			string idName = null;
-			bool wasStreamed = true;
-			bool toLower = false;
+			string id_name = null;
+			bool was_streamed = true;
+			bool to_lower = false;
 
 			if (s.IsReading)
 			{
-				wasStreamed = s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+				was_streamed = s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					idName = System.IO.Path.GetFileNameWithoutExtension(idName);
+					id_name = System.IO.Path.GetFileNameWithoutExtension(id_name);
 
-					dbid = this.Database.GetId(kDbKind, idName);
-					Contract.Assert(dbid.IsNotNone(), idName);
+					dbid = this.Database.GetId(kDbKind, id_name);
+					Contract.Assert(dbid.IsNotNone(), id_name);
 
 					if (PhxUtil.IsUndefinedReferenceHandle(dbid))
-						TraceUndefinedHandle(s, idName, xmlName, dbid, kDbKind.ToString());
+						TraceUndefinedHandle(s, id_name, xmlName, dbid, kDbKind.ToString());
 				}
 			}
 			else if (s.IsWriting)
 			{
 				if (dbid.IsNone())
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				idName = this.Database.GetName(kDbKind, dbid);
-				Contract.Assert(!string.IsNullOrEmpty(idName));
+				id_name = this.Database.GetName(kDbKind, dbid);
+				Contract.Assert(!string.IsNullOrEmpty(id_name));
 
-				idName += Phx.BTacticData.K_FILE_EXT;
-				s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+				id_name += Phx.BTacticData.kFileExt;
+				s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
 		/// <summary>Stream the current element's Text as a a string</summary>
@@ -510,8 +510,8 @@ namespace KSoft.Phoenix.XML
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref damangeType, Phx.DatabaseObjectKind.DAMAGE_TYPE,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref damangeType, Phx.DatabaseObjectKind.DamageType,
+				false, XmlUtil.kSourceCursor);
 		}
 		/// <summary>Stream the current element's Text as a ObjectType</summary>
 		internal static void StreamObjectType<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
@@ -519,44 +519,44 @@ namespace KSoft.Phoenix.XML
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref objectType, Phx.DatabaseObjectKind.OBJECT_TYPE,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref objectType, Phx.DatabaseObjectKind.ObjectType,
+				false, XmlUtil.kSourceCursor);
 		}
 		/// <summary>Stream the current element's Text as a ProtoObject</summary>
-		internal static void StreamObjectId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
+		internal static void StreamObjectID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
 			[Phx.Meta.BProtoObjectReference] ref int objectProtoId)
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref objectProtoId, Phx.DatabaseObjectKind.OBJECT,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref objectProtoId, Phx.DatabaseObjectKind.Object,
+				false, XmlUtil.kSourceCursor);
 		}
 		/// <summary>Stream the current element's Text as a ProtoSquad</summary>
-		internal static void StreamSquadId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
+		internal static void StreamSquadID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
 			[Phx.Meta.BProtoSquadReference] ref int squadProtoId)
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref squadProtoId, Phx.DatabaseObjectKind.SQUAD,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref squadProtoId, Phx.DatabaseObjectKind.Squad,
+				false, XmlUtil.kSourceCursor);
 		}
 		/// <summary>Stream the current element's Text as a ProtoTech</summary>
-		internal static void StreamTechId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
+		internal static void StreamTechID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
 			[Phx.Meta.BProtoTechReference] ref int techProtoId)
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref techProtoId, Phx.DatabaseObjectKind.OBJECT,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref techProtoId, Phx.DatabaseObjectKind.Object,
+				false, XmlUtil.kSourceCursor);
 		}
 		/// <summary>Stream the current element's Text as a ProtoObject or ObjectType</summary>
-		internal static void StreamUnitId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
+		internal static void StreamUnitID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs,
 			ref int unitProtoId)
 			where TDoc : class
 			where TCursor : class
 		{
-			xs.StreamDbid(s, XmlUtil.K_NO_XML_NAME, ref unitProtoId, Phx.DatabaseObjectKind.UNIT,
-				false, XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, XmlUtil.kNoXmlName, ref unitProtoId, Phx.DatabaseObjectKind.Unit,
+				false, XmlUtil.kSourceCursor);
 		}
 	};
 }

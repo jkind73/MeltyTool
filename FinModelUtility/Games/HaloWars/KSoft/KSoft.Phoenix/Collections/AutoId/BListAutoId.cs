@@ -15,7 +15,7 @@ namespace KSoft.Collections
 		// If structs are needed, the streaming logic will need to be adjusted
 		where T : class, IListAutoIdObject, new()
 	{
-		readonly string kUnregisteredMessage_;
+		readonly string kUnregisteredMessage;
 
 		static string BuildUnRegisteredMsg()
 		{
@@ -23,24 +23,24 @@ namespace KSoft.Collections
 		}
 		public BListAutoId(BListAutoIdParams @params = null) : base(@params)
 		{
-			this.kUnregisteredMessage_ = BuildUnRegisteredMsg();
-			this.mUndefinedInterface_ = new ProtoEnumWithUndefinedImpl(this);
+			this.kUnregisteredMessage = BuildUnRegisteredMsg();
+			this.mUndefinedInterface = new ProtoEnumWithUndefinedImpl(this);
 		}
 
 		public override void Clear()
 		{
 			base.Clear();
 
-			if (this.mDbi_ != null)
-				this.mDbi_.Clear();
+			if (this.mDBI != null)
+				this.mDBI.Clear();
 
-			if (this.mUndefinedInterface_ != null)
-				this.mUndefinedInterface_.Clear();
+			if (this.mUndefinedInterface != null)
+				this.mUndefinedInterface.Clear();
 		}
 
 		#region Database interfaces
 		/// <remarks>Mainly a hack for adding new items dynamically</remarks>
-		void PreAdd(T item, string itemName, int id = TypeExtensions.K_NONE)
+		void PreAdd(T item, string itemName, int id = TypeExtensions.kNone)
 		{
 			item.AutoId = id.IsNotNone()
 				? id
@@ -49,12 +49,12 @@ namespace KSoft.Collections
 			if (itemName != null)
 				item.Data = itemName;
 		}
-		internal int DynamicAdd(T item, string itemName, int id = TypeExtensions.K_NONE)
+		internal int DynamicAdd(T item, string itemName, int id = TypeExtensions.kNone)
 		{
 			this.PreAdd(item, itemName, id);
-			if (this.mDbi_ != null)
+			if (this.mDBI != null)
 			{
-				if (this.mDbi_.ContainsKey(itemName))
+				if (this.mDBI.ContainsKey(itemName))
 				{
 					throw new ArgumentException(string.Format(
 						"There is already a {0} named {1}",
@@ -62,13 +62,13 @@ namespace KSoft.Collections
 						), nameof(itemName));
 				}
 
-				this.mDbi_.Add(item.Data, item);
+				this.mDBI.Add(item.Data, item);
 
 				if (this.Params != null && this.Params.ToLowerDataNames)
 				{
-					string lowerName = PhxUtil.ToLowerIfContainsUppercase(item.Data);
-					if (!ReferenceEquals(lowerName, item.Data))
-						this.mDbi_.Add(lowerName, item);
+					string lower_name = PhxUtil.ToLowerIfContainsUppercase(item.Data);
+					if (!ReferenceEquals(lower_name, item.Data))
+						this.mDBI.Add(lower_name, item);
 				}
 			}
 			this.AddItem(item);
@@ -76,20 +76,20 @@ namespace KSoft.Collections
 			return item.AutoId;
 		}
 
-		Dictionary<string, T> mDbi_;
+		Dictionary<string, T> mDBI;
 		internal void SetupDatabaseInterface()
 		{
-			this.mDbi_ = new Dictionary<string, T>(this.Params != null ? this.Params.initialCapacity : BCollectionParams.K_DEFAULT_CAPACITY);
+			this.mDBI = new Dictionary<string, T>(this.Params != null ? this.Params.InitialCapacity : BCollectionParams.kDefaultCapacity);
 		}
 
 		internal int TryGetId(string name)
 		{
-			int id = TypeExtensions.K_NONE;
-			if (this.mDbi_ == null)
+			int id = TypeExtensions.kNone;
+			if (this.mDBI == null)
 				return id;
 
 			T obj;
-			if (this.mDbi_.TryGetValue(name, out obj))
+			if (this.mDBI.TryGetValue(name, out obj))
 				id = obj.AutoId;
 
 			return id;
@@ -121,7 +121,7 @@ namespace KSoft.Collections
 			int index = this.TryGetMemberId(memberName);
 
 			if (index.IsNone())
-				throw new ArgumentException(this.kUnregisteredMessage_, memberName);
+				throw new ArgumentException(this.kUnregisteredMessage, memberName);
 
 			return index;
 		}
@@ -139,14 +139,14 @@ namespace KSoft.Collections
 				return null;
 
 			if (PhxUtil.IsUndefinedReferenceHandle(id))
-				return Phoenix.TypeExtensionsPhx.GetUndefinedObject(this.mUndefinedInterface_, id);
+				return Phoenix.TypeExtensionsPhx.GetUndefinedObject(this.mUndefinedInterface, id);
 
 			return base.GetObject(id);
 		}
 
-		private ProtoEnumWithUndefinedImpl mUndefinedInterface_;
-		IProtoEnumWithUndefined IHasUndefinedProtoMemberInterface.UndefinedInterface { get { return this.mUndefinedInterface_; } }
-		internal IProtoEnumWithUndefined UndefinedInterface { get { return this.mUndefinedInterface_; } }
+		private ProtoEnumWithUndefinedImpl mUndefinedInterface;
+		IProtoEnumWithUndefined IHasUndefinedProtoMemberInterface.UndefinedInterface { get { return this.mUndefinedInterface; } }
+		internal IProtoEnumWithUndefined UndefinedInterface { get { return this.mUndefinedInterface; } }
 	};
 }
 

@@ -35,7 +35,7 @@ public readonly struct Etc1TileReader(bool hasAlpha) : ITileReader<Rgba32> {
   ];
 
   public IImage<Rgba32> CreateImage(int width, int height)
-    => new Rgba32Image(hasAlpha ? PixelFormat.ETC1_A : PixelFormat.ETC1,
+    => new Rgba32Image(hasAlpha ? PixelFormat.ETC1A : PixelFormat.ETC1,
                        width,
                        height);
 
@@ -132,14 +132,14 @@ public readonly struct Etc1TileReader(bool hasAlpha) : ITileReader<Rgba32> {
       /* Differential mode */
 
       /* 5bit base values */
-      byte r1A = (byte) (((block >> 59) & 0x1F));
-      byte g1A = (byte) (((block >> 51) & 0x1F));
-      byte b1A = (byte) (((block >> 43) & 0x1F));
+      byte r1a = (byte) (((block >> 59) & 0x1F));
+      byte g1a = (byte) (((block >> 51) & 0x1F));
+      byte b1a = (byte) (((block >> 43) & 0x1F));
 
       /* Subblock 1, 8bit extended */
-      r1 = (byte) ((r1A << 3) | (r1A >> 2));
-      g1 = (byte) ((g1A << 3) | (g1A >> 2));
-      b1 = (byte) ((b1A << 3) | (b1A >> 2));
+      r1 = (byte) ((r1a << 3) | (r1a >> 2));
+      g1 = (byte) ((g1a << 3) | (g1a >> 2));
+      b1 = (byte) ((b1a << 3) | (b1a >> 2));
 
       /* 3bit modifiers */
       sbyte dr2 = (sbyte) ((block >> 56) & 0x07);
@@ -150,9 +150,9 @@ public readonly struct Etc1TileReader(bool hasAlpha) : ITileReader<Rgba32> {
       if (db2 >= 4) db2 -= 8;
 
       /* Subblock 2, 8bit extended */
-      r2 = (byte) ((r1A + dr2) << 3 | (r1A + dr2) >> 2);
-      g2 = (byte) ((g1A + dg2) << 3 | (g1A + dg2) >> 2);
-      b2 = (byte) ((b1A + db2) << 3 | (b1A + db2) >> 2);
+      r2 = (byte) ((r1a + dr2) << 3 | (r1a + dr2) >> 2);
+      g2 = (byte) ((g1a + dg2) << 3 | (g1a + dg2) >> 2);
+      b2 = (byte) ((b1a + db2) << 3 | (b1a + db2) >> 2);
     }
 
     for (int py = 0; py < 4; py++) {

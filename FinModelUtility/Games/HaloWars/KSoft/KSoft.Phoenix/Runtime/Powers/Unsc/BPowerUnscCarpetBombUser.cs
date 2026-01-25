@@ -8,30 +8,30 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerUnscCarpetBombUser
 		: BPowerUser
 	{
-		public sbyte inputState;
-		public BVector position, desiredForward;
-		public float desiredScale, currentScale;
-		public double shutdownTime;
-		public BEntityID arrowId;
-		public float maxBombOffset, lengthMultiplier;
-		public sbyte losMode;
-		public BProtoObjectID arrowProtoId;
-		public BPowerHelperHudSounds hudSounds = new BPowerHelperHudSounds();
+		public sbyte InputState;
+		public BVector Position, DesiredForward;
+		public float DesiredScale, CurrentScale;
+		public double ShutdownTime;
+		public BEntityID ArrowID;
+		public float MaxBombOffset, LengthMultiplier;
+		public sbyte LOSMode;
+		public BProtoObjectID ArrowProtoID;
+		public BPowerHelperHudSounds HudSounds = new BPowerHelperHudSounds();
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(ref this.inputState);
-			s.StreamV(ref this.position); s.StreamV(ref this.desiredForward);
-			s.Stream(ref this.desiredScale); s.Stream(ref this.currentScale);
-			s.Stream(ref this.shutdownTime);
-			s.Stream(ref this.arrowId);
-			s.Stream(ref this.maxBombOffset); s.Stream(ref this.lengthMultiplier);
-			s.Stream(ref this.losMode);
-			s.Stream(ref this.arrowProtoId);
-			s.Stream(this.hudSounds);
+			s.Stream(ref this.InputState);
+			s.StreamV(ref this.Position); s.StreamV(ref this.DesiredForward);
+			s.Stream(ref this.DesiredScale); s.Stream(ref this.CurrentScale);
+			s.Stream(ref this.ShutdownTime);
+			s.Stream(ref this.ArrowID);
+			s.Stream(ref this.MaxBombOffset); s.Stream(ref this.LengthMultiplier);
+			s.Stream(ref this.LOSMode);
+			s.Stream(ref this.ArrowProtoID);
+			s.Stream(this.HudSounds);
 		}
 		#endregion
 	};

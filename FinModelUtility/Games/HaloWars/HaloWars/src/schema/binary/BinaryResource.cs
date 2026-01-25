@@ -8,21 +8,21 @@ namespace hw.schema.binary;
 [BinarySchema]
 [Endianness(Endianness.BigEndian)]
 public partial class BinaryResource : IBinaryDeserializable {
-  private uint unk0_;
+  private uint unk0;
 
   public uint HeaderSize { get; set; }
 
-  private uint unk1_;
-  private uint unk2_;
+  private uint unk1;
+  private uint unk2;
 
   [WLengthOfSequence(nameof(Chunks))]
   public ushort NumChunks { get; set; }
 
   [Skip]
-  private uint LengthOfUnk3 => this.HeaderSize - 18;
+  private uint LengthOfUnk3_ => this.HeaderSize - 18;
 
-  [RSequenceLengthSource(nameof(LengthOfUnk3))]
-  private byte[] unk3_;
+  [RSequenceLengthSource(nameof(LengthOfUnk3_))]
+  private byte[] unk3;
 
   [RSequenceLengthSource(nameof(NumChunks))]
   public BinaryResourceChunk[] Chunks { get; private set; }

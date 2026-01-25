@@ -16,7 +16,7 @@ public readonly struct Dxt1TileReader(
     bool flipBlocksHorizontally = true)
     : ITileReader<Rgba32> {
   public IImage<Rgba32> CreateImage(int width, int height)
-    => new Rgba32Image(PixelFormat.DXT1_A, width, height);
+    => new Rgba32Image(PixelFormat.DXT1A, width, height);
 
   private readonly int tileSizeInAxis_
       = subTileCountInAxis * subTileSizeInAxis;

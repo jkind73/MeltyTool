@@ -5,23 +5,23 @@ namespace UoT {
   // https://wiki.cloudmodding.com/oot/Animation_Format#Normal_Animations
 
   public sealed class NormalAnimation : IAnimation {
-    public ushort[] angles = [];
-    public IList<Vec3S> positions;
-    public NormalAnimationTrack[] tracks = [];
-    public uint trackOffset;
-    public uint angleCount;
+    public ushort[] Angles = [];
+    public IList<Vec3s> Positions;
+    public NormalAnimationTrack[] Tracks = [];
+    public uint TrackOffset;
+    public uint AngleCount;
 
     public required uint Offset { get; init; }
 
     public ushort FrameCount { get; set; }
 
-    public int PositionCount => this.positions.Count;
-    public Vec3S GetPosition(int i) => this.positions[i];
+    public int PositionCount => this.Positions.Count;
+    public Vec3s GetPosition(int i) => this.Positions[i];
 
-    public int TrackCount => this.tracks.Length;
-    public IAnimationTrack GetTrack(int i) => this.tracks[i];
+    public int TrackCount => this.Tracks.Length;
+    public IAnimationTrack GetTrack(int i) => this.Tracks[i];
 
-    public FacialState GetFacialState(int _) => FacialState.@default;
+    public FacialState GetFacialState(int _) => FacialState.DEFAULT;
   }
 
   public sealed class NormalAnimationTrack : IAnimationTrack {

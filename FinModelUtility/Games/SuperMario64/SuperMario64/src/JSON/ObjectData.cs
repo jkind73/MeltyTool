@@ -14,8 +14,8 @@ namespace sm64.JSON {
     public short Y { get; set; }
     public short Z { get; set; }
 
-    public short Rx { get; set; }
-    public short Ry { get; set; }
-    public short Rz { get; set; }
+    public short RX { get; set; }
+    public short RY { get; set; }
+    public short RZ { get; set; }
   }
 }

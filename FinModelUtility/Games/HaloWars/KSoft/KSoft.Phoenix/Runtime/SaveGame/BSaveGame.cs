@@ -2,20 +2,20 @@
 
 namespace KSoft.Phoenix.Runtime
 {
-	static partial class CSaveMarker
+	static partial class cSaveMarker
 	{
 		public const ushort 
-			START = 0x2710, END = 0x2711,
-			VERSIONS = 0x2712,
+			Start = 0x2710, End = 0x2711,
+			Versions = 0x2712,
 			DB = 0x2713,
-			SETUP_PLAYER = 0x2714, SETUP_TEAM = 0x2715, USER1 = 0x2716, // User1 = SetupUser
-			USER2 = 0x2717,
-			WORLD = 0x2718,
+			SetupPlayer = 0x2714, SetupTeam = 0x2715, User1 = 0x2716, // User1 = SetupUser
+			User2 = 0x2717,
+			World = 0x2718,
 			UI = 0x2719,
 
-			FATALITY_MANAGER = 0x2710,
+			FatalityManager = 0x2710,
 
-			ARROW = 0x2712 // BObjectiveManager
+			Arrow = 0x2712 // BObjectiveManager
 			;
 	};
 
@@ -23,7 +23,7 @@ namespace KSoft.Phoenix.Runtime
 		: IO.IEndianStreamSerializable
 //		, IO.IIndentedTextWritable
 	{
-		int saveFileType_;
+		int SaveFileType;
 		public BDatabase Database { get; private set; } = new BDatabase();
 
 		public List<BSavePlayer> Players { get; private set; } = [];
@@ -31,7 +31,7 @@ namespace KSoft.Phoenix.Runtime
 		public BSaveUser UserSave { get; private set; } = new BSaveUser();
 
 		public BWorld World { get; private set; } = new BWorld();
-		public BuiManager UiManager { get; private set; } = new BuiManager();
+		public BUIManager UIManager { get; private set; } = new BUIManager();
 		public BUser User { get; private set; } = new BUser();
 
 		#region IEndianStreamSerializable Members
@@ -39,7 +39,7 @@ namespace KSoft.Phoenix.Runtime
 		{
 			StreamCollection(s, this.Players);
 			StreamCollection(s, this.Teams);
-			s.StreamSignature(CSaveMarker.SETUP_TEAM);
+			s.StreamSignature(cSaveMarker.SetupTeam);
 			s.Stream(this.UserSave);
 		}
 		void SerializeGameState(IO.EndianStream s)
@@ -56,11 +56,11 @@ namespace KSoft.Phoenix.Runtime
 		{
 			using (s.EnterOwnerBookmark(this))
 			{
-				s.StreamSignature(KClassVersions.B_SAVE_GAME);
-				s.Stream(ref this.saveFileType_);
+				s.StreamSignature(kClassVersions.BSaveGame);
+				s.Stream(ref this.SaveFileType);
 
-				s.StreamSignature(CSaveMarker.START);
-				KClassVersions.Serialize(s);
+				s.StreamSignature(cSaveMarker.Start);
+				kClassVersions.Serialize(s);
 				s.Stream(this.Database);
 				this.SerializeSetup(s);
 				this.SerializeGameState(s);

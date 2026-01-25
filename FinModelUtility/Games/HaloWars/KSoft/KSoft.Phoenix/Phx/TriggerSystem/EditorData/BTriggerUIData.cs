@@ -1,10 +1,10 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	/*public*/ sealed class BTriggerUiData
+	/*public*/ sealed class BTriggerUIData
 	{
 		#region Xml constants
-		public const string K_XML_ROOT_NAME = "UIData";
+		public const string kXmlRootName = "UIData";
 		#endregion
 	};
 }

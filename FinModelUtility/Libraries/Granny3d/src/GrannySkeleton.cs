@@ -24,7 +24,7 @@ namespace granny3d {
     public string Name { get; private set; }
     public int ParentIndex { get; private set; }
     public IGrannyTransform LocalTransform { get; } = new GrannyTransform();
-    public IFinMatrix4X4 InverseWorld4X4 { get; } = new FinMatrix4X4();
+    public IFinMatrix4x4 InverseWorld4x4 { get; } = new FinMatrix4x4();
     public float LodError { get; private set; }
 
     public void Read(IBinaryReader br) {
@@ -38,7 +38,7 @@ namespace granny3d {
       // inverse_world_4x4
       for (var y = 0; y < 4; ++y) {
         for (var x = 0; x < 4; x++) {
-          this.InverseWorld4X4[x, y] = br.ReadSingle();
+          this.InverseWorld4x4[x, y] = br.ReadSingle();
         }
       }
 

@@ -3,46 +3,46 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BCollectibleSkullEffectType
 	{
-		INVALID,
+		Invalid,
 
-		SCORE,
-		GRUNT_TANK,
-		GRUNT_CONFETTI,
-		PHYSICS,
-		SCARAB_BEAM,
-		MINIMAP_DISABLE,
-		WEAKNESS,
-		HITPOINT_MOD,
-		DAMAGE_MOD,
-		VETERANCY,
-		ABILITY_RECHARGE,
-		DEATH_EXPLODE,
-		TRAIN_MOD,
-		SUPPLY_MOD,
-		POWER_RECHARGE,
-		UNIT_MOD_WARTHOG,
-		UNIT_MOD_WRAITH,
+		Score,
+		GruntTank,
+		GruntConfetti,
+		Physics,
+		ScarabBeam,
+		MinimapDisable,
+		Weakness,
+		HitpointMod,
+		DamageMod,
+		Veterancy,
+		AbilityRecharge,
+		DeathExplode,
+		TrainMod,
+		SupplyMod,
+		PowerRecharge,
+		UnitModWarthog,
+		UnitModWraith,
 	};
 
 	public enum BCollectibleSkullFlags
 	{
 		// 0x3C
 		// 0
-		ON_FROM_BEGINNING, // 1
+		OnFromBeginning, // 1
 		// 2
-		HIDDEN, // 3
+		Hidden, // 3
 		// 4
-		SELF_ACTIVE, // 5
+		SelfActive, // 5
 		// 6
-		ACTIVE, // 7
+		Active, // 7
 	};
 
 	public enum BCollectibleSkullTarget
 	{
-		NONE,
+		None,
 
-		PLAYER_UNITS,
-		NON_PLAYER_UNITS,
-		OWNER_ONLY,
+		PlayerUnits,
+		NonPlayerUnits,
+		OwnerOnly,
 	};
 }

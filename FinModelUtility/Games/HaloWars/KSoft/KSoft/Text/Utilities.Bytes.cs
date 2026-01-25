@@ -71,7 +71,7 @@ namespace KSoft.Text
 		}
 
 		#region Byte arrays
-		public const int K_DEFAULT_HEX_DIGITS_PER_LINE = 16;
+		public const int kDefaultHexDigitsPerLine = 16;
 
 		// #REVIEW: Instead of doing byte.ToString("X2") we could just have a lookup table...
 
@@ -172,7 +172,7 @@ namespace KSoft.Text
 				; x < (startIndex+count)
 				; x+=2, index++)
 			{
-				bytes[index] = (byte)CharsToByte(NumeralBase.HEX, data, x);
+				bytes[index] = (byte)CharsToByte(NumeralBase.Hex, data, x);
 			}
 
 			return bytes;
@@ -247,7 +247,7 @@ namespace KSoft.Text
 		/// <remarks>Uses <see cref="System.Environment.NewLine"/> for line termination</remarks>
 		public static string ByteArrayToAlignedString(byte[] data
 			, string padding = ""
-			, int digitsPerLine = K_DEFAULT_HEX_DIGITS_PER_LINE)
+			, int digitsPerLine = kDefaultHexDigitsPerLine)
 		{
 			Contract.Requires<ArgumentNullException>(data != null);
 			Contract.Requires<ArgumentNullException>(padding != null);
@@ -256,23 +256,23 @@ namespace KSoft.Text
 
 			Contract.Ensures(Contract.Result<string>() != null);
 
-			string newLine = Environment.NewLine;
+			string new_line = Environment.NewLine;
 
 			int blocks = data.Length / digitsPerLine;
 			int leftovers = data.Length % digitsPerLine;
 
 			StringBuilder sb = new StringBuilder(
 				(data.Length * 2) +
-				(newLine.Length * blocks) + // calculate how many new line characters we'll need
+				(new_line.Length * blocks) + // calculate how many new line characters we'll need
 				(padding.Length * (leftovers == 0 ? blocks : blocks + 1)) // calculate how many characters the padding on each line will take
 			);
 
 			int index = 0;
 			for (int b = 0; b < blocks; b++, index+=digitsPerLine)
-				sb.AppendFormat(KSoft.Util.InvariantCultureInfo, "{0}{1}{2}", padding, ByteArrayToString(data, index, digitsPerLine), newLine);
+				sb.AppendFormat(KSoft.Util.InvariantCultureInfo, "{0}{1}{2}", padding, ByteArrayToString(data, index, digitsPerLine), new_line);
 
 			if (leftovers > 0)
-				sb.AppendFormat(KSoft.Util.InvariantCultureInfo, "{0}{1}{2}", padding, ByteArrayToString(data, index), newLine);
+				sb.AppendFormat(KSoft.Util.InvariantCultureInfo, "{0}{1}{2}", padding, ByteArrayToString(data, index), new_line);
 
 			return sb.ToString();
 		}
@@ -283,7 +283,7 @@ namespace KSoft.Text
 		/// <param name="digitsPerLine">Number of hex characters per line</param>
 		public static void ByteArrayToAlignedOutput(byte[] data, TextWriter output
 			, string padding = null
-			, int digitsPerLine = K_DEFAULT_HEX_DIGITS_PER_LINE)
+			, int digitsPerLine = kDefaultHexDigitsPerLine)
 		{
 			Contract.Requires<ArgumentNullException>(data != null);
 			Contract.Requires(digitsPerLine >= 2);
@@ -320,32 +320,32 @@ namespace KSoft.Text
 		/// <param name="c">Byte digit char up to base-36</param>
 		/// <returns></returns>
 		/// <remarks>Upper ('A') and lower ('a') case char digits map to the same int values</remarks>
-		public static int CharToAnyDigit(char c)	=> KCharToByteLookup36[(byte)c];
+		public static int CharToAnyDigit(char c)	=> kCharToByteLookup36[(byte)c];
 		/// <summary>Checks if the byte digit character is any valid representable value</summary>
 		/// <param name="c">Byte digit char up to base-36</param>
 		/// <returns></returns>
 		/// <remarks>Upper ('A') and lower ('a') case char digits map to the same int values</remarks>
-		public static bool CharIsAnyDigit(char c)	=> KCharIsDigitLookup62[(byte)c];
+		public static bool CharIsAnyDigit(char c)	=> kCharIsDigitLookup62[(byte)c];
 
 		/// <summary>Convert the byte digit character to the byte value it represents</summary>
 		/// <param name="c">Byte digit char up to base-62</param>
 		/// <returns></returns>
 		/// <remarks>"Extended" char digits map different int values for upper ('A') and lower ('a') case</remarks>
-		public static int CharToAnyDigitExtended(char c)	=> KCharToByteLookup62[(byte)c];
+		public static int CharToAnyDigitExtended(char c)	=> kCharToByteLookup62[(byte)c];
 		/// <summary>Checks if the byte digit character is any valid representable value</summary>
 		/// <param name="c">Byte digit char up to base-62</param>
 		/// <returns></returns>
 		/// <remarks>"Extended" char digits map different int values for upper ('A') and lower ('a') case</remarks>
-		public static bool CharIsAnyDigitExtended(char c)	=> KCharIsDigitLookup62[(byte)c];
+		public static bool CharIsAnyDigitExtended(char c)	=> kCharIsDigitLookup62[(byte)c];
 
 		/// <summary>Convert the byte digit character to the byte value it represents</summary>
 		/// <param name="c">Byte digit char up to base-16</param>
 		/// <returns></returns>
-		public static int CharToDigit(char c)		=> KCharToByteLookup16[(byte)c];
+		public static int CharToDigit(char c)		=> kCharToByteLookup16[(byte)c];
 		/// <summary>Checks if the byte digit character is any valid representable value</summary>
 		/// <param name="c">Byte digit char up to base-16</param>
 		/// <returns></returns>
-		public static bool CharIsDigit(char c)		=> KCharIsDigitLookup16[(byte)c];
+		public static bool CharIsDigit(char c)		=> kCharIsDigitLookup16[(byte)c];
 
 		/// <summary>Convert a character into the byte digit it represents</summary>
 		/// <param name="c">Character representing the byte digit</param>
@@ -356,8 +356,8 @@ namespace KSoft.Text
 		public static int CharToInt(char c, NumeralBase radix, int place)
 		{
 			int digit = CharToAnyDigit(c);
-			int fromBase = (int)radix;
-			int multiplier = (int)Math.Pow(fromBase, place);
+			int from_base = (int)radix;
+			int multiplier = (int)Math.Pow(from_base, place);
 
 			return digit * multiplier;
 		}
@@ -373,8 +373,8 @@ namespace KSoft.Text
 		public static int CharToIntExtended(char c, NumeralBase radix, int place)
 		{
 			int digit = CharToAnyDigitExtended(c);
-			int fromBase = (int)radix;
-			int multiplier = (int)Math.Pow(fromBase, place);
+			int from_base = (int)radix;
+			int multiplier = (int)Math.Pow(from_base, place);
 
 			return digit * multiplier;
 		}

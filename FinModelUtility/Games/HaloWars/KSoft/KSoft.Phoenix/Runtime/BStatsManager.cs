@@ -8,54 +8,54 @@ using BCost = System.Single;
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class CSaveMarker
+	partial class cSaveMarker
 	{
 		public const ushort
-			STATS_PLAYER = 0x2710,
-			STATS_RECORDERS = 0x2711,
-			STATS_POWERS = 0x2712,
-			STATS_ABILITIES = 0x2713
+			StatsPlayer = 0x2710,
+			StatsRecorders = 0x2711,
+			StatsPowers = 0x2712,
+			StatsAbilities = 0x2713
 			;
 	};
 
 	struct BStatLostDestroyed
 		: IO.IEndianStreamSerializable
 	{
-		public uint lost, destroyed;
+		public uint Lost, Destroyed;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.lost);
-			s.Stream(ref this.destroyed);
+			s.Stream(ref this.Lost);
+			s.Stream(ref this.Destroyed);
 		}
 		#endregion
 	};
 	struct BStatLostDestroyedKeyValuePair
 		: IO.IEndianStreamSerializable
 	{
-		public int key;
-		public BStatLostDestroyed value;
+		public int Key;
+		public BStatLostDestroyed Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.key);
-			s.Stream(ref this.value);
+			s.Stream(ref this.Key);
+			s.Stream(ref this.Value);
 		}
 		#endregion
 	};
 	sealed class BStatLostDestroyedMap
 		: IO.IEndianStreamSerializable
 	{
-		public int index;
-		public BStatLostDestroyedKeyValuePair[] killers;
+		public int Index;
+		public BStatLostDestroyedKeyValuePair[] Killers;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.index);
-			BSaveGame.StreamArray16(s, ref this.killers);
+			s.Stream(ref this.Index);
+			BSaveGame.StreamArray16(s, ref this.Killers);
 		}
 		#endregion
 	};
@@ -63,30 +63,30 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BStatCombat
 		: IO.IEndianStreamSerializable
 	{
-		public const ushort DONE_INDEX = 0x2711;
+		public const ushort DoneIndex = 0x2711;
 
-		public int[] levels;
-		public float xp;
+		public int[] Levels;
+		public float XP;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamArray16(s, ref this.levels);
-			s.Stream(ref this.xp);
+			BSaveGame.StreamArray16(s, ref this.Levels);
+			s.Stream(ref this.XP);
 		}
 		#endregion
 	};
 	sealed class BStatCombatWithIndex
 		: IO.IEndianStreamSerializable
 	{
-		public int index;
-		public BStatCombat combat = new BStatCombat();
+		public int Index;
+		public BStatCombat Combat = new BStatCombat();
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.index);
-			s.Stream(this.combat);
+			s.Stream(ref this.Index);
+			s.Stream(this.Combat);
 		}
 		#endregion
 	};
@@ -94,34 +94,34 @@ namespace KSoft.Phoenix.Runtime
 	class BStatTotal
 		: IO.IEndianStreamSerializable
 	{
-		public byte[] killerIDs = new byte[0x20];
-		public uint built, lost, destroyed, max;
-		public int combatId;
-		public uint firstTime, lastTime;
+		public byte[] KillerIDs = new byte[0x20];
+		public uint Built, Lost, Destroyed, Max;
+		public int CombatID;
+		public uint FirstTime, LastTime;
 
 		#region IEndianStreamSerializable Members
 		public virtual void Serialize(IO.EndianStream s)
 		{
-			s.Stream(this.killerIDs);
-			s.Stream(ref this.built); s.Stream(ref this.lost); s.Stream(ref this.destroyed); s.Stream(ref this.max);
-			s.Stream(ref this.combatId);
-			s.Stream(ref this.firstTime); s.Stream(ref this.lastTime);
+			s.Stream(this.KillerIDs);
+			s.Stream(ref this.Built); s.Stream(ref this.Lost); s.Stream(ref this.Destroyed); s.Stream(ref this.Max);
+			s.Stream(ref this.CombatID);
+			s.Stream(ref this.FirstTime); s.Stream(ref this.LastTime);
 		}
 		#endregion
 	};
 	sealed class BStatEvent
 		: BStatTotal
 	{
-		public uint timestamp;
-		public int protoId;
+		public uint Timestamp;
+		public int ProtoID;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(ref this.timestamp);
-			s.Stream(ref this.protoId);
+			s.Stream(ref this.Timestamp);
+			s.Stream(ref this.ProtoID);
 		}
 		#endregion
 	};
@@ -129,14 +129,14 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BStatTotalKeyValuePair
 		: IO.IEndianStreamSerializable
 	{
-		public int key;
-		public BStatTotal value = new BStatTotal();
+		public int Key;
+		public BStatTotal Value = new BStatTotal();
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.key);
-			s.Stream(this.value);
+			s.Stream(ref this.Key);
+			s.Stream(this.Value);
 		}
 		#endregion
 	};
@@ -145,26 +145,26 @@ namespace KSoft.Phoenix.Runtime
 	abstract class BStatRecorderBase
 		: IO.IEndianStreamSerializable
 	{
-		public BStatLostDestroyedMap[] killers;
-		public BStatCombatWithIndex[] combat;
+		public BStatLostDestroyedMap[] Killers;
+		public BStatCombatWithIndex[] Combat;
 
 		#region IEndianStreamSerializable Members
 		public virtual void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamArray16(s, ref this.killers, isIterated:true);
-			BSaveGame.StreamArray16(s, ref this.combat);
-			s.StreamSignature(BStatCombat.DONE_INDEX);
+			BSaveGame.StreamArray16(s, ref this.Killers, isIterated:true);
+			BSaveGame.StreamArray16(s, ref this.Combat);
+			s.StreamSignature(BStatCombat.DoneIndex);
 		}
 		#endregion
 	};
 	sealed class BStatTotalsRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 1;
+		public const int kStatType = 1;
 
 		public List<BStatTotalKeyValuePair> Totals { get; private set; } = [];
-		public BStatTotal total = new BStatTotal();
-		public BStatCombat combat;
+		public BStatTotal Total = new BStatTotal();
+		public BStatCombat Combat_;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
@@ -172,70 +172,70 @@ namespace KSoft.Phoenix.Runtime
 			base.Serialize(s);
 
 			BSaveGame.StreamCollection(s, this.Totals);
-			s.Stream(this.total);
-			s.StreamNotNull(ref this.combat);
+			s.Stream(this.Total);
+			s.StreamNotNull(ref this.Combat_);
 		}
 		#endregion
 	};
 	sealed class BStatEventRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 2;
+		public const int kStatType = 2;
 
-		public BStatTotal total = new BStatTotal();
-		public BStatEvent[] events;
+		public BStatTotal Total = new BStatTotal();
+		public BStatEvent[] Events;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(this.total);
-			BSaveGame.StreamArray16(s, ref this.events);
+			s.Stream(this.Total);
+			BSaveGame.StreamArray16(s, ref this.Events);
 		}
 		#endregion
 	};
 	sealed class BStatGraphRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 3;
+		public const int kStatType = 3;
 	};
 	sealed class BStatResourceGraphRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 4;
+		public const int kStatType = 4;
 	};
 	sealed class BStatPopGraphRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 5;
+		public const int kStatType = 5;
 	};
 	sealed class BStatBaseGraphRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 6;
+		public const int kStatType = 6;
 	};
 	sealed class BStatScoreGraphRecorder
 		: BStatRecorderBase
 	{
-		public const int K_STAT_TYPE = 7;
+		public const int kStatType = 7;
 	};
 
 	sealed class BStatsRecorder
 		: IO.IEndianStreamSerializable
 	{
-		public short index;
+		public short Index;
 
-		public byte statType;
-		public BStatRecorderBase stat;
+		public byte StatType;
+		public BStatRecorderBase Stat;
 
 		#region IEndianStreamSerializable Members
 		static BStatRecorderBase FromType(int statType)
 		{
 			switch (statType)
 			{
-			case BStatTotalsRecorder.K_STAT_TYPE: return new BStatTotalsRecorder();
-			case BStatEventRecorder.K_STAT_TYPE: return new BStatEventRecorder();
+			case BStatTotalsRecorder.kStatType: return new BStatTotalsRecorder();
+			case BStatEventRecorder.kStatType: return new BStatEventRecorder();
 #if false
 			case BStatGraphRecorder.kStatType: return new BStatGraphRecorder();
 			case BStatResourceGraphRecorder.kStatType: return new BStatResourceGraphRecorder();
@@ -249,10 +249,10 @@ namespace KSoft.Phoenix.Runtime
 		}
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.index);
-			s.Stream(ref this.statType);
-			s.Stream(ref this.stat, 
-				() => FromType(this.statType));
+			s.Stream(ref this.Index);
+			s.Stream(ref this.StatType);
+			s.Stream(ref this.Stat, 
+				() => FromType(this.StatType));
 		}
 		#endregion
 	};
@@ -261,73 +261,73 @@ namespace KSoft.Phoenix.Runtime
 	struct BStatPowerKeyValuePair
 		: IO.IEndianStreamSerializable
 	{
-		public BProtoPowerID key;
-		public uint value;
+		public BProtoPowerID Key;
+		public uint Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.key);
-			s.Stream(ref this.value);
+			s.Stream(ref this.Key);
+			s.Stream(ref this.Value);
 		}
 		#endregion
 	};
 	struct BStatAbilityKeyValuePair
 		: IO.IEndianStreamSerializable
 	{
-		public int key;
-		public uint value;
+		public int Key;
+		public uint Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.key);
-			s.Stream(ref this.value);
+			s.Stream(ref this.Key);
+			s.Stream(ref this.Value);
 		}
 		#endregion
 	};
 	sealed class BStatsManager
 		: IO.IEndianStreamSerializable
 	{
-		public BStatsRecorder[] recorders;
+		public BStatsRecorder[] Recorders;
 		public List<BStatPowerKeyValuePair> Powers { get; private set; } = [];
 		public List<BStatAbilityKeyValuePair> Abilities { get; private set; } =
 			[];
 
-		public BCost[] totalResources, maxResources, 
-			gatheredResources, tributedResources;
-		public BPlayerID playerId;
-		public BTeamID teamId;
-		public uint playerStateTime;
-		public BPlayerState playerState;
-		public uint strengthTime, strengthTimer;
-		public int civId, leaderId;
-		public byte resourcesUsed, playerType;
-		public bool randomCiv, randomLeader, resigned, defeated, disconnected, won;
+		public BCost[] TotalResources, MaxResources, 
+			GatheredResources, TributedResources;
+		public BPlayerID PlayerID;
+		public BTeamID TeamID;
+		public uint PlayerStateTime;
+		public BPlayerState PlayerState;
+		public uint StrengthTime, StrengthTimer;
+		public int CivID, LeaderID;
+		public byte ResourcesUsed, PlayerType;
+		public bool RandomCiv, RandomLeader, Resigned, Defeated, Disconnected, Won;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
 			var sg = s.Owner as BSaveGame;
 
-			BSaveGame.StreamArray16(s, ref this.recorders, isIterated:true);
-			s.StreamSignature(CSaveMarker.STATS_RECORDERS);
+			BSaveGame.StreamArray16(s, ref this.Recorders, isIterated:true);
+			s.StreamSignature(cSaveMarker.StatsRecorders);
 			BSaveGame.StreamCollection(s, this.Powers);
-			s.StreamSignature(CSaveMarker.STATS_POWERS);
+			s.StreamSignature(cSaveMarker.StatsPowers);
 			BSaveGame.StreamCollection(s, this.Abilities);
-			s.StreamSignature(CSaveMarker.STATS_ABILITIES);
-			sg.StreamBCost(s, ref this.totalResources); sg.StreamBCost(s, ref this.maxResources);
-			sg.StreamBCost(s, ref this.gatheredResources); sg.StreamBCost(s, ref this.tributedResources);
-			s.Stream(ref this.playerId);
-			s.Stream(ref this.teamId);
-			s.Stream(ref this.playerStateTime);
-			s.Stream(ref this.playerState);
-			s.Stream(ref this.strengthTime); s.Stream(ref this.strengthTimer);
-			s.Stream(ref this.civId); s.Stream(ref this.leaderId);
-			s.Stream(ref this.resourcesUsed); s.Stream(ref this.playerType);
-			s.Stream(ref this.randomCiv); s.Stream(ref this.randomLeader); s.Stream(ref this.resigned);
-			s.Stream(ref this.defeated); s.Stream(ref this.disconnected); s.Stream(ref this.won);
-			s.StreamSignature(CSaveMarker.STATS_PLAYER);
+			s.StreamSignature(cSaveMarker.StatsAbilities);
+			sg.StreamBCost(s, ref this.TotalResources); sg.StreamBCost(s, ref this.MaxResources);
+			sg.StreamBCost(s, ref this.GatheredResources); sg.StreamBCost(s, ref this.TributedResources);
+			s.Stream(ref this.PlayerID);
+			s.Stream(ref this.TeamID);
+			s.Stream(ref this.PlayerStateTime);
+			s.Stream(ref this.PlayerState);
+			s.Stream(ref this.StrengthTime); s.Stream(ref this.StrengthTimer);
+			s.Stream(ref this.CivID); s.Stream(ref this.LeaderID);
+			s.Stream(ref this.ResourcesUsed); s.Stream(ref this.PlayerType);
+			s.Stream(ref this.RandomCiv); s.Stream(ref this.RandomLeader); s.Stream(ref this.Resigned);
+			s.Stream(ref this.Defeated); s.Stream(ref this.Disconnected); s.Stream(ref this.Won);
+			s.StreamSignature(cSaveMarker.StatsPlayer);
 		}
 		#endregion
 	};

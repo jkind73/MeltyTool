@@ -131,7 +131,7 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
 
     var material = model.MaterialManager.AddShaderMaterial(
         $$"""
-          #version {{GlslConstants.VertexShaderVersion}}
+          #version {{GlslConstants.VERTEX_SHADER_VERSION}}
 
           {{GlslUtil.GetMatricesHeaders(model)}}
 
@@ -149,7 +149,7 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
           }
           """,
         $$"""
-          #version {{GlslConstants.FragmentShaderVersion}}
+          #version {{GlslConstants.FRAGMENT_SHADER_VERSION}}
           {{GlslConstants.FLOAT_PRECISION}}
 
           uniform sampler2D diffuseTexture;

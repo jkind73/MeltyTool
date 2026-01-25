@@ -14,12 +14,12 @@ namespace jsystem.GCN;
 public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
   public string Name { get; set; }
   public GxCullMode CullMode { get; set; }
-  public byte colorChannelControlsCountIndex;
-  public byte texGensCountIndex;
-  public byte tevStagesCountIndex;
-  public byte zCompLocIndex;
-  public byte zModeIndex;
-  public byte ditherIndex;
+  public byte ColorChannelControlsCountIndex;
+  public byte TexGensCountIndex;
+  public byte TevStagesCountIndex;
+  public byte ZCompLocIndex;
+  public byte ZModeIndex;
+  public byte DitherIndex;
 
   public (int, Color)[] MaterialColors { get; set; }
   public IColorChannelControl?[] ColorChannelControls { get; set; }
@@ -30,33 +30,33 @@ public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
   public IColorRegister?[] ColorRegisters { get; set; }
 
 
-  public ushort[] texGenInfo;
+  public ushort[] TexGenInfo;
 
-  public ushort[] texGenInfo2;
+  public ushort[] TexGenInfo2;
   public ITextureMatrixInfo?[] TextureMatrices { get; set; }
-  public ushort[] dttMatrices;
+  public ushort[] DttMatrices;
   public short[] TextureIndices { get; set; }
-  public ushort[] tevKonstColorIndexes;
-  public byte[] constColorSel;
-  public byte[] constAlphaSel;
+  public ushort[] TevKonstColorIndexes;
+  public byte[] ConstColorSel;
+  public byte[] ConstAlphaSel;
 
   public ITevOrder?[] TevOrderInfos { get; set; }
 
-  public ushort[] tevOrderInfoIndexes;
-  public ushort[] tevColorIndexes;
+  public ushort[] TevOrderInfoIndexes;
+  public ushort[] TevColorIndexes;
   public ITevStageProps?[] TevStageInfos { get; set; }
   public ITevSwapMode?[] TevSwapModes { get; set; }
   public ITevSwapModeTable?[] TevSwapModeTables { get; set; }
 
   [Unknown]
-  public ushort[] unknown2;
+  public ushort[] Unknown2;
 
-  public short fogInfoIndex;
+  public short FogInfoIndex;
   public IAlphaCompare AlphaCompare { get; set; }
   public IBlendFunction BlendMode { get; set; }
 
   [Unknown]
-  public short unknownIndex;
+  public short UnknownIndex;
 
   public IDepthFunction DepthFunction { get; }
 
@@ -64,32 +64,32 @@ public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
 
   public IIndirectTexture? IndirectTexture { get; set; }
 
-  public BmdPopulatedMaterial(Bmd.Mat3Section mat3,
+  public BmdPopulatedMaterial(BMD.MAT3Section mat3,
                               int index,
                               MaterialEntry entry) {
-    this.Name = mat3.materialNameTable[index];
+    this.Name = mat3.MaterialNameTable[index];
 
-    this.CullMode = mat3.cullModes[entry.CullModeIndex];
-    this.DepthFunction = mat3.depthFunctions[entry.DepthFunctionIndex];
+    this.CullMode = mat3.CullModes[entry.CullModeIndex];
+    this.DepthFunction = mat3.DepthFunctions[entry.DepthFunctionIndex];
 
     this.MaterialColors =
         entry.MaterialColorIndexes
-             .Select(i => ((int) i, GetOrNull_(mat3.materialColor, i)))
+             .Select(i => ((int) i, GetOrNull_(mat3.MaterialColor, i)))
              .ToArray();
     this.AmbientColors =
         entry.AmbientColorIndexes
-             .Select(i => ((int) i, GetOrNull_(mat3.ambientColors, i)))
+             .Select(i => ((int) i, GetOrNull_(mat3.AmbientColors, i)))
              .ToArray();
 
     this.LightColors =
         entry.LightColorIndexes
-             .Select(i => GetOrNullStruct_(mat3.lightColors, i))
+             .Select(i => GetOrNullStruct_(mat3.LightColors, i))
              .ToArray();
 
     this.ColorRegisters =
         entry.TevColorIndexes
              .Select(i => {
-               var color = GetOrNull_(mat3.tevColors, i);
+               var color = GetOrNull_(mat3.TevColors, i);
                if (color != null) {
                  return (IColorRegister) new GxColorRegister
                      {Color = color, Index = i,};
@@ -100,23 +100,23 @@ public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
              .ToArray();
     this.KonstColors =
         entry.TevKonstColorIndexes
-             .Select(i => GetOrNull_(mat3.tevKonstColors, i))
+             .Select(i => GetOrNull_(mat3.TevKonstColors, i))
              .ToArray();
 
     this.ColorChannelControls =
         entry.ColorChannelControlIndexes
-             .Select(i => GetOrNull_(mat3.colorChannelControls, i))
+             .Select(i => GetOrNull_(mat3.ColorChannelControls, i))
              .ToArray();
 
     this.TextureMatrices =
         entry.TexMatrices
-             .Select(i => GetOrNull_(mat3.textureMatrices, i))
+             .Select(i => GetOrNull_(mat3.TextureMatrices, i))
              .ToArray();
 
     this.TevOrderInfos =
         entry.TevOrderInfoIndexes
              .Select(i => {
-               var tevOrder = GetOrNull_(mat3.tevOrders, i);
+               var tevOrder = GetOrNull_(mat3.TevOrders, i);
                if (tevOrder == null) {
                  return null;
                }
@@ -130,33 +130,33 @@ public sealed class BmdPopulatedMaterial : IPopulatedMaterial {
 
     this.TevStageInfos =
         entry.TevStageInfoIndexes
-             .Select(i => GetOrNull_(mat3.tevStages, i))
+             .Select(i => GetOrNull_(mat3.TevStages, i))
              .ToArray();
 
     this.TevSwapModes =
         entry.TevSwapModeInfo
-             .Select(i => GetOrNull_(mat3.tevSwapModes, i))
+             .Select(i => GetOrNull_(mat3.TevSwapModes, i))
              .ToArray();
     this.TevSwapModeTables =
         entry.TevSwapModeTable
-             .Select(i => GetOrNull_(mat3.tevSwapModeTables, i))
+             .Select(i => GetOrNull_(mat3.TevSwapModeTables, i))
              .ToArray();
 
     this.TextureIndices =
         entry.TextureIndexes
-             .Select(t => (short) (t != -1 ? mat3.textureIndices[t] : -1))
+             .Select(t => (short) (t != -1 ? mat3.TextureIndices[t] : -1))
              .ToArray();
 
     this.TexCoordGens =
         entry.TexGenInfo
-             .Select(i => GetOrNull_(mat3.texCoordGens, i))
+             .Select(i => GetOrNull_(mat3.TexCoordGens, i))
              .ToArray();
 
-    this.AlphaCompare = mat3.alphaCompares[entry.alphaCompareIndex];
-    this.BlendMode = mat3.blendFunctions[entry.blendModeIndex];
+    this.AlphaCompare = mat3.AlphaCompares[entry.AlphaCompareIndex];
+    this.BlendMode = mat3.BlendFunctions[entry.BlendModeIndex];
 
-    if (index < mat3.indirectTextures.Count) {
-      var indirectTexture = mat3.indirectTextures[index];
+    if (index < mat3.IndirectTextures.Count) {
+      var indirectTexture = mat3.IndirectTextures[index];
       this.IndirectTexture = indirectTexture.HasLookup ? indirectTexture : null;
     }
   }

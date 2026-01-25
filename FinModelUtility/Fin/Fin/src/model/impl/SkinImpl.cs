@@ -74,7 +74,7 @@ public partial class ModelImpl<TVertex> {
       if (!this.boneWeightsByBone_.TryGetValue(bone, out var boneWeights)) {
         boneWeights = this.CreateBoneWeights(
             vertexSpace,
-            new BoneWeight(bone, FinMatrix4X4.identity, 1));
+            new BoneWeight(bone, FinMatrix4x4.IDENTITY, 1));
         this.boneWeightsByBone_[bone] = boneWeights;
         this.bonesUsedByVertices_.Add(bone);
       }

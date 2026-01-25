@@ -6,10 +6,10 @@ namespace KSoft.Memory.Strings
 	public enum StringStorageWidthType : byte
 	{
 		/// <summary>String character storage is single byte based</summary>
-		ASCII,
+		Ascii,
 		/// <summary>String character storage is UTF-16</summary>
 		/// <remarks>http://en.wikipedia.org/wiki/UTF-16/UCS-2</remarks>
-		UNICODE,
+		Unicode,
 
 		/// <summary>UTF-7. Not fully tested.</summary>
 		/// <remarks>http://en.wikipedia.org/wiki/UTF-7</remarks>
@@ -22,24 +22,24 @@ namespace KSoft.Memory.Strings
 		UTF32,
 
 		/// <remarks>3 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)]
-		K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)]
+		kNumberOf,
 	};
 
 	/// <summary>The storage method types supported for string data</summary>
 	public enum StringStorageType : byte
 	{
 		/// <summary>Zero-terminated character string</summary>
-		C_STRING,
+		CString,
 		/// <summary>Character string with a length pre-fix header</summary>
 		/// <remarks>This type will never acknowledge fixed length status</remarks>
-		PASCAL,
+		Pascal,
 		/// <summary>Standard array of characters, nothing more</summary>
-		CHAR_ARRAY,
+		CharArray,
 
 		/// <remarks>2 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)]
-		K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)]
+		kNumberOf,
 	};
 
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
@@ -47,20 +47,20 @@ namespace KSoft.Memory.Strings
 	{
 		/// <remarks>This is what the CLR uses</remarks>
 		/// <see cref="Encoded7BitInt"/>
-		INT7,
+		Int7,
 
 		/// <summary>1-byte length prefix</summary>
-		INT8,
+		Int8,
 		/// <summary>2-byte length prefix</summary>
-		INT16,
+		Int16,
 		/// <summary>4-byte length prefix</summary>
-		INT32,
+		Int32,
 
 		/// <remarks>2 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)]
-		K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)]
+		kNumberOf,
 
 		/// <summary>Convenience member to save a bit. You shouldn't need to use this unless your internal code</summary>
-		NONE = INT7,
+		None = Int7,
 	};
 }

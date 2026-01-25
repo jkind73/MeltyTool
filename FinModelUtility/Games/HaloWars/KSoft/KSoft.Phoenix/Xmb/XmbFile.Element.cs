@@ -7,50 +7,50 @@ namespace KSoft.Phoenix.Xmb
 	{
 		sealed class Element
 		{
-			internal int index;
-			Values.PtrHandle mAttributesOffsetPos_, mAttributesOffset_;
-			Values.PtrHandle mChildrenOffsetPos_, mChildrenOffset_;
+			internal int Index;
+			Values.PtrHandle mAttributesOffsetPos, mAttributesOffset;
+			Values.PtrHandle mChildrenOffsetPos, mChildrenOffset;
 
-			public int rootElementIndex = TypeExtensions.K_NONE;
-			public XmbVariant nameVariant;
-			public XmbVariant innerTextVariant;
-			List<KeyValuePair<XmbVariant, XmbVariant>> attributes_;
-			List<int> childrenIndices_;
+			public int RootElementIndex = TypeExtensions.kNone;
+			public XmbVariant NameVariant;
+			public XmbVariant InnerTextVariant;
+			List<KeyValuePair<XmbVariant, XmbVariant>> Attributes;
+			List<int> ChildrenIndices;
 
 			#region IEndianStreamable Members
 			public void ReadAttributes(XmbFile xmb, IO.EndianReader s)
 			{
-				if (this.mAttributesOffset_.IsInvalidHandle)
+				if (this.mAttributesOffset.IsInvalidHandle)
 					return;
 
-				s.Seek((long) this.mAttributesOffset_);
-				for (int x = 0; x < this.attributes_.Capacity; x++)
+				s.Seek((long) this.mAttributesOffset);
+				for (int x = 0; x < this.Attributes.Capacity; x++)
 				{
 					XmbVariant k; XmbVariantSerialization.Read(s, out k);
 					XmbVariant v; XmbVariantSerialization.Read(s, out v);
 
 					var kv = new KeyValuePair<XmbVariant, XmbVariant>(k, v);
-					this.attributes_.Add(kv);
+					this.Attributes.Add(kv);
 
 					if (k.HasUnicodeData || v.HasUnicodeData)
-						xmb.mHasUnicodeStrings_ = true;
+						xmb.mHasUnicodeStrings = true;
 				}
 			}
 			public void ReadChildren(IO.EndianReader s)
 			{
-				if (this.mChildrenOffset_.IsInvalidHandle)
+				if (this.mChildrenOffset.IsInvalidHandle)
 					return;
 
-				s.Seek((long) this.mChildrenOffset_);
-				for (int x = 0; x < this.childrenIndices_.Capacity; x++)
-					this.childrenIndices_.Add(s.ReadInt32());
+				s.Seek((long) this.mChildrenOffset);
+				for (int x = 0; x < this.ChildrenIndices.Capacity; x++)
+					this.ChildrenIndices.Add(s.ReadInt32());
 			}
 			public void Read(XmbFile xmb, XmbFileContext xmbContext, IO.EndianReader s)
 			{
-				s.Read(out this.rootElementIndex);
-				XmbVariantSerialization.Read(s, out this.nameVariant);
-				XmbVariantSerialization.Read(s, out this.innerTextVariant);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				s.Read(out this.RootElementIndex);
+				XmbVariantSerialization.Read(s, out this.NameVariant);
+				XmbVariantSerialization.Read(s, out this.InnerTextVariant);
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
@@ -58,35 +58,35 @@ namespace KSoft.Phoenix.Xmb
 				#region Attributes header
 				int count;
 				s.Read(out count);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
-				s.ReadVirtualAddress(out this.mAttributesOffset_);
-				this.attributes_ = new List<KeyValuePair<XmbVariant, XmbVariant>>(count);
+				s.ReadVirtualAddress(out this.mAttributesOffset);
+				this.Attributes = new List<KeyValuePair<XmbVariant, XmbVariant>>(count);
 				#endregion
 
 				#region Children header
 				s.Read(out count);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
-				s.ReadVirtualAddress(out this.mChildrenOffset_);
-				this.childrenIndices_ = new List<int>(count);
+				s.ReadVirtualAddress(out this.mChildrenOffset);
+				this.ChildrenIndices = new List<int>(count);
 				#endregion
 
-				if (this.nameVariant.HasUnicodeData || this.innerTextVariant.HasUnicodeData)
-					xmb.mHasUnicodeStrings_ = true;
+				if (this.NameVariant.HasUnicodeData || this.InnerTextVariant.HasUnicodeData)
+					xmb.mHasUnicodeStrings = true;
 			}
 
 			public void WriteAttributes(IO.EndianWriter s)
 			{
-				if (this.attributes_.Count == 0)
+				if (this.Attributes.Count == 0)
 					return;
 
-				this.mAttributesOffset_ = s.PositionPtr;
-				foreach (var kv in this.attributes_)
+				this.mAttributesOffset = s.PositionPtr;
+				foreach (var kv in this.Attributes)
 				{
 					XmbVariantSerialization.Write(s, kv.Key);
 					XmbVariantSerialization.Write(s, kv.Value);
@@ -94,56 +94,56 @@ namespace KSoft.Phoenix.Xmb
 
 				// Update element entry
 				var pos = s.BaseStream.Position;
-				s.Seek((long) this.mAttributesOffsetPos_);
-				s.WriteVirtualAddress(this.mAttributesOffset_);
+				s.Seek((long) this.mAttributesOffsetPos);
+				s.WriteVirtualAddress(this.mAttributesOffset);
 				s.Seek(pos);
 			}
 			public void WriteChildren(IO.EndianWriter s)
 			{
-				if (this.childrenIndices_.Count == 0)
+				if (this.ChildrenIndices.Count == 0)
 					return;
 
-				this.mChildrenOffset_ = s.PositionPtr;
-				foreach (int ci in this.childrenIndices_)
+				this.mChildrenOffset = s.PositionPtr;
+				foreach (int ci in this.ChildrenIndices)
 					s.Write(ci);
 
 				// Update element entry
 				var pos = s.BaseStream.Position;
-				s.Seek((long) this.mChildrenOffsetPos_);
-				s.WriteVirtualAddress(this.mChildrenOffset_);
+				s.Seek((long) this.mChildrenOffsetPos);
+				s.WriteVirtualAddress(this.mChildrenOffset);
 				s.Seek(pos);
 			}
 			public void Write(IO.EndianWriter s)
 			{
 				var xmbContext = s.UserData as XmbFileContext;
 
-				s.Write(this.rootElementIndex);
-				XmbVariantSerialization.Write(s, this.nameVariant);
-				XmbVariantSerialization.Write(s, this.innerTextVariant);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				s.Write(this.RootElementIndex);
+				XmbVariantSerialization.Write(s, this.NameVariant);
+				XmbVariantSerialization.Write(s, this.InnerTextVariant);
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
 
 				#region Attributes header
-				s.Write(this.attributes_.Count);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				s.Write(this.Attributes.Count);
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
 
-				this.mAttributesOffsetPos_ = s.PositionPtr;
+				this.mAttributesOffsetPos = s.PositionPtr;
 				s.WriteVirtualAddress(Values.PtrHandle.InvalidHandle32);
 				#endregion
 
 				#region Children header
-				s.Write(this.childrenIndices_.Count);
-				if (xmbContext.pointerSize == Shell.ProcessorSize.X64)
+				s.Write(this.ChildrenIndices.Count);
+				if (xmbContext.PointerSize == Shell.ProcessorSize.x64)
 				{
 					s.Pad32();
 				}
 
-				this.mChildrenOffsetPos_ = s.PositionPtr;
+				this.mChildrenOffsetPos = s.PositionPtr;
 				s.WriteVirtualAddress(Values.PtrHandle.InvalidHandle32);
 				#endregion
 			}
@@ -158,13 +158,13 @@ namespace KSoft.Phoenix.Xmb
 			}
 			public void FromXmlInitialize(XmbFileBuilder builder, int rootIndex, int index, XmlElement e)
 			{
-				this.index = index;
-				this.rootElementIndex = rootIndex;
+				this.Index = index;
+				this.RootElementIndex = rootIndex;
 
 				if (e.HasAttributes)
-					this.attributes_ = new List<KeyValuePair<XmbVariant, XmbVariant>>(e.Attributes.Count);
+					this.Attributes = new List<KeyValuePair<XmbVariant, XmbVariant>>(e.Attributes.Count);
 				if (e.HasChildNodes)
-					this.childrenIndices_ = new List<int>(e.ChildNodes.Count);
+					this.ChildrenIndices = new List<int>(e.ChildNodes.Count);
 
 				string name = e.Name;
 				string text = e.Value;
@@ -178,15 +178,15 @@ namespace KSoft.Phoenix.Xmb
 			#region ToXml
 			void InnerTextToXml(XmbFile xmb, XmlDocument doc, XmlElement e)
 			{
-				if (!this.innerTextVariant.IsEmpty)
+				if (!this.InnerTextVariant.IsEmpty)
 				{
-					var text = doc.CreateTextNode(xmb.ToString(this.innerTextVariant));
+					var text = doc.CreateTextNode(xmb.ToString(this.InnerTextVariant));
 					e.AppendChild(text);
 				}
 			}
 			void AttributesToXml(XmbFile xmb, XmlDocument doc, XmlElement e)
 			{
-				if (this.attributes_.Count > 0) foreach (var kv in this.attributes_)
+				if (this.Attributes.Count > 0) foreach (var kv in this.Attributes)
 				{
 					string k = xmb.ToString(kv.Key);
 					string v = xmb.ToString(kv.Value);
@@ -209,16 +209,16 @@ namespace KSoft.Phoenix.Xmb
 			}
 			void ChildrenToXml(XmbFile xmb, XmlDocument doc, XmlElement e)
 			{
-				if (this.childrenIndices_.Count > 0) foreach (int x in this.childrenIndices_)
+				if (this.ChildrenIndices.Count > 0) foreach (int x in this.ChildrenIndices)
 				{
-					var element = xmb.mElements_[x];
+					var element = xmb.mElements[x];
 
 					element.ToXml(xmb, doc, e);
 				}
 			}
 			public XmlElement ToXml(XmbFile xmb, XmlDocument doc, XmlElement root)
 			{
-				var e = doc.CreateElement(xmb.ToString(this.nameVariant));
+				var e = doc.CreateElement(xmb.ToString(this.NameVariant));
 
 				if (root != null)
 					root.AppendChild(e);

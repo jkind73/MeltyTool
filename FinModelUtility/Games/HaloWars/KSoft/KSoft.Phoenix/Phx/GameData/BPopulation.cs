@@ -8,7 +8,7 @@ namespace KSoft.Phoenix.Phx
 		, IComparable<BPopulation>
 		, IEqualityComparer<BPopulation>
 	{
-		sealed class EqualityComparer : IEqualityComparer<BPopulation>
+		sealed class _EqualityComparer : IEqualityComparer<BPopulation>
 		{
 			#region IEqualityComparer<BPopulation> Members
 			public bool Equals(BPopulation x, BPopulation y)
@@ -22,47 +22,47 @@ namespace KSoft.Phoenix.Phx
 			}
 			#endregion
 		};
-		private static EqualityComparer gEqualityComparer_;
+		private static _EqualityComparer gEqualityComparer;
 		public static IEqualityComparer<BPopulation> EqualityComparer { get {
-			if (gEqualityComparer_ == null)
-				gEqualityComparer_ = new EqualityComparer();
+			if (gEqualityComparer == null)
+				gEqualityComparer = new _EqualityComparer();
 
-			return gEqualityComparer_;
+			return gEqualityComparer;
 		} }
 
 		#region Xml constants
-		public static readonly Collections.BTypeValuesParams<BPopulation> KBListParams = new
+		public static readonly Collections.BTypeValuesParams<BPopulation> kBListParams = new
 			Collections.BTypeValuesParams<BPopulation>(db => db.GameData.Populations)
 			{
-				kTypeGetInvalid = () => KInvalid
+				kTypeGetInvalid = () => kInvalid
 			};
-		public static readonly XML.BTypeValuesXmlParams<BPopulation> KBListXmlParams = new
+		public static readonly XML.BTypeValuesXmlParams<BPopulation> kBListXmlParams = new
 			XML.BTypeValuesXmlParams<BPopulation>("Pop", "Type");
 
-		public static readonly Collections.BTypeValuesParams<float> KBListParamsSingle = new
+		public static readonly Collections.BTypeValuesParams<float> kBListParamsSingle = new
 			Collections.BTypeValuesParams<float>(db => db.GameData.Populations)
 			{
-				kTypeGetInvalid = PhxUtil.KGetInvalidSingle
+				kTypeGetInvalid = PhxUtil.kGetInvalidSingle
 			};
-		public static readonly XML.BTypeValuesXmlParams<float> KBListXmlParamsSingle = new
+		public static readonly XML.BTypeValuesXmlParams<float> kBListXmlParamsSingle = new
 			XML.BTypeValuesXmlParams<float>("Pop", "Type");
-		public static readonly XML.BTypeValuesXmlParams<float> KBListXmlParamsSingleLowerCase = new
+		public static readonly XML.BTypeValuesXmlParams<float> kBListXmlParamsSingle_LowerCase = new
 			XML.BTypeValuesXmlParams<float>("Pop", "Type".ToLowerInvariant());
-		public static readonly XML.BTypeValuesXmlParams<float> KBListXmlParamsSingleCapAddition = new
+		public static readonly XML.BTypeValuesXmlParams<float> kBListXmlParamsSingle_CapAddition = new
 			XML.BTypeValuesXmlParams<float>("PopCapAddition", "Type");
 		#endregion
 
-		private static BPopulation KInvalid { get { return new BPopulation(PhxUtil.K_INVALID_SINGLE, PhxUtil.K_INVALID_SINGLE); } }
+		private static BPopulation kInvalid { get { return new BPopulation(PhxUtil.kInvalidSingle, PhxUtil.kInvalidSingle); } }
 
-		float mMax_;
-		public float Max { get { return this.mMax_; } }
+		float mMax;
+		public float Max { get { return this.mMax; } }
 
-		float mCount_;
-		public float Count { get { return this.mCount_; } }
+		float mCount;
+		public float Count { get { return this.mCount; } }
 
 		BPopulation(float max, float count) {
-			this.mMax_ = max;
-			this.mCount_ = count; }
+			this.mMax = max;
+			this.mCount = count; }
 
 		#region IComparable<T> Members
 		int IComparable<BPopulation>.CompareTo(BPopulation other)
@@ -91,8 +91,8 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttribute("Max", ref this.mMax_);
-			s.StreamCursor(ref this.mCount_);
+			s.StreamAttribute("Max", ref this.mMax);
+			s.StreamCursor(ref this.mCount);
 		}
 		#endregion
 	};

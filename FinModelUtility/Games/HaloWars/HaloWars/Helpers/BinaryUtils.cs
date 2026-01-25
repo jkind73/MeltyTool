@@ -7,7 +7,7 @@ namespace HaloWarsTools;
 
 public static class BinaryUtils {
   public static byte ReadByteLittleEndian(byte[] buffer, int startIndex) =>
-      ReadByte(buffer, startIndex, BinaryEndianness.LITTLE_ENDIAN);
+      ReadByte(buffer, startIndex, BinaryEndianness.LittleEndian);
 
   public static byte ReadByte(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     // I don't think this actually does anything since BinaryPrimitives.ReverseEndianness says it does nothing for bytes?
@@ -16,7 +16,7 @@ public static class BinaryUtils {
   }
 
   public static short ReadInt16BigEndian(byte[] buffer, int startIndex) =>
-      ReadInt16(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadInt16(buffer, startIndex, BinaryEndianness.BigEndian);
 
   public static short ReadInt16(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     short value = BitConverter.ToInt16(buffer, startIndex);
@@ -25,11 +25,11 @@ public static class BinaryUtils {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static int ReadInt32LittleEndian(byte[] buffer, int startIndex) =>
-      ReadInt32(buffer, startIndex, BinaryEndianness.LITTLE_ENDIAN);
+      ReadInt32(buffer, startIndex, BinaryEndianness.LittleEndian);
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static int ReadInt32BigEndian(byte[] buffer, int startIndex) =>
-      ReadInt32(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadInt32(buffer, startIndex, BinaryEndianness.BigEndian);
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static int ReadInt32(byte[] buffer, int startIndex, BinaryEndianness endianness) {
@@ -38,7 +38,7 @@ public static class BinaryUtils {
   }
 
   public static long ReadInt64LittleEndian(byte[] buffer, int startIndex) =>
-      ReadInt64(buffer, startIndex, BinaryEndianness.LITTLE_ENDIAN);
+      ReadInt64(buffer, startIndex, BinaryEndianness.LittleEndian);
 
   public static long ReadInt64(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     long value = BitConverter.ToInt64(buffer, startIndex);
@@ -46,10 +46,10 @@ public static class BinaryUtils {
   }
 
   public static ushort ReadUInt16LittleEndian(byte[] buffer, int startIndex) =>
-      ReadUInt16(buffer, startIndex, BinaryEndianness.LITTLE_ENDIAN);
+      ReadUInt16(buffer, startIndex, BinaryEndianness.LittleEndian);
 
   public static ushort ReadUInt16BigEndian(byte[] buffer, int startIndex) =>
-      ReadUInt16(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadUInt16(buffer, startIndex, BinaryEndianness.BigEndian);
 
   public static ushort ReadUInt16(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     ushort value = BitConverter.ToUInt16(buffer, startIndex);
@@ -57,7 +57,7 @@ public static class BinaryUtils {
   }
 
   public static uint ReadUInt32BigEndian(byte[] buffer, int startIndex) =>
-      ReadUInt32(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadUInt32(buffer, startIndex, BinaryEndianness.BigEndian);
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static uint ReadUInt32(byte[] buffer, int startIndex, BinaryEndianness endianness) {
@@ -66,7 +66,7 @@ public static class BinaryUtils {
   }
 
   public static ulong ReadUInt64BigEndian(byte[] buffer, int startIndex) =>
-      ReadUInt64(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadUInt64(buffer, startIndex, BinaryEndianness.BigEndian);
 
   public static ulong ReadUInt64(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     ulong value = BitConverter.ToUInt64(buffer, startIndex);
@@ -74,10 +74,10 @@ public static class BinaryUtils {
   }
 
   public static float ReadFloatLittleEndian(byte[] buffer, int startIndex) =>
-      ReadFloat(buffer, startIndex, BinaryEndianness.LITTLE_ENDIAN);
+      ReadFloat(buffer, startIndex, BinaryEndianness.LittleEndian);
 
   public static float ReadFloatBigEndian(byte[] buffer, int startIndex) =>
-      ReadFloat(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadFloat(buffer, startIndex, BinaryEndianness.BigEndian);
 
   public static float ReadFloat(byte[] buffer, int startIndex, BinaryEndianness endianness) {
     int value = BitConverter.ToInt32(buffer, startIndex);
@@ -87,7 +87,7 @@ public static class BinaryUtils {
   }
 
   public static Vector3 ReadVector3BigEndian(byte[] buffer, int startIndex) =>
-      ReadVector3(buffer, startIndex, BinaryEndianness.BIG_ENDIAN);
+      ReadVector3(buffer, startIndex, BinaryEndianness.BigEndian);
 
   public static Vector3 ReadVector3(byte[] buffer, int offset, BinaryEndianness endianness) {
     return new Vector3(
@@ -99,9 +99,9 @@ public static class BinaryUtils {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static bool IsAlreadyDesiredEndianness(BinaryEndianness endianness)
-    => (endianness == BinaryEndianness.LITTLE_ENDIAN &&
+    => (endianness == BinaryEndianness.LittleEndian &&
         BitConverter.IsLittleEndian) ||
-       (endianness == BinaryEndianness.BIG_ENDIAN &&
+       (endianness == BinaryEndianness.BigEndian &&
         !BitConverter.IsLittleEndian);
 
   public static float ReadHalfLittleEndian(byte[] buffer, int offset)
@@ -109,6 +109,6 @@ public static class BinaryUtils {
 }
 
 public enum BinaryEndianness {
-  LITTLE_ENDIAN,
-  BIG_ENDIAN
+  LittleEndian,
+  BigEndian
 }

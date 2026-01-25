@@ -3,7 +3,7 @@ using System.Globalization;
 namespace System.IO.Abstractions.TestingHelpers;
 
 internal static class CommonExceptions {
-  private const int FILE_LOCK_H_RESULT_ = unchecked((int) 0x80070020);
+  private const int _fileLockHResult = unchecked((int) 0x80070020);
 
   public static FileNotFoundException FileNotFound(string path) =>
       new FileNotFoundException(
@@ -76,11 +76,11 @@ internal static class CommonExceptions {
                   StringResources.Manager.GetString(
                       "PROCESS_CANNOT_ACCESS_FILE_IN_USE_WITH_FILENAME"),
                   paramName),
-              FILE_LOCK_H_RESULT_)
+              _fileLockHResult)
           : new IOException(
               StringResources.Manager.GetString(
                   "PROCESS_CANNOT_ACCESS_FILE_IN_USE"),
-              FILE_LOCK_H_RESULT_);
+              _fileLockHResult);
 
   public static IOException FileAlreadyExists(string paramName) =>
       new IOException(string.Format(

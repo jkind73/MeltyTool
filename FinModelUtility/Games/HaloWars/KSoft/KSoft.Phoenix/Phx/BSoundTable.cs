@@ -6,9 +6,9 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		internal static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
+		internal static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.DATA,
+			Directory = Engine.GameDirectory.Data,
 			FileName = "SoundTable.xml",
 			RootName = "Table"
 		};
@@ -25,11 +25,11 @@ namespace KSoft.Phoenix.Phx
 			foreach (var element in s.ElementsByName("Sound"))
 				using (s.EnterCursorBookmark(element))
 				{
-					string name = null; uint eventId = 0;
+					string name = null; uint event_id = 0;
 					s.StreamElement("CueName", ref name);
-					s.StreamElement("CueIndex", ref eventId);
+					s.StreamElement("CueIndex", ref event_id);
 
-					this.mEventsMap.Add(eventId, name);
+					this.mEventsMap.Add(event_id, name);
 				}
 		}
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)

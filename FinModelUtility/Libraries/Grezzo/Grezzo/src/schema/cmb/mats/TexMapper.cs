@@ -6,7 +6,7 @@ namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
 public sealed partial class TexMapper : IBinaryConvertible {
-  public short TextureId { get; set; }
+  public short textureId { get; set; }
   private readonly ushort padding_ = 0;
   public TextureMinFilter minFilter;
   public TextureMagFilter magFilter;

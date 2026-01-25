@@ -34,7 +34,7 @@ public sealed partial class StringTableEntry : IBinaryConvertible {
   [Unknown]
   public ushort unknown;
 
-  private ushort offset_;
+  private ushort offset;
 }
 
 [BinarySchema]

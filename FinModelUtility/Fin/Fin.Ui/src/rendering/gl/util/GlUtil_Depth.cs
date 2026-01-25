@@ -7,17 +7,17 @@ namespace fin.ui.rendering.gl;
 
 public partial class GlState {
   public (DepthMode, DepthCompareType) DepthModeAndCompareType { get; set; }
-    = (DepthMode.READ | DepthMode.WRITE, DepthCompareType.L_EQUAL);
+    = (DepthMode.READ | DepthMode.WRITE, DepthCompareType.LEqual);
 }
 
 public static partial class GlUtil {
   public static bool DisableChangingDepth { get; set; }
 
   public static void ResetDepth()
-    => SetDepth((DepthMode.READ | DepthMode.WRITE), DepthCompareType.L_EQUAL);
+    => SetDepth((DepthMode.READ | DepthMode.WRITE), DepthCompareType.LEqual);
 
   public static bool SetDepth(DepthMode depthMode)
-    => SetDepth(depthMode, depthMode == DepthMode.NONE ? DepthCompareType.ALWAYS : DepthCompareType.L_EQUAL);
+    => SetDepth(depthMode, depthMode == DepthMode.NONE ? DepthCompareType.Always : DepthCompareType.LEqual);
 
   public static bool SetDepth(
       DepthMode depthMode,
@@ -35,7 +35,7 @@ public static partial class GlUtil {
         = (depthMode, depthCompareType);
 
     if (depthMode.CheckFlag(DepthMode.READ) &&
-        depthCompareType != DepthCompareType.ALWAYS) {
+        depthCompareType != DepthCompareType.Always) {
       GL.Enable(EnableCap.DepthTest);
       GL.DepthFunc(ConvertFinDepthCompareTypeToGl_(depthCompareType));
     } else {
@@ -50,14 +50,14 @@ public static partial class GlUtil {
   private static DepthFunction ConvertFinDepthCompareTypeToGl_(
       DepthCompareType finDepthCompareType)
     => finDepthCompareType switch {
-        DepthCompareType.L_EQUAL  => DepthFunction.Lequal,
-        DepthCompareType.LESS    => DepthFunction.Less,
-        DepthCompareType.EQUAL   => DepthFunction.Equal,
-        DepthCompareType.GREATER => DepthFunction.Greater,
-        DepthCompareType.N_EQUAL  => DepthFunction.Notequal,
-        DepthCompareType.G_EQUAL  => DepthFunction.Gequal,
-        DepthCompareType.ALWAYS  => DepthFunction.Always,
-        DepthCompareType.NEVER   => DepthFunction.Never,
+        DepthCompareType.LEqual  => DepthFunction.Lequal,
+        DepthCompareType.Less    => DepthFunction.Less,
+        DepthCompareType.Equal   => DepthFunction.Equal,
+        DepthCompareType.Greater => DepthFunction.Greater,
+        DepthCompareType.NEqual  => DepthFunction.Notequal,
+        DepthCompareType.GEqual  => DepthFunction.Gequal,
+        DepthCompareType.Always  => DepthFunction.Always,
+        DepthCompareType.Never   => DepthFunction.Never,
         _ => throw new ArgumentOutOfRangeException(
             nameof(finDepthCompareType),
             finDepthCompareType,

@@ -11,35 +11,35 @@ namespace KSoft.IO
 		public abstract string CursorName { get; }
 
 		#region GuidFormatString
-		string mGuidFormatString_ = Values.KGuid.K_FORMAT_HYPHENATED;
+		string mGuidFormatString = Values.KGuid.kFormatHyphenated;
 		/// <summary>
 		/// The formatting string for read/writing Guid values.
 		/// Hyphenated is the default format. Setting this to NULL reverts the format to default
 		/// </summary>
 		public string GuidFormatString
 		{
-			get { return this.mGuidFormatString_; }
-			set { this.mGuidFormatString_ = value ?? Values.KGuid.K_FORMAT_HYPHENATED; }
+			get { return this.mGuidFormatString; }
+			set { this.mGuidFormatString = value ?? Values.KGuid.kFormatHyphenated; }
 		}
 		#endregion
 
 		#region SingleFormatSpecifier
-		string mSingleFormatSpecifier_ = Numbers.K_SINGLE_ROUND_TRIP_FORMAT_SPECIFIER;
+		string mSingleFormatSpecifier = Numbers.kSingleRoundTripFormatSpecifier;
 		/// <summary>RoundTrip by default</summary>
 		public string SingleFormatSpecifier
 		{
-			get { return this.mSingleFormatSpecifier_; }
-			set { this.mSingleFormatSpecifier_ = value; }
+			get { return this.mSingleFormatSpecifier; }
+			set { this.mSingleFormatSpecifier = value; }
 		}
 		#endregion
 
 		#region DoubleFormatSpecifier
-		string mDoubleFormatSpecifier_ = Numbers.K_DOUBLE_ROUND_TRIP_FORMAT_SPECIFIER;
+		string mDoubleFormatSpecifier = Numbers.kDoubleRoundTripFormatSpecifier;
 		/// <summary>RoundTrip by default</summary>
 		public string DoubleFormatSpecifier
 		{
-			get { return this.mDoubleFormatSpecifier_; }
-			set { this.mDoubleFormatSpecifier_ = value; }
+			get { return this.mDoubleFormatSpecifier; }
+			set { this.mDoubleFormatSpecifier = value; }
 		}
 		#endregion
 
@@ -48,18 +48,18 @@ namespace KSoft.IO
 
 		protected TagElementTextStream()
 		{
-			this.mReadErrorState_ = new TextStreamReadErrorState(this);
+			this.mReadErrorState = new TextStreamReadErrorState(this);
 		}
 
 		public void UseDefaultFloatFormatSpecifiers()
 		{
-			this.SingleFormatSpecifier = Numbers.K_FLOAT_DEFAULT_FORMAT_SPECIFIER;
-			this.DoubleFormatSpecifier = Numbers.K_FLOAT_DEFAULT_FORMAT_SPECIFIER;
+			this.SingleFormatSpecifier = Numbers.kFloatDefaultFormatSpecifier;
+			this.DoubleFormatSpecifier = Numbers.kFloatDefaultFormatSpecifier;
 		}
 		public void UseRoundTripFloatFormatSpecifiers()
 		{
-			this.SingleFormatSpecifier = Numbers.K_SINGLE_ROUND_TRIP_FORMAT_SPECIFIER;
-			this.DoubleFormatSpecifier = Numbers.K_DOUBLE_ROUND_TRIP_FORMAT_SPECIFIER;
+			this.SingleFormatSpecifier = Numbers.kSingleRoundTripFormatSpecifier;
+			this.DoubleFormatSpecifier = Numbers.kDoubleRoundTripFormatSpecifier;
 		}
 	};
 

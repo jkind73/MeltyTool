@@ -9,7 +9,7 @@ namespace KSoft.Wwise.SoundBank
 	public sealed class CAkParameterNodeBase
 		: IO.IEndianStreamSerializable
 	{
-		struct FxData
+		struct FXData
 			: IO.IEndianStreamSerializable
 		{
 			#region IEndianStreamSerializable Members
@@ -22,11 +22,11 @@ namespace KSoft.Wwise.SoundBank
 			}
 			#endregion
 		};
-		struct AkbkStateItem
+		struct AKBKStateItem
 			: IO.IEndianStreamSerializable
 		{
 			/// <summary>Size of this struct on disk</summary>
-			internal const uint K_SIZE_OF = 9;
+			internal const uint kSizeOf = 9;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
@@ -38,30 +38,30 @@ namespace KSoft.Wwise.SoundBank
 			#endregion
 		};
 
-		byte numFx_;
-		FxData[] fx_;
+		byte NumFx;
+		FXData[] FX;
 
-		public uint overrideBusId, directParentId;
-		byte priority_;
-		bool priorityOverrideParent_, priorityApplyDistFactor_;
-		sbyte priorityDistanceOffset_;
+		public uint OverrideBusId, DirectParentID;
+		byte Priority;
+		bool PriorityOverrideParent, PriorityApplyDistFactor;
+		sbyte PriorityDistanceOffset;
 
-		bool positioningInfoOverrideParent_;
+		bool PositioningInfoOverrideParent;
 
-		ushort numStates_;
+		ushort NumStates;
 
-		ushort numRtpc_;
+		ushort NumRTPC;
 
 		#region IEndianStreamSerializable Members
 		void SerializeFxParams(IO.EndianStream s)
 		{
 			s.Pad8(); // IsOverrideParentFX
-			s.Stream(ref this.numFx_);
-			Contract.Assert(this.numFx_ <= 4);
+			s.Stream(ref this.NumFx);
+			Contract.Assert(this.NumFx <= 4);
 			if (s.IsReading)
-				this.fx_ = new FxData[this.numFx_];
-			if (this.numFx_ > 0) s.Pad8(); // bitsFXBypass
-			s.StreamArray(this.fx_);
+				this.FX = new FXData[this.NumFx];
+			if (this.NumFx > 0) s.Pad8(); // bitsFXBypass
+			s.StreamArray(this.FX);
 		}
 		void SerializeParams(IO.EndianStream s)
 		{
@@ -81,9 +81,9 @@ namespace KSoft.Wwise.SoundBank
 		}
 		void SerializePositioningParams(IO.EndianStream s)
 		{
-			s.Stream(ref this.positioningInfoOverrideParent_);
-			Contract.Assert(!this.positioningInfoOverrideParent_);
-			if (this.positioningInfoOverrideParent_)
+			s.Stream(ref this.PositioningInfoOverrideParent);
+			Contract.Assert(!this.PositioningInfoOverrideParent);
+			if (this.PositioningInfoOverrideParent)
 			{
 				s.Pad32(); // CenterPct
 			}
@@ -97,9 +97,9 @@ namespace KSoft.Wwise.SoundBank
 			s.Pad8(); // bool MaxNumInstOverrideParent
 			s.Pad8(); // bool VVoicesOptOverrideParent
 		}
-		void SerializeRtpc(IO.EndianStream s)
+		void SerializeRTPC(IO.EndianStream s)
 		{
-			const int kSizeOf =
+			const int k_size_of =
 				4 + // FXID
 				1 + // FXIndex
 				4 + // RTPCID
@@ -109,8 +109,8 @@ namespace KSoft.Wwise.SoundBank
 				2 // Size
 				;
 
-			s.Stream(ref this.numRtpc_);
-			s.Pad((int)(this.numRtpc_ * kSizeOf));
+			s.Stream(ref this.NumRTPC);
+			s.Pad((int)(this.NumRTPC * k_size_of));
 		}
 		void SerializeFeedbackInfo(IO.EndianStream s)
 		{
@@ -128,22 +128,22 @@ namespace KSoft.Wwise.SoundBank
 		{
 			this.SerializeFxParams(s); // 0x2...
 			{ // 0xC
-				s.Stream(ref this.overrideBusId);
-				s.Stream(ref this.directParentId);
-				s.Stream(ref this.priority_);
-				s.Stream(ref this.priorityOverrideParent_);
-				s.Stream(ref this.priorityApplyDistFactor_);
-				s.Stream(ref this.priorityDistanceOffset_);
+				s.Stream(ref this.OverrideBusId);
+				s.Stream(ref this.DirectParentID);
+				s.Stream(ref this.Priority);
+				s.Stream(ref this.PriorityOverrideParent);
+				s.Stream(ref this.PriorityApplyDistFactor);
+				s.Stream(ref this.PriorityDistanceOffset);
 			}
 			this.SerializeParams(s);            // 0x34
 			this.SerializePositioningParams(s); // 0x1...
 			this.SerializeAdvSettingsParams(s);    // 0x7
 			{                                   // 0x2...
 				s.Pad8();                       // StateSyncType
-				s.Stream(ref this.numStates_);
-				s.Pad((int)(this.numStates_ * AkbkStateItem.K_SIZE_OF));
+				s.Stream(ref this.NumStates);
+				s.Pad((int)(this.NumStates * AKBKStateItem.kSizeOf));
 			}
-			this.SerializeRtpc(s);      // 0x2...
+			this.SerializeRTPC(s);      // 0x2...
 			this.SerializeFeedbackInfo(s); // // 0x1C
 		}
 		#endregion

@@ -3,9 +3,9 @@
 namespace fin.common;
 
 public static class CommonFiles {
-  public static IReadOnlySystemDirectory CommonDirectory { get; } =
-    DirectoryConstants.BaseDirectory.AssertGetExistingSubdir("common");
+  public static IReadOnlySystemDirectory COMMON_DIRECTORY { get; } =
+    DirectoryConstants.BASE_DIRECTORY.AssertGetExistingSubdir("common");
 
-  public static IReadOnlySystemFile WindowsSoundfontFile { get; } =
-    CommonDirectory.AssertGetExistingFile("windows.sf2");
+  public static IReadOnlySystemFile WINDOWS_SOUNDFONT_FILE { get; } =
+    COMMON_DIRECTORY.AssertGetExistingFile("windows.sf2");
 }

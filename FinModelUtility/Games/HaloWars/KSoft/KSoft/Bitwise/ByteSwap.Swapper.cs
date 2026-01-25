@@ -13,20 +13,20 @@ namespace KSoft.Bitwise
 		[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct Swapper
 		{
-			readonly short[] kCodes_;
+			readonly short[] kCodes;
 
 			public Swapper(int sizeOf, params short[] codes)
 			{
 				Contract.Requires<ArgumentOutOfRangeException>(sizeOf > 0);
 				Contract.Requires<ArgumentNullException>(codes != null);
 
-				this.kCodes_ = codes;
+				this.kCodes = codes;
 			}
 			public Swapper(IByteSwappable definition)
 			{
 				Contract.Requires<ArgumentNullException>(definition != null);
 
-				this.kCodes_ = definition.ByteSwapCodes;
+				this.kCodes = definition.ByteSwapCodes;
 			}
 
 			public int SwapData(byte[] buffer, int startIndex = 0)
@@ -34,7 +34,7 @@ namespace KSoft.Bitwise
 				Contract.Requires<ArgumentOutOfRangeException>(startIndex >= 0);
 				Contract.Requires<ArgumentOutOfRangeException>(startIndex <= buffer.Length);
 
-				return this.SwapData(buffer, startIndex, out int sizeInBytes, out int sizeInCodes);
+				return this.SwapData(buffer, startIndex, out int size_in_bytes, out int size_in_codes);
 			}
 
 			public int SwapData(byte[] buffer, int startIndex,
@@ -51,111 +51,111 @@ namespace KSoft.Bitwise
 				, int codesStartIndex)
 			{
 				outSizeInBytes = outSizeInCodes = 0;
-				int sizeInBytes = 0;
-				int sizeInCodes = 0;
+				int size_in_bytes = 0;
+				int size_in_codes = 0;
 
-				int codesIndex = codesStartIndex;
-				Contract.Assert(this.kCodes_[codesIndex] == (int)BsCode.ARRAY_START);
+				int codes_index = codesStartIndex;
+				Contract.Assert(this.kCodes[codes_index] == (int)BsCode.ArrayStart);
 
-				int arrayCount = this.kCodes_[codesIndex + 1]; // array count comes after ArrayStart
+				int array_count = this.kCodes[codes_index + 1]; // array count comes after ArrayStart
 
-				bool bufferIsValid = buffer != null;
-				int bufferIndex = startIndex;
-				for (int elementsRemaining = arrayCount; elementsRemaining > 0; )
+				bool buffer_is_valid = buffer != null;
+				int buffer_index = startIndex;
+				for (int elements_remaining = array_count; elements_remaining > 0; )
 				{
-					sizeInCodes = 2;
-					bool foundArrayEnd = false;
-					for (codesIndex = codesStartIndex + sizeInCodes; !foundArrayEnd; )
+					size_in_codes = 2;
+					bool found_array_end = false;
+					for (codes_index = codesStartIndex + size_in_codes; !found_array_end; )
 					{
-						var currentCode = this.kCodes_[codesIndex];
-						switch (currentCode)
+						var current_code = this.kCodes[codes_index];
+						switch (current_code)
 						{
 							#region Word
-							case (int)BsCode.INT16:
-								if (bufferIsValid)
+							case (int)BsCode.Int16:
+								if (buffer_is_valid)
 								{
-									SwapInt16(buffer, bufferIndex);
-									bufferIndex += sizeof(short);
+									SwapInt16(buffer, buffer_index);
+									buffer_index += sizeof(short);
 								}
 
-								sizeInBytes += sizeof(short);
-								sizeInCodes++;
-								codesIndex++;
+								size_in_bytes += sizeof(short);
+								size_in_codes++;
+								codes_index++;
 								break;
 							#endregion
 
 							#region DWord
-							case (int)BsCode.INT32:
-								if (bufferIsValid)
+							case (int)BsCode.Int32:
+								if (buffer_is_valid)
 								{
-									SwapInt32(buffer, bufferIndex);
-									bufferIndex += sizeof(int);
+									SwapInt32(buffer, buffer_index);
+									buffer_index += sizeof(int);
 								}
 
-								sizeInBytes += sizeof(int);
-								sizeInCodes++;
-								codesIndex++;
+								size_in_bytes += sizeof(int);
+								size_in_codes++;
+								codes_index++;
 								break;
 							#endregion
 
 							#region QWord
-							case (int)BsCode.INT64:
-								if (bufferIsValid)
+							case (int)BsCode.Int64:
+								if (buffer_is_valid)
 								{
-									SwapInt64(buffer, bufferIndex);
-									bufferIndex += sizeof(long);
+									SwapInt64(buffer, buffer_index);
+									buffer_index += sizeof(long);
 								}
 
-								sizeInBytes += sizeof(long);
-								sizeInCodes++;
-								codesIndex++;
+								size_in_bytes += sizeof(long);
+								size_in_codes++;
+								codes_index++;
 								break;
 							#endregion
 
-							case (int)BsCode.ARRAY_START:
-								int recursiveSizeInBytes, recursiveSizeInCodes;
+							case (int)BsCode.ArrayStart:
+								int recursive_size_in_bytes, recursive_size_in_codes;
 
-								this.SwapDataImpl(buffer, bufferIndex,
-								                  out recursiveSizeInBytes, out recursiveSizeInCodes,
-								                  codesIndex);
+								this.SwapDataImpl(buffer, buffer_index,
+								                  out recursive_size_in_bytes, out recursive_size_in_codes,
+								                  codes_index);
 
-								if (bufferIsValid)
-									bufferIndex += recursiveSizeInBytes;
+								if (buffer_is_valid)
+									buffer_index += recursive_size_in_bytes;
 
-								codesIndex += recursiveSizeInCodes;
-								sizeInCodes += recursiveSizeInCodes;
-								sizeInBytes += recursiveSizeInBytes;
+								codes_index += recursive_size_in_codes;
+								size_in_codes += recursive_size_in_codes;
+								size_in_bytes += recursive_size_in_bytes;
 								break;
 
-							case (int)BsCode.ARRAY_END:
-								codesIndex++;
-								sizeInCodes++;
-								elementsRemaining--;
-								foundArrayEnd = true;
+							case (int)BsCode.ArrayEnd:
+								codes_index++;
+								size_in_codes++;
+								elements_remaining--;
+								found_array_end = true;
 								break;
 
 							#region Skip (default)
 							default:
-								if (currentCode < 0)
+								if (current_code < 0)
 									throw new Debug.UnreachableException();
 
-								if (bufferIsValid)
-									bufferIndex += currentCode;
+								if (buffer_is_valid)
+									buffer_index += current_code;
 
-								codesIndex++;
-								sizeInCodes++;
-								sizeInBytes += currentCode;
+								codes_index++;
+								size_in_codes++;
+								size_in_bytes += current_code;
 								break;
 							#endregion
 						}
 					}
 				}
 
-				outSizeInBytes = sizeInBytes;
-				outSizeInCodes = sizeInCodes;
-				return bufferIsValid
-					? bufferIndex
-					: TypeExtensions.K_NONE;
+				outSizeInBytes = size_in_bytes;
+				outSizeInCodes = size_in_codes;
+				return buffer_is_valid
+					? buffer_index
+					: TypeExtensions.kNone;
 			}
 		};
 	};

@@ -38,12 +38,12 @@ public sealed class BoneWeightMemoryEnumerator : IMemoryEnumerator<IBoneWeight[]
 
     this.boneCount_ = shape.boneDimensions;
 
-    var maxIndex = shape.PrimitiveSets
+    var maxIndex = shape.primitiveSets
                         .SelectMany(p => p.primitive.indices)
                         .Max() +
                    1;
     var primitivesByVertexIndex = new PrimitiveSet[maxIndex];
-    foreach (var primitiveSet in shape.PrimitiveSets) {
+    foreach (var primitiveSet in shape.primitiveSets) {
       foreach (var vertexIndex in primitiveSet.primitive.indices) {
         primitivesByVertexIndex[(int) vertexIndex] = primitiveSet;
       }
@@ -98,7 +98,7 @@ public sealed class BoneWeightMemoryEnumerator : IMemoryEnumerator<IBoneWeight[]
     var bWeights = this.shape_.bWeights;
     var boneCount = this.shape_.boneDimensions;
 
-    if (bWeights.Mode == VertexAttributeMode.CONSTANT) {
+    if (bWeights.Mode == VertexAttributeMode.Constant) {
       if (this.weights_ != null) {
         weights = this.weights_;
         return false;
@@ -126,10 +126,10 @@ public sealed class BoneWeightMemoryEnumerator : IMemoryEnumerator<IBoneWeight[]
     Span<float> boneEnumeratorIndices = stackalloc float[boneCount];
     this.boneIndexEnumerator_.TryReadInto(boneEnumeratorIndices);
 
-    if (this.hasBi_ && primitiveSet.skinningMode != SkinningMode.SINGLE) {
+    if (this.hasBi_ && primitiveSet.skinningMode != SkinningMode.Single) {
       single = false;
 
-      if (this.shape_.bIndices.Mode == VertexAttributeMode.CONSTANT) {
+      if (this.shape_.bIndices.Mode == VertexAttributeMode.Constant) {
         this.shape_.bIndices.Constants.AsSpan(0, boneCount)
             .CopyTo(readBoneIndices);
       } else {

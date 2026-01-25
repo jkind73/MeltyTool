@@ -94,7 +94,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
       }
 
       inverseBindMatrixByJObj[jObj]
-          = new FinMatrix4X4(inverseBindMatrixFloatBuffer).TransposeInPlace();
+          = new FinMatrix4x4(inverseBindMatrixFloatBuffer).TransposeInPlace();
 
       foreach (var datChildBone in jObj.GetChildren()) {
         boneQueue.Enqueue((finBone, datChildBone));
@@ -150,13 +150,13 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
 
     // Adds mesh and materials
     var mObjByOffset = new Dictionary<uint, MObj>();
-    var tObjByOffset = new Dictionary<uint, Obj>();
+    var tObjByOffset = new Dictionary<uint, TObj>();
     foreach (var jObj in datSubfile.JObjs) {
       foreach (var dObj in jObj.DObjs) {
         var mObj = dObj.MObj;
         if (mObj != null) {
           mObjByOffset[dObj.MObjOffset] = mObj;
-          foreach (var (tObjOffset, tObj) in mObj.ObjsAndOffsets) {
+          foreach (var (tObjOffset, tObj) in mObj.TObjsAndOffsets) {
             tObjByOffset[tObjOffset] = tObj;
           }
         }
@@ -212,8 +212,8 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
           finTexture.WrapModeV = tObj.WrapT.ToFinWrapMode();
 
           finTexture.UvIndex = tObj.TexGenSrc switch {
-              >= GxTexGenSrc.TEX0 and <= GxTexGenSrc.TEX7
-                  => tObj.TexGenSrc - GxTexGenSrc.TEX0
+              >= GxTexGenSrc.Tex0 and <= GxTexGenSrc.Tex7
+                  => tObj.TexGenSrc - GxTexGenSrc.Tex0
           };
           finTexture.UvType = tObj.Flags.GetCoord() switch {
               Coord.UV         => UvType.STANDARD,
@@ -221,7 +221,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
               _                => UvType.STANDARD
           };
 
-          FinMatrix4X4Util.FromTrs(tObj.Translation,
+          FinMatrix4x4Util.FromTrs(tObj.Translation,
                                    tObj.RotationRadians.CreateZyxRadians(),
                                    tObj.Scale)
                           .InvertInPlace()
@@ -248,10 +248,10 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
               }
 
               var mObj = mObjByOffset[mObjOffset];
-              var tObjsAndOffsets = mObj.ObjsAndOffsets.ToArray();
+              var tObjsAndOffsets = mObj.TObjsAndOffsets.ToArray();
 
               var tObjsAndFinTextures =
-                  new (Obj, ITexture)[tObjsAndOffsets.Length];
+                  new (TObj, ITexture)[tObjsAndOffsets.Length];
               for (var i = 0; i < tObjsAndOffsets.Length; i++) {
                 var (tObjOffset, tObj) = tObjsAndOffsets[i];
                 tObjsAndFinTextures[i] = (
@@ -277,7 +277,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
               var peDesc = mObj.PeDesc;
               if (peDesc == null) {
                 fixedFunctionMaterial.SetAlphaCompare(
-                    AlphaCompareType.GREATER,
+                    AlphaCompareType.Greater,
                     0);
               } else {
                 fixedFunctionMaterial.DepthCompareType =
@@ -431,7 +431,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
   /// </summary>
   private void PopulateFixedFunctionMaterial_(
       MObj mObj,
-      IReadOnlyList<(Obj, ITexture)> tObjsAndFinTextures,
+      IReadOnlyList<(TObj, ITexture)> tObjsAndFinTextures,
       IFixedFunctionMaterial fixedFunctionMaterial) {
     var equations = fixedFunctionMaterial.Equations;
 
@@ -486,13 +486,13 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
     IColorValue diffuseLightColor = ColorConstant.ONE;
     IColorValue specularLightColor = ColorConstant.ZERO;
 
-    var lightingPasses = new LinkedList<ObjFlags>();
-    lightingPasses.AddLast(ObjFlags.LIGHTMAP_DIFFUSE);
+    var lightingPasses = new LinkedList<TObjFlags>();
+    lightingPasses.AddLast(TObjFlags.LIGHTMAP_DIFFUSE);
 
     // Shamelessly stolen from:
     // https://github.com/Ploaj/HSDLib/blob/93a906444f34951c6eed4d8c6172bba43d4ada98/HSDRawViewer/Shader/gx_material.frag#L81
     if (!(hasConstantRenderMode && !hasDiffuseRenderMode)) {
-      lightingPasses.AddFirst(ObjFlags.LIGHTMAP_AMBIENT);
+      lightingPasses.AddFirst(TObjFlags.LIGHTMAP_AMBIENT);
       ambientLightColor = equations.CreateOrGetColorInput(
           FixedFunctionSource.LIGHT_AMBIENT_COLOR);
 
@@ -501,7 +501,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
       }
 
       if (hasSpecularRenderMode) {
-        lightingPasses.AddLast(ObjFlags.LIGHTMAP_SPECULAR);
+        lightingPasses.AddLast(TObjFlags.LIGHTMAP_SPECULAR);
         specularLightColor = equations.GetMergedLightSpecularColor();
       }
     }
@@ -511,17 +511,17 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
       IScalarValue? alpha;
 
       switch (lightingPass) {
-        case ObjFlags.LIGHTMAP_DIFFUSE: {
+        case TObjFlags.LIGHTMAP_DIFFUSE: {
           color = diffuseSurfaceColor;
           alpha = diffuseSurfaceAlpha;
           break;
         }
-        case ObjFlags.LIGHTMAP_AMBIENT: {
+        case TObjFlags.LIGHTMAP_AMBIENT: {
           color = ambientSurfaceColor;
           alpha = ambientSurfaceAlpha;
           break;
         }
-        case ObjFlags.LIGHTMAP_SPECULAR: {
+        case TObjFlags.LIGHTMAP_SPECULAR: {
           color = specularSurfaceColor;
           alpha = specularSurfaceAlpha;
           break;
@@ -545,17 +545,17 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
             ref alpha);
 
         switch (lightingPass) {
-          case ObjFlags.LIGHTMAP_DIFFUSE: {
+          case TObjFlags.LIGHTMAP_DIFFUSE: {
             diffuseSurfaceColor = color;
             diffuseSurfaceAlpha = alpha;
             break;
           }
-          case ObjFlags.LIGHTMAP_AMBIENT: {
+          case TObjFlags.LIGHTMAP_AMBIENT: {
             ambientSurfaceColor = color;
             ambientSurfaceAlpha = alpha;
             break;
           }
-          case ObjFlags.LIGHTMAP_SPECULAR: {
+          case TObjFlags.LIGHTMAP_SPECULAR: {
             specularSurfaceColor = color;
             specularSurfaceAlpha = alpha;
             break;
@@ -583,7 +583,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
 
     for (var i = 0; i < tObjsAndFinTextures.Count; ++i) {
       var (tObj, _) = tObjsAndFinTextures[i];
-      if (!tObj.Flags.CheckFlag(ObjFlags.LIGHTMAP_EXT)) {
+      if (!tObj.Flags.CheckFlag(TObjFlags.LIGHTMAP_EXT)) {
         continue;
       }
 
@@ -605,7 +605,7 @@ public sealed class DatModelImporter : IModelImporter<DatModelFileBundle> {
   }
 
   private void PerformTextureLightingPass_(
-      Obj tObj,
+      TObj tObj,
       int textureIndex,
       IFixedFunctionEquations<FixedFunctionSource> equations,
       IColorOps colorOps,

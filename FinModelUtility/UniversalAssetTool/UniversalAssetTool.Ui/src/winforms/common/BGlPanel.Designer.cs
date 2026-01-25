@@ -45,7 +45,7 @@ namespace uni.ui.winforms.common {
       glControlSettings.API
           = OpenGlVersionService.Es ? ContextAPI.OpenGLES : ContextAPI.OpenGL;
 
-      if (GlConstants.COMPATIBILITY) {
+      if (GlConstants.Compatibility) {
         glControlSettings.Profile = ContextProfile.Compatability;
       }
 

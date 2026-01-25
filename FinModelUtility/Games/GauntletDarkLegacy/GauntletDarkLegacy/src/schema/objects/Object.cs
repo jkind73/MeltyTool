@@ -33,10 +33,10 @@ public sealed partial class Object : IBinaryDeserializable {
   public SubObjectModels? SubObjectModels { get; set; }
 
   [Skip]
-  private int TrueSubObjCount => ((int) this.SubObjectCount) - 1;
+  private int TrueSubObjCount_ => ((int) this.SubObjectCount) - 1;
 
   [RAtPosition(nameof(SubObjectPointer))]
-  [RSequenceLengthSource(nameof(TrueSubObjCount))]
+  [RSequenceLengthSource(nameof(TrueSubObjCount_))]
   public SubObject[] SubObjectsPast0 { get; set; }
 
   [Skip]

@@ -1,32 +1,32 @@
 ﻿namespace gx;
 
 public enum GxColorSrc : byte {
-  REGISTER = 0, // Use Register Colors
-  VERTEX = 1    // Use Vertex Colors
+  Register = 0, // Use Register Colors
+  Vertex = 1    // Use Vertex Colors
 }
 
 public enum GxAttenuationFunction : byte {
   // No attenuation
-  NONE = 2,
+  None = 2,
 
   // Specular Computation
-  SPEC = 0,
+  Spec = 0,
 
   // Spot Light Attenuation
-  SPOT = 1
+  Spot = 1
 }
 
 [Flags]
 public enum GxLightMask : byte {
-  LIGHT0 = 0x01,
-  LIGHT1 = 0x02,
-  LIGHT2 = 0x04,
-  LIGHT3 = 0x08,
-  LIGHT4 = 0x10,
-  LIGHT5 = 0x20,
-  LIGHT6 = 0x40,
-  LIGHT7 = 0x80,
-  NONE = 0x00
+  Light0 = 0x01,
+  Light1 = 0x02,
+  Light2 = 0x04,
+  Light3 = 0x08,
+  Light4 = 0x10,
+  Light5 = 0x20,
+  Light6 = 0x40,
+  Light7 = 0x80,
+  None = 0x00
 }
 
 public static class GxLightMaskExtensions {
@@ -41,9 +41,9 @@ public static class GxLightMaskExtensions {
 }
 
 public enum GxDiffuseFunction : byte {
-  NONE = 0,
-  SIGNED = 1,
-  CLAMP = 2
+  None = 0,
+  Signed = 1,
+  Clamp = 2
 }
 
 

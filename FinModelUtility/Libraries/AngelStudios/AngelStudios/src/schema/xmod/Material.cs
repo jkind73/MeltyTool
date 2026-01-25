@@ -21,7 +21,7 @@ public sealed class Material : ITextDeserializable {
   public void Read(ITextReader tr) {
     tr.AssertString("mtl ");
 
-    this.Name = tr.ReadUpToAndPastTerminator(TextReaderUtils.openBrace);
+    this.Name = tr.ReadUpToAndPastTerminator(TextReaderUtils.OPEN_BRACE);
 
     this.NumPackets = TextReaderUtils.ReadKeyValueNumber<int>(tr, "packets");
     TextReaderUtils.ReadKeyValueNumber<int>(tr, "primitives");
@@ -55,7 +55,7 @@ public sealed class Material : ITextDeserializable {
       }
     }
 
-    tr.ReadUpToAndPastTerminator(TextReaderUtils.closingBrace);
+    tr.ReadUpToAndPastTerminator(TextReaderUtils.CLOSING_BRACE);
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
   }
 }

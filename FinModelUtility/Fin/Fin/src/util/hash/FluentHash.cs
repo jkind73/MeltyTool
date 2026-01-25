@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 namespace fin.util.hash;
 
 public struct FluentHash {
-  private static int nullHash_ = 0xDEADBEEF.GetHashCode();
+  private static int NULL_HASH = 0xDEADBEEF.GetHashCode();
 
   public int Hash { get; private set; }
   private readonly int primeCoefficient_;
@@ -32,7 +32,7 @@ public struct FluentHash {
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public FluentHash With<T>(T? other) where T : notnull
-    => this.With(other?.GetHashCode() ?? nullHash_);
+    => this.With(other?.GetHashCode() ?? NULL_HASH);
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public FluentHash With<T>(ReadOnlySpan<T> others) where T : notnull {

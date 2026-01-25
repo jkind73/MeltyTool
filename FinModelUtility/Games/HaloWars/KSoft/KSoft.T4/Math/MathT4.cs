@@ -62,7 +62,7 @@ namespace KSoft.T4.Math
 				if (this.Dimensions >= 3) yield return new VectorComponent(2, "z", this.Dimensions);
 			} }
 
-			public bool ComponentsRequireCast { get { return this.CodeDef.SizeOfInBytes < PrimitiveDefinitions.KInt32.SizeOfInBytes; } }
+			public bool ComponentsRequireCast { get { return this.CodeDef.SizeOfInBytes < PrimitiveDefinitions.kInt32.SizeOfInBytes; } }
 
 			public string ComponentDecls(string prefix = "", string suffix = "")
 			{
@@ -135,10 +135,10 @@ namespace KSoft.T4.Math
 			}
 		};
 		public static IEnumerable<VectorDef> IntegralVectors { get {
-			yield return new VectorDef(PrimitiveDefinitions.KInt16, 2);
-			yield return new VectorDef(PrimitiveDefinitions.KInt16, 3);
-			yield return new VectorDef(PrimitiveDefinitions.KInt32, 2);
-			yield return new VectorDef(PrimitiveDefinitions.KInt32, 3);
+			yield return new VectorDef(PrimitiveDefinitions.kInt16, 2);
+			yield return new VectorDef(PrimitiveDefinitions.kInt16, 3);
+			yield return new VectorDef(PrimitiveDefinitions.kInt32, 2);
+			yield return new VectorDef(PrimitiveDefinitions.kInt32, 3);
 		} }
 	};
 }

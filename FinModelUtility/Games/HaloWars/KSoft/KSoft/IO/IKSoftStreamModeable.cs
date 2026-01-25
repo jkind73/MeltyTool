@@ -12,7 +12,7 @@ namespace KSoft.IO
 	// For the lack of a better name...
 
 	/// <summary>Exposes data streaming state information and control</summary>
-	[Contracts.ContractClass(typeof(IkSoftStreamModeableContract))]
+	[Contracts.ContractClass(typeof(IKSoftStreamModeableContract))]
 	public interface IKSoftStreamModeable
 	{
 		/// <summary>Supported access permissions for the stream</summary>
@@ -24,7 +24,7 @@ namespace KSoft.IO
 	};
 
 	[Contracts.ContractClassFor(typeof(IKSoftStreamModeable))]
-	abstract class IkSoftStreamModeableContract : IKSoftStreamModeable
+	abstract class IKSoftStreamModeableContract : IKSoftStreamModeable
 	{
 		public abstract FileAccess StreamPermissions { get; }
 

@@ -18,32 +18,32 @@ public interface ILogger {
 }
 
 public sealed class Logging {
-  private static bool verbose_ = true;
+  private static bool VERBOSE_ = true;
 
-  private static ILoggerFactory factory_ = LoggerFactory.Create(
+  private static ILoggerFactory FACTORY_ = LoggerFactory.Create(
       builder =>
           builder //.AddConsole()
               .AddProvider(new CleanConsoleLoggerProvider())
               .AddDebug()
               .AddFilter(
                   logLevel
-                      => verbose_ ||
-                         VERBOSE_EXCEPTIONS_.Contains(logLevel)));
+                      => VERBOSE_ ||
+                         verboseExceptions_.Contains(logLevel)));
 
-  private static readonly IList<LogLevel> VERBOSE_EXCEPTIONS_ = [
+  private static readonly IList<LogLevel> verboseExceptions_ = [
       LogLevel.Critical, LogLevel.Error, LogLevel.Warning,
   ];
 
 
   public static void Initialize(bool verbose) {
-    verbose_ = verbose;
+    VERBOSE_ = verbose;
   }
 
   public static FinLogger Create<T>()
-    => new Logger(factory_.CreateLogger<T>());
+    => new Logger(FACTORY_.CreateLogger<T>());
 
   public static FinLogger Create(string categoryName)
-    => new Logger(factory_.CreateLogger(categoryName));
+    => new Logger(FACTORY_.CreateLogger(categoryName));
 
 
   private sealed class Logger(MicrosoftLogger impl) : ILogger {

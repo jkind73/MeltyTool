@@ -17,7 +17,7 @@ public sealed partial class Texture : IBinaryConvertible {
   public enum TextureFormat : uint {
     RGB565 = 0,
     CMPR = 1,
-    RGB5_A3 = 2,
+    RGB5A3 = 2,
     I4 = 3,
     I8 = 4,
     IA4 = 5,
@@ -35,27 +35,27 @@ public sealed partial class Texture : IBinaryConvertible {
   public ushort height = 0;
   public TextureFormat format = 0;
 
-  public uint mipmapCount;
+  public uint MipmapCount;
 
   [Unknown]
   public readonly uint[] unknowns = new uint[4];
 
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public byte[] ImageData { get; set; }
+  public byte[] imageData { get; set; }
 
   public IImage[] ToMipmapImages() {
     using var br
-        = new SchemaBinaryReader(this.ImageData, Endianness.BigEndian);
+        = new SchemaBinaryReader(this.imageData, Endianness.BigEndian);
 
-    var images = new IImage[this.mipmapCount];
+    var images = new IImage[this.MipmapCount];
     for (var i = 0; i < images.Length; ++i) {
       images[i] = new GxImageReader(
               this.width >> i,
               this.height >> i,
               this.format switch {
                   TextureFormat.RGB565 => GxTextureFormat.R5_G6_B5,
-                  TextureFormat.CMPR => GxTextureFormat.S3_TC1,
-                  TextureFormat.RGB5_A3 => GxTextureFormat.A3_RGB5,
+                  TextureFormat.CMPR => GxTextureFormat.S3TC1,
+                  TextureFormat.RGB5A3 => GxTextureFormat.A3_RGB5,
                   TextureFormat.I4 => GxTextureFormat.I4,
                   TextureFormat.I8 => GxTextureFormat.I8,
                   TextureFormat.IA4 => GxTextureFormat.A4_I4,

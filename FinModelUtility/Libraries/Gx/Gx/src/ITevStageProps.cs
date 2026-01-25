@@ -64,44 +64,44 @@ public enum ColorRegister : byte {
 }
 
 public interface ITevStageProps {
-  GxCc ColorA { get; }
-  GxCc ColorB { get; }
-  GxCc ColorC { get; }
-  GxCc ColorD { get; }
-  TevOp ColorOp { get; }
-  TevBias ColorBias { get; }
-  TevScale ColorScale { get; }
-  bool ColorClamp { get; }
-  ColorRegister ColorRegid { get; }
+  GxCc color_a { get; }
+  GxCc color_b { get; }
+  GxCc color_c { get; }
+  GxCc color_d { get; }
+  TevOp color_op { get; }
+  TevBias color_bias { get; }
+  TevScale color_scale { get; }
+  bool color_clamp { get; }
+  ColorRegister color_regid { get; }
 
-  GxCa AlphaA { get; }
-  GxCa AlphaB { get; }
-  GxCa AlphaC { get; }
-  GxCa AlphaD { get; }
-  TevOp AlphaOp { get; }
-  TevBias AlphaBias { get; }
-  TevScale AlphaScale { get; }
-  bool AlphaClamp { get; }
-  ColorRegister AlphaRegid { get; }
+  GxCa alpha_a { get; }
+  GxCa alpha_b { get; }
+  GxCa alpha_c { get; }
+  GxCa alpha_d { get; }
+  TevOp alpha_op { get; }
+  TevBias alpha_bias { get; }
+  TevScale alpha_scale { get; }
+  bool alpha_clamp { get; }
+  ColorRegister alpha_regid { get; }
 }
 
 public sealed class TevStagePropsImpl : ITevStageProps {
-  public GxCc ColorA { get; set; }
-  public GxCc ColorB { get; set; }
-  public GxCc ColorC { get; set; }
-  public GxCc ColorD { get; set; }
-  public TevOp ColorOp { get; set; }
-  public TevBias ColorBias { get; set; }
-  public TevScale ColorScale { get; set; }
-  public bool ColorClamp { get; set; }
-  public ColorRegister ColorRegid { get; set; }
-  public GxCa AlphaA { get; set; }
-  public GxCa AlphaB { get; set; }
-  public GxCa AlphaC { get; set; }
-  public GxCa AlphaD { get; set; }
-  public TevOp AlphaOp { get; set; }
-  public TevBias AlphaBias { get; set; }
-  public TevScale AlphaScale { get; set; }
-  public bool AlphaClamp { get; set; }
-  public ColorRegister AlphaRegid { get; set; }
+  public GxCc color_a { get; set; }
+  public GxCc color_b { get; set; }
+  public GxCc color_c { get; set; }
+  public GxCc color_d { get; set; }
+  public TevOp color_op { get; set; }
+  public TevBias color_bias { get; set; }
+  public TevScale color_scale { get; set; }
+  public bool color_clamp { get; set; }
+  public ColorRegister color_regid { get; set; }
+  public GxCa alpha_a { get; set; }
+  public GxCa alpha_b { get; set; }
+  public GxCa alpha_c { get; set; }
+  public GxCa alpha_d { get; set; }
+  public TevOp alpha_op { get; set; }
+  public TevBias alpha_bias { get; set; }
+  public TevScale alpha_scale { get; set; }
+  public bool alpha_clamp { get; set; }
+  public ColorRegister alpha_regid { get; set; }
 }

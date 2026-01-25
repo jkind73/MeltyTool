@@ -7,36 +7,36 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerUnscOdst
 		: BPower
 	{
-		public struct BodstDrop
+		public struct BODSTDrop
 			: IO.IEndianStreamSerializable
 		{
 			// A BVector field?
-			public ulong unknown0, unknown8;
+			public ulong Unknown0, Unknown8;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.unknown0); s.Stream(ref this.unknown8);
+				s.Stream(ref this.Unknown0); s.Stream(ref this.Unknown8);
 			}
 			#endregion
 		};
 
-		public float squadSpawnDelay;
-		public BodstDrop[] activeDrops;
-		public BProtoObjectID projectileProtoId, odstProtoSquadId;
-		public BAIMissionID addToMissionId;
-		public bool readyForShutdown;
+		public float SquadSpawnDelay;
+		public BODSTDrop[] ActiveDrops;
+		public BProtoObjectID ProjectileProtoID, ODSTProtoSquadID;
+		public BAIMissionID AddToMissionID;
+		public bool ReadyForShutdown;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(ref this.squadSpawnDelay);
-			BSaveGame.StreamArray(s, ref this.activeDrops);
-			s.Stream(ref this.projectileProtoId); s.Stream(ref this.odstProtoSquadId);
-			s.Stream(ref this.addToMissionId);
-			s.Stream(ref this.readyForShutdown);
+			s.Stream(ref this.SquadSpawnDelay);
+			BSaveGame.StreamArray(s, ref this.ActiveDrops);
+			s.Stream(ref this.ProjectileProtoID); s.Stream(ref this.ODSTProtoSquadID);
+			s.Stream(ref this.AddToMissionID);
+			s.Stream(ref this.ReadyForShutdown);
 		}
 		#endregion
 	};

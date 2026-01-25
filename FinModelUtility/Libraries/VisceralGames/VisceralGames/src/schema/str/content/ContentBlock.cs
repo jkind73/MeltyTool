@@ -11,14 +11,14 @@ public sealed partial class ContentBlock : IBlock {
     = new(br => (ContentType) br.ReadUInt32(),
           (bw, magic) => bw.WriteUInt32((uint) magic),
           magic => magic switch {
-              ContentType.HEADER         => new FileInfo(),
-              ContentType.DATA           => new UncompressedData(),
-              ContentType.COMPRESSED_DATA => new RefPackCompressedData(),
+              ContentType.Header         => new FileInfo(),
+              ContentType.Data           => new UncompressedData(),
+              ContentType.CompressedData => new RefPackCompressedData(),
               _                          => throw new ArgumentOutOfRangeException(nameof(magic), magic, null)
           });
 
   [Skip]
-  public BlockType Type => BlockType.CONTENT;
+  public BlockType Type => BlockType.Content;
 
   public override string ToString() => this.Impl.ToString();
 }

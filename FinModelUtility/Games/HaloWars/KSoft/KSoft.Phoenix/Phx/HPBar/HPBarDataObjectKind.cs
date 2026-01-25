@@ -1,15 +1,15 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public enum HpBarDataObjectKind
+	public enum HPBarDataObjectKind
 	{
-		NONE = PhxUtil.K_OBJECT_KIND_NONE,
+		None = PhxUtil.kObjectKindNone,
 
-		HP_BAR,
-		COLOR_STAGES,
-		VETERANCY_BAR,
-		PIE_PROGRESS,
-		BOBBLE_HEAD,
-		BUILDING_STRENGTH,
+		HPBar,
+		ColorStages,
+		VeterancyBar,
+		PieProgress,
+		BobbleHead,
+		BuildingStrength,
 	};
 }

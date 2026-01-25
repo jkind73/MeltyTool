@@ -33,17 +33,17 @@ public static class Leo {
   ];
 
   /* Outer Track per Zone [zone] */
-  static readonly int[] PZONE_TRACK_ =
+  static readonly int[] PZONE_TRACK =
     [0x000, 0x09E, 0x13C, 0x1D1, 0x266, 0x2FB, 0x390, 0x425, 0x497];
 
   /* Start Track of Zone [pzone] */
-  static readonly int[] TRACK_START_ZONE_TBL_ = [
+  static readonly int[] TRACK_START_ZONE_TBL = [
     0x000, 0x09E, 0x13C, 0x1D1, 0x266, 0x2FB, 0x390, 0x425,
     0x091, 0x12F, 0x1C4, 0x259, 0x2EE, 0x383, 0x418, 0x48A
   ];
 
   /* LBA to VZone [type,vzone] */
-  static readonly int[,] VZONE_LBA_TBL_ = {
+  static readonly int[,] VZONE_LBA_TBL = {
     {
       0x0124, 0x0248, 0x035A, 0x047E, 0x05A2, 0x06B4, 0x07C6, 0x08D8,
       0x09EA, 0x0AB6, 0x0B82, 0x0C94, 0x0DA6, 0x0EB8, 0x0FCA, 0x10DC
@@ -69,7 +69,7 @@ public static class Leo {
   };
 
   /* VZone to PZone [type,vzone] */
-  static readonly int[,] VZONE_PZONE_TBL_ = {
+  static readonly int[,] VZONE_PZONE_TBL = {
     {
       0x0, 0x1, 0x2, 0x9, 0x8, 0x3, 0x4, 0x5, 0x6, 0x7, 0xF, 0xE, 0xD, 0xC,
       0xB, 0xA
@@ -95,17 +95,17 @@ public static class Leo {
   };
 
   /* LBA Start RAM Area [type] */
-  public static readonly short[] RAM_START_LBA =
+  public static readonly short[] RamStartLBA =
     [0x5A2, 0x7C6, 0x9EA, 0xC0E, 0xE32, 0x1010, 0x10DC];
 
   /* RAM Area Total Sizes [type] */
-  public static readonly int[] RAM_SIZE =
+  public static readonly int[] RamSize =
     [0x24A9DC0, 0x1C226C0, 0x1450F00, 0xD35680, 0x6CFD40, 0x1DA240, 0x0];
 
   /* LBA To Virtual Zone */
-  public static int LbaToVZone(int lba, int disktype) {
+  public static int LBAToVZone(int lba, int disktype) {
     for (int vzone = 0; vzone < 16; vzone++) {
-      if (lba < VZONE_LBA_TBL_[disktype, vzone]) {
+      if (lba < VZONE_LBA_TBL[disktype, vzone]) {
         return vzone;
       }
     }
@@ -115,10 +115,10 @@ public static class Leo {
 
   /* Virtual Zone to Physical Zone */
   public static int VZoneToPZone(int vzone, int disktype)
-    => VZONE_PZONE_TBL_[disktype, vzone];
+    => VZONE_PZONE_TBL[disktype, vzone];
 
   /* Calculate byte size from LBA x to LBA x+y */
-  public static int LbaToByte(int disktype, int startlba, int nlbas) {
+  public static int LBAToByte(int disktype, int startlba, int nlbas) {
     if (disktype < 0 && disktype > 7)
       throw new ArgumentOutOfRangeException("Disk Type out of range",
                                             disktype.ToString());
@@ -133,16 +133,16 @@ public static class Leo {
                                             (startlba + nlbas).ToString());
 
     int totalbytes = 0;
-    bool initFlag = true;
+    bool init_flag = true;
     int vzone = 1;
     int pzone = 0;
     int lba = startlba;
-    int lbaCount = nlbas;
+    int lba_count = nlbas;
     int blkbytes = 0;
     if (nlbas != 0) {
-      for (; lbaCount != 0; lbaCount--) {
-        if ((initFlag) || (VZONE_LBA_TBL_[disktype, vzone] == lba)) {
-          vzone = LbaToVZone(lba, disktype);
+      for (; lba_count != 0; lba_count--) {
+        if ((init_flag) || (VZONE_LBA_TBL[disktype, vzone] == lba)) {
+          vzone = LBAToVZone(lba, disktype);
           pzone = VZoneToPZone(vzone, disktype);
           if (7 < pzone) {
             pzone -= 7;
@@ -153,8 +153,8 @@ public static class Leo {
 
         totalbytes += blkbytes;
         lba++;
-        initFlag = false;
-        if ((lbaCount > 1) && (lba > MAX_LBA)) {
+        init_flag = false;
+        if ((lba_count > 1) && (lba > MAX_LBA)) {
           return -1;
         }
       }
@@ -164,29 +164,29 @@ public static class Leo {
   }
 
   /* MAME Disk Format Offsets for each zone */
-  static readonly int[] MAME_OFFSET_TABLE_ = [
+  static readonly int[] MAMEOffsetTable = [
     0x0, 0x5F15E0, 0xB79D00, 0x10801A0, 0x1523720, 0x1963D80, 0x1D414C0,
     0x20BBCE0,
     0x23196E0, 0x28A1E00, 0x2DF5DC0, 0x3299340, 0x36D99A0, 0x3AB70E0,
     0x3E31900, 0x4149200
   ];
 
-  public static int LbaToMameOffset(int lba, ReadOnlySpan<byte> sysData) {
+  public static int LBAToMAMEOffset(int lba, ReadOnlySpan<byte> sysData) {
     if (lba < 0 && lba > Leo.MAX_LBA)
       throw new ArgumentOutOfRangeException("LBA out of range", lba.ToString());
 
     int head, track, block;
-    LbaToPhys(lba, sysData, out head, out track, out block);
-    return PhysToMameOffset(head, track, block, 0);
+    LBAToPhys(lba, sysData, out head, out track, out block);
+    return PhysToMAMEOffset(head, track, block, 0);
   }
 
   public static int
-    PhysToMameOffset(int head, int track, int block, int sector) {
-    int pzone = Array.FindIndex(PZONE_TRACK_, x => track < x) - 1;
+    PhysToMAMEOffset(int head, int track, int block, int sector) {
+    int pzone = Array.FindIndex(PZONE_TRACK, x => track < x) - 1;
 
-    int trackRelative = track - PZONE_TRACK_[pzone];
+    int trackRelative = track - PZONE_TRACK[pzone];
 
-    int offsetCalc = MAME_OFFSET_TABLE_[pzone + (head * 8)];
+    int offsetCalc = MAMEOffsetTable[pzone + (head * 8)];
     offsetCalc += BLOCK_SIZE[pzone + head] * 2 * trackRelative;
     offsetCalc += block * BLOCK_SIZE[pzone + head];
     offsetCalc += sector * SECTOR_SIZE[pzone + head];
@@ -198,7 +198,7 @@ public static class Leo {
     return offsetCalc;
   }
 
-  public static void LbaToPhys(int lba,
+  public static void LBAToPhys(int lba,
                                ReadOnlySpan<byte> sysData,
                                out int head,
                                out int track,
@@ -216,29 +216,29 @@ public static class Leo {
       block = 1;
 
     //Calculate Head & Track
-    int vZone = LbaToVZone(lba, diskType);
-    int pZone = VZoneToPZone(vZone, diskType);
+    int VZone = LBAToVZone(lba, diskType);
+    int PZone = VZoneToPZone(VZone, diskType);
 
     //Get Head
-    head = (7 < pZone) ? 1 : 0;
+    head = (7 < PZone) ? 1 : 0;
 
-    int calcPZone = pZone - (head * 7);
+    int calcPZone = PZone - (head * 7);
 
     int calcTrack
-      = (lba - ((vZone == 0) ? 0 : VZONE_LBA_TBL_[diskType, vZone - 1])) /
+      = (lba - ((VZone == 0) ? 0 : VZONE_LBA_TBL[diskType, VZone - 1])) /
         BLOCKS_PER_TRACK;
 
     //int zoneTrackStart = PZONE_TRACK[calcPZone - head];
-    int zoneTrackStart = TRACK_START_ZONE_TBL_[pZone];
+    int zoneTrackStart = TRACK_START_ZONE_TBL[PZone];
     if (head == 1) {
       calcTrack = -calcTrack;
-      zoneTrackStart = PZONE_TRACK_[calcPZone - head];
+      zoneTrackStart = PZONE_TRACK[calcPZone - head];
     }
 
-    calcTrack += TRACK_START_ZONE_TBL_[pZone];
+    calcTrack += TRACK_START_ZONE_TBL[PZone];
 
-    int calcDefectOffset = (pZone == 0) ? 0 : sysData[8 + pZone - 1];
-    int calcDefectAmount = sysData[8 + pZone] - calcDefectOffset;
+    int calcDefectOffset = (PZone == 0) ? 0 : sysData[8 + PZone - 1];
+    int calcDefectAmount = sysData[8 + PZone] - calcDefectOffset;
 
     while ((calcDefectAmount > 0) &&
            ((sysData[0x20 + calcDefectOffset] + zoneTrackStart) <= calcTrack)) {

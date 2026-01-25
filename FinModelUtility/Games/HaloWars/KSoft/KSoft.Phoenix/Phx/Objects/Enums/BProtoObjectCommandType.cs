@@ -3,29 +3,29 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BProtoObjectCommandType
 	{
-		INVALID = TypeExtensions.K_NONE,
+		Invalid = TypeExtensions.kNone,
 
-		RESEARCH = 0,
-		TRAIN_UNIT,
-		BUILD,
-		TRAIN_SQUAD,
-		UNLOAD,
-		REINFORCE,
-		CHANGE_MODE,
-		ABILITY,
-		KILL,
-		CANCEL_KILL,
-		TRIBUTE,
-		CUSTOM_COMMAND,
-		POWER,
-		BUILD_OTHER,
-		TRAIN_LOCK,
-		TRAIN_UNLOCK,
-		RALLY_POINT,
-		CLEAR_RALLY_POINT,
-		DESTROY_BASE,
-		CANCEL_DESTROY_BASE,
-		REVERSE_HOT_DROP,
+		Research = 0,
+		TrainUnit,
+		Build,
+		TrainSquad,
+		Unload,
+		Reinforce,
+		ChangeMode,
+		Ability,
+		Kill,
+		CancelKill,
+		Tribute,
+		CustomCommand,
+		Power,
+		BuildOther,
+		TrainLock,
+		TrainUnlock,
+		RallyPoint,
+		ClearRallyPoint,
+		DestroyBase,
+		CancelDestroyBase,
+		ReverseHotDrop,
 	};
 }
 
@@ -37,13 +37,13 @@ namespace KSoft.Phoenix
 		{
 			switch(type)
 			{
-				case Phx.BProtoObjectCommandType.RESEARCH:
-				case Phx.BProtoObjectCommandType.TRAIN_UNIT:
-				case Phx.BProtoObjectCommandType.BUILD:
-				case Phx.BProtoObjectCommandType.BUILD_OTHER:
-				case Phx.BProtoObjectCommandType.TRAIN_SQUAD:
-				case Phx.BProtoObjectCommandType.ABILITY:
-				case Phx.BProtoObjectCommandType.POWER:
+				case Phx.BProtoObjectCommandType.Research:
+				case Phx.BProtoObjectCommandType.TrainUnit:
+				case Phx.BProtoObjectCommandType.Build:
+				case Phx.BProtoObjectCommandType.BuildOther:
+				case Phx.BProtoObjectCommandType.TrainSquad:
+				case Phx.BProtoObjectCommandType.Ability:
+				case Phx.BProtoObjectCommandType.Power:
 					return true;
 
 				default:
@@ -55,25 +55,25 @@ namespace KSoft.Phoenix
 		{
 			switch (type)
 			{
-				case Phx.BProtoObjectCommandType.RESEARCH:
-					return Phx.DatabaseObjectKind.TECH;
+				case Phx.BProtoObjectCommandType.Research:
+					return Phx.DatabaseObjectKind.Tech;
 
-				case Phx.BProtoObjectCommandType.TRAIN_UNIT:
-				case Phx.BProtoObjectCommandType.BUILD:
-				case Phx.BProtoObjectCommandType.BUILD_OTHER:
-					return Phx.DatabaseObjectKind.OBJECT;
+				case Phx.BProtoObjectCommandType.TrainUnit:
+				case Phx.BProtoObjectCommandType.Build:
+				case Phx.BProtoObjectCommandType.BuildOther:
+					return Phx.DatabaseObjectKind.Object;
 
-				case Phx.BProtoObjectCommandType.TRAIN_SQUAD:
-					return Phx.DatabaseObjectKind.SQUAD;
+				case Phx.BProtoObjectCommandType.TrainSquad:
+					return Phx.DatabaseObjectKind.Squad;
 
-				case Phx.BProtoObjectCommandType.ABILITY:
-					return Phx.DatabaseObjectKind.ABILITY;
+				case Phx.BProtoObjectCommandType.Ability:
+					return Phx.DatabaseObjectKind.Ability;
 
-				case Phx.BProtoObjectCommandType.POWER:
-					return Phx.DatabaseObjectKind.POWER;
+				case Phx.BProtoObjectCommandType.Power:
+					return Phx.DatabaseObjectKind.Power;
 
 				default:
-					return Phx.DatabaseObjectKind.NONE;
+					return Phx.DatabaseObjectKind.None;
 			}
 		}
 	};

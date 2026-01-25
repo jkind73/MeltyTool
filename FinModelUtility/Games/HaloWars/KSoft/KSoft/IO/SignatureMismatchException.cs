@@ -11,17 +11,17 @@ namespace KSoft.IO
 	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA2237:MarkISerializableTypesWithSerializable")]
 	public partial class SignatureMismatchException : System.Exception
 	{
-		const string K_FORMAT_ = "Invalid signature! @{0} Expected '{1}', got '{2}'";
-		const string K_DESC_FORMAT_ = "Invalid '{0}' signature! Expected '{1}', got '{2}'";
+		const string kFormat = "Invalid signature! @{0} Expected '{1}', got '{2}'";
+		const string kDescFormat = "Invalid '{0}' signature! Expected '{1}', got '{2}'";
 
 		public SignatureMismatchException(string dataDescription, string expected, string found)
-			: base(string.Format(Util.InvariantCultureInfo, K_DESC_FORMAT_, dataDescription, expected, found))
+			: base(string.Format(Util.InvariantCultureInfo, kDescFormat, dataDescription, expected, found))
 		{
 			Contract.Requires(!string.IsNullOrEmpty(dataDescription));
 		}
 
 		SignatureMismatchException(long pos, string expected, string found) :
-			base(string.Format(Util.InvariantCultureInfo, K_FORMAT_, pos.ToString("X8", Util.InvariantCultureInfo), expected, found))
+			base(string.Format(Util.InvariantCultureInfo, kFormat, pos.ToString("X8", Util.InvariantCultureInfo), expected, found))
 		{
 		}
 

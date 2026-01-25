@@ -12,10 +12,10 @@ namespace KSoft.Phoenix.XML
 	public static partial class XmlUtil
 	{
 		/// <summary>Pass this to a Stream call when reading something from the Text data (which doesn't have a name), just to be clear of the code's intention</summary>
-		public const string K_NO_XML_NAME = null;
-		public const IO.TagElementNodeType K_SOURCE_ATTR = IO.TagElementNodeType.ATTRIBUTE;
-		public const IO.TagElementNodeType K_SOURCE_ELEMENT = IO.TagElementNodeType.ELEMENT;
-		public const IO.TagElementNodeType K_SOURCE_CURSOR = IO.TagElementNodeType.TEXT;
+		public const string kNoXmlName = null;
+		public const IO.TagElementNodeType kSourceAttr = IO.TagElementNodeType.Attribute;
+		public const IO.TagElementNodeType kSourceElement = IO.TagElementNodeType.Element;
+		public const IO.TagElementNodeType kSourceCursor = IO.TagElementNodeType.Text;
 
 		public static void ReadDetermineListSize<TDoc, TCursor, T>(IO.TagElementStream<TDoc, TCursor, string> s, List<T> list)
 			where TDoc : class
@@ -25,19 +25,19 @@ namespace KSoft.Phoenix.XML
 			Contract.Requires(list != null);
 			Contract.Requires(s.IsReading);
 
-			int childElementCount = s.TryGetCursorElementCount();
-			if (list.Capacity < childElementCount)
-				list.Capacity = childElementCount;
+			int child_element_count = s.TryGetCursorElementCount();
+			if (list.Capacity < child_element_count)
+				list.Capacity = child_element_count;
 		}
 
 		public static IEnumerable<TCursor> ReadGetNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, string xmlName, IO.TagElementNodeType xmlSource)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != K_NO_XML_NAME));
-			Contract.Requires(xmlSource != IO.TagElementNodeType.ATTRIBUTE);
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != kNoXmlName));
+			Contract.Requires(xmlSource != IO.TagElementNodeType.Attribute);
 
-			return xmlSource == IO.TagElementNodeType.TEXT
+			return xmlSource == IO.TagElementNodeType.Text
 				? s.ElementsByName(xmlName)
 				: s.Elements;
 		}
@@ -50,128 +50,128 @@ namespace KSoft.Phoenix
 	{
 		public static bool StreamBVector<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s
 			, string xmlName, ref BVector vector
-			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.K_SOURCE_ELEMENT)
+			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.kNoXmlName));
 
-			string stringValue = null;
-			bool wasStreamed = true;
-			const bool toLower = false;
+			string string_value = null;
+			bool was_streamed = true;
+			const bool to_lower = false;
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref stringValue, toLower, xmlSource);
+					was_streamed = s.StreamStringOpt(xmlName, ref string_value, to_lower, xmlSource);
 				else
-					s.StreamString(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamString(xmlName, ref string_value, to_lower, xmlSource);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					var parseResult = ParseBVectorString(stringValue);
-					if (!parseResult.HasValue)
+					var parse_result = ParseBVectorString(string_value);
+					if (!parse_result.HasValue)
 						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
 							"Failed to parse value (hint: {0}) as vector: {1}",
 							xmlSource.RequiresName() ? xmlName : "ElementText",
-							stringValue)));
+							string_value)));
 
-					vector = parseResult.Value;
+					vector = parse_result.Value;
 				}
 			}
 			else if (s.IsWriting)
 			{
 				if (isOptional && PhxPredicates.IsZero(vector))
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				stringValue = vector.ToBVectorString();
+				string_value = vector.ToBVectorString();
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamStringOpt(xmlName, ref string_value, to_lower, xmlSource);
 				else
-					s.StreamString(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamString(xmlName, ref string_value, to_lower, xmlSource);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
 		public static bool StreamIntegerColor<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s
 			, string xmlName, ref System.Drawing.Color color
 			, byte defaultAlpha = 0xFF
-			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.K_SOURCE_ELEMENT)
+			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.kSourceElement)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.kNoXmlName));
 
-			string stringValue = null;
-			bool wasStreamed = true;
-			const bool toLower = false;
+			string string_value = null;
+			bool was_streamed = true;
+			const bool to_lower = false;
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref stringValue, toLower, xmlSource);
+					was_streamed = s.StreamStringOpt(xmlName, ref string_value, to_lower, xmlSource);
 				else
-					s.StreamString(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamString(xmlName, ref string_value, to_lower, xmlSource);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					if (!TokenizeIntegerColor(stringValue, defaultAlpha, ref color))
+					if (!TokenizeIntegerColor(string_value, defaultAlpha, ref color))
 						s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
 							"Failed to parse value (hint: {0}) as color: {1}",
 							xmlSource.RequiresName() ? xmlName : "ElementText",
-							stringValue)));
+							string_value)));
 				}
 			}
 			else if (s.IsWriting)
 			{
 				if (isOptional && PhxPredicates.IsZero(color))
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				stringValue = color.ToIntegerColorString(defaultAlpha);
+				string_value = color.ToIntegerColorString(defaultAlpha);
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamStringOpt(xmlName, ref string_value, to_lower, xmlSource);
 				else
-					s.StreamString(xmlName, ref stringValue, toLower, xmlSource);
+					s.StreamString(xmlName, ref string_value, to_lower, xmlSource);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 
 		public static bool StreamProtoEnum<TDoc, TCursor>(this IO.TagElementStream<TDoc, TCursor, string> s
 			, string xmlName, ref int dbid
 			, Collections.IProtoEnum protoEnum
-			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.K_SOURCE_ELEMENT
-			, int isOptionalDefaultValue = TypeExtensions.K_NONE)
+			, bool isOptional = true, IO.TagElementNodeType xmlSource = XML.XmlUtil.kSourceElement
+			, int isOptionalDefaultValue = TypeExtensions.kNone)
 			where TDoc : class
 			where TCursor : class
 		{
-			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.K_NO_XML_NAME));
+			Contract.Requires(xmlSource.RequiresName() == (xmlName != XML.XmlUtil.kNoXmlName));
 			Contract.Requires(protoEnum != null);
 
-			string idName = null;
-			bool wasStreamed = true;
-			bool toLower = false;
+			string id_name = null;
+			bool was_streamed = true;
+			bool to_lower = false;
 
 			if (s.IsReading)
 			{
 				if (isOptional)
-					wasStreamed = s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					was_streamed = s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 
-				if (wasStreamed)
+				if (was_streamed)
 				{
-					dbid = protoEnum.TryGetMemberId(idName);
-					Contract.Assert(dbid.IsNotNone(), idName);
+					dbid = protoEnum.TryGetMemberId(id_name);
+					Contract.Assert(dbid.IsNotNone(), id_name);
 				}
 				//else
 				//	dbid = isOptionalDefaultValue;
@@ -180,21 +180,21 @@ namespace KSoft.Phoenix
 			{
 				if (isOptional && isOptionalDefaultValue.IsNotNone() && isOptionalDefaultValue == dbid)
 				{
-					wasStreamed = false;
-					return wasStreamed;
+					was_streamed = false;
+					return was_streamed;
 				}
 
-				idName = protoEnum.TryGetMemberName(dbid);
-				if (idName.IsNullOrEmpty())
-					Contract.Assert(!idName.IsNullOrEmpty(), dbid.ToString());
+				id_name = protoEnum.TryGetMemberName(dbid);
+				if (id_name.IsNullOrEmpty())
+					Contract.Assert(!id_name.IsNullOrEmpty(), dbid.ToString());
 
 				if (isOptional)
-					s.StreamStringOpt(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamStringOpt(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 				else
-					s.StreamString(xmlName, ref idName, toLower, xmlSource, intern: true);
+					s.StreamString(xmlName, ref id_name, to_lower, xmlSource, intern: true);
 			}
 
-			return wasStreamed;
+			return was_streamed;
 		}
 	};
 }

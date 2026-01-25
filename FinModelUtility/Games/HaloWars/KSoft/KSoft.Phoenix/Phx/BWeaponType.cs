@@ -5,39 +5,39 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("WeaponType")
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("WeaponType")
 		{
-			dataName = "Name",
-			flags = XML.BCollectionXmlParamsFlags.USE_ELEMENT_FOR_DATA
+			DataName = "Name",
+			Flags = XML.BCollectionXmlParamsFlags.UseElementForData
 		};
-		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.DATA,
+			Directory = Engine.GameDirectory.Data,
 			FileName = "WeaponTypes.xml",
-			RootName = KBListXmlParams.rootName
+			RootName = kBListXmlParams.RootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.LISTS,
-			KXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.Lists,
+			kXmlFileInfo);
 		#endregion
 
 		#region DeathAnimation
-		string mDeathAnimation_;
+		string mDeathAnimation;
 		public string DeathAnimation
 		{
-			get { return this.mDeathAnimation_; }
-			set { this.mDeathAnimation_ = value; }
+			get { return this.mDeathAnimation; }
+			set { this.mDeathAnimation = value; }
 		}
 		#endregion
 
-		public Collections.BTypeValues<BWeaponModifier> Modifiers { get; private set; } = new Collections.BTypeValues<BWeaponModifier>(BWeaponModifier.KBListParams);
+		public Collections.BTypeValues<BWeaponModifier> Modifiers { get; private set; } = new Collections.BTypeValues<BWeaponModifier>(BWeaponModifier.kBListParams);
 
 		#region BListObjectBase Members
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
-			s.StreamElementOpt("DeathAnimation", ref this.mDeathAnimation_, Predicates.IsNotNullOrEmpty);
+			s.StreamElementOpt("DeathAnimation", ref this.mDeathAnimation, Predicates.IsNotNullOrEmpty);
 
-			XML.XmlUtil.Serialize(s, this.Modifiers, BWeaponModifier.KBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Modifiers, BWeaponModifier.kBListXmlParams);
 		}
 		#endregion
 	};

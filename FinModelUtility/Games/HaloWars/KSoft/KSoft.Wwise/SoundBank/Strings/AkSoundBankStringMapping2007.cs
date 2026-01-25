@@ -12,66 +12,66 @@ namespace KSoft.Wwise.SoundBank
 		public struct StringHashEntry
 			: IO.IEndianStreamSerializable
 		{
-			public uint offset; // if this is -1, we have to skip it. TODO: serialize entries into memory stream?
-			public uint key, id;
+			public uint Offset; // if this is -1, we have to skip it. TODO: serialize entries into memory stream?
+			public uint Key, ID;
 
-			public string value;
+			public string Value;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.offset);
+				s.Stream(ref this.Offset);
 			}
 			#endregion
 		};
 		public sealed class StringGroup
 			: IO.IEndianStreamSerializable
 		{
-			AkbkHashHeader mHeader_;
-			public StringHashEntry[] entries;
+			AKBKHashHeader mHeader;
+			public StringHashEntry[] Entries;
 
-			public uint Id { get { return this.mHeader_.Hash; } }
+			public uint ID { get { return this.mHeader.Hash; } }
 
 			#region IEndianStreamSerializable Members
 			void SerializeGroupEntries(IO.EndianStream s)
 			{
-				s.StreamArrayInt32(ref this.entries);
-				for (int x = 0; x < this.entries.Length; x++)
+				s.StreamArrayInt32(ref this.Entries);
+				for (int x = 0; x < this.Entries.Length; x++)
 				{
-					s.Stream(ref this.entries[x].id);
-					s.Stream(ref this.entries[x].value, Memory.Strings.StringStorage.CStringAscii);
-					s.Stream(ref this.entries[x].key);
+					s.Stream(ref this.Entries[x].ID);
+					s.Stream(ref this.Entries[x].Value, Memory.Strings.StringStorage.CStringAscii);
+					s.Stream(ref this.Entries[x].Key);
 				}
 			}
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.mHeader_);
+				s.Stream(ref this.mHeader);
 
-				long eos = EndOfStream(s, this.mHeader_);
+				long eos = EndOfStream(s, this.mHeader);
 				this.SerializeGroupEntries(s);
 				Contract.Assert(s.BaseStream.Position == eos);
 			}
 			#endregion
 		};
 
-		public StringHashEntry[] events;
+		public StringHashEntry[] Events;
 
 		static void SerializeEntries(IO.EndianStream s, ref StringHashEntry[] entries)
 		{
 			s.StreamArrayInt32(ref entries);
 			for (int x = 0; x < entries.Length; x++)
 			{
-				s.Stream(ref entries[x].value, Memory.Strings.StringStorage.CStringAscii);
-				s.Stream(ref entries[x].key);
+				s.Stream(ref entries[x].Value, Memory.Strings.StringStorage.CStringAscii);
+				s.Stream(ref entries[x].Key);
 			}
 		}
 
-	void SerializeStringType(IO.EndianStream s, AkbkHashHeader hdr, AkSoundBank bank)
+	void SerializeStringType(IO.EndianStream s, AKBKHashHeader hdr, AkSoundBank bank)
 		{
 			switch (hdr.Type)
 			{
-				case StringType.OLD_EVENTS:
-					SerializeEntries(s, ref this.events);
+				case StringType.OldEvents:
+					SerializeEntries(s, ref this.Events);
 					break;
 			}
 		}
@@ -86,7 +86,7 @@ namespace KSoft.Wwise.SoundBank
 
 			while (s.BaseStream.Position != eos)
 			{
-				AkbkHashHeader hdr = new AkbkHashHeader();
+				AKBKHashHeader hdr = new AKBKHashHeader();
 				hdr.Serialize(s);
 
 				this.SerializeStringType(s, hdr, bank);

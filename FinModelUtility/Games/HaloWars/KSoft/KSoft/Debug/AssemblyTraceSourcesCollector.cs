@@ -26,10 +26,10 @@ namespace KSoft.Debug
 				if (prop.PropertyType != typeof(TraceSource))
 					continue;
 
-				var traceSource = (TraceSource)prop.GetValue(null);
-				Contract.Assert(traceSource != null, prop.Name);
+				var trace_source = (TraceSource)prop.GetValue(null);
+				Contract.Assert(trace_source != null, prop.Name);
 
-				sources.Add(traceSource);
+				sources.Add(trace_source);
 			}
 
 			return sources;

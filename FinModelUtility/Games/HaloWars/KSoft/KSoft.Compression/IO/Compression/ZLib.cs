@@ -14,7 +14,7 @@ namespace KSoft.IO.Compression
 		Justification = "CodeContracts generally handle this already")]
 	public static class ZLib
 	{
-		const int K_SIZE_OF_HEADER_ = sizeof(ushort);
+		const int kSizeOfHeader = sizeof(ushort);
 
 		static byte[] BufferFromStream(DeflateStream dec, int offset, int length, bool skipHeader)
 		{
@@ -22,7 +22,7 @@ namespace KSoft.IO.Compression
 
 			// adjust for zlib header
 			if (skipHeader)
-				dec.BaseStream.Seek(offset + K_SIZE_OF_HEADER_, SeekOrigin.Begin);
+				dec.BaseStream.Seek(offset + kSizeOfHeader, SeekOrigin.Begin);
 
 			// decompress the data and fill in the result array
 			result = new byte[length];
@@ -32,7 +32,7 @@ namespace KSoft.IO.Compression
 		}
 
 		public static byte[] BufferFromStream(MemoryStream ms,
-			int offset = TypeExtensions.K_NONE_INT32, int length = TypeExtensions.K_NONE_INT32,
+			int offset = TypeExtensions.kNoneInt32, int length = TypeExtensions.kNoneInt32,
 			bool skipHeader = true)
 		{
 			Contract.Requires<ArgumentNullException>(ms != null);
@@ -47,7 +47,7 @@ namespace KSoft.IO.Compression
 			}
 		}
 		public static byte[] BufferFromBytes(byte[] bytes,
-			int offset = TypeExtensions.K_NONE_INT32, int length = TypeExtensions.K_NONE_INT32,
+			int offset = TypeExtensions.kNoneInt32, int length = TypeExtensions.kNoneInt32,
 			bool skipHeader = true)
 		{
 			Contract.Requires<ArgumentNullException>(bytes != null);
@@ -64,27 +64,27 @@ namespace KSoft.IO.Compression
 		}
 
 
-		public const int K_NO_COMPRESSION = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.NO_COMPRESSION;
-		public const int K_BEST_COMPRESSION = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.BEST_COMPRESSION;
+		public const int kNoCompression = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.NO_COMPRESSION;
+		public const int kBestCompression = ICSharpCode.SharpZipLib.Zip.Compression.Deflater.BEST_COMPRESSION;
 
 		public static byte[] LowLevelCompress(byte[] bytes, int level,
 			out uint adler, byte[] compressedBytes,
 			bool trimCompressedBytes = true, bool noZlibHeaderOrFooter = true)
 		{
-			int compressedSize;
+			int compressed_size;
 
 			var zip = new ICSharpCode.SharpZipLib.Zip.Compression.Deflater(level, noZlibHeaderOrFooter);
 			{
 				zip.SetInput(bytes);
 				zip.Finish();
-				compressedSize = zip.Deflate(compressedBytes);
+				compressed_size = zip.Deflate(compressedBytes);
 				adler = (uint)zip.Adler;
 
 				if (trimCompressedBytes)
 				{
-					byte[] cmpData = compressedBytes;
-					Array.Resize(ref cmpData, compressedSize);
-					compressedBytes = cmpData;
+					byte[] cmp_data = compressedBytes;
+					Array.Resize(ref cmp_data, compressed_size);
+					compressedBytes = cmp_data;
 				}
 			}
 
@@ -111,10 +111,10 @@ namespace KSoft.IO.Compression
 
 			byte[] result = new byte[sizeof(int)];
 			// Setup the decompressed size header
-			byte[] sizeBytes = BitConverter.GetBytes(bytes.Length);
+			byte[] size_bytes = BitConverter.GetBytes(bytes.Length);
 			if (!byteOrder.IsSameAsRuntime())
-				Bitwise.ByteSwap.SwapInt32(sizeBytes, 0);
-			Array.Copy(sizeBytes, result, sizeBytes.Length);
+				Bitwise.ByteSwap.SwapInt32(size_bytes, 0);
+			Array.Copy(size_bytes, result, size_bytes.Length);
 
 			var zip = new ICSharpCode.SharpZipLib.Zip.Compression.Deflater(
 				ICSharpCode.SharpZipLib.Zip.Compression.Deflater.BEST_COMPRESSION, false);
@@ -122,11 +122,11 @@ namespace KSoft.IO.Compression
 				zip.SetInput(bytes);
 				zip.Finish();
 				byte[] temp = new byte[bytes.Length];
-				int compressedSize = zip.Deflate(temp);
+				int compressed_size = zip.Deflate(temp);
 
-				Contract.Assert(compressedSize <= bytes.Length);
-				Array.Resize(ref result, sizeof(int) + compressedSize);
-				Array.Copy(temp, 0, result, sizeof(int), compressedSize);
+				Contract.Assert(compressed_size <= bytes.Length);
+				Array.Resize(ref result, sizeof(int) + compressed_size);
+				Array.Copy(temp, 0, result, sizeof(int), compressed_size);
 			}
 			return result;
 		}

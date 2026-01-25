@@ -1,8 +1,8 @@
 ﻿
 namespace KSoft.Security.Cryptography
 {
-	public sealed class Xtea
-		: XteaBase
+	public sealed class XTEA
+		: XTEABase
 	{
 		public void SetKey(byte[] b)
 		{
@@ -19,7 +19,7 @@ namespace KSoft.Security.Cryptography
 			for (uint i = 0, sum = 0; i < 32; )
 			{
 				r[i++] = sum + key[sum & 3];
-				sum += K_DELTA;
+				sum += kDelta;
 				r[i++] = sum + key[(sum >> 11) & 3];
 			}
 

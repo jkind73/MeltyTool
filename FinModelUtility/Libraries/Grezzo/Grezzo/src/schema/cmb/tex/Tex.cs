@@ -6,5 +6,5 @@ namespace grezzo.schema.cmb.tex;
 [BinarySchema]
 public sealed partial class Tex : IBinaryConvertible {
   [SequenceLengthSource(SchemaIntegerType.UINT32)]
-  public Texture[] Textures { get; private set; }
+  public Texture[] textures { get; private set; }
 }

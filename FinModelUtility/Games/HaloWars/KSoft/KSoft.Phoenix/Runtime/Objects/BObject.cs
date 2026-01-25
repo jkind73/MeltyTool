@@ -10,40 +10,40 @@ using BPlayerID = System.Int32;
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class CSaveMarker
+	partial class cSaveMarker
 	{
 		public const ushort
-			OBJECT1 = 0x2710
+			Object1 = 0x2710
 			;
 	};
 
 	public struct BObjectAnimationState
 		: IO.IEndianStreamSerializable
 	{
-		public short animType;
-		public short tweenToAnimation;
-		public float tweenTime, moveSpeed;
-		public int forceAnimId;
-		public sbyte state;
-		public sbyte exitAction;
+		public short AnimType;
+		public short TweenToAnimation;
+		public float TweenTime, MoveSpeed;
+		public int ForceAnimID;
+		public sbyte State;
+		public sbyte ExitAction;
 		public bool
-			flagDirty, flagMoving, flagTurning,
-			flagReset, flagApplyInstantly, flagLock,
-			flagOverrideExitAction
+			FlagDirty, FlagMoving, FlagTurning,
+			FlagReset, FlagApplyInstantly, FlagLock,
+			FlagOverrideExitAction
 			;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.animType);
-			s.Stream(ref this.tweenToAnimation);
-			s.Stream(ref this.tweenTime); s.Stream(ref this.moveSpeed);
-			s.Stream(ref this.forceAnimId);
-			s.Stream(ref this.state);
-			s.Stream(ref this.exitAction);
-			s.Stream(ref this.flagDirty);	s.Stream(ref this.flagMoving);			s.Stream(ref this.flagTurning);
-			s.Stream(ref this.flagReset);	s.Stream(ref this.flagApplyInstantly);	s.Stream(ref this.flagLock);
-			s.Stream(ref this.flagOverrideExitAction);
+			s.Stream(ref this.AnimType);
+			s.Stream(ref this.TweenToAnimation);
+			s.Stream(ref this.TweenTime); s.Stream(ref this.MoveSpeed);
+			s.Stream(ref this.ForceAnimID);
+			s.Stream(ref this.State);
+			s.Stream(ref this.ExitAction);
+			s.Stream(ref this.FlagDirty);	s.Stream(ref this.FlagMoving);			s.Stream(ref this.FlagTurning);
+			s.Stream(ref this.FlagReset);	s.Stream(ref this.FlagApplyInstantly);	s.Stream(ref this.FlagLock);
+			s.Stream(ref this.FlagOverrideExitAction);
 		}
 		#endregion
 	};
@@ -51,121 +51,121 @@ namespace KSoft.Phoenix.Runtime
 	public sealed class BObject
 		: BEntity
 	{
-		const int K_UV_OFFSETS_SIZE_ = 0x18;
-		const int C_MAXIMUM_OBJECT_ATTACHMENTS_ = 0xFA;
-		const int C_MAXIMUM_ADDITIONAL_TEXTURES_ = 0xFA;
-		const int C_MAXIMUM_HARDPOINTS_ = 0x64;
+		const int kUVOffsetsSize = 0x18;
+		const int cMaximumObjectAttachments = 0xFA;
+		const int cMaximumAdditionalTextures = 0xFA;
+		const int cMaximumHardpoints = 0x64;
 
-		public BVector centerOffset, iconColorSize;
-		public byte[] uvOffsets = new byte[K_UV_OFFSETS_SIZE_];
-		public uint multiframeTextureIndex;
-		public int visualVariationIndex;
-		public BVisual visual;
-		public float animationRate, radius, moveAnimationPosition, highlightIntensity;
-		public uint subUpdateNumber;
-		public BBitVector32 playerVisibility, doppleBits;
-		public int simX, simZ;
-		public float losScalar;
-		public int lastSimLos;
-		public BObjectAttachments[] objectAttachments;
-		public BAdditionalTextures[] additionalTextures;
-		public BHardpointState[] hardpointState;
-		public BObjectAnimationState animationState;
-		public uint animationLockEnds;
-		public int protoId;
-		public BPlayerID colorPlayerId;
-		public uint overrideTint,
-			overrideFlashInterval, overrideFlashIntervalTimer, overrideFlashDuration,
-			lifespanExpiration;
-		public float currentAlphaTime, alphaFadeDuration,
-			selectionPulseTime, selectionPulsePercent, selectionFlashTime, selectionPulseSpeed,
-			lastRealtime;
-		public byte aoTintValue, teamSelectionMask;
-		public float losRevealTime;
+		public BVector CenterOffset, IconColorSize;
+		public byte[] UVOffsets = new byte[kUVOffsetsSize];
+		public uint MultiframeTextureIndex;
+		public int VisualVariationIndex;
+		public BVisual Visual;
+		public float AnimationRate, Radius, MoveAnimationPosition, HighlightIntensity;
+		public uint SubUpdateNumber;
+		public BBitVector32 PlayerVisibility, DoppleBits;
+		public int SimX, SimZ;
+		public float LOSScalar;
+		public int LastSimLOS;
+		public BObjectAttachments[] ObjectAttachments;
+		public BAdditionalTextures[] AdditionalTextures;
+		public BHardpointState[] HardpointState;
+		public BObjectAnimationState AnimationState;
+		public uint AnimationLockEnds;
+		public int ProtoID;
+		public BPlayerID ColorPlayerID;
+		public uint OverrideTint,
+			OverrideFlashInterval, OverrideFlashIntervalTimer, OverrideFlashDuration,
+			LifespanExpiration;
+		public float CurrentAlphaTime, AlphaFadeDuration,
+			SelectionPulseTime, SelectionPulsePercent, SelectionFlashTime, SelectionPulseSpeed,
+			LastRealtime;
+		public byte AOTintValue, TeamSelectionMask;
+		public float LOSRevealTime;
 
 		#region Flags
 		public bool
-			flagVisibility, flagLos, flagHasLifespan, flagDopples,
-			flagIsFading, flagAnimationDisabled, flagIsRevealer, flagDontInterpolate,
-			flagBlockLos, flagCloaked, flagCloakDetected, flagGrayMapDopples,
-			flagLosMarked, flagUseLosScalar, flagLosDirty, flagAnimationLocked,
-			flagUpdateSquadPositionOnAnimationUnlock, flagExistSoundPlaying, flagNoUpdate, flagSensorLockTagged,
-			flagNoReveal, flagBuilt, flagBeingCaptured, flagInvulnerable,
-			flagVisibleForOwnerOnly, flagVisibleToAll, flagNearLayer, flagIkDisabled,
-			flagHasTrackMask, flagLodFading, flagOccluded, flagFadeOnDeath,
-			flagObscurable, flagNoRender, flagTurning, flagAppearsBelowDecals,
-			flagSkipMotionExtraction, flagOverrideTint, flagMotionCollisionChecked,
-			flagIsDopple, flagIsImpactEffect, flagDebugRenderAreaAttackRange, flagDontLockMovementAnimation,
-			flagRemainVisible, flagVisibleForTeamOnly, flagDontAutoAttackMe, flagAlwaysAttackReviveUnits,
-			flagNoRenderForOwner, flagNoRenderDuringCinematic, flagUseCenterOffset, flagNotDoppleFriendly,
-			flagForceVisibilityUpdateNextFrame, flagTurningRight, flagIsUnderCinematicControl, flagNoWorldUpdate;
+			FlagVisibility, FlagLOS, FlagHasLifespan, FlagDopples,
+			FlagIsFading, FlagAnimationDisabled, FlagIsRevealer, FlagDontInterpolate,
+			FlagBlockLOS, FlagCloaked, FlagCloakDetected, FlagGrayMapDopples,
+			FlagLOSMarked, FlagUseLOSScalar, FlagLOSDirty, FlagAnimationLocked,
+			FlagUpdateSquadPositionOnAnimationUnlock, FlagExistSoundPlaying, FlagNoUpdate, FlagSensorLockTagged,
+			FlagNoReveal, FlagBuilt, FlagBeingCaptured, FlagInvulnerable,
+			FlagVisibleForOwnerOnly, FlagVisibleToAll, FlagNearLayer, FlagIKDisabled,
+			FlagHasTrackMask, FlagLODFading, FlagOccluded, FlagFadeOnDeath,
+			FlagObscurable, FlagNoRender, FlagTurning, FlagAppearsBelowDecals,
+			FlagSkipMotionExtraction, FlagOverrideTint, FlagMotionCollisionChecked,
+			FlagIsDopple, FlagIsImpactEffect, FlagDebugRenderAreaAttackRange, FlagDontLockMovementAnimation,
+			FlagRemainVisible, FlagVisibleForTeamOnly, FlagDontAutoAttackMe, FlagAlwaysAttackReviveUnits,
+			FlagNoRenderForOwner, FlagNoRenderDuringCinematic, FlagUseCenterOffset, FlagNotDoppleFriendly,
+			FlagForceVisibilityUpdateNextFrame, FlagTurningRight, FlagIsUnderCinematicControl, FlagNoWorldUpdate;
 		#endregion
 
-		public bool isObstruction; // "mpObstructionNode != NULL"
+		public bool IsObstruction; // "mpObstructionNode != NULL"
 
-		public bool HasObjectAttachments { get { return this.objectAttachments != null; } }
-		public bool HasAdditionalTextures { get { return this.additionalTextures != null; } }
+		public bool HasObjectAttachments { get { return this.ObjectAttachments != null; } }
+		public bool HasAdditionalTextures { get { return this.AdditionalTextures != null; } }
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.StreamV(ref this.centerOffset); s.StreamV(ref this.iconColorSize);
-			s.Stream(this.uvOffsets);
-			s.Stream(ref this.multiframeTextureIndex);
-			s.Stream(ref this.visualVariationIndex);
-			BVisualManager.Stream(s, ref this.visual);
-			s.Stream(ref this.animationRate); s.Stream(ref this.radius); s.Stream(ref this.moveAnimationPosition); s.Stream(ref this.highlightIntensity);
-			s.Stream(ref this.subUpdateNumber);
-			s.Stream(ref this.playerVisibility); s.Stream(ref this.doppleBits);
-			s.Stream(ref this.simX); s.Stream(ref this.simZ);
-			s.Stream(ref this.losScalar);
-			s.Stream(ref this.lastSimLos);
+			s.StreamV(ref this.CenterOffset); s.StreamV(ref this.IconColorSize);
+			s.Stream(this.UVOffsets);
+			s.Stream(ref this.MultiframeTextureIndex);
+			s.Stream(ref this.VisualVariationIndex);
+			BVisualManager.Stream(s, ref this.Visual);
+			s.Stream(ref this.AnimationRate); s.Stream(ref this.Radius); s.Stream(ref this.MoveAnimationPosition); s.Stream(ref this.HighlightIntensity);
+			s.Stream(ref this.SubUpdateNumber);
+			s.Stream(ref this.PlayerVisibility); s.Stream(ref this.DoppleBits);
+			s.Stream(ref this.SimX); s.Stream(ref this.SimZ);
+			s.Stream(ref this.LOSScalar);
+			s.Stream(ref this.LastSimLOS);
 
 			if (s.StreamCond(this, me => me.HasObjectAttachments))
-				BSaveGame.StreamArray(s, ref this.objectAttachments, C_MAXIMUM_OBJECT_ATTACHMENTS_);
+				BSaveGame.StreamArray(s, ref this.ObjectAttachments, cMaximumObjectAttachments);
 
 			if (s.StreamCond(this, me => me.HasAdditionalTextures))
-				BSaveGame.StreamArray(s, ref this.additionalTextures, C_MAXIMUM_ADDITIONAL_TEXTURES_);
+				BSaveGame.StreamArray(s, ref this.AdditionalTextures, cMaximumAdditionalTextures);
 
-			BSaveGame.StreamArray(s, ref this.hardpointState, C_MAXIMUM_HARDPOINTS_);
-			s.Stream(ref this.animationState);
-			s.Stream(ref this.animationLockEnds);
-			s.Stream(ref this.protoId);
-			s.Stream(ref this.colorPlayerId);
-			s.Stream(ref this.overrideTint);
-			s.Stream(ref this.overrideFlashInterval); s.Stream(ref this.overrideFlashIntervalTimer); s.Stream(ref this.overrideFlashDuration);
-			s.Stream(ref this.lifespanExpiration);
-			s.Stream(ref this.currentAlphaTime); s.Stream(ref this.alphaFadeDuration);
-			s.Stream(ref this.selectionPulseTime); s.Stream(ref this.selectionPulsePercent); s.Stream(ref this.selectionFlashTime); s.Stream(ref this.selectionPulseSpeed);
-			s.Stream(ref this.lastRealtime);
-			s.Stream(ref this.aoTintValue);
-			s.Stream(ref this.teamSelectionMask);
-			s.Stream(ref this.losRevealTime);
+			BSaveGame.StreamArray(s, ref this.HardpointState, cMaximumHardpoints);
+			s.Stream(ref this.AnimationState);
+			s.Stream(ref this.AnimationLockEnds);
+			s.Stream(ref this.ProtoID);
+			s.Stream(ref this.ColorPlayerID);
+			s.Stream(ref this.OverrideTint);
+			s.Stream(ref this.OverrideFlashInterval); s.Stream(ref this.OverrideFlashIntervalTimer); s.Stream(ref this.OverrideFlashDuration);
+			s.Stream(ref this.LifespanExpiration);
+			s.Stream(ref this.CurrentAlphaTime); s.Stream(ref this.AlphaFadeDuration);
+			s.Stream(ref this.SelectionPulseTime); s.Stream(ref this.SelectionPulsePercent); s.Stream(ref this.SelectionFlashTime); s.Stream(ref this.SelectionPulseSpeed);
+			s.Stream(ref this.LastRealtime);
+			s.Stream(ref this.AOTintValue);
+			s.Stream(ref this.TeamSelectionMask);
+			s.Stream(ref this.LOSRevealTime);
 
 			#region Flags
-			s.Stream(ref this.flagVisibility); s.Stream(ref this.flagLos); s.Stream(ref this.flagHasLifespan); s.Stream(ref this.flagDopples);
-			s.Stream(ref this.flagIsFading); s.Stream(ref this.flagAnimationDisabled); s.Stream(ref this.flagIsRevealer); s.Stream(ref this.flagDontInterpolate);
-			s.Stream(ref this.flagBlockLos); s.Stream(ref this.flagCloaked); s.Stream(ref this.flagCloakDetected); s.Stream(ref this.flagGrayMapDopples);
-			s.Stream(ref this.flagLosMarked); s.Stream(ref this.flagUseLosScalar); s.Stream(ref this.flagLosDirty); s.Stream(ref this.flagAnimationLocked);
-			s.Stream(ref this.flagUpdateSquadPositionOnAnimationUnlock); s.Stream(ref this.flagExistSoundPlaying); s.Stream(ref this.flagNoUpdate); s.Stream(ref this.flagSensorLockTagged);
-			s.Stream(ref this.flagNoReveal); s.Stream(ref this.flagBuilt); s.Stream(ref this.flagBeingCaptured); s.Stream(ref this.flagInvulnerable);
-			s.Stream(ref this.flagVisibleForOwnerOnly); s.Stream(ref this.flagVisibleToAll); s.Stream(ref this.flagNearLayer); s.Stream(ref this.flagIkDisabled);
-			s.Stream(ref this.flagHasTrackMask); s.Stream(ref this.flagLodFading); s.Stream(ref this.flagOccluded); s.Stream(ref this.flagFadeOnDeath);
-			s.Stream(ref this.flagObscurable); s.Stream(ref this.flagNoRender); s.Stream(ref this.flagTurning); s.Stream(ref this.flagAppearsBelowDecals);
-			s.Stream(ref this.flagSkipMotionExtraction); s.Stream(ref this.flagOverrideTint); s.Stream(ref this.flagMotionCollisionChecked); s.Stream(ref this.flagIsDopple);
-			s.Stream(ref this.flagIsImpactEffect); s.Stream(ref this.flagDebugRenderAreaAttackRange); s.Stream(ref this.flagDontLockMovementAnimation); s.Stream(ref this.flagRemainVisible);
-			s.Stream(ref this.flagVisibleForTeamOnly); s.Stream(ref this.flagDontAutoAttackMe); s.Stream(ref this.flagAlwaysAttackReviveUnits); s.Stream(ref this.flagNoRenderForOwner);
-			s.Stream(ref this.flagNoRenderDuringCinematic); s.Stream(ref this.flagUseCenterOffset); s.Stream(ref this.flagNotDoppleFriendly); s.Stream(ref this.flagForceVisibilityUpdateNextFrame);
-			s.Stream(ref this.flagTurningRight); s.Stream(ref this.flagIsUnderCinematicControl); s.Stream(ref this.flagNoWorldUpdate);
+			s.Stream(ref this.FlagVisibility); s.Stream(ref this.FlagLOS); s.Stream(ref this.FlagHasLifespan); s.Stream(ref this.FlagDopples);
+			s.Stream(ref this.FlagIsFading); s.Stream(ref this.FlagAnimationDisabled); s.Stream(ref this.FlagIsRevealer); s.Stream(ref this.FlagDontInterpolate);
+			s.Stream(ref this.FlagBlockLOS); s.Stream(ref this.FlagCloaked); s.Stream(ref this.FlagCloakDetected); s.Stream(ref this.FlagGrayMapDopples);
+			s.Stream(ref this.FlagLOSMarked); s.Stream(ref this.FlagUseLOSScalar); s.Stream(ref this.FlagLOSDirty); s.Stream(ref this.FlagAnimationLocked);
+			s.Stream(ref this.FlagUpdateSquadPositionOnAnimationUnlock); s.Stream(ref this.FlagExistSoundPlaying); s.Stream(ref this.FlagNoUpdate); s.Stream(ref this.FlagSensorLockTagged);
+			s.Stream(ref this.FlagNoReveal); s.Stream(ref this.FlagBuilt); s.Stream(ref this.FlagBeingCaptured); s.Stream(ref this.FlagInvulnerable);
+			s.Stream(ref this.FlagVisibleForOwnerOnly); s.Stream(ref this.FlagVisibleToAll); s.Stream(ref this.FlagNearLayer); s.Stream(ref this.FlagIKDisabled);
+			s.Stream(ref this.FlagHasTrackMask); s.Stream(ref this.FlagLODFading); s.Stream(ref this.FlagOccluded); s.Stream(ref this.FlagFadeOnDeath);
+			s.Stream(ref this.FlagObscurable); s.Stream(ref this.FlagNoRender); s.Stream(ref this.FlagTurning); s.Stream(ref this.FlagAppearsBelowDecals);
+			s.Stream(ref this.FlagSkipMotionExtraction); s.Stream(ref this.FlagOverrideTint); s.Stream(ref this.FlagMotionCollisionChecked); s.Stream(ref this.FlagIsDopple);
+			s.Stream(ref this.FlagIsImpactEffect); s.Stream(ref this.FlagDebugRenderAreaAttackRange); s.Stream(ref this.FlagDontLockMovementAnimation); s.Stream(ref this.FlagRemainVisible);
+			s.Stream(ref this.FlagVisibleForTeamOnly); s.Stream(ref this.FlagDontAutoAttackMe); s.Stream(ref this.FlagAlwaysAttackReviveUnits); s.Stream(ref this.FlagNoRenderForOwner);
+			s.Stream(ref this.FlagNoRenderDuringCinematic); s.Stream(ref this.FlagUseCenterOffset); s.Stream(ref this.FlagNotDoppleFriendly); s.Stream(ref this.FlagForceVisibilityUpdateNextFrame);
+			s.Stream(ref this.FlagTurningRight); s.Stream(ref this.FlagIsUnderCinematicControl); s.Stream(ref this.FlagNoWorldUpdate);
 			#endregion
 
-			s.Stream(ref this.isObstruction);
+			s.Stream(ref this.IsObstruction);
 
 			Contract.Assert(false);// mpPhysicsObject
 
-			s.StreamSignature(CSaveMarker.OBJECT1);
+			s.StreamSignature(cSaveMarker.Object1);
 		}
 		#endregion
 	};

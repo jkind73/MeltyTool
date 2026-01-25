@@ -9,32 +9,32 @@ namespace KSoft.Bitwise
 {
 	/// <summary>Stack friendly bit encoder for dealing with handle generation or reading</summary>
 	/// <remarks>Bits are written from the LSB to the MSB</remarks>
-	[System.Diagnostics.DebuggerDisplay("Bits = {m64}, BitIndex = {mBitIndex_}")]
+	[System.Diagnostics.DebuggerDisplay("Bits = {m64}, BitIndex = {mBitIndex}")]
 	public partial struct HandleBitEncoder
 		: IEquatable<HandleBitEncoder>
 	{
-		IntegerUnion mBits_;
-		int mBitIndex_;
+		IntegerUnion mBits;
+		int mBitIndex;
 
 	/// <summary>How many bits have actually been consumed by the handle data</summary>
-	public int UsedBitCount => this.mBitIndex_;
+	public int UsedBitCount => this.mBitIndex;
 
 		/// <summary>Get the entire handle's value represented in 32-bits</summary>
 		/// <returns></returns>
 		public uint GetCombinedHandle()
 		{
-			uint hi = Bits.GetHighBits(this.mBits_.u64);
+			uint hi = Bits.GetHighBits(this.mBits.u64);
 
 			// this order allows a user to XOR again with GetHandle32 to get
 			// the upper 32-bit values of m64
-			return hi ^ this.mBits_.u32;
+			return hi ^ this.mBits.u32;
 		}
 
 	/// <summary>Clear the internal state of the encoder</summary>
 	public void Reset()
 		{
-			this.mBits_ = new IntegerUnion();
-			this.mBitIndex_ = 0;
+			this.mBits = new IntegerUnion();
+			this.mBitIndex = 0;
 		}
 
 		#region Overrides
@@ -47,8 +47,8 @@ namespace KSoft.Bitwise
 
 			return false;
 		}
-		public bool Equals(HandleBitEncoder other) => this.mBitIndex_ == other.mBitIndex_ &&
-		                                              this.mBits_.u64 == other.mBits_.u64;
+		public bool Equals(HandleBitEncoder other) => this.mBitIndex == other.mBitIndex &&
+		                                              this.mBits.u64 == other.mBits.u64;
 		public static bool operator ==(HandleBitEncoder x, HandleBitEncoder y) => x.Equals(y);
 		public static bool operator !=(HandleBitEncoder x, HandleBitEncoder y) => !x.Equals(y);
 
@@ -60,8 +60,8 @@ namespace KSoft.Bitwise
 		public override string ToString() =>
 			string.Format(Util.InvariantCultureInfo,
 				"[{0} @ {1}]",
-				this.mBits_.u64.ToString("X16", Util.InvariantCultureInfo),
-				this.mBitIndex_.ToString(Util.InvariantCultureInfo));
+				this.mBits.u64.ToString("X16", Util.InvariantCultureInfo),
+				this.mBitIndex.ToString(Util.InvariantCultureInfo));
 		#endregion
 	};
 }

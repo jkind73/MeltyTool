@@ -9,8 +9,8 @@ public sealed partial class BmdHeader : IBinaryConvertible {
   private readonly string magic_ = "J3D2bmd3";
 
   [WSizeOfStreamInBytes]
-  public uint fileSize;
+  public uint FileSize;
 
-  public uint nrSections;
-  public readonly byte[] padding = new byte[16];
+  public uint NrSections;
+  public readonly byte[] Padding = new byte[16];
 }

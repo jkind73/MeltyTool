@@ -10,8 +10,8 @@ namespace KSoft.IO
 {
 	internal enum TagElementStreamParseEnumResult
 	{
-		SUCCESS,
-		FAILED_MEMBER_NOT_FOUND,
+		Success,
+		FailedMemberNotFound,
 	};
 	internal static class TagElementStreamParseEnumUtil
 	{
@@ -31,11 +31,11 @@ namespace KSoft.IO
 			bool result = Enum.TryParse(str, ignoreCase, out TEnum temp);
 
 			if (!result)
-				return TagElementStreamParseEnumResult.FAILED_MEMBER_NOT_FOUND;
+				return TagElementStreamParseEnumResult.FailedMemberNotFound;
 			else
 				value = temp;
 
-			return TagElementStreamParseEnumResult.SUCCESS;
+			return TagElementStreamParseEnumResult.Success;
 		}
 		public static TagElementStreamParseEnumResult Parse<TEnum>(bool ignoreCase,
 			string str, ref int intValue)
@@ -46,7 +46,7 @@ namespace KSoft.IO
 			TEnum value = default(TEnum);
 			var result = Parse(ignoreCase, str, ref value);
 
-			if (result == TagElementStreamParseEnumResult.SUCCESS)
+			if (result == TagElementStreamParseEnumResult.Success)
 				intValue = EnumToInt(value);
 
 			return result;
@@ -268,7 +268,7 @@ namespace KSoft.IO
 			Contract.Requires<ArgumentNullException>(coll != null);
 			Contract.Requires(action != null);
 
-			this.ReadElements(this.Elements, coll, ctxt, action, ctxt => new T());
+			this.ReadElements(this.Elements, coll, ctxt, action, _ctxt => new T());
 		}
 		public void ReadElements<T, TContext>(TName name,
 			ICollection<T> coll, TContext ctxt, StreamAction<T, TContext> action, Func<TContext, T> ctor)
@@ -288,7 +288,7 @@ namespace KSoft.IO
 			Contract.Requires<ArgumentNullException>(coll != null);
 			Contract.Requires(action != null);
 
-			this.ReadElements(this.ElementsByName(name), coll, ctxt, action, ctxt => new T());
+			this.ReadElements(this.ElementsByName(name), coll, ctxt, action, _ctxt => new T());
 		}
 
 		void ReadStreamableElements<T, TContext>(IEnumerable<TCursor> elements,
@@ -364,7 +364,7 @@ namespace KSoft.IO
 			Contract.Requires(streamKey != null);
 			Contract.Requires(streamValue != null);
 
-			this.ReadElements(this.Elements, dic, ctxt, streamKey, streamValue, ctxt => new TValue());
+			this.ReadElements(this.Elements, dic, ctxt, streamKey, streamValue, _ctxt => new TValue());
 		}
 		public void ReadElements<TKey, TValue, TContext>(TName name,
 			IDictionary<TKey, TValue> dic, TContext ctxt,
@@ -389,7 +389,7 @@ namespace KSoft.IO
 			Contract.Requires(streamKey != null);
 			Contract.Requires(streamValue != null);
 
-			this.ReadElements(this.ElementsByName(name), dic, ctxt, streamKey, streamValue, ctxt => new TValue());
+			this.ReadElements(this.ElementsByName(name), dic, ctxt, streamKey, streamValue, _ctxt => new TValue());
 		}
 
 		void ReadStreamableElements<TKey, TValue, TContext>(IEnumerable<TCursor> elements,

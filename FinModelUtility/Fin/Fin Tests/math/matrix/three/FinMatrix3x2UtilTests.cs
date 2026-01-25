@@ -13,7 +13,7 @@ public sealed class FinMatrix3x2UtilTests {
   public void TestTranslation() {
     var expectedTranslation = new Vector2(2, 3);
 
-    var matrix = FinMatrix3X2Util.FromTranslation(expectedTranslation);
+    var matrix = FinMatrix3x2Util.FromTranslation(expectedTranslation);
 
     matrix.CopyTranslationInto(out var actualTranslation);
 
@@ -25,7 +25,7 @@ public sealed class FinMatrix3x2UtilTests {
   public void TestRotation() {
     var expectedRotation = 1.23f;
 
-    var matrix = FinMatrix3X2Util.FromRotation(
+    var matrix = FinMatrix3x2Util.FromRotation(
         expectedRotation);
 
     matrix.CopyRotationInto(out var actualRotation);
@@ -38,7 +38,7 @@ public sealed class FinMatrix3x2UtilTests {
   public void TestScale() {
     var expectedScale = new Vector2(3, 4);
 
-    var matrix = FinMatrix3X2Util.FromScale(expectedScale);
+    var matrix = FinMatrix3x2Util.FromScale(expectedScale);
 
     matrix.CopyScaleInto(out var actualScale);
 
@@ -54,7 +54,7 @@ public sealed class FinMatrix3x2UtilTests {
     var expectedScale = new Vector2(3, 4);
     var expectedSkew = 1.56f;
 
-    var trs = FinMatrix3X2Util.FromTrss(
+    var trs = FinMatrix3x2Util.FromTrss(
         expectedTranslation,
         expectedRotation,
         expectedScale,

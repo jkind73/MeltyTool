@@ -19,7 +19,7 @@ namespace KSoft
 		public static uint BitDecode(uint bits, int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (bits >> bitIndex) & bitMask;
@@ -33,7 +33,7 @@ namespace KSoft
 		public static int BitDecodeNoneable(uint bits, int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (int)BitDecode(bits, bitIndex, bitMask) - 1;
@@ -71,14 +71,14 @@ namespace KSoft
 		public static uint BitDecode(uint bits, ref int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bitCount = BitCount(bitMask);
-			Contract.Assert((bitIndex + bitCount) <= K_INT32_BIT_COUNT);
+			int bit_count = BitCount(bitMask);
+			Contract.Assert((bitIndex + bit_count) <= kInt32BitCount);
 
 			var value = (bits >> bitIndex) & bitMask;
-			bitIndex += bitCount;
+			bitIndex += bit_count;
 
 			return value;
 		}
@@ -92,7 +92,7 @@ namespace KSoft
 		public static int BitDecodeNoneable(uint bits, ref int bitIndex, uint bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (int)BitDecode(bits, ref bitIndex, bitMask) - 1;
@@ -108,7 +108,7 @@ namespace KSoft
 		public static ulong BitDecode(ulong bits, int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (bits >> bitIndex) & bitMask;
@@ -122,7 +122,7 @@ namespace KSoft
 		public static long BitDecodeNoneable(ulong bits, int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (long)BitDecode(bits, bitIndex, bitMask) - 1;
@@ -160,14 +160,14 @@ namespace KSoft
 		public static ulong BitDecode(ulong bits, ref int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
-			int bitCount = BitCount(bitMask);
-			Contract.Assert((bitIndex + bitCount) <= K_INT64_BIT_COUNT);
+			int bit_count = BitCount(bitMask);
+			Contract.Assert((bitIndex + bit_count) <= kInt64BitCount);
 
 			var value = (bits >> bitIndex) & bitMask;
-			bitIndex += bitCount;
+			bitIndex += bit_count;
 
 			return value;
 		}
@@ -181,7 +181,7 @@ namespace KSoft
 		public static long BitDecodeNoneable(ulong bits, ref int bitIndex, ulong bitMask)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
 			Contract.Requires/*<ArgumentException>*/(bitMask != 0);
 
 			return (long)BitDecode(bits, ref bitIndex, bitMask) - 1;
@@ -198,7 +198,7 @@ namespace KSoft
 		public static uint BitFieldExtractRange(uint bits, int bitIndexLow, int bitIndexHigh)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow >= 0 && bitIndexHigh >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow < K_INT32_BIT_COUNT && bitIndexHigh < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow < kInt32BitCount && bitIndexHigh < kInt32BitCount);
 
 			var shifted = bits >> bitIndexLow;								// Shift the bit field to start at the 0th bit
 			var mask = BitCountToMask32((bitIndexHigh-bitIndexLow) + 1);	// Generate a mask of the bit range
@@ -214,8 +214,8 @@ namespace KSoft
 		public static uint BitFieldExtractValue(uint bits, int bitIndex, int bitCount)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0 && bitCount >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT32_BIT_COUNT);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex + (bitCount-1) < K_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt32BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex + (bitCount-1) < kInt32BitCount);
 
 			return BitFieldExtractRange(bits, bitIndex, bitIndex + (bitCount-1));
 		}
@@ -229,7 +229,7 @@ namespace KSoft
 		public static ulong BitFieldExtractRange(ulong bits, int bitIndexLow, int bitIndexHigh)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow >= 0 && bitIndexHigh >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow < K_INT64_BIT_COUNT && bitIndexHigh < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndexLow < kInt64BitCount && bitIndexHigh < kInt64BitCount);
 
 			var shifted = bits >> bitIndexLow;								// Shift the bit field to start at the 0th bit
 			var mask = BitCountToMask64((bitIndexHigh-bitIndexLow) + 1);	// Generate a mask of the bit range
@@ -245,8 +245,8 @@ namespace KSoft
 		public static ulong BitFieldExtractValue(ulong bits, int bitIndex, int bitCount)
 		{
 			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex >= 0 && bitCount >= 0);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < K_INT64_BIT_COUNT);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex + (bitCount-1) < K_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex < kInt64BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitIndex + (bitCount-1) < kInt64BitCount);
 
 			return BitFieldExtractRange(bits, bitIndex, bitIndex + (bitCount-1));
 		}

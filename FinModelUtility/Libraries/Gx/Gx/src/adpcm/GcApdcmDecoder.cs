@@ -17,7 +17,7 @@ public static class GcAdpcmDecoder {
 
     var pcm = new short[sampleCount];
 
-    int frameCount = sampleCount.DivideByRoundUp(GcAdpcmMath.SAMPLES_PER_FRAME);
+    int frameCount = sampleCount.DivideByRoundUp(GcAdpcmMath.SamplesPerFrame);
     int currentSample = 0;
     int inIndex = 0;
     var outIndex = 0;
@@ -30,7 +30,7 @@ public static class GcAdpcmDecoder {
       short coef2 = coefficients[predictor * 2 + 1];
 
       int samplesToRead
-          = Math.Min(GcAdpcmMath.SAMPLES_PER_FRAME, sampleCount - currentSample);
+          = Math.Min(GcAdpcmMath.SamplesPerFrame, sampleCount - currentSample);
 
       for (int s = 0; s < samplesToRead; s++) {
         int adpcmSample = s % 2 == 0

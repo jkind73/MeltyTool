@@ -33,7 +33,7 @@ namespace visceral.schema.str;
 [Endianness(Endianness.LittleEndian)]
 [BinarySchema]
 public sealed partial class StreamSetFile : IBinaryConvertible {
-  private readonly BlockType magic_ = BlockType.OPTIONS;
+  private readonly BlockType magic_ = BlockType.Options;
   private readonly uint size_ = 12;
 
   /* Dead Space:
@@ -76,9 +76,9 @@ public sealed partial class StreamSetFile : IBinaryConvertible {
 
     public IBlock CreateData(BlockType magic)
       => magic switch {
-          BlockType.OPTIONS => new NoopBlock(BlockType.OPTIONS),
-          BlockType.CONTENT => new ContentBlock(),
-          BlockType.PADDING => new NoopBlock(BlockType.PADDING),
+          BlockType.Options => new NoopBlock(BlockType.Options),
+          BlockType.Content => new ContentBlock(),
+          BlockType.Padding => new NoopBlock(BlockType.Padding),
       };
   }
 }

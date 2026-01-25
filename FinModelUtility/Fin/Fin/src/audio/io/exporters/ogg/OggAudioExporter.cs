@@ -17,7 +17,7 @@ namespace fin.audio.io.exporters.ogg;
 ///   https://github.com/SteveLillis/.NET-Ogg-Vorbis-Encoder/blob/master/OggVorbisEncoder.Example/Encoder.cs
 /// </summary>
 public sealed class OggAudioExporter : IAudioExporter {
-  private const int WRITE_BUFFER_SIZE_ = 512;
+  private const int WRITE_BUFFER_SIZE = 512;
 
   public void ExportAudio(IAudioBuffer<short> audioBuffer,
                           ISystemFile outputFile) {
@@ -87,12 +87,12 @@ public sealed class OggAudioExporter : IAudioExporter {
 
     for (int readIndex = 0;
          readIndex <= lengthInSamples;
-         readIndex += WRITE_BUFFER_SIZE_) {
+         readIndex += WRITE_BUFFER_SIZE) {
       if (readIndex == lengthInSamples) {
         processingState.WriteEndOfStream();
       } else {
         var writeLength
-            = Math.Min(lengthInSamples - readIndex, WRITE_BUFFER_SIZE_);
+            = Math.Min(lengthInSamples - readIndex, WRITE_BUFFER_SIZE);
         processingState.WriteData(floatSamples, writeLength, readIndex);
       }
 

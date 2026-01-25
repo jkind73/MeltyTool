@@ -13,7 +13,7 @@ namespace KSoft.Collections
 		: BListBase<string>
 		, IBTypeNames
 	{
-		readonly string kUnregisteredMessage_;
+		readonly string kUnregisteredMessage;
 
 		static string BuildUnRegisteredMsg()
 		{
@@ -21,16 +21,16 @@ namespace KSoft.Collections
 		}
 		public BTypeNames()
 		{
-			this.kUnregisteredMessage_ = BuildUnRegisteredMsg();
-			this.mUndefinedInterface_ = new ProtoEnumWithUndefinedImpl(this);
+			this.kUnregisteredMessage = BuildUnRegisteredMsg();
+			this.mUndefinedInterface = new ProtoEnumWithUndefinedImpl(this);
 		}
 
 		public override void Clear()
 		{
 			base.Clear();
 
-			if (this.mUndefinedInterface_ != null)
-				this.mUndefinedInterface_.Clear();
+			if (this.mUndefinedInterface != null)
+				this.mUndefinedInterface.Clear();
 		}
 
 		#region IProtoEnum Members
@@ -60,7 +60,7 @@ namespace KSoft.Collections
 			int index = this.TryGetMemberId(memberName);
 
 			if (index.IsNone())
-				throw new ArgumentException(this.kUnregisteredMessage_, memberName);
+				throw new ArgumentException(this.kUnregisteredMessage, memberName);
 
 			return index;
 		}
@@ -78,14 +78,14 @@ namespace KSoft.Collections
 				return null;
 
 			if (PhxUtil.IsUndefinedReferenceHandle(id))
-				return Phoenix.TypeExtensionsPhx.GetUndefinedObject(this.mUndefinedInterface_, id);
+				return Phoenix.TypeExtensionsPhx.GetUndefinedObject(this.mUndefinedInterface, id);
 
 			return base.GetObject(id);
 		}
 
-		private ProtoEnumWithUndefinedImpl mUndefinedInterface_;
-		IProtoEnumWithUndefined IHasUndefinedProtoMemberInterface.UndefinedInterface { get { return this.mUndefinedInterface_; } }
-		internal IProtoEnumWithUndefined UndefinedInterface { get { return this.mUndefinedInterface_; } }
+		private ProtoEnumWithUndefinedImpl mUndefinedInterface;
+		IProtoEnumWithUndefined IHasUndefinedProtoMemberInterface.UndefinedInterface { get { return this.mUndefinedInterface; } }
+		internal IProtoEnumWithUndefined UndefinedInterface { get { return this.mUndefinedInterface; } }
 	};
 }
 

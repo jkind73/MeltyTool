@@ -4,143 +4,143 @@ using BObjectiveID = System.Int32;
 
 namespace KSoft.Phoenix.Runtime
 {
-	static partial class CSaveMarker
+	static partial class cSaveMarker
 	{
 		public const ushort 
-			UI_WIDGET = 0x2710
+			UIWidget = 0x2710
 			;
 	};
 
-	sealed class BuiWidget
+	sealed class BUIWidget
 		: IO.IEndianStreamSerializable
 	{
 		public struct BReticulePointer
 			: IO.IEndianStreamSerializable
 		{
-			public ulong unknown0, unknown8;
-			public uint unknown10;
+			public ulong Unknown0, Unknown8;
+			public uint Unknown10;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.Stream(ref this.unknown0); s.Stream(ref this.unknown8); s.Stream(ref this.unknown10);
+				s.Stream(ref this.Unknown0); s.Stream(ref this.Unknown8); s.Stream(ref this.Unknown10);
 			}
 			#endregion
 		};
 
-		public sealed class BuiTalkingHeadControl
+		public sealed class BUITalkingHeadControl
 			: IO.IEndianStreamSerializable
 		{
-			public string talkingHeadText;
-			public int objectiveId, lastCount;
-			public bool showBackground, objectiveVisible, talkingHeadVisible, isShown;
+			public string TalkingHeadText;
+			public int ObjectiveID, LastCount;
+			public bool ShowBackground, ObjectiveVisible, TalkingHeadVisible, IsShown;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamPascalWideString32(ref this.talkingHeadText);
-				s.Stream(ref this.objectiveId); s.Stream(ref this.lastCount);
-				s.Stream(ref this.showBackground); s.Stream(ref this.objectiveVisible); s.Stream(ref this.talkingHeadVisible); s.Stream(ref this.isShown);
+				s.StreamPascalWideString32(ref this.TalkingHeadText);
+				s.Stream(ref this.ObjectiveID); s.Stream(ref this.LastCount);
+				s.Stream(ref this.ShowBackground); s.Stream(ref this.ObjectiveVisible); s.Stream(ref this.TalkingHeadVisible); s.Stream(ref this.IsShown);
 			}
 			#endregion
 		};
 
-		public sealed class BuiObjectiveProgressControl
+		public sealed class BUIObjectiveProgressControl
 			: IO.IEndianStreamSerializable
 		{
-			public struct BuiLabel
+			public struct BUILabel
 				: IO.IEndianStreamSerializable
 			{
-				public bool isShown;
-				public string text;
+				public bool IsShown;
+				public string Text;
 
 				#region IEndianStreamSerializable Members
 				public void Serialize(IO.EndianStream s)
 				{
-					s.Stream(ref this.isShown);
-					s.StreamPascalWideString32(ref this.text);
+					s.Stream(ref this.IsShown);
+					s.StreamPascalWideString32(ref this.Text);
 				}
 				#endregion
 			};
 
-			public struct BuiObjectiveProgressData
+			public struct BUIObjectiveProgressData
 				: IO.IEndianStreamSerializable
 			{
-				public BObjectiveID objectiveId;
-				public int lastCount;
-				public uint fadeTime;
-				public int labelIndex, minIncrement;
+				public BObjectiveID ObjectiveID;
+				public int LastCount;
+				public uint FadeTime;
+				public int LabelIndex, MinIncrement;
 
 				#region IEndianStreamSerializable Members
 				public void Serialize(IO.EndianStream s)
 				{
-					s.Stream(ref this.objectiveId);
-					s.Stream(ref this.lastCount);
-					s.Stream(ref this.fadeTime);
-					s.Stream(ref this.labelIndex); s.Stream(ref this.minIncrement);
+					s.Stream(ref this.ObjectiveID);
+					s.Stream(ref this.LastCount);
+					s.Stream(ref this.FadeTime);
+					s.Stream(ref this.LabelIndex); s.Stream(ref this.MinIncrement);
 				}
 				#endregion
 			};
 
-			public BuiLabel[] objectiveLabels = new BuiLabel[4];
-			public BuiObjectiveProgressData[] objectives;
+			public BUILabel[] ObjectiveLabels = new BUILabel[4];
+			public BUIObjectiveProgressData[] Objectives;
 
-			public BuiObjectiveProgressControl()
+			public BUIObjectiveProgressControl()
 			{
-				for (int x = 0; x < this.objectiveLabels.Length; x++)
-					this.objectiveLabels[x] = new BuiLabel();
+				for (int x = 0; x < this.ObjectiveLabels.Length; x++)
+					this.ObjectiveLabels[x] = new BUILabel();
 			}
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				for (int x = 0; x < this.objectiveLabels.Length; x++) s.Stream(ref this.objectiveLabels[x]);
-				BSaveGame.StreamArray(s, ref this.objectives);
+				for (int x = 0; x < this.ObjectiveLabels.Length; x++) s.Stream(ref this.ObjectiveLabels[x]);
+				BSaveGame.StreamArray(s, ref this.Objectives);
 			}
 			#endregion
 		};
 
-		public int counterCurrent, counterMax, timerId, timerLabelId;
-		public float elapsedTimerTime;
-		public int numCitizensSaved, numCitizensNeeded;
+		public int CounterCurrent, CounterMax, TimerID, TimerLabelID;
+		public float ElapsedTimerTime;
+		public int NumCitizensSaved, NumCitizensNeeded;
 
-		public ushort garrisonContainerVisible0; public byte garrisonContainerVisible2;
-		public int garrisonContainerEntities0, garrisonContainerEntities4, garrisonContainerEntities8;
-		public ushort garrisonContainerUseEntity0; public byte garrisonContainerUseEntity2;
-		public int garrisonContainerCounts0, garrisonContainerCounts4, garrisonContainerCounts8;
+		public ushort GarrisonContainerVisible0; public byte GarrisonContainerVisible2;
+		public int GarrisonContainerEntities0, GarrisonContainerEntities4, GarrisonContainerEntities8;
+		public ushort GarrisonContainerUseEntity0; public byte GarrisonContainerUseEntity2;
+		public int GarrisonContainerCounts0, GarrisonContainerCounts4, GarrisonContainerCounts8;
 
-		public uint reticulePointersVisible0; public byte reticulePointersVisible4;
-		public BReticulePointer reticulePointerType;
-		public BVector[] reticulePointerArea = new BVector[3];
-		public BReticulePointer reticulePointerEntities, pointerRotation, pointerRotationFloat;
-		public BuiTalkingHeadControl talkingHeadControl = new BuiTalkingHeadControl();
-		public BuiObjectiveProgressControl objectiveProgressControl = new BuiObjectiveProgressControl();
-		public bool widgetPanelVisible, timerVisible, citizensSavedVisible,
-			counterVisible, timerShown;
+		public uint ReticulePointersVisible0; public byte ReticulePointersVisible4;
+		public BReticulePointer ReticulePointerType;
+		public BVector[] ReticulePointerArea = new BVector[3];
+		public BReticulePointer ReticulePointerEntities, PointerRotation, PointerRotationFloat;
+		public BUITalkingHeadControl TalkingHeadControl = new BUITalkingHeadControl();
+		public BUIObjectiveProgressControl ObjectiveProgressControl = new BUIObjectiveProgressControl();
+		public bool WidgetPanelVisible, TimerVisible, CitizensSavedVisible,
+			CounterVisible, TimerShown;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.counterCurrent); s.Stream(ref this.counterMax); s.Stream(ref this.timerId); s.Stream(ref this.timerLabelId);
-			s.Stream(ref this.elapsedTimerTime);
-			s.Stream(ref this.numCitizensSaved); s.Stream(ref this.numCitizensNeeded);
+			s.Stream(ref this.CounterCurrent); s.Stream(ref this.CounterMax); s.Stream(ref this.TimerID); s.Stream(ref this.TimerLabelID);
+			s.Stream(ref this.ElapsedTimerTime);
+			s.Stream(ref this.NumCitizensSaved); s.Stream(ref this.NumCitizensNeeded);
 
-			s.Stream(ref this.garrisonContainerVisible0); s.Stream(ref this.garrisonContainerVisible2);
-			s.Stream(ref this.garrisonContainerEntities0); s.Stream(ref this.garrisonContainerEntities4); s.Stream(ref this.garrisonContainerEntities8);
-			s.Stream(ref this.garrisonContainerUseEntity0); s.Stream(ref this.garrisonContainerUseEntity2);
-			s.Stream(ref this.garrisonContainerCounts0); s.Stream(ref this.garrisonContainerCounts4); s.Stream(ref this.garrisonContainerCounts8);
+			s.Stream(ref this.GarrisonContainerVisible0); s.Stream(ref this.GarrisonContainerVisible2);
+			s.Stream(ref this.GarrisonContainerEntities0); s.Stream(ref this.GarrisonContainerEntities4); s.Stream(ref this.GarrisonContainerEntities8);
+			s.Stream(ref this.GarrisonContainerUseEntity0); s.Stream(ref this.GarrisonContainerUseEntity2);
+			s.Stream(ref this.GarrisonContainerCounts0); s.Stream(ref this.GarrisonContainerCounts4); s.Stream(ref this.GarrisonContainerCounts8);
 
-			s.Stream(ref this.reticulePointersVisible0); s.Stream(ref this.reticulePointersVisible4);
-			s.Stream(ref this.reticulePointerType);
-			for (int x = 0; x < this.reticulePointerArea.Length; x++) s.StreamV(ref this.reticulePointerArea[x]);
-			s.Stream(ref this.reticulePointerEntities);
-			s.Stream(ref this.pointerRotation);
-			s.Stream(ref this.pointerRotationFloat);
-			s.Stream(this.talkingHeadControl);
-			s.Stream(this.objectiveProgressControl);
-			s.Stream(ref this.widgetPanelVisible); s.Stream(ref this.timerVisible); s.Stream(ref this.citizensSavedVisible);
-			s.Stream(ref this.counterVisible); s.Stream(ref this.timerShown);
-			s.StreamSignature(CSaveMarker.UI_WIDGET);
+			s.Stream(ref this.ReticulePointersVisible0); s.Stream(ref this.ReticulePointersVisible4);
+			s.Stream(ref this.ReticulePointerType);
+			for (int x = 0; x < this.ReticulePointerArea.Length; x++) s.StreamV(ref this.ReticulePointerArea[x]);
+			s.Stream(ref this.ReticulePointerEntities);
+			s.Stream(ref this.PointerRotation);
+			s.Stream(ref this.PointerRotationFloat);
+			s.Stream(this.TalkingHeadControl);
+			s.Stream(this.ObjectiveProgressControl);
+			s.Stream(ref this.WidgetPanelVisible); s.Stream(ref this.TimerVisible); s.Stream(ref this.CitizensSavedVisible);
+			s.Stream(ref this.CounterVisible); s.Stream(ref this.TimerShown);
+			s.StreamSignature(cSaveMarker.UIWidget);
 		}
 		#endregion
 	};

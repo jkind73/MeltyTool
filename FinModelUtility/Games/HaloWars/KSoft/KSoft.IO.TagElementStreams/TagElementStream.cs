@@ -11,9 +11,9 @@ namespace KSoft.IO
 {
 	public enum TagElementNodeType
 	{
-		ELEMENT=	System.Xml.XmlNodeType.Element,
-		ATTRIBUTE=	System.Xml.XmlNodeType.Attribute,
-		TEXT=		System.Xml.XmlNodeType.Text,
+		Element=	System.Xml.XmlNodeType.Element,
+		Attribute=	System.Xml.XmlNodeType.Attribute,
+		Text=		System.Xml.XmlNodeType.Text,
 	};
 
 	/// <summary></summary>
@@ -29,7 +29,7 @@ namespace KSoft.IO
 		where TDoc : class
 		where TCursor : class
 	{
-		protected const NumeralBase K_DEFAULT_RADIX = NumeralBase.DECIMAL;
+		protected const NumeralBase kDefaultRadix = NumeralBase.Decimal;
 
 		#region Owner
 		/// <summary>Owner of this stream</summary>
@@ -81,14 +81,14 @@ namespace KSoft.IO
 		#endregion
 
 		#region Cursor
-		TCursor mCursor_;
+		TCursor mCursor;
 		/// <summary>Element data we are streaming data to and from</summary>
 		public TCursor Cursor {
-			get { return this.mCursor_; }
+			get { return this.mCursor; }
 			set {
 				Contract.Requires<ArgumentNullException>(value != null);
 
-				this.mCursor_ = value;
+				this.mCursor = value;
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace KSoft.IO
 		{
 			var count = this.Cursor != null
 				? this.PredictElementCount(this.Cursor)
-				: TypeExtensions.K_NONE;
+				: TypeExtensions.kNone;
 
 			return count < 0
 				? defaultCount
@@ -188,16 +188,16 @@ namespace KSoft.IO
 		#endregion
 
 		#region Comments
-		bool mCommentsEnabled_;
+		bool mCommentsEnabled;
 		/// <summary>If the stream supports comments, this toggles their usage</summary>
 		/// <remarks>Off by default, setting this when a stream doesn't support comments is an error</remarks>
 		public bool CommentsEnabled
 		{
-			get { return this.mCommentsEnabled_; }
+			get { return this.mCommentsEnabled; }
 			set {
 				Contract.Requires(this.SupportsComments, "Stream must support comments in order to toggle their usage");
 
-				this.mCommentsEnabled_ = value;
+				this.mCommentsEnabled = value;
 			}
 		}
 
@@ -254,7 +254,7 @@ namespace KSoft.IO
 		{
 			if (disposing)
 			{
-				this.mCursor_ = null;
+				this.mCursor = null;
 
 				this.Owner = null;
 			}

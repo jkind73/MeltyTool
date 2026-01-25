@@ -3,37 +3,37 @@ namespace KSoft.Bitwise
 {
 	public static class Int24
 	{
-		public const uint MAX_VALUE = K_DATA_BIT_MASK;
+		public const uint MaxValue = kDataBitMask;
 
 		#region Data\Number Access
-		internal const int K_DATA_BIT_INDEX = 0;
-		const int K_DATA_BIT_COUNT_ = 23;
-		internal const uint K_DATA_BIT_MASK = (1 << K_DATA_BIT_COUNT_) - 1;
+		internal const int kDataBitIndex = 0;
+		const int kDataBitCount = 23;
+		internal const uint kDataBitMask = (1 << kDataBitCount) - 1;
 
 		public static uint GetNumber(uint data)
 		{
-			return data & K_DATA_BIT_MASK;
+			return data & kDataBitMask;
 		}
 		#endregion
 
 		#region Sign bit access
-		internal const int K_SIGN_BIT_INDEX = K_DATA_BIT_INDEX + K_DATA_BIT_COUNT_;
-		const int K_SIGN_BIT_COUNT_ = 1;
-		internal const int K_SIGN_BIT_MASK = K_SIGN_BIT_COUNT_ << K_SIGN_BIT_INDEX;
+		internal const int kSignBitIndex = kDataBitIndex + kDataBitCount;
+		const int kSignBitCount = 1;
+		internal const int kSignBitMask = kSignBitCount << kSignBitIndex;
 
 		public static bool IsSigned(uint data)
 		{
-			return Flags.Test(data, K_SIGN_BIT_MASK);
+			return Flags.Test(data, kSignBitMask);
 		}
 		public static uint SetSigned(uint data, bool isSigned)
 		{
-			return Flags.Modify(isSigned, data, K_SIGN_BIT_MASK);
+			return Flags.Modify(isSigned, data, kSignBitMask);
 		}
 		#endregion
 
 		public static bool InRange(uint v)
 		{
-			return v <= K_DATA_BIT_MASK;
+			return v <= kDataBitMask;
 		}
 	};
 }

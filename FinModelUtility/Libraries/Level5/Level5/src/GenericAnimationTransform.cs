@@ -1,8 +1,8 @@
 ﻿namespace level5;
 
 public enum AnimNodeHashType {
-  NAME = 0,
-  CRC32_C = 1,
+  Name = 0,
+  CRC32C = 1,
 }
 
 /// <summary>
@@ -14,7 +14,7 @@ public sealed class GenericAnimationTransform {
 
   public uint Hash { get; set; }
 
-  public AnimNodeHashType HashType { get; set; } = AnimNodeHashType.NAME;
+  public AnimNodeHashType HashType { get; set; } = AnimNodeHashType.Name;
 
   public Dictionary<AnimationTrackFormat, GenericTransformTrack> Tracks {
     get;
@@ -31,7 +31,7 @@ public sealed class GenericAnimationTransform {
                      float value,
                      AnimationTrackFormat type,
                      InterpolationType interpolationType =
-                         InterpolationType.LINEAR) {
+                         InterpolationType.Linear) {
       if (!this.Tracks.TryGetValue(type, out var track)) {
         track = new GenericTransformTrack(type);
         this.Tracks[type] = track;
@@ -43,30 +43,30 @@ public sealed class GenericAnimationTransform {
 
 
 public enum AnimationTrackFormat {
-  TRANSLATE_X,
-  TRANSLATE_Y,
-  TRANSLATE_Z,
-  ROTATE_X,
-  ROTATE_Y,
-  ROTATE_Z,
-  SCALE_X,
-  SCALE_Y,
-  SCALE_Z,
-  COMPENSATE_SCALE
+  TranslateX,
+  TranslateY,
+  TranslateZ,
+  RotateX,
+  RotateY,
+  RotateZ,
+  ScaleX,
+  ScaleY,
+  ScaleZ,
+  CompensateScale
 }
 
 public static class AnimationTrackFormatExtensions {
   public static bool IsTranslation(this AnimationTrackFormat value,
                                    out int axis)
-    => value.IsInRange(AnimationTrackFormat.TRANSLATE_X, 3, out axis);
+    => value.IsInRange(AnimationTrackFormat.TranslateX, 3, out axis);
 
   public static bool IsRotation(this AnimationTrackFormat value,
                                 out int axis)
-    => value.IsInRange(AnimationTrackFormat.ROTATE_X, 3, out axis);
+    => value.IsInRange(AnimationTrackFormat.RotateX, 3, out axis);
 
   public static bool IsScale(this AnimationTrackFormat value,
                              out int axis)
-    => value.IsInRange(AnimationTrackFormat.SCALE_X, 3, out axis);
+    => value.IsInRange(AnimationTrackFormat.ScaleX, 3, out axis);
 
   public static bool IsInRange(this AnimationTrackFormat value,
                                AnimationTrackFormat min,
@@ -89,9 +89,9 @@ public sealed class GenericTransformTrack(AnimationTrackFormat type) {
   public void AddKey(float frame,
                      float value,
                      InterpolationType interpolationType =
-                         InterpolationType.LINEAR,
-                     float inTan = 0,
+                         InterpolationType.Linear,
+                     float InTan = 0,
                      float outTan = float.MaxValue) {
-    this.Keys.AddKey(frame, value, interpolationType, inTan, outTan);
+    this.Keys.AddKey(frame, value, interpolationType, InTan, outTan);
     }
 }

@@ -9,52 +9,52 @@ namespace KSoft.Phoenix.Phx
 {
 	partial class BProtoTechEffect
 	{
-		[Interop.StructLayout(Interop.LayoutKind.Explicit, Size = K_SIZE_OF)]
+		[Interop.StructLayout(Interop.LayoutKind.Explicit, Size = kSizeOf)]
 		struct DataUnion
 		{
-			internal const int K_SIZE_OF = 12 // type, 1st and 2nd param
+			internal const int kSizeOf = 12 // type, 1st and 2nd param
 				+ 4 // pad
 				+ sizeof(ulong) // object reference
 				;
 			/// <summary>Offset of the first parameter</summary>
-			const int K_FIRST_PARAM_ = 4;
+			const int kFirstParam = 4;
 			/// <summary>Offset of the second parameter</summary>
-			const int K_SECOND_PARAM_ = 8;
-			const int K_STRING_PARAM_ = 16;
+			const int kSecondParam = 8;
+			const int kStringParam = 16;
 
 			[Interop.FieldOffset(0)] public BObjectDataType SubType;
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public int ID;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int ID2;
-			[Interop.FieldOffset(K_STRING_PARAM_)] public string StringValue;
+			[Interop.FieldOffset(kFirstParam)] public int ID;
+			[Interop.FieldOffset(kSecondParam)] public int ID2;
+			[Interop.FieldOffset(kStringParam)] public string StringValue;
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public int Cost_Type;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int Cost_UnitType; // proto object or type ID
+			[Interop.FieldOffset(kFirstParam)] public int Cost_Type;
+			[Interop.FieldOffset(kSecondParam)] public int Cost_UnitType; // proto object or type ID
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public BProtoObjectCommandType CommandType;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int CommandData;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public BSquadMode CommandDataSM;
+			[Interop.FieldOffset(kFirstParam)] public BProtoObjectCommandType CommandType;
+			[Interop.FieldOffset(kSecondParam)] public int CommandData;
+			[Interop.FieldOffset(kSecondParam)] public BSquadMode CommandDataSM;
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public int DmgMod_WeapType;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int DmgMod_DmgType;
+			[Interop.FieldOffset(kFirstParam)] public int DmgMod_WeapType;
+			[Interop.FieldOffset(kSecondParam)] public int DmgMod_DmgType;
 
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int TrainLimitType; // proto object or squad ID
+			[Interop.FieldOffset(kSecondParam)] public int TrainLimitType; // proto object or squad ID
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public int FromTypeID;
-			[Interop.FieldOffset(K_SECOND_PARAM_)] public int ToTypeID;
+			[Interop.FieldOffset(kFirstParam)] public int FromTypeID;
+			[Interop.FieldOffset(kSecondParam)] public int ToTypeID;
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public BProtoTechEffectSetAgeLevel SetAgeLevel;
+			[Interop.FieldOffset(kFirstParam)] public BProtoTechEffectSetAgeLevel SetAgeLevel;
 
-			[Interop.FieldOffset(K_STRING_PARAM_)] public string TurretRate_HardpointName;
+			[Interop.FieldOffset(kStringParam)] public string TurretRate_HardpointName;
 
-			[Interop.FieldOffset(K_FIRST_PARAM_)] public BObjectDataIconType Icon_Type;
-			[Interop.FieldOffset(K_STRING_PARAM_)] public string Icon_Name;
+			[Interop.FieldOffset(kFirstParam)] public BObjectDataIconType Icon_Type;
+			[Interop.FieldOffset(kStringParam)] public string Icon_Name;
 
-			[Interop.FieldOffset(K_STRING_PARAM_)] public string HPBar_Name;
+			[Interop.FieldOffset(kStringParam)] public string HPBar_Name;
 
 			public void Initialize()
 			{
-				this.SubType = BObjectDataType.INVALID;
-				this.ID = this.ID2 = TypeExtensions.K_NONE;
+				this.SubType = BObjectDataType.Invalid;
+				this.ID = this.ID2 = TypeExtensions.kNone;
 				this.StringValue = null;
 			}
 
@@ -62,41 +62,41 @@ namespace KSoft.Phoenix.Phx
 				where TDoc : class
 				where TCursor : class
 			{
-				xs.StreamTypeName(s, "Resource", ref this.Cost_Type, GameDataObjectKind.COST, isResourceOptional, XML.XmlUtil.K_SOURCE_ATTR);
-				bool streamedUnitType = xs.StreamDbid(s, "UnitType", ref this.Cost_UnitType, DatabaseObjectKind.OBJECT, true, XML.XmlUtil.K_SOURCE_ATTR);
+				xs.StreamTypeName(s, "Resource", ref this.Cost_Type, GameDataObjectKind.Cost, isResourceOptional, XML.XmlUtil.kSourceAttr);
+				bool streamedUnitType = xs.StreamDBID(s, "UnitType", ref this.Cost_UnitType, DatabaseObjectKind.Object, true, XML.XmlUtil.kSourceAttr);
 				// #HACK deal with hand edited data in Halo Wars
 				if (!streamedUnitType && s.IsReading)
-					xs.StreamDbid(s, "unitType", ref this.Cost_UnitType, DatabaseObjectKind.OBJECT, true, XML.XmlUtil.K_SOURCE_ATTR);
+					xs.StreamDBID(s, "unitType", ref this.Cost_UnitType, DatabaseObjectKind.Object, true, XML.XmlUtil.kSourceAttr);
 			}
 			void StreamCommandData<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs)
 				where TDoc : class
 				where TCursor : class
 			{
-				const string attrName = "CommandData";
+				const string attr_name = "CommandData";
 
 				switch (this.CommandType)
 				{
-				case BProtoObjectCommandType.RESEARCH: // proto tech
-					xs.StreamDbid(s, attrName, ref this.CommandData, DatabaseObjectKind.TECH, false, XML.XmlUtil.K_SOURCE_ATTR);
+				case BProtoObjectCommandType.Research: // proto tech
+					xs.StreamDBID(s, attr_name, ref this.CommandData, DatabaseObjectKind.Tech, false, XML.XmlUtil.kSourceAttr);
 					break;
-				case BProtoObjectCommandType.TRAIN_UNIT: // proto object
-				case BProtoObjectCommandType.BUILD:
-				case BProtoObjectCommandType.BUILD_OTHER:
-					xs.StreamDbid(s, attrName, ref this.CommandData, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_ATTR);
+				case BProtoObjectCommandType.TrainUnit: // proto object
+				case BProtoObjectCommandType.Build:
+				case BProtoObjectCommandType.BuildOther:
+					xs.StreamDBID(s, attr_name, ref this.CommandData, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceAttr);
 					break;
-				case BProtoObjectCommandType.TRAIN_SQUAD: // proto squad
-					xs.StreamDbid(s, attrName, ref this.CommandData, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_ATTR);
-					break;
-
-				case BProtoObjectCommandType.CHANGE_MODE: // unused
-					s.StreamAttributeEnum(attrName, ref this.CommandDataSM);
+				case BProtoObjectCommandType.TrainSquad: // proto squad
+					xs.StreamDBID(s, attr_name, ref this.CommandData, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceAttr);
 					break;
 
-				case BProtoObjectCommandType.ABILITY:
-					xs.StreamDbid(s, attrName, ref this.CommandData, DatabaseObjectKind.ABILITY, false, XML.XmlUtil.K_SOURCE_ATTR);
+				case BProtoObjectCommandType.ChangeMode: // unused
+					s.StreamAttributeEnum(attr_name, ref this.CommandDataSM);
 					break;
-				case BProtoObjectCommandType.POWER:
-					xs.StreamDbid(s, attrName, ref this.CommandData, DatabaseObjectKind.POWER, false, XML.XmlUtil.K_SOURCE_ATTR);
+
+				case BProtoObjectCommandType.Ability:
+					xs.StreamDBID(s, attr_name, ref this.CommandData, DatabaseObjectKind.Ability, false, XML.XmlUtil.kSourceAttr);
+					break;
+				case BProtoObjectCommandType.Power:
+					xs.StreamDBID(s, attr_name, ref this.CommandData, DatabaseObjectKind.Power, false, XML.XmlUtil.kSourceAttr);
 					break;
 				}
 			}
@@ -105,15 +105,15 @@ namespace KSoft.Phoenix.Phx
 				where TCursor : class
 			{
 				// #NOTE engine parses this as "CommandType", but its parser ignores case
-				if (s.StreamAttributeEnumOpt("commandType", ref this.CommandType, e => e != BProtoObjectCommandType.INVALID))
+				if (s.StreamAttributeEnumOpt("commandType", ref this.CommandType, e => e != BProtoObjectCommandType.Invalid))
 					this.StreamCommandData(s, xs);
 			}
 			public void StreamDamageModifier<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs)
 				where TDoc : class
 				where TCursor : class
 			{
-				xs.StreamDbid(s, "WeaponType", ref this.DmgMod_WeapType, DatabaseObjectKind.WEAPON_TYPE, false, XML.XmlUtil.K_SOURCE_ATTR);
-				xs.StreamDbid(s, "DamageType", ref this.DmgMod_DmgType, DatabaseObjectKind.DAMAGE_TYPE, false, XML.XmlUtil.K_SOURCE_ATTR);
+				xs.StreamDBID(s, "WeaponType", ref this.DmgMod_WeapType, DatabaseObjectKind.WeaponType, false, XML.XmlUtil.kSourceAttr);
+				xs.StreamDBID(s, "DamageType", ref this.DmgMod_DmgType, DatabaseObjectKind.DamageType, false, XML.XmlUtil.kSourceAttr);
 			}
 			public void StreamTrainLimit<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs, DatabaseObjectKind kind)
 				where TDoc : class
@@ -121,10 +121,10 @@ namespace KSoft.Phoenix.Phx
 			{
 				// #NOTE engine parses these as "UnitType" and "SquadType", but its parser ignores case
 
-				if (kind == DatabaseObjectKind.OBJECT)
-					xs.StreamDbid(s, "unitType", ref this.TrainLimitType, kind, false, XML.XmlUtil.K_SOURCE_ATTR);
-				else if (kind == DatabaseObjectKind.SQUAD)
-					xs.StreamDbid(s, "squadType", ref this.TrainLimitType, kind, false, XML.XmlUtil.K_SOURCE_ATTR);
+				if (kind == DatabaseObjectKind.Object)
+					xs.StreamDBID(s, "unitType", ref this.TrainLimitType, kind, false, XML.XmlUtil.kSourceAttr);
+				else if (kind == DatabaseObjectKind.Squad)
+					xs.StreamDBID(s, "squadType", ref this.TrainLimitType, kind, false, XML.XmlUtil.kSourceAttr);
 			}
 			public void StreamIcon<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs)
 				where TDoc : class
@@ -139,74 +139,74 @@ namespace KSoft.Phoenix.Phx
 
 		#region ID variants
 		[Meta.BWeaponTypeReference]
-		public int WeaponTypeId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
-			Contract.Requires(this.SubType == BObjectDataType.DAMAGE_MODIFIER);
-			return this.mDu_.DmgMod_WeapType;
+		public int WeaponTypeID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Data);
+			Contract.Requires(this.SubType == BObjectDataType.DamageModifier);
+			return this.mDU.DmgMod_WeapType;
 		} }
 		[Meta.BDamageTypeReference]
-		public int DamageTypeId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
-			Contract.Requires(this.SubType == BObjectDataType.DAMAGE_MODIFIER);
-			return this.mDu_.DmgMod_DmgType;
+		public int DamageTypeID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Data);
+			Contract.Requires(this.SubType == BObjectDataType.DamageModifier);
+			return this.mDU.DmgMod_DmgType;
 		} }
 
 		[Meta.RateReference]
-		public int RateId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
-			Contract.Requires(this.SubType == BObjectDataType.RATE_AMOUNT || this.SubType == BObjectDataType.RATE_MULTIPLIER);
-			return this.mDu_.ID;
+		public int RateID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Data);
+			Contract.Requires(this.SubType == BObjectDataType.RateAmount || this.SubType == BObjectDataType.RateMultiplier);
+			return this.mDU.ID;
 		} }
 
 		[Meta.PopulationReference]
-		public int PopId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
-			Contract.Requires(this.SubType == BObjectDataType.POP_CAP || this.SubType == BObjectDataType.POP_MAX);
-			return this.mDu_.ID;
+		public int PopID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Data);
+			Contract.Requires(this.SubType == BObjectDataType.PopCap || this.SubType == BObjectDataType.PopMax);
+			return this.mDU.ID;
 		} }
 
 		[Meta.BProtoPowerReference]
-		public int PowerId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.DATA);
-			Contract.Requires(this.SubType == BObjectDataType.POWER_RECHARGE_TIME || this.SubType == BObjectDataType.POWER_USE_LIMIT || this.SubType == BObjectDataType.POWER_LEVEL);
-			return this.mDu_.ID;
+		public int PowerID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Data);
+			Contract.Requires(this.SubType == BObjectDataType.PowerRechargeTime || this.SubType == BObjectDataType.PowerUseLimit || this.SubType == BObjectDataType.PowerLevel);
+			return this.mDU.ID;
 		} }
 
-		public int TransformUnitId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.TRANSFORM_UNIT);
-			return this.mDu_.ToTypeID;
+		public int TransformUnitID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.TransformUnit);
+			return this.mDU.ToTypeID;
 		} }
-		public int TransformProtoFromId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.TRANSFORM_PROTO_UNIT || this.Type == BProtoTechEffectType.TRANSFORM_PROTO_SQUAD);
-			return this.mDu_.FromTypeID;
+		public int TransformProtoFromID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.TransformProtoUnit || this.Type == BProtoTechEffectType.TransformProtoSquad);
+			return this.mDU.FromTypeID;
 		} }
-		public int TransformProtoToId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.TRANSFORM_PROTO_UNIT || this.Type == BProtoTechEffectType.TRANSFORM_PROTO_SQUAD);
-			return this.mDu_.ToTypeID;
+		public int TransformProtoToID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.TransformProtoUnit || this.Type == BProtoTechEffectType.TransformProtoSquad);
+			return this.mDU.ToTypeID;
 		} }
 		[Meta.BProtoObjectReference]
-		public int BuildObjectId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.BUILD);
-			return this.mDu_.ToTypeID;
+		public int BuildObjectID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Build);
+			return this.mDU.ToTypeID;
 		} }
 		[Meta.BProtoPowerReference]
-		public int GodPowerId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.GOD_POWER);
-			return this.mDu_.ID;
+		public int GodPowerID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.GodPower);
+			return this.mDU.ID;
 		} }
 		[Meta.BProtoTechReference]
-		public int TechStatusTechId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.TECH_STATUS);
-			return this.mDu_.ID;
+		public int TechStatusTechID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.TechStatus);
+			return this.mDU.ID;
 		} }
 		[Meta.BAbilityReference]
-		public int AbilityId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.ABILITY);
-			return this.mDu_.ID;
+		public int AbilityID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.Ability);
+			return this.mDU.ID;
 		} }
-		public int AttachSquadTypeObjectId { get {
-			Contract.Requires(this.Type == BProtoTechEffectType.ATTACH_SQUAD);
-			return this.mDu_.ID;
+		public int AttachSquadTypeObjectID { get {
+			Contract.Requires(this.Type == BProtoTechEffectType.AttachSquad);
+			return this.mDU.ID;
 		} }
 		#endregion
 	};

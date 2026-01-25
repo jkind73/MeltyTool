@@ -9,7 +9,7 @@ public sealed class ModelMatricesUbo {
   private readonly GlUbo impl_;
 
   public ModelMatricesUbo(int boneCount) {
-    this.bufferSize_ = (1 + (1 + boneCount)) * UboUtil.SIZE_OF_MATRIX4_X4;
+    this.bufferSize_ = (1 + (1 + boneCount)) * UboUtil.SIZE_OF_MATRIX4X4;
     this.impl_ = new(this.bufferSize_,
                      GlslConstants.UBO_CURRENT_MATRICES_BINDING_INDEX);
   }
@@ -30,8 +30,8 @@ public sealed class ModelMatricesUbo {
 
     // TODO: Merge model/view/projection matrices with bone matrices here
     // rather than in the shader
-    UboUtil.AppendMatrix4X4(buffer, ref offset, modelMatrix);
-    UboUtil.AppendMatrix4X4S(buffer, ref offset, boneMatrices);
+    UboUtil.AppendMatrix4x4(buffer, ref offset, modelMatrix);
+    UboUtil.AppendMatrix4x4s(buffer, ref offset, boneMatrices);
 
     this.impl_.UpdateDataIfChanged(buffer);
   }

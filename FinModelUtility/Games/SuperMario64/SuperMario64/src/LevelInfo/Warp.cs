@@ -3,53 +3,53 @@
 namespace sm64.LevelInfo {
   public sealed class Warp {
     public Warp(bool isPaintingWarp) {
-      this.isPaintingWarp_ = isPaintingWarp;
+      this.isPaintingWarp = isPaintingWarp;
     }
 
-    private const ushort NUM_OF_CATERGORIES_ = 2;
-    private bool isPaintingWarp_ = false;
+    private const ushort NUM_OF_CATERGORIES = 2;
+    private bool isPaintingWarp = false;
 
-    private byte warpFromId_;
+    private byte warpFrom_ID;
 
-    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("From ID")]
-    public byte WarpFromId {
-      get { return this.warpFromId_; }
-      set { this.warpFromId_ = value; }
+    public byte WarpFrom_ID {
+      get { return this.warpFrom_ID; }
+      set { this.warpFrom_ID = value; }
     }
 
-    private byte warpToLevelId_;
+    private byte warpTo_LevelID;
 
-    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("To Level")]
-    public byte WarpToLevelId {
-      get { return this.warpToLevelId_; }
-      set { this.warpToLevelId_ = value; }
+    public byte WarpTo_LevelID {
+      get { return this.warpTo_LevelID; }
+      set { this.warpTo_LevelID = value; }
     }
 
-    private byte warpToAreaId_;
+    private byte warpTo_AreaID;
 
-    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("To Area")]
-    public byte WarpToAreaId {
-      get { return this.warpToAreaId_; }
-      set { this.warpToAreaId_ = value; }
+    public byte WarpTo_AreaID {
+      get { return this.warpTo_AreaID; }
+      set { this.warpTo_AreaID = value; }
     }
 
-    private byte warpToWarpId_;
+    private byte warpTo_WarpID;
 
-    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Connect Warps", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("To ID")]
-    public byte WarpToWarpId {
-      get { return this.warpToWarpId_; }
-      set { this.warpToWarpId_ = value; }
+    public byte WarpTo_WarpID {
+      get { return this.warpTo_WarpID; }
+      set { this.warpTo_WarpID = value; }
     }
 
-    [CustomSortedCategory("Info", 2, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Info", 2, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [Description("Location inside the ROM file")]
     [DisplayName("Address")]
@@ -62,29 +62,29 @@ namespace sm64.LevelInfo {
           [new ReadOnlyAttribute(true)]);
     }
 
-    private string GetLevelName_() {
-      Rom rom = Rom.Instance;
+    private string getLevelName() {
+      ROM rom = ROM.Instance;
       foreach (KeyValuePair<string, ushort> entry in rom.levelIDs) {
-        if (entry.Value == this.WarpToLevelId)
-          return entry.Key + " (" + this.warpToAreaId_ + ")";
+        if (entry.Value == this.WarpTo_LevelID)
+          return entry.Key + " (" + this.warpTo_AreaID + ")";
       }
-      return "Unknown" + " (" + this.warpToAreaId_ + ")";
+      return "Unknown" + " (" + this.warpTo_AreaID + ")";
     }
 
-    private string GetWarpName_() {
-      if (this.isPaintingWarp_) {
-        return " [to " + this.GetLevelName_() + "]";
+    private string getWarpName() {
+      if (this.isPaintingWarp) {
+        return " [to " + this.getLevelName() + "]";
       } else {
-        switch (this.WarpFromId) {
+        switch (this.WarpFrom_ID) {
           case 0xF0:
-            return " (Success)" + " [to " + this.GetLevelName_() + "]";
+            return " (Success)" + " [to " + this.getLevelName() + "]";
           case 0xF1:
-            return " (Failure)" + " [to " + this.GetLevelName_() + "]";
+            return " (Failure)" + " [to " + this.getLevelName() + "]";
           case 0xF2:
           case 0xF3:
-            return " (Special)" + " [to " + this.GetLevelName_() + "]";
+            return " (Special)" + " [to " + this.getLevelName() + "]";
           default:
-            return " [to " + this.GetLevelName_() + "]";
+            return " [to " + this.getLevelName() + "]";
         }
       }
     }
@@ -92,10 +92,10 @@ namespace sm64.LevelInfo {
     public override string ToString() {
       //isPaintingWarp
       string warpName = "Warp 0x";
-      if (this.isPaintingWarp_)
+      if (this.isPaintingWarp)
         warpName = "Painting 0x";
 
-      warpName += this.WarpFromId.ToString("X2") + this.GetWarpName_();
+      warpName += this.WarpFrom_ID.ToString("X2") + this.getWarpName();
 
       return warpName;
     }

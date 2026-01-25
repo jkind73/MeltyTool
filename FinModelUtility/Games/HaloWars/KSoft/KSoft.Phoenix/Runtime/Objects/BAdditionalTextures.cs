@@ -6,33 +6,33 @@ namespace KSoft.Phoenix.Runtime
 	public struct BAdditionalTextures
 		: IO.IEndianStreamSerializable
 	{
-		public int renderType, texture;
-		public BVec2 texUvOfs;
-		public float texUvScale, texInten, texScrollSpeed;
+		public int RenderType, Texture;
+		public BVec2 TexUVOfs;
+		public float TexUVScale, TexInten, TexScrollSpeed;
 		// relative in gamefiles, TexTimeout - gWorld->getGametimeFloat()
-		public float texTimeoutOffset;
-		public bool modulateOffset
-			, modulateIntensity
-			, shouldBeCopied
-			, texClamp
-			, texScrollLoop
+		public float TexTimeoutOffset;
+		public bool ModulateOffset
+			, ModulateIntensity
+			, ShouldBeCopied
+			, TexClamp
+			, TexScrollLoop
 			;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.renderType);
-			s.Stream(ref this.texture);
-			s.StreamV(ref this.texUvOfs);
-			s.Stream(ref this.texUvScale);
-			s.Stream(ref this.texInten);
-			s.Stream(ref this.texScrollSpeed);
-			s.Stream(ref this.texTimeoutOffset);
-			s.Stream(ref this.modulateOffset);
-			s.Stream(ref this.modulateIntensity);
-			s.Stream(ref this.shouldBeCopied);
-			s.Stream(ref this.texClamp);
-			s.Stream(ref this.texScrollLoop);
+			s.Stream(ref this.RenderType);
+			s.Stream(ref this.Texture);
+			s.StreamV(ref this.TexUVOfs);
+			s.Stream(ref this.TexUVScale);
+			s.Stream(ref this.TexInten);
+			s.Stream(ref this.TexScrollSpeed);
+			s.Stream(ref this.TexTimeoutOffset);
+			s.Stream(ref this.ModulateOffset);
+			s.Stream(ref this.ModulateIntensity);
+			s.Stream(ref this.ShouldBeCopied);
+			s.Stream(ref this.TexClamp);
+			s.Stream(ref this.TexScrollLoop);
 		}
 		#endregion
 	};

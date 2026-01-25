@@ -3,18 +3,18 @@ namespace KSoft.Phoenix
 {
 	public struct IsNumericTester
 	{
-		public bool allowExponential;
-		public int startOffset;
+		public bool AllowExponential;
+		public int StartOffset;
 
-		public int returnFailOffset;
-		public int returnIntegralDigits;
-		public int returnFractionalDigits;
-		public int returnSignificantDigits;
+		public int ReturnFailOffset;
+		public int ReturnIntegralDigits;
+		public int ReturnFractionalDigits;
+		public int ReturnSignificantDigits;
 
 		private void InitializeReturns()
 		{
-			this.returnFailOffset = TypeExtensions.K_NONE;
-			this.returnIntegralDigits = this.returnFractionalDigits = this.returnSignificantDigits = 0;
+			this.ReturnFailOffset = TypeExtensions.kNone;
+			this.ReturnIntegralDigits = this.ReturnFractionalDigits = this.ReturnSignificantDigits = 0;
 		}
 
 		private enum Phase
@@ -23,16 +23,16 @@ namespace KSoft.Phoenix
 			// [whitespace] [sign] [digits] [.digits] [ {d | D | e | E}[sign]digits]
 			//  0            1      2        34          4              5    6
 
-			/** <summary>0</summary> */ WHITESPACE,
-			/** <summary>1</summary> */ SIGN,
-			/** <summary>2</summary> */ DIGITS,
-			/** <summary>3</summary> */ FRACTIONAL_SIGN,
-			/** <summary>4</summary> */ FRACTIONAL_DIGITS,
-			/** <summary>5</summary> */ EXPONENT_SIGN,
-			/** <summary>6</summary> */ EXPONENT_DIGITS,
-			/** <summary>7</summary> */ TRAILING_WHITE_SPACE,
+			/** <summary>0</summary> */ Whitespace,
+			/** <summary>1</summary> */ Sign,
+			/** <summary>2</summary> */ Digits,
+			/** <summary>3</summary> */ FractionalSign,
+			/** <summary>4</summary> */ FractionalDigits,
+			/** <summary>5</summary> */ ExponentSign,
+			/** <summary>6</summary> */ ExponentDigits,
+			/** <summary>7</summary> */ TrailingWhiteSpace,
 
-			K_NUMBER_OF
+			kNumberOf
 		};
 
 		public bool Test(string str)
@@ -42,147 +42,147 @@ namespace KSoft.Phoenix
 			if (str == null)
 				return this.TestFailed(0);
 
-			bool foundDigits = false;
+			bool found_digits = false;
 
-			bool foundFirstNonZeroDigit = false;
-			var curPhase = Phase.WHITESPACE;
+			bool found_first_non_zero_digit = false;
+			var cur_phase = Phase.Whitespace;
 
-			for (int curPos = this.startOffset; curPos < str.Length; curPos++)
+			for (int cur_pos = this.StartOffset; cur_pos < str.Length; cur_pos++)
 			{
-				char c = str[curPos];
+				char c = str[cur_pos];
 
-				bool cIsDigit = char.IsDigit(c);
-				if (cIsDigit)
-					foundDigits = true;
+				bool c_is_digit = char.IsDigit(c);
+				if (c_is_digit)
+					found_digits = true;
 
-				for (bool nextChar = true; nextChar; )
+				for (bool next_char = true; next_char; )
 				{
-					nextChar = false;
+					next_char = false;
 
-					switch (curPhase)
+					switch (cur_phase)
 					{
-						case Phase.WHITESPACE: {
+						case Phase.Whitespace: {
 							if (IsIgnoredWhitespace(c))
-								nextChar = true;
+								next_char = true;
 							else
-								curPhase = Phase.SIGN;
+								cur_phase = Phase.Sign;
 						} break;
 
-						case Phase.SIGN: {
+						case Phase.Sign: {
 							if (IsDigitSign(c))
-								nextChar = true;
+								next_char = true;
 
-							curPhase = Phase.DIGITS;
+							cur_phase = Phase.Digits;
 						} break;
 
-						case Phase.DIGITS: {
-							if (cIsDigit)
+						case Phase.Digits: {
+							if (c_is_digit)
 							{
-								this.returnIntegralDigits++;
+								this.ReturnIntegralDigits++;
 
 								if (c != '0')
-									foundFirstNonZeroDigit = true;
+									found_first_non_zero_digit = true;
 
-								if (foundFirstNonZeroDigit)
-									this.returnSignificantDigits++;
+								if (found_first_non_zero_digit)
+									this.ReturnSignificantDigits++;
 
-								nextChar = true;
+								next_char = true;
 							}
 							else
-								curPhase = Phase.FRACTIONAL_SIGN;
+								cur_phase = Phase.FractionalSign;
 						} break;
 
-						case Phase.FRACTIONAL_SIGN: {
+						case Phase.FractionalSign: {
 							if(c == '.')
 							{
-								nextChar = true;
-								curPhase = Phase.FRACTIONAL_DIGITS;
+								next_char = true;
+								cur_phase = Phase.FractionalDigits;
 							}
 							else if (IsExponentCharacter(c))
 							{
-								if (!this.allowExponential)
-									return this.TestFailed(curPos);
+								if (!this.AllowExponential)
+									return this.TestFailed(cur_pos);
 
-								nextChar = true;
-								curPhase = Phase.EXPONENT_SIGN;
+								next_char = true;
+								cur_phase = Phase.ExponentSign;
 							}
 							else
 							{
-								return this.TestFailed(curPos);
+								return this.TestFailed(cur_pos);
 							}
 						} break;
 
-						case Phase.FRACTIONAL_DIGITS: {
-							if (cIsDigit)
+						case Phase.FractionalDigits: {
+							if (c_is_digit)
 							{
-								this.returnFractionalDigits++;
+								this.ReturnFractionalDigits++;
 
 								if (c != '0')
-									foundFirstNonZeroDigit = true;
+									found_first_non_zero_digit = true;
 
-								if (foundFirstNonZeroDigit)
-									this.returnSignificantDigits++;
+								if (found_first_non_zero_digit)
+									this.ReturnSignificantDigits++;
 
-								nextChar = true;
+								next_char = true;
 							}
 							else if (IsExponentCharacter(c))
 							{
-								if (!this.allowExponential)
-									return this.TestFailed(curPos);
+								if (!this.AllowExponential)
+									return this.TestFailed(cur_pos);
 
-								nextChar = true;
-								curPhase = Phase.EXPONENT_SIGN;
+								next_char = true;
+								cur_phase = Phase.ExponentSign;
 							}
 							else if (IsIgnoredWhitespace(c))
 							{
-								nextChar = true;
-								curPhase = Phase.TRAILING_WHITE_SPACE;
+								next_char = true;
+								cur_phase = Phase.TrailingWhiteSpace;
 							}
 							else
 							{
-								return this.TestFailed(curPos);
+								return this.TestFailed(cur_pos);
 							}
 						} break;
 
-						case Phase.EXPONENT_SIGN: {
+						case Phase.ExponentSign: {
 							if (IsDigitSign(c))
-								nextChar = true;
+								next_char = true;
 
-							curPhase = Phase.EXPONENT_DIGITS;
+							cur_phase = Phase.ExponentDigits;
 						} break;
 
-						case Phase.EXPONENT_DIGITS: {
-							if (cIsDigit)
+						case Phase.ExponentDigits: {
+							if (c_is_digit)
 							{
-								nextChar = true;
+								next_char = true;
 							}
 							else if (IsIgnoredWhitespace(c))
 							{
-								nextChar = true;
-								curPhase = Phase.TRAILING_WHITE_SPACE;
+								next_char = true;
+								cur_phase = Phase.TrailingWhiteSpace;
 							}
 							else
 							{
-								this.TestFailed(curPos);
+								this.TestFailed(cur_pos);
 							}
 						} break;
 
-						case Phase.TRAILING_WHITE_SPACE: {
+						case Phase.TrailingWhiteSpace: {
 							if (IsIgnoredWhitespace(c))
-								nextChar = true;
+								next_char = true;
 							else
-								return this.TestFailed(curPos);
+								return this.TestFailed(cur_pos);
 						} break;
 					}
 				}
 			}
 
-			return foundDigits;
+			return found_digits;
 		}
 
 		private bool TestFailed(int curPos)
 		{
-			this.returnFailOffset = curPos;
+			this.ReturnFailOffset = curPos;
 			return false;
 		}
 

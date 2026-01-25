@@ -19,7 +19,7 @@ namespace KSoft.IO
 			TagElementStream<TDoc, TCursor, string> s,
 			string elementName,
 			TContext ctxt, SerializeBitToTagElementStreamDelegate<TDoc, TCursor, TContext> streamElement,
-			int highestBitIndex = TypeExtensions.K_NONE_INT32)
+			int highestBitIndex = TypeExtensions.kNoneInt32)
 			where TDoc : class
 			where TCursor : class
 		{
@@ -33,27 +33,27 @@ namespace KSoft.IO
 
 			if (s.IsReading)
 			{
-				int bitIndex = 0;
+				int bit_index = 0;
 				foreach (var node in s.ElementsByName(elementName))
 					using (s.EnterCursorBookmark(node))
 					{
-						bitIndex = streamElement(s, @this, TypeExtensions.K_NONE_INT32, ctxt);
-						if (bitIndex.IsNone())
+						bit_index = streamElement(s, @this, TypeExtensions.kNoneInt32, ctxt);
+						if (bit_index.IsNone())
 							s.ThrowReadException(new System.IO.InvalidDataException(string.Format(Util.InvariantCultureInfo,
 								"Element is not a valid {0} value", elementName)));
 
-						@this[bitIndex] = true;
+						@this[bit_index] = true;
 					}
 			}
 			else if (s.IsWriting)
 			{
-				foreach (int bitIndex in @this.SetBitIndices)
+				foreach (int bit_index in @this.SetBitIndices)
 				{
-					if (bitIndex > highestBitIndex)
+					if (bit_index > highestBitIndex)
 						break;
 
 					using (s.EnterCursorBookmark(elementName))
-						streamElement(s, @this, bitIndex, ctxt);
+						streamElement(s, @this, bit_index, ctxt);
 				}
 			}
 		}

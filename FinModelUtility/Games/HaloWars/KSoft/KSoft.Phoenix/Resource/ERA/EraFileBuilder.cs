@@ -12,25 +12,25 @@ namespace KSoft.Phoenix.Resource
 {
 	public enum EraFileBuilderOptions
 	{
-		ENCRYPT,
-		ALWAYS_USE_XML_OVER_XMB,
+		Encrypt,
+		AlwaysUseXmlOverXmb,
 
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
 	};
 
 	public sealed class EraFileBuilder
 		: EraFileUtil
 	{
 		/// <summary>Extension of the file listing used to build ERAs</summary>
-		public const string K_NAME_EXTENSION = ".eradef";
+		public const string kNameExtension = ".eradef";
 
 		/// <see cref="EraFileBuilderOptions"/>
-		public Collections.BitVector32 builderOptions;
+		public Collections.BitVector32 BuilderOptions;
 
 		public EraFileBuilder(string listingPath)
 		{
-			if (Path.GetExtension(listingPath) != K_NAME_EXTENSION)
-				listingPath += K_NAME_EXTENSION;
+			if (Path.GetExtension(listingPath) != kNameExtension)
+				listingPath += kNameExtension;
 
 			this.mSourceFile = listingPath;
 		}
@@ -81,38 +81,38 @@ namespace KSoft.Phoenix.Resource
 
 		void EncryptFileBytes(byte[] eraBytes, int eraBytesLength)
 		{
-			using (var eraInMs = new MemoryStream(eraBytes, 0, eraBytesLength, writable: false))
-			using (var eraOutMs = new MemoryStream(eraBytes, 0, eraBytesLength, writable: true))
-			using (var eraReader = new IO.EndianReader(eraInMs, Shell.EndianFormat.BIG))
-			using (var eraWriter = new IO.EndianWriter(eraOutMs, Shell.EndianFormat.BIG))
+			using (var era_in_ms = new MemoryStream(eraBytes, 0, eraBytesLength, writable: false))
+			using (var era_out_ms = new MemoryStream(eraBytes, 0, eraBytesLength, writable: true))
+			using (var era_reader = new IO.EndianReader(era_in_ms, Shell.EndianFormat.Big))
+			using (var era_writer = new IO.EndianWriter(era_out_ms, Shell.EndianFormat.Big))
 			{
-				CryptStream(eraReader, eraWriter,
-					Security.Cryptography.CryptographyTransformType.ENCRYPT);
+				CryptStream(era_reader, era_writer,
+					Security.Cryptography.CryptographyTransformType.Encrypt);
 			}
 		}
 
 		bool BuildInternal(string workPath, string eraName, string outputPath)
 		{
-			string eraFilename = Path.Combine(outputPath, eraName);
-			if (!this.builderOptions.Test(EraFileBuilderOptions.ENCRYPT))
+			string era_filename = Path.Combine(outputPath, eraName);
+			if (!this.BuilderOptions.Test(EraFileBuilderOptions.Encrypt))
 			{
-				eraFilename += EraFileExpander.K_NAME_EXTENSION;
+				era_filename += EraFileExpander.kNameExtension;
 			}
 			else
 			{
-				eraFilename += K_EXTENSION_ENCRYPTED;
+				era_filename += kExtensionEncrypted;
 			}
 
-			this.mEraFile.FileName = eraFilename;
+			this.mEraFile.FileName = era_filename;
 
-			if (File.Exists(eraFilename))
+			if (File.Exists(era_filename))
 			{
-				var attrs = File.GetAttributes(eraFilename);
+				var attrs = File.GetAttributes(era_filename);
 				if (attrs.HasFlag(FileAttributes.ReadOnly))
-					throw new IOException("ERA file is readonly, can't build: " + eraFilename);
+					throw new IOException("ERA file is readonly, can't build: " + era_filename);
 			}
 
-			if (this.builderOptions.Test(EraFileBuilderOptions.ALWAYS_USE_XML_OVER_XMB))
+			if (this.BuilderOptions.Test(EraFileBuilderOptions.AlwaysUseXmlOverXmb))
 			{
 				if (this.ProgressOutput != null)
 					this.ProgressOutput.WriteLine("Finding XML files to use over XMB references...");
@@ -120,8 +120,8 @@ namespace KSoft.Phoenix.Resource
 				this.mEraFile.TryToReferenceXmlOverXmbFies(workPath, this.VerboseOutput);
 			}
 
-			const FA kMode = FA.Write;
-			const int kInitialBufferSize = 24 * IntegerMath.K_MEGA; // 24MB
+			const FA k_mode = FA.Write;
+			const int k_initial_buffer_size = 24 * IntegerMath.kMega; // 24MB
 
 			if (this.ProgressOutput != null)
 				this.ProgressOutput.WriteLine("Building {0} to {1}...", eraName, outputPath);
@@ -129,23 +129,23 @@ namespace KSoft.Phoenix.Resource
 			if (this.ProgressOutput != null)
 				this.ProgressOutput.WriteLine("\tAllocating memory...");
 			bool result = true;
-			using (var ms = new MemoryStream(kInitialBufferSize))
-			using (var eraMemory = new IO.EndianStream(ms, Shell.EndianFormat.BIG, this, permissions: kMode))
+			using (var ms = new MemoryStream(k_initial_buffer_size))
+			using (var era_memory = new IO.EndianStream(ms, Shell.EndianFormat.Big, this, permissions: k_mode))
 			{
-				eraMemory.StreamMode = kMode;
+				era_memory.StreamMode = k_mode;
 				// we can use our custom VAT system to generate relative-offset (to a given chunk) information which ECFs use
-				eraMemory.VirtualAddressTranslationInitialize(Shell.ProcessorSize.X32);
+				era_memory.VirtualAddressTranslationInitialize(Shell.ProcessorSize.x32);
 
 				// create null bytes for the header and embedded file chunk descriptors
 				// previously just used Seek to do this, but it doesn't update Length.
-				long preambleSize = this.mEraFile.CalculateHeaderAndFileChunksSize();
-				ms.SetLength(preambleSize);
-				ms.Seek(preambleSize, SeekOrigin.Begin);
+				long preamble_size = this.mEraFile.CalculateHeaderAndFileChunksSize();
+				ms.SetLength(preamble_size);
+				ms.Seek(preamble_size, SeekOrigin.Begin);
 
 				// now we can start embedding the files
 				if (this.ProgressOutput != null)
 					this.ProgressOutput.WriteLine("\tPacking files...");
-				result &= this.mEraFile.Build(eraMemory, workPath);
+				result &= this.mEraFile.Build(era_memory, workPath);
 
 				if (result)
 				{
@@ -154,27 +154,27 @@ namespace KSoft.Phoenix.Resource
 
 					// seek back to the start of the ERA and write out the finalized header and file chunk descriptors
 					ms.Seek(0, SeekOrigin.Begin);
-					this.mEraFile.Serialize(eraMemory);
+					this.mEraFile.Serialize(era_memory);
 
 					// Right now we don't actually perform any file removing (eg, duplicates) until EraFile.Build so
 					// we also allow the written size to be LESS THAN the assumed preamble size
-					Contract.Assert(eraMemory.BaseStream.Position <= preambleSize,
+					Contract.Assert(era_memory.BaseStream.Position <= preamble_size,
 						"Written ERA header size is greater than what we calculated");
 
 					// finally, bake the ERA memory stream into a file
-					if (this.builderOptions.Test(EraFileBuilderOptions.ENCRYPT))
+					if (this.BuilderOptions.Test(EraFileBuilderOptions.Encrypt))
 					{
 						if (this.ProgressOutput != null)
 							this.ProgressOutput.WriteLine("\tEncrypting...");
 
-						var eraBytes = ms.GetBuffer();
-						this.EncryptFileBytes(eraBytes, (int)ms.Length);
+						var era_bytes = ms.GetBuffer();
+						this.EncryptFileBytes(era_bytes, (int)ms.Length);
 					}
 					else // not encrypted
 					{
 					}
 
-					using (var fs = new FileStream(eraFilename, FileMode.Create, FA.Write))
+					using (var fs = new FileStream(era_filename, FileMode.Create, FA.Write))
 						ms.WriteTo(fs);
 				}
 			}

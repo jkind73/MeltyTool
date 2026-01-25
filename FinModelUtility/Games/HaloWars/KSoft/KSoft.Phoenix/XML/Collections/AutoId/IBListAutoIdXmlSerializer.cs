@@ -8,7 +8,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Phoenix.XML
 {
-	[Contracts.ContractClass(typeof(IbListAutoIdXmlSerializerContract))]
+	[Contracts.ContractClass(typeof(IBListAutoIdXmlSerializerContract))]
 	public interface IBListAutoIdXmlSerializer
 		: IDisposable
 		, IO.ITagElementStringNameStreamable
@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.XML
 	};
 
 	[Contracts.ContractClassFor(typeof(IBListAutoIdXmlSerializer))]
-	abstract class IbListAutoIdXmlSerializerContract : IBListAutoIdXmlSerializer
+	abstract class IBListAutoIdXmlSerializerContract : IBListAutoIdXmlSerializer
 	{
 		#region IBListAutoIdXmlSerializer Members
 		public abstract BListXmlParams Params { get; }

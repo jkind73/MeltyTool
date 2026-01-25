@@ -18,7 +18,7 @@ public enum BlenderAlphaA {
 }
 
 public enum BlenderAlphaB {
-  G_BL_1_MA,
+  G_BL_1MA,
   G_BL_A_MEM,
   G_BL_1,
   G_BL_0,

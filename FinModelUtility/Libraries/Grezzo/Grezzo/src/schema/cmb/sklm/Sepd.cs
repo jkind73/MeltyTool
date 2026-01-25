@@ -10,7 +10,7 @@ public sealed partial class Sepd : IBinaryConvertible {
   public uint chunkSize;
 
   [WLengthOfSequence(nameof(primitiveSetOffsets_))]
-  [WLengthOfSequence(nameof(PrimitiveSets))]
+  [WLengthOfSequence(nameof(primitiveSets))]
   private ushort primSetCount_;
 
   /**
@@ -25,34 +25,34 @@ public sealed partial class Sepd : IBinaryConvertible {
        HasIndices  : 01000000
        HasWeights  : 10000000
    */
-  public ushort VertFlags { get; set; }
+  public ushort vertFlags { get; set; }
 
-  public float[] MeshCenter { get; } = new float[3];
-  public float[] PositionOffset { get; } = new float[3];
+  public float[] meshCenter { get; } = new float[3];
+  public float[] positionOffset { get; } = new float[3];
 
   [Skip]
-  private bool HasMinAndMax => CmbHeader.Version.SupportsMinAndMaxInSepd();
+  private bool hasMinAndMax_ => CmbHeader.Version.SupportsMinAndMaxInSepd();
 
   // Min coordinate of the shape
-  [RIfBoolean(nameof(HasMinAndMax))]
+  [RIfBoolean(nameof(hasMinAndMax_))]
   [SequenceLengthSource(3)]
-  public float[]? Min { get; private set; }
+  public float[]? min { get; private set; }
 
   // Max coordinate of the shape
-  [RIfBoolean(nameof(HasMinAndMax))]
+  [RIfBoolean(nameof(hasMinAndMax_))]
   [SequenceLengthSource(3)]
-  public float[]? Max { get; private set; }
+  public float[]? max { get; private set; }
 
   public readonly VertexAttribute position = new();
   public readonly VertexAttribute normal = new();
 
   [Skip]
-  private bool HasTangents => CmbHeader.Version.SupportsInSepd();
+  private bool hasTangents_ => CmbHeader.Version.SupportsInSepd();
 
-  [RIfBoolean(nameof(HasTangents))]
+  [RIfBoolean(nameof(hasTangents_))]
   public VertexAttribute? tangents;
 
-  public VertexAttribute Color { get; set; } = new();
+  public VertexAttribute color { get; set; } = new();
   public readonly VertexAttribute uv0 = new();
   public readonly VertexAttribute uv1 = new();
   public readonly VertexAttribute uv2 = new();
@@ -82,5 +82,5 @@ public sealed partial class Sepd : IBinaryConvertible {
 
   [AlignStart(4)]
   [RSequenceLengthSource(nameof(primSetCount_))]
-  public PrimitiveSet[] PrimitiveSets { get; set; }
+  public PrimitiveSet[] primitiveSets { get; set; }
 }

@@ -8,12 +8,12 @@ namespace KSoft.Phoenix.Phx
 		, IComparable<BProtoObjectVeterancy>
 		, IEqualityComparer<BProtoObjectVeterancy>
 	{
-		sealed class EqualityComparer : IEqualityComparer<BProtoObjectVeterancy>
+		sealed class _EqualityComparer : IEqualityComparer<BProtoObjectVeterancy>
 		{
 			#region IEqualityComparer<BProtoObjectVeterancy> Members
 			public bool Equals(BProtoObjectVeterancy x, BProtoObjectVeterancy y)
 			{
-				return x.Xp == y.Xp
+				return x.XP == y.XP
 					&& x.Damage == y.Damage
 					&& x.Velocity == y.Velocity
 					&& x.Accuracy == y.Accuracy
@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.Phx
 
 			public int GetHashCode(BProtoObjectVeterancy obj)
 			{
-				return obj.Xp.GetHashCode()
+				return obj.XP.GetHashCode()
 					^ obj.Damage.GetHashCode()
 					^ obj.Velocity.GetHashCode()
 					^ obj.Accuracy.GetHashCode()
@@ -34,84 +34,84 @@ namespace KSoft.Phoenix.Phx
 			}
 			#endregion
 		};
-		private static EqualityComparer gEqualityComparer_;
+		private static _EqualityComparer gEqualityComparer;
 		public static IEqualityComparer<BProtoObjectVeterancy> EqualityComparer { get {
-			if (gEqualityComparer_ == null)
-				gEqualityComparer_ = new EqualityComparer();
+			if (gEqualityComparer == null)
+				gEqualityComparer = new _EqualityComparer();
 
-			return gEqualityComparer_;
+			return gEqualityComparer;
 		} }
 
 		#region Constants
-		static readonly BProtoObjectVeterancy KInvalid = new BProtoObjectVeterancy(),
-			KDefaultLevel1 = new BProtoObjectVeterancy()
+		static readonly BProtoObjectVeterancy kInvalid = new BProtoObjectVeterancy(),
+			kDefaultLevel1 = new BProtoObjectVeterancy()
 			{
-				mDamage_ = 1.15f, mVelocity_ = 1, mAccuracy_ = 1.6f, mWorkRate_ = 1.2f, mWeaponRange_ = 1f, mDamageTaken_ = 0.87f
+				mDamage = 1.15f, mVelocity = 1, mAccuracy = 1.6f, mWorkRate = 1.2f, mWeaponRange = 1f, mDamageTaken = 0.87f
 			},
-			KDefaultLevel2 = new BProtoObjectVeterancy()
+			kDefaultLevel2 = new BProtoObjectVeterancy()
 			{
-				mDamage_ = 1.15f, mVelocity_ = 1, mAccuracy_ = 1.7f, mWorkRate_ = 1.2f, mWeaponRange_ = 1f, mDamageTaken_ = 0.80f
+				mDamage = 1.15f, mVelocity = 1, mAccuracy = 1.7f, mWorkRate = 1.2f, mWeaponRange = 1f, mDamageTaken = 0.80f
 			},
-			KDefaultLevel3 = new BProtoObjectVeterancy()
+			kDefaultLevel3 = new BProtoObjectVeterancy()
 			{
-				mDamage_ = 1.15f, mVelocity_ = 1, mAccuracy_ = 1.8f, mWorkRate_ = 1.2f, mWeaponRange_ = 1f, mDamageTaken_ = 0.74f
+				mDamage = 1.15f, mVelocity = 1, mAccuracy = 1.8f, mWorkRate = 1.2f, mWeaponRange = 1f, mDamageTaken = 0.74f
 			},
-			KDefaultLevel4 = new BProtoObjectVeterancy()
+			kDefaultLevel4 = new BProtoObjectVeterancy()
 			{
-				mDamage_ = 2.00f, mVelocity_ = 1, mAccuracy_ = 1.1f, mWorkRate_ = 2.0f, mWeaponRange_ = 1f, mDamageTaken_ = 0.50f
+				mDamage = 2.00f, mVelocity = 1, mAccuracy = 1.1f, mWorkRate = 2.0f, mWeaponRange = 1f, mDamageTaken = 0.50f
 			},
-			KDefaultLevel5 = new BProtoObjectVeterancy()
+			kDefaultLevel5 = new BProtoObjectVeterancy()
 			{
-				mDamage_ = 2.00f, mVelocity_ = 1, mAccuracy_ = 1.2f, mWorkRate_ = 2.0f, mWeaponRange_ = 1f, mDamageTaken_ = 0.50f
+				mDamage = 2.00f, mVelocity = 1, mAccuracy = 1.2f, mWorkRate = 2.0f, mWeaponRange = 1f, mDamageTaken = 0.50f
 			};
 
 		public static IEnumerable<BProtoObjectVeterancy> GetLevelDefaults()
 		{
-			yield return KDefaultLevel1;
-			yield return KDefaultLevel2;
-			yield return KDefaultLevel3;
-			yield return KDefaultLevel4;
-			yield return KDefaultLevel5;
+			yield return kDefaultLevel1;
+			yield return kDefaultLevel2;
+			yield return kDefaultLevel3;
+			yield return kDefaultLevel4;
+			yield return kDefaultLevel5;
 		}
 		#endregion
 
 		#region Xml constants
-		public static readonly Collections.BListExplicitIndexParams<BProtoObjectVeterancy> KBListExplicitIndexParams = new
+		public static readonly Collections.BListExplicitIndexParams<BProtoObjectVeterancy> kBListExplicitIndexParams = new
 			Collections.BListExplicitIndexParams<BProtoObjectVeterancy>(5)
 			{
 				// We use a zero'd instance as the invalid format
 				// Game considers Vets with XP = 0 as 'null' basically
-				kTypeGetInvalid = () => KInvalid
+				kTypeGetInvalid = () => kInvalid
 			};
-		public static readonly XML.BListExplicitIndexXmlParams<BProtoObjectVeterancy> KBListExplicitIndexXmlParams = new
+		public static readonly XML.BListExplicitIndexXmlParams<BProtoObjectVeterancy> kBListExplicitIndexXmlParams = new
 			XML.BListExplicitIndexXmlParams<BProtoObjectVeterancy>("Veterancy", "Level");
 		#endregion
 
 		#region Properties
-		float mXp_;
-		public float Xp { get { return this.mXp_; } }
-		float mDamage_ = 1.0f;
-		public float Damage { get { return this.mDamage_; } }
-		float mVelocity_ = 1.0f;
-		public float Velocity { get { return this.mVelocity_; } }
-		float mAccuracy_ = 1.0f;
-		public float Accuracy { get { return this.mAccuracy_; } }
-		float mWorkRate_ = 1.0f;
-		public float WorkRate { get { return this.mWorkRate_; } }
-		float mWeaponRange_ = 1.0f;
-		public float WeaponRange { get { return this.mWeaponRange_; } }
-		float mDamageTaken_ = 1.0f;
-		public float DamageTaken { get { return this.mDamageTaken_; } }
+		float mXP;
+		public float XP { get { return this.mXP; } }
+		float mDamage = 1.0f;
+		public float Damage { get { return this.mDamage; } }
+		float mVelocity = 1.0f;
+		public float Velocity { get { return this.mVelocity; } }
+		float mAccuracy = 1.0f;
+		public float Accuracy { get { return this.mAccuracy; } }
+		float mWorkRate = 1.0f;
+		public float WorkRate { get { return this.mWorkRate; } }
+		float mWeaponRange = 1.0f;
+		public float WeaponRange { get { return this.mWeaponRange; } }
+		float mDamageTaken = 1.0f;
+		public float DamageTaken { get { return this.mDamageTaken; } }
 		#endregion
 
-		public bool IsInvalid { get { return ReferenceEquals(this, KInvalid); } }
-		public bool IsIgnored { get { return this.mXp_ == 0.0f; } }
+		public bool IsInvalid { get { return ReferenceEquals(this, kInvalid); } }
+		public bool IsIgnored { get { return this.mXP == 0.0f; } }
 
 		#region IComparable Members
 		int IComparable<BProtoObjectVeterancy>.CompareTo(BProtoObjectVeterancy other)
 		{
-			if (this.Xp != other.Xp)
-				return this.Xp.CompareTo(other.Xp);
+			if (this.XP != other.XP)
+				return this.XP.CompareTo(other.XP);
 
 			if (this.Damage != other.Damage)
 				return this.Damage.CompareTo(other.Damage);
@@ -152,13 +152,13 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeOpt("XP", ref this.mXp_, Predicates.IsNotZero);
-			s.StreamAttributeOpt("Damage", ref this.mDamage_, PhxPredicates.IsNotOne);
-			s.StreamAttributeOpt("Velocity", ref this.mVelocity_, PhxPredicates.IsNotOne);
-			s.StreamAttributeOpt("Accuracy", ref this.mAccuracy_, PhxPredicates.IsNotOne);
-			s.StreamAttributeOpt("WorkRate", ref this.mWorkRate_, PhxPredicates.IsNotOne);
-			s.StreamAttributeOpt("WeaponRange", ref this.mWeaponRange_, PhxPredicates.IsNotOne);
-			s.StreamAttributeOpt("DamageTaken", ref this.mDamageTaken_, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("XP", ref this.mXP, Predicates.IsNotZero);
+			s.StreamAttributeOpt("Damage", ref this.mDamage, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("Velocity", ref this.mVelocity, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("Accuracy", ref this.mAccuracy, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("WorkRate", ref this.mWorkRate, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("WeaponRange", ref this.mWeaponRange, PhxPredicates.IsNotOne);
+			s.StreamAttributeOpt("DamageTaken", ref this.mDamageTaken, PhxPredicates.IsNotOne);
 		}
 		#endregion
 	};

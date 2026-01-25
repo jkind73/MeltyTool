@@ -2,59 +2,59 @@
 
 namespace sm64.LevelInfo {
   public sealed class WarpInstant {
-    private const ushort NUM_OF_CATERGORIES_ = 2;
+    private const ushort NUM_OF_CATERGORIES = 2;
 
-    private byte triggerId_;
+    private byte triggerID;
 
-    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("Trigger ID")]
-    public byte TriggerId {
-      get { return this.triggerId_; }
-      set { this.triggerId_ = value; }
+    public byte TriggerID {
+      get { return this.triggerID; }
+      set { this.triggerID = value; }
     }
 
-    private byte areaId_;
+    private byte areaID;
 
-    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("To Area")]
-    public byte AreaId {
-      get { return this.areaId_; }
-      set { this.areaId_ = value; }
+    public byte AreaID {
+      get { return this.areaID; }
+      set { this.areaID = value; }
     }
 
-    private short teleX_;
+    private short teleX;
 
-    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("Teleport X")]
     public short TeleX {
-      get { return this.teleX_; }
-      set { this.teleX_ = value; }
+      get { return this.teleX; }
+      set { this.teleX = value; }
     }
 
-    private short teleY_;
+    private short teleY;
 
-    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("Teleport Y")]
     public short TeleY {
-      get { return this.teleY_; }
-      set { this.teleY_ = value; }
+      get { return this.teleY; }
+      set { this.teleY = value; }
     }
 
-    private short teleZ_;
+    private short teleZ;
 
-    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Instant Warp", 1, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [DisplayName("Teleport Z")]
     public short TeleZ {
-      get { return this.teleZ_; }
-      set { this.teleZ_ = value; }
+      get { return this.teleZ; }
+      set { this.teleZ = value; }
     }
 
-    [CustomSortedCategory("Info", 2, NUM_OF_CATERGORIES_)]
+    [CustomSortedCategory("Info", 2, NUM_OF_CATERGORIES)]
     [Browsable(true)]
     [Description("Location inside the ROM file")]
     [DisplayName("Address")]
@@ -68,15 +68,15 @@ namespace sm64.LevelInfo {
     }
 
 
-    private string GetWarpName_() {
-      return " [to Area " + this.AreaId + "]";
+    private string getWarpName() {
+      return " [to Area " + this.AreaID + "]";
     }
 
     public override string ToString() {
       //isPaintingWarp
       string warpName = "Instant Warp 0x";
 
-      warpName += this.TriggerId.ToString("X2") + this.GetWarpName_();
+      warpName += this.TriggerID.ToString("X2") + this.getWarpName();
 
       return warpName;
     }

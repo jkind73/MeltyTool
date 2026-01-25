@@ -56,7 +56,7 @@ public sealed partial class MObj : IBinaryDeserializable {
   public string? Name { get; set; }
 
   [RAtPositionOrNull(nameof(FirstTObjOffset))]
-  public Obj? FirstTObj { get; set; }
+  public TObj? FirstTObj { get; set; }
 
   [RAtPositionOrNull(nameof(MaterialOffset))]
   public DatMaterial? Material { get; set; }
@@ -65,7 +65,7 @@ public sealed partial class MObj : IBinaryDeserializable {
   public PeDesc? PeDesc { get; set; }
 
   [Skip]
-  public IEnumerable<(uint, Obj)> ObjsAndOffsets {
+  public IEnumerable<(uint, TObj)> TObjsAndOffsets {
     get {
         var tObjOffset = this.FirstTObjOffset;
         var tObj = this.FirstTObj;

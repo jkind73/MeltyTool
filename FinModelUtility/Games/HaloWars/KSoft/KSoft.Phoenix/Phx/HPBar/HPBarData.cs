@@ -7,40 +7,40 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Phoenix.Phx
 {
-	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.HP_DATA)]
-	public sealed class HpBarData
+	[ProtoDataTypeObjectSourceKind(ProtoDataObjectSourceKind.HPData)]
+	public sealed class HPBarData
 		: IO.ITagElementStringNameStreamable
 		, IProtoDataObjectDatabaseProvider
 	{
 		public ProtoDataObjectDatabase ObjectDatabase { get; private set; }
 
 		#region Xml constants
-		const string K_XML_ROOT_ = "HPBarDefinition";
+		const string kXmlRoot = "HPBarDefinition";
 
-		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.DATA,
+			Directory = Engine.GameDirectory.Data,
 			FileName = "HPBars.xml",
-			RootName = K_XML_ROOT_
+			RootName = kXmlRoot
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.GAME_DATA,
-			KXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.GameData,
+			kXmlFileInfo);
 		#endregion
 
-		public Collections.BListAutoId<BProtoHpBar> HpBars { get; private set; }
-		public Collections.BListAutoId<BProtoHpBarColorStages> ColorStages { get; private set; }
+		public Collections.BListAutoId<BProtoHPBar> HPBars { get; private set; }
+		public Collections.BListAutoId<BProtoHPBarColorStages> ColorStages { get; private set; }
 		public Collections.BListAutoId<BProtoVeterancyBar> VeterancyBars { get; private set; }
 		public Collections.BListAutoId<BProtoPieProgress> PieProgress { get; private set; }
 		public Collections.BListAutoId<BProtoBobbleHead> BobbleHeads { get; private set; }
 		public Collections.BListAutoId<BProtoBuildingStrength> BuildingStrengths { get; private set; }
 
-		public HpBarData()
+		public HPBarData()
 		{
-			this.ObjectDatabase = new ProtoDataObjectDatabase(this, typeof(HpBarDataObjectKind));
+			this.ObjectDatabase = new ProtoDataObjectDatabase(this, typeof(HPBarDataObjectKind));
 
-			this.HpBars = new Collections.BListAutoId<BProtoHpBar>();
-			this.ColorStages = new Collections.BListAutoId<BProtoHpBarColorStages>();
+			this.HPBars = new Collections.BListAutoId<BProtoHPBar>();
+			this.ColorStages = new Collections.BListAutoId<BProtoHPBarColorStages>();
 			this.VeterancyBars = new Collections.BListAutoId<BProtoVeterancyBar>();
 			this.PieProgress = new Collections.BListAutoId<BProtoPieProgress>();
 			this.BobbleHeads = new Collections.BListAutoId<BProtoBobbleHead>();
@@ -51,7 +51,7 @@ namespace KSoft.Phoenix.Phx
 
 		public void Clear()
 		{
-			this.HpBars.Clear();
+			this.HPBars.Clear();
 			this.ColorStages.Clear();
 			this.VeterancyBars.Clear();
 			this.PieProgress.Clear();
@@ -62,7 +62,7 @@ namespace KSoft.Phoenix.Phx
 		#region Database interfaces
 		void InitializeDatabaseInterfaces()
 		{
-			this.HpBars.SetupDatabaseInterface();
+			this.HPBars.SetupDatabaseInterface();
 			this.ColorStages.SetupDatabaseInterface();
 			this.VeterancyBars.SetupDatabaseInterface();
 			this.PieProgress.SetupDatabaseInterface();
@@ -70,35 +70,35 @@ namespace KSoft.Phoenix.Phx
 			this.BuildingStrengths.SetupDatabaseInterface();
 		}
 
-		internal Collections.IBTypeNames GetNamesInterface(HpBarDataObjectKind kind)
+		internal Collections.IBTypeNames GetNamesInterface(HPBarDataObjectKind kind)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != HpBarDataObjectKind.NONE);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != HPBarDataObjectKind.None);
 
 			switch (kind)
 			{
-			case HpBarDataObjectKind.HP_BAR:            return this.HpBars;
-			case HpBarDataObjectKind.COLOR_STAGES:      return this.ColorStages;
-			case HpBarDataObjectKind.VETERANCY_BAR:     return this.VeterancyBars;
-			case HpBarDataObjectKind.PIE_PROGRESS:      return this.PieProgress;
-			case HpBarDataObjectKind.BOBBLE_HEAD:       return this.BobbleHeads;
-			case HpBarDataObjectKind.BUILDING_STRENGTH: return this.BuildingStrengths;
+			case HPBarDataObjectKind.HPBar:            return this.HPBars;
+			case HPBarDataObjectKind.ColorStages:      return this.ColorStages;
+			case HPBarDataObjectKind.VeterancyBar:     return this.VeterancyBars;
+			case HPBarDataObjectKind.PieProgress:      return this.PieProgress;
+			case HPBarDataObjectKind.BobbleHead:       return this.BobbleHeads;
+			case HPBarDataObjectKind.BuildingStrength: return this.BuildingStrengths;
 
 			default: throw new KSoft.Debug.UnreachableException(kind.ToString());
 			}
 		}
 
-		internal Collections.IHasUndefinedProtoMemberInterface GetMembersInterface(HpBarDataObjectKind kind)
+		internal Collections.IHasUndefinedProtoMemberInterface GetMembersInterface(HPBarDataObjectKind kind)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(kind != HpBarDataObjectKind.NONE);
+			Contract.Requires<ArgumentOutOfRangeException>(kind != HPBarDataObjectKind.None);
 
 			switch (kind)
 			{
-			case HpBarDataObjectKind.HP_BAR:            return this.HpBars;
-			case HpBarDataObjectKind.COLOR_STAGES:      return this.ColorStages;
-			case HpBarDataObjectKind.VETERANCY_BAR:     return this.VeterancyBars;
-			case HpBarDataObjectKind.PIE_PROGRESS:      return this.PieProgress;
-			case HpBarDataObjectKind.BOBBLE_HEAD:       return this.BobbleHeads;
-			case HpBarDataObjectKind.BUILDING_STRENGTH: return this.BuildingStrengths;
+			case HPBarDataObjectKind.HPBar:            return this.HPBars;
+			case HPBarDataObjectKind.ColorStages:      return this.ColorStages;
+			case HPBarDataObjectKind.VeterancyBar:     return this.VeterancyBars;
+			case HPBarDataObjectKind.PieProgress:      return this.PieProgress;
+			case HPBarDataObjectKind.BobbleHead:       return this.BobbleHeads;
+			case HPBarDataObjectKind.BuildingStrength: return this.BuildingStrengths;
 
 			default: throw new KSoft.Debug.UnreachableException(kind.ToString());
 			}
@@ -107,39 +107,39 @@ namespace KSoft.Phoenix.Phx
 
 		#region ITagElementStreamable<string> Members
 		/// <remarks>For streaming directly from hpbars.xml</remarks>
-		internal void StreamHpBarData<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
+		internal void StreamHPBarData<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
-			XML.XmlUtil.Serialize(s, this.HpBars, BProtoHpBar.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.ColorStages, BProtoHpBarColorStages.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.VeterancyBars, BProtoVeterancyBar.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.PieProgress, BProtoPieProgress.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.BobbleHeads, BProtoBobbleHead.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.BuildingStrengths, BProtoBuildingStrength.KBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.HPBars, BProtoHPBar.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.ColorStages, BProtoHPBarColorStages.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.VeterancyBars, BProtoVeterancyBar.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.PieProgress, BProtoPieProgress.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.BobbleHeads, BProtoBobbleHead.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.BuildingStrengths, BProtoBuildingStrength.kBListXmlParams);
 		}
 
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
-			using (s.EnterCursorBookmark(K_XML_ROOT_))
-				this.StreamHpBarData(s);
+			using (s.EnterCursorBookmark(kXmlRoot))
+				this.StreamHPBarData(s);
 		}
 		#endregion
 
 		#region IProtoDataObjectDatabaseProvider members
-		Engine.XmlFileInfo IProtoDataObjectDatabaseProvider.SourceFileReference { get { return KXmlFileInfo; } }
+		Engine.XmlFileInfo IProtoDataObjectDatabaseProvider.SourceFileReference { get { return kXmlFileInfo; } }
 
 		Collections.IBTypeNames IProtoDataObjectDatabaseProvider.GetNamesInterface(int objectKind)
 		{
-			var kind = (HpBarDataObjectKind)objectKind;
+			var kind = (HPBarDataObjectKind)objectKind;
 			return this.GetNamesInterface(kind);
 		}
 
 		Collections.IHasUndefinedProtoMemberInterface IProtoDataObjectDatabaseProvider.GetMembersInterface(int objectKind)
 		{
-			var kind = (HpBarDataObjectKind)objectKind;
+			var kind = (HPBarDataObjectKind)objectKind;
 			return this.GetMembersInterface(kind);
 		}
 		#endregion

@@ -3,67 +3,67 @@ namespace KSoft.Phoenix.Resource
 {
 	public enum ResourceTagPlatformId : byte
 	{
-		ANY,
-		PC,
-		XBOX,
+		Any,
+		Pc,
+		Xbox,
 		_64bit,
 	};
 
 	public sealed class ResourceTagHeader
 		: IO.IEndianStreamSerializable
 	{
-		public const ulong K_CHUNK_ID = 0x00000000714BFE00;
+		public const ulong kChunkId = 0x00000000714BFE00;
 
-		const ushort K_SIGNATURE_ = 0x714C;
-		const byte K_MAJOR_VERSION_ = 0x11;
-		const byte K_MINOR_VERSION_ = 0x0;
+		const ushort kSignature = 0x714C;
+		const byte kMajorVersion = 0x11;
+		const byte kMinorVersion = 0x0;
 
 		public Shell.ProcessorSize CreatorPointerSize { get; private set; }
 
-		public ushort headerSize;
-		public ushort dataSize;
-		public uint headerAdler32;
+		public ushort HeaderSize;
+		public ushort DataSize;
+		public uint HeaderAdler32;
 
-		public ulong tagTimeStamp; // FILETIME
-		public Values.KGuid tagGuid;
-		Values.PtrHandle tagMachineNameOffset_;
-		Values.PtrHandle tagUserNameOffset_;
+		public ulong TagTimeStamp; // FILETIME
+		public Values.KGuid TagGuid;
+		Values.PtrHandle TagMachineNameOffset;
+		Values.PtrHandle TagUserNameOffset;
 
-		Values.PtrHandle sourceFileName_;
-		public byte[] sourceDigest = new byte[Security.Cryptography.PhxHash.K_SHA1_SIZE_OF];
-		public ulong sourceFileSize;
-		public ulong sourceFileTimeStamp;
+		Values.PtrHandle SourceFileName;
+		public byte[] SourceDigest = new byte[Security.Cryptography.PhxHash.kSha1SizeOf];
+		public ulong SourceFileSize;
+		public ulong SourceFileTimeStamp;
 
-		Values.PtrHandle creatorToolCommandLine_;
-		public byte creatorToolVersion;
+		Values.PtrHandle CreatorToolCommandLine;
+		public byte CreatorToolVersion;
 
-		private byte mPlatformId_;
+		private byte mPlatformId;
 		public ResourceTagPlatformId PlatformId
 		{
-			get { return (ResourceTagPlatformId) this.mPlatformId_; }
-			set { this.mPlatformId_ = (byte)value; }
+			get { return (ResourceTagPlatformId) this.mPlatformId; }
+			set { this.mPlatformId = (byte)value; }
 		}
 
-		public ResourceTagHeader(Shell.ProcessorSize pointerSize = Shell.ProcessorSize.X32)
+		public ResourceTagHeader(Shell.ProcessorSize pointerSize = Shell.ProcessorSize.x32)
 		{
-			if (pointerSize == Shell.ProcessorSize.X32)
+			if (pointerSize == Shell.ProcessorSize.x32)
 			{
-				this.tagMachineNameOffset_ = Values.PtrHandle.InvalidHandle32;
-				this.tagUserNameOffset_ = Values.PtrHandle.InvalidHandle32;
-				this.creatorToolCommandLine_ = Values.PtrHandle.InvalidHandle32;
+				this.TagMachineNameOffset = Values.PtrHandle.InvalidHandle32;
+				this.TagUserNameOffset = Values.PtrHandle.InvalidHandle32;
+				this.CreatorToolCommandLine = Values.PtrHandle.InvalidHandle32;
 			}
 			else
 			{
-				this.tagMachineNameOffset_ = Values.PtrHandle.InvalidHandle64;
-				this.tagUserNameOffset_ = Values.PtrHandle.InvalidHandle64;
-				this.creatorToolCommandLine_ = Values.PtrHandle.InvalidHandle64;
+				this.TagMachineNameOffset = Values.PtrHandle.InvalidHandle64;
+				this.TagUserNameOffset = Values.PtrHandle.InvalidHandle64;
+				this.CreatorToolCommandLine = Values.PtrHandle.InvalidHandle64;
 			}
 		}
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			using (s.BeginEndianSwitch(Shell.EndianFormat.LITTLE))
+			using (s.BeginEndianSwitch(Shell.EndianFormat.Little))
 			{
 				s.VirtualAddressTranslationInitialize(this.CreatorPointerSize);
 				s.VirtualAddressTranslationPushPosition();
@@ -74,50 +74,50 @@ namespace KSoft.Phoenix.Resource
 
 		private void SerializeBody(IO.EndianStream s)
 		{
-			s.StreamSignature(K_SIGNATURE_);
-			s.StreamVersion(K_MAJOR_VERSION_);
-			s.StreamVersion(K_MINOR_VERSION_);
+			s.StreamSignature(kSignature);
+			s.StreamVersion(kMajorVersion);
+			s.StreamVersion(kMinorVersion);
 
-			s.Stream(ref this.headerSize);
-			s.Stream(ref this.dataSize);
-			s.Stream(ref this.headerAdler32);
+			s.Stream(ref this.HeaderSize);
+			s.Stream(ref this.DataSize);
+			s.Stream(ref this.HeaderAdler32);
 
-			s.Stream(ref this.tagTimeStamp);
-			s.Stream(ref this.tagGuid);
+			s.Stream(ref this.TagTimeStamp);
+			s.Stream(ref this.TagGuid);
 
-			s.StreamVirtualAddress(ref this.tagMachineNameOffset_);
-			s.StreamVirtualAddress(ref this.tagUserNameOffset_);
+			s.StreamVirtualAddress(ref this.TagMachineNameOffset);
+			s.StreamVirtualAddress(ref this.TagUserNameOffset);
 
-			s.StreamVirtualAddress(ref this.sourceFileName_);
-			s.Stream(this.sourceDigest);
-			s.Stream(ref this.sourceFileSize);
-			s.Stream(ref this.sourceFileTimeStamp);
+			s.StreamVirtualAddress(ref this.SourceFileName);
+			s.Stream(this.SourceDigest);
+			s.Stream(ref this.SourceFileSize);
+			s.Stream(ref this.SourceFileTimeStamp);
 
-			s.StreamVirtualAddress(ref this.creatorToolCommandLine_);
-			s.Stream(ref this.creatorToolVersion);
+			s.StreamVirtualAddress(ref this.CreatorToolCommandLine);
+			s.Stream(ref this.CreatorToolVersion);
 
-			s.Stream(ref this.mPlatformId_);
+			s.Stream(ref this.mPlatformId);
 			s.Pad(sizeof(byte) + sizeof(uint));
 		}
 
 		public bool StreamTagMachineName(IO.EndianStream s, ref string value)
 		{
-			return PhxUtil.StreamPointerizedCString(s, ref this.tagMachineNameOffset_, ref value);
+			return PhxUtil.StreamPointerizedCString(s, ref this.TagMachineNameOffset, ref value);
 		}
 
 		public bool StreamTagUserName(IO.EndianStream s, ref string value)
 		{
-			return PhxUtil.StreamPointerizedCString(s, ref this.tagUserNameOffset_, ref value);
+			return PhxUtil.StreamPointerizedCString(s, ref this.TagUserNameOffset, ref value);
 		}
 
 		public bool StreamSourceFileNamee(IO.EndianStream s, ref string value)
 		{
-			return PhxUtil.StreamPointerizedCString(s, ref this.sourceFileName_, ref value);
+			return PhxUtil.StreamPointerizedCString(s, ref this.SourceFileName, ref value);
 		}
 
 		public bool StreamCreatorToolCommandLine(IO.EndianStream s, ref string value)
 		{
-			return PhxUtil.StreamPointerizedCString(s, ref this.creatorToolCommandLine_, ref value);
+			return PhxUtil.StreamPointerizedCString(s, ref this.CreatorToolCommandLine, ref value);
 		}
 		#endregion
 	};

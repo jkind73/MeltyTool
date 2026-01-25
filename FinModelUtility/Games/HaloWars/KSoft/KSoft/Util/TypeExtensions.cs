@@ -14,49 +14,49 @@ namespace KSoft
 	/// <summary>Extension methods for types in this assembly</summary>
 	public static partial class TypeExtensions
 	{
-		public const double K_RADIANS_PER_DEGREE = Math.PI / 180.0;
-		public const double K_DEGREES_PER_RADIAN = 180 / Math.PI;
+		public const double kRadiansPerDegree = Math.PI / 180.0;
+		public const double kDegreesPerRadian = 180 / Math.PI;
 
 		#region NONE extensions
-		public const int K_NONE = -1;
+		public const int kNone = -1;
 		/// <summary>The default string representation of a value which has a 'None' state</summary>
-		public const string K_NONE_DISPLAY_STRING = "NONE";
+		public const string kNoneDisplayString = "NONE";
 
-		public const sbyte K_NONE_INT8 = K_NONE;
-		public const short K_NONE_INT16 = K_NONE;
-		public const int K_NONE_INT32 = K_NONE;
-		public const long K_NONE_INT64 = K_NONE;
+		public const sbyte kNoneInt8 = kNone;
+		public const short kNoneInt16 = kNone;
+		public const int kNoneInt32 = kNone;
+		public const long kNoneInt64 = kNone;
 
 		[Contracts.Pure]
 		public static bool IsNone(this int value)
 		{
-			return value == K_NONE_INT32;
+			return value == kNoneInt32;
 		}
 		[Contracts.Pure]
 		public static bool IsNotNone(this int value)
 		{
-			return value != K_NONE_INT32;
+			return value != kNoneInt32;
 		}
 		[Contracts.Pure]
 		public static bool IsNoneOrPositive(this int value)
 		{
-			return value >= K_NONE_INT32;
+			return value >= kNoneInt32;
 		}
 
 		[Contracts.Pure]
 		public static bool IsNone(this long value)
 		{
-			return value == K_NONE_INT64;
+			return value == kNoneInt64;
 		}
 		[Contracts.Pure]
 		public static bool IsNotNone(this long value)
 		{
-			return value != K_NONE_INT64;
+			return value != kNoneInt64;
 		}
 		[Contracts.Pure]
 		public static bool IsNoneOrPositive(this long value)
 		{
-			return value >= K_NONE_INT64;
+			return value >= kNoneInt64;
 		}
 		#endregion
 
@@ -105,12 +105,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static Collections.TreeTraversalDirection GetOrder(this Collections.TreeTraversalDirection dir)
 		{
-			return dir & Collections.TreeTraversalDirection.K_ORDER_MASK;
+			return dir & Collections.TreeTraversalDirection.kOrderMask;
 		}
 		[Contracts.Pure]
 		public static Collections.TreeTraversalDirection GetDirections(this Collections.TreeTraversalDirection dir)
 		{
-			return dir & Collections.TreeTraversalDirection.K_DIR_MASK;
+			return dir & Collections.TreeTraversalDirection.kDirMask;
 		}
 		[Contracts.Pure]
 		public static bool HasFlag(this Collections.TreeTraversalOrders orders, Collections.TreeTraversalOrders flag)
@@ -120,33 +120,33 @@ namespace KSoft
 		#endregion
 
 		#region IO
-		public static /*IDisposable*/IO.IkSoftStreamOwnerBookmark EnterOwnerBookmark(this IO.IKSoftStream stream,
+		public static /*IDisposable*/IO.IKSoftStreamOwnerBookmark EnterOwnerBookmark(this IO.IKSoftStream stream,
 			object newOwner = null)
 		{
-			return new IO.IkSoftStreamOwnerBookmark(stream, newOwner);
+			return new IO.IKSoftStreamOwnerBookmark(stream, newOwner);
 		}
-		public static /*IDisposable*/IO.IkSoftStreamUserDataBookmark EnterUserDataBookmark(this IO.IKSoftStream stream,
+		public static /*IDisposable*/IO.IKSoftStreamUserDataBookmark EnterUserDataBookmark(this IO.IKSoftStream stream,
 			object newUserData = null)
 		{
-			return new IO.IkSoftStreamUserDataBookmark(stream, newUserData);
+			return new IO.IKSoftStreamUserDataBookmark(stream, newUserData);
 		}
 		/// <summary>Temporarily enter a new data streaming state</summary>
 		/// <param name="newMode"></param>
 		/// <returns></returns>
-		public static IO.IkSoftStreamModeBookmark EnterStreamModeBookmark(IO.IKSoftStreamModeable stream,
+		public static IO.IKSoftStreamModeBookmark EnterStreamModeBookmark(IO.IKSoftStreamModeable stream,
 			System.IO.FileAccess newMode)
 		{
 			Contract.Requires(stream.StreamMode != 0, "Current mode is unset!");
 			Contract.Requires(newMode != 0, "New mode is unset!");
 
-			return new IO.IkSoftStreamModeBookmark(stream, newMode);
+			return new IO.IKSoftStreamModeBookmark(stream, newMode);
 		}
 
 		#region IKSoftStreamWithVirtualBuffer
 		/// <summary>Begin the concept of a virtual buffer</summary>
 		/// <param name="bufferLength">Virtual buffer's byte length</param>
 		/// <returns></returns>
-		public static IO.IkSoftStreamWithVirtualBufferCleanup EnterVirtualBuffer(this IO.IKSoftStreamWithVirtualBuffer stream,
+		public static IO.IKSoftStreamWithVirtualBufferCleanup EnterVirtualBuffer(this IO.IKSoftStreamWithVirtualBuffer stream,
 			long bufferLength)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(bufferLength > 0);
@@ -154,30 +154,30 @@ namespace KSoft
 			stream.VirtualBufferStart = stream.BaseStream.Position;
 			stream.VirtualBufferLength = bufferLength;
 
-			return new IO.IkSoftStreamWithVirtualBufferCleanup(stream);
+			return new IO.IKSoftStreamWithVirtualBufferCleanup(stream);
 		}
 		/// <summary>Begin the concept of a virtual buffer</summary>
 		/// <returns></returns>
-		public static IO.IkSoftStreamWithVirtualBufferCleanup EnterVirtualBuffer(this IO.IKSoftStreamWithVirtualBuffer stream)
+		public static IO.IKSoftStreamWithVirtualBufferCleanup EnterVirtualBuffer(this IO.IKSoftStreamWithVirtualBuffer stream)
 		{
-			return new IO.IkSoftStreamWithVirtualBufferCleanup(stream);
+			return new IO.IKSoftStreamWithVirtualBufferCleanup(stream);
 		}
 		/// <summary>Temporarily bookmark this stream's VirtualBuffer properties</summary>
 		/// <returns></returns>
-		public static IO.IkSoftStreamWithVirtualBufferBookmark EnterVirtualBufferBookmark(this IO.IKSoftStreamWithVirtualBuffer stream)
+		public static IO.IKSoftStreamWithVirtualBufferBookmark EnterVirtualBufferBookmark(this IO.IKSoftStreamWithVirtualBuffer stream)
 		{
-			return new IO.IkSoftStreamWithVirtualBufferBookmark(stream);
+			return new IO.IKSoftStreamWithVirtualBufferBookmark(stream);
 		}
 		/// <summary>
 		/// Temporarily bookmark this stream's VirtualBuffer properties and begin the concept of a virtual buffer
 		/// </summary>
 		/// <returns></returns>
-		public static IO.IkSoftStreamWithVirtualBufferAndBookmark EnterVirtualBufferWithBookmark(this IO.IKSoftStreamWithVirtualBuffer stream,
+		public static IO.IKSoftStreamWithVirtualBufferAndBookmark EnterVirtualBufferWithBookmark(this IO.IKSoftStreamWithVirtualBuffer stream,
 			long bufferLength)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(bufferLength > 0);
 
-			return new IO.IkSoftStreamWithVirtualBufferAndBookmark(stream, bufferLength);
+			return new IO.IKSoftStreamWithVirtualBufferAndBookmark(stream, bufferLength);
 		}
 		#endregion
 
@@ -291,8 +291,8 @@ namespace KSoft
 
 			switch(type)
 			{
-				case MS.StringStorageWidthType.ASCII:	return Encoding.ASCII;
-				case MS.StringStorageWidthType.UNICODE:	return Encoding.Unicode;
+				case MS.StringStorageWidthType.Ascii:	return Encoding.ASCII;
+				case MS.StringStorageWidthType.Unicode:	return Encoding.Unicode;
 				case MS.StringStorageWidthType.UTF7:	return Encoding.UTF7;
 				case MS.StringStorageWidthType.UTF8:	return Encoding.UTF8;
 				case MS.StringStorageWidthType.UTF32:	return Encoding.UTF32;
@@ -312,8 +312,8 @@ namespace KSoft
 		{
 			Contract.Requires<ArgumentNullException>(enc != null);
 
-			if		(enc is ASCIIEncoding)				return MS.StringStorageWidthType.ASCII;
-			else if (enc is UnicodeEncoding)			return MS.StringStorageWidthType.UNICODE;
+			if		(enc is ASCIIEncoding)				return MS.StringStorageWidthType.Ascii;
+			else if (enc is UnicodeEncoding)			return MS.StringStorageWidthType.Unicode;
 			else if (enc is UTF7Encoding)				return MS.StringStorageWidthType.UTF7;
 			else if (enc is UTF8Encoding)				return MS.StringStorageWidthType.UTF8;
 			else if (enc is UTF32Encoding)				return MS.StringStorageWidthType.UTF32;
@@ -327,7 +327,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static bool UsesLengthPrefix(this MS.StringStorageType type)
 		{
-			return type == MS.StringStorageType.PASCAL;
+			return type == MS.StringStorageType.Pascal;
 		}
 
 		/// <summary>Does this width type support variable length characters (code points)?</summary>
@@ -348,10 +348,10 @@ namespace KSoft
 
 			switch (value)
 			{
-			case Shell.ProcessorSize.X32:
-				return Bits.K_INT32_BIT_COUNT;
-			case Shell.ProcessorSize.X64:
-				return Bits.K_INT64_BIT_COUNT;
+			case Shell.ProcessorSize.x32:
+				return Bits.kInt32BitCount;
+			case Shell.ProcessorSize.x64:
+				return Bits.kInt64BitCount;
 
 			default:
 				return -1;
@@ -364,9 +364,9 @@ namespace KSoft
 
 			switch (value)
 			{
-			case Shell.ProcessorSize.X32:
+			case Shell.ProcessorSize.x32:
 				return sizeof(int);
-			case Shell.ProcessorSize.X64:
+			case Shell.ProcessorSize.x64:
 				return sizeof(long);
 
 			default:
@@ -408,7 +408,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static Shell.EndianFormat Invert(this Shell.EndianFormat ef)
 		{
-			return ef == Shell.EndianFormat.LITTLE ? Shell.EndianFormat.BIG : Shell.EndianFormat.LITTLE;
+			return ef == Shell.EndianFormat.Little ? Shell.EndianFormat.Big : Shell.EndianFormat.Little;
 		}
 		#endregion
 	};

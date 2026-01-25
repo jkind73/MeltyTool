@@ -16,10 +16,10 @@ public sealed class AotFftRenderer : IRenderable {
 
   public IAotAudioPlayback<short>? ActivePlayback { get; set; }
 
-  private const int POINT_COUNT_ = 1000;
-  private const int SAMPLES_PER_POINT_ = 10;
+  private const int POINT_COUNT = 1000;
+  private const int SAMPLES_PER_POINT = 10;
 
-  private float[] samples_ = new float[POINT_COUNT_ * SAMPLES_PER_POINT_];
+  private float[] samples_ = new float[POINT_COUNT * SAMPLES_PER_POINT];
 
   public int Width { get; set; }
   public float MiddleY { get; set; }

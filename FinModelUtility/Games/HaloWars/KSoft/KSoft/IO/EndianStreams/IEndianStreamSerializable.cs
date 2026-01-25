@@ -7,14 +7,14 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.IO
 {
-	[Contracts.ContractClass(typeof(EndianStreamSerializableContract))]
+	[Contracts.ContractClass(typeof(IEndianStreamSerializableContract))]
 	public interface IEndianStreamSerializable
 	{
 		void Serialize(EndianStream s);
 	};
 
 	[Contracts.ContractClassFor(typeof(IEndianStreamSerializable))]
-	abstract class EndianStreamSerializableContract : IEndianStreamSerializable
+	abstract class IEndianStreamSerializableContract : IEndianStreamSerializable
 	{
 		public void Serialize(EndianStream s)	{ Contract.Requires(s != null); }
 	};

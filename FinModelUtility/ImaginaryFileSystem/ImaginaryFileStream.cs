@@ -23,11 +23,11 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
   }
 
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
-  private readonly string path_;
-  private readonly FileAccess access_ = FileAccess.ReadWrite;
-  private readonly FileOptions options_;
-  private readonly ImaginaryFileData fileData_;
-  private bool disposed_;
+  private readonly string path;
+  private readonly FileAccess access = FileAccess.ReadWrite;
+  private readonly FileOptions options;
+  private readonly ImaginaryFileData fileData;
+  private bool disposed;
 
   /// <inheritdoc />
   public ImaginaryFileStream(
@@ -39,26 +39,26 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       : base(new MemoryStream(),
              path == null ? null : Path.GetFullPath(path),
              (options & FileOptions.Asynchronous) != 0) {
-    ThrowIfInvalidModeAccess_(mode, access);
+    ThrowIfInvalidModeAccess(mode, access);
 
     this.imaginaryFileDataAccessor_ = imaginaryFileDataAccessor ??
                                       throw new ArgumentNullException(
                                           nameof(imaginaryFileDataAccessor));
-    this.path_ = path;
-    this.options_ = options;
+    this.path = path;
+    this.options = options;
 
     if (imaginaryFileDataAccessor.FileExists(path)) {
       if (mode.Equals(FileMode.CreateNew)) {
         throw CommonExceptions.FileAlreadyExists(path);
       }
 
-      this.fileData_ = imaginaryFileDataAccessor.GetFile(path);
-      this.fileData_.CheckFileAccess(path, access);
+      fileData = imaginaryFileDataAccessor.GetFile(path);
+      fileData.CheckFileAccess(path, access);
 
       var timeAdjustments
           = GetTimeAdjustmentsForFileStreamWhenFileExists_(mode, access);
-      imaginaryFileDataAccessor.AdjustTimes(this.fileData_, timeAdjustments);
-      var existingContents = this.fileData_.Contents;
+      imaginaryFileDataAccessor.AdjustTimes(fileData, timeAdjustments);
+      var existingContents = fileData.Contents;
       var keepExistingContents =
           existingContents?.Length > 0 &&
           mode != FileMode.Truncate &&
@@ -81,18 +81,18 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
         throw CommonExceptions.FileNotFound(path);
       }
 
-      this.fileData_ = new ImaginaryFileData(new byte[] { });
-      imaginaryFileDataAccessor.AdjustTimes(this.fileData_,
-                                            TimeAdjustments.CREATION_TIME |
-                                            TimeAdjustments.LAST_ACCESS_TIME);
-      imaginaryFileDataAccessor.AddFile(path, this.fileData_);
+      fileData = new ImaginaryFileData(new byte[] { });
+      imaginaryFileDataAccessor.AdjustTimes(fileData,
+                                            TimeAdjustments.CreationTime |
+                                            TimeAdjustments.LastAccessTime);
+      imaginaryFileDataAccessor.AddFile(path, fileData);
     }
 
-    this.access_ = access;
+    this.access = access;
   }
 
   private static void
-      ThrowIfInvalidModeAccess_(FileMode mode, FileAccess access) {
+      ThrowIfInvalidModeAccess(FileMode mode, FileAccess access) {
     if (mode == FileMode.Append) {
       if (access == FileAccess.Read) {
         throw CommonExceptions.InvalidAccessCombination(mode, access);
@@ -113,28 +113,28 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
   }
 
   /// <inheritdoc />
-  public override bool CanRead => this.access_.HasFlag(FileAccess.Read);
+  public override bool CanRead => access.HasFlag(FileAccess.Read);
 
   /// <inheritdoc />
-  public override bool CanWrite => this.access_.HasFlag(FileAccess.Write);
+  public override bool CanWrite => access.HasFlag(FileAccess.Write);
 
   /// <inheritdoc />
   public override int Read(byte[] buffer, int offset, int count) {
-    this.imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                                                TimeAdjustments.LAST_ACCESS_TIME);
+    this.imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                                                TimeAdjustments.LastAccessTime);
     return base.Read(buffer, offset, count);
   }
 
   /// <inheritdoc />
   protected override void Dispose(bool disposing) {
-    if (this.disposed_) {
+    if (disposed) {
       return;
     }
 
-    this.InternalFlush_();
+    InternalFlush();
     base.Dispose(disposing);
     OnClose();
-    this.disposed_ = true;
+    disposed = true;
   }
 
   /// <inheritdoc cref="FileSystemStream.EndWrite(IAsyncResult)" />
@@ -161,9 +161,9 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       throw new NotSupportedException("Stream does not support writing.");
     }
 
-    this.imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                                                TimeAdjustments.LAST_ACCESS_TIME |
-                                                TimeAdjustments.LAST_WRITE_TIME);
+    this.imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                                                TimeAdjustments.LastAccessTime |
+                                                TimeAdjustments.LastWriteTime);
     base.Write(buffer, offset, count);
   }
 
@@ -175,8 +175,8 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
-            imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                TimeAdjustments.LAST_ACCESS_TIME | TimeAdjustments.LAST_WRITE_TIME);
+            imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
             base.Write(buffer);
         }
 #endif
@@ -190,9 +190,9 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       throw new NotSupportedException("Stream does not support writing.");
     }
 
-    this.imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                                                TimeAdjustments.LAST_ACCESS_TIME |
-                                                TimeAdjustments.LAST_WRITE_TIME);
+    this.imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                                                TimeAdjustments.LastAccessTime |
+                                                TimeAdjustments.LastWriteTime);
     return base.WriteAsync(buffer, offset, count, cancellationToken);
   }
 
@@ -206,8 +206,8 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
             {
                 throw new NotSupportedException("Stream does not support writing.");
             }
-            imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                                                   TimeAdjustments.LAST_ACCESS_TIME | TimeAdjustments.LAST_WRITE_TIME);
+            imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                                                   TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
             return base.WriteAsync(buffer, cancellationToken);
         }
 #endif
@@ -218,54 +218,54 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       throw new NotSupportedException("Stream does not support writing.");
     }
 
-    this.imaginaryFileDataAccessor_.AdjustTimes(this.fileData_,
-                                                TimeAdjustments.LAST_ACCESS_TIME |
-                                                TimeAdjustments.LAST_WRITE_TIME);
+    this.imaginaryFileDataAccessor_.AdjustTimes(fileData,
+                                                TimeAdjustments.LastAccessTime |
+                                                TimeAdjustments.LastWriteTime);
     base.WriteByte(value);
   }
 
   /// <inheritdoc />
   public override void Flush() {
-    this.InternalFlush_();
+    InternalFlush();
   }
 
   /// <inheritdoc />
   public override void Flush(bool flushToDisk)
-    => this.InternalFlush_();
+    => InternalFlush();
 
   /// <inheritdoc />
   public override Task FlushAsync(CancellationToken cancellationToken) {
-    this.InternalFlush_();
+    InternalFlush();
     return Task.CompletedTask;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl() {
-    return this.GetMockFileData_().AccessControl;
+    return GetMockFileData().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl(
       IFileSystemAclSupport.AccessControlSections includeSections) {
-    return this.GetMockFileData_().AccessControl;
+    return GetMockFileData().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
   [SupportedOSPlatform("windows")]
   public void SetAccessControl(object value) {
-    this.GetMockFileData_().AccessControl = value as FileSecurity;
+    GetMockFileData().AccessControl = value as FileSecurity;
   }
 
-  private ImaginaryFileData GetMockFileData_() {
-    return this.imaginaryFileDataAccessor_.GetFile(this.path_) ??
-           throw CommonExceptions.FileNotFound(this.path_);
+  private ImaginaryFileData GetMockFileData() {
+    return this.imaginaryFileDataAccessor_.GetFile(path) ??
+           throw CommonExceptions.FileNotFound(path);
   }
 
-  private void InternalFlush_() {
-    if (this.imaginaryFileDataAccessor_.FileExists(this.path_)) {
-      var mockFileData = this.imaginaryFileDataAccessor_.GetFile(this.path_);
+  private void InternalFlush() {
+    if (this.imaginaryFileDataAccessor_.FileExists(path)) {
+      var mockFileData = this.imaginaryFileDataAccessor_.GetFile(path);
       /* reset back to the beginning .. */
       var position = Position;
       Seek(0, SeekOrigin.Begin);
@@ -280,15 +280,15 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
   }
 
   private void OnClose() {
-    if (this.options_.HasFlag(FileOptions.DeleteOnClose) &&
-        this.imaginaryFileDataAccessor_.FileExists(this.path_)) {
-      this.imaginaryFileDataAccessor_.RemoveFile(this.path_);
+    if (options.HasFlag(FileOptions.DeleteOnClose) &&
+        this.imaginaryFileDataAccessor_.FileExists(path)) {
+      this.imaginaryFileDataAccessor_.RemoveFile(path);
     }
 
-    if (this.options_.HasFlag(FileOptions.Encrypted) &&
-        this.imaginaryFileDataAccessor_.FileExists(this.path_)) {
+    if (options.HasFlag(FileOptions.Encrypted) &&
+        this.imaginaryFileDataAccessor_.FileExists(path)) {
 #pragma warning disable CA1416 // Ignore SupportedOSPlatform for testing helper encryption
-      this.imaginaryFileDataAccessor_.FileInfo.New(this.path_).Encrypt();
+      this.imaginaryFileDataAccessor_.FileInfo.New(path).Encrypt();
 #pragma warning restore CA1416
     }
   }
@@ -300,21 +300,21 @@ public class ImaginaryFileStream : FileSystemStream, IFileSystemAclSupport {
       case FileMode.Append:
       case FileMode.CreateNew:
         if (access.HasFlag(FileAccess.Read)) {
-          return TimeAdjustments.LAST_ACCESS_TIME;
+          return TimeAdjustments.LastAccessTime;
         }
 
-        return TimeAdjustments.NONE;
+        return TimeAdjustments.None;
       case FileMode.Create:
       case FileMode.Truncate:
         if (access.HasFlag(FileAccess.Write)) {
-          return TimeAdjustments.LAST_ACCESS_TIME | TimeAdjustments.LAST_WRITE_TIME;
+          return TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime;
         }
 
-        return TimeAdjustments.LAST_ACCESS_TIME;
+        return TimeAdjustments.LastAccessTime;
       case FileMode.Open:
       case FileMode.OpenOrCreate:
       default:
-        return TimeAdjustments.NONE;
+        return TimeAdjustments.None;
     }
   }
 }

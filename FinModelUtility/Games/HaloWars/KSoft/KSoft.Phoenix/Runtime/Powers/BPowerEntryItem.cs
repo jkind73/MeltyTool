@@ -7,18 +7,18 @@ namespace KSoft.Phoenix.Runtime
 		: IO.IEndianStreamSerializable
 		//, IO.IIndentedTextWritable
 	{
-		public BEntityID squadId;
-		public int usesRemaining, timesUsed, chargeCap;
-		public uint nextGrantTime;
-		public bool infiniteUses, recharging;
+		public BEntityID SquadID;
+		public int UsesRemaining, TimesUsed, ChargeCap;
+		public uint NextGrantTime;
+		public bool InfiniteUses, Recharging;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.squadId);
-			s.Stream(ref this.usesRemaining); s.Stream(ref this.timesUsed); s.Stream(ref this.chargeCap);
-			s.Stream(ref this.nextGrantTime);
-			s.Stream(ref this.infiniteUses); s.Stream(ref this.recharging);
+			s.Stream(ref this.SquadID);
+			s.Stream(ref this.UsesRemaining); s.Stream(ref this.TimesUsed); s.Stream(ref this.ChargeCap);
+			s.Stream(ref this.NextGrantTime);
+			s.Stream(ref this.InfiniteUses); s.Stream(ref this.Recharging);
 		}
 		#endregion
 

@@ -5,30 +5,30 @@ namespace KSoft.DDS
 {
 	public enum DirectXTexFileType : uint
 	{
-		UNKNOWN,
+		Unknown,
 
 		DDS,
 		HDR,
 		TGA,
 		WIC,
 
-		COUNT
+		Count
 	};
 
 	/// <summary>
 	/// https://github.com/KornnerStudios/DirectXTex/tree/DotNet
 	/// </summary>
-	static class DirectXTexDll
+	static class DirectXTexDLL
 	{
 		public enum LibraryMode : uint
 		{
-			DEBUG,
-			RELEASE,
+			Debug,
+			Release,
 		};
 
-		const string K_DLL_NAME_ = @"DDS\DirectXTexDLL.dll";
-		const CallingConvention K_CALL_CONV_ = CallingConvention.StdCall;
-		const CharSet K_CHAR_SET_ = CharSet.Unicode;
+		const string kDllName = @"DDS\DirectXTexDLL.dll";
+		const CallingConvention kCallConv = CallingConvention.StdCall;
+		const CharSet kCharSet = CharSet.Unicode;
 
 		public static bool Initialized { get; private set; }
 
@@ -37,7 +37,7 @@ namespace KSoft.DDS
 		{
 			get
 			{
-				if (!Initialized && !gEntryPointsNotFound && !gIsInitializing_)
+				if (!Initialized && !gEntryPointsNotFound && !gIsInitializing)
 					Initialize();
 
 				return gEntryPointsNotFound;
@@ -51,12 +51,12 @@ namespace KSoft.DDS
 				return;
 
 			EntryPointsNotFound = true;
-			Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+			Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 				"Failed to find a DirectXTexDLL method",
 				ex);
 		}
 
-		private static bool gIsInitializing_;
+		private static bool gIsInitializing;
 		public static void Initialize()
 		{
 			if (Initialized)
@@ -64,12 +64,12 @@ namespace KSoft.DDS
 
 			try
 			{
-				gIsInitializing_ = true;
+				gIsInitializing = true;
 
 				var libPointerSize = DirectXTex_GetPointerSize();
 				if (libPointerSize != IntPtr.Size)
 				{
-					Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.K_NONE,
+					Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Critical, TypeExtensions.kNone,
 						"DirectXTexDLL was built for a platform that doesn't match what we're currently running in",
 						libPointerSize,
 						IntPtr.Size);
@@ -77,7 +77,7 @@ namespace KSoft.DDS
 				}
 
 				var libMode = DirectXTex_GetLibraryMode();
-				Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Information, TypeExtensions.K_NONE,
+				Phoenix.Debug.Trace.Phoenix.TraceData(System.Diagnostics.TraceEventType.Information, TypeExtensions.kNone,
 					"Finished loading DirectXTexDLL",
 					libMode);
 
@@ -89,7 +89,7 @@ namespace KSoft.DDS
 			}
 			finally
 			{
-				gIsInitializing_ = false;
+				gIsInitializing = false;
 			}
 		}
 
@@ -107,18 +107,18 @@ namespace KSoft.DDS
 			Marshal.ThrowExceptionForHR(hresult);
 		}
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern uint DirectXTex_GetPointerSize();
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern LibraryMode DirectXTex_GetLibraryMode();
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_GetMetadataFromFile(
 			DirectXTexFileType fileType,
 			out TexMetadata metadata,
 			string file,
 			uint flags);
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_GetMetadataFromMemory(
 			DirectXTexFileType fileType,
 			out TexMetadata metadata,
@@ -127,15 +127,15 @@ namespace KSoft.DDS
 			uint flags);
 
 		#region DirectX::Blob
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_BlobNew(
 			out DirectXTexBlob outBlob);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_BlobFree(
 			DirectXTexBlob blob);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_BlobGetBuffer(
 			DirectXTexBlob blob,
 			out IntPtr bufferPointer,
@@ -143,20 +143,20 @@ namespace KSoft.DDS
 		#endregion
 
 		#region DirectX::ScratchImage
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageNew(
 			out DirectXTexScratchImage outImage);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageFree(
 			DirectXTexScratchImage image);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageGetMetadata(
 			DirectXTexScratchImage image,
 			out TexMetadata metadata);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageGetRawBytes(
 			DirectXTexScratchImage image,
 			uint arrayIndex,
@@ -164,27 +164,27 @@ namespace KSoft.DDS
 			uint slice,
 			out DirectXTexBlob outBlob);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageGenerateMipMaps(
 			DirectXTexScratchImage image,
 			out DirectXTexScratchImage outMipChain);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageCreateEmptyMipChain(
 			DirectXTexScratchImage image,
 			out DirectXTexScratchImage outMipChain);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageCreateTexture2D(
 			byte[] pixels,
 			uint width,
 			uint height,
-			DxgiFormat format,
+			DXGI_FORMAT format,
 			uint rowPitch,
 			uint slicePitch,
 			out DirectXTexScratchImage outImage);
 
-		[DllImport(K_DLL_NAME_, CallingConvention=K_CALL_CONV_, CharSet=K_CHAR_SET_)]
+		[DllImport(kDllName, CallingConvention=kCallConv, CharSet=kCharSet)]
 		public static extern int DirectXTex_ScratchImageCreateTexture11(
 			DirectXTexScratchImage image,
 			IntPtr d11Device,

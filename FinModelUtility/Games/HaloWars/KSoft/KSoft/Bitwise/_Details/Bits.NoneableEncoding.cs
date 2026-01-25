@@ -39,16 +39,16 @@ namespace KSoft
 			{
 				// GetMaxEnumBits asserts maxValue > 1, as why would you normally want to bit encode an enum with only 1 possible value?
 				// hard set naked bit count to 1-bit to get around this case (where NONE and 0 are valid values)
-				int nakedBitCount = maxValue > 1
+				int naked_bit_count = maxValue > 1
 					? GetMaxEnumBits(maxValue)
 					: 1;
 
-				if (bitCount > nakedBitCount)
+				if (bitCount > naked_bit_count)
 				{
 					Debug.Trace.KSoft.TraceInformation(
 						"Noneable encoding at {0},#{1} appears inefficient. " +
 						"#{2} requires {3}-bits, but encoding overflows to {4}-bits",
-						sourceFile, sourceLineNum, maxValue, nakedBitCount, bitCount);
+						sourceFile, sourceLineNum, maxValue, naked_bit_count, bitCount);
 				}
 			}
 #endif
@@ -86,16 +86,16 @@ namespace KSoft
 			{
 				// GetMaxEnumBits asserts maxValue > 1, as why would you normally want to bit encode an enum with only 1 possible value?
 				// hard set naked bit count to 1-bit to get around this case (where NONE and 0 are valid values)
-				int nakedBitCount = maxValue > 1
+				int naked_bit_count = maxValue > 1
 					? GetMaxEnumBits(maxValue)
 					: 1;
 
-				if (bitCount > nakedBitCount)
+				if (bitCount > naked_bit_count)
 				{
 					Debug.Trace.KSoft.TraceInformation(
 						"Noneable encoding at {0},#{1} appears inefficient. " +
 						"#{2} requires {3}-bits, but encoding overflows to {4}-bits",
-						sourceFile, sourceLineNum, maxValue, nakedBitCount, bitCount);
+						sourceFile, sourceLineNum, maxValue, naked_bit_count, bitCount);
 				}
 			}
 #endif

@@ -14,11 +14,11 @@ namespace KSoft.Text
 		: Exception
 		, ITextLineInfo
 	{
-		readonly string mStreamName_;
+		readonly string mStreamName;
 		// Use TextLineInfo, instead of ITextLineInfo, as it is a value type, thus just an explicit copy of the line info
-		readonly TextLineInfo mLineInfo_;
+		readonly TextLineInfo mLineInfo;
 
-		public string StreamName { get => this.mStreamName_; }
+		public string StreamName { get => this.mStreamName; }
 
 		public TextLineInfoException(Exception innerException, ITextLineInfo lineInfo, string streamName = null)
 			: base("Text stream error", innerException)
@@ -28,8 +28,8 @@ namespace KSoft.Text
 			if (string.IsNullOrEmpty(streamName))
 				streamName = "<unknown text stream>";
 
-			this.mStreamName_ = streamName;
-			this.mLineInfo_ = new TextLineInfo(lineInfo);
+			this.mStreamName = streamName;
+			this.mLineInfo = new TextLineInfo(lineInfo);
 		}
 		public TextLineInfoException(ITextLineInfo lineInfo, string streamName = null)
 			: this(null, lineInfo, streamName)
@@ -39,14 +39,14 @@ namespace KSoft.Text
 
 		public override string Message { get => string.Format(KSoft.Util.InvariantCultureInfo,
 			"{0} ({1})",
-			this.mStreamName_,
-			this.mLineInfo_.ToString());
+			this.mStreamName,
+			this.mLineInfo.ToString());
 		}
 
 		#region ITextLineInfo Members
-		public bool HasLineInfo	{ get => this.mLineInfo_.HasLineInfo; }
-		public int LineNumber	{ get => this.mLineInfo_.LineNumber; }
-		public int LinePosition	{ get => this.mLineInfo_.LinePosition; }
+		public bool HasLineInfo	{ get => this.mLineInfo.HasLineInfo; }
+		public int LineNumber	{ get => this.mLineInfo.LineNumber; }
+		public int LinePosition	{ get => this.mLineInfo.LinePosition; }
 		#endregion
 	};
 }

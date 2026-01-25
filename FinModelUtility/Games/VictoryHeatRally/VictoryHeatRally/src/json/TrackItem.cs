@@ -1,8 +1,8 @@
 ﻿namespace vhr.json;
 
 public sealed class TrackItem {
-  public float[]? myArray;
-  public TrackItemStruct? myStruct;
+  public float[]? my_array;
+  public TrackItemStruct? my_struct;
   public string? type;
 
   // Background
@@ -15,11 +15,11 @@ public sealed class TrackItem {
   // Other
   public string? bgm;
   public string? floortex;
-  public int? fogEnabled;
+  public int? fog_enabled;
   public int? laps;
   public int? rally;
   public int? startpos;
-  public string? sprBarrier;
+  public string? spr_barrier;
   public int? timeofday;
-  public string? trackName;
+  public string? track_name;
 }

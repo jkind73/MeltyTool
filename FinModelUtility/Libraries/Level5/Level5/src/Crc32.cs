@@ -10,7 +10,7 @@ public static class Crc32 {
   public static uint Crc32C(ReadOnlySpan<byte> input) {
     var hash = 0xffffffffu;
     for (var i = 0; i < input.Length; i++)
-      hash = (hash >> 8) ^ CRC_TABLE_[input[i] ^ hash & 0xff];
+      hash = (hash >> 8) ^ CrcTable[input[i] ^ hash & 0xff];
     return ~hash;
   }
 
@@ -21,7 +21,7 @@ public static class Crc32 {
     return Crc32C(bytes.Slice(0, len));
   }
 
-  private static readonly uint[] CRC_TABLE_ = [
+  private static readonly uint[] CrcTable = [
       0, 0x77073096, 0xEE0E612C, 0x990951BA,
       0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
       0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988,

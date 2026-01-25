@@ -4,59 +4,59 @@
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "Command",
+			ElementName = "Command",
 		};
 		#endregion
 
 		#region Position
-		int mPosition_;
+		int mPosition;
 		public int Position
 		{
-			get { return this.mPosition_; }
-			set { this.mPosition_ = value; }
+			get { return this.mPosition; }
+			set { this.mPosition = value; }
 		}
 		#endregion
 
 		#region CommandType
-		BProtoObjectCommandType mCommandType_ = BProtoObjectCommandType.INVALID;
+		BProtoObjectCommandType mCommandType = BProtoObjectCommandType.Invalid;
 		public BProtoObjectCommandType CommandType
 		{
-			get { return this.mCommandType_; }
-			set { this.mCommandType_ = value; }
+			get { return this.mCommandType; }
+			set { this.mCommandType = value; }
 		}
 		#endregion
 
 		#region ID
-		int mId_ = TypeExtensions.K_NONE;
-		public int Id
+		int mID = TypeExtensions.kNone;
+		public int ID
 		{
-			get { return this.mId_; }
-			set { this.mId_ = value; }
+			get { return this.mID; }
+			set { this.mID = value; }
 		}
 		#endregion
 
 		#region SquadMode
-		BSquadMode mSquadMode_ = BSquadMode.INVALID;
+		BSquadMode mSquadMode = BSquadMode.Invalid;
 		public BSquadMode SquadMode
 		{
-			get { return this.mSquadMode_; }
-			set { this.mSquadMode_ = value; }
+			get { return this.mSquadMode; }
+			set { this.mSquadMode = value; }
 		}
 		#endregion
 
 		#region AutoClose
-		bool mAutoClose_;
+		bool mAutoClose;
 		public bool AutoClose
 		{
-			get { return this.mAutoClose_; }
-			set { this.mAutoClose_ = value; }
+			get { return this.mAutoClose; }
+			set { this.mAutoClose = value; }
 		}
 		#endregion
 
 		public bool IsValid { get {
-			return this.CommandType != BProtoObjectCommandType.INVALID
+			return this.CommandType != BProtoObjectCommandType.Invalid
 				&&
 				this.Position >= 0
 				&&
@@ -65,10 +65,10 @@
 
 		public bool IsCommandDataValid { get {
 			if (this.CommandType.RequiresValidId())
-				return this.Id.IsNotNone();
+				return this.ID.IsNotNone();
 
-			if (this.CommandType == BProtoObjectCommandType.CHANGE_MODE)
-				return this.SquadMode != BSquadMode.INVALID;
+			if (this.CommandType == BProtoObjectCommandType.ChangeMode)
+				return this.SquadMode != BSquadMode.Invalid;
 
 			return true;
 		} }
@@ -80,36 +80,36 @@
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttribute("Position", ref this.mPosition_);
+			s.StreamAttribute("Position", ref this.mPosition);
 
-			s.StreamAttributeEnum("Type", ref this.mCommandType_);
-			switch (this.mCommandType_)
+			s.StreamAttributeEnum("Type", ref this.mCommandType);
+			switch (this.mCommandType)
 			{
-			case BProtoObjectCommandType.RESEARCH: // proto tech
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.TECH, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			case BProtoObjectCommandType.Research: // proto tech
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Tech, false, XML.XmlUtil.kSourceCursor);
 				break;
-			case BProtoObjectCommandType.TRAIN_UNIT: // proto object
-			case BProtoObjectCommandType.BUILD:
-			case BProtoObjectCommandType.BUILD_OTHER:
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			case BProtoObjectCommandType.TrainUnit: // proto object
+			case BProtoObjectCommandType.Build:
+			case BProtoObjectCommandType.BuildOther:
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
 				break;
-			case BProtoObjectCommandType.TRAIN_SQUAD: // proto squad
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_CURSOR);
-				break;
-
-			case BProtoObjectCommandType.CHANGE_MODE: // unused
-				s.StreamCursorEnum(ref this.mSquadMode_);
+			case BProtoObjectCommandType.TrainSquad: // proto squad
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceCursor);
 				break;
 
-			case BProtoObjectCommandType.ABILITY:
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.ABILITY, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			case BProtoObjectCommandType.ChangeMode: // unused
+				s.StreamCursorEnum(ref this.mSquadMode);
 				break;
-			case BProtoObjectCommandType.POWER:
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, DatabaseObjectKind.POWER, false, XML.XmlUtil.K_SOURCE_CURSOR);
+
+			case BProtoObjectCommandType.Ability:
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Ability, false, XML.XmlUtil.kSourceCursor);
+				break;
+			case BProtoObjectCommandType.Power:
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, DatabaseObjectKind.Power, false, XML.XmlUtil.kSourceCursor);
 				break;
 			}
 
-			s.StreamAttributeOpt("AutoClose", ref this.mAutoClose_, Predicates.IsTrue);
+			s.StreamAttributeOpt("AutoClose", ref this.mAutoClose, Predicates.IsTrue);
 		}
 		#endregion
 	};

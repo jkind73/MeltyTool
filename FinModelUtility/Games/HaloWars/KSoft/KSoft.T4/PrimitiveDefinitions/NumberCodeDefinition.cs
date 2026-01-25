@@ -14,29 +14,29 @@ namespace KSoft.T4
 		{
 			this.OperationWord = TypeCodeToOperationWord(typeCode) ?? this.Keyword;
 
-			string descPrefix = "";
-			string descId;
-			string descPostfix;
+			string desc_prefix = "";
+			string desc_id;
+			string desc_postfix;
 			if(this.IsInteger)
 			{
-				descPrefix = this.IsSigned
+				desc_prefix = this.IsSigned
 					?   "signed"
 					: "unsigned";
 
-				descId = this.SizeOfInBits + "-bit";
+				desc_id = this.SizeOfInBits + "-bit";
 
-				descPostfix = "integer";
+				desc_postfix = "integer";
 			}
 			else
 			{
-				descId = this.Code.ToString().ToLower(UtilT4.InvariantCultureInfo) + "-precision";
+				desc_id = this.Code.ToString().ToLower(UtilT4.InvariantCultureInfo) + "-precision";
 
-				descPostfix = "number";
+				desc_postfix = "number";
 			}
 
 			this.SetupDescription(string.Format(UtilT4.InvariantCultureInfo,
 			                                    "{0} {1} {2}",
-			                                    descPrefix, descId, descPostfix).Trim());
+			                                    desc_prefix, desc_id, desc_postfix).Trim());
 		}
 
 		public override bool IsInteger { get {
@@ -136,7 +136,7 @@ namespace KSoft.T4
 
 		/// <summary>Shift amount to get or set the byte with the MSB</summary>
 		public int MostSignificantByteBitShift { get {
-			return this.SizeOfInBits - Bitwise.BitwiseT4.K_BITS_PER_BYTE;
+			return this.SizeOfInBits - Bitwise.BitwiseT4.kBitsPerByte;
 		} }
 
 		static string TypeCodeToOperationWord(TypeCode typeCode)

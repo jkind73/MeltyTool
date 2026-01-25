@@ -3,29 +3,29 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BPlacementRuleType
 	{
-		AND,
-		OR,
+		And,
+		Or,
 
-		DISTANCE_AT_MOST_FROM_TYPE,
-		DISTANCE_AT_LEAST_FROM_TYPE,
-		OBSTRUCTION_AT_LEAST_FROM_TYPE,
+		DistanceAtMostFromType,
+		DistanceAtLeastFromType,
+		ObstructionAtLeastFromType,
 	};
 	public enum BPlacementRuleFromTypeKind
 	{
-		BUILDER,
-		UNIT,
+		Builder,
+		Unit,
 	};
 	public enum BPlacementRuleLifeType
 	{
-		ANY,
-		ALIVE,
-		DEAD,
+		Any,
+		Alive,
+		Dead,
 	};
 	public enum BPlacementRuleFoundationType
 	{
-		ANY,
-		SOLID,
-		FULLY_BUILT,
+		Any,
+		Solid,
+		FullyBuilt,
 	};
 
 	/*public*/ sealed class BPlacementRule

@@ -26,6 +26,6 @@ public sealed class Waypoint : BLevelObject {
         = level.Get<Waypoint?>(xmlObject.GetPointerId("mOptionalNextWP1"));
     this.OptionalNextWp2
         = level.Get<Waypoint?>(xmlObject.GetPointerId("mOptionalNextWP2"));
-    this.Mat = xmlObject.GetAttributeMatrix4X4("Mat");
+    this.Mat = xmlObject.GetAttributeMatrix4x4("Mat");
   }
 }

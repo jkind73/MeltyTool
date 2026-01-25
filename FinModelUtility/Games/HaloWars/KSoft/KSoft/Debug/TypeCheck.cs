@@ -47,9 +47,9 @@ namespace KSoft.Debug
 		{
 			Contract.Requires<ArgumentNullException>(value != null);
 
-			CastValue(value, out TResult obj);
+			CastValue(value, out TResult _obj);
 
-			return obj;
+			return _obj;
 		}
 		#endregion
 
@@ -92,9 +92,9 @@ namespace KSoft.Debug
 		{
 			Contract.Requires<ArgumentNullException>(value != null);
 
-			CastReference(value, out TResult obj);
+			CastReference(value, out TResult _obj);
 
-			return obj;
+			return _obj;
 		}
 		/// <summary>Basically a beefed up argument type checker</summary>
 		/// <typeparam name="TResult">Result type</typeparam>

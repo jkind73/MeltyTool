@@ -3,12 +3,12 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BObjectDataRelative
 	{
-		INVALID = TypeExtensions.K_NONE,
+		Invalid = TypeExtensions.kNone,
 
-		ABSOLUTE = 0,
-		BASE_PERCENT,
-		PERCENT,
-		ASSIGN,
-		BASE_PERCENT_ASSIGN,
+		Absolute = 0,
+		BasePercent,
+		Percent,
+		Assign,
+		BasePercentAssign,
 	};
 }

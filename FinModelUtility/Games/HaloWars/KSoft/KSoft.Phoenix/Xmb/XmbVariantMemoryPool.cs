@@ -16,47 +16,47 @@ namespace KSoft.Phoenix.Xmb
 		: IDisposable
 	{
 		/// <summary>Default amount of entry memory allocated for use</summary>
-		const int K_ENTRY_START_COUNT_ = 16;
+		const int kEntryStartCount = 16;
 
-		Dictionary<uint, PoolEntry> mEntries_;
-		uint mPoolSize_;
+		Dictionary<uint, PoolEntry> mEntries;
+		uint mPoolSize;
 
-		public uint Size { get { return this.mPoolSize_; } }
+		public uint Size { get { return this.mPoolSize; } }
 
-		IO.EndianReader mBuffer_;
-		uint mBufferedDataRemaining_;
+		IO.EndianReader mBuffer;
+		uint mBufferedDataRemaining;
 
-		public XmbVariantMemoryPool(int initialEntryCount = K_ENTRY_START_COUNT_)
+		public XmbVariantMemoryPool(int initialEntryCount = kEntryStartCount)
 		{
 			if (initialEntryCount < 0)
-				initialEntryCount = K_ENTRY_START_COUNT_;
+				initialEntryCount = kEntryStartCount;
 
-			this.mEntries_ = new Dictionary<uint, PoolEntry>(K_ENTRY_START_COUNT_);
+			this.mEntries = new Dictionary<uint, PoolEntry>(kEntryStartCount);
 		}
-		public XmbVariantMemoryPool(byte[] buffer, Shell.EndianFormat byteOrder = Shell.EndianFormat.BIG)
+		public XmbVariantMemoryPool(byte[] buffer, Shell.EndianFormat byteOrder = Shell.EndianFormat.Big)
 			: this()
 		{
 			Contract.Requires(buffer != null);
 
-			this.mPoolSize_ = (uint)buffer.Length;
+			this.mPoolSize = (uint)buffer.Length;
 			var ms = new System.IO.MemoryStream(buffer, false);
-			this.mBuffer_ = new IO.EndianReader(ms, byteOrder, this);
-			this.mBufferedDataRemaining_ = this.mPoolSize_;
+			this.mBuffer = new IO.EndianReader(ms, byteOrder, this);
+			this.mBufferedDataRemaining = this.mPoolSize;
 		}
 
 		#region IDisposable Members
 		void DisposeBuffer()
 		{
-			Util.DisposeAndNull(ref this.mBuffer_);
+			Util.DisposeAndNull(ref this.mBuffer);
 		}
 		public void Dispose()
 		{
 			this.DisposeBuffer();
 
-			if (this.mEntries_ != null)
+			if (this.mEntries != null)
 			{
-				this.mEntries_.Clear();
-				this.mEntries_ = null;
+				this.mEntries.Clear();
+				this.mEntries = null;
 			}
 		}
 		#endregion
@@ -66,17 +66,17 @@ namespace KSoft.Phoenix.Xmb
 		{
 			uint size = e.CalculateSize();
 
-			uint offset = this.mPoolSize_ += size;
+			uint offset = this.mPoolSize += size;
 			// In case the entry needs to be aligned
-			this.mPoolSize_ += e.CalculatePadding(offset);
+			this.mPoolSize += e.CalculatePadding(offset);
 
-			this.mEntries_.Add(offset, e);
+			this.mEntries.Add(offset, e);
 			return offset;
 		}
 
 		public uint Add(XmbFileBuilder builder, int v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -85,7 +85,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, uint v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -94,7 +94,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, float v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -103,7 +103,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, double v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -112,7 +112,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, string v, bool isUnicode = false)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -122,7 +122,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, Vector2f v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -131,7 +131,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, Vector3f v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -140,7 +140,7 @@ namespace KSoft.Phoenix.Xmb
 		}
 		public uint Add(XmbFileBuilder builder, Vector4f v)
 		{
-			foreach (var kv in this.mEntries_)
+			foreach (var kv in this.mEntries)
 				if (kv.Value.Equals(v))
 					return kv.Key;
 
@@ -150,37 +150,37 @@ namespace KSoft.Phoenix.Xmb
 		#endregion
 
 		#region Get
-		bool ValidOffset(uint offset)	{ return offset < this.mPoolSize_; }
+		bool ValidOffset(uint offset)	{ return offset < this.mPoolSize; }
 
 		PoolEntry DeBuffer(XmbVariantType type, uint offset, byte flags = 0)
 		{
 			if (!this.ValidOffset(offset))
 				throw new ArgumentOutOfRangeException("offset", string.Format("{0} > {1}",
 					offset.ToString("X8"),
-					this.mPoolSize_.ToString("X6")));
+					this.mPoolSize.ToString("X6")));
 
 			PoolEntry e;
-			if (!this.mEntries_.TryGetValue(offset, out e))
+			if (!this.mEntries.TryGetValue(offset, out e))
 			{
-					 if (this.mBufferedDataRemaining_ == 0)	throw new InvalidOperationException("No data left in buffer");
-				else if (this.mBuffer_ == null)				throw new InvalidOperationException("No underlying buffer");
+					 if (this.mBufferedDataRemaining == 0)	throw new InvalidOperationException("No data left in buffer");
+				else if (this.mBuffer == null)				throw new InvalidOperationException("No underlying buffer");
 
 				// Create our new entry, setting any additional properties
 				e = PoolEntry.New(type);
-					 if (type == XmbVariantType.STRING) e.IsUnicode = flags != 0;
-				else if (type == XmbVariantType.VECTOR) e.VectorLength = flags;
+					 if (type == XmbVariantType.String) e.IsUnicode = flags != 0;
+				else if (type == XmbVariantType.Vector) e.VectorLength = flags;
 				// Great, now read the entry's value data
-				this.mBuffer_.Seek32(offset);
-				e.Read(this.mBuffer_);
+				this.mBuffer.Seek32(offset);
+				e.Read(this.mBuffer);
 
 				// Update how much data is still remaining
-				uint bytesRead = (uint)(this.mBuffer_.BaseStream.Position - offset);
-				this.mBufferedDataRemaining_ -= bytesRead;
+				uint bytes_read = (uint)(this.mBuffer.BaseStream.Position - offset);
+				this.mBufferedDataRemaining -= bytes_read;
 
-				if (this.mBufferedDataRemaining_ == 0)
+				if (this.mBufferedDataRemaining == 0)
 					this.DisposeBuffer();
 
-				this.mEntries_.Add(offset, e);
+				this.mEntries.Add(offset, e);
 			}
 
 			return e;
@@ -188,49 +188,49 @@ namespace KSoft.Phoenix.Xmb
 
 		public int GetInt32(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.INT, offset);
+			var e = this.DeBuffer(XmbVariantType.Int, offset);
 
 			return (int)e.Int;
 		}
 		public uint GetUInt32(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.INT, offset);
+			var e = this.DeBuffer(XmbVariantType.Int, offset);
 
 			return e.Int;
 		}
 		public float GetSingle(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.SINGLE, offset);
+			var e = this.DeBuffer(XmbVariantType.Single, offset);
 
 			return e.Single;
 		}
 		public double GetDouble(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.DOUBLE, offset);
+			var e = this.DeBuffer(XmbVariantType.Double, offset);
 
 			return e.Double;
 		}
 		public string GetString(uint offset, bool isUnicode)
 		{
-			var e = this.DeBuffer(XmbVariantType.STRING, offset, (byte)(isUnicode ? 1 : 0));
+			var e = this.DeBuffer(XmbVariantType.String, offset, (byte)(isUnicode ? 1 : 0));
 
 			return e.String;
 		}
 		public Vector2f GetVector2D(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.VECTOR, offset, 2);
+			var e = this.DeBuffer(XmbVariantType.Vector, offset, 2);
 
 			return e.Vector2d;
 		}
 		public Vector3f GetVector3D(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.VECTOR, offset, 3);
+			var e = this.DeBuffer(XmbVariantType.Vector, offset, 3);
 
 			return e.Vector3d;
 		}
 		public Vector4f GetVector4D(uint offset)
 		{
-			var e = this.DeBuffer(XmbVariantType.VECTOR, offset, 4);
+			var e = this.DeBuffer(XmbVariantType.Vector, offset, 4);
 
 			return e.Vector4d;
 		}
@@ -238,7 +238,7 @@ namespace KSoft.Phoenix.Xmb
 
 		public void Write(IO.EndianWriter s)
 		{
-			foreach (var e in this.mEntries_.Values)
+			foreach (var e in this.mEntries.Values)
 				e.Write(s);
 		}
 
@@ -253,7 +253,7 @@ namespace KSoft.Phoenix.Xmb
 			int v;
 			try
 			{
-				v = Convert.ToInt32(str, (int)NumeralBase.DECIMAL);
+				v = Convert.ToInt32(str, (int)NumeralBase.Decimal);
 			}
 			catch (Exception)
 			{
@@ -266,7 +266,7 @@ namespace KSoft.Phoenix.Xmb
 
 			if (useInt24)
 			{
-				var int24 = v & XmbVariantSerialization.K_VALUE_BIT_MASK;
+				var int24 = v & XmbVariantSerialization.kValueBitMask;
 				if (int24 != v)
 					return false;
 			}
@@ -293,7 +293,7 @@ namespace KSoft.Phoenix.Xmb
 			uint v;
 			try
 			{
-				v = Convert.ToUInt32(str, (int)NumeralBase.DECIMAL);
+				v = Convert.ToUInt32(str, (int)NumeralBase.Decimal);
 			}
 			catch (Exception)
 			{
@@ -306,7 +306,7 @@ namespace KSoft.Phoenix.Xmb
 
 			if (useInt24)
 			{
-				var int24 = v & XmbVariantSerialization.K_VALUE_BIT_MASK;
+				var int24 = v & XmbVariantSerialization.kValueBitMask;
 				if (int24 != v)
 					return false;
 			}

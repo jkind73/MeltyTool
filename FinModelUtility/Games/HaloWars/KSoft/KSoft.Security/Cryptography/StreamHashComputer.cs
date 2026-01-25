@@ -14,22 +14,22 @@ namespace KSoft.Security.Cryptography
 		where T : HashAlgorithm
 	{
 		/// <summary>Max size of the scratch buffer when we don't use a user specified preallocated buffer</summary>
-		const int K_MAX_SCRATCH_BUFFER_SIZE_ = 0x1000;
+		const int kMaxScratchBufferSize = 0x1000;
 
-		private readonly T mAlgo_;
-		private readonly Stream mInputStream_;
-		private byte[] mScratchBuffer_;
-		private long mStartOffset_;
-		private long mCount_;
-		private readonly bool mRestorePosition_;
+		private readonly T mAlgo;
+		private readonly Stream mInputStream;
+		private byte[] mScratchBuffer;
+		private long mStartOffset;
+		private long mCount;
+		private readonly bool mRestorePosition;
 
-		public Stream InputStream { get { return this.mInputStream_; } }
-		public long StartOffset { get { return this.mStartOffset_; } }
-		public long Count { get { return this.mCount_; } }
+		public Stream InputStream { get { return this.mInputStream; } }
+		public long StartOffset { get { return this.mStartOffset; } }
+		public long Count { get { return this.mCount; } }
 		/// <summary>
 		/// Does the input stream's current position get treated as the starting offset?
 		/// </summary>
-		public bool StartOffsetIsStreamPosition { get { return this.mStartOffset_.IsNone(); } }
+		public bool StartOffsetIsStreamPosition { get { return this.mStartOffset.IsNone(); } }
 
 		public StreamHashComputer(T algo, Stream inputStream
 			, bool restorePosition = false
@@ -39,21 +39,21 @@ namespace KSoft.Security.Cryptography
 			Contract.Requires<ArgumentException>(inputStream.CanSeek);
 			Contract.Requires<ArgumentException>(preallocatedBuffer == null || preallocatedBuffer.Length > 0);
 
-			this.mAlgo_ = algo;
-			this.mInputStream_ = inputStream;
-			this.mScratchBuffer_ = preallocatedBuffer;
-			this.mStartOffset_ = TypeExtensions.K_NONE;
-			this.mCount_ = TypeExtensions.K_NONE;
-			this.mRestorePosition_ = restorePosition;
+			this.mAlgo = algo;
+			this.mInputStream = inputStream;
+			this.mScratchBuffer = preallocatedBuffer;
+			this.mStartOffset = TypeExtensions.kNone;
+			this.mCount = TypeExtensions.kNone;
+			this.mRestorePosition = restorePosition;
 
-			this.mAlgo_.Initialize();
+			this.mAlgo.Initialize();
 		}
 
 		public void SetRangeAtCurrentOffset(long count)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 
-			this.SetRangeAndOffset(TypeExtensions.K_NONE, count);
+			this.SetRangeAndOffset(TypeExtensions.kNone, count);
 		}
 		public void SetRangeAndOffset(long offset, long count)
 		{
@@ -61,8 +61,8 @@ namespace KSoft.Security.Cryptography
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(offset.IsNone() || (offset+count) <= this.InputStream.Length);
 
-			this.mStartOffset_ = offset;
-			this.mCount_ = count;
+			this.mStartOffset = offset;
+			this.mCount = count;
 		}
 
 		public T Compute()
@@ -74,61 +74,61 @@ namespace KSoft.Security.Cryptography
 
 			#region prologue
 
-			this.mAlgo_.Initialize();
+			this.mAlgo.Initialize();
 
-			int bufferSize;
+			int buffer_size;
 			byte[] buffer;
 
-			bool usesPreallocatedBuffer = this.mScratchBuffer_ != null;
-			if (!usesPreallocatedBuffer)
+			bool uses_preallocated_buffer = this.mScratchBuffer != null;
+			if (!uses_preallocated_buffer)
 			{
-				bufferSize = Math.Min((int) this.Count, K_MAX_SCRATCH_BUFFER_SIZE_);
-				this.mScratchBuffer_ = new byte[bufferSize];
+				buffer_size = Math.Min((int) this.Count, kMaxScratchBufferSize);
+				this.mScratchBuffer = new byte[buffer_size];
 			}
 
-			buffer = this.mScratchBuffer_;
-			bufferSize = this.mScratchBuffer_.Length;
+			buffer = this.mScratchBuffer;
+			buffer_size = this.mScratchBuffer.Length;
 
-			long origPos = this.mInputStream_.Position;
-			if (!this.StartOffsetIsStreamPosition && this.StartOffset != origPos)
-				this.mInputStream_.Seek(this.StartOffset, SeekOrigin.Begin);
+			long orig_pos = this.mInputStream.Position;
+			if (!this.StartOffsetIsStreamPosition && this.StartOffset != orig_pos)
+				this.mInputStream.Seek(this.StartOffset, SeekOrigin.Begin);
 			#endregion
 
-			for (long bytesRemaining = this.Count; bytesRemaining > 0;)
+			for (long bytes_remaining = this.Count; bytes_remaining > 0;)
 			{
-				long numBytesToRead = Math.Min(bytesRemaining, bufferSize);
-				int numBytesRead = 0;
+				long num_bytes_to_read = Math.Min(bytes_remaining, buffer_size);
+				int num_bytes_read = 0;
 				do
 				{
-					int n = this.mInputStream_.Read(buffer, numBytesRead, (int)numBytesToRead);
+					int n = this.mInputStream.Read(buffer, num_bytes_read, (int)num_bytes_to_read);
 					if (n == 0)
 						break;
 
-					numBytesRead += n;
-					numBytesToRead -= n;
-				} while (numBytesToRead > 0);
+					num_bytes_read += n;
+					num_bytes_to_read -= n;
+				} while (num_bytes_to_read > 0);
 
-				if (numBytesRead > 0)
-					this.mAlgo_.TransformBlock(buffer, 0, numBytesRead, null, 0);
+				if (num_bytes_read > 0)
+					this.mAlgo.TransformBlock(buffer, 0, num_bytes_read, null, 0);
 				else
 					break;
 
-				bytesRemaining -= numBytesRead;
+				bytes_remaining -= num_bytes_read;
 			}
 
-			this.mAlgo_.TransformFinalBlock(buffer, 0, 0); // yes, 0 bytes, all bytes should have been taken care of already
+			this.mAlgo.TransformFinalBlock(buffer, 0, 0); // yes, 0 bytes, all bytes should have been taken care of already
 
 			#region epilogue
-			if (this.mRestorePosition_)
-				this.mInputStream_.Seek(origPos, SeekOrigin.Begin);
+			if (this.mRestorePosition)
+				this.mInputStream.Seek(orig_pos, SeekOrigin.Begin);
 
-			if (!usesPreallocatedBuffer)
+			if (!uses_preallocated_buffer)
 			{
-				this.mScratchBuffer_ = null;
+				this.mScratchBuffer = null;
 			}
 			#endregion
 
-			return this.mAlgo_;
+			return this.mAlgo;
 		}
 	};
 }

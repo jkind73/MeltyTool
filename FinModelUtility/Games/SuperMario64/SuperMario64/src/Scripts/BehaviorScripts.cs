@@ -6,60 +6,60 @@
     RETURN,
     GOTO,
     BEGIN_REPEAT,
-    END_REPEAT,
-    END_REPEAT_CONTINUE,
-    BEGIN_LOOP,
-    END_LOOP,
+    end_repeat,
+    end_repeat_continue,
+    begin_loop,
+    end_loop,
     BREAK = 0x0A,
-    BREAK_UNUSED,
-    CALL_NATIVE,
-    ADD_FLOAT,
-    SET_FLOAT,
-    ADD_INT,
-    SET_INT,
-    OR_INT,
-    BIT_CLEAR,
-    SET_INT_RAND_RSHIFT,
-    SET_RANDOM_FLOAT,
-    SET_RANDOM_INT,
-    ADD_RANDOM_FLOAT,
-    ADD_INT_RAND_RSHIFT,
-    NOP_1,
-    NOP_2,
-    NOP_3,
-    SET_MODEL,
-    SPAWN_CHILD,
-    DEACTIVATE,
-    DROP_TO_FLOOR,
-    SUM_FLOAT,
-    SUM_INT = 0x20,
-    BILLBOARD,
-    HIDE,
-    SET_HITBOX,
-    NOP_4,
-    DELAY_VAR,
-    BEGIN_REPEAT_UNUSED,
-    LOAD_ANIMATIONS,
-    ANIMATE,
-    SPAWN_CHILD_WITH_PARAM,
-    LOAD_COLLISION_DATA,
-    SET_HITBOX_WITH_OFFSET,
-    SPAWN_OBJ,
-    SET_HOME,
-    SET_HURTBOX,
-    SET_INTERACT_TYPE,
-    SET_OBJ_PHYSICS,
-    SET_INTERACT_SUBTYPE,
+    break_unused,
+    call_native,
+    add_float,
+    set_float,
+    add_int,
+    set_int,
+    or_int,
+    bit_clear,
+    set_int_rand_rshift,
+    set_random_float,
+    set_random_int,
+    add_random_float,
+    add_int_rand_rshift,
+    nop_1,
+    nop_2,
+    nop_3,
+    set_model,
+    spawn_child,
+    deactivate,
+    drop_to_floor,
+    sum_float,
+    sum_int = 0x20,
+    billboard,
+    hide,
+    set_hitbox,
+    nop_4,
+    delay_var,
+    begin_repeat_unused,
+    load_animations,
+    animate,
+    spawn_child_with_param,
+    load_collision_data,
+    set_hitbox_with_offset,
+    spawn_obj,
+    set_home,
+    set_hurtbox,
+    set_interact_type,
+    set_obj_physics,
+    set_interact_subtype,
     SCALE = 0x32,
-    PARENT_BIT_CLEAR,
-    ANIMATE_TEXTURE,
-    DISABLE_RENDERING,
-    SET_INT_UNUSED,
-    SPAWN_WATER_DROPLET,
+    parent_bit_clear,
+    animate_texture,
+    disable_rendering,
+    set_int_unused,
+    spawn_water_droplet,
   }
 
   class BehaviorScripts {
-    private static uint BytesToInt_(byte[] b, int offset, int length) {
+    private static uint bytesToInt(byte[] b, int offset, int length) {
       switch (length) {
         case 1: return b[0 + offset];
         case 2: return (uint) (b[0 + offset] << 8 | b[1 + offset]);
@@ -72,20 +72,20 @@
       }
     }
 
-    public static void Parse(ref List<ScriptDumpCommandInfo> dump,
+    public static void parse(ref List<ScriptDumpCommandInfo> dump,
                              uint segOffset) {
-      Parse(ref dump, (byte) (segOffset >> 24), segOffset & 0x00FFFFFF);
+      parse(ref dump, (byte) (segOffset >> 24), segOffset & 0x00FFFFFF);
     }
 
-    public static void Parse(ref List<ScriptDumpCommandInfo> dump,
+    public static void parse(ref List<ScriptDumpCommandInfo> dump,
                              byte seg,
                              uint off) {
       if (seg == 0) return;
-      Rom rom = Rom.Instance;
-      byte[] data = rom.GetSegment(seg, null);
+      ROM rom = ROM.Instance;
+      byte[] data = rom.getSegment(seg, null);
       bool end = false;
       while (!end) {
-        byte cmdLen = GetCmdLength_(data[off]);
+        byte cmdLen = getCmdLength(data[off]);
         byte[] cmd = rom.getSubArray_safe(data, off, cmdLen);
         //rom.printArray(cmd, cmdLen);
         string desc = "Unknown command";
@@ -96,24 +96,24 @@
             break;
           case 0x02:
             desc = "Jump & link to address 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X8");
             alreadyAdded = true;
-            AddBehCommandToDump_(ref dump, cmd, seg, off, desc);
-            Parse(ref dump, cmd[4], BytesToInt_(cmd, 5, 3));
+            addBehCommandToDump(ref dump, cmd, seg, off, desc);
+            parse(ref dump, cmd[4], bytesToInt(cmd, 5, 3));
             break;
           case 0x03:
             desc = "Return back from jump & link";
             end = true;
             break;
           case 0x04:
-            desc = "Jump to address 0x" + BytesToInt_(cmd, 4, 4).ToString("X8");
+            desc = "Jump to address 0x" + bytesToInt(cmd, 4, 4).ToString("X8");
             alreadyAdded = true;
-            AddBehCommandToDump_(ref dump, cmd, seg, off, desc);
-            Parse(ref dump, cmd[4], BytesToInt_(cmd, 5, 3));
+            addBehCommandToDump(ref dump, cmd, seg, off, desc);
+            parse(ref dump, cmd[4], bytesToInt(cmd, 5, 3));
             end = true;
             break;
           case 0x05:
-            desc = "Loop " + BytesToInt_(cmd, 2, 2) + " times";
+            desc = "Loop " + bytesToInt(cmd, 2, 2) + " times";
             break;
           case 0x07:
             desc = "Infinite loop (jump back 4 bytes)";
@@ -136,63 +136,63 @@
             break;
           case 0x0C:
             desc = "Call ASM function 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X8");
             break;
           case 0x0D:
-            desc = "Add (float)" + BytesToInt_(cmd, 2, 2) +
+            desc = "Add (float)" + bytesToInt(cmd, 2, 2) +
                    " to the value at obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2");
             break;
           case 0x0E:
             desc = "(Set value) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
-                   " = (float)" + BytesToInt_(cmd, 2, 2);
+                   " = (float)" + bytesToInt(cmd, 2, 2);
             break;
           case 0x0F:
-            desc = "Add " + (short) (BytesToInt_(cmd, 2, 2) & 0xFFFF) +
+            desc = "Add " + (short) (bytesToInt(cmd, 2, 2) & 0xFFFF) +
                    " to the value at obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2");
             break;
           case 0x10:
             desc = "(Set value) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
-                   " = " + (short) (BytesToInt_(cmd, 2, 2) & 0xFFFF);
+                   " = " + (short) (bytesToInt(cmd, 2, 2) & 0xFFFF);
             break;
           case 0x11:
             desc = "(Set bits) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
-                   " |= 0x" + BytesToInt_(cmd, 2, 2).ToString("X4");
+                   " |= 0x" + bytesToInt(cmd, 2, 2).ToString("X4");
             break;
           case 0x12:
             desc = "(Clear bits) obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + " &= (0x" +
-                   BytesToInt_(cmd, 2, 2).ToString("X4") + " ^ 0xFFFF)";
+                   bytesToInt(cmd, 2, 2).ToString("X4") + " ^ 0xFFFF)";
             break;
           case 0x13:
             desc = "(Set RNG) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
-                   " = " + BytesToInt_(cmd, 2, 2) + " + (randU16() >> " +
-                   BytesToInt_(cmd, 4, 2) + ")";
+                   " = " + bytesToInt(cmd, 2, 2) + " + (randU16() >> " +
+                   bytesToInt(cmd, 4, 2) + ")";
             break;
           case 0x14:
             desc = "(Set float from multi) obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + " = (float)" +
-                   BytesToInt_(cmd, 2, 2) + " * (float)" +
-                   BytesToInt_(cmd, 4, 2) + ")";
+                   bytesToInt(cmd, 2, 2) + " * (float)" +
+                   bytesToInt(cmd, 4, 2) + ")";
             break;
           case 0x15:
             desc = "(Set float RNG from multi) obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + " = (float)" +
-                   BytesToInt_(cmd, 2, 2) + " + (randFloat() * (float)" +
-                   BytesToInt_(cmd, 4, 2) + ")";
+                   bytesToInt(cmd, 2, 2) + " + (randFloat() * (float)" +
+                   bytesToInt(cmd, 4, 2) + ")";
             break;
           case 0x16:
             desc = "(Set float RNG from add) obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + " = (float)" +
-                   BytesToInt_(cmd, 2, 2) + " + randFloat() + (float)" +
-                   BytesToInt_(cmd, 4, 2);
+                   bytesToInt(cmd, 2, 2) + " + randFloat() + (float)" +
+                   bytesToInt(cmd, 4, 2);
             break;
           case 0x17:
             desc = "(Set RNG) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
                    " = (obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") + " + " +
-                   BytesToInt_(cmd, 2, 2) + ") + (randU16() >> " +
-                   BytesToInt_(cmd, 4, 2) + ")";
+                   bytesToInt(cmd, 2, 2) + ") + (randU16() >> " +
+                   bytesToInt(cmd, 4, 2) + ")";
             break;
           case 0x18:
           case 0x19:
@@ -200,12 +200,12 @@
             desc = "Do nothing";
             break;
           case 0x1B:
-            desc = "Set Model ID to 0x" + BytesToInt_(cmd, 2, 2).ToString("X4");
+            desc = "Set Model ID to 0x" + bytesToInt(cmd, 2, 2).ToString("X4");
             break;
           case 0x1C:
             desc = "Spawn child object (Model ID = 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
-                   BytesToInt_(cmd, 8, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
+                   bytesToInt(cmd, 8, 4).ToString("X8");
             break;
           case 0x1D:
             desc = "Deactivate object";
@@ -235,8 +235,8 @@
             break;
           case 0x23:
             desc = "Set Collision sphere size (XZ radius = " +
-                   BytesToInt_(cmd, 4, 2) + ", Y radius = " +
-                   BytesToInt_(cmd, 6, 2) + ")";
+                   bytesToInt(cmd, 4, 2) + ", Y radius = " +
+                   bytesToInt(cmd, 6, 2) + ")";
             break;
           case 0x24:
             desc = "Do nothing. (Unused function)";
@@ -251,7 +251,7 @@
             break;
           case 0x27:
             desc = "(Set word) obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") +
-                   " = 0x" + BytesToInt_(cmd, 4, 4).ToString("X8");
+                   " = 0x" + bytesToInt(cmd, 4, 4).ToString("X8");
             break;
           case 0x28:
             desc = "Set obj->_0x3C from (obj->_0x120 + 0x" +
@@ -259,25 +259,25 @@
             break;
           case 0x29:
             desc = "Spawn child object (Model ID = 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
-                   BytesToInt_(cmd, 8, 4).ToString("X8") + ", B.Param = 0x" +
-                   BytesToInt_(cmd, 2, 2).ToString("X4");
+                   bytesToInt(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
+                   bytesToInt(cmd, 8, 4).ToString("X8") + ", B.Param = 0x" +
+                   bytesToInt(cmd, 2, 2).ToString("X4");
             break;
           case 0x2A:
             desc = "Set collision address (obj->_0x218) from address 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X8");
             ;
             break;
           case 0x2B:
             desc = "Set Collision sphere size (XZ radius = " +
-                   BytesToInt_(cmd, 4, 2) + ", Y radius = " +
-                   BytesToInt_(cmd, 6, 2) + ", obj->_0x208 = " +
-                   BytesToInt_(cmd, 8, 2) + ")";
+                   bytesToInt(cmd, 4, 2) + ", Y radius = " +
+                   bytesToInt(cmd, 6, 2) + ", obj->_0x208 = " +
+                   bytesToInt(cmd, 8, 2) + ")";
             break;
           case 0x2C:
             desc = "(Spawn child object) obj->_0x6C = (Model ID = 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
-                   BytesToInt_(cmd, 8, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X4") + ", Behavior = 0x" +
+                   bytesToInt(cmd, 8, 4).ToString("X8");
             break;
           case 0x2D:
             desc =
@@ -285,44 +285,44 @@
             break;
           case 0x2E:
             desc = "obj->_0x200 = (float)" +
-                   BytesToInt_(cmd, 4, 2).ToString("X4") +
+                   bytesToInt(cmd, 4, 2).ToString("X4") +
                    ", obj->_0x204 = (float)" +
-                   BytesToInt_(cmd, 6, 2).ToString("X4");
+                   bytesToInt(cmd, 6, 2).ToString("X4");
             break;
           case 0x2F:
             desc = "(Set interaction value) obj->_0x130 = 0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X8");
             break;
           case 0x30:
             desc =
-                "(Set gravity) obj->_0x128 = " + BytesToInt_(cmd, 4, 2)
+                "(Set gravity) obj->_0x128 = " + bytesToInt(cmd, 4, 2)
                                                + "f, obj->_0xE8 = " +
-                                               (BytesToInt_(cmd, 6, 2) / 100.0f)
+                                               (bytesToInt(cmd, 6, 2) / 100.0f)
                                                + "f, obj->_0x158 = " +
-                                               (BytesToInt_(cmd, 8, 2) / 100.0f)
+                                               (bytesToInt(cmd, 8, 2) / 100.0f)
                                                + "f, obj->_0x12C = " +
-                                               (BytesToInt_(cmd, 10, 2) / 100.0f)
+                                               (bytesToInt(cmd, 10, 2) / 100.0f)
                                                + "f, obj->_0x170 = " +
-                                               (BytesToInt_(cmd, 12, 2) / 100.0f)
+                                               (bytesToInt(cmd, 12, 2) / 100.0f)
                                                + "f, obj->_0x174 = " +
-                                               (BytesToInt_(cmd, 14, 2) /
+                                               (bytesToInt(cmd, 14, 2) /
                                                 100.0f) + "f";
             break;
           case 0x31:
-            desc = "obj->_0x190 = 0x" + BytesToInt_(cmd, 4, 4).ToString("X8");
+            desc = "obj->_0x190 = 0x" + bytesToInt(cmd, 4, 4).ToString("X8");
             break;
           case 0x32:
-            desc = "Set uniform scaling to " + (BytesToInt_(cmd, 2, 2) / 100f) +
+            desc = "Set uniform scaling to " + (bytesToInt(cmd, 2, 2) / 100f) +
                    "%";
             break;
           case 0x33:
             desc = "(Clear flags in child) obj->_0x68->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + " &= ~0x" +
-                   BytesToInt_(cmd, 4, 4).ToString("X8");
+                   bytesToInt(cmd, 4, 4).ToString("X8");
             break;
           case 0x34:
             desc = "(Increment texture animate rate) if((*0x8032D5D4) / " +
-                   BytesToInt_(cmd, 2, 2) + " == 0) obj->_0x" +
+                   bytesToInt(cmd, 2, 2) + " == 0) obj->_0x" +
                    (cmd[1] * 4 + 0x88).ToString("X2") + "++";
             break;
           case 0x35:
@@ -330,16 +330,16 @@
             break;
           case 0x36:
             desc = "obj->_0x" + (cmd[1] * 4 + 0x88).ToString("X2") + " = " +
-                   ((short) BytesToInt_(cmd, 4, 4)).ToString("X4");
+                   ((short) bytesToInt(cmd, 4, 4)).ToString("X4");
             break;
         }
         if (!alreadyAdded)
-          AddBehCommandToDump_(ref dump, cmd, seg, off, desc);
+          addBehCommandToDump(ref dump, cmd, seg, off, desc);
         off += cmdLen;
       }
     }
 
-    private static void AddBehCommandToDump_(
+    private static void addBehCommandToDump(
         ref List<ScriptDumpCommandInfo> dump,
         byte[] cmd,
         byte seg,
@@ -350,11 +350,11 @@
       info.description = description;
       info.segAddress = (uint) (seg << 24) | offset;
       info.romAddress =
-          Rom.Instance.decodeSegmentAddress_safe(seg, offset, null);
+          ROM.Instance.decodeSegmentAddress_safe(seg, offset, null);
       dump.Add(info);
     }
 
-    private static byte GetCmdLength_(byte cmd) {
+    private static byte getCmdLength(byte cmd) {
       switch (cmd) {
         case 0x02:
         case 0x04:

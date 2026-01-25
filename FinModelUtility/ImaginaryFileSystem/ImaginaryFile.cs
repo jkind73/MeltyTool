@@ -34,13 +34,13 @@ public partial class ImaginaryFile : FileBase {
       imaginaryFileDataAccessor_.AddFile(path,
                                          imaginaryFileDataAccessor_.AdjustTimes(
                                              new ImaginaryFileData(bytes),
-                                             TimeAdjustments.ALL));
+                                             TimeAdjustments.All));
     } else {
       var file = imaginaryFileDataAccessor_.GetFile(path);
       file.CheckFileAccess(path, FileAccess.Write);
       imaginaryFileDataAccessor_.AdjustTimes(file,
-                                             TimeAdjustments.LAST_ACCESS_TIME |
-                                             TimeAdjustments.LAST_WRITE_TIME);
+                                             TimeAdjustments.LastAccessTime |
+                                             TimeAdjustments.LastWriteTime);
       file.Contents = file.Contents.Concat(bytes).ToArray();
     }
   }
@@ -54,7 +54,7 @@ public partial class ImaginaryFile : FileBase {
   /// <inheritdoc />
   public override void
       AppendAllLines(string path, IEnumerable<string> contents) {
-    AppendAllLines(path, contents, ImaginaryFileData.DEFAULT_ENCODING);
+    AppendAllLines(path, contents, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <inheritdoc />
@@ -75,7 +75,7 @@ public partial class ImaginaryFile : FileBase {
 
   /// <inheritdoc />
   public override void AppendAllText(string path, string contents) {
-    AppendAllText(path, contents, ImaginaryFileData.DEFAULT_ENCODING);
+    AppendAllText(path, contents, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <inheritdoc />
@@ -99,13 +99,13 @@ public partial class ImaginaryFile : FileBase {
                                                       new ImaginaryFileData(
                                                           contents,
                                                           encoding),
-                                                      TimeAdjustments.ALL));
+                                                      TimeAdjustments.All));
     } else {
       var file = this.imaginaryFileDataAccessor_.GetFile(path);
       file.CheckFileAccess(path, FileAccess.Write);
       this.imaginaryFileDataAccessor_.AdjustTimes(
           file,
-          TimeAdjustments.LAST_ACCESS_TIME | TimeAdjustments.LAST_WRITE_TIME);
+          TimeAdjustments.LastAccessTime | TimeAdjustments.LastWriteTime);
       var bytesToAppend = encoding.GetBytes(contents);
       file.Contents = file.Contents.Concat(bytesToAppend).ToArray();
     }
@@ -197,7 +197,7 @@ public partial class ImaginaryFile : FileBase {
     var destFileData = new ImaginaryFileData(sourceFileData);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         destFileData,
-        TimeAdjustments.CREATION_TIME | TimeAdjustments.LAST_ACCESS_TIME);
+        TimeAdjustments.CreationTime | TimeAdjustments.LastAccessTime);
     this.imaginaryFileDataAccessor_.AddFile(destFileName, destFileData);
   }
 
@@ -213,9 +213,9 @@ public partial class ImaginaryFile : FileBase {
   public override FileSystemStream Create(string path,
                                           int bufferSize,
                                           FileOptions options) =>
-      this.CreateInternal_(path, FileAccess.ReadWrite, options);
+      CreateInternal(path, FileAccess.ReadWrite, options);
 
-  private FileSystemStream CreateInternal_(string path,
+  private FileSystemStream CreateInternal(string path,
                                           FileAccess access,
                                           FileOptions options) {
     if (path == null) {
@@ -231,9 +231,9 @@ public partial class ImaginaryFile : FileBase {
     var mockFileData = new ImaginaryFileData(new byte[0]);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         mockFileData,
-        TimeAdjustments.ALL);
+        TimeAdjustments.All);
     this.imaginaryFileDataAccessor_.AddFile(path, mockFileData);
-    return this.OpenInternal_(path, FileMode.Open, access, options);
+    return OpenInternal(path, FileMode.Open, access, options);
   }
 
 #if FEATURE_CREATE_SYMBOLIC_LINK
@@ -272,8 +272,8 @@ public partial class ImaginaryFile : FileBase {
     sourceFileData.CheckFileAccess(pathToTarget, FileAccess.Read);
     var destFileData = new ImaginaryFileData(new byte[0]);
     imaginaryFileDataAccessor_.AdjustTimes(destFileData,
-                                           TimeAdjustments.CREATION_TIME |
-                                           TimeAdjustments.LAST_ACCESS_TIME);
+                                           TimeAdjustments.CreationTime |
+                                           TimeAdjustments.LastAccessTime);
     destFileData.LinkTarget = pathToTarget;
     imaginaryFileDataAccessor_.AddFile(path, destFileData);
 
@@ -413,10 +413,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.CreationTime.LocalDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .LocalDateTime);
+    return GetTimeFromFile(path,
+                           data => data.CreationTime.LocalDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .LocalDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -433,10 +433,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.CreationTime.UtcDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .UtcDateTime);
+    return GetTimeFromFile(path,
+                           data => data.CreationTime.UtcDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .UtcDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -453,10 +453,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.LastAccessTime.LocalDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .LocalDateTime);
+    return GetTimeFromFile(path,
+                           data => data.LastAccessTime.LocalDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .LocalDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -473,10 +473,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.LastAccessTime.UtcDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .UtcDateTime);
+    return GetTimeFromFile(path,
+                           data => data.LastAccessTime.UtcDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .UtcDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -493,10 +493,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.LastWriteTime.LocalDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .LocalDateTime);
+    return GetTimeFromFile(path,
+                           data => data.LastWriteTime.LocalDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .LocalDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -513,10 +513,10 @@ public partial class ImaginaryFile : FileBase {
             path,
             "path");
 
-    return this.GetTimeFromFile_(path,
-                                 data => data.LastWriteTime.UtcDateTime,
-                                 () => ImaginaryFileData.DEFAULT_DATE_TIME_OFFSET
-                                     .UtcDateTime);
+    return GetTimeFromFile(path,
+                           data => data.LastWriteTime.UtcDateTime,
+                           () => ImaginaryFileData.DefaultDateTimeOffset
+                                                  .UtcDateTime);
   }
 
 #if FEATURE_FILE_ATTRIBUTES_VIA_HANDLE
@@ -549,7 +549,7 @@ public partial class ImaginaryFile : FileBase {
   }
 #endif
 
-  private DateTime GetTimeFromFile_(string path,
+  private DateTime GetTimeFromFile(string path,
                                    Func<ImaginaryFileData, DateTime>
                                        existingFileFunction,
                                    Func<DateTime> nonExistingFileFunction) {
@@ -605,7 +605,7 @@ public partial class ImaginaryFile : FileBase {
               destFileName,
               this.imaginaryFileDataAccessor_.AdjustTimes(
                   new ImaginaryFileData(sourceFile),
-                  TimeAdjustments.LAST_ACCESS_TIME),
+                  TimeAdjustments.LastAccessTime),
               false);
         }
 
@@ -623,7 +623,7 @@ public partial class ImaginaryFile : FileBase {
                                                     new ImaginaryFileData(
                                                         sourceFile),
                                                     TimeAdjustments
-                                                        .LAST_ACCESS_TIME),
+                                                        .LastAccessTime),
                                             false);
   }
 
@@ -673,7 +673,7 @@ public partial class ImaginaryFile : FileBase {
     imaginaryFileDataAccessor_.AddFile(destFileName,
                                        imaginaryFileDataAccessor_.AdjustTimes(
                                            new ImaginaryFileData(sourceFile),
-                                           TimeAdjustments.LAST_ACCESS_TIME));
+                                           TimeAdjustments.LastAccessTime));
   }
 #endif
 
@@ -709,17 +709,17 @@ public partial class ImaginaryFile : FileBase {
                                         FileMode mode,
                                         FileAccess access,
                                         FileShare share) =>
-      this.OpenInternal_(path, mode, access, FileOptions.None);
+      OpenInternal(path, mode, access, FileOptions.None);
 
 #if FEATURE_FILESTREAM_OPTIONS
   /// <inheritdoc />
   public override FileSystemStream
       Open(string path, FileStreamOptions options) {
-    return this.OpenInternal_(path, options.Mode, options.Access, options.Options);
+    return OpenInternal(path, options.Mode, options.Access, options.Options);
   }
 #endif
 
-  private FileSystemStream OpenInternal_(
+  private FileSystemStream OpenInternal(
       string path,
       FileMode mode,
       FileAccess access,
@@ -740,19 +740,19 @@ public partial class ImaginaryFile : FileBase {
     }
 
     if (!exists || mode == FileMode.CreateNew) {
-      return this.CreateInternal_(path, access, options);
+      return CreateInternal(path, access, options);
     }
 
     if (mode == FileMode.Create || mode == FileMode.Truncate) {
       Delete(path);
-      return this.CreateInternal_(path, access, options);
+      return CreateInternal(path, access, options);
     }
 
     var mockFileData = this.imaginaryFileDataAccessor_.GetFile(path);
     mockFileData.CheckFileAccess(path, access);
-    var timeAdjustments = TimeAdjustments.LAST_ACCESS_TIME;
+    var timeAdjustments = TimeAdjustments.LastAccessTime;
     if (access.HasFlag(FileAccess.Write)) {
-      timeAdjustments |= TimeAdjustments.LAST_WRITE_TIME;
+      timeAdjustments |= TimeAdjustments.LastWriteTime;
     }
 
     this.imaginaryFileDataAccessor_.AdjustTimes(mockFileData, timeAdjustments);
@@ -786,14 +786,14 @@ public partial class ImaginaryFile : FileBase {
 
   /// <inheritdoc />
   public override FileSystemStream OpenWrite(string path)
-    => this.OpenWriteInternal_(path, FileOptions.None);
+    => OpenWriteInternal(path, FileOptions.None);
 
-  private FileSystemStream OpenWriteInternal_(string path, FileOptions options) {
+  private FileSystemStream OpenWriteInternal(string path, FileOptions options) {
     this.imaginaryFileDataAccessor_.ImaginaryPathVerifier
         .IsLegalAbsoluteOrRelative(
             path,
             "path");
-    return this.OpenInternal_(path, FileMode.OpenOrCreate, FileAccess.Write, options);
+    return OpenInternal(path, FileMode.OpenOrCreate, FileAccess.Write, options);
   }
 
   /// <inheritdoc />
@@ -812,7 +812,7 @@ public partial class ImaginaryFile : FileBase {
     var fileData = this.imaginaryFileDataAccessor_.GetFile(path);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         fileData,
-        TimeAdjustments.LAST_ACCESS_TIME);
+        TimeAdjustments.LastAccessTime);
     return fileData.Contents.ToArray();
   }
 
@@ -831,7 +831,7 @@ public partial class ImaginaryFile : FileBase {
     fileData.CheckFileAccess(path, FileAccess.Read);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         fileData,
-        TimeAdjustments.LAST_ACCESS_TIME);
+        TimeAdjustments.LastAccessTime);
 
     return fileData
            .TextContents
@@ -857,7 +857,7 @@ public partial class ImaginaryFile : FileBase {
     fileData.CheckFileAccess(path, FileAccess.Read);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         fileData,
-        TimeAdjustments.LAST_ACCESS_TIME);
+        TimeAdjustments.LastAccessTime);
 
     using (var ms = new MemoryStream(fileData.Contents))
     using (var sr = new StreamReader(ms, encoding)) {
@@ -867,7 +867,7 @@ public partial class ImaginaryFile : FileBase {
 
   /// <inheritdoc />
   public override string ReadAllText(string path) {
-    return ReadAllText(path, ImaginaryFileData.DEFAULT_ENCODING);
+    return ReadAllText(path, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <inheritdoc />
@@ -1018,7 +1018,7 @@ public partial class ImaginaryFile : FileBase {
     } else {
       this.imaginaryFileDataAccessor_.AdjustTimes(
           possibleFileData,
-          TimeAdjustments.LAST_ACCESS_TIME);
+          TimeAdjustments.LastAccessTime);
       possibleFileData.Attributes = fileAttributes;
     }
   }
@@ -1215,7 +1215,7 @@ public partial class ImaginaryFile : FileBase {
                                                 .AdjustTimes(
                                                     new ImaginaryFileData(
                                                         bytes.ToArray()),
-                                                    TimeAdjustments.ALL));
+                                                    TimeAdjustments.All));
   }
 
 #if FEATURE_FILE_SPAN
@@ -1266,7 +1266,7 @@ public partial class ImaginaryFile : FileBase {
             "path");
     VerifyValueIsNotNull_(contents, "contents");
 
-    WriteAllLines(path, contents, ImaginaryFileData.DEFAULT_ENCODING);
+    WriteAllLines(path, contents, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <summary>
@@ -1373,7 +1373,7 @@ public partial class ImaginaryFile : FileBase {
             "path");
     VerifyValueIsNotNull_(contents, "contents");
 
-    WriteAllLines(path, contents, ImaginaryFileData.DEFAULT_ENCODING);
+    WriteAllLines(path, contents, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <summary>
@@ -1457,7 +1457,7 @@ public partial class ImaginaryFile : FileBase {
   /// </para>
   /// </remarks>
   public override void WriteAllText(string path, string contents) {
-    WriteAllText(path, contents, ImaginaryFileData.DEFAULT_ENCODING);
+    WriteAllText(path, contents, ImaginaryFileData.DefaultEncoding);
   }
 
   /// <summary>
@@ -1512,7 +1512,7 @@ public partial class ImaginaryFile : FileBase {
                                             this.imaginaryFileDataAccessor_
                                                 .AdjustTimes(
                                                     data,
-                                                    TimeAdjustments.ALL));
+                                                    TimeAdjustments.All));
   }
 
 #if FEATURE_FILE_SPAN
@@ -1541,7 +1541,7 @@ public partial class ImaginaryFile : FileBase {
     mockFileData.CheckFileAccess(path, FileAccess.Read);
     this.imaginaryFileDataAccessor_.AdjustTimes(
         mockFileData,
-        TimeAdjustments.LAST_ACCESS_TIME);
+        TimeAdjustments.LastAccessTime);
     return ReadAllBytes(mockFileData.Contents, encoding);
   }
 

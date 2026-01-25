@@ -13,14 +13,14 @@ namespace KSoft
 {
 	public static class Kontracts
 	{
-		public const string K_CATEGORY = "Microsoft.Contracts";
+		public const string kCategory = "Microsoft.Contracts";
 
 		// Based on ContractsManual.pdf: 5.2.3, Delegating Checks to Other Methods
 		//Usage: [System.Diagnostics.CodeAnalysis.SuppressMessage(Kontracts.kCategory, Kontracts.kIgnoreOverrideId, Justification=Kontracts.kIgnoreOverrideJust)]
 		/// <summary>SuppressMessage warning id</summary>
-		public const string K_IGNORE_OVERRIDE_ID = "CC1055";
+		public const string kIgnoreOverrideId = "CC1055";
 		/// <summary>SuppressMessage justification</summary>
-		public const string K_IGNORE_OVERRIDE_JUST = "Validation performed in base method";
+		public const string kIgnoreOverrideJust = "Validation performed in base method";
 	};
 
 	[SuppressMessage("Microsoft.Design", "CA1724:TypeNamesShouldNotMatchNamespaces")]
@@ -30,7 +30,7 @@ namespace KSoft
 		// MSDN example uses "nq" suffix, yet doesn't explain it. I knew SOMEONE had to have commented on this. If you check
 		// the VS2010-era DebuggerDisplay docs you'll find a Community Addition reply with WTF "nq" is for (and the above link)
 		/// <summary>DebuggerDisplay value to use to display the object's {DebuggerDisplay} value without any quotes</summary>
-		public const string DEBUGGER_DISPLAY_PROP_NAME_SANS_QUOTES = "{DebuggerDisplay,nq}";
+		public const string DebuggerDisplayPropNameSansQuotes = "{DebuggerDisplay,nq}";
 
 		/// <summary>When you want to declare a variable, perhaps for debugging, but only ever assign it, use this to silence compiler warnings</summary>
 		/// <typeparam name="T"></typeparam>
@@ -49,32 +49,32 @@ namespace KSoft
 		#endregion
 
 		#region static GetNullException function ptr
-		private static Func<Exception> gGetNullException_;
+		private static Func<Exception> gGetNullException;
 		internal static Func<Exception> GetNullException { get {
-			if (gGetNullException_ == null)
-				gGetNullException_ = () => null;
+			if (gGetNullException == null)
+				gGetNullException = () => null;
 
-			return gGetNullException_;
+			return gGetNullException;
 		} }
 		#endregion
 
 		#region static pre-boxed boolean values
-		private static object gFalseObject_;
+		private static object gFalseObject;
 		/// <summary>false boolean pre-boxed to an object</summary>
 		public static object FalseObject { get {
-			if (gFalseObject_ == null)
-				gFalseObject_ = (object)false;
+			if (gFalseObject == null)
+				gFalseObject = (object)false;
 
-			return gFalseObject_;
+			return gFalseObject;
 		} }
 
-		private static object gTrueObject_;
+		private static object gTrueObject;
 		/// <summary>true boolean pre-boxed to an object</summary>
 		public static object TrueObject { get {
-			if (gTrueObject_ == null)
-				gTrueObject_ = (object)true;
+			if (gTrueObject == null)
+				gTrueObject = (object)true;
 
-			return gTrueObject_;
+			return gTrueObject;
 		} }
 		#endregion
 
@@ -115,17 +115,17 @@ namespace KSoft
 		}
 
 		#region Unix Time
-		private static long kUnixTimeEpochInTicks_;
-		private static DateTime kUnixTimeEpoch_;
+		private static long kUnixTimeEpochInTicks;
+		private static DateTime kUnixTimeEpoch;
 		/// <summary>The UTC of the <b>time_t</b> C++ construct</summary>
 		public static DateTime UnixTimeEpoch { get {
-			if (kUnixTimeEpochInTicks_ == 0)
+			if (kUnixTimeEpochInTicks == 0)
 			{
-				kUnixTimeEpoch_ = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-				kUnixTimeEpochInTicks_ = kUnixTimeEpoch_.Ticks;
+				kUnixTimeEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+				kUnixTimeEpochInTicks = kUnixTimeEpoch.Ticks;
 			}
 
-			return kUnixTimeEpoch_;
+			return kUnixTimeEpoch;
 		} }
 
 		/// <summary>Convert a <b>time_t</b> or <b>time64_t</b> value to a <see cref="System.DateTime"/></summary>
@@ -134,11 +134,11 @@ namespace KSoft
 		[Contracts.Pure]
 		public static DateTime ConvertDateTimeFromUnixTime(
 			[SuppressMessage("Microsoft.Design", "CA1707:IdentifiersShouldNotContainUnderscores")]
-			long timeT)
+			long time_t)
 		{
-			Contract.Requires<ArgumentOutOfRangeException>(timeT >= 0);
+			Contract.Requires<ArgumentOutOfRangeException>(time_t >= 0);
 
-			return UnixTimeEpoch.AddSeconds(timeT);
+			return UnixTimeEpoch.AddSeconds(time_t);
 		}
 
 		/// <summary>Convert a <see cref="System.DateTime"/> to a <b>time64_t</b> value</summary>
@@ -149,12 +149,12 @@ namespace KSoft
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(value >= UnixTimeEpoch);
 
-			long timeT = 0;
+			long time_t = 0;
 
 			// Subtract unix's epoch then rebase back into seconds
-			timeT = (value.ToFileTimeUtc() - UnixTimeEpoch.ToFileTimeUtc()) / 10000000;
+			time_t = (value.ToFileTimeUtc() - UnixTimeEpoch.ToFileTimeUtc()) / 10000000;
 
-			return timeT;
+			return time_t;
 		}
 		#endregion
 
@@ -162,17 +162,17 @@ namespace KSoft
 		sealed class ComparerFactory<T>
 			: IComparer<T>
 		{
-			readonly Func<T, T, int> mComparer_;
+			readonly Func<T, T, int> mComparer;
 
 			ComparerFactory(Func<T, T, int> comparer)
 			{
-				this.mComparer_ = comparer;
+				this.mComparer = comparer;
 			}
 
 			#region IComparer<T> Members
 			public int Compare(T x, T y)
 			{
-				return this.mComparer_(x, y);
+				return this.mComparer(x, y);
 			}
 			#endregion
 
@@ -466,9 +466,9 @@ namespace KSoft
 
 			if (nameofArray.IsNullOrEmpty())
 			{
-				foreach (string nameofSubstring in nameofArray)
+				foreach (string nameof_substring in nameofArray)
 				{
-					fullnameof += "." + nameofSubstring;
+					fullnameof += "." + nameof_substring;
 				}
 			}
 
@@ -522,7 +522,7 @@ namespace KSoft
 
 		public static bool ParseStringList(string line, List<string> list
 			, bool sort = false
-			, string valueSeperator = TypeExtensions.K_DEFAULT_ARRAY_VALUE_SEPERATOR)
+			, string valueSeperator = TypeExtensions.kDefaultArrayValueSeperator)
 		{
 			if (line == null)
 			{

@@ -11,7 +11,7 @@ namespace fin.model.skeleton;
 ///   Well, this is simple for downstream users at least.
 /// </summary>
 public sealed class SimpleBoneTransformView : IBoneTransformView {
-  private const bool USE_FASTER_TRANSFORM_VIEW_ = false;
+  private const bool USE_FASTER_TRANSFORM_VIEW = false;
 
   private readonly IBoneTransformView[] impls_;
 

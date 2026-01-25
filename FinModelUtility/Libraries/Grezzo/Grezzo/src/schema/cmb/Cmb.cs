@@ -22,7 +22,7 @@ namespace grezzo.schema.cmb;
 public sealed class Cmb : IBinaryDeserializable {
   public readonly CmbHeader header = new();
 
-  private const int TWEAK_AUTO_SIZE_ = -8;
+  private const int TWEAK_AUTO_SIZE = -8;
 
   public readonly AutoStringMagicUInt32SizedSection<Skl> skl
       = new("skl" + AsciiUtil.GetChar(0x20));
@@ -33,9 +33,9 @@ public sealed class Cmb : IBinaryDeserializable {
   /// <summary>
   ///   For some reason, the size for this section is wrong? We have to just ignore it.
   /// </summary>
-  public AutoStringMagicJankSizedSection<Mats> Mats { get; set; } =
+  public AutoStringMagicJankSizedSection<Mats> mats { get; set; } =
     new("mats") {
-        TweakReadSize = TWEAK_AUTO_SIZE_,
+        TweakReadSize = TWEAK_AUTO_SIZE,
     };
 
   public readonly AutoStringMagicUInt32SizedSection<Tex> tex
@@ -55,56 +55,56 @@ public sealed class Cmb : IBinaryDeserializable {
       br.PushLocalSpace();
       this.header.Read(br);
 
-      br.Position = this.header.SklOffset;
+      br.Position = this.header.sklOffset;
       this.skl.Read(br);
 
       if (CmbHeader.Version > Version.OCARINA_OF_TIME_3D) {
-        br.Position = this.header.QtrsOffset;
+        br.Position = this.header.qtrsOffset;
         this.qtrs.Read(br);
       }
 
-      br.Position = this.header.MatsOffset;
-      this.Mats.Read(br);
+      br.Position = this.header.matsOffset;
+      this.mats.Read(br);
 
-      br.Position = this.header.TexOffset;
+      br.Position = this.header.texOffset;
       this.tex.Read(br);
 
       // TODO: Read this more accurately
       this.TextureImages
-          = this.header.TextureDataOffset == 0
+          = this.header.textureDataOffset == 0
               ? null
-              : this.tex.Data.Textures
+              : this.tex.Data.textures
                     .Select(t => br.SubreadAt(
-                                this.header.TextureDataOffset + t.DataOffset,
+                                this.header.textureDataOffset + t.DataOffset,
                                 () => t.GetImageReader().ReadImage(br)))
                     .ToArray();
 
-      br.Position = this.header.SklmOffset;
+      br.Position = this.header.sklmOffset;
       this.sklm.Read(br);
 
-      br.Position = this.header.LutsOffset;
+      br.Position = this.header.lutsOffset;
       this.luts.Read(br);
 
-      br.Position = this.header.VatrOffset;
+      br.Position = this.header.vatrOffset;
       this.vatr.Read(br);
 
       // Add face indices to primitive sets
       var sklm = this.sklm.Data;
-      foreach (var shape in sklm.shapes.Shapes) {
-        foreach (var pset in shape.PrimitiveSets) {
+      foreach (var shape in sklm.shapes.shapes) {
+        foreach (var pset in shape.primitiveSets) {
           var primitive = pset.primitive;
           // # Always * 2 even if ubyte is used...
-          br.Position = this.header.FaceIndicesOffset +
-                        2 * primitive.Offset;
+          br.Position = this.header.faceIndicesOffset +
+                        2 * primitive.offset;
 
           primitive.indices = new uint[primitive.indicesCount];
           for (var i = 0; i < primitive.indicesCount; ++i) {
             switch (primitive.dataType) {
-              case DataType.U_BYTE: {
+              case DataType.UByte: {
                 primitive.indices[i] = br.ReadByte();
                 break;
               }
-              case DataType.U_SHORT: {
+              case DataType.UShort: {
                 primitive.indices[i] = br.ReadUInt16();
                 break;
               }

@@ -8,7 +8,7 @@ namespace sm64.memory {
     public required Segment Segment15 { get; init; }
 
 
-    public static MemoryConstants NaConstants { get; } = new() {
+    public static MemoryConstants NA_CONSTANTS { get; } = new() {
         MacroPresetTable = 0xEC7E0,
         SpecialPresetTable = 0xED350,
         Segment2 =

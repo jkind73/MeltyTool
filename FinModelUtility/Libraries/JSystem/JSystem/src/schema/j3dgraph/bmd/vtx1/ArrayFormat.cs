@@ -10,14 +10,14 @@ namespace jsystem.schema.j3dgraph.bmd.vtx1;
 
 [BinarySchema]
 public sealed partial class ArrayFormat : IBinaryConvertible {
-  public GxVertexAttribute arrayType;
+  public GxVertexAttribute ArrayType;
   public GxComponentCountType ComponentCountType { get; set; }
-  public GxComponentType dataType;
-  public byte decimalPoint;
+  public GxComponentType DataType;
+  public byte DecimalPoint;
 
   [Unknown]
-  public byte unknown1;
+  public byte Unknown1;
 
   [Unknown]
-  public ushort unknown2;
+  public ushort Unknown2;
 }

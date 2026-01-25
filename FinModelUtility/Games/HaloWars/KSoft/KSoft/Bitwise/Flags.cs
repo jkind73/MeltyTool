@@ -20,12 +20,12 @@ namespace KSoft.Bitwise
 	/// </remarks>
 	public sealed class Flags32
 	{
-		uint mValue_;
+		uint mValue;
 
 		/// <summary>Reset the internal value with another</summary>
 		/// <param name="value"></param>
 		public void Reset(uint value)				{
-			this.mValue_ = value; }
+			this.mValue = value; }
 		/// <summary>Reset the internal value with an array of bits</summary>
 		/// <param name="values">Array of bit values</param>
 		public void Reset(params uint[] values)
@@ -39,7 +39,7 @@ namespace KSoft.Bitwise
 		/// <summary>Implicitly cast an <see cref="Flags32"/> to its unsigned integer representation</summary>
 		public uint ToUInt32()
 		{
-			return this.mValue_;
+			return this.mValue;
 		}
 		/// <summary>Implicitly cast an <see cref="Flags32"/> to its unsigned integer representation</summary>
 		/// <param name="value"></param>
@@ -67,13 +67,13 @@ namespace KSoft.Bitwise
 		/// <param name="flag">flag to test</param>
 		/// <returns>True if <paramref name="flag"/> is set</returns>
 		[Contracts.Pure]
-		public bool Test(uint flag)					{ return (this.mValue_ & flag) == flag; }
+		public bool Test(uint flag)					{ return (this.mValue & flag) == flag; }
 
 		#region Add
 		/// <summary>Adds <paramref name="flags"/> from this.Value</summary>
 		/// <param name="flags">flags to add</param>
 		public void Add(uint flags)					{
-			this.mValue_ |= flags; }
+			this.mValue |= flags; }
 
 		/// <summary>Adds <paramref name="flags"/> when <paramref name="cond"/> is true</summary>
 		/// <param name="cond">condition to use to determine when to set flags</param>
@@ -92,7 +92,7 @@ namespace KSoft.Bitwise
 		/// <summary>Removes <paramref name="flags"/> from this.Value</summary>
 		/// <param name="flags">flags to remove</param>
 		public void Remove(uint flags)				{
-			this.mValue_ &= ~flags; }
+			this.mValue &= ~flags; }
 
 		/// <summary>Removes <paramref name="flags"/> when <paramref name="cond"/> is true</summary>
 		/// <param name="cond">condition to use to determine when to remove flags</param>
@@ -112,16 +112,16 @@ namespace KSoft.Bitwise
 		/// <summary>Tests whether or not <paramref name="obj"/> is equal to this</summary>
 		/// <param name="obj">The other object</param>
 		/// <returns>Returns true if <paramref name="obj"/> is a <see cref="Flags32"/> object and if it's value is the same as this</returns>
-		public override bool Equals(object obj)	{ return obj is Flags32 && ((Flags32)obj).mValue_ == this.mValue_; }
+		public override bool Equals(object obj)	{ return obj is Flags32 && ((Flags32)obj).mValue == this.mValue; }
 		/// <summary><see cref="uint.GetHashCode()"/></summary>
 		/// <returns></returns>
 		/// <remarks>Beware: this uses the underlying flags value's hash code</remarks>
-		public override int GetHashCode()		{ return this.mValue_.GetHashCode(); }
+		public override int GetHashCode()		{ return this.mValue.GetHashCode(); }
 		/// <summary><see cref="uint.ToString()"/></summary>
 		/// <returns>Returns a 8 character hexadecimal value in a string</returns>
 		public override string ToString()
 		{
-			return this.mValue_.ToString("X8", Util.InvariantCultureInfo);
+			return this.mValue.ToString("X8", Util.InvariantCultureInfo);
 		}
 		#endregion
 	};

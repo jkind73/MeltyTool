@@ -5,42 +5,42 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "CaptureCost",
+			ElementName = "CaptureCost",
 		};
 		#endregion
 
 		#region CivID
-		int mCivId_ = TypeExtensions.K_NONE;
+		int mCivID = TypeExtensions.kNone;
 		[Meta.BCivReference]
-		public int CivId
+		public int CivID
 		{
-			get { return this.mCivId_; }
-			set { this.mCivId_ = value; }
+			get { return this.mCivID; }
+			set { this.mCivID = value; }
 		}
 		#endregion
 
 		#region ResourceType
-		int mResourceType_ = TypeExtensions.K_NONE;
+		int mResourceType = TypeExtensions.kNone;
 		[Meta.ResourceReference]
 		public int ResourceType
 		{
-			get { return this.mResourceType_; }
-			set { this.mResourceType_ = value; }
+			get { return this.mResourceType; }
+			set { this.mResourceType = value; }
 		}
 		#endregion
 
 		#region Cost
-		float mCost_;
+		float mCost;
 		public float Cost
 		{
-			get { return this.mCost_; }
-			set { this.mCost_ = value; }
+			get { return this.mCost; }
+			set { this.mCost = value; }
 		}
 		#endregion
 
-		public bool AppliesToAllCivs { get { return this.CivId.IsNone(); } }
+		public bool AppliesToAllCivs { get { return this.CivID.IsNone(); } }
 		/// <summary>Does the engine not ignore the XML data of this bit?</summary>
 		public bool IsNotIgnored { get {
 			return this.ResourceType >= 0
@@ -55,14 +55,14 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDbid(s, "Civ", ref this.mCivId_, DatabaseObjectKind.CIV, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			xs.StreamDBID(s, "Civ", ref this.mCivID, DatabaseObjectKind.Civ, xmlSource: XML.XmlUtil.kSourceAttr);
 
-			if (!xs.StreamTypeName(s, BResource.KBListTypeValuesXmlParamsCost.dataName, ref this.mResourceType_, GameDataObjectKind.COST, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_ATTR))
+			if (!xs.StreamTypeName(s, BResource.kBListTypeValuesXmlParams_Cost.DataName, ref this.mResourceType, GameDataObjectKind.Cost, isOptional: false, xmlSource: XML.XmlUtil.kSourceAttr))
 				s.ThrowReadException(new System.IO.InvalidDataException(string.Format(
 					"ProtoObject's {0} XML doesn't define a {1}",
-					KBListXmlParams.elementName, BResource.KBListTypeValuesXmlParamsCost.dataName)));
+					kBListXmlParams.ElementName, BResource.kBListTypeValuesXmlParams_Cost.DataName)));
 
-			s.StreamCursor(ref this.mCost_);
+			s.StreamCursor(ref this.mCost);
 		}
 		#endregion
 	};

@@ -10,7 +10,7 @@ public enum TextureType {
   PALETTE_4 = 2,
   PALETTE_16 = 3,
   PALETTE_256 = 4,
-  TEX_4_X4 = 5,
+  TEX_4X4 = 5,
   A5_I3 = 6,
   DIRECT = 7
 }
@@ -43,9 +43,9 @@ public sealed partial class Texture : IBinaryConvertible {
   public bool UseTransparentColor0 => this.Parameters.GetBit(29);
 
   [Skip]
-  private uint TrueDataLength {
+  private uint TrueDataLength_ {
     get {
-      if (this.TextureType == TextureType.TEX_4_X4) {
+      if (this.TextureType == TextureType.TEX_4X4) {
         var blockCount = this.rawDataLength_ / 4;
         return blockCount * 4 + blockCount * 2;
       }
@@ -55,6 +55,6 @@ public sealed partial class Texture : IBinaryConvertible {
   }
 
   [RAtPosition(nameof(dataOffset_))]
-  [RSequenceLengthSource(nameof(TrueDataLength))]
+  [RSequenceLengthSource(nameof(TrueDataLength_))]
   public byte[] Data { get; set; }
 }

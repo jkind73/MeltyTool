@@ -11,7 +11,7 @@ public class ImaginaryDirectoryData : ImaginaryFileData {
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
-  private DirectorySecurity accessControl_;
+  private DirectorySecurity accessControl;
 
   /// <inheritdoc />
   public ImaginaryDirectoryData() : base(string.Empty) {
@@ -24,8 +24,8 @@ public class ImaginaryDirectoryData : ImaginaryFileData {
     get {
       // DirectorySecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
       // This let's us use this class as long as we don't use AccessControl property.
-      return this.accessControl_ ?? (this.accessControl_ = new DirectorySecurity());
+      return accessControl ?? (accessControl = new DirectorySecurity());
     }
-    set { this.accessControl_ = value; }
+    set { accessControl = value; }
   }
 }

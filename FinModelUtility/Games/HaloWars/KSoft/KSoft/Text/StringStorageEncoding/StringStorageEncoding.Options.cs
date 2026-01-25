@@ -1,5 +1,4 @@
 ﻿using System;
-using KSoft.Memory.Strings;
 
 namespace KSoft.Text
 {
@@ -16,22 +15,22 @@ namespace KSoft.Text
 			/// <summary>Encoding uses a byte order marker</summary>
 			/// <seealso cref="System.Text.Encoding.GetPreamble()"/>
 			/// <remarks>This may conflict with strings which store prefix data (eg, <see cref="Memory.Strings.StringStorageWidthType.Pascal"/>)</remarks>
-			USE_BYTE_ORDER_MARK = 1 << 0,
+			UseByteOrderMark = 1 << 0,
 			/// <summary>Throw an exception when invalid bytes are handled</summary>
 			/// <remarks>
-			/// Ignored in <see cref="StringStorageWidthType.ASCII"/> cases.
+			/// Ignored in <see cref="Memory.Strings.StringStorageWidthType.Ascii"/> cases.
 			///
 			/// For <see cref="Memory.Strings.StringStorageWidthType.UTF7"/> this disables optional characters.
 			/// </remarks>
-			THROW_ON_INVALID_BYTES = 1 << 1,
+			ThrowOnInvalidBytes = 1 << 1,
 			/// <summary>
 			/// By default, we always flush the encoding's encoder\decoder. Use this to listen
 			/// to the "flush" parameter instead
 			/// </summary>
-			DONT_ALWAYS_FLUSH = 1 << 2,
+			DontAlwaysFlush = 1 << 2,
 
 			/// <summary>All options are enabled</summary>
-			K_ALL = USE_BYTE_ORDER_MARK | THROW_ON_INVALID_BYTES | DONT_ALWAYS_FLUSH
+			kAll = UseByteOrderMark | ThrowOnInvalidBytes | DontAlwaysFlush
 		};
 	};
 }

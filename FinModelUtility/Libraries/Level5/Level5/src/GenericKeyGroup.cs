@@ -1,10 +1,10 @@
 ﻿namespace level5;
 
 public enum InterpolationType {
-  CONSTANT,
-  LINEAR,
-  HERMITE,
-  STEP
+  Constant,
+  Linear,
+  Hermite,
+  Step
 }
 
 public readonly struct GenericAnimKey<T> {
@@ -27,12 +27,12 @@ public sealed class GenericKeyGroup<T> {
 
   private LinkedList<GenericAnimKey<T>> keys_ = [];
 
-  public void AddKey(float frame, T value, InterpolationType type = InterpolationType.LINEAR, float tanIn = 0, float tanOut = float.MaxValue) {
+  public void AddKey(float frame, T value, InterpolationType type = InterpolationType.Linear, float TanIn = 0, float tanOut = float.MaxValue) {
       GenericAnimKey<T> key = new() {
           Frame = frame,
           Value = value,
-          InTan = tanIn,
-          OutTan = tanOut == float.MaxValue ? tanIn : tanOut,
+          InTan = TanIn,
+          OutTan = tanOut == float.MaxValue ? TanIn : tanOut,
           InterpolationType = type,
       };
       this.keys_.AddLast(key);

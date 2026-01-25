@@ -10,81 +10,81 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseNamedObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Leader")
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Leader")
 		{
-			dataName = "Name",
-			flags = 0
+			DataName = "Name",
+			Flags = 0
 		};
-		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.DATA,
+			Directory = Engine.GameDirectory.Data,
 			FileName = "Leaders.xml",
-			RootName = KBListXmlParams.rootName
+			RootName = kBListXmlParams.RootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.PROTO_DATA,
-			KXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.ProtoData,
+			kXmlFileInfo);
 
-		static readonly XML.BTypeValuesXmlParams<float> KRepairCostTypeValuesXmlParams = new
+		static readonly XML.BTypeValuesXmlParams<float> kRepairCostTypeValuesXmlParams = new
 			XML.BTypeValuesXmlParams<float>("RepairCost", "Type");
-		static readonly XML.BTypeValuesXmlParams<float> KReverseHotDropCostTypeValuesXmlParams = new
+		static readonly XML.BTypeValuesXmlParams<float> kReverseHotDropCostTypeValuesXmlParams = new
 			XML.BTypeValuesXmlParams<float>("ReverseHotDropCost", "Type");
 		#endregion
 
 		#region IconName
-		string mIconName_;
+		string mIconName;
 		[Meta.TextureReference]
 		public string IconName
 		{
-			get { return this.mIconName_; }
-			set { this.mIconName_ = value; }
+			get { return this.mIconName; }
+			set { this.mIconName = value; }
 		}
 		#endregion
 
 		#region Test
-		bool mTest_;
+		bool mTest;
 		public bool Test
 		{
-			get { return this.mTest_; }
-			set { this.mTest_ = value; }
+			get { return this.mTest; }
+			set { this.mTest = value; }
 		}
 		#endregion
 
 		#region IsExcludedFromAlpha
-		int mAlpha_ = TypeExtensions.K_NONE;
+		int mAlpha = TypeExtensions.kNone;
 		public bool IsExcludedFromAlpha
 		{
-			get { return this.mAlpha_ == 0; }
-			set { this.mAlpha_ = value ? 0 : TypeExtensions.K_NONE; }
+			get { return this.mAlpha == 0; }
+			set { this.mAlpha = value ? 0 : TypeExtensions.kNone; }
 		}
 		#endregion
 
 		#region LeaderPickerOrder
-		sbyte mLeaderPickerOrder_ = TypeExtensions.K_NONE;
+		sbyte mLeaderPickerOrder = TypeExtensions.kNone;
 		/// <summary>
 		/// Leaders with this attribute set to zero or greater (and without the test attribute set) will be sorted by this value and shown in the leader picker.
 		/// </summary>
 		public sbyte LeaderPickerOrder
 		{
-			get { return this.mLeaderPickerOrder_; }
-			set { this.mLeaderPickerOrder_ = value; }
+			get { return this.mLeaderPickerOrder; }
+			set { this.mLeaderPickerOrder = value; }
 		}
 		#endregion
 
 		#region StatsID
-		sbyte mStatsId_ = TypeExtensions.K_NONE;
+		sbyte mStatsID = TypeExtensions.kNone;
 		/// <summary>
 		/// This identifies leaders for stats/leaderboard purposes, which allows you to reorder the leaders in the XML file without messing up stats/leaderboards.
 		/// </summary>
-		public sbyte StatsId
+		public sbyte StatsID
 		{
-			get { return this.mStatsId_; }
-			set { this.mStatsId_ = value; }
+			get { return this.mStatsID; }
+			set { this.mStatsID = value; }
 		}
 		#endregion
 
 		#region DefaultPlayerSlotFlags
-		byte mDefaultPlayerSlotFlags_;
+		byte mDefaultPlayerSlotFlags;
 		/// <summary>
 		/// Bit flags defining how leaders are assigned to player slots.
 		/// Bits 0-5 indicate that the leader is the default leader for the associated slot when AI is assigned to that slot.
@@ -94,81 +94,81 @@ namespace KSoft.Phoenix.Phx
 		/// </summary>
 		public byte DefaultPlayerSlotFlags
 		{
-			get { return this.mDefaultPlayerSlotFlags_; }
-			set { this.mDefaultPlayerSlotFlags_ = value; }
+			get { return this.mDefaultPlayerSlotFlags; }
+			set { this.mDefaultPlayerSlotFlags = value; }
 		}
 		#endregion
 
 		#region IsRandom
-		bool mIsRandom_;
+		bool mIsRandom;
 		public bool IsRandom
 		{
-			get { return this.mIsRandom_; }
-			set { this.mIsRandom_ = value; }
+			get { return this.mIsRandom; }
+			set { this.mIsRandom = value; }
 		}
 		#endregion
 
 		#region TechID
-		int mTechId_ = TypeExtensions.K_NONE;
+		int mTechID = TypeExtensions.kNone;
 		[Meta.BProtoTechReference]
-		public int TechId
+		public int TechID
 		{
-			get { return this.mTechId_; }
-			set { this.mTechId_ = value; }
+			get { return this.mTechID; }
+			set { this.mTechID = value; }
 		}
 		#endregion
 
 		#region CivID
-		int mCivId_ = TypeExtensions.K_NONE;
+		int mCivID = TypeExtensions.kNone;
 		[Meta.BCivReference]
-		public int CivId
+		public int CivID
 		{
-			get { return this.mCivId_; }
-			set { this.mCivId_ = value; }
+			get { return this.mCivID; }
+			set { this.mCivID = value; }
 		}
 		#endregion
 
 		#region FlashCivID
-		sbyte mFlashCivId_ = TypeExtensions.K_NONE;
+		sbyte mFlashCivID = TypeExtensions.kNone;
 		/// <summary>
 		/// The civilization as specified in the Flash scene. 0 is UNSC, 1 is Covenant, and 2 is Random.
 		/// If you figure out how to modify the Flash scene to add other values to the leader picker, this may be useful to you.
 		/// </summary>
 		[Meta.BCivReference]
-		public sbyte FlashCivId
+		public sbyte FlashCivID
 		{
-			get { return this.mFlashCivId_; }
-			set { this.mFlashCivId_ = value; }
+			get { return this.mFlashCivID; }
+			set { this.mFlashCivID = value; }
 		}
 		#endregion
 
 		#region LeaderPowerID
-		int mPowerId_ = TypeExtensions.K_NONE;
+		int mPowerID = TypeExtensions.kNone;
 		[Meta.BProtoPowerReference]
-		public int PowerId
+		public int PowerID
 		{
-			get { return this.mPowerId_; }
-			set { this.mPowerId_ = value; }
+			get { return this.mPowerID; }
+			set { this.mPowerID = value; }
 		}
 		#endregion
 
 		#region FlashImg
-		string mFlashImg_;
+		string mFlashImg;
 		[Meta.UnusedData]
 		public string FlashImg
 		{
-			get { return this.mFlashImg_; }
-			set { this.mFlashImg_ = value; }
+			get { return this.mFlashImg; }
+			set { this.mFlashImg = value; }
 		}
 		#endregion
 
 		#region FlashPortrait
-		string mFlashPortrait_; // img://unknown.ddx
+		string mFlashPortrait; // img://unknown.ddx
 		[Meta.TextureReference]
 		public string FlashPortrait
 		{
-			get { return this.mFlashPortrait_; }
-			set { this.mFlashPortrait_ = value; }
+			get { return this.mFlashPortrait; }
+			set { this.mFlashPortrait = value; }
 		}
 		#endregion
 
@@ -177,41 +177,41 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BListArray<BLeaderStartingUnit> StartingUnits { get; private set; }
 
 		#region RallyPointOffset
-		BVector mRallyPointOffset_;
+		BVector mRallyPointOffset;
 		public BVector RallyPointOffset
 		{
-			get { return this.mRallyPointOffset_; }
-			set { this.mRallyPointOffset_ = value; }
+			get { return this.mRallyPointOffset; }
+			set { this.mRallyPointOffset = value; }
 		}
 		#endregion
 
 		#region RepairRate
-		float mRepairRate_;
+		float mRepairRate;
 		public float RepairRate
 		{
-			get { return this.mRepairRate_; }
-			set { this.mRepairRate_ = value; }
+			get { return this.mRepairRate; }
+			set { this.mRepairRate = value; }
 		}
 		#endregion
 
 		#region RepairDelay
-		float mRepairDelay_;
+		float mRepairDelay;
 		/// <remarks>In seconds</remarks>
 		public float RepairDelay
 		{
-			get { return this.mRepairDelay_; }
-			set { this.mRepairDelay_ = value; }
+			get { return this.mRepairDelay; }
+			set { this.mRepairDelay = value; }
 		}
 		#endregion
 
 		public Collections.BTypeValuesSingle RepairCost { get; private set; }
 
 		#region RepairTime
-		float mRepairTime_;
+		float mRepairTime;
 		public float RepairTime
 		{
-			get { return this.mRepairTime_; }
-			set { this.mRepairTime_ = value; }
+			get { return this.mRepairTime; }
+			set { this.mRepairTime = value; }
 		}
 		#endregion
 
@@ -223,31 +223,31 @@ namespace KSoft.Phoenix.Phx
 		public Collections.BTypeValuesSingle Resources { get; private set; }
 
 		#region UIControlBackground
-		string mUiControlBackground_;
+		string mUIControlBackground;
 		[Meta.TextureReference]
-		public string UiControlBackground
+		public string UIControlBackground
 		{
-			get { return this.mUiControlBackground_; }
-			set { this.mUiControlBackground_ = value; }
+			get { return this.mUIControlBackground; }
+			set { this.mUIControlBackground = value; }
 		}
 		#endregion
 
 		// Empty Leaders just have a Civ
-		public bool IsEmpty { get { return this.mTechId_.IsNone(); } }
+		public bool IsEmpty { get { return this.mTechID.IsNone(); } }
 
 		public BLeader()
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasNameId = true;
-			textData.HasDescriptionId = true;
+			textData.HasNameID = true;
+			textData.HasDescriptionID = true;
 
 			this.SupportPowers = new Collections.BListArray<BLeaderSupportPower>();
 			this.StartingSquads = new Collections.BListArray<BLeaderStartingSquad>();
 			this.StartingUnits = new Collections.BListArray<BLeaderStartingUnit>();
-			this.RepairCost = new Collections.BTypeValuesSingle(BResource.KBListTypeValuesParams);
-			this.ReverseHotDropCost = new Collections.BTypeValuesSingle(BResource.KBListTypeValuesParams);
-			this.Populations = new Collections.BTypeValues<BPopulation>(BPopulation.KBListParams);
-			this.Resources = new Collections.BTypeValuesSingle(BResource.KBListTypeValuesParams);
+			this.RepairCost = new Collections.BTypeValuesSingle(BResource.kBListTypeValuesParams);
+			this.ReverseHotDropCost = new Collections.BTypeValuesSingle(BResource.kBListTypeValuesParams);
+			this.Populations = new Collections.BTypeValues<BPopulation>(BPopulation.kBListParams);
+			this.Resources = new Collections.BTypeValuesSingle(BResource.kBListTypeValuesParams);
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -257,35 +257,35 @@ namespace KSoft.Phoenix.Phx
 
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeOpt("Icon", ref this.mIconName_, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("Test", ref this.mTest_, Predicates.IsTrue);
-			s.StreamAttributeOpt("Alpha", ref this.mAlpha_, Predicates.IsNotNone);
+			s.StreamAttributeOpt("Icon", ref this.mIconName, Predicates.IsNotNullOrEmpty);
+			s.StreamAttributeOpt("Test", ref this.mTest, Predicates.IsTrue);
+			s.StreamAttributeOpt("Alpha", ref this.mAlpha, Predicates.IsNotNone);
 
-			s.StreamAttributeOpt("Random", ref this.mIsRandom_, Predicates.IsTrue);
-			s.StreamAttributeOpt("StatsID", ref this.mStatsId_, Predicates.IsNotNone);
-			s.StreamAttributeOpt("LeaderPickerOrder", ref this.mLeaderPickerOrder_, Predicates.IsNotNone);
-			s.StreamAttributeOpt("DefaultPlayerSlotFlags", ref this.mDefaultPlayerSlotFlags_, Predicates.IsNotZero,
-				NumeralBase.HEX);
+			s.StreamAttributeOpt("Random", ref this.mIsRandom, Predicates.IsTrue);
+			s.StreamAttributeOpt("StatsID", ref this.mStatsID, Predicates.IsNotNone);
+			s.StreamAttributeOpt("LeaderPickerOrder", ref this.mLeaderPickerOrder, Predicates.IsNotNone);
+			s.StreamAttributeOpt("DefaultPlayerSlotFlags", ref this.mDefaultPlayerSlotFlags, Predicates.IsNotZero,
+				NumeralBase.Hex);
 
-			xs.StreamDbid(s, "Tech", ref this.mTechId_, DatabaseObjectKind.TECH);
-			xs.StreamDbid(s, "Civ", ref this.mCivId_, DatabaseObjectKind.CIV);
-			xs.StreamDbid(s, "Power", ref this.mPowerId_, DatabaseObjectKind.POWER);
-			s.StreamElementOpt("FlashCivID", ref this.mFlashCivId_, Predicates.IsNotNone);
-			s.StreamStringOpt("FlashImg", ref this.mFlashImg_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
+			xs.StreamDBID(s, "Tech", ref this.mTechID, DatabaseObjectKind.Tech);
+			xs.StreamDBID(s, "Civ", ref this.mCivID, DatabaseObjectKind.Civ);
+			xs.StreamDBID(s, "Power", ref this.mPowerID, DatabaseObjectKind.Power);
+			s.StreamElementOpt("FlashCivID", ref this.mFlashCivID, Predicates.IsNotNone);
+			s.StreamStringOpt("FlashImg", ref this.mFlashImg, toLower: false, type: XML.XmlUtil.kSourceElement);
 			// TODO: HW360's FlashPortrait elements have an ending " character (sans a starting quote). Be careful!
-			s.StreamStringOpt("FlashPortrait", ref this.mFlashPortrait_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
-			XML.XmlUtil.Serialize(s, this.SupportPowers, BLeaderSupportPower.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.StartingSquads, BLeaderStartingSquad.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.StartingUnits, BLeaderStartingUnit.KBListXmlParams);
-			s.StreamBVector("RallyPointOffset", ref this.mRallyPointOffset_);
-			s.StreamElementOpt("RepairRate", ref this.mRepairRate_, Predicates.IsNotZero);
-			s.StreamElementOpt("RepairDelay", ref this.mRepairDelay_, Predicates.IsNotZero);
-			XML.XmlUtil.Serialize(s, this.RepairCost, KRepairCostTypeValuesXmlParams);
-			s.StreamElementOpt("RepairTime", ref this.mRepairTime_, Predicates.IsNotZero);
-			XML.XmlUtil.Serialize(s, this.ReverseHotDropCost, KReverseHotDropCostTypeValuesXmlParams);
-			XML.XmlUtil.Serialize(s, this.Populations, BPopulation.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.Resources, BResource.KBListTypeValuesXmlParams);
-			s.StreamStringOpt("UIControlBackground", ref this.mUiControlBackground_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
+			s.StreamStringOpt("FlashPortrait", ref this.mFlashPortrait, toLower: false, type: XML.XmlUtil.kSourceElement);
+			XML.XmlUtil.Serialize(s, this.SupportPowers, BLeaderSupportPower.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.StartingSquads, BLeaderStartingSquad.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.StartingUnits, BLeaderStartingUnit.kBListXmlParams);
+			s.StreamBVector("RallyPointOffset", ref this.mRallyPointOffset);
+			s.StreamElementOpt("RepairRate", ref this.mRepairRate, Predicates.IsNotZero);
+			s.StreamElementOpt("RepairDelay", ref this.mRepairDelay, Predicates.IsNotZero);
+			XML.XmlUtil.Serialize(s, this.RepairCost, kRepairCostTypeValuesXmlParams);
+			s.StreamElementOpt("RepairTime", ref this.mRepairTime, Predicates.IsNotZero);
+			XML.XmlUtil.Serialize(s, this.ReverseHotDropCost, kReverseHotDropCostTypeValuesXmlParams);
+			XML.XmlUtil.Serialize(s, this.Populations, BPopulation.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.Resources, BResource.kBListTypeValuesXmlParams);
+			s.StreamStringOpt("UIControlBackground", ref this.mUIControlBackground, toLower: false, type: XML.XmlUtil.kSourceElement);
 		}
 		#endregion
 	};
@@ -296,28 +296,28 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<BLeaderSupportPower>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "SupportPower",
+			ElementName = "SupportPower",
 		};
 		#endregion
 
 		#region IconLocation
-		int mIconLocation_;
+		int mIconLocation;
 		public int IconLocation
 		{
-			get { return this.mIconLocation_; }
-			set { this.mIconLocation_ = value; }
+			get { return this.mIconLocation; }
+			set { this.mIconLocation = value; }
 		}
 		#endregion
 
 		#region TechPrereqID
-		int mTechPrereqId_ = TypeExtensions.K_NONE;
+		int mTechPrereqID = TypeExtensions.kNone;
 		[Meta.BProtoTechReference]
-		public int TechPrereqId
+		public int TechPrereqID
 		{
-			get { return this.mTechPrereqId_; }
-			set { this.mTechPrereqId_ = value; }
+			get { return this.mTechPrereqID; }
+			set { this.mTechPrereqID = value; }
 		}
 		#endregion
 
@@ -333,9 +333,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttribute("IconLocation", ref this.mIconLocation_);
+			s.StreamAttribute("IconLocation", ref this.mIconLocation);
 
-			xs.StreamDbid(s, "Power", this.SupportPowerIDs, DatabaseObjectKind.POWER, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
+			xs.StreamDBID(s, "Power", this.SupportPowerIDs, DatabaseObjectKind.Power, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
 		}
 		#endregion
 
@@ -345,15 +345,15 @@ namespace KSoft.Phoenix.Phx
 			if (this.IconLocation != other.IconLocation)
 				this.IconLocation.CompareTo(other.IconLocation);
 
-			if (this.TechPrereqId != other.TechPrereqId)
-				this.TechPrereqId.CompareTo(other.TechPrereqId);
+			if (this.TechPrereqID != other.TechPrereqID)
+				this.TechPrereqID.CompareTo(other.TechPrereqID);
 
 			if (this.SupportPowerIDs.Count != other.SupportPowerIDs.Count)
 				this.SupportPowerIDs.Count.CompareTo(other.SupportPowerIDs.Count);
 
-			int aHash = PhxUtil.CalculateHashCodeForDbiDs(this.SupportPowerIDs);
-			int bHash = PhxUtil.CalculateHashCodeForDbiDs(other.SupportPowerIDs);
-			return aHash.CompareTo(bHash);
+			int a_hash = PhxUtil.CalculateHashCodeForDBIDs(this.SupportPowerIDs);
+			int b_hash = PhxUtil.CalculateHashCodeForDBIDs(other.SupportPowerIDs);
+			return a_hash.CompareTo(b_hash);
 		}
 		#endregion
 
@@ -362,7 +362,7 @@ namespace KSoft.Phoenix.Phx
 		{
 			return this.IconLocation == other.IconLocation
 				&&
-				this.TechPrereqId == other.TechPrereqId
+				this.TechPrereqID == other.TechPrereqID
 				&&
 				this.SupportPowerIDs.EqualsList(other.SupportPowerIDs);
 		}
@@ -375,41 +375,41 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<BLeaderStartingSquad>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "StartingSquad",
+			ElementName = "StartingSquad",
 		};
 		#endregion
 
 		#region SquadID
-		int mSquadId_ = TypeExtensions.K_NONE;
+		int mSquadID = TypeExtensions.kNone;
 		[Meta.BProtoSquadReference]
-		public int SquadId
+		public int SquadID
 		{
-			get { return this.mSquadId_; }
-			set { this.mSquadId_ = value; }
+			get { return this.mSquadID; }
+			set { this.mSquadID = value; }
 		}
 		#endregion
 
 		#region FlyIn
-		bool mFlyIn_;
+		bool mFlyIn;
 		public bool FlyIn
 		{
-			get { return this.mFlyIn_; }
-			set { this.mFlyIn_ = value; }
+			get { return this.mFlyIn; }
+			set { this.mFlyIn = value; }
 		}
 		#endregion
 
 		#region Offset
-		BVector mOffset_;
+		BVector mOffset;
 		public BVector Offset
 		{
-			get { return this.mOffset_; }
-			set { this.mOffset_ = value; }
+			get { return this.mOffset; }
+			set { this.mOffset = value; }
 		}
 		#endregion
 
-		public bool IsInvalid { get { return PhxUtil.IsUndefinedReferenceHandleOrNone(this.SquadId); } }
+		public bool IsInvalid { get { return PhxUtil.IsUndefinedReferenceHandleOrNone(this.SquadID); } }
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -418,10 +418,10 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamBVector("Offset", ref this.mOffset_, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
-			s.StreamAttributeOpt("FlyIn", ref this.mFlyIn_, Predicates.IsTrue);
+			s.StreamBVector("Offset", ref this.mOffset, xmlSource: XML.XmlUtil.kSourceAttr);
+			s.StreamAttributeOpt("FlyIn", ref this.mFlyIn, Predicates.IsTrue);
 
-			XML.BXmlSerializerInterface.StreamSquadId(s, xs, ref this.mSquadId_);
+			XML.BXmlSerializerInterface.StreamSquadID(s, xs, ref this.mSquadID);
 		}
 		#endregion
 
@@ -434,7 +434,7 @@ namespace KSoft.Phoenix.Phx
 			if (this.Offset != other.Offset)
 				this.Offset.CompareTo(other.Offset);
 
-			return this.SquadId.CompareTo(other.SquadId);
+			return this.SquadID.CompareTo(other.SquadID);
 		}
 		#endregion
 
@@ -445,7 +445,7 @@ namespace KSoft.Phoenix.Phx
 				&&
 				this.Offset == other.Offset
 				&&
-				this.SquadId == other.SquadId;
+				this.SquadID == other.SquadID;
 		}
 		#endregion
 	};
@@ -456,51 +456,51 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<BLeaderStartingUnit>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "StartingUnit",
+			ElementName = "StartingUnit",
 		};
 		#endregion
 
 		#region DoppleOnStart
-		bool mDoppleOnStart_;
+		bool mDoppleOnStart;
 		public bool DoppleOnStart
 		{
-			get { return this.mDoppleOnStart_; }
-			set { this.mDoppleOnStart_ = value; }
+			get { return this.mDoppleOnStart; }
+			set { this.mDoppleOnStart = value; }
 		}
 		#endregion
 
 		#region ObjectTypeID
-		int mObjectTypeId_ = TypeExtensions.K_NONE;
+		int mObjectTypeID = TypeExtensions.kNone;
 		[Meta.BProtoObjectReference]
-		public int ObjectTypeId
+		public int ObjectTypeID
 		{
-			get { return this.mObjectTypeId_; }
-			set { this.mObjectTypeId_ = value; }
+			get { return this.mObjectTypeID; }
+			set { this.mObjectTypeID = value; }
 		}
 		#endregion
 
 		#region BuildOtherID
-		int mBuildOtherId_ = TypeExtensions.K_NONE;
+		int mBuildOtherID = TypeExtensions.kNone;
 		[Meta.BProtoObjectReference]
-		public int BuildOtherId
+		public int BuildOtherID
 		{
-			get { return this.mBuildOtherId_; }
-			set { this.mBuildOtherId_ = value; }
+			get { return this.mBuildOtherID; }
+			set { this.mBuildOtherID = value; }
 		}
 		#endregion
 
 		#region Offset
-		BVector mOffset_;
+		BVector mOffset;
 		public BVector Offset
 		{
-			get { return this.mOffset_; }
-			set { this.mOffset_ = value; }
+			get { return this.mOffset; }
+			set { this.mOffset = value; }
 		}
 		#endregion
 
-		public bool IsInvalid { get { return PhxUtil.IsUndefinedReferenceHandleOrNone(this.ObjectTypeId); } }
+		public bool IsInvalid { get { return PhxUtil.IsUndefinedReferenceHandleOrNone(this.ObjectTypeID); } }
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -509,12 +509,12 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamBVector("Offset", ref this.mOffset_, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			s.StreamBVector("Offset", ref this.mOffset, xmlSource: XML.XmlUtil.kSourceAttr);
 
-			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mObjectTypeId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_CURSOR);
-			xs.StreamDbid(s, "BuildOther", ref this.mBuildOtherId_, DatabaseObjectKind.OBJECT, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mObjectTypeID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceCursor);
+			xs.StreamDBID(s, "BuildOther", ref this.mBuildOtherID, DatabaseObjectKind.Object, xmlSource: XML.XmlUtil.kSourceAttr);
 
-			s.StreamAttributeOpt("DoppleOnStart", ref this.mDoppleOnStart_, Predicates.IsTrue);
+			s.StreamAttributeOpt("DoppleOnStart", ref this.mDoppleOnStart, Predicates.IsTrue);
 		}
 		#endregion
 
@@ -527,10 +527,10 @@ namespace KSoft.Phoenix.Phx
 			if (this.Offset != other.Offset)
 				this.Offset.CompareTo(other.Offset);
 
-			if (this.ObjectTypeId != other.ObjectTypeId)
-				this.ObjectTypeId.CompareTo(other.ObjectTypeId);
+			if (this.ObjectTypeID != other.ObjectTypeID)
+				this.ObjectTypeID.CompareTo(other.ObjectTypeID);
 
-			return this.BuildOtherId.CompareTo(other.BuildOtherId);
+			return this.BuildOtherID.CompareTo(other.BuildOtherID);
 		}
 		#endregion
 
@@ -541,9 +541,9 @@ namespace KSoft.Phoenix.Phx
 				&&
 				this.Offset == other.Offset
 				&&
-				this.ObjectTypeId == other.ObjectTypeId
+				this.ObjectTypeID == other.ObjectTypeID
 				&&
-				this.BuildOtherId == other.BuildOtherId;
+				this.BuildOtherID == other.BuildOtherID;
 		}
 		#endregion
 	};

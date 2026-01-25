@@ -12,16 +12,16 @@ public partial class HeightmapParser : IBwHeightmap {
 
   private readonly TerrData terrData_;
 
-  public const int TILES_PER_CHUNK_AXIS = 4;
-  public const int TILES_PER_CHUNK = TILES_PER_CHUNK_AXIS * TILES_PER_CHUNK_AXIS;
+  public const int tilesPerChunkAxis = 4;
+  public const int tilesPerChunk = tilesPerChunkAxis * tilesPerChunkAxis;
 
-  public const int POINTS_PER_TILE_AXIS = 4;
-  public const int POINTS_PER_TILE = POINTS_PER_TILE_AXIS * POINTS_PER_TILE_AXIS;
+  public const int pointsPerTileAxis = 4;
+  public const int pointsPerTile = pointsPerTileAxis * pointsPerTileAxis;
 
-  public const float CHUNK_SIZE = 12;
-  public const float OVERALL_SCALE = 5.25f;
-  public const float XY_SCALE = OVERALL_SCALE;
-  public const float Z_SCALE = 1 / 64f * OVERALL_SCALE;
+  public const float chunkSize = 12;
+  public const float overallScale = 5.25f;
+  public const float xyScale = overallScale;
+  public const float zScale = 1 / 64f * overallScale;
 
   public Grid<IBwHeightmapChunk?> Chunks { get; }
 
@@ -53,8 +53,8 @@ public partial class HeightmapParser : IBwHeightmap {
       schemaTiles = tilesEr.ReadNews<SchemaTile>(schemaTileCount);
     }
 
-    var totalWidth = CHUNK_SIZE * chunkCountX;
-    var totalHeight = CHUNK_SIZE * chunkCountY;
+    var totalWidth = chunkSize * chunkCountX;
+    var totalHeight = chunkSize * chunkCountY;
 
     for (var chunkY = 0; chunkY < chunkCountY; ++chunkY) {
       for (var chunkX = 0; chunkX < chunkCountX; ++chunkX) {
@@ -69,8 +69,8 @@ public partial class HeightmapParser : IBwHeightmap {
         var chunk = new BwHeightmapChunk();
         this.Chunks[chunkX, chunkY] = chunk;
 
-        for (var tileY = 0; tileY < TILES_PER_CHUNK_AXIS; ++tileY) {
-          for (var tileX = 0; tileX < TILES_PER_CHUNK_AXIS; ++tileX) {
+        for (var tileY = 0; tileY < tilesPerChunkAxis; ++tileY) {
+          for (var tileX = 0; tileX < tilesPerChunkAxis; ++tileX) {
             var tile = new BwHeightmapTile();
             chunk.Tiles[tileX, tileY] = tile;
 
@@ -80,8 +80,8 @@ public partial class HeightmapParser : IBwHeightmap {
             tile.Schema = schemaTile;
             tile.MatlIndex = schemaTile.MatlIndex;
 
-            for (var pointY = 0; pointY < POINTS_PER_TILE_AXIS; ++pointY) {
-              for (var pointX = 0; pointX < POINTS_PER_TILE_AXIS; ++pointX) {
+            for (var pointY = 0; pointY < pointsPerTileAxis; ++pointY) {
+              for (var pointX = 0; pointX < pointsPerTileAxis; ++pointX) {
                 var point = new BwHeightmapPoint();
 
                 GetWorldPosition(terrData.ChunkCountX, terrData.ChunkCountY, chunkX, chunkY, tileX, tileY, pointX, pointY, out var worldX, out var worldY);
@@ -90,7 +90,7 @@ public partial class HeightmapParser : IBwHeightmap {
 
                 var pointOffset = pointY * 4 + pointX;
 
-                point.Height = Z_SCALE * schemaTile.Heights[pointOffset];
+                point.Height = zScale * schemaTile.Heights[pointOffset];
                 point.LightColor = schemaTile.LightColors[pointOffset];
 
                 tile.Points[pointX, pointY] = point;
@@ -108,12 +108,12 @@ public partial class HeightmapParser : IBwHeightmap {
       int tileX, int tileY,
       int pointX, int pointY,
       out float worldX, out float worldY) {
-    worldX = XY_SCALE *
+    worldX = xyScale *
              (4 * 3 * chunkX + 3 * tileX + pointX -
-              CHUNK_SIZE * chunkCountX / 2);
-    worldY = XY_SCALE *
+              chunkSize * chunkCountX / 2);
+    worldY = xyScale *
              (4 * 3 * chunkY + 3 * tileY + pointY -
-              CHUNK_SIZE * chunkCountY / 2);
+              chunkSize * chunkCountY / 2);
   }
 
   public static void GetIndices(
@@ -122,8 +122,8 @@ public partial class HeightmapParser : IBwHeightmap {
       out int chunkX, out int chunkY,
       out int tileX, out int tileY,
       out int pointX, out int pointY) {
-    var localX = (int)(worldX / XY_SCALE + CHUNK_SIZE * chunkCountX / 2);
-    var localY = (int)(worldY / XY_SCALE + CHUNK_SIZE * chunkCountY / 2);
+    var localX = (int)(worldX / xyScale + chunkSize * chunkCountX / 2);
+    var localY = (int)(worldY / xyScale + chunkSize * chunkCountY / 2);
 
     pointX = localX % 3;
     pointY = localY % 3;

@@ -15,12 +15,12 @@ namespace KSoft.ObjectModel
 	public static class Util
 	{
 		// based on System.Windows.Data.Binding.IndexerName in PresentationFramework.dll
-		public const string K_INDEXER_PROPERTY_NAME = "Item[]";
-		public static readonly PropertyChangedEventArgs KIndexerPropertyChanged =
-			new PropertyChangedEventArgs(K_INDEXER_PROPERTY_NAME);
+		public const string kIndexerPropertyName = "Item[]";
+		public static readonly PropertyChangedEventArgs kIndexerPropertyChanged =
+			new PropertyChangedEventArgs(kIndexerPropertyName);
 
 
-		public static readonly System.Collections.Specialized.NotifyCollectionChangedEventArgs KNotifyCollectionReset =
+		public static readonly System.Collections.Specialized.NotifyCollectionChangedEventArgs kNotifyCollectionReset =
 			new System.Collections.Specialized.NotifyCollectionChangedEventArgs(
 				System.Collections.Specialized.NotifyCollectionChangedAction.Reset);
 
@@ -43,7 +43,7 @@ namespace KSoft.ObjectModel
 				Reflection.Util.PropertyFromExpr(propertyExpr).Name);
 		}
 
-		private static Dictionary<Type, Func<object, object>> gCollectionGetUnderlyingListFuncs_ = new Dictionary<Type, Func<object, object>>();
+		private static Dictionary<Type, Func<object, object>> gCollectionGetUnderlyingListFuncs = new Dictionary<Type, Func<object, object>>();
 		public static List<T> GetUnderlyingItemsAsList<T>(System.Collections.ObjectModel.Collection<T> coll, bool throwOnError = true)
 		{
 			if (coll == null)
@@ -51,12 +51,12 @@ namespace KSoft.ObjectModel
 
 			var collType = coll.GetType();
 			Func<object, object> getFunc;
-			lock (gCollectionGetUnderlyingListFuncs_)
+			lock (gCollectionGetUnderlyingListFuncs)
 			{
-				if (!gCollectionGetUnderlyingListFuncs_.TryGetValue(collType, out getFunc))
+				if (!gCollectionGetUnderlyingListFuncs.TryGetValue(collType, out getFunc))
 				{
 					getFunc = Reflection.Util.GenerateMemberGetter<object>(collType, "items");
-					gCollectionGetUnderlyingListFuncs_.Add(collType, getFunc);
+					gCollectionGetUnderlyingListFuncs.Add(collType, getFunc);
 				}
 			}
 

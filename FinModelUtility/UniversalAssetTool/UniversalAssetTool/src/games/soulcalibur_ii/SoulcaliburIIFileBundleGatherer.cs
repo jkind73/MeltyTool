@@ -4,7 +4,7 @@ using fin.util.progress;
 
 namespace uni.games.soulcalibur_ii;
 
-public sealed class SoulcaliburIiFileBundleGatherer : BGameCubeFileBundleGatherer {
+public sealed class SoulcaliburIIFileBundleGatherer : BGameCubeFileBundleGatherer {
   public override string Name => "soulcalibur_ii";
 
   protected override void GatherFileBundlesFromHierarchy(

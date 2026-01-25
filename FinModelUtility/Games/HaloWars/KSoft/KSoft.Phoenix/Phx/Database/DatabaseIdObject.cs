@@ -6,11 +6,11 @@ namespace KSoft.Phoenix.Phx
 		, IDatabaseIdObject
 	{
 		#region DBID
-		private int mDbId_ = TypeExtensions.K_NONE;
+		private int mDbId = TypeExtensions.kNone;
 		public int DbId
 		{
-			get { return this.mDbId_; }
-			set { this.SetFieldVal(ref this.mDbId_, value); }
+			get { return this.mDbId; }
+			set { this.SetFieldVal(ref this.mDbId, value); }
 		}
 		#endregion
 

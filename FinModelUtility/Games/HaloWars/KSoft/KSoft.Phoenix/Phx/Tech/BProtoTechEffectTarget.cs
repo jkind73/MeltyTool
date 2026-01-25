@@ -5,51 +5,51 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Target")
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Target")
 		{
-			rootName = null,
-			flags = 0
+			RootName = null,
+			Flags = 0
 		};
 		#endregion
 
-		BProtoTechEffectTargetType mType_ = BProtoTechEffectTargetType.NONE;
+		BProtoTechEffectTargetType mType = BProtoTechEffectTargetType.None;
 		public BProtoTechEffectTargetType Type
 		{
-			get { return this.mType_; }
-			set { this.mType_ = value; }
+			get { return this.mType; }
+			set { this.mType = value; }
 		}
 
-		int mValueId_ = TypeExtensions.K_NONE;
-		public int ValueId
+		int mValueID = TypeExtensions.kNone;
+		public int ValueID
 		{
-			get { return this.mValueId_; }
-			set { this.mValueId_ = value; }
+			get { return this.mValueID; }
+			set { this.mValueID = value; }
 		}
 
 		public DatabaseObjectKind ObjectKind { get {
-			switch (this.mType_)
+			switch (this.mType)
 			{
-			case BProtoTechEffectTargetType.PROTO_UNIT:
-				return DatabaseObjectKind.UNIT;
-			case BProtoTechEffectTargetType.PROTO_SQUAD:
-				return DatabaseObjectKind.SQUAD;
-			case BProtoTechEffectTargetType.TECH:
-				return DatabaseObjectKind.TECH;
+			case BProtoTechEffectTargetType.ProtoUnit:
+				return DatabaseObjectKind.Unit;
+			case BProtoTechEffectTargetType.ProtoSquad:
+				return DatabaseObjectKind.Squad;
+			case BProtoTechEffectTargetType.Tech:
+				return DatabaseObjectKind.Tech;
 
 			default:
-				return DatabaseObjectKind.NONE;
+				return DatabaseObjectKind.None;
 			}
 		} }
 
 		#region ITagElementStreamable<string> Members
-		void StreamValueId<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs)
+		void StreamValueID<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, XML.BXmlSerializerInterface xs)
 			where TDoc : class
 			where TCursor : class
 		{
 			DatabaseObjectKind kind = this.ObjectKind;
 
-			if (kind != DatabaseObjectKind.NONE)
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mValueId_, kind, false, XML.XmlUtil.K_SOURCE_CURSOR);
+			if (kind != DatabaseObjectKind.None)
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mValueID, kind, false, XML.XmlUtil.kSourceCursor);
 		}
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
@@ -57,8 +57,8 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnum("type", ref this.mType_);
-			this.StreamValueId(s, xs);
+			s.StreamAttributeEnum("type", ref this.mType);
+			this.StreamValueID(s, xs);
 		}
 		#endregion
 	};

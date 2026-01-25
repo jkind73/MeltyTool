@@ -8,18 +8,18 @@ namespace KSoft.Phoenix.Phx
 		, IEqualityComparer<BTargetPriority>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "TargetPriority",
+			ElementName = "TargetPriority",
 		};
 		#endregion
 
-		int mUnitTypeId_ = TypeExtensions.K_NONE;
+		int mUnitTypeID = TypeExtensions.kNone;
 		[Meta.UnitReference]
-		public int UnitTypeId { get { return this.mUnitTypeId_; } }
+		public int UnitTypeID { get { return this.mUnitTypeID; } }
 
-		float mPriority_ = PhxUtil.K_INVALID_SINGLE;
-		public float Priority { get { return this.mPriority_; } }
+		float mPriority = PhxUtil.kInvalidSingle;
+		public float Priority { get { return this.mPriority; } }
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -28,20 +28,20 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDbid(s, "type", ref this.mUnitTypeId_, DatabaseObjectKind.UNIT, false, XML.XmlUtil.K_SOURCE_ATTR);
-			s.StreamCursor(ref this.mPriority_);
+			xs.StreamDBID(s, "type", ref this.mUnitTypeID, DatabaseObjectKind.Unit, false, XML.XmlUtil.kSourceAttr);
+			s.StreamCursor(ref this.mPriority);
 		}
 		#endregion
 
 		#region IEqualityComparer<BTargetPriority> Members
 		public bool Equals(BTargetPriority x, BTargetPriority y)
 		{
-			return x.UnitTypeId == y.UnitTypeId && x.Priority == y.Priority;
+			return x.UnitTypeID == y.UnitTypeID && x.Priority == y.Priority;
 		}
 
 		public int GetHashCode(BTargetPriority obj)
 		{
-			return obj.UnitTypeId.GetHashCode() ^ obj.Priority.GetHashCode();
+			return obj.UnitTypeID.GetHashCode() ^ obj.Priority.GetHashCode();
 		}
 		#endregion
 	};

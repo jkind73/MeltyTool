@@ -5,10 +5,10 @@ namespace KSoft.Phoenix.Phx
 		: Collections.BListAutoIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "PieProgress",
-			dataName = "name",
+			ElementName = "PieProgress",
+			DataName = "name",
 		};
 		#endregion
 

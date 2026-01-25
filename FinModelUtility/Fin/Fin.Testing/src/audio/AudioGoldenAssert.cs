@@ -7,7 +7,7 @@ using fin.audio.stubbed;
 namespace fin.testing.audio;
 
 public static class AudioGoldenAssert {
-  private static string extension_ = ".ogg";
+  private static string EXTENSION = ".ogg";
 
   public static void AssertGolden<TAudioBundle>(
       IFileHierarchyDirectory goldenSubdir,
@@ -27,7 +27,7 @@ public static class AudioGoldenAssert {
                   audioBuffer[0],
                   new FinFile(
                       Path.Combine(targetDirectory.FullPath,
-                                   $"{audioBundle.MainFile.NameWithoutExtension}{extension_}")));
+                                   $"{audioBundle.MainFile.NameWithoutExtension}{EXTENSION}")));
         });
   }
 }

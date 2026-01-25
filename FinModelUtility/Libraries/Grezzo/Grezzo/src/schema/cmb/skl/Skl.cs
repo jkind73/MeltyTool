@@ -15,5 +15,5 @@ public sealed partial class Skl : IBinaryConvertible {
   public uint unkFlags;
 
   [RSequenceLengthSource(nameof(boneCount_))]
-  public Bone[] Bones { get; set; }
+  public Bone[] bones { get; set; }
 }

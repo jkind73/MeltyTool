@@ -11,7 +11,7 @@ using XFS = MockUnixSupport;
 #endif
 public class ImaginaryDirectory : DirectoryBase {
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
-  private string currentDirectory_;
+  private string currentDirectory;
 
   /// <inheritdoc />
   public ImaginaryDirectory(IImaginaryFileDataAccessor imaginaryFileDataAccessor,
@@ -23,7 +23,7 @@ public class ImaginaryDirectory : DirectoryBase {
   public ImaginaryDirectory(IImaginaryFileDataAccessor imaginaryFileDataAccessor,
                        string currentDirectory) : base(
       imaginaryFileDataAccessor?.FileSystem) {
-    this.currentDirectory_ = currentDirectory;
+    this.currentDirectory = currentDirectory;
     this.imaginaryFileDataAccessor_ =
         imaginaryFileDataAccessor ??
         throw new ArgumentNullException(nameof(imaginaryFileDataAccessor));
@@ -32,7 +32,7 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override IDirectoryInfo CreateDirectory(string path) {
-    return this.CreateDirectoryInternal_(path);
+    return this.CreateDirectoryInternal(path);
   }
 
 #if FEATURE_UNIX_FILE_MODE
@@ -43,7 +43,7 @@ public class ImaginaryDirectory : DirectoryBase {
         }
 #endif
 
-  private IDirectoryInfo CreateDirectoryInternal_(string path) {
+  private IDirectoryInfo CreateDirectoryInternal(string path) {
     if (path == null) {
       throw new ArgumentNullException(nameof(path));
     }
@@ -117,7 +117,7 @@ public class ImaginaryDirectory : DirectoryBase {
  Path.Combine(this.FileSystem.Path.GetTempPath(), randomDir);
             } while (this.Exists(potentialTempDirectory));
 
-            return this.CreateDirectoryInternal_(potentialTempDirectory);
+            return this.CreateDirectoryInternal(potentialTempDirectory);
         }
 #endif
 
@@ -195,7 +195,7 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override string GetCurrentDirectory() {
-    return this.currentDirectory_;
+    return this.currentDirectory;
   }
 
   /// <inheritdoc />
@@ -272,7 +272,7 @@ public class ImaginaryDirectory : DirectoryBase {
       throw new ArgumentException("Invalid character(s) in path", nameof(path));
     }
 
-    this.CheckSearchPattern_(searchPattern);
+    this.CheckSearchPattern(searchPattern);
     if (searchPattern.Equals(string.Empty,
                              StringComparison.OrdinalIgnoreCase)) {
       searchPattern = "*";
@@ -613,7 +613,7 @@ public class ImaginaryDirectory : DirectoryBase {
 
   /// <inheritdoc />
   public override void SetCurrentDirectory(string path) {
-    this.currentDirectory_ = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
+    this.currentDirectory = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
   }
 
   /// <inheritdoc />
@@ -675,10 +675,10 @@ public class ImaginaryDirectory : DirectoryBase {
                .Where(p => !this.imaginaryFileDataAccessor_.StringOperations.Equals(
                           p,
                           path))
-               .Select(p => this.FixPrefix_(p, originalPath));
+               .Select(p => this.FixPrefix(p, originalPath));
   }
 
-  private string FixPrefix_(string path, string originalPath) {
+  private string FixPrefix(string path, string originalPath) {
     var normalizedOriginalPath
         = this.imaginaryFileDataAccessor_.Path.GetFullPath(originalPath);
     var pathWithoutOriginalPath = path.Substring(normalizedOriginalPath.Length)
@@ -763,18 +763,18 @@ public class ImaginaryDirectory : DirectoryBase {
         }
 #endif
 
-  private string EnsureAbsolutePath_(string path) {
+  private string EnsureAbsolutePath(string path) {
     return Path.IsPathRooted(path)
         ? path
         : Path.Combine(this.GetCurrentDirectory(), path);
   }
 
-  private void CheckSearchPattern_(string searchPattern) {
+  private void CheckSearchPattern(string searchPattern) {
     if (searchPattern == null) {
       throw new ArgumentNullException(nameof(searchPattern));
     }
 
-    const string twoDots = "..";
+    const string TWO_DOTS = "..";
     Func<ArgumentException> createException = ()
         => new ArgumentException(
             @"Search pattern cannot contain "".."" to move up directories and can be contained only internally in file/directory names, as in ""a..b"".",
@@ -782,14 +782,14 @@ public class ImaginaryDirectory : DirectoryBase {
 
     if (this.imaginaryFileDataAccessor_.StringOperations.EndsWith(
             searchPattern,
-            twoDots)) {
+            TWO_DOTS)) {
       throw createException();
     }
 
     var position
         = this.imaginaryFileDataAccessor_.StringOperations.IndexOf(
             searchPattern,
-            twoDots);
+            TWO_DOTS);
 
     if (position >= 0) {
       var characterAfterTwoDots = searchPattern[position + 2];

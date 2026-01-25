@@ -11,7 +11,7 @@ namespace grezzo.schema.cmb.luts;
 [BinarySchema]
 public sealed partial class Luts : IBinaryConvertible {
   [WLengthOfSequence(nameof(Offset))]
-  [WLengthOfSequence(nameof(Luts))]
+  [WLengthOfSequence(nameof(luts))]
   private uint lutSetCount_;
 
   [Unknown]
@@ -21,5 +21,5 @@ public sealed partial class Luts : IBinaryConvertible {
   public uint[] Offset { get; set; }
 
   [RSequenceLengthSource(nameof(lutSetCount_))]
-  public LutSet[] Luts { get; set; }
+  public LutSet[] luts { get; set; }
 }

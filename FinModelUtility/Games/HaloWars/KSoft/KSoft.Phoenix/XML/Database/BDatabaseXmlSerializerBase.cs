@@ -5,12 +5,12 @@ namespace KSoft.Phoenix.XML
 		: BXmlSerializerInterface
 		, IO.ITagElementStringNameStreamable
 	{
-		IBListAutoIdXmlSerializer mDamageTypesSerializer_
-			, mImpactEffectsSerializer_
-			, mObjectsSerializer_
-			, mSquadsSerializer_
-			, mPowersSerializer_
-			, mTechsSerializer_
+		IBListAutoIdXmlSerializer mDamageTypesSerializer
+			, mImpactEffectsSerializer
+			, mObjectsSerializer
+			, mSquadsSerializer
+			, mPowersSerializer
+			, mTechsSerializer
 			;
 
 		protected BDatabaseXmlSerializerBase()
@@ -26,29 +26,29 @@ namespace KSoft.Phoenix.XML
 
 		protected virtual void AutoIdSerializersInitialize()
 		{
-			if (this.mDamageTypesSerializer_ == null)
-				this.mDamageTypesSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.DamageTypes, Phx.BDamageType.KBListXmlParams);
-			if (this.mImpactEffectsSerializer_ == null)
-				this.mImpactEffectsSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.ImpactEffects, Phx.BProtoImpactEffect.KBListXmlParams);
+			if (this.mDamageTypesSerializer == null)
+				this.mDamageTypesSerializer = XmlUtil.CreateXmlSerializer(this.Database.DamageTypes, Phx.BDamageType.kBListXmlParams);
+			if (this.mImpactEffectsSerializer == null)
+				this.mImpactEffectsSerializer = XmlUtil.CreateXmlSerializer(this.Database.ImpactEffects, Phx.BProtoImpactEffect.kBListXmlParams);
 
-			if (this.mObjectsSerializer_ == null)
-				this.mObjectsSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.Objects, Phx.BProtoObject.KBListXmlParams);
-			if (this.mSquadsSerializer_ == null)
-				this.mSquadsSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.Squads, Phx.BProtoSquad.KBListXmlParams);
-			if (this.mPowersSerializer_ == null)
-				this.mPowersSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.Powers, Phx.BProtoPower.KBListXmlParams);
-			if (this.mTechsSerializer_ == null)
-				this.mTechsSerializer_ = XmlUtil.CreateXmlSerializer(this.Database.Techs, Phx.BProtoTech.KBListXmlParams);
+			if (this.mObjectsSerializer == null)
+				this.mObjectsSerializer = XmlUtil.CreateXmlSerializer(this.Database.Objects, Phx.BProtoObject.kBListXmlParams);
+			if (this.mSquadsSerializer == null)
+				this.mSquadsSerializer = XmlUtil.CreateXmlSerializer(this.Database.Squads, Phx.BProtoSquad.kBListXmlParams);
+			if (this.mPowersSerializer == null)
+				this.mPowersSerializer = XmlUtil.CreateXmlSerializer(this.Database.Powers, Phx.BProtoPower.kBListXmlParams);
+			if (this.mTechsSerializer == null)
+				this.mTechsSerializer = XmlUtil.CreateXmlSerializer(this.Database.Techs, Phx.BProtoTech.kBListXmlParams);
 		}
 		protected virtual void AutoIdSerializersDispose()
 		{
-			Util.DisposeAndNull(ref this.mDamageTypesSerializer_);
-			Util.DisposeAndNull(ref this.mImpactEffectsSerializer_);
+			Util.DisposeAndNull(ref this.mDamageTypesSerializer);
+			Util.DisposeAndNull(ref this.mImpactEffectsSerializer);
 
-			Util.DisposeAndNull(ref this.mObjectsSerializer_);
-			Util.DisposeAndNull(ref this.mSquadsSerializer_);
-			Util.DisposeAndNull(ref this.mPowersSerializer_);
-			Util.DisposeAndNull(ref this.mTechsSerializer_);
+			Util.DisposeAndNull(ref this.mObjectsSerializer);
+			Util.DisposeAndNull(ref this.mSquadsSerializer);
+			Util.DisposeAndNull(ref this.mPowersSerializer);
+			Util.DisposeAndNull(ref this.mTechsSerializer);
 		}
 	};
 }

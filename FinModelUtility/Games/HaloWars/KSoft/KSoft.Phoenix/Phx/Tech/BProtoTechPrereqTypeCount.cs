@@ -6,40 +6,40 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "TypeCount",
+			ElementName = "TypeCount",
 		};
 		#endregion
 
 		#region UnitID
-		int mUnitId_ = TypeExtensions.K_NONE;
+		int mUnitID = TypeExtensions.kNone;
 		[Meta.BProtoObjectReference]
-		public int UnitId
+		public int UnitID
 		{
-			get { return this.mUnitId_; }
-			set { this.mUnitId_ = value; }
+			get { return this.mUnitID; }
+			set { this.mUnitID = value; }
 		}
 		#endregion
 
 		#region Operator
-		BProtoTechTypeCountOperator mOperator_;
+		BProtoTechTypeCountOperator mOperator;
 		public BProtoTechTypeCountOperator Operator
 		{
-			get { return this.mOperator_; }
-			set { this.mOperator_ = value; }
+			get { return this.mOperator; }
+			set { this.mOperator = value; }
 		}
 		#endregion
 
 		#region Count
-		int mCount_;
+		int mCount;
 		public int Count
 		{
-			get { return this.mCount_; }
-			set { this.mCount_ = value; }
+			get { return this.mCount; }
+			set { this.mCount = value; }
 		}
 
-		public const int C_MAX_COUNT = 2048;
+		public const int cMaxCount = 2048;
 		#endregion
 
 		#region ITagElementStreamable<string> Members
@@ -49,9 +49,9 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDbid(s, "unit", ref this.mUnitId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_ATTR);
-			s.StreamAttributeEnumOpt("operator", ref this.mOperator_, e => e != BProtoTechTypeCountOperator.E);
-			s.StreamAttributeOpt("count", ref this.mCount_, Predicates.IsNotZero);
+			xs.StreamDBID(s, "unit", ref this.mUnitID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceAttr);
+			s.StreamAttributeEnumOpt("operator", ref this.mOperator, e => e != BProtoTechTypeCountOperator.e);
+			s.StreamAttributeOpt("count", ref this.mCount, Predicates.IsNotZero);
 		}
 		#endregion
 	};

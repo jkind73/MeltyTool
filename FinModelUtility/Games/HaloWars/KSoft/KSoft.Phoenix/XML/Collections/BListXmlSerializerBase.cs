@@ -22,16 +22,16 @@ namespace KSoft.Phoenix.XML
 			where TDoc : class
 			where TCursor : class
 		{
-			int childElementCount = s.TryGetCursorElementCount();
-			if (this.List.Capacity < childElementCount)
-				this.List.Capacity = childElementCount;
+			int child_element_count = s.TryGetCursorElementCount();
+			if (this.List.Capacity < child_element_count)
+				this.List.Capacity = child_element_count;
 		}
 		protected virtual IEnumerable<TCursor> ReadGetNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
 			return this.Params.UseElementName
-				? s.ElementsByName(this.Params.elementName)
+				? s.ElementsByName(this.Params.ElementName)
 				: s.Elements;
 		}
 		protected virtual void ReadNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs)
@@ -51,7 +51,7 @@ namespace KSoft.Phoenix.XML
 		}
 		protected virtual string WriteGetElementName(T data)
 		{
-			return this.Params.elementName;
+			return this.Params.ElementName;
 		}
 		protected virtual void WriteNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs)
 			where TDoc : class
@@ -66,16 +66,16 @@ namespace KSoft.Phoenix.XML
 			where TDoc : class
 			where TCursor : class
 		{
-			bool shouldStream = true;
-			string rootName = this.Params.GetOptionalRootName();
+			bool should_stream = true;
+			string root_name = this.Params.GetOptionalRootName();
 			var xs = s.GetSerializerInterface();
 
 			if (s.IsReading) // If the stream doesn't have the expected element, don't try to stream
-				shouldStream = rootName == null || s.ElementsExists(rootName);
+				should_stream = root_name == null || s.ElementsExists(root_name);
 			else if (s.IsWriting)
-				shouldStream = this.List != null && this.List.IsEmpty == false;
+				should_stream = this.List != null && this.List.IsEmpty == false;
 
-			if (shouldStream) using (s.EnterCursorBookmark(rootName))
+			if (should_stream) using (s.EnterCursorBookmark(root_name))
 			{
 					 if (s.IsReading)
 						 this.ReadNodes(s, xs);

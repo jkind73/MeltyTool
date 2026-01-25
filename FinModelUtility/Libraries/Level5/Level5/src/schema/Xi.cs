@@ -106,11 +106,11 @@ public sealed class Xi {
 
       var imageFormat = (_3dsImageTools.TexFormat) this.ImageFormat;
       if (imageFormat is _3dsImageTools.TexFormat.ETC1
-                         or _3dsImageTools.TexFormat.ETC1_A4) {
+                         or _3dsImageTools.TexFormat.ETC1a4) {
         tileSheet = TiledImageReader.New(this.Tiles.Count * 8,
                                          8,
                                          new Etc1TileReader(
-                                             imageFormat is _3dsImageTools.TexFormat.ETC1_A4))
+                                             imageFormat is _3dsImageTools.TexFormat.ETC1a4))
                                     .ReadImage(this.ImageData)
                                     .AsBitmap();
       } else {
@@ -134,7 +134,7 @@ public sealed class Xi {
           _3dsImageTools.TexFormat.L4       => PixelFormat.L4,
           _3dsImageTools.TexFormat.A4       => PixelFormat.A4,
           _3dsImageTools.TexFormat.ETC1     => PixelFormat.ETC1,
-          _3dsImageTools.TexFormat.ETC1_A4   => PixelFormat.ETC1_A,
+          _3dsImageTools.TexFormat.ETC1a4   => PixelFormat.ETC1A,
           _                                 => throw new ArgumentOutOfRangeException()
       };
 

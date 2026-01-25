@@ -20,7 +20,7 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public sbyte mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
@@ -29,8 +29,8 @@ namespace KSoft.Phoenix.Runtime
 			if (this.Index != parentListInfo.DoneIndex)
 			{
 				if (s.IsReading)
-					this.value = new T();
-				s.Stream(this.value);
+					this.Value = new T();
+				s.Stream(this.Value);
 			}
 		}
 		#endregion
@@ -41,14 +41,14 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public sbyte mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
 		{
 			s.Stream(ref this.mIndex);
 			if (this.Index != parentListInfo.DoneIndex)
-				s.Stream(ref this.value);
+				s.Stream(ref this.Value);
 		}
 		#endregion
 	};
@@ -59,7 +59,7 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public short mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
@@ -68,8 +68,8 @@ namespace KSoft.Phoenix.Runtime
 			if (this.Index != parentListInfo.DoneIndex)
 			{
 				if (s.IsReading)
-					this.value = new T();
-				s.Stream(this.value);
+					this.Value = new T();
+				s.Stream(this.Value);
 			}
 		}
 		#endregion
@@ -80,14 +80,14 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public short mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
 		{
 			s.Stream(ref this.mIndex);
 			if (this.Index != parentListInfo.DoneIndex)
-				s.Stream(ref this.value);
+				s.Stream(ref this.Value);
 		}
 		#endregion
 	};
@@ -98,7 +98,7 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public int mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
@@ -107,8 +107,8 @@ namespace KSoft.Phoenix.Runtime
 			if (this.Index != parentListInfo.DoneIndex)
 			{
 				if (s.IsReading)
-					this.value = new T();
-				s.Stream(this.value);
+					this.Value = new T();
+				s.Stream(this.Value);
 			}
 		}
 		#endregion
@@ -118,14 +118,14 @@ namespace KSoft.Phoenix.Runtime
 	{
 		public int mIndex;
 		public int Index { get { return this.mIndex; } }
-		public T value;
+		public T Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s, CondensedListInfo parentListInfo)
 		{
 			s.Stream(ref this.mIndex);
 			if (this.Index != parentListInfo.DoneIndex)
-				s.Stream(ref this.value);
+				s.Stream(ref this.Value);
 		}
 		#endregion
 	};

@@ -1,32 +1,32 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public enum BuiControlFunctionType
+	public enum BUIControlFunctionType
 	{
-		FLARE,		SPEED_MODIFIER,	START,		BACK,				TRANSLATION,		PAN,
-		TILT,		ZOOM,			SELECTION,	DOUBLE_CLICK_SELECT,	MULTI_SELECT,		CLEAR,
-		DO_WORK,		DO_WORK_QUEUE,	ABILITY,	ABILITY_QUEUE,		POWERS,				RESET_CAMERA,
+		Flare,		SpeedModifier,	Start,		Back,				Translation,		Pan,
+		Tilt,		Zoom,			Selection,	DoubleClickSelect,	MultiSelect,		Clear,
+		DoWork,		DoWorkQueue,	Ability,	AbilityQueue,		Powers,				ResetCamera,
 
-		ASSIGN_GROUP1,	ASSIGN_GROUP2,	ASSIGN_GROUP3,	ASSIGN_GROUP4,
-		SELECT_GROUP1,	SELECT_GROUP2,	SELECT_GROUP3,	SELECT_GROUP4,
-		GOTO_GROUP1,		GOTO_GROUP2,		GOTO_GROUP3,		GOTO_GROUP4,
+		AssignGroup1,	AssignGroup2,	AssignGroup3,	AssignGroup4,
+		SelectGroup1,	SelectGroup2,	SelectGroup3,	SelectGroup4,
+		GotoGroup1,		GotoGroup2,		GotoGroup3,		GotoGroup4,
 		
-		GOTO_BASE,	GOTO_ALERT,	GOTO_SCOUT,	GOTO_ARMY,	GOTO_NODE,	GOTO_HERO,	GOTO_RALLY,	GOTO_SELECTED,
+		GotoBase,	GotoAlert,	GotoScout,	GotoArmy,	GotoNode,	GotoHero,	GotoRally,	GotoSelected,
 
-		SCREEN_SELECT,		GLOBAL_SELECT,
-		SCREEN_SELECT_PREV,	SCREEN_SELECT_NEXT,
-		GLOBAL_SELECT_PREV,	GLOBAL_SELECT_NEXT,
-		SCREEN_CYCLE_PREV,	SCREEN_CYCLE_NEXT,
-		TARGET_PREV,			TARGET_NEXT,
-		SUB_SELECT_PREV,		SUB_SELECT_NEXT,		SUB_SELECT_SQUAD,		SUB_SELECT_TYPE,	SUB_SELECT_TAG,
-		SUB_SELECT_SELECT,	SUB_SELECT_GOTO,
-		MODE_GOTO,			MODE_SUB_SELECT_RIGHT,	MODE_SUB_SELECT_LEFT,	MODE_GROUP,		MODE_FLARE,
-		GROUP_ADD,			GROUP_NEXT,			GROUP_PREV,			GROUP_GOTO,
-		FLARE_LOOK,			FLARE_HELP,			FLARE_MEET,			FLARE_ATTACK,	MAP_ZOOM,
+		ScreenSelect,		GlobalSelect,
+		ScreenSelectPrev,	ScreenSelectNext,
+		GlobalSelectPrev,	GlobalSelectNext,
+		ScreenCyclePrev,	ScreenCycleNext,
+		TargetPrev,			TargetNext,
+		SubSelectPrev,		SubSelectNext,		SubSelectSquad,		SubSelectType,	SubSelectTag,
+		SubSelectSelect,	SubSelectGoto,
+		ModeGoto,			ModeSubSelectRight,	ModeSubSelectLeft,	ModeGroup,		ModeFlare,
+		GroupAdd,			GroupNext,			GroupPrev,			GroupGoto,
+		FlareLook,			FlareHelp,			FlareMeet,			FlareAttack,	MapZoom,
 		
-		ATTACK_MOVE,
-		SET_RALLY,
-		NO_ACTION1,			NO_ACTION2,
-		EXTRA_INFO,
+		AttackMove,
+		SetRally,
+		NoAction1,			NoAction2,
+		ExtraInfo,
 	};
 }

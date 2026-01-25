@@ -13,19 +13,19 @@ using jsystem.schema.jutility.bti;
 namespace jsystem.exporter;
 
 public sealed class BmdMaterialManager {
-  private readonly Bmd bmd_;
+  private readonly BMD bmd_;
   private readonly IList<IGxTexture> textures_;
   private readonly IList<GxFixedFunctionMaterial> materials_;
 
   public BmdMaterialManager(
       IModel model,
-      Bmd bmd,
+      BMD bmd,
       IList<(string, Bti)>? pathsAndBtis = null) {
     this.bmd_ = bmd;
 
-    var tex1 = bmd.Tex1.Data;
-    this.textures_ = tex1.textureHeaders.Select((textureHeader, i) => {
-                           var textureName = tex1.stringTable[i];
+    var tex1 = bmd.TEX1.Data;
+    this.textures_ = tex1.TextureHeaders.Select((textureHeader, i) => {
+                           var textureName = tex1.StringTable[i];
 
                            return (IGxTexture) new BmdGxTexture(
                                textureName,
@@ -38,16 +38,16 @@ public sealed class BmdMaterialManager {
   }
 
   public GxFixedFunctionMaterial Get(int entryIndex)
-    => this.materials_[this.bmd_.mat3.materialEntryIndieces[entryIndex]];
+    => this.materials_[this.bmd_.MAT3.MaterialEntryIndieces[entryIndex]];
 
   private IList<GxFixedFunctionMaterial>
-      GetMaterials_(IModel model, Bmd bmd) {
+      GetMaterials_(IModel model, BMD bmd) {
     var lazyTextureMap = new GxLazyTextureDictionary(model);
-    return bmd.mat3.materialEntries.Select(
+    return bmd.MAT3.MaterialEntries.Select(
                   (_, i) => new GxFixedFunctionMaterial(
                       model,
                       model.MaterialManager,
-                      bmd.mat3.PopulatedMaterials[i],
+                      bmd.MAT3.PopulatedMaterials[i],
                       this.textures_,
                       lazyTextureMap))
               .ToList();

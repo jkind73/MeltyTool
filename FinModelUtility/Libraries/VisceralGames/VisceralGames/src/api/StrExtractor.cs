@@ -67,7 +67,7 @@ public sealed class StrExtractor {
 
       for (var i = 0; i < contentBlocks.Length; ++i) {
         var block = contentBlocks[i];
-        if (block.Impl.Magic == ContentType.HEADER) {
+        if (block.Impl.Magic == ContentType.Header) {
           headerBlocks.AddLast(((FileInfo) block.Impl.Data, i));
         }
       }

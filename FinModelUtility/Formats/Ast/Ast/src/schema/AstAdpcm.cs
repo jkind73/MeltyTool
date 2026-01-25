@@ -63,7 +63,7 @@ public partial class Ast {
     }
   }
 
-  private static (short, short)[] afcCoefs_ = [
+  private static (short, short)[] afc_coefs = [
       (0, 0),
       (2048, 0),
       (0, 2048),
@@ -101,8 +101,8 @@ public partial class Ast {
 
       var scale = 1 << ((frame[0] >> 4) & 0xf);
       var index = (frame[0] & 0xf);
-      var coef1 = afcCoefs_[index].Item1;
-      var coef2 = afcCoefs_[index].Item2;
+      var coef1 = afc_coefs[index].Item1;
+      var coef2 = afc_coefs[index].Item2;
 
       /* decode nibbles */
       for (var sI = 0; sI < samplesPerFrame; sI++, sampleIndex++) {

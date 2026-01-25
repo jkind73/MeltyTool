@@ -15,16 +15,16 @@ namespace KSoft.LowLevel.Util
 		where T : struct
 	{
 		/// <summary>Size-of (in bytes) of the value type we're managing</summary>
-		public static readonly int KSizeOf = Marshal.SizeOf<T>();
+		public static readonly int kSizeOf = Marshal.SizeOf<T>();
 		/// <summary>Size-of (in bytes) of the value type we're managing</summary>
-		public int SizeOf { get { return KSizeOf; } }
+		public int SizeOf { get { return kSizeOf; } }
 
-		IntPtr mHandle_;
+		IntPtr mHandle;
 
 		/// <summary>Initialize the manager and allocate the underlying object</summary>
 		public StructBitManager()
 		{
-			this.mHandle_ = Unmanaged.New<T>();
+			this.mHandle = Unmanaged.New<T>();
 		}
 
 		#region IDisposable Members
@@ -43,10 +43,10 @@ namespace KSoft.LowLevel.Util
 			KSoft.Util.MarkUnusedVariable(ref disposing);
 
 			// check to see if we've already been called
-			if (this.mHandle_ != IntPtr.Zero)
+			if (this.mHandle != IntPtr.Zero)
 			{
-				Unmanaged.Delete(this.mHandle_);
-				this.mHandle_ = IntPtr.Zero;
+				Unmanaged.Delete(this.mHandle);
+				this.mHandle = IntPtr.Zero;
 			}
 		}
 		#endregion
@@ -58,9 +58,9 @@ namespace KSoft.LowLevel.Util
 		{
 			Contract.Requires(buffer != null);
 			Contract.Requires(startIndex < buffer.Length);
-			Contract.Requires((startIndex+KSizeOf) < buffer.Length);
+			Contract.Requires((startIndex+kSizeOf) < buffer.Length);
 
-			Marshal.Copy(buffer, startIndex, this.mHandle_, KSizeOf);
+			Marshal.Copy(buffer, startIndex, this.mHandle, kSizeOf);
 		}
 
 		/// <summary>Copies the underlying <typeparamref name="T"/> object to a buffer</summary>
@@ -71,9 +71,9 @@ namespace KSoft.LowLevel.Util
 		{
 			Contract.Requires(buffer != null);
 			Contract.Requires(startIndex < buffer.Length);
-			Contract.Requires((startIndex+KSizeOf) < buffer.Length);
+			Contract.Requires((startIndex+kSizeOf) < buffer.Length);
 
-			Marshal.Copy(this.mHandle_, buffer, startIndex, KSizeOf);
+			Marshal.Copy(this.mHandle, buffer, startIndex, kSizeOf);
 		}
 		/// <summary>Get a buffer containing the underlying <typeparamref name="T"/> object's bytes</summary>
 		/// <returns>A buffer holding the underlying object's bytes</returns>
@@ -82,8 +82,8 @@ namespace KSoft.LowLevel.Util
 		{
 			Contract.Ensures(Contract.Result<byte[]>() != null);
 
-			byte[] buffer = new byte[KSizeOf];
-			Marshal.Copy(this.mHandle_, buffer, 0, KSizeOf);
+			byte[] buffer = new byte[kSizeOf];
+			Marshal.Copy(this.mHandle, buffer, 0, kSizeOf);
 
 			return buffer;
 		}
@@ -92,7 +92,7 @@ namespace KSoft.LowLevel.Util
 		/// <param name="value"></param>
 		public void FromValue(T value)
 		{
-			Unmanaged.StructureToPtr(value, this.mHandle_);
+			Unmanaged.StructureToPtr(value, this.mHandle);
 		}
 
 		/// <summary>Get the underlying <typeparamref name="T"/> object</summary>
@@ -100,7 +100,7 @@ namespace KSoft.LowLevel.Util
 		[Contracts.Pure]
 		public T ToValue()
 		{
-			return Unmanaged.IntPtrToStructure<T>(this.mHandle_);
+			return Unmanaged.IntPtrToStructure<T>(this.mHandle);
 		}
 	};
 }

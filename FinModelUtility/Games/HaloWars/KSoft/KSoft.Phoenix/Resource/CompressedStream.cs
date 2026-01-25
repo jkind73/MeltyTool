@@ -15,26 +15,26 @@ namespace KSoft.Phoenix.Resource
 	{
 		enum Mode : uint
 		{
-			STREAMING,
-			BUFFERED,
-			BUFFERED_END,
+			Streaming,
+			Buffered,
+			BufferedEnd,
 		};
 
 		/// <summary>Max size of a chunk of a in a buffered stream</summary>
-		const int K_BUFFERED_SIZE_ = 0x2000; // cOutBufSize
+		const int kBufferedSize = 0x2000; // cOutBufSize
 
-		public const uint K_SIGNATURE = 0xCC34EEAD;
-		const uint K_SIGNATURE_END_OF_STREAM_ = 0xA5D91776;
+		public const uint kSignature = 0xCC34EEAD;
+		const uint kSignatureEndOfStream = 0xA5D91776;
 
-		Header mHeader_;
-		bool mUseBufferedStreaming_;
+		Header mHeader;
+		bool mUseBufferedStreaming;
 
 		public byte[] CompressedData { get; private set; }
 		public byte[] UncompressedData { get; private set; }
 
 		public CompressedStream(bool useBufferedStreaming = false)
 		{
-			this.mUseBufferedStreaming_ = useBufferedStreaming;
+			this.mUseBufferedStreaming = useBufferedStreaming;
 		}
 
 		#region IDisposable Members
@@ -52,28 +52,28 @@ namespace KSoft.Phoenix.Resource
 		void StreamCompressedData(IO.EndianStream s)
 		{
 			if (s.IsReading)
-				this.CompressedData = new byte[(int) this.mHeader_.compressedSize];
+				this.CompressedData = new byte[(int) this.mHeader.CompressedSize];
 
 			s.Stream(this.CompressedData);
-			s.StreamSignature(K_SIGNATURE_END_OF_STREAM_);
+			s.StreamSignature(kSignatureEndOfStream);
 		}
 
 		#region Chunk buffering
 		int ReadChunk(IO.EndianReader s, System.IO.MemoryStream ms)
 		{
-			ushort chunkSize = s.ReadUInt16(), negateChunkSize = s.ReadUInt16();
+			ushort chunk_size = s.ReadUInt16(), negate_chunk_size = s.ReadUInt16();
 
-			ushort expectedNegate = (ushort)~chunkSize;
-			if (expectedNegate != negateChunkSize)
+			ushort expected_negate = (ushort)~chunk_size;
+			if (expected_negate != negate_chunk_size)
 			{
 				throw new IO.SignatureMismatchException(s.BaseStream,
-					expectedNegate, negateChunkSize);
+					expected_negate, negate_chunk_size);
 			}
 
-			byte[] bytes = s.ReadBytes(chunkSize);
+			byte[] bytes = s.ReadBytes(chunk_size);
 			ms.Write(bytes, 0, bytes.Length);
 
-			return chunkSize;
+			return chunk_size;
 		}
 		int WriteChunk(IO.EndianWriter s, int chunkStart, ref int bytesRemaining)
 		{
@@ -84,16 +84,16 @@ namespace KSoft.Phoenix.Resource
 				return 0;
 			}
 
-			int chunkSize = (bytesRemaining < K_BUFFERED_SIZE_)
-				? this.CompressedData.Length % K_BUFFERED_SIZE_
-				: K_BUFFERED_SIZE_;
-			bytesRemaining -= chunkSize;
+			int chunk_size = (bytesRemaining < kBufferedSize)
+				? this.CompressedData.Length % kBufferedSize
+				: kBufferedSize;
+			bytesRemaining -= chunk_size;
 
-			s.Write((ushort)chunkSize);
-			s.Write((ushort)~chunkSize);
-			s.Write(this.CompressedData, chunkStart, chunkSize);
+			s.Write((ushort)chunk_size);
+			s.Write((ushort)~chunk_size);
+			s.Write(this.CompressedData, chunkStart, chunk_size);
 
-			return chunkSize;
+			return chunk_size;
 		}
 		void ReadCompressedDataInChunks(IO.EndianStream s, int initBufferCapacity)
 		{
@@ -102,20 +102,20 @@ namespace KSoft.Phoenix.Resource
 				while (this.ReadChunk(s.Reader, ms) != 0)
 				{
 				}
-				s.StreamSignature(K_SIGNATURE_END_OF_STREAM_);
+				s.StreamSignature(kSignatureEndOfStream);
 
 				this.CompressedData = ms.ToArray();
 			}
 		}
 		void WriteCompressedDataInChunks(IO.EndianStream s)
 		{
-			for (int offset = 0, size = 0, bytesRemaining = this.CompressedData.Length;
-				(size = this.WriteChunk(s.Writer, offset, ref bytesRemaining)) != 0;
+			for (int offset = 0, size = 0, bytes_remaining = this.CompressedData.Length;
+				(size = this.WriteChunk(s.Writer, offset, ref bytes_remaining)) != 0;
 				offset += size)
 			{
 			}
 
-			s.StreamSignature(K_SIGNATURE_END_OF_STREAM_);
+			s.StreamSignature(kSignatureEndOfStream);
 		}
 		void StreamCompressedDataInChunks(IO.EndianStream s, int initBufferCapacity = 4096)
 		{
@@ -136,43 +136,43 @@ namespace KSoft.Phoenix.Resource
 
 			if (s.IsReading)
 			{
-				s.Stream(ref this.mHeader_);
+				s.Stream(ref this.mHeader);
 
-				this.mHeader_.UpdateHeaderCrc();
-				this.mUseBufferedStreaming_ = this.mHeader_.UseBufferedStreaming;
+				this.mHeader.UpdateHeaderCrc();
+				this.mUseBufferedStreaming = this.mHeader.UseBufferedStreaming;
 			}
 			else if (writing)
 			{
-				var head = this.mUseBufferedStreaming_
-					? KBufferedHeader
-					: this.mHeader_;
+				var head = this.mUseBufferedStreaming
+					? kBufferedHeader
+					: this.mHeader;
 				s.Stream(ref head);
 			}
 
-			if (!this.mUseBufferedStreaming_)
+			if (!this.mUseBufferedStreaming)
 			{
-				Contract.Assert(!writing || this.mHeader_.streamMode == (uint)Mode.STREAMING);
+				Contract.Assert(!writing || this.mHeader.StreamMode == (uint)Mode.Streaming);
 
 				this.StreamCompressedData(s);
 			}
 			else
 			{
-				Contract.Assert(!writing || this.mHeader_.streamMode == (uint)Mode.BUFFERED);
+				Contract.Assert(!writing || this.mHeader.StreamMode == (uint)Mode.Buffered);
 
 				this.StreamCompressedDataInChunks(s);
-				s.Stream(ref this.mHeader_); // actual header appears after the chunks
+				s.Stream(ref this.mHeader); // actual header appears after the chunks
 
-				Contract.Assert(!writing || this.mHeader_.streamMode == (uint)Mode.BUFFERED_END);
+				Contract.Assert(!writing || this.mHeader.StreamMode == (uint)Mode.BufferedEnd);
 			}
 		}
 		#endregion
 
 		public void ReadData(System.IO.Stream s)
 		{
-			this.UncompressedData = new byte[this.mHeader_.uncompressedSize];
+			this.UncompressedData = new byte[this.mHeader.UncompressedSize];
 			s.Read(this.UncompressedData, 0, this.UncompressedData.Length);
 
-			this.mHeader_.uncompressedAdler32 = Adler32.Compute(this.UncompressedData);
+			this.mHeader.UncompressedAdler32 = Adler32.Compute(this.UncompressedData);
 		}
 		public void WriteData(System.IO.Stream s)
 		{
@@ -182,19 +182,19 @@ namespace KSoft.Phoenix.Resource
 		{
 			Contract.Requires(source.CanRead);
 
-			this.mHeader_.uncompressedSize = (ulong)source.Length;
+			this.mHeader.UncompressedSize = (ulong)source.Length;
 			this.ReadData(source);
 		}
 
 		public void Compress(int level = 5)
 		{
 			Contract.Requires(level.IsNone() ||
-				(level >= IO.Compression.ZLib.K_NO_COMPRESSION && level <= IO.Compression.ZLib.K_BEST_COMPRESSION));
+				(level >= IO.Compression.ZLib.kNoCompression && level <= IO.Compression.ZLib.kBestCompression));
 
 			// Assume the compressed data will be at most the same size as the uncompressed data
-			if (this.CompressedData == null || this.CompressedData.Length < (int) this.mHeader_.uncompressedSize)
+			if (this.CompressedData == null || this.CompressedData.Length < (int) this.mHeader.UncompressedSize)
 			{
-				this.CompressedData = new byte[this.mHeader_.uncompressedSize];
+				this.CompressedData = new byte[this.mHeader.UncompressedSize];
 			}
 			else
 			{
@@ -206,8 +206,8 @@ namespace KSoft.Phoenix.Resource
 			                                                        out adler32/*mHeader.CompressedAdler32*/,
 			                                                        this.CompressedData);
 
-			this.mHeader_.compressedAdler32 = Adler32.Compute(this.CompressedData);
-			if (this.mHeader_.compressedAdler32 != adler32)
+			this.mHeader.CompressedAdler32 = Adler32.Compute(this.CompressedData);
+			if (this.mHeader.CompressedAdler32 != adler32)
 			{
 #if false
 				Debug.Trace.Resource.TraceInformation("ZLib.LowLevelCompress returned different adler32 ({0}) than our computations ({1}). Uncompressed adler32={2}",
@@ -217,13 +217,13 @@ namespace KSoft.Phoenix.Resource
 #endif
 			}
 
-			this.mHeader_.compressedSize = (ulong) this.CompressedData.LongLength;
+			this.mHeader.CompressedSize = (ulong) this.CompressedData.LongLength;
 		}
 		public void Decompress()
 		{
-			if (this.UncompressedData == null || this.UncompressedData.Length < (int) this.mHeader_.uncompressedSize)
+			if (this.UncompressedData == null || this.UncompressedData.Length < (int) this.mHeader.UncompressedSize)
 			{
-				this.UncompressedData = new byte[this.mHeader_.uncompressedSize];
+				this.UncompressedData = new byte[this.mHeader.UncompressedSize];
 			}
 			else
 			{

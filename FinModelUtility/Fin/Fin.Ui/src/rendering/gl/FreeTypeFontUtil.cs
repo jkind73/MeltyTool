@@ -12,7 +12,7 @@ public static class FreeTypeFontUtil {
       return;
     }
 
-    FreeTypeFont.Init(DirectoryConstants.dllDirectory);
+    FreeTypeFont.Init(DirectoryConstants.DLL_DIRECTORY);
     isInit_ = true;
   }
 }

@@ -18,7 +18,7 @@ public sealed class Ped : ITextDeserializable {
       var lodIndex = tr.ReadUInt32();
       tr.ReadUpToAndPastTerminator('{');
       xmodNames.AddLast(
-          tr.ReadUpToAndPastTerminator(TextReaderUtils.closingBrace).Trim());
+          tr.ReadUpToAndPastTerminator(TextReaderUtils.CLOSING_BRACE).Trim());
       tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
     }
 
@@ -32,7 +32,7 @@ public sealed class Ped : ITextDeserializable {
         break;
       }
 
-      var key = tr.ReadUpToAndPastTerminator(TextReaderUtils.colon);
+      var key = tr.ReadUpToAndPastTerminator(TextReaderUtils.COLON);
       var value = tr.ReadLine().Trim();
       this.AnimMap[key] = value;
     }

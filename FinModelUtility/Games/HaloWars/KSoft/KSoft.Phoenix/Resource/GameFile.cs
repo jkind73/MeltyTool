@@ -14,19 +14,19 @@ namespace KSoft.Phoenix.Resource
 	[Flags]
 		internal enum FileFlags : ushort
 		{
-			COMPRESS_CONTENT = 1<<0,
-			ENCRYPT_CONTENT = 1<<1,
-			ENCRYPT_HEADER = 1<<2,
+			CompressContent = 1<<0,
+			EncryptContent = 1<<1,
+			EncryptHeader = 1<<2,
 
-			K_ALL = COMPRESS_CONTENT | ENCRYPT_CONTENT | ENCRYPT_HEADER,
+			kAll = CompressContent | EncryptContent | EncryptHeader,
 		};
-		const ushort K_VERSION_ = 0x17;
+		const ushort kVersion = 0x17;
 
-		const int K_MAX_CONTENT_SIZE_ = 0xDD240;
+		const int kMaxContentSize = 0xDD240;
 		/// <summary>Number of random words that follow the content payload</summary>
-		const int K_RANDOM_BLOCK_WORDS_ = 0xA00;
+		const int kRandomBlockWords = 0xA00;
 
-		FileFlags flags_ = FileFlags.K_ALL;
+		FileFlags Flags = FileFlags.kAll;
 		internal SHA1CryptoServiceProvider ShaContext { get; set; } = new SHA1CryptoServiceProvider();
 
 		public MediaHeader Header { get; private set; } = new MediaHeader();
@@ -38,15 +38,15 @@ namespace KSoft.Phoenix.Resource
 		{
 			this.ShaContext.Initialize();
 
-			PhxHash.UInt16(this.ShaContext, (ushort) this.flags_);
-			PhxHash.UInt16(this.ShaContext, K_VERSION_);
+			PhxHash.UInt16(this.ShaContext, (ushort) this.Flags);
+			PhxHash.UInt16(this.ShaContext, kVersion);
 
 			this.Header.UpdateHash(this.ShaContext);
 		}
 
 		static uint WriteRandomBlock(IO.EndianWriter s, uint seed = 1)
 		{
-			for (int x = K_RANDOM_BLOCK_WORDS_; x > 0; x--)
+			for (int x = kRandomBlockWords; x > 0; x--)
 			{
 				uint r8 = seed << 17;
 				uint r7 = r8 ^ seed;
@@ -79,8 +79,8 @@ namespace KSoft.Phoenix.Resource
 
 					if (s.IsReading)
 					{
-						var tea = new Security.Cryptography.PhxTea(s.Reader, crypted.Writer);
-						tea.InitializeKey(Security.Cryptography.PhxTea.KKeyGameFile, userKey);
+						var tea = new Security.Cryptography.PhxTEA(s.Reader, crypted.Writer);
+						tea.InitializeKey(Security.Cryptography.PhxTEA.kKeyGameFile, userKey);
 						tea.Decrypt(size);
 
 						crypted.Seek(0);
@@ -95,8 +95,8 @@ namespace KSoft.Phoenix.Resource
 					{
 						crypted.Seek(0);
 
-						var tea = new Security.Cryptography.PhxTea(crypted.Reader, s.Writer);
-						tea.InitializeKey(Security.Cryptography.PhxTea.KKeyGameFile, userKey);
+						var tea = new Security.Cryptography.PhxTEA(crypted.Reader, s.Writer);
+						tea.InitializeKey(Security.Cryptography.PhxTEA.kKeyGameFile, userKey);
 						tea.Encrypt(size);
 					}
 				}
@@ -122,15 +122,15 @@ namespace KSoft.Phoenix.Resource
 		{
 //			WriteRandomBlocks(ew);
 
-			if (ew.BaseStream.Length < K_MAX_CONTENT_SIZE_)
+			if (ew.BaseStream.Length < kMaxContentSize)
 			{
-				int paddingBytesCount = System.Math.Min(this.PaddingBytes.Length, K_MAX_CONTENT_SIZE_ - (int)(ew.BaseStream.Length));
-				ew.Write(this.PaddingBytes, 0, paddingBytesCount);
+				int padding_bytes_count = System.Math.Min(this.PaddingBytes.Length, kMaxContentSize - (int)(ew.BaseStream.Length));
+				ew.Write(this.PaddingBytes, 0, padding_bytes_count);
 			}
 
-			if (ew.BaseStream.Length < K_MAX_CONTENT_SIZE_)
+			if (ew.BaseStream.Length < kMaxContentSize)
 			{
-				byte[] zero = new byte[K_MAX_CONTENT_SIZE_ - (int)(ew.BaseStream.Length)];
+				byte[] zero = new byte[kMaxContentSize - (int)(ew.BaseStream.Length)];
 				Array.Clear(zero, 0, zero.Length);
 				ew.Write(zero, 0, zero.Length);
 			}
@@ -148,8 +148,8 @@ namespace KSoft.Phoenix.Resource
 			{
 				using (var cs = new CompressedStream(true))
 				{
-					Stream(s, EnumFlags.Test(this.flags_, FileFlags.ENCRYPT_CONTENT), cs,
-						userKey: this.Header.dataCryptKey, streamLeftovers: this.StreamLeftovers);
+					Stream(s, EnumFlags.Test(this.Flags, FileFlags.EncryptContent), cs,
+						userKey: this.Header.DataCryptKey, streamLeftovers: this.StreamLeftovers);
 
 					cs.Decompress();
 					this.Content = cs.UncompressedData;
@@ -158,7 +158,7 @@ namespace KSoft.Phoenix.Resource
 			else if (s.IsWriting)
 			{
 				using (var cs = new CompressedStream(true))
-				using (var ms = new System.IO.MemoryStream(K_MAX_CONTENT_SIZE_))
+				using (var ms = new System.IO.MemoryStream(kMaxContentSize))
 				using (var sout = new IO.EndianWriter(ms, s.ByteOrder))
 				{
 					sout.Write(this.Content);
@@ -167,8 +167,8 @@ namespace KSoft.Phoenix.Resource
 					cs.InitializeFromStream(ms);
 					cs.Compress();
 
-					Stream(s, EnumFlags.Test(this.flags_, FileFlags.ENCRYPT_CONTENT), cs,
-						userKey: this.Header.dataCryptKey, streamLeftovers: this.StreamLeftovers);
+					Stream(s, EnumFlags.Test(this.Flags, FileFlags.EncryptContent), cs,
+						userKey: this.Header.DataCryptKey, streamLeftovers: this.StreamLeftovers);
 				}
 			}
 		}
@@ -181,13 +181,13 @@ namespace KSoft.Phoenix.Resource
 				//Flags = EnumFlags.Remove(Flags, FileFlags.EncryptHeader | FileFlags.EncryptContent);
 			}
 
-			s.Stream(ref this.flags_, FileFlagsStreamer.Instance);
-			s.StreamVersion(K_VERSION_);
+			s.Stream(ref this.Flags, FileFlagsStreamer.Instance);
+			s.StreamVersion(kVersion);
 
-			Stream(s, EnumFlags.Test(this.flags_, FileFlags.ENCRYPT_HEADER), this.Header, MediaHeader.K_SIZE_OF);
+			Stream(s, EnumFlags.Test(this.Flags, FileFlags.EncryptHeader), this.Header, MediaHeader.kSizeOf);
 			this.GenerateHash();
 
-			if (EnumFlags.Test(this.flags_, FileFlags.COMPRESS_CONTENT))
+			if (EnumFlags.Test(this.Flags, FileFlags.CompressContent))
 			{
 				this.StreamCompressedContent(s);
 			}

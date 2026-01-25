@@ -33,7 +33,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
 
     var sb = new IndentedStringBuilder();
     sb.AppendLine(
-        $"#version {GlslConstants.FragmentShaderVersion}");
+        $"#version {GlslConstants.FRAGMENT_SHADER_VERSION}");
     sb.AppendLine(GlslConstants.FLOAT_PRECISION);
     sb.AppendLine();
 
@@ -54,7 +54,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     if (this.hasLighting_) {
       sb.AppendLine(
           $"""
-           {GlslUtil.LightHeader}
+           {GlslUtil.LIGHT_HEADER}
 
            """);
     }

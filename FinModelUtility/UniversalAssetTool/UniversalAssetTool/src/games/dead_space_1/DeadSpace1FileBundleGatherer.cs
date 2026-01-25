@@ -32,7 +32,7 @@ public sealed class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
     var mtlbFileIdsDictionary = new MtlbFileIdsDictionary(
         extractedDir,
         new FinFile(Path.Join(cacheDir.FullPath, "mtlbs.ids")));
-    var tg4HFileIdDictionary = new Tg4HFileIdDictionary(
+    var tg4hFileIdDictionary = new Tg4hFileIdDictionary(
         extractedDir,
         new FinFile(Path.Join(cacheDir.FullPath, "tg4hs.ids")));
 
@@ -65,7 +65,7 @@ public sealed class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
             RcbFile = rcbFile,
             BnkFileIdsDictionary = bnkFileIdsDictionary,
             MtlbFileIdsDictionary = mtlbFileIdsDictionary,
-            Tg4HFileIdDictionary = tg4HFileIdDictionary,
+            Tg4hFileIdDictionary = tg4hFileIdDictionary,
         }.Annotate(geoFiles.FirstOrDefault() ?? rcbFile!));
       } else {
         ;

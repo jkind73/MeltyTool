@@ -14,7 +14,7 @@ namespace KSoft.IO
 	public sealed partial class EndianReader : BinaryReader, IKSoftBinaryStream, IKSoftEndianStream
 	{
 		#region BinaryReader Accessors
-		static readonly Reflection.Util.ReferenceTypeMemberSetterDelegate<BinaryReader, Stream> KSetBaseStream =
+		static readonly Reflection.Util.ReferenceTypeMemberSetterDelegate<BinaryReader, Stream> kSetBaseStream =
 			Reflection.Util.GenerateReferenceTypeMemberSetter<BinaryReader, Stream>("m_stream");
 		#endregion
 
@@ -37,14 +37,14 @@ namespace KSoft.IO
 
 			this.ByteOrder = byteOrder;
 			this.Owner = streamOwner;
-			this.mStringEncoding_ = encoding;
+			this.mStringEncoding = encoding;
 
 			this.StreamName = name ?? "(unnamed)";
 
 			// If the stream is a different endian than the runtime, data will
 			// be byte swapped of course
 			//this.mRequiresByteSwap = Shell.Platform.Environment.ProcessorType.ByteOrder != byteOrder;
-			this.mRequiresByteSwap_ = !byteOrder.IsSameAsRuntime();
+			this.mRequiresByteSwap = !byteOrder.IsSameAsRuntime();
 		}
 
 		/// <summary>Create a new binary reader which respects the endian format of the underlying stream's bytes</summary>
@@ -192,7 +192,7 @@ namespace KSoft.IO
 
 			// Explicitly check for Little endian since this is
 			// a character array and not a primitive integer
-			if (this.ByteOrder == Shell.EndianFormat.LITTLE)
+			if (this.ByteOrder == Shell.EndianFormat.Little)
 			{
 				Array.Reverse(tag, 0, 4);
 				return tag;
@@ -231,7 +231,7 @@ namespace KSoft.IO
 
 			// Explicitly check for Little endian since this is
 			// a character array and not a primitive integer
-			if (this.ByteOrder == Shell.EndianFormat.LITTLE)
+			if (this.ByteOrder == Shell.EndianFormat.Little)
 			{
 				Array.Reverse(tag, 0, 4);
 				Array.Reverse(tag, 4, 4);
@@ -255,7 +255,7 @@ namespace KSoft.IO
 		public uint ReadTagUInt32()
 		{
 			uint value = base.ReadUInt32();
-			if (this.mRequiresByteSwap_)	Bitwise.ByteSwap.Swap(ref value);
+			if (this.mRequiresByteSwap)	Bitwise.ByteSwap.Swap(ref value);
 
 			return value;
 		}
@@ -266,7 +266,7 @@ namespace KSoft.IO
 		public ulong ReadTagUInt64()
 		{
 			ulong value = base.ReadUInt64();
-			if (this.mRequiresByteSwap_)	Bitwise.ByteSwap.Swap(ref value);
+			if (this.mRequiresByteSwap)	Bitwise.ByteSwap.Swap(ref value);
 
 			return value;
 		}
@@ -280,7 +280,7 @@ namespace KSoft.IO
 		public int ReadInt24()
 		{
 			int value = this.ReadByte() | (this.ReadByte() << 8) | (this.ReadByte() << 16);
-			if(this.mRequiresByteSwap_) Bitwise.ByteSwap.SwapInt24(ref value);
+			if(this.mRequiresByteSwap) Bitwise.ByteSwap.SwapInt24(ref value);
 
 			value = Bits.SignExtend(value, 24);
 			return value;
@@ -291,7 +291,7 @@ namespace KSoft.IO
 		public uint ReadUInt24()
 		{
 			uint value = (uint)(this.ReadByte() | (this.ReadByte() << 8) | (this.ReadByte() << 16));
-			if(this.mRequiresByteSwap_) Bitwise.ByteSwap.SwapUInt24(ref value);
+			if(this.mRequiresByteSwap) Bitwise.ByteSwap.SwapUInt24(ref value);
 
 			return value;
 		}
@@ -307,7 +307,7 @@ namespace KSoft.IO
 				((ulong)this.ReadByte() << 24) |
 				((ulong)this.ReadByte() << 32)
 				;
-			if(this.mRequiresByteSwap_) Bitwise.ByteSwap.SwapUInt40(ref value);
+			if(this.mRequiresByteSwap) Bitwise.ByteSwap.SwapUInt40(ref value);
 
 			return value;
 		}
@@ -318,7 +318,7 @@ namespace KSoft.IO
 		static void ValidateStringStorageForStreaming(Memory.Strings.StringStorage s, int length)
 		{
 			// There are going to be issues if we try to read back a willy nilly char array string
-			if (s.Type == Memory.Strings.StringStorageType.CHAR_ARRAY && !s.IsFixedLength && length <= 0)
+			if (s.Type == Memory.Strings.StringStorageType.CharArray && !s.IsFixedLength && length <= 0)
 			{
 				throw new InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Provided string storage and length is invalid for Endian streaming: {0}, {1}",

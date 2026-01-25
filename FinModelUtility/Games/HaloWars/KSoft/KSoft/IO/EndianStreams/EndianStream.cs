@@ -204,25 +204,25 @@ namespace KSoft.IO
 		/// <summary>Convenience class for C# "using" statements where we want to temporarily inverse the current byte order</summary>
 		class EndianFormatSwitchBlock : IDisposable
 		{
-			readonly IDisposable mReaderSwitch_, mWriterSwitch_;
+			readonly IDisposable mReaderSwitch, mWriterSwitch;
 
 			/// <summary></summary>
 			/// <param name="s"></param>
 			public EndianFormatSwitchBlock(EndianStream s)
 			{
 				if (s.Reader != null)
-					this.mReaderSwitch_ = s.Reader.BeginEndianSwitch();
+					this.mReaderSwitch = s.Reader.BeginEndianSwitch();
 				if (s.Writer != null)
-					this.mWriterSwitch_ = s.Writer.BeginEndianSwitch();
+					this.mWriterSwitch = s.Writer.BeginEndianSwitch();
 			}
 
 			#region IDisposable Members
 			public void Dispose()
 			{
-				if (this.mReaderSwitch_ != null)
-					this.mReaderSwitch_.Dispose();
-				if (this.mWriterSwitch_ != null)
-					this.mWriterSwitch_.Dispose();
+				if (this.mReaderSwitch != null)
+					this.mReaderSwitch.Dispose();
+				if (this.mWriterSwitch != null)
+					this.mWriterSwitch.Dispose();
 			}
 			#endregion
 		};
@@ -529,7 +529,7 @@ namespace KSoft.IO
 		#endregion
 
 		#region Stream group tag
-		char[] mTagScratchBuffer_ = new char[8];
+		char[] mTagScratchBuffer = new char[8];
 
 		public EndianStream StreamTag(ref uint value)
 		{
@@ -544,13 +544,13 @@ namespace KSoft.IO
 		{
 			if (this.IsReading)
 			{
-				this.Reader.ReadTag32(this.mTagScratchBuffer_);
-				value = Values.GroupTagData32.ToUInt(this.mTagScratchBuffer_);
+				this.Reader.ReadTag32(this.mTagScratchBuffer);
+				value = Values.GroupTagData32.ToUInt(this.mTagScratchBuffer);
 			}
 			else if (this.IsWriting)
 			{
-				Values.GroupTagData32.FromUInt(value, this.mTagScratchBuffer_);
-				this.Writer.WriteTag32(this.mTagScratchBuffer_);
+				Values.GroupTagData32.FromUInt(value, this.mTagScratchBuffer);
+				this.Writer.WriteTag32(this.mTagScratchBuffer);
 			}
 
 			return this;
@@ -1163,9 +1163,9 @@ namespace KSoft.IO
 				version = VersionOutOfRangeException.AssertZeroBasedEnum(this.Reader, maxCount);
 			else if (this.IsWriting)
 			{
-				var typeCode = Reflection.EnumUtil<TEnum>.UnderlyingTypeCode;
+				var type_code = Reflection.EnumUtil<TEnum>.UnderlyingTypeCode;
 
-				switch (typeCode)
+				switch (type_code)
 				{
 					case TypeCode.SByte:
 					case TypeCode.Byte:
@@ -1196,7 +1196,7 @@ namespace KSoft.IO
 					} break;
 
 					default:
-						throw new Debug.UnreachableException(typeCode.ToString());
+						throw new Debug.UnreachableException(type_code.ToString());
 				}
 			}
 

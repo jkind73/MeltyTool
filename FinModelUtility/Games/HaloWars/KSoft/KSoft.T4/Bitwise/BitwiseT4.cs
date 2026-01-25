@@ -8,18 +8,18 @@ namespace KSoft.T4.Bitwise
 {
 	public enum BitOperation
 	{
-		CLEAR,
-		SET,
-		TOGGLE,
-		TEST,
+		Clear,
+		Set,
+		Toggle,
+		Test,
 
-		K_FIRST = CLEAR,
-		K_LAST = TEST
+		kFirst = Clear,
+		kLast = Test
 	};
 
 	public static partial class BitwiseT4
 	{
-		public const int K_BITS_PER_BYTE = sizeof(byte) * 8;
+		public const int kBitsPerByte = sizeof(byte) * 8;
 
 		// Get the keyword used to define general constants for integer types (bit count, etc)
 		public static string GetConstantKeyword(this NumberCodeDefinition def)
@@ -63,20 +63,20 @@ namespace KSoft.T4.Bitwise
 		#region Bitstream related
 		/// <summary>	The integer type to use for bitstream cache operations. </summary>
 		public static NumberCodeDefinition BitStreamCacheWord { get {
-			return PrimitiveDefinitions.KUInt32;
+			return PrimitiveDefinitions.kUInt32;
 		} }
 		public static IEnumerable<PrimitiveCodeDefinition> BitStreambleIntegerTypes { get {
-			yield return PrimitiveDefinitions.KChar;
+			yield return PrimitiveDefinitions.kChar;
 
-			foreach (var numType in PrimitiveDefinitions.Numbers)
-				if (numType.IsInteger)
-					yield return numType;
+			foreach (var num_type in PrimitiveDefinitions.Numbers)
+				if (num_type.IsInteger)
+					yield return num_type;
 		} }
 		public static IEnumerable<PrimitiveCodeDefinition> BitStreambleNonIntegerTypes { get {
-			yield return PrimitiveDefinitions.KBool;
+			yield return PrimitiveDefinitions.kBool;
 
-			yield return PrimitiveDefinitions.KSingle;
-			yield return PrimitiveDefinitions.KDouble;
+			yield return PrimitiveDefinitions.kSingle;
+			yield return PrimitiveDefinitions.kDouble;
 		} }
 		#endregion
 
@@ -85,10 +85,10 @@ namespace KSoft.T4.Bitwise
 		{
 			switch (op)
 			{
-			case BitOperation.CLEAR:	return "Bitwise.Flags.Remove";
-			case BitOperation.SET:		return "Bitwise.Flags.Add";
-			case BitOperation.TOGGLE:	return "Bitwise.Flags.Toggle";
-			case BitOperation.TEST:		return "Bitwise.Flags.TestAny";
+			case BitOperation.Clear:	return "Bitwise.Flags.Remove";
+			case BitOperation.Set:		return "Bitwise.Flags.Add";
+			case BitOperation.Toggle:	return "Bitwise.Flags.Toggle";
+			case BitOperation.Test:		return "Bitwise.Flags.TestAny";
 
 			default: throw new InvalidOperationException(op.ToString());
 			}
@@ -97,9 +97,9 @@ namespace KSoft.T4.Bitwise
 		{
 			switch (op)
 			{
-			case BitOperation.CLEAR:
-			case BitOperation.SET:
-			case BitOperation.TOGGLE:
+			case BitOperation.Clear:
+			case BitOperation.Set:
+			case BitOperation.Toggle:
 				return "ref";
 
 			default:
@@ -110,7 +110,7 @@ namespace KSoft.T4.Bitwise
 		{
 			switch (op)
 			{
-			case BitOperation.TEST:
+			case BitOperation.Test:
 				return "bool";
 
 			default:
@@ -121,7 +121,7 @@ namespace KSoft.T4.Bitwise
 		{
 			switch (op)
 			{
-			case BitOperation.TEST:
+			case BitOperation.Test:
 				return "false";
 
 			default:
@@ -130,97 +130,97 @@ namespace KSoft.T4.Bitwise
 		}
 		public static bool IsNotPure(this BitOperation op)
 		{
-			return op != BitOperation.TEST;
+			return op != BitOperation.Test;
 		}
 		public static bool RequiresCardinalityReUpdate(this BitOperation op)
 		{
-			return op != BitOperation.TEST;
+			return op != BitOperation.Test;
 		}
 		#endregion
 
 		#region BittableTypes
-		static readonly IReadOnlyList<NumberCodeDefinition> KBittableTypesUnsigned = new List<NumberCodeDefinition> {
-			PrimitiveDefinitions.KByte,
-			PrimitiveDefinitions.KUInt16,
-			PrimitiveDefinitions.KUInt32,
-			PrimitiveDefinitions.KUInt64,
+		static readonly IReadOnlyList<NumberCodeDefinition> kBittableTypes_Unsigned = new List<NumberCodeDefinition> {
+			PrimitiveDefinitions.kByte,
+			PrimitiveDefinitions.kUInt16,
+			PrimitiveDefinitions.kUInt32,
+			PrimitiveDefinitions.kUInt64,
 		};
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1707:IdentifiersShouldNotContainUnderscores")]
-		public static IReadOnlyList<NumberCodeDefinition> BittableTypesUnsigned { get {
-			return KBittableTypesUnsigned;
+		public static IReadOnlyList<NumberCodeDefinition> BittableTypes_Unsigned { get {
+			return kBittableTypes_Unsigned;
 		} }
 
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1707:IdentifiersShouldNotContainUnderscores")]
-		public static IEnumerable<NumberCodeDefinition> BittableTypesMajorWords { get {
-			yield return PrimitiveDefinitions.KUInt32;
-			yield return PrimitiveDefinitions.KUInt64;
+		public static IEnumerable<NumberCodeDefinition> BittableTypes_MajorWords { get {
+			yield return PrimitiveDefinitions.kUInt32;
+			yield return PrimitiveDefinitions.kUInt64;
 		} }
 
 		public static IEnumerable<NumberCodeDefinition> BittableTypes { get {
-			return PrimitiveDefinitions.Numbers.Where(numType => numType.IsInteger);
+			return PrimitiveDefinitions.Numbers.Where(num_type => num_type.IsInteger);
 		} }
 
 		public static IEnumerable<NumberCodeDefinition> BittableTypesInt32 { get {
-			yield return PrimitiveDefinitions.KUInt32;
-			yield return PrimitiveDefinitions.KInt32;
+			yield return PrimitiveDefinitions.kUInt32;
+			yield return PrimitiveDefinitions.kInt32;
 		} }
 		public static IEnumerable<NumberCodeDefinition> BittableTypesInt32And64 { get {
-			yield return PrimitiveDefinitions.KUInt32;
-			yield return PrimitiveDefinitions.KInt32;
-			yield return PrimitiveDefinitions.KUInt64;
-			yield return PrimitiveDefinitions.KInt64;
+			yield return PrimitiveDefinitions.kUInt32;
+			yield return PrimitiveDefinitions.kInt32;
+			yield return PrimitiveDefinitions.kUInt64;
+			yield return PrimitiveDefinitions.kInt64;
 		} }
 		#endregion
 
 		public sealed class IntegerByteAccessCodeGenerator
 		{
-			static readonly string KByteKeyword = NumberCodeDefinition.TypeCodeToKeyword(TypeCode.Byte);
+			static readonly string kByteKeyword = NumberCodeDefinition.TypeCodeToKeyword(TypeCode.Byte);
 
-			readonly TextTemplating.TextTransformation mFile_;
+			readonly TextTemplating.TextTransformation mFile;
 			//readonly NumberCodeDefinition mDef;
-			readonly int mSizeOfInBits_;
-			readonly int mSizeOfInBytes_;
-			readonly string mByteName_;
+			readonly int mSizeOfInBits;
+			readonly int mSizeOfInBytes;
+			readonly string mByteName;
 
-			readonly string mBufferName_;
-			readonly string mOffsetName_; // NOTE: offset variable must be mutable!
+			readonly string mBufferName;
+			readonly string mOffsetName; // NOTE: offset variable must be mutable!
 
 			internal IntegerByteAccessCodeGenerator(TextTemplating.TextTransformation ttFile,
 				NumberCodeDefinition def,
 				string byteName, string bufferName, string offsetName = null,
 				int bitCount = -1)
 			{
-				this.mFile_ = ttFile;
+				this.mFile = ttFile;
 				//mDef = def;
-				this.mSizeOfInBits_ = bitCount == -1
+				this.mSizeOfInBits = bitCount == -1
 					? def.SizeOfInBits
 					: bitCount;
-				this.mSizeOfInBytes_ = bitCount == -1
+				this.mSizeOfInBytes = bitCount == -1
 					? def.SizeOfInBytes
-					: bitCount / K_BITS_PER_BYTE;
-				this.mByteName_ = byteName;
+					: bitCount / kBitsPerByte;
+				this.mByteName = byteName;
 
-				this.mBufferName_ = bufferName;
-				this.mOffsetName_ = offsetName;
+				this.mBufferName = bufferName;
+				this.mOffsetName = offsetName;
 			}
 
 			void GenerateByteDeclarationsCode()
 			{
-				this.mFile_.Write("{0} ", KByteKeyword);
-				for (int x = 0; x < this.mSizeOfInBytes_; x++)
+				this.mFile.Write("{0} ", kByteKeyword);
+				for (int x = 0; x < this.mSizeOfInBytes; x++)
 				{
-					this.mFile_.Write("{0}{1}", this.mByteName_, x);
+					this.mFile.Write("{0}{1}", this.mByteName, x);
 
-					if (x < (this.mSizeOfInBytes_ - 1))
-						this.mFile_.Write(", ");
+					if (x < (this.mSizeOfInBytes - 1))
+						this.mFile.Write(", ");
 				}
 
-				this.mFile_.WriteLine(";");
+				this.mFile.WriteLine(";");
 			}
 			public void GenerateByteDeclarations()
 			{
 				// indent to method code body's indention level
-				using (this.mFile_.EnterCodeBlock(indentCount: 3))
+				using (this.mFile.EnterCodeBlock(indentCount: 3))
 				{
 					this.GenerateByteDeclarationsCode();
 				}
@@ -228,18 +228,18 @@ namespace KSoft.T4.Bitwise
 
 			void GenerateBytesFromBufferCode()
 			{
-				Debug.Assert(this.mOffsetName_ != null, "generator not setup for read/write from/to a buffer");
+				Debug.Assert(this.mOffsetName != null, "generator not setup for read/write from/to a buffer");
 
-				for (int x = 0; x < this.mSizeOfInBytes_; x++, this.mFile_.WriteLine(";"))
+				for (int x = 0; x < this.mSizeOfInBytes; x++, this.mFile.WriteLine(";"))
 				{
-					this.mFile_.Write("{0}{1} = ", this.mByteName_, x);
-					this.mFile_.Write("{0}[{1}++]", this.mBufferName_, this.mOffsetName_);
+					this.mFile.Write("{0}{1} = ", this.mByteName, x);
+					this.mFile.Write("{0}[{1}++]", this.mBufferName, this.mOffsetName);
 				}
 			}
 			public void GenerateBytesFromBuffer()
 			{
 				// indent to method code body's indention level
-				using (this.mFile_.EnterCodeBlock(indentCount: 3))
+				using (this.mFile.EnterCodeBlock(indentCount: 3))
 				{
 					this.GenerateBytesFromBufferCode();
 				}
@@ -247,23 +247,23 @@ namespace KSoft.T4.Bitwise
 
 			void GenerateBytesFromValueCode(string valueName, bool littleEndian)
 			{
-				int bitOffset = !littleEndian
-					? this.mSizeOfInBits_
-					: 0 - K_BITS_PER_BYTE;
-				int bitAdjustment = !littleEndian
-					? -K_BITS_PER_BYTE
-					: +K_BITS_PER_BYTE;
+				int bit_offset = !littleEndian
+					? this.mSizeOfInBits
+					: 0 - kBitsPerByte;
+				int bit_adjustment = !littleEndian
+					? -kBitsPerByte
+					: +kBitsPerByte;
 
-				for (int x = 0; x < this.mSizeOfInBytes_; x++, this.mFile_.WriteLine(";"))
+				for (int x = 0; x < this.mSizeOfInBytes; x++, this.mFile.WriteLine(";"))
 				{
-					this.mFile_.Write("{0}{1} = ", this.mByteName_, x);
-					this.mFile_.Write("({0})({1} >> {2,2})", KByteKeyword, valueName, bitOffset += bitAdjustment);
+					this.mFile.Write("{0}{1} = ", this.mByteName, x);
+					this.mFile.Write("({0})({1} >> {2,2})", kByteKeyword, valueName, bit_offset += bit_adjustment);
 				}
 			}
 			public void GenerateBytesFromValue(string valueName, bool littleEndian = true)
 			{
 				// indent to method code body's indention level, plus one (assumed we are in a if-statement)
-				using (this.mFile_.EnterCodeBlock(indentCount: 3+1))
+				using (this.mFile.EnterCodeBlock(indentCount: 3+1))
 				{
 					this.GenerateBytesFromValueCode(valueName, littleEndian);
 				}
@@ -271,25 +271,25 @@ namespace KSoft.T4.Bitwise
 
 			void GenerateWriteBytesToBufferCode(bool useSwapFormat)
 			{
-				const string kSwapFormat =		"{0}[--{1}] = ";
-				const string kReplacementFormat =	"{0}[{1}++] = ";
+				const string k_swap_format =		"{0}[--{1}] = ";
+				const string k_replacement_format =	"{0}[{1}++] = ";
 
-				Debug.Assert(this.mOffsetName_ != null);
+				Debug.Assert(this.mOffsetName != null);
 
 				string format = useSwapFormat
-					? kSwapFormat
-					: kReplacementFormat;
+					? k_swap_format
+					: k_replacement_format;
 
-				for (int x = 0; x < this.mSizeOfInBytes_; x++, this.mFile_.WriteLine(";"))
+				for (int x = 0; x < this.mSizeOfInBytes; x++, this.mFile.WriteLine(";"))
 				{
-					this.mFile_.Write(format, this.mBufferName_, this.mOffsetName_);
-					this.mFile_.Write("{0}{1}", this.mByteName_, x);
+					this.mFile.Write(format, this.mBufferName, this.mOffsetName);
+					this.mFile.Write("{0}{1}", this.mByteName, x);
 				}
 			}
 			public void GenerateWriteBytesToBuffer(bool useSwapFormat = true)
 			{
 				// indent to method code body's indention level
-				using (this.mFile_.EnterCodeBlock(indentCount: 3))
+				using (this.mFile.EnterCodeBlock(indentCount: 3))
 				{
 					this.GenerateWriteBytesToBufferCode(useSwapFormat);
 				}
@@ -315,7 +315,7 @@ namespace KSoft.T4.Bitwise
 					this.GenerateXmlDoc();
 					this.GenerateMethodSignature();
 
-					using (this.File.EnterCodeBlock(TextTransformationCodeBlockType.BRACKETS))
+					using (this.File.EnterCodeBlock(TextTransformationCodeBlockType.Brackets))
 					{
 						this.GeneratePrologue();
 						this.GenerateCode();

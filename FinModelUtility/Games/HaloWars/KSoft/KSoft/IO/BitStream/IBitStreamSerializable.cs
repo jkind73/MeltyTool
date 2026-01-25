@@ -7,14 +7,14 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.IO
 {
-	[Contracts.ContractClass(typeof(BitStreamSerializableContract))]
+	[Contracts.ContractClass(typeof(IBitStreamSerializableContract))]
 	public interface IBitStreamSerializable
 	{
 		void Serialize(BitStream s);
 	};
 
 	[Contracts.ContractClassFor(typeof(IBitStreamSerializable))]
-	abstract class BitStreamSerializableContract : IBitStreamSerializable
+	abstract class IBitStreamSerializableContract : IBitStreamSerializable
 	{
 		public void Serialize(BitStream s)	{ Contract.Requires(s != null); }
 	};

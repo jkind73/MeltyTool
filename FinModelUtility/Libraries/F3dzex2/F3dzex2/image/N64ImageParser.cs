@@ -23,8 +23,8 @@ public enum N64ImageFormat : byte {
   LA4 = 0x60,
   LA8 = 0x68,
   LA16 = 0x70,
-  I4_I = 0x80,
-  I4_II = 0x90,
+  I4i = 0x80,
+  I4ii = 0x90,
   I8 = 0x88,
 }
 

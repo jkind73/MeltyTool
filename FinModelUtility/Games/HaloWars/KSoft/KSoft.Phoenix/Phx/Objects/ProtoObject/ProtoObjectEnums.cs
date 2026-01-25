@@ -3,148 +3,148 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BAutoLockDown
 	{
-		NONE,
-		LOCK_AND_UNLOCK,
-		LOCK_ONLY,
-		UNLOCK_ONLY,
+		None,
+		LockAndUnlock,
+		LockOnly,
+		UnlockOnly,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public enum BGotoType
 	{
-		NONE,
-		BASE,
-		MILITARY,
-		INFANTRY,
-		VEHICLE,
-		AIR,
-		CIVILIAN,
-		SCOUT,
-		NODE,
-		ALERT,
-		ARMY,
-		HERO,
+		None,
+		Base,
+		Military,
+		Infantry,
+		Vehicle,
+		Air,
+		Civilian,
+		Scout,
+		Node,
+		Alert,
+		Army,
+		Hero,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public enum BObjectSoundType
 	{
-		NONE = TypeExtensions.K_NONE,
+		None = TypeExtensions.kNone,
 
-		CREATE,
-		DEATH,
-		SELECT,
-		WORK,
-		ATTACK,
-		CAPTURE_COMPLETE,
-		ABILITY,
-		ABILITY_JACKED,
+		Create,
+		Death,
+		Select,
+		Work,
+		Attack,
+		CaptureComplete,
+		Ability,
+		AbilityJacked,
 
-		STOP_EXIST,
-		STEP_DOWN,
-		STEP_UP,
-		SKID_ON,
-		SKID_OFF,
-		ROCKET_START,
-		ROCKET_END,
+		StopExist,
+		StepDown,
+		StepUp,
+		SkidOn,
+		SkidOff,
+		RocketStart,
+		RocketEnd,
 		/// <summary>Ramp up sound leading to moving sound</summary>
-		START_MOVE,
-		CORPSE_DEATH,
+		StartMove,
+		CorpseDeath,
 		/// <summary>The ramp down sound</summary>
-		STOP_MOVE,
-		JUMP,
-		LAND,
-		IMPACT_DEATH,
-		PIECE_THROWN_OFF,
-		LAND_HARD,
+		StopMove,
+		Jump,
+		Land,
+		ImpactDeath,
+		PieceThrownOff,
+		LandHard,
 
-		SELECT_DOWNED,
-		UNUSED24,
+		SelectDowned,
+		Unused24,
 
-		PAIN,
-		CLOAK,
-		UN_CLOAK,
-		EXIST,
+		Pain,
+		Cloak,
+		UnCloak,
+		Exist,
 
-		SHIELD_LOW,
-		SHIELD_DEPLETED,
-		SHIELD_REGEN,
+		ShieldLow,
+		ShieldDepleted,
+		ShieldRegen,
 	};
 
 	public enum BPickPriority
 	{
-		NONE,
-		BUILDING,
-		RESOURCE,
-		UNIT,
-		RALLY,
+		None,
+		Building,
+		Resource,
+		Unit,
+		Rally,
 	};
 
 	public enum BProtoObjectClassType
 	{
-		INVALID = TypeExtensions.K_NONE,
+		Invalid = TypeExtensions.kNone,
 
-		OBJECT,
-		SQUAD,
-		BUILDING,
-		UNIT,
-		PROJECTILE,
+		Object,
+		Squad,
+		Building,
+		Unit,
+		Projectile,
 	};
 
 	public enum BProtoObjectExitDirection
 	{
-		FROM_FRONT,
-		FROM_FRONT_RIGHT,
-		FROM_FRONT_LEFT,
-		FROM_RIGHT,
-		FROM_LEFT,
-		FROM_BACK,
+		FromFront,
+		FromFrontRight,
+		FromFrontLeft,
+		FromRight,
+		FromLeft,
+		FromBack,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public enum BProtoObjectMovementType
 	{
-		NONE,
-		LAND,
-		AIR,
-		FLOOD,
-		SCARAB,
-		HOVER,
+		None,
+		Land,
+		Air,
+		Flood,
+		Scarab,
+		Hover,
 	};
 
 	public enum BProtoObjectSelectType
 	{
-		NONE,
+		None,
 
-		UNIT,
-		COMMAND,
-		TARGET,
-		SINGLE_UNIT,
-		SINGLE_TYPE,
+		Unit,
+		Command,
+		Target,
+		SingleUnit,
+		SingleType,
 	};
 
 	public enum BRallyPointType
 	{
-		INVALID = TypeExtensions.K_NONE,
+		Invalid = TypeExtensions.kNone,
 
-		MILITARY,
-		CIVILIAN,
+		Military,
+		Civilian,
 	};
 
 	partial class BProtoObjectChildObject
 	{
 		public enum ChildObjectType
 		{
-			OBJECT,
-			PARKING_LOT,
-			SOCKET,
-			RALLY,
-			ONE_TIME_SPAWN_SQUAD,
-			UNIT,
-			FOUNDATION,
+			Object,
+			ParkingLot,
+			Socket,
+			Rally,
+			OneTimeSpawnSquad,
+			Unit,
+			Foundation,
 		};
 	};
 
@@ -152,10 +152,10 @@ namespace KSoft.Phoenix.Phx
 	{
 		public enum LimitType
 		{
-			INVALID = TypeExtensions.K_NONE,
+			Invalid = TypeExtensions.kNone,
 
-			UNIT,
-			SQUAD,
+			Unit,
+			Squad,
 		};
 	};
 }

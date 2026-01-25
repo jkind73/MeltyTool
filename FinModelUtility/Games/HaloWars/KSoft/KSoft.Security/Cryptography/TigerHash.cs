@@ -20,10 +20,10 @@ namespace KSoft.Security.Cryptography
 		: TigerHashBase
 	{
 		#region Registeration
-		public const string K_ALGORITHM_NAME = "KSoft.Security.Cryptography.TigerHash";
+		public const string kAlgorithmName = "KSoft.Security.Cryptography.TigerHash";
 
 		public new static TigerHash Create(string algName) => (TigerHash)System.Security.Cryptography.CryptoConfig.CreateFromName(algName);
-		public new static TigerHash Create() => Create(K_ALGORITHM_NAME);
+		public new static TigerHash Create() => Create(kAlgorithmName);
 		#endregion
 
 		public TigerHash()
@@ -43,10 +43,10 @@ namespace KSoft.Security.Cryptography
 		: TigerHashBase
 	{
 		#region Registeration
-		public const string K_ALGORITHM_NAME = "KSoft.Security.Cryptography.TigerHash2";
+		public const string kAlgorithmName = "KSoft.Security.Cryptography.TigerHash2";
 
 		public new static TigerHash Create(string algName) => (TigerHash)System.Security.Cryptography.CryptoConfig.CreateFromName(algName);
-		public new static TigerHash Create() => Create(K_ALGORITHM_NAME);
+		public new static TigerHash Create() => Create(kAlgorithmName);
 		#endregion
 
 		public TigerHash2()
@@ -69,29 +69,29 @@ namespace KSoft.Security.Cryptography
 		static TigerHashBase()
 		{
 			System.Security.Cryptography.CryptoConfig.AddAlgorithm(
-				typeof(TigerHash), TigerHash.K_ALGORITHM_NAME);
+				typeof(TigerHash), TigerHash.kAlgorithmName);
 			System.Security.Cryptography.CryptoConfig.AddAlgorithm(
-				typeof(TigerHash2), TigerHash2.K_ALGORITHM_NAME);
+				typeof(TigerHash2), TigerHash2.kAlgorithmName);
 		}
 
 		public new static TigerHashBase Create(string algName)
 		{
 			Contract.Requires(
-				TigerHash .K_ALGORITHM_NAME.Equals(algName, StringComparison.InvariantCulture) ||
-				TigerHash2.K_ALGORITHM_NAME.Equals(algName, StringComparison.InvariantCulture));
+				TigerHash .kAlgorithmName.Equals(algName, StringComparison.InvariantCulture) ||
+				TigerHash2.kAlgorithmName.Equals(algName, StringComparison.InvariantCulture));
 
 			return (TigerHashBase)System.Security.Cryptography.CryptoConfig.CreateFromName(algName);
 		}
 		#endregion
 
-		const int K_BLOCK_SIZE_ = 64;
-		const int K_HASH_SIZE_ = 192;
-		const int K_WORD_COUNT_ = 8;
-		const ulong K_REGISTER0_ = 0x0123456789ABCDEFUL;
-		const ulong K_REGISTER1_ = 0xFEDCBA9876543210UL;
-		const ulong K_REGISTER2_ = 0xF096A5B4C3B2E187UL;
+		const int kBlockSize = 64;
+		const int kHashSize = 192;
+		const int kWordCount = 8;
+		const ulong kRegister0 = 0x0123456789ABCDEFUL;
+		const ulong kRegister1 = 0xFEDCBA9876543210UL;
+		const ulong kRegister2 = 0xF096A5B4C3B2E187UL;
 
-		ulong[] mRegs_, mX_;
+		ulong[] mRegs, mX;
 
 		public TigerHashVersion Version { get; set; }
 
@@ -100,9 +100,9 @@ namespace KSoft.Security.Cryptography
 			tiger64 = 0;
 
 			// This would only ever happen if Initialize wasn't called
-			if (this.mRegs_ != null && this.mRegs_.Length >= 1)
+			if (this.mRegs != null && this.mRegs.Length >= 1)
 			{
-				tiger64 = this.mRegs_[0];
+				tiger64 = this.mRegs[0];
 				return true;
 			}
 
@@ -115,10 +115,10 @@ namespace KSoft.Security.Cryptography
 			tiger128 = 0;
 
 			// This would only ever happen if Initialize wasn't called
-			if (this.mRegs_ != null && this.mRegs_.Length >= 2)
+			if (this.mRegs != null && this.mRegs.Length >= 2)
 			{
-				tiger64 = this.mRegs_[0];
-				tiger128 = this.mRegs_[1];
+				tiger64 = this.mRegs[0];
+				tiger128 = this.mRegs[1];
 				return true;
 			}
 
@@ -132,11 +132,11 @@ namespace KSoft.Security.Cryptography
 			tiger192 = 0;
 
 			// This would only ever happen if Initialize wasn't called
-			if (this.mRegs_ != null && this.mRegs_.Length >= 3)
+			if (this.mRegs != null && this.mRegs.Length >= 3)
 			{
-				tiger64 = this.mRegs_[0];
-				tiger128 = this.mRegs_[1];
-				tiger192 = this.mRegs_[2];
+				tiger64 = this.mRegs[0];
+				tiger128 = this.mRegs[1];
+				tiger192 = this.mRegs[2];
 				return true;
 			}
 
@@ -148,20 +148,20 @@ namespace KSoft.Security.Cryptography
 			if (buffer == null)
 				return false;
 
-			if ((buffer.Length-offset) < (K_HASH_SIZE_/Bits.K_BYTE_BIT_COUNT))
+			if ((buffer.Length-offset) < (kHashSize/Bits.kByteBitCount))
 				return false;
 
 			// This would only ever happen if Initialize wasn't called
-			if (this.mRegs_ != null && this.mRegs_.Length >= 3)
+			if (this.mRegs != null && this.mRegs.Length >= 3)
 			{
-				Bits.ArrayCopy(this.mRegs_, 0, buffer, offset, this.mRegs_.Length);
+				Bits.ArrayCopy(this.mRegs, 0, buffer, offset, this.mRegs.Length);
 				return true;
 			}
 
 			return false;
 		}
 
-		protected TigerHashBase() : base(K_BLOCK_SIZE_, K_HASH_SIZE_)
+		protected TigerHashBase() : base(kBlockSize, kHashSize)
 		{
 			this.Initialize();
 		}
@@ -170,20 +170,20 @@ namespace KSoft.Security.Cryptography
 		{
 			base.Initialize();
 
-			if (this.mRegs_ == null)
-				this.mRegs_ = new ulong[3];
-			this.mRegs_[0] = K_REGISTER0_;
-			this.mRegs_[1] = K_REGISTER1_;
-			this.mRegs_[2] = K_REGISTER2_;
+			if (this.mRegs == null)
+				this.mRegs = new ulong[3];
+			this.mRegs[0] = kRegister0;
+			this.mRegs[1] = kRegister1;
+			this.mRegs[2] = kRegister2;
 
-			if (this.mX_ == null)
+			if (this.mX == null)
 			{
-				this.mX_ = new ulong[K_WORD_COUNT_];
+				this.mX = new ulong[kWordCount];
 			}
 			else
 			{
-				Array.Resize(ref this.mX_, K_WORD_COUNT_);
-				Array.Clear(this.mX_, 0, K_WORD_COUNT_);
+				Array.Resize(ref this.mX, kWordCount);
+				Array.Clear(this.mX, 0, kWordCount);
 			}
 
 			Contract.Assert(this.Version == TigerHashVersion.V1 || this.Version == TigerHashVersion.V2,
@@ -193,9 +193,9 @@ namespace KSoft.Security.Cryptography
 		private void ProcessWords()
 		{
 			int i = -1;
-			ulong a = this.mRegs_[0], b = this.mRegs_[1], c = this.mRegs_[2];
-			ulong x0= this.mX_[++i], x1= this.mX_[++i], x2= this.mX_[++i], x3= this.mX_[++i];
-			ulong x4= this.mX_[++i], x5= this.mX_[++i], x6= this.mX_[++i], x7= this.mX_[++i];
+			ulong a = this.mRegs[0], b = this.mRegs[1], c = this.mRegs[2];
+			ulong x0= this.mX[++i], x1= this.mX[++i], x2= this.mX[++i], x3= this.mX[++i];
+			ulong x4= this.mX[++i], x5= this.mX[++i], x6= this.mX[++i], x7= this.mX[++i];
 
 			// rounds and schedule
 			c^=x0; Round(ref a,ref b,(uint)(c>>32),(uint)c); b*=5;
@@ -230,28 +230,28 @@ namespace KSoft.Security.Cryptography
 			b^=x7; Round(ref c,ref a,(uint)(b>>32),(uint)b); a*=9;
 
 			// feed forward
-			this.mRegs_[0] ^= a;
-			b -= this.mRegs_[1];
-			this.mRegs_[1] = b;
-			this.mRegs_[2] += c;
+			this.mRegs[0] ^= a;
+			b -= this.mRegs[1];
+			this.mRegs[1] = b;
+			this.mRegs[2] += c;
 		}
 
 		void CopyBlock(byte[] inputBuffer, int inputOffset)
 		{
-			int remainingBytes = inputBuffer.Length - inputOffset;
-			int inputCount = Math.Min(this.BlockSize, remainingBytes);
-			if (inputCount != this.BlockSize)
+			int remaining_bytes = inputBuffer.Length - inputOffset;
+			int input_count = Math.Min(this.BlockSize, remaining_bytes);
+			if (input_count != this.BlockSize)
 			{
-				Array.Clear(this.mX_, 0, this.mX_.Length);
+				Array.Clear(this.mX, 0, this.mX.Length);
 			}
-			Bits.ArrayCopy(inputBuffer, inputOffset, this.mX_, 0, inputCount);
+			Bits.ArrayCopy(inputBuffer, inputOffset, this.mX, 0, input_count);
 		}
 
 		void ProcessBlockOfWords(byte[] inputBuffer, int inputOffset, int blockCount)
 		{
-			for (int blockIndex = 0, blockOffsetInInput = inputOffset; blockIndex < blockCount; blockIndex++, blockOffsetInInput += this.BlockSize)
+			for (int block_index = 0, block_offset_in_input = inputOffset; block_index < blockCount; block_index++, block_offset_in_input += this.BlockSize)
 			{
-				this.CopyBlock(inputBuffer, blockOffsetInInput);
+				this.CopyBlock(inputBuffer, block_offset_in_input);
 
 				this.ProcessWords();
 			}
@@ -266,7 +266,7 @@ namespace KSoft.Security.Cryptography
 		{
 			// it's okay to modify inputBuffer here since it's the final block and it's actually BlockHashAlgorithm's internal buffer
 
-			ulong msgBitLength = ((ulong) this.TotalBytesProcessed + (ulong)inputCount) << 3;
+			ulong msg_bit_length = ((ulong) this.TotalBytesProcessed + (ulong)inputCount) << 3;
 
 			if (inputOffset > 0 && inputCount > 0)
 			{
@@ -279,24 +279,24 @@ namespace KSoft.Security.Cryptography
 			Array.Clear(inputBuffer, inputCount, this.BlockSize-inputCount);
 
 			// write the padding byte then align up to the next word boundary (proceeding bytes are already zero due to above Clear)
-			int inputOffset = inputCount;
-			inputBuffer[inputOffset++] = (byte) this.Version; // padding byte
-			inputOffset = IntegerMath.Align(IntegerMath.K_INT64_ALIGNMENT_BIT, inputOffset);
+			int input_offset = inputCount;
+			inputBuffer[input_offset++] = (byte) this.Version; // padding byte
+			input_offset = IntegerMath.Align(IntegerMath.kInt64AlignmentBit, input_offset);
 
 			// if we don't have enough space to encode the length, process what we have now as a block.
 			// remaining bytes are still all zero, due to above Clear.
-			if (inputOffset > (this.BlockSize-sizeof(ulong)))
+			if (input_offset > (this.BlockSize-sizeof(ulong)))
 			{
 				this.ProcessBlock(inputBuffer, inputOffset, 1);
 
-				inputOffset = 0;
+				input_offset = 0;
 				Array.Clear(inputBuffer, 0, this.BlockSize);
 			}
 
 			// write out the number of bytes that were processed before finalization
-			for ( inputOffset = this.BlockSize - sizeof(ulong)
-				; msgBitLength != 0
-				; inputBuffer[inputOffset] = (byte)msgBitLength, msgBitLength >>= 8, ++inputOffset)
+			for ( input_offset = this.BlockSize - sizeof(ulong)
+				; msg_bit_length != 0
+				; inputBuffer[input_offset] = (byte)msg_bit_length, msg_bit_length >>= 8, ++input_offset)
 			{
 			}
 
@@ -304,14 +304,14 @@ namespace KSoft.Security.Cryptography
 
 			if (this.HashValue == null)
 			{
-				this.HashValue = new byte[this.HashSizeValue / K_WORD_COUNT_];
+				this.HashValue = new byte[this.HashSizeValue / kWordCount];
 			}
-			Bits.ArrayCopy(this.mRegs_, 0, this.HashValue, 0, this.mRegs_.Length);
+			Bits.ArrayCopy(this.mRegs, 0, this.HashValue, 0, this.mRegs.Length);
 			return this.HashValue;
 		}
 
 		#region S-Boxes
-		static readonly ulong[] KSbox1 = [
+		static readonly ulong[] kSbox1 = [
 			0x02AAB17CF7E90C5EUL, 0xAC424B03E243A8ECUL, 0x72CD5BE30DD5FCD3UL, 0x6D019B93F6F97F3AUL,
 			0xCD9978FFD21F9193UL, 0x7573A1C9708029E2UL, 0xB164326B922A83C3UL, 0x46883EEE04915870UL,
 			0xEAACE3057103ECE6UL, 0xC54169B808A3535CUL, 0x4CE754918DDEC47CUL, 0x0AA2F4DFDC0DF40CUL,
@@ -378,7 +378,7 @@ namespace KSoft.Security.Cryptography
 			0xFFED95D8F1EA02A2UL, 0xE72B3BD61464D43DUL, 0xA6300F170BDC4820UL, 0xEBC18760ED78A77AUL
 		];
 
-		static readonly ulong[] KSbox2 = [
+		static readonly ulong[] kSbox2 = [
 			0xE6A6BE5A05A12138UL, 0xB5A122A5B4F87C98UL, 0x563C6089140B6990UL, 0x4C46CB2E391F5DD5UL,
 			0xD932ADDBC9B79434UL, 0x08EA70E42015AFF5UL, 0xD765A6673E478CF1UL, 0xC4FB757EAB278D99UL,
 			0xDF11C6862D6E0692UL, 0xDDEB84F10D7F3B16UL, 0x6F2EF604A665EA04UL, 0x4A8E0F0FF0E0DFB3UL,
@@ -445,7 +445,7 @@ namespace KSoft.Security.Cryptography
 			0x9010A91E84711AE9UL, 0x4DF7F0B7B1498371UL, 0xD62A2EABC0977179UL, 0x22FAC097AA8D5C0EUL
 		];
 
-		static readonly ulong[] KSbox3 = [
+		static readonly ulong[] kSbox3 = [
 			0xF49FCC2FF1DAF39BUL, 0x487FD5C66FF29281UL, 0xE8A30667FCDCA83FUL, 0x2C9B4BE3D2FCCE63UL,
 			0xDA3FF74B93FBBBC2UL, 0x2FA165D2FE70BA66UL, 0xA103E279970E93D4UL, 0xBECDEC77B0E45E71UL,
 			0xCFB41E723985E497UL, 0xB70AAA025EF75017UL, 0xD42309F03840B8E0UL, 0x8EFC1AD035898579UL,
@@ -512,7 +512,7 @@ namespace KSoft.Security.Cryptography
 			0x454C6FE9F2C0C1CDUL, 0x419CF6496412691CUL, 0xD3DC3BEF265B0F70UL, 0x6D0E60F5C3578A9EUL
 		];
 
-		static readonly ulong[] KSbox4 = [
+		static readonly ulong[] kSbox4 = [
 			0x5B0E608526323C55UL, 0x1A46C1A9FA1B59F5UL, 0xA9E245A17C4C8FFAUL, 0x65CA5159DB2955D7UL,
 			0x05DB0A76CE35AFC2UL, 0x81EAC77EA9113D45UL, 0x528EF88AB6AC0A0DUL, 0xA09EA253597BE3FFUL,
 			0x430DDFB3AC48CD56UL, 0xC4B3A67AF45CE46FUL, 0x4ECECFD8FBE2D05EUL, 0x3EF56F10B39935F0UL,
@@ -582,10 +582,10 @@ namespace KSoft.Security.Cryptography
 
 		static void Round(ref ulong x, ref ulong y, uint zh, uint zl)
 		{
-			x -=   KSbox1[(int)(byte) zl    ] ^ KSbox2[(int)(byte)(zl>>16)]
-				 ^ KSbox3[(int)(byte) zh    ] ^ KSbox4[(int)(byte)(zh>>16)];
-			y +=   KSbox4[(int)(byte)(zl>>8)] ^ KSbox3[(int)(byte)(zl>>24)]
-				 ^ KSbox2[(int)(byte)(zh>>8)] ^ KSbox1[(int)(byte)(zh>>24)];
+			x -=   kSbox1[(int)(byte) zl    ] ^ kSbox2[(int)(byte)(zl>>16)]
+				 ^ kSbox3[(int)(byte) zh    ] ^ kSbox4[(int)(byte)(zh>>16)];
+			y +=   kSbox4[(int)(byte)(zl>>8)] ^ kSbox3[(int)(byte)(zl>>24)]
+				 ^ kSbox2[(int)(byte)(zh>>8)] ^ kSbox1[(int)(byte)(zh>>24)];
 		}
 
 		static void KeySchedule(ref ulong x0

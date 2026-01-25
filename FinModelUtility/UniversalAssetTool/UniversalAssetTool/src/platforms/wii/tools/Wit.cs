@@ -35,7 +35,7 @@ public sealed class Wit {
         romFile.AssertGetParent()!,
         () => {
           ProcessUtil.ExecuteBlocking(
-              WiiToolsConstants.WitExe,
+              WiiToolsConstants.WIT_EXE,
               $"extract \"{romFile.FullPath}\" \"{outDirectory.FullPath}\"");
         });
   }

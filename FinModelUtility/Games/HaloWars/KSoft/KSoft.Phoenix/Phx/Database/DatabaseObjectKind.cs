@@ -3,25 +3,25 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum DatabaseObjectKind
 	{
-		NONE = PhxUtil.K_OBJECT_KIND_NONE,
+		None = PhxUtil.kObjectKindNone,
 
 		// #NOTE place new DatabaseObjectKind code here
 
-		ABILITY,
-		CIV,
-		DAMAGE_TYPE,
-		IMPACT_EFFECT,
-		LEADER,
-		OBJECT,
-		OBJECT_TYPE,
-		POWER,
-		SQUAD,
-		TACTIC,
-		TECH,
-		TERRAIN_TILE_TYPE,
+		Ability,
+		Civ,
+		DamageType,
+		ImpactEffect,
+		Leader,
+		Object,
+		ObjectType,
+		Power,
+		Squad,
+		Tactic,
+		Tech,
+		TerrainTileType,
 		/// <summary>Object or ObjectType</summary>
-		UNIT,
-		USER_CLASS,
-		WEAPON_TYPE,
+		Unit,
+		UserClass,
+		WeaponType,
 	};
 }

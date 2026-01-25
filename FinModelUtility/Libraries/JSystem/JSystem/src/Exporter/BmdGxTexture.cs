@@ -44,7 +44,7 @@ public sealed class BmdGxTexture : IGxTexture {
 
     this.MipmapImages = this.Header.ToMipmapImages();
 
-    this.ColorType = GetColorType_(this.Header.format);
+    this.ColorType = GetColorType_(this.Header.Format);
   }
 
   public string Name { get; }
@@ -55,10 +55,10 @@ public sealed class BmdGxTexture : IGxTexture {
   private Bti DefaultHeader { get; }
   private Bti? OverrideHeader { get; }
 
-  public GxWrapMode WrapModeS => this.Header.wrapS;
-  public GxWrapMode WrapModeT => this.Header.wrapT;
-  public GxMinTextureFilter MinTextureFilter => this.Header.minFilter;
-  public GxMagTextureFilter MagTextureFilter => this.Header.magFilter;
+  public GxWrapMode WrapModeS => this.Header.WrapS;
+  public GxWrapMode WrapModeT => this.Header.WrapT;
+  public GX_MIN_TEXTURE_FILTER MinTextureFilter => this.Header.MinFilter;
+  public GX_MAG_TEXTURE_FILTER MagTextureFilter => this.Header.MagFilter;
 
   public ColorType ColorType { get; }
 
@@ -76,7 +76,7 @@ public sealed class BmdGxTexture : IGxTexture {
       case GxTextureFormat.INDEX4:
       case GxTextureFormat.INDEX8:
       case GxTextureFormat.INDEX14_X2:
-      case GxTextureFormat.S3_TC1:
+      case GxTextureFormat.S3TC1:
         return ColorType.COLOR;
 
       default:
@@ -84,9 +84,9 @@ public sealed class BmdGxTexture : IGxTexture {
     }
   }
 
-  public float MinLod => this.Header.minLodTimes8 / 8f;
-  public float MaxLod => this.Header.maxLodTimes8 / 8f;
-  public float LodBias => this.Header.lodBiasTimes100 / 100f;
+  public float MinLod => this.Header.MinLodTimes8 / 8f;
+  public float MaxLod => this.Header.MaxLodTimes8 / 8f;
+  public float LodBias => this.Header.LodBiasTimes100 / 100f;
 
   public static bool operator ==(BmdGxTexture lhs, BmdGxTexture rhs)
     => lhs.Equals(rhs);

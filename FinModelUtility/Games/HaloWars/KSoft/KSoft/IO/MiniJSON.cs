@@ -271,13 +271,13 @@ namespace MiniJSON {
         }
 
         sealed class Parser : IDisposable {
-            const string WORD_BREAK_ = "{}[],:\"";
+            const string WORD_BREAK = "{}[],:\"";
 
             public static bool IsWordBreak(char c) {
-                return Char.IsWhiteSpace(c) || WORD_BREAK_.IndexOf(c) != -1;
+                return Char.IsWhiteSpace(c) || WORD_BREAK.IndexOf(c) != -1;
             }
 
-            enum Token {
+            enum TOKEN {
                 NONE,
                 CURLY_OPEN,
                 CURLY_CLOSE,
@@ -292,10 +292,10 @@ namespace MiniJSON {
                 NULL
             };
 
-            StringReader json_;
+            StringReader json;
 
             Parser(string jsonString) {
-	            this.json_ = new StringReader(jsonString);
+	            this.json = new StringReader(jsonString);
             }
 
             public static object Parse(string jsonString) {
@@ -305,26 +305,26 @@ namespace MiniJSON {
             }
 
             public void Dispose() {
-	            this.json_.Dispose();
-	            this.json_ = null;
+	            this.json.Dispose();
+	            this.json = null;
             }
 
             Dictionary<string, object> ParseObject() {
                 Dictionary<string, object> table = new Dictionary<string, object>();
 
                 // ditch opening brace
-                this.json_.Read();
+                this.json.Read();
 
                 // {
                 while (true) {
                     switch (this.NextToken) {
-                    case Token.NONE:
+                    case TOKEN.NONE:
                         return null;
-                    case Token.COMMA:
+                    case TOKEN.COMMA:
                         continue;
-                    case Token.CURLY_CLOSE:
+                    case TOKEN.CURLY_CLOSE:
                         return table;
-                    case Token.STRING:
+                    case TOKEN.STRING:
                         // name
                         string name = this.ParseString();
                         if (name == null) {
@@ -332,16 +332,16 @@ namespace MiniJSON {
                         }
 
                         // :
-                        if (this.NextToken != Token.COLON) {
+                        if (this.NextToken != TOKEN.COLON) {
                             return null;
                         }
                         // ditch the colon
-                        this.json_.Read();
+                        this.json.Read();
 
                         // value
-                        Token valueToken = this.NextToken;
+                        TOKEN valueToken = this.NextToken;
                          object value = this.ParseByToken(valueToken);
-                         if (value == null && valueToken != Token.NULL)
+                         if (value == null && valueToken != TOKEN.NULL)
                              return null;
                          table[name] = value;
                         break;
@@ -362,29 +362,29 @@ namespace MiniJSON {
                 // KM00 end
 
                 // ditch opening bracket
-                this.json_.Read();
+                this.json.Read();
 
                 // [
                 var parsing = true;
                 while (parsing) {
-                    Token nextToken = this.NextToken;
+                    TOKEN nextToken = this.NextToken;
 
                     switch (nextToken) {
-                    case Token.NONE:
+                    case TOKEN.NONE:
                         return null;
-                    case Token.COMMA:
+                    case TOKEN.COMMA:
                         continue;
-                    case Token.SQUARED_CLOSE:
+                    case TOKEN.SQUARED_CLOSE:
                         parsing = false;
                         break;
                     // KM00 start
-                    case Token.COLON:
-	                    this.json_.Read(); //invalid array: consume colon to prevent infinite loop
+                    case TOKEN.COLON:
+	                    this.json.Read(); //invalid array: consume colon to prevent infinite loop
                         break;
                     // KM00 end
                     default:
                         object value = this.ParseByToken(nextToken);
-                        if (value == null && nextToken != Token.NULL)
+                        if (value == null && nextToken != TOKEN.NULL)
                             return null;
 
                             // KM00 start
@@ -407,25 +407,25 @@ namespace MiniJSON {
             }
 
             object ParseValue() {
-                Token nextToken = this.NextToken;
+                TOKEN nextToken = this.NextToken;
                 return this.ParseByToken(nextToken);
             }
 
-            object ParseByToken(Token token) {
+            object ParseByToken(TOKEN token) {
                 switch (token) {
-                case Token.STRING:
+                case TOKEN.STRING:
                     return this.ParseString();
-                case Token.NUMBER:
+                case TOKEN.NUMBER:
                     return this.ParseNumber();
-                case Token.CURLY_OPEN:
+                case TOKEN.CURLY_OPEN:
                     return this.ParseObject();
-                case Token.SQUARED_OPEN:
+                case TOKEN.SQUARED_OPEN:
                     return this.ParseArray();
-                case Token.TRUE:
+                case TOKEN.TRUE:
                     return true;
-                case Token.FALSE:
+                case TOKEN.FALSE:
                     return false;
-                case Token.NULL:
+                case TOKEN.NULL:
                     return null;
                 default:
                     return null;
@@ -433,8 +433,8 @@ namespace MiniJSON {
             }
 
             // KM00 start
-            private StringBuilder mParseStringBuffer_;
-            private char[] mParseStringHexBuffer_;
+            private StringBuilder mParseStringBuffer;
+            private char[] mParseStringHexBuffer;
             private static bool IsHexDigit(char c)
             {
                 return
@@ -446,22 +446,22 @@ namespace MiniJSON {
             // KM00 end
             string ParseString() {
                 // KM00 start
-                if (this.mParseStringBuffer_ == null)
-	                this.mParseStringBuffer_ = new StringBuilder();
+                if (this.mParseStringBuffer == null)
+	                this.mParseStringBuffer = new StringBuilder();
                 else
-	                this.mParseStringBuffer_.Length = 0;
+	                this.mParseStringBuffer.Length = 0;
 
-                StringBuilder s = this.mParseStringBuffer_;
+                StringBuilder s = this.mParseStringBuffer;
                 // KM00 end
                 char c;
 
                 // ditch opening quote
-                this.json_.Read();
+                this.json.Read();
 
                 bool parsing = true;
                 while (parsing) {
 
-                    if (this.json_.Peek() == -1) {
+                    if (this.json.Peek() == -1) {
                         parsing = false;
                         break;
                     }
@@ -472,7 +472,7 @@ namespace MiniJSON {
                         parsing = false;
                         break;
                     case '\\':
-                        if (this.json_.Peek() == -1) {
+                        if (this.json.Peek() == -1) {
                             parsing = false;
                             break;
                         }
@@ -501,10 +501,10 @@ namespace MiniJSON {
                             break;
                         case 'u':
                             // KM00 start
-                            if (this.mParseStringHexBuffer_ == null)
-	                            this.mParseStringHexBuffer_ = new char[4];
+                            if (this.mParseStringHexBuffer == null)
+	                            this.mParseStringHexBuffer = new char[4];
 
-                            var hex = this.mParseStringHexBuffer_;
+                            var hex = this.mParseStringHexBuffer;
                             // KM00 end
 
                             for (int i=0; i< 4; i++) {
@@ -551,14 +551,14 @@ namespace MiniJSON {
 
             void EatWhitespace() {
                 // KM00 start
-                if (this.json_.Peek () == -1)
+                if (this.json.Peek () == -1)
                     return;
                 // KM00 end
 
                 while (Char.IsWhiteSpace(this.PeekChar)) {
-	                this.json_.Read();
+	                this.json.Read();
 
-                    if (this.json_.Peek() == -1) {
+                    if (this.json.Peek() == -1) {
                         break;
                     }
                 }
@@ -566,34 +566,34 @@ namespace MiniJSON {
 
             char PeekChar {
                 get {
-                    return Convert.ToChar(this.json_.Peek());
+                    return Convert.ToChar(this.json.Peek());
                 }
             }
 
             char NextChar {
                 get {
-                    return Convert.ToChar(this.json_.Read());
+                    return Convert.ToChar(this.json.Read());
                 }
             }
 
             // KM00 start
-            private StringBuilder mNextWordStringBuffer_;
+            private StringBuilder mNextWordStringBuffer;
             // KM00 end
             string NextWord {
                 get {
                     // KM00 start
-                    if (this.mNextWordStringBuffer_ == null)
-	                    this.mNextWordStringBuffer_ = new StringBuilder();
+                    if (this.mNextWordStringBuffer == null)
+	                    this.mNextWordStringBuffer = new StringBuilder();
                     else
-	                    this.mNextWordStringBuffer_.Length = 0;
+	                    this.mNextWordStringBuffer.Length = 0;
 
-                    StringBuilder word = this.mNextWordStringBuffer_;
+                    StringBuilder word = this.mNextWordStringBuffer;
                     // KM00 end
 
                     while (!IsWordBreak(this.PeekChar)) {
                         word.Append(this.NextChar);
 
-                        if (this.json_.Peek() == -1) {
+                        if (this.json.Peek() == -1) {
                             break;
                         }
                     }
@@ -602,32 +602,32 @@ namespace MiniJSON {
                 }
             }
 
-            Token NextToken {
+            TOKEN NextToken {
                 get {
 	                this.EatWhitespace();
 
-                    if (this.json_.Peek() == -1) {
-                        return Token.NONE;
+                    if (this.json.Peek() == -1) {
+                        return TOKEN.NONE;
                     }
 
                     switch (this.PeekChar) {
                     case '{':
-                        return Token.CURLY_OPEN;
+                        return TOKEN.CURLY_OPEN;
                     case '}':
-	                    this.json_.Read();
-                        return Token.CURLY_CLOSE;
+	                    this.json.Read();
+                        return TOKEN.CURLY_CLOSE;
                     case '[':
-                        return Token.SQUARED_OPEN;
+                        return TOKEN.SQUARED_OPEN;
                     case ']':
-	                    this.json_.Read();
-                        return Token.SQUARED_CLOSE;
+	                    this.json.Read();
+                        return TOKEN.SQUARED_CLOSE;
                     case ',':
-	                    this.json_.Read();
-                        return Token.COMMA;
+	                    this.json.Read();
+                        return TOKEN.COMMA;
                     case '"':
-                        return Token.STRING;
+                        return TOKEN.STRING;
                     case ':':
-                        return Token.COLON;
+                        return TOKEN.COLON;
                     case '0':
                     case '1':
                     case '2':
@@ -639,19 +639,19 @@ namespace MiniJSON {
                     case '8':
                     case '9':
                     case '-':
-                        return Token.NUMBER;
+                        return TOKEN.NUMBER;
                     }
 
                     switch (this.NextWord) {
                     case "false":
-                        return Token.FALSE;
+                        return TOKEN.FALSE;
                     case "true":
-                        return Token.TRUE;
+                        return TOKEN.TRUE;
                     case "null":
-                        return Token.NULL;
+                        return TOKEN.NULL;
                     }
 
-                    return Token.NONE;
+                    return TOKEN.NONE;
                 }
             }
         }
@@ -666,23 +666,23 @@ namespace MiniJSON {
         }
 
         sealed class Serializer {
-            StringBuilder builder_;
-            bool prettyPrint_;
-            int numPrettyPrintLevels_;
+            StringBuilder builder;
+            bool prettyPrint;
+            int numPrettyPrintLevels;
 
             Serializer() {
-	            this.builder_ = new StringBuilder();
+	            this.builder = new StringBuilder();
             }
 
             public static string Serialize(object obj, bool prettyPrint = false, int numPrettyPrintLevels = 0) {
 				var instance = new Serializer
 				{
-					prettyPrint_ = prettyPrint,
-					numPrettyPrintLevels_ = numPrettyPrintLevels
+					prettyPrint = prettyPrint,
+					numPrettyPrintLevels = numPrettyPrintLevels
 				};
 				instance.SerializeValue(obj);
 
-                return instance.builder_.ToString();
+                return instance.builder.ToString();
             }
 
             void SerializeValue(object value, int level = 0) {
@@ -691,11 +691,11 @@ namespace MiniJSON {
                 string asStr;
 
                 if (value == null) {
-	                this.builder_.Append("null");
+	                this.builder.Append("null");
                 } else if ((asStr = value as string) != null) {
 	                this.SerializeString(asStr);
                 } else if (value is bool) {
-	                this.builder_.Append((bool) value ? "true" : "false");
+	                this.builder.Append((bool) value ? "true" : "false");
                 } else if ((asList = value as IList) != null) {
 	                this.SerializeArray(asList, level);
                 } else if ((asDict = value as IDictionary) != null) {
@@ -710,45 +710,45 @@ namespace MiniJSON {
             void SerializeObject(IDictionary obj, int level = 0) {
                 bool first = true;
 
-                this.builder_.Append('{');
+                this.builder.Append('{');
 
                 foreach (object e in obj.Keys) {
                     if (!first) {
-	                    this.builder_.Append(',');
+	                    this.builder.Append(',');
                     }
 
-                    if (this.numPrettyPrintLevels_ <= 0 || (level + 1) <= this.numPrettyPrintLevels_)
+                    if (this.numPrettyPrintLevels <= 0 || (level + 1) <= this.numPrettyPrintLevels)
                     {
 	                    this.PrettyPrintNewLine(level + 1);
                     }
 
                     this.SerializeString(e.ToString());
-                    this.builder_.Append(':');
+                    this.builder.Append(':');
 
                     this.SerializeValue(obj[e], level + 1);
 
                     first = false;
                 }
 
-                if (!first && (this.numPrettyPrintLevels_ <= 0 || level < this.numPrettyPrintLevels_))
+                if (!first && (this.numPrettyPrintLevels <= 0 || level < this.numPrettyPrintLevels))
                 {
 	                this.PrettyPrintNewLine(level);
                 }
 
-                this.builder_.Append('}');
+                this.builder.Append('}');
             }
 
             void SerializeArray(IList anArray, int level = 0) {
-	            this.builder_.Append('[');
+	            this.builder.Append('[');
 
                 bool first = true;
 
                 foreach (object obj in anArray) {
                     if (!first) {
-	                    this.builder_.Append(',');
+	                    this.builder.Append(',');
                     }
 
-                    if (this.numPrettyPrintLevels_ <= 0 || (level + 1) <= this.numPrettyPrintLevels_)
+                    if (this.numPrettyPrintLevels <= 0 || (level + 1) <= this.numPrettyPrintLevels)
                     {
 	                    this.PrettyPrintNewLine(level + 1);
                     }
@@ -758,53 +758,53 @@ namespace MiniJSON {
                     first = false;
                 }
 
-                if (!first && (this.numPrettyPrintLevels_ <= 0 || level < this.numPrettyPrintLevels_))
+                if (!first && (this.numPrettyPrintLevels <= 0 || level < this.numPrettyPrintLevels))
                 {
 	                this.PrettyPrintNewLine(level);
                 }
 
-                this.builder_.Append(']');
+                this.builder.Append(']');
             }
 
             void SerializeString(string str) {
-	            this.builder_.Append('\"');
+	            this.builder.Append('\"');
 
                 foreach (var c in str) {
                     switch (c) {
                     case '"':
-	                    this.builder_.Append("\\\"");
+	                    this.builder.Append("\\\"");
                         break;
                     case '\\':
-	                    this.builder_.Append("\\\\");
+	                    this.builder.Append("\\\\");
                         break;
                     case '\b':
-	                    this.builder_.Append("\\b");
+	                    this.builder.Append("\\b");
                         break;
                     case '\f':
-	                    this.builder_.Append("\\f");
+	                    this.builder.Append("\\f");
                         break;
                     case '\n':
-	                    this.builder_.Append("\\n");
+	                    this.builder.Append("\\n");
                         break;
                     case '\r':
-	                    this.builder_.Append("\\r");
+	                    this.builder.Append("\\r");
                         break;
                     case '\t':
-	                    this.builder_.Append("\\t");
+	                    this.builder.Append("\\t");
                         break;
                     default:
                         int codepoint = Convert.ToInt32(c);
                         if ((codepoint >= 32) && (codepoint <= 126)) {
-	                        this.builder_.Append(c);
+	                        this.builder.Append(c);
                         } else {
-	                        this.builder_.Append("\\u");
-	                        this.builder_.Append(codepoint.ToString("x4", Util.InvariantCultureInfo)); // KM00
+	                        this.builder.Append("\\u");
+	                        this.builder.Append(codepoint.ToString("x4", Util.InvariantCultureInfo)); // KM00
                         }
                         break;
                     }
                 }
 
-                this.builder_.Append('\"');
+                this.builder.Append('\"');
             }
 
             void SerializeOther(object value) {
@@ -813,7 +813,7 @@ namespace MiniJSON {
                 // Previously floats and doubles lost precision too.
                 if (value is float) {
                     // KM00 changed to ToStringInvariant with recommended round trip specifier
-                    this.builder_.Append(((float) value).ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER));
+                    this.builder.Append(((float) value).ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier));
                 } else if (value is int
                     || value is uint
                     || value is long
@@ -822,11 +822,11 @@ namespace MiniJSON {
                     || value is short
                     || value is ushort
                     || value is ulong) {
-	                this.builder_.Append(value);
+	                this.builder.Append(value);
                 } else if (value is double
                     || value is decimal) {
                     // KM00 changed to ToStringInvariant with recommended round trip specifier
-                    this.builder_.Append(Convert.ToDouble(value, Util.InvariantCultureInfo).ToStringInvariant(Numbers.K_DOUBLE_ROUND_TRIP_FORMAT_SPECIFIER));
+                    this.builder.Append(Convert.ToDouble(value, Util.InvariantCultureInfo).ToStringInvariant(Numbers.kDoubleRoundTripFormatSpecifier));
                 } else {
 	                this.SerializeString(value.ToString());
                 }
@@ -834,13 +834,13 @@ namespace MiniJSON {
 
             void PrettyPrintNewLine(int numSpaces)
             {
-                if (!this.prettyPrint_)
+                if (!this.prettyPrint)
                     return;
 
-                this.builder_.Append('\n');
+                this.builder.Append('\n');
                 for (int i = 0; i < numSpaces; i++)
                 {
-	                this.builder_.Append(PrettyPrintSpace);
+	                this.builder.Append(PrettyPrintSpace);
                 }
             }
         }

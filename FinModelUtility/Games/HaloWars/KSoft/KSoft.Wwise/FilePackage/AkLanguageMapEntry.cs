@@ -5,18 +5,18 @@ namespace KSoft.Wwise.FilePackage
 		: IO.IEndianStreamSerializable
 	{
 		/// <summary>Size of this struct on disk</summary>
-		public const int K_SIZE_OF = sizeof(uint) * 2;
+		public const int kSizeOf = sizeof(uint) * 2;
 
-		public uint offset;
-		public uint id;
+		public uint Offset;
+		public uint ID;
 
-		public string value;
+		public string Value;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.offset);
-			s.Stream(ref this.id);
+			s.Stream(ref this.Offset);
+			s.Stream(ref this.ID);
 		}
 		#endregion
 	};

@@ -7,20 +7,20 @@ namespace KSoft.Phoenix.Runtime
 	public struct BObjectAttachments
 		: IO.IEndianStreamSerializable
 	{
-		public BVector position, up, forward;
-		public BEntityID attachmentObjectId;
-		public int toBoneHandle, fromBoneHandle;
-		public bool isUnitAttachment
-			, useOffset
+		public BVector Position, Up, Forward;
+		public BEntityID AttachmentObjectID;
+		public int ToBoneHandle, FromBoneHandle;
+		public bool IsUnitAttachment
+			, UseOffset
 			;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.StreamV(ref this.position); s.StreamV(ref this.up); s.StreamV(ref this.forward);
-			s.Stream(ref this.attachmentObjectId);
-			s.Stream(ref this.toBoneHandle); s.Stream(ref this.fromBoneHandle);
-			s.Stream(ref this.isUnitAttachment); s.Stream(ref this.useOffset);
+			s.StreamV(ref this.Position); s.StreamV(ref this.Up); s.StreamV(ref this.Forward);
+			s.Stream(ref this.AttachmentObjectID);
+			s.Stream(ref this.ToBoneHandle); s.Stream(ref this.FromBoneHandle);
+			s.Stream(ref this.IsUnitAttachment); s.Stream(ref this.UseOffset);
 		}
 		#endregion
 	};

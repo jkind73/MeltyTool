@@ -23,7 +23,7 @@ public enum PixelFormat {
   RGBA5553,
   RGBA8888,
   RGBA16161616,
-  AR88_GB88,
+  AR88GB88,
 
   HILO88,
 
@@ -31,11 +31,11 @@ public enum PixelFormat {
   P8,
 
   DXT1,
-  DXT1_A,
+  DXT1A,
   DXT3,
   DXT5,
-  DXT5_A,
+  DXT5A,
 
   ETC1,
-  ETC1_A,
+  ETC1A,
 }

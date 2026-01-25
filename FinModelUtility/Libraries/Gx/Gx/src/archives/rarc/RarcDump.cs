@@ -29,7 +29,7 @@ public sealed class RarcDump {
           rarcFile.Impl.AssertGetParent()!,
           () => {
             ProcessUtil.ExecuteBlockingSilently(
-                GcnToolsConstants.RarcdumpExe,
+                GcnToolsConstants.RARCDUMP_EXE,
                 $"\"{rarcFile.FullPath}\"");
           });
       Asserts.True(Directory.Exists(directoryPath),

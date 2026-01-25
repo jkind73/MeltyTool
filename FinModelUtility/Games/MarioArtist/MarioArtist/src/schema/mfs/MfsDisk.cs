@@ -21,19 +21,19 @@ public sealed class MfsDisk : IBinaryDeserializable {
     this.Disk = new LeoDisk(br);
 
     this.Volume = null;
-    if (this.Disk.format == LeoDisk.DiskFormat.INVALID) {
+    if (this.Disk.Format == LeoDisk.DiskFormat.Invalid) {
       this.Error = MfsDiskError.INVALID;
       return;
     }
 
-    if (this.Disk.ramFileSystem != LeoDisk.FileSystem.MFS) {
+    if (this.Disk.RAMFileSystem != LeoDisk.FileSystem.MFS) {
       this.Error = MfsDiskError.NOT_MFS;
       return;
     }
 
     this.Error = MfsDiskError.NONE;
     using var ramAreaReader = new SchemaBinaryReader(
-        this.Disk.GetRamAreaArray().AssertNonnull(),
+        this.Disk.GetRAMAreaArray().AssertNonnull(),
         Endianness.BigEndian);
     this.Volume = ramAreaReader.ReadNew<MfsRamVolume>();
   }

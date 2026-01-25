@@ -15,53 +15,53 @@ namespace KSoft.Bitwise
 	public enum BsCode : short
 	{
 		/// <summary>Byte-swap code for 8 bits of data</summary>
-		BYTE = 1,
+		Byte = 1,
 		/// <summary>Byte-swap code for 16 bits of data</summary>
 		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		INT16 = -2,
+		Int16 = -2,
 		/// <summary>Byte-swap code for 32 bits of data</summary>
 		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		INT32 = -4,
+		Int32 = -4,
 		/// <summary>Byte-swap code for 64 bits of data</summary>
 		[SuppressMessage("Microsoft.Design", "CA1720:IdentifiersShouldNotContainTypeNames")]
-		INT64 = -8,
+		Int64 = -8,
 
 		/// <summary>
 		/// Byte-swap code for the start of a repeated table of byte swap codes.
 		/// Next int in the byte swap code list is the amount of times to repeat the codes
 		/// </summary>
-		ARRAY_START = -100,
+		ArrayStart = -100,
 		/// <summary>Byte-swap code for the end of a repeated table of byte swap codes</summary>
-		ARRAY_END = -101,
+		ArrayEnd = -101,
 	};
 
 	public static partial class ByteSwap
 	{
 		// ArrayStart, {Count}, {Elements}, ArrayEnd
-		internal const int K_MINUMUM_NUMBER_OF_DEFINITION_BS_CODES = 4;
+		internal const int kMinumumNumberOfDefinitionBsCodes = 4;
 
 		[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct BsDefinition
 			: IByteSwappable
 		{
-			readonly string kName_;
-			public override string ToString()	{ return this.kName_; }
-			readonly short[] kBsCodes_;
+			readonly string kName;
+			public override string ToString()	{ return this.kName; }
+			readonly short[] kBsCodes;
 			[SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-			public short[] ByteSwapCodes		{ get { return this.kBsCodes_; } }
-			readonly int kSizeOf_;
-			public int SizeOf					{ get { return this.kSizeOf_; } }
+			public short[] ByteSwapCodes		{ get { return this.kBsCodes; } }
+			readonly int kSizeOf;
+			public int SizeOf					{ get { return this.kSizeOf; } }
 
 			public BsDefinition(string name, int sizeOf, params short[] bsCodes)
 			{
 				Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(name));
 				Contract.Requires<ArgumentOutOfRangeException>(sizeOf > 0);
 				Contract.Requires<ArgumentNullException>(bsCodes != null);
-				Contract.Requires<ArgumentException>(bsCodes.Length >= K_MINUMUM_NUMBER_OF_DEFINITION_BS_CODES);
+				Contract.Requires<ArgumentException>(bsCodes.Length >= kMinumumNumberOfDefinitionBsCodes);
 
-				this.kName_ = name;
-				this.kSizeOf_ = sizeOf;
-				this.kBsCodes_ = bsCodes;
+				this.kName = name;
+				this.kSizeOf = sizeOf;
+				this.kBsCodes = bsCodes;
 			}
 		};
 
@@ -87,30 +87,30 @@ namespace KSoft.Bitwise
 				return startIndex;
 
 			var swap = new Swapper(definition);
-			int bufferIndex = startIndex;
-			for (int elementsRemaining = count; elementsRemaining > 0; elementsRemaining--)
-				bufferIndex = swap.SwapData(buffer, bufferIndex);
+			int buffer_index = startIndex;
+			for (int elements_remaining = count; elements_remaining > 0; elements_remaining--)
+				buffer_index = swap.SwapData(buffer, buffer_index);
 
-			Contract.Assert(bufferIndex == (startIndex + (definition.SizeOf * count)));
-			return bufferIndex;
+			Contract.Assert(buffer_index == (startIndex + (definition.SizeOf * count)));
+			return buffer_index;
 		}
 
 		#region Int byte swap definitions
 		/// <summary>Byte-swap definition for a 16-bit integer</summary>
-		public static readonly IByteSwappable KInt16Definition = new BsDefinition("Int16", sizeof(short),
-			(short)BsCode.ARRAY_START, 1,
-			(short)BsCode.INT16,
-			(short)BsCode.ARRAY_END);
+		public static readonly IByteSwappable kInt16Definition = new BsDefinition("Int16", sizeof(short),
+			(short)BsCode.ArrayStart, 1,
+			(short)BsCode.Int16,
+			(short)BsCode.ArrayEnd);
 		/// <summary>Byte-swap definition for a 32-bit integer</summary>
-		public static readonly IByteSwappable KInt32Definition = new BsDefinition("Int32", sizeof(int),
-			(short)BsCode.ARRAY_START, 1,
-			(short)BsCode.INT32,
-			(short)BsCode.ARRAY_END);
+		public static readonly IByteSwappable kInt32Definition = new BsDefinition("Int32", sizeof(int),
+			(short)BsCode.ArrayStart, 1,
+			(short)BsCode.Int32,
+			(short)BsCode.ArrayEnd);
 		/// <summary>Byte-swap definition for a 64-bit integer</summary>
-		public static readonly IByteSwappable KInt64Definition = new BsDefinition("Int64", sizeof(long),
-			(short)BsCode.ARRAY_START, 1,
-			(short)BsCode.INT64,
-			(short)BsCode.ARRAY_END);
+		public static readonly IByteSwappable kInt64Definition = new BsDefinition("Int64", sizeof(long),
+			(short)BsCode.ArrayStart, 1,
+			(short)BsCode.Int64,
+			(short)BsCode.ArrayEnd);
 		#endregion
 
 		#region Single

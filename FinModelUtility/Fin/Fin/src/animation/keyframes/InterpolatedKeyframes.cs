@@ -25,7 +25,7 @@ public sealed class InterpolatedKeyframes<TKeyframe, T>(
   public ISharedInterpolationConfig SharedConfig => sharedConfig;
 
   public IndividualInterpolationConfig<T> IndividualConfig
-    => individualConfig ?? IndividualInterpolationConfig<T>.Default;
+    => individualConfig ?? IndividualInterpolationConfig<T>.DEFAULT;
 
   public IReadOnlyList<TKeyframe> Definitions => this.impl_;
   public bool HasAnyData => this.Definitions.Count > 0;

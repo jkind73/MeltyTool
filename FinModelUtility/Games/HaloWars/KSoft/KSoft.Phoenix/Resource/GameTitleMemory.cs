@@ -11,11 +11,11 @@ namespace KSoft.Phoenix.Resource
 	sealed class GameTitleMemory0
 		: IO.IEndianStreamSerializable
 	{
-		const byte K_VERSION_ = 5;
-		public int automaticDifficultyMultiplier; // max: 200
-		public int unk8; // max: 100
+		const byte kVersion = 5;
+		public int AutomaticDifficultyMultiplier; // max: 200
+		public int Unk8; // max: 100
 
-		byte unkLength_; // 0xD in mine (latest) TU
+		byte UnkLength; // 0xD in mine (latest) TU
 		// 0x1...0xD
 		public byte[] UnkC { get; private set; }
 		// 6 6 5 2 3 3 3 0 0 0 4 0 0
@@ -24,15 +24,15 @@ namespace KSoft.Phoenix.Resource
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.StreamVersion(K_VERSION_);
-			s.Stream(ref this.automaticDifficultyMultiplier);
-			s.Stream(ref this.unk8);
+			s.StreamVersion(kVersion);
+			s.Stream(ref this.AutomaticDifficultyMultiplier);
+			s.Stream(ref this.Unk8);
 
-			s.Stream(ref this.unkLength_);
+			s.Stream(ref this.UnkLength);
 			if (s.IsReading)
 			{
-				this.UnkC = new byte[this.unkLength_];
-				this.Unk18 = new byte[this.unkLength_];
+				this.UnkC = new byte[this.UnkLength];
+				this.Unk18 = new byte[this.UnkLength];
 			}
 			s.Stream(this.UnkC);
 			s.Stream(this.Unk18);
@@ -43,12 +43,12 @@ namespace KSoft.Phoenix.Resource
 	sealed class GameTitleMemory1
 		: IO.IEndianStreamSerializable
 	{
-	const byte K_VERSION_TU_ = 0x1C;
+	const byte kVersionTU = 0x1C;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.StreamVersion(K_VERSION_TU_);
+			s.StreamVersion(kVersionTU);
 
 			Contract.Assert(false, "TODO");
 		}
@@ -57,9 +57,9 @@ namespace KSoft.Phoenix.Resource
 
 	public sealed class GameTitleMemory
 	{
-		long mMemoryOffset0_, mMemoryOffset1_;
-		GameTitleMemory0 mMemory0_ = new GameTitleMemory0();
-		GameTitleMemory1 mMemory1_ = new GameTitleMemory1();
+		long mMemoryOffset0, mMemoryOffset1;
+		GameTitleMemory0 mMemory0 = new GameTitleMemory0();
+		GameTitleMemory1 mMemory1 = new GameTitleMemory1();
 
 		public void SetTitleMemoryOffsets(Stream gpdBaseStream, long tm0, long tm1)
 		{
@@ -68,8 +68,8 @@ namespace KSoft.Phoenix.Resource
 			Contract.Requires<ArgumentOutOfRangeException>(tm0 >= 0 && tm0 < gpdBaseStream.Length);
 			Contract.Requires<ArgumentOutOfRangeException>(tm1 >= 0 && tm1 < gpdBaseStream.Length);
 
-			this.mMemoryOffset0_ = tm0;
-			this.mMemoryOffset1_ = tm1;
+			this.mMemoryOffset0 = tm0;
+			this.mMemoryOffset1 = tm1;
 		}
 
 		void SerializeTitleMemory(IO.EndianStream gpdStream, long tmOffset, IO.IEndianStreamSerializable tm)
@@ -78,8 +78,8 @@ namespace KSoft.Phoenix.Resource
 
 			if (gpdStream.IsReading)
 			{
-				byte[] uncompressedData = CompressedStream.DecompressFromStream(gpdStream);
-				using (var ms = new MemoryStream(uncompressedData, false))
+				byte[] uncompressed_data = CompressedStream.DecompressFromStream(gpdStream);
+				using (var ms = new MemoryStream(uncompressed_data, false))
 				using (var s = new IO.EndianStream(ms, FileAccess.Read))
 				{
 					s.StreamMode = FileAccess.Read;
@@ -97,9 +97,9 @@ namespace KSoft.Phoenix.Resource
 					s.Stream(tm);
 
 					ms.Seek(0, SeekOrigin.Begin);
-					uint streamAdlr;
-					int streamSize;
-					CompressedStream.CompressFromStream(gpdStream.Writer, ms, out streamAdlr, out streamSize);
+					uint stream_adlr;
+					int stream_size;
+					CompressedStream.CompressFromStream(gpdStream.Writer, ms, out stream_adlr, out stream_size);
 				}
 			}
 		}
@@ -108,14 +108,14 @@ namespace KSoft.Phoenix.Resource
 			Contract.Requires<ArgumentNullException>(gpdStream != null);
 			Contract.Requires<ArgumentException>(gpdStream.BaseStream.CanSeek);
 
-			this.SerializeTitleMemory(gpdStream, this.mMemoryOffset0_, this.mMemory0_);
+			this.SerializeTitleMemory(gpdStream, this.mMemoryOffset0, this.mMemory0);
 		}
 		public void SerializeTitleMemory1(IO.EndianStream gpdStream)
 		{
 			Contract.Requires<ArgumentNullException>(gpdStream != null);
 			Contract.Requires<ArgumentException>(gpdStream.BaseStream.CanSeek);
 
-			this.SerializeTitleMemory(gpdStream, this.mMemoryOffset1_, this.mMemory1_);
+			this.SerializeTitleMemory(gpdStream, this.mMemoryOffset1, this.mMemory1);
 		}
 	};
 }

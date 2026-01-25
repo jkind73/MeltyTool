@@ -4,14 +4,14 @@ namespace KSoft.Phoenix.Runtime
 	abstract class BProtoObjectBase
 		: BProtoBuildableObject
 	{
-		public short baseType;
+		public short BaseType;
 
-		public bool available;
+		public bool Available;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.baseType);
+			s.Stream(ref this.BaseType);
 		}
 		#endregion
 	};

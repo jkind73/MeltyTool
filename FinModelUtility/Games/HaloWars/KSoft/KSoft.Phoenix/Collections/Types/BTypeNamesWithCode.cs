@@ -10,13 +10,13 @@ namespace KSoft.Collections
 	public sealed class BTypeNamesWithCode
 		: BTypeNames
 	{
-		IProtoEnum mCodeTypes_;
+		IProtoEnum mCodeTypes;
 
-		public BTypeNamesWithCode(IProtoEnum codeTypes)
+		public BTypeNamesWithCode(IProtoEnum CodeTypes)
 		{
-			Contract.Requires<ArgumentNullException>(codeTypes != null);
+			Contract.Requires<ArgumentNullException>(CodeTypes != null);
 
-			this.mCodeTypes_ = codeTypes;
+			this.mCodeTypes = CodeTypes;
 		}
 
 		#region IProtoEnum Members
@@ -26,7 +26,7 @@ namespace KSoft.Collections
 
 			if (idx.IsNone())
 			{
-				idx = this.mCodeTypes_.TryGetMemberId(memberName);
+				idx = this.mCodeTypes.TryGetMemberId(memberName);
 				if (idx.IsNotNone())
 					idx += this.Count;
 			}
@@ -38,7 +38,7 @@ namespace KSoft.Collections
 			string name = base.TryGetMemberName(memberId);
 
 			if (name == null)
-				return this.mCodeTypes_.TryGetMemberName(memberId);
+				return this.mCodeTypes.TryGetMemberName(memberId);
 
 			return name;
 		}
@@ -49,11 +49,11 @@ namespace KSoft.Collections
 				return base.GetMemberName(memberId);
 
 			memberId -= this.Count;
-			return this.mCodeTypes_.GetMemberName(memberId);
+			return this.mCodeTypes.GetMemberName(memberId);
 		}
 
 		public override int MemberCount { get {
-			return this.Count + this.mCodeTypes_.MemberCount;
+			return this.Count + this.mCodeTypes.MemberCount;
 		} }
 		#endregion
 	};

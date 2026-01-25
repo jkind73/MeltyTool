@@ -53,13 +53,13 @@ public sealed class CleanConsoleLogger : MicrosoftLogger {
 }
 
 public sealed class CleanConsoleLoggerProvider : MicrosoftLoggerProvider {
-  private readonly ConcurrentDictionary<string, CleanConsoleLogger> loggers_ = new ConcurrentDictionary<string, CleanConsoleLogger>();
+  private readonly ConcurrentDictionary<string, CleanConsoleLogger> _loggers = new ConcurrentDictionary<string, CleanConsoleLogger>();
 
   public MicrosoftLogger CreateLogger(string categoryName)
-    => this.loggers_.GetOrAdd(categoryName, name => new CleanConsoleLogger());
+    => this._loggers.GetOrAdd(categoryName, name => new CleanConsoleLogger());
 
   public void Dispose() {
-    this.loggers_.Clear();
+    this._loggers.Clear();
   }
 }
 

@@ -78,8 +78,8 @@ public sealed class FileBundleTreeView : FileTreeView<IFileBundleDirectory> {
 
   public override Image GetImageForFile(IFileBundle file)
     => file switch {
-        IModelFileBundle => Icons.MODEL_IMAGE,
-        IAudioFileBundle => Icons.MUSIC_IMAGE,
-        ISceneFileBundle => Icons.SCENE_IMAGE,
+        IModelFileBundle => Icons.modelImage,
+        IAudioFileBundle => Icons.musicImage,
+        ISceneFileBundle => Icons.sceneImage,
     };
 }

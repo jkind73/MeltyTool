@@ -5,16 +5,16 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			rootName = "InfectionMap",
-			elementName = "InfectionMapEntry",
+			RootName = "InfectionMap",
+			ElementName = "InfectionMapEntry",
 		};
 		#endregion
 
-		int mBaseObjectId_ = TypeExtensions.K_NONE;
-		int mInfectedObjectId_ = TypeExtensions.K_NONE;
-		int mInfectedSquadId_ = TypeExtensions.K_NONE;
+		int mBaseObjectID = TypeExtensions.kNone;
+		int mInfectedObjectID = TypeExtensions.kNone;
+		int mInfectedSquadID = TypeExtensions.kNone;
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -23,10 +23,10 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			xs.StreamDbid(s, "base", ref this.mBaseObjectId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_ATTR);
-			xs.StreamDbid(s, "infected", ref this.mInfectedObjectId_, DatabaseObjectKind.OBJECT, false, XML.XmlUtil.K_SOURCE_ATTR);
-			if(xs.Database.Engine.Build != Engine.PhxEngineBuild.ALPHA)
-				xs.StreamDbid(s, "infectedSquad", ref this.mInfectedSquadId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_ATTR);
+			xs.StreamDBID(s, "base", ref this.mBaseObjectID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceAttr);
+			xs.StreamDBID(s, "infected", ref this.mInfectedObjectID, DatabaseObjectKind.Object, false, XML.XmlUtil.kSourceAttr);
+			if(xs.Database.Engine.Build != Engine.PhxEngineBuild.Alpha)
+				xs.StreamDBID(s, "infectedSquad", ref this.mInfectedSquadID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceAttr);
 		}
 		#endregion
 	};

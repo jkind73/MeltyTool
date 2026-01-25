@@ -14,25 +14,25 @@ namespace KSoft.Phoenix.Runtime
 	public sealed class BVisualItem
 		: IO.IEndianStreamSerializable
 	{
-		const int K_UV_OFFSETS_SIZE_ = 0x18;
-	public BMatrix matrix;
-		public uint subUpdateNumber, grannySubUpdateNumber;
-		public BMatrix matrix1, matrix2;
+		const int kUVOffsetsSize = 0x18;
+	public BMatrix Matrix;
+		public uint SubUpdateNumber, GrannySubUpdateNumber;
+		public BMatrix Matrix1, Matrix2;
 		public BVector
-			combinedMinCorner, combinedMaxCorner,
-			minCorner, maxCorner;
-		public BVisualAsset modelAsset;
-		public byte[] modelUvOffsets = new byte[K_UV_OFFSETS_SIZE_]; // BVisualModelUVOffsets
-		public uint flags;
-		public BVisualItem[] attachments;
+			CombinedMinCorner, CombinedMaxCorner,
+			MinCorner, MaxCorner;
+		public BVisualAsset ModelAsset;
+		public byte[] ModelUVOffsets = new byte[kUVOffsetsSize]; // BVisualModelUVOffsets
+		public uint Flags;
+		public BVisualItem[] Attachments;
 
 		#region IEndianStreamSerializable Members
 		void StreamFlags(IO.EndianStream s)
 		{
-			const byte kSizeInBytes = sizeof(uint);
+			const byte k_size_in_bytes = sizeof(uint);
 
-			s.StreamSignature(kSizeInBytes);
-			s.Stream(ref this.flags);
+			s.StreamSignature(k_size_in_bytes);
+			s.Stream(ref this.Flags);
 		}
 		void StreamAttachments(IO.EndianStream s)
 		{
@@ -40,16 +40,16 @@ namespace KSoft.Phoenix.Runtime
 		}
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamMatrix(s, ref this.matrix);
-			s.Stream(ref this.subUpdateNumber);
-			s.Stream(ref this.grannySubUpdateNumber);
-			BSaveGame.StreamMatrix(s, ref this.matrix1);
-			BSaveGame.StreamMatrix(s, ref this.matrix2);
-			s.StreamV(ref this.combinedMinCorner); s.StreamV(ref this.combinedMaxCorner);
-			s.StreamV(ref this.minCorner); s.StreamV(ref this.maxCorner);
-			s.Stream(ref this.modelAsset);
-			if (s.StreamCond(this.modelUvOffsets, offsets => !offsets.EqualsZero()))
-				s.Stream(this.modelUvOffsets);
+			BSaveGame.StreamMatrix(s, ref this.Matrix);
+			s.Stream(ref this.SubUpdateNumber);
+			s.Stream(ref this.GrannySubUpdateNumber);
+			BSaveGame.StreamMatrix(s, ref this.Matrix1);
+			BSaveGame.StreamMatrix(s, ref this.Matrix2);
+			s.StreamV(ref this.CombinedMinCorner); s.StreamV(ref this.CombinedMaxCorner);
+			s.StreamV(ref this.MinCorner); s.StreamV(ref this.MaxCorner);
+			s.Stream(ref this.ModelAsset);
+			if (s.StreamCond(this.ModelUVOffsets, offsets => !offsets.EqualsZero()))
+				s.Stream(this.ModelUVOffsets);
 			this.StreamFlags(s);
 			this.StreamAttachments(s);
 		}
@@ -59,14 +59,14 @@ namespace KSoft.Phoenix.Runtime
 	public sealed class BVisual
 		: IO.IEndianStreamSerializable
 	{
-		public int protoId;
+		public int ProtoId;
 
-		public long userData;
+		public long UserData;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.userData);
+			s.Stream(ref this.UserData);
 		}
 		#endregion
 	};
@@ -79,11 +79,11 @@ namespace KSoft.Phoenix.Runtime
 		}
 		static void SetProtoId(BVisual visual, int id)
 		{
-			visual.protoId = id;
+			visual.ProtoId = id;
 		}
 		static int GetProtoId(BVisual visual)
 		{
-			return visual.protoId;
+			return visual.ProtoId;
 		}
 		internal static void Stream(IO.EndianStream s, ref BVisual visual)
 		{

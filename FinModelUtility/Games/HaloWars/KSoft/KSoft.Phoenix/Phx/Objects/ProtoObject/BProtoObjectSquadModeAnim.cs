@@ -8,28 +8,28 @@ namespace KSoft.Phoenix.Phx
 		, IEquatable<BProtoObjectSquadModeAnim>
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "SquadModeAnim",
+			ElementName = "SquadModeAnim",
 		};
 		#endregion
 
 		#region Mode
-		BSquadMode mMode_;
+		BSquadMode mMode;
 		public BSquadMode Mode
 		{
-			get { return this.mMode_; }
-			set { this.mMode_ = value; }
+			get { return this.mMode; }
+			set { this.mMode = value; }
 		}
 		#endregion
 
 		#region AnimType
-		string mAnimType_;
+		string mAnimType;
 		[Meta.BAnimTypeReference]
 		public string AnimType
 		{
-			get { return this.mAnimType_; }
-			set { this.mAnimType_ = value; }
+			get { return this.mAnimType; }
+			set { this.mAnimType = value; }
 		}
 		#endregion
 
@@ -38,8 +38,8 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeEnum("Mode", ref this.mMode_);
-			s.StreamCursor(ref this.mAnimType_);
+			s.StreamAttributeEnum("Mode", ref this.mMode);
+			s.StreamCursor(ref this.mAnimType);
 		}
 		#endregion
 

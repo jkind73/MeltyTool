@@ -10,21 +10,21 @@ namespace KSoft.Phoenix.Resource.PKG
 {
 	public enum CaPackageFileBuilderOptions
 	{
-		ALWAYS_USE_XML_OVER_XMB,
+		AlwaysUseXmlOverXmb,
 
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
 	};
 
 	public sealed class CaPackageFileBuilder
 		: CaPackageFileUtil
 	{
 		/// <see cref="CaPackageFileBuilderOptions"/>
-		public Collections.BitVector32 builderOptions;
+		public Collections.BitVector32 BuilderOptions;
 
 		public CaPackageFileBuilder(string listingPath)
 		{
-			if (Path.GetExtension(listingPath) != CaPackageFileDefinition.K_FILE_EXTENSION)
-				listingPath += CaPackageFileDefinition.K_FILE_EXTENSION;
+			if (Path.GetExtension(listingPath) != CaPackageFileDefinition.kFileExtension)
+				listingPath += CaPackageFileDefinition.kFileExtension;
 
 			this.mSourceFile = listingPath;
 		}

@@ -14,13 +14,13 @@ namespace KSoft.Phoenix.HaloWars
 	partial class BDatabaseXmlSerializer
 		: XML.BDatabaseXmlSerializerBase
 	{
-		BDatabase mDatabase_;
+		BDatabase mDatabase;
 
-		internal override Phx.BDatabaseBase Database { get { return this.mDatabase_; } }
+		internal override Phx.BDatabaseBase Database { get { return this.mDatabase; } }
 
 		public BDatabaseXmlSerializer(BDatabase db)
 		{
-			this.mDatabase_ = db;
+			this.mDatabase = db;
 		}
 
 		protected override void PostStreamXml(FA mode)
@@ -29,7 +29,7 @@ namespace KSoft.Phoenix.HaloWars
 
 			if (mode == FA.Read)
 			{
-				this.mDatabase_.SetupDbiDs();
+				this.mDatabase.SetupDBIDs();
 			}
 		}
 	};

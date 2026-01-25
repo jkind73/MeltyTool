@@ -5,24 +5,24 @@ namespace KSoft.Phoenix.Phx
 		: TriggerScriptIdObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams("Trigger")
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams("Trigger")
 		{
-			dataName = DatabaseNamedObject.K_XML_ATTR_NAME_N,
+			DataName = DatabaseNamedObject.kXmlAttrNameN,
 		};
 
-		const string K_XML_ATTR_ACTIVE_ = "Active";
-		const string K_XML_ATTR_EVALUATE_FREQUENCY_ = "EvaluateFrequency";
-		const string K_XML_ATTR_EVAL_LIMIT_ = "EvalLimit";
-		const string K_XML_ATTR_CONDITIONAL_TRIGGER_ = "ConditionalTrigger";
+		const string kXmlAttrActive = "Active";
+		const string kXmlAttrEvaluateFrequency = "EvaluateFrequency";
+		const string kXmlAttrEvalLimit = "EvalLimit";
+		const string kXmlAttrConditionalTrigger = "ConditionalTrigger";
 	#endregion
 
-	bool mActive_;
+	bool mActive;
 
-		int mEvaluateFrequency_;
+		int mEvaluateFrequency;
 
-		int mEvalLimit_;
+		int mEvalLimit;
 
-		bool mConditionalTrigger_;
+		bool mConditionalTrigger;
 
 		public Collections.BListAutoId<BTriggerCondition> Conditions { get; private set; } = new Collections.BListAutoId<BTriggerCondition>();
 
@@ -35,14 +35,14 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			var kAndParams = BTriggerCondition.KBListXmlParamsAnd;
+			var k_AND_params = BTriggerCondition.kBListXmlParams_And;
 
 			if (s.IsReading)
 			{
-				if (this.OrConditions = !s.ElementsExists(kAndParams.rootName))
-					XML.XmlUtil.Serialize(s, this.Conditions, BTriggerCondition.KBListXmlParamsOr);
+				if (this.OrConditions = !s.ElementsExists(k_AND_params.RootName))
+					XML.XmlUtil.Serialize(s, this.Conditions, BTriggerCondition.kBListXmlParams_Or);
 				else
-					XML.XmlUtil.Serialize(s, this.Conditions, kAndParams);
+					XML.XmlUtil.Serialize(s, this.Conditions, k_AND_params);
 			}
 			else if (s.IsWriting)
 			{
@@ -50,31 +50,31 @@ namespace KSoft.Phoenix.Phx
 				// Well, technically we could use an empty Or tag as well, but it wouldn't be consistent
 				// with the engine. The runtime will assume the the TS is bad if neither tag is present
 				if (this.Conditions.Count == 0)
-					s.WriteElement(kAndParams.rootName);
+					s.WriteElement(k_AND_params.RootName);
 				else
 					XML.XmlUtil.Serialize(s,
 					                      this.Conditions,
-					                      this.OrConditions ? BTriggerCondition.KBListXmlParamsOr : kAndParams);
+					                      this.OrConditions ? BTriggerCondition.kBListXmlParams_Or : k_AND_params);
 			}
 		}
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.Serialize(s);
 
-			s.StreamAttribute(K_XML_ATTR_ACTIVE_, ref this.mActive_);
-			s.StreamAttribute(K_XML_ATTR_EVALUATE_FREQUENCY_, ref this.mEvaluateFrequency_);
-			s.StreamAttribute(K_XML_ATTR_EVAL_LIMIT_, ref this.mEvalLimit_);
-			s.StreamAttribute(K_XML_ATTR_CONDITIONAL_TRIGGER_, ref this.mConditionalTrigger_);
+			s.StreamAttribute(kXmlAttrActive, ref this.mActive);
+			s.StreamAttribute(kXmlAttrEvaluateFrequency, ref this.mEvaluateFrequency);
+			s.StreamAttribute(kXmlAttrEvalLimit, ref this.mEvalLimit);
+			s.StreamAttribute(kXmlAttrConditionalTrigger, ref this.mConditionalTrigger);
 
 			// These tags must exist no matter what :|
-			using (s.EnterCursorBookmark(BTriggerCondition.K_XML_ROOT_NAME))
+			using (s.EnterCursorBookmark(BTriggerCondition.kXmlRootName))
 				this.StreamConditions(s);
 
-			using (s.EnterCursorBookmark(BTriggerEffect.K_XML_ROOT_NAME_ON_TRUE))
-				XML.XmlUtil.Serialize(s, this.EffectsOnTrue, BTriggerEffect.KBListXmlParams);
+			using (s.EnterCursorBookmark(BTriggerEffect.kXmlRootName_OnTrue))
+				XML.XmlUtil.Serialize(s, this.EffectsOnTrue, BTriggerEffect.kBListXmlParams);
 
-			using (s.EnterCursorBookmark(BTriggerEffect.K_XML_ROOT_NAME_ON_FALSE))
-				XML.XmlUtil.Serialize(s, this.EffectsOnFalse, BTriggerEffect.KBListXmlParams);
+			using (s.EnterCursorBookmark(BTriggerEffect.kXmlRootName_OnFalse))
+				XML.XmlUtil.Serialize(s, this.EffectsOnFalse, BTriggerEffect.kBListXmlParams);
 		}
 	};
 }

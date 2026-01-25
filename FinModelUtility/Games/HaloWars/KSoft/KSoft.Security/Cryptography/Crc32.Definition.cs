@@ -10,24 +10,24 @@ namespace KSoft.Security.Cryptography
 	{
 		public sealed class Definition
 		{
-			readonly uint mPolynomial_;
-			readonly uint[] mCrcTable_;
-			readonly uint mInitialValue_;
-			readonly uint mXorIn_;
-			readonly uint mXorOut_;
+			readonly uint mPolynomial;
+			readonly uint[] mCrcTable;
+			readonly uint mInitialValue;
+			readonly uint mXorIn;
+			readonly uint mXorOut;
 
-			public uint Polynomial { get { return this.mPolynomial_; } }
+			public uint Polynomial { get { return this.mPolynomial; } }
 			[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-			public uint[] CrcTable { get { return this.mCrcTable_; } }
-			public uint InitialValue { get { return this.mInitialValue_; } }
-			public uint XorIn { get { return this.mXorIn_; } }
-			public uint XorOut { get { return this.mXorOut_; } }
+			public uint[] CrcTable { get { return this.mCrcTable; } }
+			public uint InitialValue { get { return this.mInitialValue; } }
+			public uint XorIn { get { return this.mXorIn; } }
+			public uint XorOut { get { return this.mXorOut; } }
 
 			static uint[] BuildCrcTable(uint polynomial)
 			{
-				var crcTable = new uint[K_CRC_TABLE_SIZE];
+				var crc_table = new uint[kCrcTableSize];
 
-				for (uint index = 0; index < crcTable.Length; index++)
+				for (uint index = 0; index < crc_table.Length; index++)
 				{
 					uint crc = index;
 					for (uint j = 0; j < 8; j++)
@@ -37,25 +37,25 @@ namespace KSoft.Security.Cryptography
 						else
 							crc >>= 1;
 					}
-					crcTable[index] = crc;
+					crc_table[index] = crc;
 				}
 
-				Contract.Assert(crcTable[1] != 0);
-				Contract.Assert(crcTable[crcTable.Length-1] != 0);
+				Contract.Assert(crc_table[1] != 0);
+				Contract.Assert(crc_table[crc_table.Length-1] != 0);
 
-				return crcTable;
+				return crc_table;
 			}
 
-			public Definition(uint polynomial = K_DEFAULT_POLYNOMIAL, uint initialValue = uint.MaxValue, uint xorIn = 0, uint xorOut = 0, params uint[] crcTable)
+			public Definition(uint polynomial = kDefaultPolynomial, uint initialValue = uint.MaxValue, uint xorIn = 0, uint xorOut = 0, params uint[] crcTable)
 			{
-				Contract.Requires(crcTable.IsNullOrEmpty() || crcTable.Length == K_CRC_TABLE_SIZE);
+				Contract.Requires(crcTable.IsNullOrEmpty() || crcTable.Length == kCrcTableSize);
 
-				this.mPolynomial_ = polynomial;
-				this.mInitialValue_ = initialValue;
-				this.mXorIn_ = xorIn;
-				this.mXorOut_ = xorOut;
+				this.mPolynomial = polynomial;
+				this.mInitialValue = initialValue;
+				this.mXorIn = xorIn;
+				this.mXorOut = xorOut;
 
-				this.mCrcTable_ = crcTable.IsNullOrEmpty()
+				this.mCrcTable = crcTable.IsNullOrEmpty()
 					? BuildCrcTable(this.Polynomial)
 					: crcTable;
 			}

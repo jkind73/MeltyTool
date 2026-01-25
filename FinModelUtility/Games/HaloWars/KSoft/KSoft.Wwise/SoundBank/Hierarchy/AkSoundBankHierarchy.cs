@@ -12,10 +12,10 @@ namespace KSoft.Wwise.SoundBank
 
 	partial class AkSoundBankObjectBase
 	{
-		static readonly Values.GroupTagData32 KHierarchySignature =
+		static readonly Values.GroupTagData32 kHierarchySignature =
 					new Values.GroupTagData32("HIRC", "audiokinetic_hierarchy"); // BankHierarchyChunkID
 
-		static AkSoundBankObjectBase NewHirc(uint generatorVersion)
+		static AkSoundBankObjectBase NewHIRC(uint generatorVersion)
 		{
 			return new AkSoundBankHierarchy();
 		}
@@ -24,37 +24,37 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankHierarchy
 		: AkSoundBankObjectBase
 	{
-		struct AkbkSubHircSection
+		struct AKBKSubHircSection
 			: IO.IEndianStreamSerializable
 		{
-			public HircType type;
-			public uint sectionSize;
+			public HircType Type;
+			public uint SectionSize;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				uint sdkVer = (s.Owner as AkSoundBank).SdkVersion;
+				uint sdk_ver = (s.Owner as AkSoundBank).SdkVersion;
 
-				s.Stream(ref this.type, AkVersion.HircTypeIs8Bit(sdkVer)
+				s.Stream(ref this.Type, AkVersion.HircTypeIs8bit(sdk_ver)
 					? HircTypeStreamer8.Instance
 					: HircTypeStreamer32.Instance);
-				s.Stream(ref this.sectionSize);
+				s.Stream(ref this.SectionSize);
 			}
 			#endregion
 		};
 
-		Dictionary<HircType, Dictionary<uint, AkSoundBankHierarchyObjectBase>> mObjects_ =
+		Dictionary<HircType, Dictionary<uint, AkSoundBankHierarchyObjectBase>> mObjects =
 			new Dictionary<HircType, Dictionary<uint, AkSoundBankHierarchyObjectBase>>();
-		Dictionary<uint, AkSoundBankHierarchyObjectBase> mIdToObject_ =
+		Dictionary<uint, AkSoundBankHierarchyObjectBase> mIdToObject =
 			new Dictionary<uint, AkSoundBankHierarchyObjectBase>();
 
 		public void CopyObjectsTo(FilePackage.AkFilePackageExtractor extractor)
 		{
-			foreach (var kv in this.mObjects_)
+			foreach (var kv in this.mObjects)
 			{
 				var type = kv.Key;
 
-				if (type == HircType.ATTENUATION)
+				if (type == HircType.Attenuation)
 					continue;
 
 				Dictionary<uint, AkSoundBankHierarchyObjectBase> dic;
@@ -78,26 +78,26 @@ namespace KSoft.Wwise.SoundBank
 		void MapObject(HircType type, AkSoundBankHierarchyObjectBase obj)
 		{
 			Dictionary<uint, AkSoundBankHierarchyObjectBase> dic;
-			if (!this.mObjects_.TryGetValue(type, out dic))
-				this.mObjects_.Add(type, dic = new Dictionary<uint, AkSoundBankHierarchyObjectBase>());
+			if (!this.mObjects.TryGetValue(type, out dic))
+				this.mObjects.Add(type, dic = new Dictionary<uint, AkSoundBankHierarchyObjectBase>());
 
-			dic.Add(obj.id, obj);
-			this.mIdToObject_.Add(obj.id, obj);
+			dic.Add(obj.ID, obj);
+			this.mIdToObject.Add(obj.ID, obj);
 		}
 
 		#region IEndianStreamSerializable Members
-		void SerializeItem(IO.EndianStream s, AkbkSubHircSection section)
+		void SerializeItem(IO.EndianStream s, AKBKSubHircSection section)
 		{
 			Contract.Assert(s.IsReading);
 
-			using (s.EnterVirtualBufferWithBookmark(section.sectionSize))
+			using (s.EnterVirtualBufferWithBookmark(section.SectionSize))
 			{
-				var obj = AkSoundBankHierarchyObjectBase.New(section.type);
+				var obj = AkSoundBankHierarchyObjectBase.New(section.Type);
 				if (obj != null)
 				{
 					s.Stream(obj);
 
-					this.MapObject(section.type, obj);
+					this.MapObject(section.Type, obj);
 				}
 			}
 		}
@@ -105,11 +105,11 @@ namespace KSoft.Wwise.SoundBank
 		{
 			var bank = s.Owner as AkSoundBank;
 
-			using (s.EnterVirtualBufferWithBookmark(header.chunkSize))
+			using (s.EnterVirtualBufferWithBookmark(header.ChunkSize))
 			{
-				for (int x = 0, numHircItems = s.Reader.ReadInt32(); x < numHircItems; x++)
+				for (int x = 0, num_hirc_items = s.Reader.ReadInt32(); x < num_hirc_items; x++)
 				{
-					var section = new AkbkSubHircSection(); section.Serialize(s);
+					var section = new AKBKSubHircSection(); section.Serialize(s);
 
 					this.SerializeItem(s, section);
 				}
@@ -124,9 +124,9 @@ namespace KSoft.Wwise.SoundBank
 
 		internal void PrepareForExtraction(AkSoundBank bank)
 		{
-			foreach (var kv in this.mObjects_)
+			foreach (var kv in this.mObjects)
 			{
-				if (kv.Key != HircType.SOUND)
+				if (kv.Key != HircType.Sound)
 					continue;
 
 				foreach(var dic in kv.Value)

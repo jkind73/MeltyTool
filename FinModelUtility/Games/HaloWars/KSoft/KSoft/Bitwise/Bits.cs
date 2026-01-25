@@ -16,7 +16,7 @@ namespace KSoft
 	public static partial class Bits
 	{
 		/// <summary>Number of logical bits in a <see cref="System.Boolean"/></summary>
-		public const int K_BOOLEAN_BIT_COUNT = 1;
+		public const int kBooleanBitCount = 1;
 
 		[Contracts.Pure]
 		static int BitmaskLookUpTableGetLength(int wordBitSize)
@@ -28,9 +28,9 @@ namespace KSoft
 		// https://en.wikipedia.org/wiki/De_Bruijn_sequence
 
 		#region MultiplyDeBruijnBitPosition
-		static readonly byte[] KMultiplyDeBruijnBitPositionHighestBitSet32 = GenerateMultiplyDeBruijnBitPositionHighestBitSet32();
-		static readonly byte[] KMultiplyDeBruijnBitPositionLeadingZeros32 = GenerateMultiplyDeBruijnBitPositionLeadingZeros32();
-		static readonly byte[] KMultiplyDeBruijnBitPositionTrailingZeros32 = [
+		static readonly byte[] kMultiplyDeBruijnBitPositionHighestBitSet32 = GenerateMultiplyDeBruijnBitPositionHighestBitSet32();
+		static readonly byte[] kMultiplyDeBruijnBitPositionLeadingZeros32 = GenerateMultiplyDeBruijnBitPositionLeadingZeros32();
+		static readonly byte[] kMultiplyDeBruijnBitPositionTrailingZeros32 = [
 			0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
 			31, 27, 13, 23, 21, 19, 16, 7, 26, 12, 18, 6, 11, 5, 10, 9
 		];
@@ -46,7 +46,7 @@ namespace KSoft
 		static byte[] GenerateMultiplyDeBruijnBitPositionLeadingZeros32()
 		{
 			var src = GenerateMultiplyDeBruijnBitPositionHighestBitSet32();
-			var dst = new byte[K_INT32_BIT_COUNT];
+			var dst = new byte[kInt32BitCount];
 			for (int x = 0; x < dst.Length; x++)
 				dst[x] = (byte)(src[x]+1);
 
@@ -55,13 +55,13 @@ namespace KSoft
 		#endregion
 
 		#region Contract messages
-		const string K_BIT_SWAP_START_BIT_INDEX_NOT_GREATER_THAN_ZERO_ =
+		const string kBitSwap_StartBitIndexNotGreaterThanZero =
 			"Doesn't make sense to bit swap 1 bit. Or to start at a negative index";
 
-		const string K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_ = "There is no point in this if '0' is the only option";
+		const string kGetMaxEnumBits_MaxValueOutOfRangeMessage = "There is no point in this if '0' is the only option";
 
-		const string K_GET_BITMASK_ENUM_MAX_VALUE_OUT_OF_RANGE_MESSAGE_ = K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_;
-		const string K_GET_BITMASK_FLAG_MAX_VALUE_OUT_OF_RANGE_MESSAGE_ = K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_;
+		const string kGetBitmaskEnum_MaxValueOutOfRangeMessage = kGetMaxEnumBits_MaxValueOutOfRangeMessage;
+		const string kGetBitmaskFlag_MaxValueOutOfRangeMessage = kGetMaxEnumBits_MaxValueOutOfRangeMessage;
 		#endregion
 
 		#region Memory/ArrayCopy
@@ -75,36 +75,36 @@ namespace KSoft
 			// http://stackoverflow.com/a/3246817/444977
 			static MemoryCopier()
 			{
-				var dstType = typeof(TDst);
-				var srcType = typeof(TSrc);
+				var dst_type = typeof(TDst);
+				var src_type = typeof(TSrc);
 
-				if (!dstType.IsPrimitive)
+				if (!dst_type.IsPrimitive)
 				{
 					Debug.Trace.LowLevel.TraceDataSansId(System.Diagnostics.TraceEventType.Critical,
 						nameof(MemoryCopier<TDst, TSrc>) + ": Destination type is not a primitive type",
-						dstType.FullName);
+						dst_type.FullName);
 				}
 
-				if (!srcType.IsPrimitive)
+				if (!src_type.IsPrimitive)
 				{
 					Debug.Trace.LowLevel.TraceDataSansId(System.Diagnostics.TraceEventType.Critical,
 						nameof(MemoryCopier<TDst, TSrc>) + ": Source type is not a primitive type",
-						srcType.FullName);
+						src_type.FullName);
 				}
 			}
 
-			readonly int mDstTypeSize_;
-			readonly int mSrcTypeSize_;
+			readonly int mDstTypeSize;
+			readonly int mSrcTypeSize;
 
-			public int DestinationTypeSize { get { return this.mDstTypeSize_; } }
-			public int SourceTypeSize { get { return this.mSrcTypeSize_; } }
+			public int DestinationTypeSize { get { return this.mDstTypeSize; } }
+			public int SourceTypeSize { get { return this.mSrcTypeSize; } }
 
 			public MemoryCopier(
 				[SuppressMessage("Microsoft.Design", "CA1801:ReviewUnusedParameters")]
 				bool dummy)
 			{
-				this.mDstTypeSize_ = LowLevel.Util.Unmanaged.SizeOf<TDst>();
-				this.mSrcTypeSize_ = LowLevel.Util.Unmanaged.SizeOf<TSrc>();
+				this.mDstTypeSize = LowLevel.Util.Unmanaged.SizeOf<TDst>();
+				this.mSrcTypeSize = LowLevel.Util.Unmanaged.SizeOf<TSrc>();
 			}
 
 			internal void CopyInternal(TDst[] dst, int dstOffset,
@@ -118,19 +118,19 @@ namespace KSoft
 					return;
 
 				// Get the available size of the buffers
-				int dstBufferLocalSizeInBytes = (dst.Length - dstOffset) * this.mDstTypeSize_;
-				int srcBufferLocalSizeInBytes = (src.Length - srcOffset) * this.mSrcTypeSize_;
+				int dst_buffer_local_size_in_bytes = (dst.Length - dstOffset) * this.mDstTypeSize;
+				int src_buffer_local_size_in_bytes = (src.Length - srcOffset) * this.mSrcTypeSize;
 
 				// Size, in bytes, of the src elements to copy. Could be smaller than src_buffer_size
-				int srcCopyCountInBytes = this.mSrcTypeSize_ * srcCopyCount;
+				int src_copy_count_in_bytes = this.mSrcTypeSize * srcCopyCount;
 
-				if (srcCopyCountInBytes > dstBufferLocalSizeInBytes)
+				if (src_copy_count_in_bytes > dst_buffer_local_size_in_bytes)
 					throw new ArgumentOutOfRangeException(nameof(srcCopyCount), srcCopyCount,
 						"total source memory to copy exceeds the memory available in destination");
 
 				Buffer.BlockCopy(src, srcOffset,
 					dst, dstOffset,
-					srcCopyCountInBytes);
+					src_copy_count_in_bytes);
 			}
 
 			public void Copy(TDst[] dst, int dstOffset,
@@ -169,12 +169,12 @@ namespace KSoft
 			if (count < 0)
 				return false;
 
-			int srcIndexEnd = srcOffset + count;
-			int dstIndexEnd = dstOffset + (count / elementSize);
+			int src_index_end = srcOffset + count;
+			int dst_index_end = dstOffset + (count / elementSize);
 			//int copy_leftovers = count % elementSize;
 
-			if (srcIndexEnd > src.Length ||
-				dstIndexEnd > dst.Length)
+			if (src_index_end > src.Length ||
+				dst_index_end > dst.Length)
 				return false;
 
 			//if (copy_leftovers != 0)
@@ -189,11 +189,11 @@ namespace KSoft
 			if (count < 0)
 				return false;
 
-			int srcIndexEnd = srcOffset + count;
-			int dstIndexEnd = dstOffset + (count * elementSize);
+			int src_index_end = srcOffset + count;
+			int dst_index_end = dstOffset + (count * elementSize);
 
-			if (srcIndexEnd > src.Length ||
-				dstIndexEnd > dst.Length)
+			if (src_index_end > src.Length ||
+				dst_index_end > dst.Length)
 				return false;
 
 			return true;
@@ -271,7 +271,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte IndexOfHighestBitSet(uint value)
 		{
-			Contract.Ensures(Contract.Result<byte>() < K_INT32_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() < kInt32BitCount);
 
 			value |= value >> 1; // first round down to one less than a power of 2
 			value |= value >> 2;
@@ -280,17 +280,17 @@ namespace KSoft
 			value |= value >> 16;
 
 			uint index = (value * 0x07C4ACDDU) >> 27;
-			return KMultiplyDeBruijnBitPositionHighestBitSet32[index];
+			return kMultiplyDeBruijnBitPositionHighestBitSet32[index];
 		}
 		[Contracts.Pure]
 		public static byte IndexOfHighestBitSet(ulong value)
 		{
-			Contract.Ensures(Contract.Result<byte>() < K_INT64_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() < kInt64BitCount);
 
 			int index = 0;
 			uint high = GetHighBits(value);
 			if(high != 0)
-				index = IndexOfHighestBitSet(high) + K_INT32_BIT_COUNT;
+				index = IndexOfHighestBitSet(high) + kInt32BitCount;
 			else
 				index = IndexOfHighestBitSet(GetLowBits(value));
 
@@ -306,8 +306,8 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte LeadingZerosCount(byte value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_BYTE_BIT_COUNT);
-			return (byte)( LeadingZerosCount((uint)value) - (K_BYTE_BIT_COUNT * 3) );
+			Contract.Ensures(Contract.Result<byte>() <= kByteBitCount);
+			return (byte)( LeadingZerosCount((uint)value) - (kByteBitCount * 3) );
 		}
 		/// <summary>Count the "leftmost" consecutive zero bits (leading) in an unsigned integer</summary>
 		/// <param name="value"></param>
@@ -315,8 +315,8 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte LeadingZerosCount(ushort value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_INT16_BIT_COUNT);
-			return (byte)( LeadingZerosCount((uint)value) - (K_BYTE_BIT_COUNT * 2) );
+			Contract.Ensures(Contract.Result<byte>() <= kInt16BitCount);
+			return (byte)( LeadingZerosCount((uint)value) - (kByteBitCount * 2) );
 		}
 		/// <summary>Count the "leftmost" consecutive zero bits (leading) in an unsigned integer</summary>
 		/// <param name="value"></param>
@@ -324,9 +324,9 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte LeadingZerosCount(uint value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_INT32_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() <= kInt32BitCount);
 			if (value == 0)
-				return K_INT32_BIT_COUNT;
+				return kInt32BitCount;
 
 			value |= value >> 1; // first round down to one less than a power of 2
 			value |= value >> 2;
@@ -336,7 +336,7 @@ namespace KSoft
 
 			// subtract the log base 2 from the number of bits in the integer
 			uint index = (value * 0x07C4ACDDU) >> 27;
-			return (byte)(K_INT32_BIT_COUNT - KMultiplyDeBruijnBitPositionLeadingZeros32[index]);
+			return (byte)(kInt32BitCount - kMultiplyDeBruijnBitPositionLeadingZeros32[index]);
 		}
 		/// <summary>Count the "leftmost" consecutive zero bits (leading) in an unsigned integer</summary>
 		/// <param name="value"></param>
@@ -344,11 +344,11 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte LeadingZerosCount(ulong value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_INT64_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() <= kInt64BitCount);
 
 			byte count = LeadingZerosCount(GetHighBits(value));
 			// The high bits were all zero, continue checking low bits
-			if (count == K_INT32_BIT_COUNT)
+			if (count == kInt32BitCount)
 				count += LeadingZerosCount(GetLowBits(value));
 
 			return count;
@@ -362,15 +362,15 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte TrailingZerosCount(uint value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_INT32_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() <= kInt32BitCount);
 			if (value == 0)
-				return K_INT32_BIT_COUNT;
+				return kInt32BitCount;
 
 			// instead of (value & -value), where the op result is a long, we do this to keep it all 32-bit
-			uint ls1B = (~value) + 1; // two's complement
-			ls1B = value & ls1B; // least significant 1 bit
-			uint index = (ls1B * 0x077CB531U) >> 27;
-			return KMultiplyDeBruijnBitPositionTrailingZeros32[index];
+			uint ls1b = (~value) + 1; // two's complement
+			ls1b = value & ls1b; // least significant 1 bit
+			uint index = (ls1b * 0x077CB531U) >> 27;
+			return kMultiplyDeBruijnBitPositionTrailingZeros32[index];
 		}
 		/// <summary>Count the "rightmost" consecutive zero bits (trailing) in an unsigned integer</summary>
 		/// <param name="value"></param>
@@ -378,11 +378,11 @@ namespace KSoft
 		[Contracts.Pure]
 		public static byte TrailingZerosCount(ulong value)
 		{
-			Contract.Ensures(Contract.Result<byte>() <= K_INT64_BIT_COUNT);
+			Contract.Ensures(Contract.Result<byte>() <= kInt64BitCount);
 
 			byte count = TrailingZerosCount(GetLowBits(value));
 			// The low bits were all zero, continue checking high bits
-			if (count == K_INT32_BIT_COUNT)
+			if (count == kInt32BitCount)
 				count += TrailingZerosCount(GetHighBits(value));
 
 			return count;
@@ -398,8 +398,8 @@ namespace KSoft
 		public static ushort BitDecode(ushort bits, Bitwise.BitFieldTraits traits)
 		{
 			Contract.Requires/*<ArgumentException>*/(!traits.IsEmpty);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex < K_INT16_BIT_COUNT);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex+traits.BitCount <= K_INT16_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex < kInt16BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex+traits.BitCount <= kInt16BitCount);
 
 			return (ushort)((bits >> traits.BitIndex) & traits.Bitmask16);
 		}
@@ -418,8 +418,8 @@ namespace KSoft
 		public static ushort BitEncode(ushort value, ushort bits, Bitwise.BitFieldTraits traits)
 		{
 			Contract.Requires/*<ArgumentException>*/(!traits.IsEmpty);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex < K_INT16_BIT_COUNT);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex+traits.BitCount <= K_INT16_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex < kInt16BitCount);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(traits.BitIndex+traits.BitCount <= kInt16BitCount);
 
 			var bitmask = (uint)traits.Bitmask16;
 			// Use the bit mask's invert so we can get all of the non-value bits

@@ -9,7 +9,7 @@ namespace KSoft.Wwise.FilePackage
 		, IComparable<AkFileLookupTableEntry>
 	{
 		/// <summary>Size of this struct on disk</summary>
-		internal const uint K_SIZE_OF = (sizeof(uint) * 2) + sizeof(ulong) + (sizeof(uint) * 2);
+		internal const uint kSizeOf = (sizeof(uint) * 2) + sizeof(ulong) + (sizeof(uint) * 2);
 
 		[FieldOffset(0)] public uint FileId32;
 		[FieldOffset(0)] public ulong FileId64;
@@ -43,9 +43,9 @@ namespace KSoft.Wwise.FilePackage
 		{
 			var settings = (s.Owner as AkFilePackage).Settings;
 
-			if (AkVersion.HasWordSizeDependentLut(settings.SdkVersion))
+			if (AkVersion.HasWordSizeDependentLUT(settings.SdkVersion))
 			{
-				if (settings.Platform.ProcessorType.ProcessorSize == Shell.ProcessorSize.X32)
+				if (settings.Platform.ProcessorType.ProcessorSize == Shell.ProcessorSize.x32)
 					this.Serialize32(s);
 				else
 					this.Serialize64(s);

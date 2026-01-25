@@ -13,7 +13,7 @@ namespace KSoft.IO
 
 		protected override void WriteElement(TCursor n, Values.KGuid value)
 		{
-			this.WriteElement(n, value.ToString(this.mGuidFormatString_, Util.InvariantCultureInfo));
+			this.WriteElement(n, value.ToString(this.mGuidFormatString, Util.InvariantCultureInfo));
 		}
 		#endregion
 
@@ -29,7 +29,7 @@ namespace KSoft.IO
 
 		public override void WriteAttribute(string name, Values.KGuid value)
 		{
-			this.CursorWriteAttribute(name, value.ToString(this.mGuidFormatString_, Util.InvariantCultureInfo));
+			this.CursorWriteAttribute(name, value.ToString(this.mGuidFormatString, Util.InvariantCultureInfo));
 		}
 		#endregion
 	};

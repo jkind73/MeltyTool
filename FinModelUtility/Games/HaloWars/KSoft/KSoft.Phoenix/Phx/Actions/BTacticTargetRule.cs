@@ -10,35 +10,35 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "TargetRule",
-			flags = XML.BCollectionXmlParamsFlags.FORCE_NO_ROOT_ELEMENT_STREAMING
+			ElementName = "TargetRule",
+			Flags = XML.BCollectionXmlParamsFlags.ForceNoRootElementStreaming
 		};
 
-		static readonly Collections.CodeEnum<BTargetRuleFlags> KFlagsProtoEnum = new Collections.CodeEnum<BTargetRuleFlags>();
-		static readonly Collections.BBitSetParams KFlagsParams = new Collections.BBitSetParams(() => KFlagsProtoEnum);
+		static readonly Collections.CodeEnum<BTargetRuleFlags> kFlagsProtoEnum = new Collections.CodeEnum<BTargetRuleFlags>();
+		static readonly Collections.BBitSetParams kFlagsParams = new Collections.BBitSetParams(() => kFlagsProtoEnum);
 
-		static readonly Collections.CodeEnum<BTargetRuleTargetStates> KTargetStatesProtoEnum = new Collections.CodeEnum<BTargetRuleTargetStates>();
-		static readonly Collections.BBitSetParams KTargetStatesParams = new Collections.BBitSetParams(() => KTargetStatesProtoEnum);
-		static readonly XML.BBitSetXmlParams KTargetStatesXmlParams = new XML.BBitSetXmlParams("TargetState");
+		static readonly Collections.CodeEnum<BTargetRuleTargetStates> kTargetStatesProtoEnum = new Collections.CodeEnum<BTargetRuleTargetStates>();
+		static readonly Collections.BBitSetParams kTargetStatesParams = new Collections.BBitSetParams(() => kTargetStatesProtoEnum);
+		static readonly XML.BBitSetXmlParams kTargetStatesXmlParams = new XML.BBitSetXmlParams("TargetState");
 		#endregion
 
 		#region Relation
-		BRelationType mRelation_ = BRelationType.ENEMY;
+		BRelationType mRelation = BRelationType.Enemy;
 		public BRelationType Relation
 		{
-			get { return this.mRelation_; }
-			set { this.mRelation_ = value; }
+			get { return this.mRelation; }
+			set { this.mRelation = value; }
 		}
 		#endregion
 
 		#region SquadMode
-		BSquadMode mSquadMode_ = BSquadMode.INVALID;
+		BSquadMode mSquadMode = BSquadMode.Invalid;
 		public BSquadMode SquadMode
 		{
-			get { return this.mSquadMode_; }
-			set { this.mSquadMode_ = value; }
+			get { return this.mSquadMode; }
+			set { this.mSquadMode = value; }
 		}
 
 		public bool AutoTargetSquadMode { get; private set; }
@@ -51,25 +51,25 @@ namespace KSoft.Phoenix.Phx
 		public List<BProtoUnitID> TargetTypes { get; private set; } = [];
 
 		#region ActionID
-		int mActionId_ = TypeExtensions.K_NONE;
+		int mActionID = TypeExtensions.kNone;
 		[Meta.BProtoActionReference]
-		public int ActionId
+		public int ActionID
 		{
-			get { return this.mActionId_; }
-			set { this.mActionId_ = value; }
+			get { return this.mActionID; }
+			set { this.mActionID = value; }
 		}
 		#endregion
 
-		public Collections.BBitSet Flags { get; private set; } = new Collections.BBitSet(KFlagsParams);
-		public Collections.BBitSet TargetStates { get; private set; } = new Collections.BBitSet(KTargetStatesParams);
+		public Collections.BBitSet Flags { get; private set; } = new Collections.BBitSet(kFlagsParams);
+		public Collections.BBitSet TargetStates { get; private set; } = new Collections.BBitSet(kTargetStatesParams);
 
 		#region AbilityID
-		int mAbilityId_ = TypeExtensions.K_NONE;
+		int mAbilityID = TypeExtensions.kNone;
 		[Meta.BAbilityReference]
-		public int AbilityId
+		public int AbilityID
 		{
-			get { return this.mAbilityId_; }
-			set { this.mAbilityId_ = value; }
+			get { return this.mAbilityID; }
+			set { this.mAbilityID = value; }
 		}
 
 		public bool IsOptionalAbility { get; private set; }
@@ -83,21 +83,21 @@ namespace KSoft.Phoenix.Phx
 			var xs = s.GetSerializerInterface();
 			var td = KSoft.Debug.TypeCheck.CastReference<BTacticData>(s.UserData);
 
-			s.StreamElementEnumOpt("Relation", ref this.mRelation_, e => e != BRelationType.ENEMY);
-			if (!s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode_, e => e != BSquadMode.INVALID))
-				if (s.StreamElementEnumOpt("AutoTargetSquadMode", ref this.mSquadMode_, e => e != BSquadMode.INVALID))
+			s.StreamElementEnumOpt("Relation", ref this.mRelation, e => e != BRelationType.Enemy);
+			if (!s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode, e => e != BSquadMode.Invalid))
+				if (s.StreamElementEnumOpt("AutoTargetSquadMode", ref this.mSquadMode, e => e != BSquadMode.Invalid))
 					this.AutoTargetSquadMode = true;
 
 			s.StreamElements("DamageType", this.DamageTypes, xs, XML.BXmlSerializerInterface.StreamDamageType);
-			s.StreamElements("TargetType", this.TargetTypes, xs, XML.BXmlSerializerInterface.StreamUnitId);
+			s.StreamElements("TargetType", this.TargetTypes, xs, XML.BXmlSerializerInterface.StreamUnitID);
 
-			td.StreamId(s, "Action", ref this.mActionId_, TacticDataObjectKind.ACTION);
+			td.StreamID(s, "Action", ref this.mActionID, TacticDataObjectKind.Action);
 
-			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.KFlagsAreElementNamesThatMeanTrue);
-			XML.XmlUtil.Serialize(s, this.TargetStates, KTargetStatesXmlParams);
+			XML.XmlUtil.Serialize(s, this.Flags, XML.BBitSetXmlParams.kFlagsAreElementNamesThatMeanTrue);
+			XML.XmlUtil.Serialize(s, this.TargetStates, kTargetStatesXmlParams);
 
-			if (!xs.StreamDbid(s, "Ability", ref this.mAbilityId_, DatabaseObjectKind.ABILITY))
-				this.IsOptionalAbility = xs.StreamDbid(s, "OptionalAbility", ref this.mAbilityId_, DatabaseObjectKind.ABILITY);
+			if (!xs.StreamDBID(s, "Ability", ref this.mAbilityID, DatabaseObjectKind.Ability))
+				this.IsOptionalAbility = xs.StreamDBID(s, "OptionalAbility", ref this.mAbilityID, DatabaseObjectKind.Ability);
 		}
 		#endregion
 	};

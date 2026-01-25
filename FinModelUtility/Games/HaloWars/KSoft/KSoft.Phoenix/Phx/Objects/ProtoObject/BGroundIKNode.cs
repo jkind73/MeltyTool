@@ -3,60 +3,60 @@ using BVector = System.Numerics.Vector4;
 
 namespace KSoft.Phoenix.Phx
 {
-	public sealed class BGroundIkNode
+	public sealed class BGroundIKNode
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "GroundIK",
+			ElementName = "GroundIK",
 		};
 		#endregion
 
 		#region Name
-		string mName_;
+		string mName;
 		public string Name
 		{
-			get { return this.mName_; }
-			set { this.mName_ = value; }
+			get { return this.mName; }
+			set { this.mName = value; }
 		}
 		#endregion
 
 		#region IKRange
-		float mIkRange_;
-		public float IkRange
+		float mIKRange;
+		public float IKRange
 		{
-			get { return this.mIkRange_; }
-			set { this.mIkRange_ = value; }
+			get { return this.mIKRange; }
+			set { this.mIKRange = value; }
 		}
 
-		public bool IkRangeIsValid { get { return this.IkRange >= 0.0; } }
+		public bool IKRangeIsValid { get { return this.IKRange >= 0.0; } }
 		#endregion
 
 		#region LinkCount
-		int mLinkCount_;
+		int mLinkCount;
 		public int LinkCount
 		{
-			get { return this.mLinkCount_; }
-			set { this.mLinkCount_ = value; }
+			get { return this.mLinkCount; }
+			set { this.mLinkCount = value; }
 		}
 
 		public bool LinkCountIsValid { get { return this.LinkCount >= byte.MinValue && this.LinkCount <= byte.MaxValue; } }
 		#endregion
 
 		#region AxisPositioning
-		BVector mAxisPositioning_;
+		BVector mAxisPositioning;
 		public BVector AxisPositioning
 		{
-			get { return this.mAxisPositioning_; }
-			set { this.mAxisPositioning_ = value; }
+			get { return this.mAxisPositioning; }
+			set { this.mAxisPositioning = value; }
 		}
 
-		public bool OnLeft { get { return this.mAxisPositioning_.X <= -1.0f; } }
-		public bool OnRight { get { return this.mAxisPositioning_.X >= +1.0f; } }
+		public bool OnLeft { get { return this.mAxisPositioning.X <= -1.0f; } }
+		public bool OnRight { get { return this.mAxisPositioning.X >= +1.0f; } }
 
-		public bool InFront { get { return this.mAxisPositioning_.Z >= +1.0f; } }
-		public bool InBack { get { return this.mAxisPositioning_.Z <= -1.0f; } }
+		public bool InFront { get { return this.mAxisPositioning.Z >= +1.0f; } }
+		public bool InBack { get { return this.mAxisPositioning.Z <= -1.0f; } }
 		#endregion
 
 		#region ITagElementStreamable<string> Members
@@ -64,11 +64,11 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamCursor(ref this.mName_);
-			s.StreamAttribute("ikRange", ref this.mIkRange_);
-			s.StreamAttribute("linkCount", ref this.mLinkCount_);
-			s.StreamAttributeOpt("x", ref this.mAxisPositioning_.X, Predicates.IsNotZero);
-			s.StreamAttributeOpt("z", ref this.mAxisPositioning_.Z, Predicates.IsNotZero);
+			s.StreamCursor(ref this.mName);
+			s.StreamAttribute("ikRange", ref this.mIKRange);
+			s.StreamAttribute("linkCount", ref this.mLinkCount);
+			s.StreamAttributeOpt("x", ref this.mAxisPositioning.X, Predicates.IsNotZero);
+			s.StreamAttributeOpt("z", ref this.mAxisPositioning.Z, Predicates.IsNotZero);
 		}
 		#endregion
 	};

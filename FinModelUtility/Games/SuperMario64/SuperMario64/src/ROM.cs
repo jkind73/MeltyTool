@@ -6,7 +6,7 @@ using sm64.memory;
 using sm64.src;
 
 namespace sm64 {
-  public enum RomRegion {
+  public enum ROM_Region {
     JAPAN,
     JAPAN_SHINDOU,
     NORTH_AMERICA,
@@ -14,87 +14,87 @@ namespace sm64 {
     CHINESE_IQUE
   };
 
-  public enum RomType {
+  public enum ROM_Type {
     VANILLA, // 8MB Compressed ROM
     EXTENDED // Uncompressed ROM
   };
 
-  public enum RomEndian {
+  public enum ROM_Endian {
     BIG, // .z64
     LITTLE, // .n64
     MIXED // .v64
   };
 
-  public sealed class Rom {
-    private static Rom? instance_; // Singleton
+  public sealed class ROM {
+    private static ROM? instance; // Singleton
 
-    public static Rom Instance => instance_ ??= new Rom();
+    public static ROM Instance => instance ??= new ROM();
 
     public string Filepath { get; set; } = "";
 
-    private byte[] writeMask_;
+    private byte[] writeMask;
 
     //private uint[] segStart = new uint[0x20];
     //private bool[] segIsMIO0 = new bool[0x20];
     //private byte[][] segData = new byte[0x20][];
-    private Dictionary<byte, SegBank> segData_ = new Dictionary<byte, SegBank>();
+    private Dictionary<byte, SegBank> segData = new Dictionary<byte, SegBank>();
 
-    private Dictionary<byte, Dictionary<byte, SegBank>> areaSegData_ = new();
+    private Dictionary<byte, Dictionary<byte, SegBank>> areaSegData = new();
 
-    public uint Seg02UncompressedOffset { get; private set; } = 0;
+    public uint Seg02_uncompressedOffset { get; private set; } = 0;
 
-    public bool Seg02IsFakeMio0 { get; private set; } = false;
+    public bool Seg02_isFakeMIO0 { get; private set; } = false;
 
-    public RomRegion Region { get; private set; } = RomRegion.NORTH_AMERICA;
+    public ROM_Region Region { get; private set; } = ROM_Region.NORTH_AMERICA;
 
-    public RomEndian Endian { get; private set; } = RomEndian.BIG;
+    public ROM_Endian Endian { get; private set; } = ROM_Endian.BIG;
 
-    public RomType Type { get; private set; } = RomType.VANILLA;
+    public ROM_Type Type { get; private set; } = ROM_Type.VANILLA;
 
     public byte[] Bytes { get; private set; }
 
-    private void CheckRom_() {
+    private void checkROM() {
       if (this.Bytes[0] == 0x80 && this.Bytes[1] == 0x37)
-        this.Endian = RomEndian.BIG;
+        this.Endian = ROM_Endian.BIG;
       else if (this.Bytes[0] == 0x37 && this.Bytes[1] == 0x80)
-        this.Endian = RomEndian.MIXED;
+        this.Endian = ROM_Endian.MIXED;
       else if (this.Bytes[0] == 0x40 && this.Bytes[1] == 0x12)
-        this.Endian = RomEndian.LITTLE;
+        this.Endian = ROM_Endian.LITTLE;
 
-      if (this.Endian == RomEndian.MIXED)
-        this.SwapMixedBig_();
-      else if (this.Endian == RomEndian.LITTLE)
-        this.SwapLittleBig_();
+      if (this.Endian == ROM_Endian.MIXED)
+        this.swapMixedBig();
+      else if (this.Endian == ROM_Endian.LITTLE)
+        this.swapLittleBig();
 
       if (this.Bytes[0x3E] == 0x45)
-        this.Region = RomRegion.NORTH_AMERICA;
+        this.Region = ROM_Region.NORTH_AMERICA;
       else if (this.Bytes[0x3E] == 0x50)
-        this.Region = RomRegion.EUROPE;
+        this.Region = ROM_Region.EUROPE;
       else if (this.Bytes[0x3E] == 0x4A) {
         if (this.Bytes[0x3F] < 3)
-          this.Region = RomRegion.JAPAN;
+          this.Region = ROM_Region.JAPAN;
         else
-          this.Region = RomRegion.JAPAN_SHINDOU;
+          this.Region = ROM_Region.JAPAN_SHINDOU;
       } else if (this.Bytes[0x3E] == 0x00) {
-        this.Region = RomRegion.CHINESE_IQUE;
+        this.Region = ROM_Region.CHINESE_IQUE;
       }
 
       Globals.MemoryConstants = this.GetMemoryConstantsForRegion_(this.Region);
 
-      this.FindAndSetSegment02();
+      this.findAndSetSegment02();
 
       if (this.Bytes[Globals.MemoryConstants.Segment15.Offset] == 0x17)
-        this.Type = RomType.EXTENDED;
+        this.Type = ROM_Type.EXTENDED;
       else
-        this.Type = RomType.VANILLA;
+        this.Type = ROM_Type.VANILLA;
     }
 
-    private MemoryConstants GetMemoryConstantsForRegion_(RomRegion region) {
+    private MemoryConstants GetMemoryConstantsForRegion_(ROM_Region region) {
       switch (region) {
-        case RomRegion.NORTH_AMERICA: {
-          var segment15Start = this.ReadWordUnsigned(0x2A622C);
-          var segment15End = this.ReadWordUnsigned(0x2A6230);
-          return MemoryConstants.NaConstants with {
+        case ROM_Region.NORTH_AMERICA: {
+          var segment15Start = this.readWordUnsigned(0x2A622C);
+          var segment15End = this.readWordUnsigned(0x2A6230);
+          return MemoryConstants.NA_CONSTANTS with {
               Segment15 = new Segment {
                   Offset = segment15Start,
                   Length = segment15End - segment15Start,
@@ -106,19 +106,19 @@ namespace sm64 {
       }
     }
 
-    private void SwapMixedBig_() {
+    private void swapMixedBig() {
       for (int i = 0; i < this.Bytes.Length; i += 2) {
         byte temp = this.Bytes[i];
         this.Bytes[i] = this.Bytes[i + 1];
         this.Bytes[i + 1] = temp;
 
-        temp = this.writeMask_[i];
-        this.writeMask_[i] = this.writeMask_[i + 1];
-        this.writeMask_[i + 1] = temp;
+        temp = this.writeMask[i];
+        this.writeMask[i] = this.writeMask[i + 1];
+        this.writeMask[i + 1] = temp;
       }
     }
 
-    private void SwapLittleBig_() {
+    private void swapLittleBig() {
       byte[] temp = new byte[4];
       for (int i = 0; i < this.Bytes.Length; i += 4) {
         temp[0] = this.Bytes[i + 0];
@@ -130,127 +130,127 @@ namespace sm64 {
         this.Bytes[i + 2] = temp[1];
         this.Bytes[i + 3] = temp[0];
 
-        temp[0] = this.writeMask_[i + 0];
-        temp[1] = this.writeMask_[i + 1];
-        temp[2] = this.writeMask_[i + 2];
-        temp[3] = this.writeMask_[i + 3];
-        this.writeMask_[i + 0] = temp[3];
-        this.writeMask_[i + 1] = temp[2];
-        this.writeMask_[i + 2] = temp[1];
-        this.writeMask_[i + 3] = temp[0];
+        temp[0] = this.writeMask[i + 0];
+        temp[1] = this.writeMask[i + 1];
+        temp[2] = this.writeMask[i + 2];
+        temp[3] = this.writeMask[i + 3];
+        this.writeMask[i + 0] = temp[3];
+        this.writeMask[i + 1] = temp[2];
+        this.writeMask[i + 2] = temp[1];
+        this.writeMask[i + 3] = temp[0];
       }
     }
 
-    public void ClearSegments() {
-      foreach (KeyValuePair<byte, SegBank> kvp in this.segData_.ToArray()) {
+    public void clearSegments() {
+      foreach (KeyValuePair<byte, SegBank> kvp in this.segData.ToArray()) {
         if ((new[] {0x15, 2}).Contains(kvp.Key))
           continue;
-        this.segData_.Remove(kvp.Key);
+        this.segData.Remove(kvp.Key);
       }
 
-      this.areaSegData_.Clear();
+      this.areaSegData.Clear();
     }
 
-    public void ReadFile(string filename) {
+    public void readFile(string filename) {
       this.Filepath = filename;
       this.Bytes = File.ReadAllBytes(filename);
-      this.writeMask_ = new byte[this.Bytes.Length];
-      this.CheckRom_();
+      this.writeMask = new byte[this.Bytes.Length];
+      this.checkROM();
     }
 
-    public void SetSegment(uint index,
+    public void setSegment(uint index,
                            uint segmentStart,
                            uint segmentEnd,
-                           bool isMio0,
-                           byte? areaId) {
-      this.SetSegment(index, segmentStart, segmentEnd, isMio0, false, 0, areaId);
+                           bool isMIO0,
+                           byte? areaID) {
+      this.setSegment(index, segmentStart, segmentEnd, isMIO0, false, 0, areaID);
     }
 
-    public void SetSegment(uint index,
+    public void setSegment(uint index,
                            uint segmentStart,
                            uint segmentEnd,
-                           bool isMio0,
-                           bool fakeMio0,
+                           bool isMIO0,
+                           bool fakeMIO0,
                            uint uncompressedOffset,
-                           byte? areaId) {
+                           byte? areaID) {
       if (segmentStart > segmentEnd)
         return;
 
       SegBank seg = new SegBank();
-      seg.SegId = (byte) index;
+      seg.SegID = (byte) index;
 
-      if (!isMio0) {
+      if (!isMIO0) {
         seg.SegStart = segmentStart;
-        seg.IsMio0 = false;
+        seg.IsMIO0 = false;
         uint size = segmentEnd - segmentStart;
         seg.Data = new byte[size];
         for (uint i = 0; i < size; i++)
           seg.Data[i] = this.Bytes[segmentStart + i];
       } else {
-        if (fakeMio0) {
+        if (fakeMIO0) {
           seg.SegStart = segmentStart + uncompressedOffset;
-          seg.IsMio0 = false;
+          seg.IsMIO0 = false;
         } else {
-          seg.IsMio0 = true;
+          seg.IsMIO0 = true;
         }
         seg.Data =
-            Mio0.mio0_decode(this.getSubArray_safe(this.Bytes, segmentStart,
+            MIO0.mio0_decode(this.getSubArray_safe(this.Bytes, segmentStart,
                                                    segmentEnd - segmentStart))!;
       }
 
-      this.SetSegment_(index, seg, areaId);
+      this.setSegment(index, seg, areaID);
     }
 
-    private void SetSegment_(uint index, SegBank seg, byte? areaId) {
-      if (areaId != null) {
-        if (!this.areaSegData_.ContainsKey(areaId.Value)) {
+    private void setSegment(uint index, SegBank seg, byte? areaID) {
+      if (areaID != null) {
+        if (!this.areaSegData.ContainsKey(areaID.Value)) {
           Dictionary<byte, SegBank> dic = new Dictionary<byte, SegBank>();
-          this.areaSegData_.Add(areaId.Value, dic);
-        } else if (this.areaSegData_[areaId.Value].ContainsKey((byte) index)) {
-          this.areaSegData_[areaId.Value].Remove((byte) index);
+          this.areaSegData.Add(areaID.Value, dic);
+        } else if (this.areaSegData[areaID.Value].ContainsKey((byte) index)) {
+          this.areaSegData[areaID.Value].Remove((byte) index);
         }
 
-        this.areaSegData_[areaId.Value].Add((byte) index, seg);
+        this.areaSegData[areaID.Value].Add((byte) index, seg);
       } else {
-        if (this.segData_.ContainsKey((byte) index)) {
-          this.segData_.Remove((byte) index);
+        if (this.segData.ContainsKey((byte) index)) {
+          this.segData.Remove((byte) index);
         }
 
-        this.segData_.Add((byte) index, seg);
+        this.segData.Add((byte) index, seg);
       }
     }
 
-    public byte[]? GetSegment(ushort seg, byte? areaId)
-      => this.GetSegBank_(seg, areaId)?.Data;
+    public byte[]? getSegment(ushort seg, byte? areaID)
+      => this.GetSegBank(seg, areaID)?.Data;
 
-    private SegBank? GetSegBank_(ushort seg, byte? areaId) {
-      if (areaId != null &&
-          this.areaSegData_.ContainsKey(areaId.Value) &&
-          this.areaSegData_[areaId.Value].ContainsKey((byte) (seg))) {
-        return this.areaSegData_[areaId.Value][(byte) seg];
+    private SegBank? GetSegBank(ushort seg, byte? areaID) {
+      if (areaID != null &&
+          this.areaSegData.ContainsKey(areaID.Value) &&
+          this.areaSegData[areaID.Value].ContainsKey((byte) (seg))) {
+        return this.areaSegData[areaID.Value][(byte) seg];
       }
-      if (this.segData_.ContainsKey((byte) seg)) {
-        return this.segData_[(byte) seg];
+      if (this.segData.ContainsKey((byte) seg)) {
+        return this.segData[(byte) seg];
       }
       return null;
     }
 
-    public uint DecodeSegmentAddress(uint segOffset, byte? areaId) {
+    public uint decodeSegmentAddress(uint segOffset, byte? areaID) {
       // Console.WriteLine("Decoding segment address: " + segOffset.ToString("X8"));
       byte seg = (byte) (segOffset >> 24);
 
-      if (this.GetSegBank_(seg, areaId).IsMio0)
+      if (this.GetSegBank(seg, areaID).IsMIO0)
         throw new ArgumentException(
             "Cannot decode segment address (0x" + segOffset.ToString("X8") +
             ") from MIO0 data. (decodeSegmentAddress 1)");
       uint off = segOffset & 0x00FFFFFF;
-      return this.GetSegBank_(seg, areaId).SegStart + off;
+      return this.GetSegBank(seg, areaID).SegStart + off;
     }
 
-    public uint DecodeSegmentAddress(byte segment, uint offset, byte? areaId) {
-      SegBank seg = this.GetSegBank_(segment, areaId);
+    public uint decodeSegmentAddress(byte segment, uint offset, byte? areaID) {
+      SegBank seg = this.GetSegBank(segment, areaID);
 
-      if (seg.IsMio0)
+      if (seg.IsMIO0)
         throw new ArgumentException(
             "Cannot decode segment address (0x" + segment.ToString("X2") +
             offset.ToString("X6") +
@@ -260,11 +260,11 @@ namespace sm64 {
 
     public uint decodeSegmentAddress_safe(byte segment,
                                           uint offset,
-                                          byte? areaId) {
-      SegBank seg = this.GetSegBank_(segment, areaId);
+                                          byte? areaID) {
+      SegBank seg = this.GetSegBank(segment, areaID);
       if (seg == null) return 0xFFFFFFFF;
 
-      if (seg.IsMio0)
+      if (seg.IsMIO0)
         return 0xFFFFFFFF;
       return seg.SegStart + offset;
     }
@@ -279,94 +279,94 @@ namespace sm64 {
       return newArr;
     }
 
-    public short ReadHalfword(uint offset) {
+    public short readHalfword(uint offset) {
       return (short) (this.Bytes[offset] << 8 | this.Bytes[offset + 1]);
     }
 
-    public ushort ReadHalfwordUnsigned(uint offset) {
-      return (ushort) this.ReadHalfword(offset);
+    public ushort readHalfwordUnsigned(uint offset) {
+      return (ushort) this.readHalfword(offset);
     }
 
-    public int ReadWord(uint offset) {
+    public int readWord(uint offset) {
       return this.Bytes[0 + offset] << 24 | this.Bytes[1 + offset] << 16
                                           | this.Bytes[2 + offset] << 8 |
                                           this.Bytes[3 + offset];
     }
 
-    public uint ReadWordUnsigned(uint offset) {
+    public uint readWordUnsigned(uint offset) {
       return (uint) (this.Bytes[0 + offset] << 24 | this.Bytes[1 + offset] << 16
                                                   | this.Bytes[2 + offset] << 8 |
                                                   this.Bytes[3 + offset]);
     }
 
-    public bool IsSegmentMio0(byte seg, byte? areaId) {
-      SegBank segBank = this.GetSegBank_(seg, areaId);
+    public bool isSegmentMIO0(byte seg, byte? areaID) {
+      SegBank segBank = this.GetSegBank(seg, areaID);
       if (segBank != null)
-        return segBank.IsMio0;
+        return segBank.IsMIO0;
       else return false;
     }
 
-    public bool TestIfMio0IsFake(uint startAddr, int compOff, int uncompOff) {
+    public bool testIfMIO0IsFake(uint startAddr, int compOff, int uncompOff) {
       if (uncompOff - compOff == 2) {
-        if (this.ReadHalfwordUnsigned((uint) (startAddr + compOff)) == 0x0000)
+        if (this.readHalfwordUnsigned((uint) (startAddr + compOff)) == 0x0000)
           return true; // Detected fake MIO0 header
       }
       return false;
     }
 
-    public void FindAndSetSegment02() {
+    public void findAndSetSegment02() {
       AssemblyReader ar = new AssemblyReader();
-      List<AssemblyReader.JalCall> funcCalls;
+      List<AssemblyReader.JAL_CALL> func_calls;
       SegBank seg = new SegBank();
-      uint seg02Init;
-      uint raMtoRom;
+      uint seg02_init;
+      uint RAMtoROM;
       switch (this.Region) {
         default:
-        case RomRegion.NORTH_AMERICA:
-          seg02Init = Globals.seg02InitNa;
-          raMtoRom = Globals.raMtoRomNa;
+        case ROM_Region.NORTH_AMERICA:
+          seg02_init = Globals.seg02_init_NA;
+          RAMtoROM = Globals.RAMtoROM_NA;
           break;
-        case RomRegion.EUROPE:
-          seg02Init = Globals.seg02InitEu;
-          raMtoRom = Globals.raMtoRomEu;
+        case ROM_Region.EUROPE:
+          seg02_init = Globals.seg02_init_EU;
+          RAMtoROM = Globals.RAMtoROM_EU;
           break;
-        case RomRegion.JAPAN:
-          seg02Init = Globals.seg02InitJp;
-          raMtoRom = Globals.raMtoRomJp;
+        case ROM_Region.JAPAN:
+          seg02_init = Globals.seg02_init_JP;
+          RAMtoROM = Globals.RAMtoROM_JP;
           break;
-        case RomRegion.JAPAN_SHINDOU:
-          seg02Init = Globals.seg02InitJs;
-          raMtoRom = Globals.raMtoRomJs;
+        case ROM_Region.JAPAN_SHINDOU:
+          seg02_init = Globals.seg02_init_JS;
+          RAMtoROM = Globals.RAMtoROM_JS;
           break;
-        case RomRegion.CHINESE_IQUE:
-          seg02Init = Globals.seg02InitIq;
-          raMtoRom = Globals.raMtoRomIq;
+        case ROM_Region.CHINESE_IQUE:
+          seg02_init = Globals.seg02_init_IQ;
+          RAMtoROM = Globals.RAMtoROM_IQ;
           break;
       }
 
-      funcCalls = ar.FindJaLsInFunction(seg02Init, raMtoRom);
-      for (int i = 0; i < funcCalls.Count; i++) {
-        if (funcCalls[i].a0 == 0x2) {
+      func_calls = ar.findJALsInFunction(seg02_init, RAMtoROM);
+      for (int i = 0; i < func_calls.Count; i++) {
+        if (func_calls[i].a0 == 0x2) {
           Globals.MemoryConstants = Globals.MemoryConstants with {
               Segment2 = new Segment {
-                  Offset = funcCalls[i].a1,
-                  Length = funcCalls[i].a2 - funcCalls[i].a1,
+                  Offset = func_calls[i].a1,
+                  Length = func_calls[i].a2 - func_calls[i].a1,
               }
           };
-          if (this.ReadWordUnsigned(funcCalls[i].a1) == 0x4D494F30) {
-            seg.IsMio0 = true;
-            this.Seg02IsFakeMio0 = this.TestIfMio0IsFake(
-                funcCalls[i].a1,
-                this.ReadWord(funcCalls[i].a1 + 0x8),
-                this.ReadWord(funcCalls[i].a1 + 0xC)
+          if (this.readWordUnsigned(func_calls[i].a1) == 0x4D494F30) {
+            seg.IsMIO0 = true;
+            this.Seg02_isFakeMIO0 = this.testIfMIO0IsFake(
+                func_calls[i].a1,
+                this.readWord(func_calls[i].a1 + 0x8),
+                this.readWord(func_calls[i].a1 + 0xC)
             );
-            seg.SegStart = funcCalls[i].a1;
-            this.Seg02UncompressedOffset = this.ReadWordUnsigned(funcCalls[i].a1 + 0xC);
+            seg.SegStart = func_calls[i].a1;
+            this.Seg02_uncompressedOffset = this.readWordUnsigned(func_calls[i].a1 + 0xC);
           }
         }
       }
 
-      this.SetSegment_(0x2, seg, null);
+      this.setSegment(0x2, seg, null);
     }
 
     public Dictionary<string, ushort> levelIDs = new Dictionary<string, ushort> {
@@ -406,8 +406,8 @@ namespace sm64 {
 
   class SegBank {
     public byte[] Data { get; set; } = null;
-    public bool IsMio0 { get; set; } = false;
+    public bool IsMIO0 { get; set; } = false;
     public uint SegStart { get; set; } = 0;
-    public byte SegId { get; set; } = 0;
+    public byte SegID { get; set; } = 0;
   }
 }

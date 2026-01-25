@@ -12,52 +12,52 @@ namespace KSoft.Phoenix.Runtime
 		public sealed class BShot
 			: IO.IEndianStreamSerializable
 		{
-			public BVector launchPos, targetPos;
-			public uint launchTime, createLaserTime;
-			public BEntityID laserObj;
-			public bool laserCreated;
+			public BVector LaunchPos, TargetPos;
+			public uint LaunchTime, CreateLaserTime;
+			public BEntityID LaserObj;
+			public bool LaserCreated;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamV(ref this.launchPos); s.StreamV(ref this.targetPos);
-				s.Stream(ref this.launchTime); s.Stream(ref this.createLaserTime);
-				s.Stream(ref this.laserObj);
-				s.Stream(ref this.laserCreated);
+				s.StreamV(ref this.LaunchPos); s.StreamV(ref this.TargetPos);
+				s.Stream(ref this.LaunchTime); s.Stream(ref this.CreateLaserTime);
+				s.Stream(ref this.LaserObj);
+				s.Stream(ref this.LaserCreated);
 			}
 			#endregion
 		};
 
-		public BEntityID realTargettingLaserId;
-		public BVector desiredTargettingPosition;
-		public BShot[] shots;
-		public bool firedInitialShot;
-		public uint shotsRemaining, impactsToProcess;
-		public BProtoObjectID targetBeamId, projectileId, effectProtoId,
-			rockSmallProtoId, rockMediumProtoId, rockLargeProtoId;
-		public BCueIndex firedSound;
-		public uint targetingDelay, autoShotDelay;
-		public float autoShotInnerRadius, autoShotOuterRadius, 
-			xOffset, yOffset, zOffset;
-		public int losMode;
+		public BEntityID RealTargettingLaserID;
+		public BVector DesiredTargettingPosition;
+		public BShot[] Shots;
+		public bool FiredInitialShot;
+		public uint ShotsRemaining, ImpactsToProcess;
+		public BProtoObjectID TargetBeamID, ProjectileID, EffectProtoID,
+			RockSmallProtoID, RockMediumProtoID, RockLargeProtoID;
+		public BCueIndex FiredSound;
+		public uint TargetingDelay, AutoShotDelay;
+		public float AutoShotInnerRadius, AutoShotOuterRadius, 
+			XOffset, YOffset, ZOffset;
+		public int LOSMode;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(ref this.realTargettingLaserId);
-			s.StreamV(ref this.desiredTargettingPosition);
-			BSaveGame.StreamArray(s, ref this.shots);
-			s.Stream(ref this.firedInitialShot);
-			s.Stream(ref this.shotsRemaining); s.Stream(ref this.impactsToProcess);
-			s.Stream(ref this.targetBeamId); s.Stream(ref this.projectileId); s.Stream(ref this.effectProtoId);
-			s.Stream(ref this.rockSmallProtoId); s.Stream(ref this.rockMediumProtoId); s.Stream(ref this.rockLargeProtoId);
-			s.Stream(ref this.firedSound);
-			s.Stream(ref this.targetingDelay); s.Stream(ref this.autoShotDelay);
-			s.Stream(ref this.autoShotInnerRadius); s.Stream(ref this.autoShotOuterRadius);
-			s.Stream(ref this.xOffset); s.Stream(ref this.yOffset); s.Stream(ref this.zOffset);
-			s.Stream(ref this.losMode);
+			s.Stream(ref this.RealTargettingLaserID);
+			s.StreamV(ref this.DesiredTargettingPosition);
+			BSaveGame.StreamArray(s, ref this.Shots);
+			s.Stream(ref this.FiredInitialShot);
+			s.Stream(ref this.ShotsRemaining); s.Stream(ref this.ImpactsToProcess);
+			s.Stream(ref this.TargetBeamID); s.Stream(ref this.ProjectileID); s.Stream(ref this.EffectProtoID);
+			s.Stream(ref this.RockSmallProtoID); s.Stream(ref this.RockMediumProtoID); s.Stream(ref this.RockLargeProtoID);
+			s.Stream(ref this.FiredSound);
+			s.Stream(ref this.TargetingDelay); s.Stream(ref this.AutoShotDelay);
+			s.Stream(ref this.AutoShotInnerRadius); s.Stream(ref this.AutoShotOuterRadius);
+			s.Stream(ref this.XOffset); s.Stream(ref this.YOffset); s.Stream(ref this.ZOffset);
+			s.Stream(ref this.LOSMode);
 		}
 		#endregion
 	};

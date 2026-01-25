@@ -11,14 +11,14 @@ public sealed class BattalionWarsVertexDescriptor(uint value)
           GxColorComponentType?)>
       GetEnumerator(uint value) {
     if (value.GetBit(0)) {
-      yield return (GxVertexAttribute.POS_MAT_IDX, null, null);
+      yield return (GxVertexAttribute.PosMatIdx, null, null);
     }
 
     value >>= 1;
 
     for (uint i = 0; i < 8; ++i) {
       if (value.GetBit(0)) {
-        yield return (GxVertexAttribute.TEX0_MAT_IDX + i, null, null);
+        yield return (GxVertexAttribute.Tex0MatIdx + i, null, null);
       }
 
       value >>= 1;
@@ -26,35 +26,35 @@ public sealed class BattalionWarsVertexDescriptor(uint value)
 
     var positionFormat = (GxAttributeType) (value & 3);
     if (positionFormat != GxAttributeType.NOT_PRESENT) {
-      yield return (GxVertexAttribute.POSITION, positionFormat, null);
+      yield return (GxVertexAttribute.Position, positionFormat, null);
     }
 
     value >>= 2;
 
     var normalFormat = (GxAttributeType) (value & 3);
     if (normalFormat != GxAttributeType.NOT_PRESENT) {
-      yield return (GxVertexAttribute.NORMAL, normalFormat, null);
+      yield return (GxVertexAttribute.Normal, normalFormat, null);
     }
 
     value >>= 2;
 
     var colorFormat0 = (GxAttributeType) (value & 3);
     if (colorFormat0 != GxAttributeType.NOT_PRESENT) {
-      yield return (GxVertexAttribute.COLOR0, colorFormat0, null);
+      yield return (GxVertexAttribute.Color0, colorFormat0, null);
     }
 
     value >>= 2;
 
     var colorFormat1 = (GxAttributeType) (value & 3);
     if (colorFormat1 != GxAttributeType.NOT_PRESENT) {
-      yield return (GxVertexAttribute.COLOR1, colorFormat1, null);
+      yield return (GxVertexAttribute.Color1, colorFormat1, null);
     }
 
     value >>= 2;
 
     for (uint i = 0; i < 8; ++i) {
       if (value.GetBit(0)) {
-        yield return (GxVertexAttribute.TEX0_COORD + i, null, null);
+        yield return (GxVertexAttribute.Tex0Coord + i, null, null);
       }
 
       value >>= 1;

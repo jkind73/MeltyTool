@@ -15,18 +15,18 @@ namespace KSoft.Values
 
 	public enum UuidVersion
 	{
-		TIME_BASED,
+		TimeBased,
 		/// <summary>DCE Security, with embedded POSIX UIDs</summary>
 		DCE,
 		/// <summary>Name-based, with MD5</summary>
-		NAME_BASED_MD5,
+		NameBasedMd5,
 		/// <summary>(Pseudo-)Randomly generated</summary>
-		RANDOM,
+		Random,
 		/// <summary>Name-based, with SHA1</summary>
-		NAME_BASED_SHA1,
+		NameBasedSha1,
 
 		/// <remarks>4 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
 	};
 
 	public enum UuidVariant
@@ -34,17 +34,17 @@ namespace KSoft.Values
 		/// <summary>Network Computing System backward compatibility</summary>
 		NCS,
 		/// <summary>Leach-Salz</summary>
-		STANDARD,
+		Standard,
 		/// <summary>GUID; Microsoft Component Object Model backward compatibility</summary>
-		MICROSOFT,
+		Microsoft,
 		/// <summary>Reserved for future definition</summary>
-		RESERVED,
+		Reserved,
 
 		/// <remarks>3 bits</remarks>
-		[Obsolete(EnumBitEncoderBase.K_OBSOLETE_MSG, true)] K_NUMBER_OF,
+		[Obsolete(EnumBitEncoderBase.kObsoleteMsg, true)] kNumberOf,
 	};
 
-	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=K_SIZE_OF)]
+	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=kSizeOf)]
 	[Interop.ComVisible(true)]
 	[Serializable]
 	[SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes")]
@@ -55,22 +55,22 @@ namespace KSoft.Values
 		, IEquatable<KGuid>, IEqualityComparer<KGuid>, IEquatable<Guid>
 	{
 		#region Constants
-		public const int K_SIZE_OF = sizeof(int) + (sizeof(short) * 2) + (sizeof(byte) * 8);
+		public const int kSizeOf = sizeof(int) + (sizeof(short) * 2) + (sizeof(byte) * 8);
 
-		const int K_VERSION_BIT_COUNT_ = 4;
-		const int K_VERSION_BIT_SHIFT_ = Bits.K_INT16_BIT_COUNT - K_VERSION_BIT_COUNT_;
+		const int kVersionBitCount = 4;
+		const int kVersionBitShift = Bits.kInt16BitCount - kVersionBitCount;
 
-		const int K_VARIANT_BIT_COUNT_ = 3;
-		const int K_VARIANT_BIT_SHIFT_ = Bits.K_BYTE_BIT_COUNT - K_VARIANT_BIT_COUNT_;
+		const int kVariantBitCount = 3;
+		const int kVariantBitShift = Bits.kByteBitCount - kVariantBitCount;
 
 		/// <summary>
 		/// Guid format is 32 digits: 00000000000000000000000000000000
 		/// </summary>
-		public const string K_FORMAT_NO_STYLE = "N";
+		public const string kFormatNoStyle = "N";
 		/// <summary>
 		/// Guid format is 32 digits separated by hyphens: 00000000-0000-0000-0000-000000000000
 		/// </summary>
-		public const string K_FORMAT_HYPHENATED = "D";
+		public const string kFormatHyphenated = "D";
 		#endregion
 
 		#region Guid Accessors
@@ -79,15 +79,15 @@ namespace KSoft.Values
 		/// <summary><see cref="System.Guid"/> internal accessors</summary>
 		static class SysGuid
 		{
-			const string K_DATA1_NAME_ = "_a";
+			const string kData1Name = "_a";
 			public static readonly Func<Guid, int> GetData1;
 			public static readonly Reflection.Util.ValueTypeMemberSetterDelegate<Guid, int> SetData1;
 
-			const string K_DATA2_NAME_ = "_b";
+			const string kData2Name = "_b";
 			public static readonly Func<Guid, short> GetData2;
 			public static readonly Reflection.Util.ValueTypeMemberSetterDelegate<Guid, short> SetData2;
 
-			const string K_DATA3_NAME_ = "_c";
+			const string kData3Name = "_c";
 			public static readonly Func<Guid, short> GetData3;
 			public static readonly Reflection.Util.ValueTypeMemberSetterDelegate<Guid, short> SetData3;
 
@@ -97,12 +97,12 @@ namespace KSoft.Values
 			[SuppressMessage("Microsoft.Design", "CA1810:InitializeReferenceTypeStaticFieldsInline")]
 			static SysGuid()
 			{
-				GetData1 = Reflection.Util.GenerateMemberGetter			<Guid, int>		(K_DATA1_NAME_);
-				SetData1 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, int>		(K_DATA1_NAME_);
-				GetData2 = Reflection.Util.GenerateMemberGetter			<Guid, short>	(K_DATA2_NAME_);
-				SetData2 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, short>	(K_DATA2_NAME_);
-				GetData3 = Reflection.Util.GenerateMemberGetter			<Guid, short>	(K_DATA3_NAME_);
-				SetData3 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, short>	(K_DATA3_NAME_);
+				GetData1 = Reflection.Util.GenerateMemberGetter			<Guid, int>		(kData1Name);
+				SetData1 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, int>		(kData1Name);
+				GetData2 = Reflection.Util.GenerateMemberGetter			<Guid, short>	(kData2Name);
+				SetData2 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, short>	(kData2Name);
+				GetData3 = Reflection.Util.GenerateMemberGetter			<Guid, short>	(kData3Name);
+				SetData3 = Reflection.Util.GenerateValueTypeMemberSetter<Guid, short>	(kData3Name);
 
 				string[] kData4Names = ["_d", "_e", "_f", "_g", "_h", "_i", "_j", "_k"
 				];
@@ -127,13 +127,13 @@ namespace KSoft.Values
 					j = SysGuid.GetData4[6](this.mData), k = SysGuid.GetData4[7](this.mData);
 			long result;
 
-			result =  d; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= e; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= f; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= g; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= h; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= i; result <<= Bits.K_BYTE_BIT_COUNT;
-			result |= j; result <<= Bits.K_BYTE_BIT_COUNT;
+			result =  d; result <<= Bits.kByteBitCount;
+			result |= e; result <<= Bits.kByteBitCount;
+			result |= f; result <<= Bits.kByteBitCount;
+			result |= g; result <<= Bits.kByteBitCount;
+			result |= h; result <<= Bits.kByteBitCount;
+			result |= i; result <<= Bits.kByteBitCount;
+			result |= j; result <<= Bits.kByteBitCount;
 			result = k;
 
 			return result;
@@ -148,10 +148,10 @@ namespace KSoft.Values
 
 		public long MostSignificantBits { get {
 			ulong result = (uint)SysGuid.GetData1(this.mData);
-			result <<= Bits.K_INT32_BIT_COUNT;
+			result <<= Bits.kInt32BitCount;
 
 			result |= (ushort)SysGuid.GetData2(this.mData);
-			result <<= Bits.K_INT16_BIT_COUNT;
+			result <<= Bits.kInt16BitCount;
 
 			result |= (ushort)SysGuid.GetData3(this.mData);
 
@@ -164,27 +164,27 @@ namespace KSoft.Values
 		} }
 
 		#region Version and Variant
-		public UuidVersion Version { get => (UuidVersion)(SysGuid.GetData3(this.mData) >> K_VERSION_BIT_SHIFT_); }
+		public UuidVersion Version { get => (UuidVersion)(SysGuid.GetData3(this.mData) >> kVersionBitShift); }
 
 		public UuidVariant Variant { get {
-			int raw = SysGuid.GetData4[0](this.mData) >> K_VARIANT_BIT_SHIFT_;
+			int raw = SysGuid.GetData4[0](this.mData) >> kVariantBitShift;
 
 			// Special condition due to the 'type' bits starting in the right-most (ie, MSB) bits,
 			// plus for NCS and Standard the lower two bits are documented in RFC as being 'don't care'
 			if ((raw >> 2) == 0)
 				return UuidVariant.NCS;
 			else if ((raw >> 2) == 1)
-				return UuidVariant.STANDARD;
+				return UuidVariant.Standard;
 			else if (raw == 6)
-				return UuidVariant.MICROSOFT;
+				return UuidVariant.Microsoft;
 			else // raw == 7
-				return UuidVariant.RESERVED;
+				return UuidVariant.Reserved;
 		} }
 		#endregion
 
 		#region TimeBased properties
 		public long Timestamp { get {
-			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TIME_BASED,
+			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TimeBased,
 				"Tried to get the Timestamp of a non-time-based GUID");
 
 			ulong msb = (ulong) this.MostSignificantBits;
@@ -196,7 +196,7 @@ namespace KSoft.Values
 		} }
 
 		public int ClockSequence { get {
-			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TIME_BASED,
+			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TimeBased,
 				"Tried to get the ClockSequence of a non-time-based GUID");
 
 			// NOTE: While the Variant field is 3-bits, both the Java and RFC implementations
@@ -208,12 +208,12 @@ namespace KSoft.Values
 		} }
 
 		public long Node { get {
-			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TIME_BASED,
+			Contract.Requires<InvalidOperationException>(this.Version == UuidVersion.TimeBased,
 				"Tried to get the Node of a non-time-based GUID");
 
 			long result = 0;
 
-			for (int x = 2; x < SysGuid.GetData4.Length; x++, result <<= Bits.K_BYTE_BIT_COUNT)
+			for (int x = 2; x < SysGuid.GetData4.Length; x++, result <<= Bits.kByteBitCount)
 				result |= SysGuid.GetData4[x](this.mData);
 
 			return result;
@@ -268,13 +268,13 @@ namespace KSoft.Values
 		/// </summary>
 		/// <returns></returns>
 		[SuppressMessage("Microsoft.Design", "CA1305:SpecifyIFormatProvider")]
-		internal string ToStringNoStyle()								=> this.mData.ToString(K_FORMAT_NO_STYLE);
+		internal string ToStringNoStyle()								=> this.mData.ToString(kFormatNoStyle);
 		/// <summary>
 		/// 32 digits separated by hyphens: 00000000-0000-0000-0000-000000000000
 		/// </summary>
 		/// <returns></returns>
 		[SuppressMessage("Microsoft.Design", "CA1305:SpecifyIFormatProvider")]
-		internal string ToStringHyphenated()							=> this.mData.ToString(K_FORMAT_HYPHENATED);
+		internal string ToStringHyphenated()							=> this.mData.ToString(kFormatHyphenated);
 		#endregion
 
 		#region IEndianStreamable Members
@@ -406,13 +406,13 @@ namespace KSoft.Values
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		internal static KGuid ParseExactNoStyle(string input) => new KGuid(Guid.ParseExact(input, K_FORMAT_NO_STYLE));
+		internal static KGuid ParseExactNoStyle(string input) => new KGuid(Guid.ParseExact(input, kFormatNoStyle));
 		/// <summary>
 		/// 32 digits separated by hyphens: 00000000-0000-0000-0000-000000000000
 		/// </summary>
 		/// <param name="input"></param>
 		/// <returns></returns>
-		internal static KGuid ParseExactHyphenated(string input) => new KGuid(Guid.ParseExact(input, K_FORMAT_HYPHENATED));
+		internal static KGuid ParseExactHyphenated(string input) => new KGuid(Guid.ParseExact(input, kFormatHyphenated));
 
 		public static bool TryParse(string input, out KGuid result)
 		{
@@ -436,8 +436,8 @@ namespace KSoft.Values
 			result = Empty;
 			return false;
 		}
-		internal static bool TryParseExactNoStyle(string input, out KGuid result) => TryParseExact(input, K_FORMAT_NO_STYLE, out result);
-		public static bool TryParseExactHyphenated(string input, out KGuid result) => TryParseExact(input, K_FORMAT_HYPHENATED, out result);
+		internal static bool TryParseExactNoStyle(string input, out KGuid result) => TryParseExact(input, kFormatNoStyle, out result);
+		public static bool TryParseExactHyphenated(string input, out KGuid result) => TryParseExact(input, kFormatHyphenated, out result);
 		#endregion
 
 		#region Byte Utils
@@ -447,7 +447,7 @@ namespace KSoft.Values
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
 			Contract.Requires<ArgumentOutOfRangeException>(index >= 0);
-			Contract.Requires<ArgumentOutOfRangeException>((index+K_SIZE_OF) <= buffer.Length);
+			Contract.Requires<ArgumentOutOfRangeException>((index+kSizeOf) <= buffer.Length);
 
 			Bitwise.ByteSwap.ReplaceBytes(buffer, index, SysGuid.GetData1(this.mData)); index += sizeof(int);
 			Bitwise.ByteSwap.ReplaceBytes(buffer, index, SysGuid.GetData2(this.mData)); index += sizeof(short);

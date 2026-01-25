@@ -16,28 +16,28 @@ namespace KSoft.IO
 	{
 		static BitStream()
 		{
-			InitializeBitmaskLookUpTable(out KBitmaskLut);
+			InitializeBitmaskLookUpTable(out kBitmaskLUT);
 		}
 
 		#region BaseStream
 		/// <summary>Stream to push/pull bits to/from</summary>
 		public Stream BaseStream { get; private set; }
 		/// <summary>byte offset in <see cref="BaseStream"/> where we started streaming at</summary>
-		long mStartPosition_;
+		long mStartPosition;
 		/// <summary>byte offset in <see cref="BaseStream"/> to stop streaming at, or zero</summary>
-		long mEndPosition_;
+		long mEndPosition;
 		/// <summary>More efficient to use buffer Read/Writes than to do Read/WriteByte calls</summary>
-		byte[] mIoBuffer_ = new byte[1];
+		byte[] mIoBuffer = new byte[1];
 		#endregion
 
 		#region Cache
-		/// <summary>current bit index in <see cref="mCache_"/></summary>
-		int mCacheBitIndex_;
-		/// <summary>Actual number of bits streamed to/form <see cref="mCache_"/></summary>
-		int mCacheBitsStreamedCount_;
+		/// <summary>current bit index in <see cref="mCache"/></summary>
+		int mCacheBitIndex;
+		/// <summary>Actual number of bits streamed to/form <see cref="mCache"/></summary>
+		int mCacheBitsStreamedCount;
 
-		/// <summary>Number of bits still left in <see cref="mCache_"/> that can be read/written</summary>
-		int CacheBitsRemaining	{ get => K_WORD_BIT_COUNT_ - this.mCacheBitIndex_; }
+		/// <summary>Number of bits still left in <see cref="mCache"/> that can be read/written</summary>
+		int CacheBitsRemaining	{ get => kWordBitCount - this.mCacheBitIndex; }
 		#endregion
 
 		#region IKSoftStream
@@ -56,11 +56,11 @@ namespace KSoft.IO
 		/// <remarks>0 means this stream is closed</remarks>
 		public FileAccess StreamPermissions { get; private set; }
 
-		FileAccess mStreamMode_;
+		FileAccess mStreamMode;
 		/// <summary>Current data streaming state</summary>
 		/// <remarks>Read or Write, not both</remarks>
-		public FileAccess StreamMode { get { return this.mStreamMode_; } set {
-			if (value != this.mStreamMode_)
+		public FileAccess StreamMode { get { return this.mStreamMode; } set {
+			if (value != this.mStreamMode)
 			{
 				// if we're switching to Read, flush then warm the cache
 				if (value == FileAccess.Read)
@@ -69,11 +69,11 @@ namespace KSoft.IO
 					this.FillCache();
 				}
 
-				this.mStreamMode_ = value;
+				this.mStreamMode = value;
 			}
 		} }
-		public bool IsReading { get => this.mStreamMode_ == FileAccess.Read; }
-		public bool IsWriting { get => this.mStreamMode_ == FileAccess.Write; }
+		public bool IsReading { get => this.mStreamMode == FileAccess.Read; }
+		public bool IsWriting { get => this.mStreamMode == FileAccess.Write; }
 		#endregion
 
 		/// <summary>Access operations to throw exceptions on when they result in overflows</summary>
@@ -86,21 +86,21 @@ namespace KSoft.IO
 
 		/// <summary>Byte length of the bitstream or <see cref="BaseStream"/>'s Length</summary>
 		/// <exception cref="NotSupportedException"><see cref="BaseStream"/> does not support seeking</exception>
-		public long Length { get => this.mEndPosition_ > 0
-				? this.mEndPosition_
+		public long Length { get => this.mEndPosition > 0
+				? this.mEndPosition
 				: this.BaseStream.Length;
 		}
 		/// <summary>Number of bits in the bitstream</summary>
 		/// <exception cref="NotSupportedException"><see cref="BaseStream"/> does not support seeking</exception>
-		public long BitLength { get => (this.Length - this.mStartPosition_) * Bits.K_BYTE_BIT_COUNT; }
+		public long BitLength { get => (this.Length - this.mStartPosition) * Bits.kByteBitCount; }
 		/// <summary>Current bit index within the bitstream</summary>
 		/// <exception cref="NotSupportedException"><see cref="BaseStream"/> does not support seeking</exception>
 		public long BitPosition	{ get {
-			long position = ((this.BaseStream.Position - this.mStartPosition_) * Bits.K_BYTE_BIT_COUNT) + this.mCacheBitIndex_;
+			long position = ((this.BaseStream.Position - this.mStartPosition) * Bits.kByteBitCount) + this.mCacheBitIndex;
 			// When reading we initialize the cache, meaning we've already advanced BaseStream.Position
 			return this.IsWriting
 				? position
-				: position - this.mCacheBitsStreamedCount_;
+				: position - this.mCacheBitsStreamedCount;
 		} }
 
 		bool IsEndOfStream { get => this.CanSeek
@@ -113,9 +113,9 @@ namespace KSoft.IO
 			Contract.Requires<InvalidOperationException>(this.CanSeek);
 
 			this.FlushCache();
-			this.mCacheBitsStreamedCount_ = 0;
+			this.mCacheBitsStreamedCount = 0;
 
-			this.BaseStream.Seek(this.mStartPosition_, SeekOrigin.Begin);
+			this.BaseStream.Seek(this.mStartPosition, SeekOrigin.Begin);
 		}
 
 		/// <summary>Constuct a new bitsream using an underlying <see cref="Stream"/> object</summary>
@@ -132,7 +132,7 @@ namespace KSoft.IO
 		/// runtime. So it will acknowledge changes in the base stream length after the constructor finishes.
 		/// </remarks>
 		public BitStream(Stream baseStream, FileAccess permissions = FileAccess.ReadWrite,
-			long startPos = TypeExtensions.K_NONE, long endPos = TypeExtensions.K_NONE,
+			long startPos = TypeExtensions.kNone, long endPos = TypeExtensions.kNone,
 			string streamName = "")
 		{
 			Contract.Requires<ArgumentNullException>(baseStream != null);
@@ -148,19 +148,19 @@ namespace KSoft.IO
 			{
 				if (startPos >= 0)
 				{
-					this.mStartPosition_ = startPos;
+					this.mStartPosition = startPos;
 					this.BaseStream.Seek(startPos, SeekOrigin.Begin);
 				}
 				else
-					this.mStartPosition_ = baseStream.Position;
+					this.mStartPosition = baseStream.Position;
 
 				if (endPos > 0)
-					this.mEndPosition_ = endPos;
+					this.mEndPosition = endPos;
 			}
 			else
 			{
-				this.mStartPosition_ = 0;
-				this.mEndPosition_ = 0;
+				this.mStartPosition = 0;
+				this.mEndPosition = 0;
 			}
 		}
 
@@ -199,59 +199,59 @@ namespace KSoft.IO
 		#region Boolean
 		public void Read(out bool value) => value = this.ReadBoolean();
 
-		public void Write(bool value) => this.WriteWord(value ? 1U : 0U, Bits.K_BOOLEAN_BIT_COUNT);
+		public void Write(bool value) => this.WriteWord(value ? 1U : 0U, Bits.kBooleanBitCount);
 		#endregion
 
 		#region Single
 		public float ReadSingle()
 		{
-			this.Read(out uint data, Bits.K_INT32_BIT_COUNT);
+			this.Read(out uint data, Bits.kInt32BitCount);
 
 			return Bitwise.ByteSwap.SingleFromUInt32(data);
 		}
 		public void Read(out float value) => value = this.ReadSingle();
 
-		public void Write(float value) => this.Write(Bitwise.ByteSwap.SingleToUInt32(value), Bits.K_INT32_BIT_COUNT);
+		public void Write(float value) => this.Write(Bitwise.ByteSwap.SingleToUInt32(value), Bits.kInt32BitCount);
 		#endregion
 
 		#region Double
 		public double ReadDouble()
 		{
-			this.Read(out long data, Bits.K_INT64_BIT_COUNT);
+			this.Read(out long data, Bits.kInt64BitCount);
 
 			return BitConverter.Int64BitsToDouble(data);
 		}
 		public void Read(out double value) => value = this.ReadDouble();
 
-		public void Write(double value) => this.Write(BitConverter.DoubleToInt64Bits(value), Bits.K_INT32_BIT_COUNT);
+		public void Write(double value) => this.Write(BitConverter.DoubleToInt64Bits(value), Bits.kInt32BitCount);
 		#endregion
 
 		#region DateTime
-		public DateTime ReadDateTime(int bitCount = Bits.K_INT64_BIT_COUNT)
+		public DateTime ReadDateTime(int bitCount = Bits.kInt64BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt64BitCount);
 
 			this.Read(out long time64, bitCount);
 
 			return Util.ConvertDateTimeFromUnixTime(time64);
 		}
-		public void Read(out DateTime value, int bitCount = Bits.K_INT64_BIT_COUNT)
+		public void Read(out DateTime value, int bitCount = Bits.kInt64BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt64BitCount);
 
 			value = this.ReadDateTime(bitCount);
 		}
-		public void Write(DateTime value, int bitCount = Bits.K_INT64_BIT_COUNT)
+		public void Write(DateTime value, int bitCount = Bits.kInt64BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt64BitCount);
 
 			long time64 = Util.ConvertDateTimeToUnixTime(value);
 
 			this.Write(time64, bitCount);
 		}
-		public BitStream Stream(ref DateTime value, int bitCount = Bits.K_INT64_BIT_COUNT)
+		public BitStream Stream(ref DateTime value, int bitCount = Bits.kInt64BitCount)
 		{
-			Contract.Requires(bitCount <= Bits.K_INT64_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kInt64BitCount);
 
 				 if (this.IsReading) value = this.ReadDateTime(bitCount);
 			else if (this.IsWriting)
@@ -266,7 +266,7 @@ namespace KSoft.IO
 		static void ValidateStringStorageForStreaming(Memory.Strings.StringStorage s, int length)
 		{
 			// There are going to be issues if we try to read back a willy nilly char array string
-			if (s.Type == Memory.Strings.StringStorageType.CHAR_ARRAY && !s.IsFixedLength && length <= 0)
+			if (s.Type == Memory.Strings.StringStorageType.CharArray && !s.IsFixedLength && length <= 0)
 			{
 				throw new InvalidDataException(string.Format(Util.InvariantCultureInfo,
 					"Provided string storage and length is invalid for Endian streaming: {0}, {1}",
@@ -285,8 +285,8 @@ namespace KSoft.IO
 		/// doesn't require an explicit character length. If you do provide the
 		/// length, this operation will perform faster in some cases.
 		/// </remarks>
-		public string ReadString(Memory.Strings.StringStorage storage, int length = TypeExtensions.K_NONE,
-			int maxLength = TypeExtensions.K_NONE, int prefixBitLength = TypeExtensions.K_NONE)
+		public string ReadString(Memory.Strings.StringStorage storage, int length = TypeExtensions.kNone,
+			int maxLength = TypeExtensions.kNone, int prefixBitLength = TypeExtensions.kNone)
 		{
 			ValidateStringStorageForStreaming(storage, length);
 
@@ -305,8 +305,8 @@ namespace KSoft.IO
 		/// doesn't require an explicit character length. If you do provide the
 		/// length, this operation will perform faster in some cases.
 		/// </remarks>
-		public string ReadString(Text.StringStorageEncoding encoding, int length = TypeExtensions.K_NONE,
-			int maxLength = TypeExtensions.K_NONE, int prefixBitLength = TypeExtensions.K_NONE)
+		public string ReadString(Text.StringStorageEncoding encoding, int length = TypeExtensions.kNone,
+			int maxLength = TypeExtensions.kNone, int prefixBitLength = TypeExtensions.kNone)
 		{
 			Contract.Requires(encoding != null);
 			ValidateStringStorageForStreaming(encoding.Storage, length);
@@ -319,23 +319,23 @@ namespace KSoft.IO
 		/// <param name="storage">Definition for how we're streaming the string</param>
 		/// <param name="maxLength">CString only: Optional maximum length of this specific string (exclusive of terminator)</param>
 		public void Write(string value, Memory.Strings.StringStorage storage,
-			int maxLength = TypeExtensions.K_NONE/*, int prefixBitLength = TypeExtensions.kNone*/)
+			int maxLength = TypeExtensions.kNone/*, int prefixBitLength = TypeExtensions.kNone*/)
 		{
 			var sse = Text.StringStorageEncoding.TryAndGetStaticEncoding(storage);
 			sse.WriteString(this, value ?? string.Empty, maxLength,
-				prefixBitLength: TypeExtensions.K_NONE);
+				prefixBitLength: TypeExtensions.kNone);
 		}
 		/// <summary>Writes a string using a <see cref="Text.StringStorageEncoding"/></summary>
 		/// <param name="value">String value to writee. Null defaults to an empty string</param>
 		/// <param name="encoding">Encoding to use for character streaming</param>
 		/// <param name="maxLength">CString only: Optional maximum length of this specific string (exclusive of terminator)</param>
 		public void Write(string value, Text.StringStorageEncoding encoding,
-			int maxLength = TypeExtensions.K_NONE/*, int prefixBitLength = TypeExtensions.kNone*/)
+			int maxLength = TypeExtensions.kNone/*, int prefixBitLength = TypeExtensions.kNone*/)
 		{
 			Contract.Requires(encoding != null);
 
 			encoding.WriteString(this, value ?? string.Empty, maxLength,
-				prefixBitLength: TypeExtensions.K_NONE);
+				prefixBitLength: TypeExtensions.kNone);
 		}
 
 		/// <summary>Serializes a string based on a <see cref="Memory.Strings.StringStorage"/> definition</summary>
@@ -344,7 +344,7 @@ namespace KSoft.IO
 		/// <param name="maxLength">CString only: Optional maximum length of this specific string (exclusive of terminator)</param>
 		/// <returns></returns>
 		public BitStream Stream(ref string value, Memory.Strings.StringStorage storage,
-			int maxLength = TypeExtensions.K_NONE)
+			int maxLength = TypeExtensions.kNone)
 		{
 				 if (this.IsReading) value = this.ReadString(storage, maxLength: maxLength);
 			else if (this.IsWriting)
@@ -358,7 +358,7 @@ namespace KSoft.IO
 		/// <param name="maxLength">CString only: Optional maximum length of this specific string (exclusive of terminator)</param>
 		/// <returns></returns>
 		public BitStream Stream(ref string value, Text.StringStorageEncoding encoding,
-			int maxLength = TypeExtensions.K_NONE)
+			int maxLength = TypeExtensions.kNone)
 		{
 			Contract.Requires(encoding != null);
 
@@ -371,13 +371,13 @@ namespace KSoft.IO
 		#endregion
 
 		#region byte[]
-		public void Read(byte[] buffer, int index, int count, int bitCount = Bits.K_BYTE_BIT_COUNT)
+		public void Read(byte[] buffer, int index, int count, int bitCount = Bits.kByteBitCount)
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
 			Contract.Requires<ArgumentOutOfRangeException>(index >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(index+count <= buffer.Length);
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 #if false // #TODO redo optimization
 			if (mCacheBitIndex == 0 && bitCount == Bits.kByteBitCount && count >= kWordByteCount)
 			{
@@ -396,13 +396,13 @@ namespace KSoft.IO
 					this.Read(out buffer[x], bitCount);
 			}
 		}
-		public void Write(byte[] buffer, int index, int count, int bitCount = Bits.K_BYTE_BIT_COUNT)
+		public void Write(byte[] buffer, int index, int count, int bitCount = Bits.kByteBitCount)
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
 			Contract.Requires<ArgumentOutOfRangeException>(index >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(index+count <= buffer.Length);
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 #if false // #TODO redo optimization
 			if (mCacheBitIndex == 0 && bitCount == Bits.kByteBitCount)
 			{
@@ -417,13 +417,13 @@ namespace KSoft.IO
 					this.Write(buffer[x], bitCount);
 			}
 		}
-		public BitStream Stream(byte[] buffer, int index, int count, int bitCount = Bits.K_BYTE_BIT_COUNT)
+		public BitStream Stream(byte[] buffer, int index, int count, int bitCount = Bits.kByteBitCount)
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
 			Contract.Requires<ArgumentOutOfRangeException>(index >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(index+count <= buffer.Length);
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 
 				 if (this.IsReading)
 					 this.Read( buffer, index, count, bitCount);
@@ -445,10 +445,10 @@ namespace KSoft.IO
 
 			return buffer;
 		}
-		public byte[] Read(byte[] buffer, int bitCount = Bits.K_BYTE_BIT_COUNT)
+		public byte[] Read(byte[] buffer, int bitCount = Bits.kByteBitCount)
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 			Contract.Ensures(Contract.Result<byte[]>() != null);
 
 			if (buffer.Length > 0)
@@ -456,10 +456,10 @@ namespace KSoft.IO
 
 			return buffer;
 		}
-		public void Write(byte[] buffer, int bitCount = Bits.K_BYTE_BIT_COUNT)
+		public void Write(byte[] buffer, int bitCount = Bits.kByteBitCount)
 		{
 			Contract.Requires<ArgumentNullException>(buffer != null);
-			Contract.Requires(bitCount <= Bits.K_BYTE_BIT_COUNT);
+			Contract.Requires(bitCount <= Bits.kByteBitCount);
 
 			if (buffer.Length > 0)
 				this.Write(buffer, 0, buffer.Length, bitCount);

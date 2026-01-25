@@ -1,13 +1,13 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	/*public*/ sealed class BTrigerUiNoteNodes
+	/*public*/ sealed class BTrigerUINoteNodes
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			rootName = "NoteNodes",
-			elementName = "NoteNodeXml",
+			RootName = "NoteNodes",
+			ElementName = "NoteNodeXml",
 		};
 	#endregion
   };

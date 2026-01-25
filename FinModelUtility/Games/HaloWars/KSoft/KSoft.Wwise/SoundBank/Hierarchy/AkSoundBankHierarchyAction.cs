@@ -6,15 +6,15 @@ namespace KSoft.Wwise.SoundBank
 	sealed class AkSoundBankHierarchyAction
 		: AkSoundBankHierarchyObjectBase
 	{
-		public AkActionType type;
-		public uint targetId;
+		public AkActionType Type;
+		public uint TargetID;
 
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(ref this.type, AkActionTypeStreamer.Instance);
-			s.Stream(ref this.targetId);
+			s.Stream(ref this.Type, AkActionTypeStreamer.Instance);
+			s.Stream(ref this.TargetID);
 			// There's more...
 		}
 	};

@@ -8,38 +8,38 @@ namespace KSoft.Phoenix.Phx
 		: DatabaseNamedObject
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			rootName = "Abilities",
-			elementName = "Ability",
-			dataName = K_XML_ATTR_NAME_N,
+			RootName = "Abilities",
+			ElementName = "Ability",
+			DataName = kXmlAttrNameN,
 		};
-		public static readonly Engine.XmlFileInfo KXmlFileInfo = new Engine.XmlFileInfo
+		public static readonly Engine.XmlFileInfo kXmlFileInfo = new Engine.XmlFileInfo
 		{
-			Directory = Engine.GameDirectory.DATA,
+			Directory = Engine.GameDirectory.Data,
 			FileName = "Abilities.xml",
-			RootName = KBListXmlParams.rootName
+			RootName = kBListXmlParams.RootName
 		};
-		public static readonly Engine.ProtoDataXmlFileInfo KProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
-			Engine.XmlFilePriority.GAME_DATA,
-			KXmlFileInfo);
+		public static readonly Engine.ProtoDataXmlFileInfo kProtoFileInfo = new Engine.ProtoDataXmlFileInfo(
+			Engine.XmlFilePriority.GameData,
+			kXmlFileInfo);
 		#endregion
 
 		#region Type
-		BAbilityType mType_ = BAbilityType.INVALID;
+		BAbilityType mType = BAbilityType.Invalid;
 		public BAbilityType Type
 		{
-			get { return this.mType_; }
-			set { this.mType_ = value; }
+			get { return this.mType; }
+			set { this.mType = value; }
 		}
 		#endregion
 
 		#region AmmoCost
-		float mAmmoCost_;
+		float mAmmoCost;
 		public float AmmoCost
 		{
-			get { return this.mAmmoCost_; }
-			set { this.mAmmoCost_ = value; }
+			get { return this.mAmmoCost; }
+			set { this.mAmmoCost = value; }
 		}
 		#endregion
 
@@ -47,206 +47,206 @@ namespace KSoft.Phoenix.Phx
 		public List<BProtoObjectID> ObjectIDs { get; private set; }
 
 		#region SquadMode
-		BSquadMode mSquadMode_ = BSquadMode.INVALID;
+		BSquadMode mSquadMode = BSquadMode.Invalid;
 		public BSquadMode SquadMode
 		{
-			get { return this.mSquadMode_; }
-			set { this.mSquadMode_ = value; }
+			get { return this.mSquadMode; }
+			set { this.mSquadMode = value; }
 		}
 		#endregion
 
 		#region RecoverStart
-		BRecoverType mRecoverStart_ = BRecoverType.MOVE;
+		BRecoverType mRecoverStart = BRecoverType.Move;
 		public BRecoverType RecoverStart
 		{
-			get { return this.mRecoverStart_; }
-			set { this.mRecoverStart_ = value; }
+			get { return this.mRecoverStart; }
+			set { this.mRecoverStart = value; }
 		}
 		#endregion
 
 		#region RecoverType
-		BRecoverType mRecoverType_ = BRecoverType.MOVE;
+		BRecoverType mRecoverType = BRecoverType.Move;
 		public BRecoverType RecoverType
 		{
-			get { return this.mRecoverType_; }
-			set { this.mRecoverType_ = value; }
+			get { return this.mRecoverType; }
+			set { this.mRecoverType = value; }
 		}
 		#endregion
 
 		#region RecoverTime
-		float mRecoverTime_;
+		float mRecoverTime;
 		public float RecoverTime
 		{
-			get { return this.mRecoverTime_; }
-			set { this.mRecoverTime_ = value; }
+			get { return this.mRecoverTime; }
+			set { this.mRecoverTime = value; }
 		}
 		#endregion
 
 		#region MovementSpeedModifier
-		float mMovementSpeedModifier_;
+		float mMovementSpeedModifier;
 		public float MovementSpeedModifier
 		{
-			get { return this.mMovementSpeedModifier_; }
-			set { this.mMovementSpeedModifier_ = value; }
+			get { return this.mMovementSpeedModifier; }
+			set { this.mMovementSpeedModifier = value; }
 		}
 		#endregion
 
 		#region MovementModifierType
-		BMovementModifierType mMovementModifierType_ = BMovementModifierType.MODE;
+		BMovementModifierType mMovementModifierType = BMovementModifierType.Mode;
 		public BMovementModifierType MovementModifierType
 		{
-			get { return this.mMovementModifierType_; }
-			set { this.mMovementModifierType_ = value; }
+			get { return this.mMovementModifierType; }
+			set { this.mMovementModifierType = value; }
 		}
 		#endregion
 
 		#region DamageTakenModifier
-		float mDamageTakenModifier_;
+		float mDamageTakenModifier;
 		public float DamageTakenModifier
 		{
-			get { return this.mDamageTakenModifier_; }
-			set { this.mDamageTakenModifier_ = value; }
+			get { return this.mDamageTakenModifier; }
+			set { this.mDamageTakenModifier = value; }
 		}
 		#endregion
 
 		#region DodgeModifier
-		float mDodgeModifier_;
+		float mDodgeModifier;
 		public float DodgeModifier
 		{
-			get { return this.mDodgeModifier_; }
-			set { this.mDodgeModifier_ = value; }
+			get { return this.mDodgeModifier; }
+			set { this.mDodgeModifier = value; }
 		}
 		#endregion
 
 		#region Icon
-		string mIcon_;
+		string mIcon;
 		[Meta.TextureReference]
 		public string Icon
 		{
-			get { return this.mIcon_; }
-			set { this.mIcon_ = value; }
+			get { return this.mIcon; }
+			set { this.mIcon = value; }
 		}
 		#endregion
 
 		#region TargetType
-		BAbilityTargetType mTargetType_ = BAbilityTargetType.NONE;
+		BAbilityTargetType mTargetType = BAbilityTargetType.None;
 		public BAbilityTargetType TargetType
 		{
-			get { return this.mTargetType_; }
-			set { this.mTargetType_ = value; }
+			get { return this.mTargetType; }
+			set { this.mTargetType = value; }
 		}
 		#endregion
 
 		#region RecoverAnimAttachment
-		string mRecoverAnimAttachment_;
+		string mRecoverAnimAttachment;
 		[Meta.AttachmentTypeReference]
 		public string RecoverAnimAttachment
 		{
-			get { return this.mRecoverAnimAttachment_; }
-			set { this.mRecoverAnimAttachment_ = value; }
+			get { return this.mRecoverAnimAttachment; }
+			set { this.mRecoverAnimAttachment = value; }
 		}
 		#endregion
 
 		#region RecoverStartAnim
-		string mRecoverStartAnim_;
+		string mRecoverStartAnim;
 		[Meta.BAnimTypeReference]
 		public string RecoverStartAnim
 		{
-			get { return this.mRecoverStartAnim_; }
-			set { this.mRecoverStartAnim_ = value; }
+			get { return this.mRecoverStartAnim; }
+			set { this.mRecoverStartAnim = value; }
 		}
 		#endregion
 
 		#region RecoverEndAnim
-		string mRecoverEndAnim_;
+		string mRecoverEndAnim;
 		[Meta.BAnimTypeReference]
 		public string RecoverEndAnim
 		{
-			get { return this.mRecoverEndAnim_; }
-			set { this.mRecoverEndAnim_ = value; }
+			get { return this.mRecoverEndAnim; }
+			set { this.mRecoverEndAnim = value; }
 		}
 		#endregion
 
 		#region Sprinting
-		bool mSprinting_;
+		bool mSprinting;
 		public bool Sprinting
 		{
-			get { return this.mSprinting_; }
-			set { this.mSprinting_ = value; }
+			get { return this.mSprinting; }
+			set { this.mSprinting = value; }
 		}
 		#endregion
 
 		#region DontInterruptAttack
-		bool mDontInterruptAttack_;
+		bool mDontInterruptAttack;
 		public bool DontInterruptAttack
 		{
-			get { return this.mDontInterruptAttack_; }
-			set { this.mDontInterruptAttack_ = value; }
+			get { return this.mDontInterruptAttack; }
+			set { this.mDontInterruptAttack = value; }
 		}
 		#endregion
 
 		#region KeepSquadMode
-		bool mKeepSquadMode_;
+		bool mKeepSquadMode;
 		public bool KeepSquadMode
 		{
-			get { return this.mKeepSquadMode_; }
-			set { this.mKeepSquadMode_ = value; }
+			get { return this.mKeepSquadMode; }
+			set { this.mKeepSquadMode = value; }
 		}
 		#endregion
 
 		#region AttackSquadMode
-		bool mAttackSquadMode_;
+		bool mAttackSquadMode;
 		public bool AttackSquadMode
 		{
-			get { return this.mAttackSquadMode_; }
-			set { this.mAttackSquadMode_ = value; }
+			get { return this.mAttackSquadMode; }
+			set { this.mAttackSquadMode = value; }
 		}
 		#endregion
 
 		#region Duration
-		float mDuration_;
+		float mDuration;
 		public float Duration
 		{
-			get { return this.mDuration_; }
-			set { this.mDuration_ = value; }
+			get { return this.mDuration; }
+			set { this.mDuration = value; }
 		}
 		#endregion
 
 		#region SmartTargetRange
-		const float C_DEFAULT_SMART_TARGET_RANGE_ = 15.0f;
+		const float cDefaultSmartTargetRange = 15.0f;
 
-		float mSmartTargetRange_ = C_DEFAULT_SMART_TARGET_RANGE_;
+		float mSmartTargetRange = cDefaultSmartTargetRange;
 		public float SmartTargetRange
 		{
-			get { return this.mSmartTargetRange_; }
-			set { this.mSmartTargetRange_ = value; }
+			get { return this.mSmartTargetRange; }
+			set { this.mSmartTargetRange = value; }
 		}
 		#endregion
 
 		#region CanHeteroCommand
-		bool mCanHeteroCommand_ = true;
+		bool mCanHeteroCommand = true;
 		public bool CanHeteroCommand
 		{
-			get { return this.mCanHeteroCommand_; }
-			set { this.mCanHeteroCommand_ = value; }
+			get { return this.mCanHeteroCommand; }
+			set { this.mCanHeteroCommand = value; }
 		}
 		#endregion
 
 		#region NoAbilityReticle
-		bool mNoAbilityReticle_;
+		bool mNoAbilityReticle;
 		public bool NoAbilityReticle
 		{
-			get { return this.mNoAbilityReticle_; }
-			set { this.mNoAbilityReticle_ = value; }
+			get { return this.mNoAbilityReticle; }
+			set { this.mNoAbilityReticle = value; }
 		}
 		#endregion
 
 		public BAbility()
 		{
 			var textData = this.CreateDatabaseObjectUserInterfaceTextData();
-			textData.HasDisplayNameId = true;
-			textData.HasDisplayName2Id = true;
-			textData.HasRolloverTextId = true;
+			textData.HasDisplayNameID = true;
+			textData.HasDisplayName2ID = true;
+			textData.HasRolloverTextID = true;
 
 			this.ObjectIDs = [];
 		}
@@ -257,30 +257,30 @@ namespace KSoft.Phoenix.Phx
 			base.Serialize(s);
 			var xs = s.GetSerializerInterface();
 
-			s.StreamElementEnumOpt("Type", ref this.mType_, e => e != BAbilityType.INVALID);
-			s.StreamElementOpt("AmmoCost", ref this.mAmmoCost_, Predicates.IsNotZero);
-			s.StreamElements("Object", this.ObjectIDs, xs, XML.BXmlSerializerInterface.StreamObjectId);
-			s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode_, e => e != BSquadMode.INVALID);
-			s.StreamElementEnumOpt("RecoverStart", ref this.mRecoverStart_, e => e != BRecoverType.MOVE);
-			s.StreamElementEnumOpt("RecoverType", ref this.mRecoverType_, e => e != BRecoverType.MOVE);
-			s.StreamElementOpt("RecoverTime", ref this.mRecoverTime_, Predicates.IsNotZero);
-			s.StreamElementOpt("MovementSpeedModifier", ref this.mMovementSpeedModifier_, Predicates.IsNotZero);
-			s.StreamElementEnumOpt("MovementModifierType", ref this.mMovementModifierType_, e => e != BMovementModifierType.MODE);
-			s.StreamElementOpt("DamageTakenModifier", ref this.mDamageTakenModifier_, Predicates.IsNotZero);
-			s.StreamElementOpt("DodgeModifier", ref this.mDodgeModifier_, Predicates.IsNotZero);
-			s.StreamStringOpt("Icon", ref this.mIcon_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
-			s.StreamElementEnumOpt("TargetType", ref this.mTargetType_, e => e != BAbilityTargetType.NONE);
-			s.StreamStringOpt("RecoverAnimAttachment", ref this.mRecoverAnimAttachment_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
-			s.StreamStringOpt("RecoverStartAnim", ref this.mRecoverStartAnim_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
-			s.StreamStringOpt("RecoverEndAnim", ref this.mRecoverEndAnim_, toLower: false, type: XML.XmlUtil.K_SOURCE_ELEMENT);
-			s.StreamElementOpt("Sprinting", ref this.mSprinting_, Predicates.IsTrue);
-			s.StreamElementOpt("DontInterruptAttack", ref this.mDontInterruptAttack_, Predicates.IsTrue);
-			s.StreamElementOpt("KeepSquadMode", ref this.mKeepSquadMode_, Predicates.IsTrue);
-			s.StreamElementOpt("AttackSquadMode", ref this.mAttackSquadMode_, Predicates.IsTrue);
-			s.StreamElementOpt("Duration", ref this.mDuration_, Predicates.IsNotZero);
-			s.StreamElementOpt("SmartTargetRange", ref this.mSmartTargetRange_, v => v != C_DEFAULT_SMART_TARGET_RANGE_);
-			s.StreamElementOpt("CanHeteroCommand", ref this.mCanHeteroCommand_, Predicates.IsFalse);
-			s.StreamElementOpt("NoAbilityReticle", ref this.mNoAbilityReticle_, Predicates.IsTrue);
+			s.StreamElementEnumOpt("Type", ref this.mType, e => e != BAbilityType.Invalid);
+			s.StreamElementOpt("AmmoCost", ref this.mAmmoCost, Predicates.IsNotZero);
+			s.StreamElements("Object", this.ObjectIDs, xs, XML.BXmlSerializerInterface.StreamObjectID);
+			s.StreamElementEnumOpt("SquadMode", ref this.mSquadMode, e => e != BSquadMode.Invalid);
+			s.StreamElementEnumOpt("RecoverStart", ref this.mRecoverStart, e => e != BRecoverType.Move);
+			s.StreamElementEnumOpt("RecoverType", ref this.mRecoverType, e => e != BRecoverType.Move);
+			s.StreamElementOpt("RecoverTime", ref this.mRecoverTime, Predicates.IsNotZero);
+			s.StreamElementOpt("MovementSpeedModifier", ref this.mMovementSpeedModifier, Predicates.IsNotZero);
+			s.StreamElementEnumOpt("MovementModifierType", ref this.mMovementModifierType, e => e != BMovementModifierType.Mode);
+			s.StreamElementOpt("DamageTakenModifier", ref this.mDamageTakenModifier, Predicates.IsNotZero);
+			s.StreamElementOpt("DodgeModifier", ref this.mDodgeModifier, Predicates.IsNotZero);
+			s.StreamStringOpt("Icon", ref this.mIcon, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamElementEnumOpt("TargetType", ref this.mTargetType, e => e != BAbilityTargetType.None);
+			s.StreamStringOpt("RecoverAnimAttachment", ref this.mRecoverAnimAttachment, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamStringOpt("RecoverStartAnim", ref this.mRecoverStartAnim, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamStringOpt("RecoverEndAnim", ref this.mRecoverEndAnim, toLower: false, type: XML.XmlUtil.kSourceElement);
+			s.StreamElementOpt("Sprinting", ref this.mSprinting, Predicates.IsTrue);
+			s.StreamElementOpt("DontInterruptAttack", ref this.mDontInterruptAttack, Predicates.IsTrue);
+			s.StreamElementOpt("KeepSquadMode", ref this.mKeepSquadMode, Predicates.IsTrue);
+			s.StreamElementOpt("AttackSquadMode", ref this.mAttackSquadMode, Predicates.IsTrue);
+			s.StreamElementOpt("Duration", ref this.mDuration, Predicates.IsNotZero);
+			s.StreamElementOpt("SmartTargetRange", ref this.mSmartTargetRange, v => v != cDefaultSmartTargetRange);
+			s.StreamElementOpt("CanHeteroCommand", ref this.mCanHeteroCommand, Predicates.IsFalse);
+			s.StreamElementOpt("NoAbilityReticle", ref this.mNoAbilityReticle, Predicates.IsTrue);
 		}
 		#endregion
 	};

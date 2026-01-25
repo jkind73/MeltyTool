@@ -6,31 +6,31 @@ namespace KSoft.Phoenix.Phx
 	public abstract class TriggerScriptObject : TriggerScriptCodeObject
 	{
 		#region Xml constants
-		protected const string K_XML_ATTR_TYPE = "Type";
-		const string K_XML_ATTR_DB_ID_ = "DBID";
-		const string K_XML_ATTR_VERSION_ = "Version";
+		protected const string kXmlAttrType = "Type";
+		const string kXmlAttrDbId = "DBID";
+		const string kXmlAttrVersion = "Version";
 		#endregion
 
 //		string mTypeStr; // TODO: temporary!
-		int mDbId_ = TypeExtensions.K_NONE;
-		public int DbId { get { return this.mDbId_; } }
+		int mDbId = TypeExtensions.kNone;
+		public int DbId { get { return this.mDbId; } }
 
-		int mVersion_ = TypeExtensions.K_NONE;
-		public int Version { get { return this.mVersion_; } }
+		int mVersion = TypeExtensions.kNone;
+		public int Version { get { return this.mVersion; } }
 
 		protected void StreamType<TTypeEnum, TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, ref TTypeEnum type)
 			where TTypeEnum : struct, IComparable, IFormattable, IConvertible
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttributeEnum(K_XML_ATTR_TYPE, ref type);
+			s.StreamAttributeEnum(kXmlAttrType, ref type);
 		}
 		public override void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 		{
 			base.Serialize(s);
 
-			s.StreamAttribute(K_XML_ATTR_DB_ID_, ref this.mDbId_);
-			s.StreamAttribute(K_XML_ATTR_VERSION_, ref this.mVersion_);
+			s.StreamAttribute(kXmlAttrDbId, ref this.mDbId);
+			s.StreamAttribute(kXmlAttrVersion, ref this.mVersion);
 			// Stream it last, so when we save it ourselves, the (relatively) fixed width stuff comes first
 //			XML.XmlUtil.StreamInternString(s, kXmlAttrType, ref mTypeStr, false);
 		}

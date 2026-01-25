@@ -11,8 +11,8 @@ namespace KSoft.Security.Cryptography
 	{
 		// http://www.opensource.apple.com/source/xnu/xnu-1504.3.12/libkern/zlib/arm/adler32vec.s
 
-		const uint K_ADLER_MOD_ = 65521;
-		const int K_BLOCK_MAX_ = 5552;
+		const uint kAdlerMod = 65521;
+		const int kBlockMax = 5552;
 
 		public static uint Compute(byte[] buffer, int offset, int length, uint adler32 = 1)
 		{
@@ -40,41 +40,41 @@ namespace KSoft.Security.Cryptography
 			Contract.Requires<InvalidOperationException>(stream.CanRead);
 			Contract.Requires(!restorePosition || stream.CanSeek);
 
-			long prevPosition = restorePosition
+			long prev_position = restorePosition
 				? stream.Position
 				: -1;
 
 			var computer = new BitComputer(adler32);
 
-			int bufferSize = Math.Min(length, 1024);
-			byte[] buffer = new byte[bufferSize];
+			int buffer_size = Math.Min(length, 1024);
+			byte[] buffer = new byte[buffer_size];
 
-			for (int bytesRemaining = length; bytesRemaining > 0; )
+			for (int bytes_remaining = length; bytes_remaining > 0; )
 			{
-				int numBytesToRead = Math.Min(bytesRemaining, bufferSize);
-				int numBytesRead = 0;
+				int num_bytes_to_read = Math.Min(bytes_remaining, buffer_size);
+				int num_bytes_read = 0;
 				do
 				{
-					int n = stream.Read(buffer, numBytesRead, numBytesToRead);
+					int n = stream.Read(buffer, num_bytes_read, num_bytes_to_read);
 					if (n == 0)
 						break;
 
-					numBytesRead += n;
-					numBytesToRead -= n;
-				} while (numBytesToRead > 0);
+					num_bytes_read += n;
+					num_bytes_to_read -= n;
+				} while (num_bytes_to_read > 0);
 
-				if (numBytesRead > 0)
-					computer.Compute(buffer, 0, numBytesRead);
+				if (num_bytes_read > 0)
+					computer.Compute(buffer, 0, num_bytes_read);
 				else
 					break;
 
-				bytesRemaining -= numBytesRead;
+				bytes_remaining -= num_bytes_read;
 			}
 
 			adler32 = computer.ComputeFinish();
 
-			if (prevPosition != -1)
-				stream.Seek(prevPosition, System.IO.SeekOrigin.Begin);
+			if (prev_position != -1)
+				stream.Seek(prev_position, System.IO.SeekOrigin.Begin);
 
 			return adler32;
 		}
@@ -87,7 +87,7 @@ namespace KSoft.Security.Cryptography
 		}
 		static uint ComputeFinish(uint s1, uint s2)
 		{
-			s1 %= K_ADLER_MOD_; s2 %= K_ADLER_MOD_;
+			s1 %= kAdlerMod; s2 %= kAdlerMod;
 
 			return ComputeResult(s1, s2);
 		}
@@ -105,46 +105,46 @@ namespace KSoft.Security.Cryptography
 		}
 
 		#region Compute 16-bits
-		public static uint ComputeLe(ushort value, uint adler32 = 1)
+		public static uint ComputeLE(ushort value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeLe(value);
+			bc.ComputeLE(value);
 			return bc.ComputeFinish();
 		}
-		public static uint ComputeBe(ushort value, uint adler32 = 1)
+		public static uint ComputeBE(ushort value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeBe(value);
+			bc.ComputeBE(value);
 			return bc.ComputeFinish();
 		}
 		#endregion
 
 		#region Compute 32-bits
-		public static uint ComputeLe(uint value, uint adler32 = 1)
+		public static uint ComputeLE(uint value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeLe(value);
+			bc.ComputeLE(value);
 			return bc.ComputeFinish();
 		}
-		public static uint ComputeBe(uint value, uint adler32 = 1)
+		public static uint ComputeBE(uint value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeBe(value);
+			bc.ComputeBE(value);
 			return bc.ComputeFinish();
 		}
 		#endregion
 
 		#region Compute 64-bits
-		public static uint ComputeLe(ulong value, uint adler32 = 1)
+		public static uint ComputeLE(ulong value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeLe(value);
+			bc.ComputeLE(value);
 			return bc.ComputeFinish();
 		}
-		public static uint ComputeBe(ulong value, uint adler32 = 1)
+		public static uint ComputeBE(ulong value, uint adler32 = 1)
 		{
 			var bc = new BitComputer(adler32);
-			bc.ComputeBe(value);
+			bc.ComputeBE(value);
 			return bc.ComputeFinish();
 		}
 		#endregion

@@ -23,8 +23,8 @@ using TextureMinFilter = grezzo.schema.cmb.TextureMinFilter;
 namespace grezzo.material;
 
 public sealed class CmbFixedFunctionMaterial {
-  private const bool USE_FIXED_FUNCTION_ = true;
-  private const bool USE_JANKY_TRANSPARENCY_ = false;
+  private const bool USE_FIXED_FUNCTION = true;
+  private const bool USE_JANKY_TRANSPARENCY = false;
 
   public CmbFixedFunctionMaterial(
       IModel finModel,
@@ -32,7 +32,7 @@ public sealed class CmbFixedFunctionMaterial {
       int materialIndex,
       bool hasVertexColors,
       ILazyArray<IImage> textureImages) {
-      var mats = cmb.Mats.Data;
+      var mats = cmb.mats.Data;
       var cmbMaterials = mats.Materials;
       var cmbMaterial = cmbMaterials[materialIndex];
 
@@ -40,18 +40,18 @@ public sealed class CmbFixedFunctionMaterial {
       var finTextures =
           cmbMaterial
               .texMappers.Select((texMapper, i) => {
-                var textureId = texMapper.TextureId;
+                var textureId = texMapper.textureId;
 
                 ITexture? finTexture = null;
                 if (textureId != -1) {
-                  var cmbTexture = cmb.tex.Data.Textures[textureId];
+                  var cmbTexture = cmb.tex.Data.textures[textureId];
 
                   var rawTextureImage = textureImages[textureId];
 
                   // TODO: Is this logic possibly right????
                   IImage textureImage;
                   if (TransparencyTypeUtil.GetTransparencyType(rawTextureImage) !=
-                      TransparencyType.OPAQUE || !USE_JANKY_TRANSPARENCY_) {
+                      TransparencyType.OPAQUE || !USE_JANKY_TRANSPARENCY) {
                     textureImage = rawTextureImage;
                   } else {
                     var backgroundColor = texMapper.BorderColor;
@@ -91,64 +91,64 @@ public sealed class CmbFixedFunctionMaterial {
 
                   finTexture =
                       finModel.MaterialManager.CreateTexture(textureImage);
-                  finTexture.Name = cmbTexture.Name;
+                  finTexture.Name = cmbTexture.name;
                   finTexture.WrapModeU = this.CmbToFinWrapMode(texMapper.wrapS);
                   finTexture.WrapModeV = this.CmbToFinWrapMode(texMapper.wrapT);
                   finTexture.MinFilter =
                       texMapper.minFilter switch {
-                          TextureMinFilter.NEAREST =>
+                          TextureMinFilter.Nearest =>
                               FinTextureMinFilter.NEAR,
-                          TextureMinFilter.LINEAR =>
+                          TextureMinFilter.Linear =>
                               FinTextureMinFilter.LINEAR,
                           TextureMinFilter
-                                  .NEAREST_MIPMAP_NEAREST =>
+                                  .NearestMipmapNearest =>
                               FinTextureMinFilter
                                   .NEAR_MIPMAP_NEAR,
                           TextureMinFilter
-                                  .LINEAR_MIPMAP_NEAREST =>
+                                  .LinearMipmapNearest =>
                               FinTextureMinFilter
                                   .LINEAR_MIPMAP_NEAR,
                           TextureMinFilter
-                                  .NEAREST_MIPMAP_LINEAR =>
+                                  .NearestMipmapLinear =>
                               FinTextureMinFilter
                                   .NEAR_MIPMAP_LINEAR,
                           TextureMinFilter
-                                  .LINEAR_MIPMAP_LINEAR =>
+                                  .LinearMipmapLinear =>
                               FinTextureMinFilter
                                   .LINEAR_MIPMAP_LINEAR,
                           _ => throw new ArgumentOutOfRangeException()
                       };
                   finTexture.MagFilter =
                       texMapper.magFilter switch {
-                          TextureMagFilter.NEAREST =>
+                          TextureMagFilter.Nearest =>
                               FinTextureMagFilter.NEAR,
-                          TextureMagFilter.LINEAR =>
+                          TextureMagFilter.Linear =>
                               FinTextureMagFilter.LINEAR,
                           _ => throw new ArgumentOutOfRangeException()
                       };
                   finTexture.LodBias = texMapper.lodBias;
                   finTexture.MinLod = texMapper.minLodBias;
-                  finTexture.UvIndex = cmbTexCoord.CoordinateIndex;
+                  finTexture.UvIndex = cmbTexCoord.coordinateIndex;
                   finTexture.BorderColor = texMapper.BorderColor;
 
                   finTexture.UvType =
-                      cmbTexCoord.MappingMethod ==
-                      TextureMappingType.UV_COORDINATE_MAP
+                      cmbTexCoord.mappingMethod ==
+                      TextureMappingType.UvCoordinateMap
                           ? UvType.STANDARD
                           : UvType.SPHERICAL;
 
                   // TODO: Better way to specify this??
-                  if (cmbTexCoord.Scale.Y == 2 &&
-                      texMapper.wrapT == TextureWrapMode.MIRROR) {
-                    cmbTexCoord.Translation.Y -= 1;
+                  if (cmbTexCoord.scale.Y == 2 &&
+                      texMapper.wrapT == TextureWrapMode.Mirror) {
+                    cmbTexCoord.translation.Y -= 1;
                   }
 
                   finTexture.TextureTransform
-                            .SetTranslation2d(cmbTexCoord.Translation.X,
-                                        cmbTexCoord.Translation.Y)
-                            .SetRotationRadians2d(cmbTexCoord.Rotation)
-                            .SetScale2d(cmbTexCoord.Scale.X,
-                                        cmbTexCoord.Scale.Y);
+                            .SetTranslation2d(cmbTexCoord.translation.X,
+                                        cmbTexCoord.translation.Y)
+                            .SetRotationRadians2d(cmbTexCoord.rotation)
+                            .SetScale2d(cmbTexCoord.scale.X,
+                                        cmbTexCoord.scale.Y);
 
                   // TODO: Use LUTs/Distribution in specular calculation
                 }
@@ -158,7 +158,7 @@ public sealed class CmbFixedFunctionMaterial {
               .ToArray();
 
       // Create material
-      if (!USE_FIXED_FUNCTION_) {
+      if (!USE_FIXED_FUNCTION) {
         // TODO: Remove this hack
         var firstTexture = finTextures.FirstOrDefault();
         var firstColorFinTexture = finTextures.FirstOrDefault(tex => {
@@ -224,22 +224,22 @@ public sealed class CmbFixedFunctionMaterial {
         combinerGenerator.AddCombiners(texEnvStages);
 
         if (!cmbMaterial.alphaTestEnabled) {
-          finMaterial.SetAlphaCompare(AlphaOp.OR,
-                                      AlphaCompareType.ALWAYS,
+          finMaterial.SetAlphaCompare(AlphaOp.Or,
+                                      AlphaCompareType.Always,
                                       0,
-                                      AlphaCompareType.ALWAYS,
+                                      AlphaCompareType.Always,
                                       0);
         } else {
           finMaterial.SetAlphaCompare(
               cmbMaterial.alphaTestFunction switch {
-                  TestFunc.ALWAYS   => AlphaCompareType.ALWAYS,
-                  TestFunc.EQUAL    => AlphaCompareType.EQUAL,
-                  TestFunc.GEQUAL   => AlphaCompareType.G_EQUAL,
-                  TestFunc.GREATER  => AlphaCompareType.GREATER,
-                  TestFunc.NEVER    => AlphaCompareType.NEVER,
-                  TestFunc.LESS     => AlphaCompareType.LESS,
-                  TestFunc.LEQUAL   => AlphaCompareType.L_EQUAL,
-                  TestFunc.NOTEQUAL => AlphaCompareType.N_EQUAL,
+                  TestFunc.Always   => AlphaCompareType.Always,
+                  TestFunc.Equal    => AlphaCompareType.Equal,
+                  TestFunc.Gequal   => AlphaCompareType.GEqual,
+                  TestFunc.Greater  => AlphaCompareType.Greater,
+                  TestFunc.Never    => AlphaCompareType.Never,
+                  TestFunc.Less     => AlphaCompareType.Less,
+                  TestFunc.Lequal   => AlphaCompareType.LEqual,
+                  TestFunc.Notequal => AlphaCompareType.NEqual,
                   _                 => throw new ArgumentOutOfRangeException()
               },
               cmbMaterial.alphaTestReferenceValue);
@@ -249,14 +249,14 @@ public sealed class CmbFixedFunctionMaterial {
 
         // TODO: Fix these
         switch (cmbMaterial.blendMode) {
-          case BlendMode.BLEND_NONE: {
+          case BlendMode.BlendNone: {
             finMaterial.SetBlending(FinBlendEquation.ADD,
                                     FinBlendFactor.ONE,
                                     FinBlendFactor.ZERO,
                                     LogicOp.UNDEFINED);
             break;
           }
-          case BlendMode.BLEND: {
+          case BlendMode.Blend: {
             finMaterial.SetBlending(
                 this.CmbBlendEquationToFin(cmbMaterial.colorEquation),
                 this.CmbBlendFactorToFin(cmbMaterial.colorSrcFunc),
@@ -264,8 +264,8 @@ public sealed class CmbFixedFunctionMaterial {
                 LogicOp.UNDEFINED);
             break;
           }
-          case BlendMode.LOGICAL_OP:
-          case BlendMode.BLEND_SEPARATE: {
+          case BlendMode.LogicalOp:
+          case BlendMode.BlendSeparate: {
             finMaterial.SetBlendingSeparate(
                 this.CmbBlendEquationToFin(cmbMaterial.colorEquation),
                 this.CmbBlendFactorToFin(cmbMaterial.colorSrcFunc),
@@ -280,14 +280,14 @@ public sealed class CmbFixedFunctionMaterial {
         }
 
         finMaterial.DepthCompareType = cmbMaterial.depthTestFunction switch {
-            TestFunc.NEVER    => DepthCompareType.NEVER,
-            TestFunc.LESS     => DepthCompareType.LESS,
-            TestFunc.EQUAL    => DepthCompareType.EQUAL,
-            TestFunc.LEQUAL   => DepthCompareType.L_EQUAL,
-            TestFunc.GREATER  => DepthCompareType.GREATER,
-            TestFunc.NOTEQUAL => DepthCompareType.N_EQUAL,
-            TestFunc.GEQUAL   => DepthCompareType.G_EQUAL,
-            TestFunc.ALWAYS   => DepthCompareType.ALWAYS,
+            TestFunc.Never    => DepthCompareType.Never,
+            TestFunc.Less     => DepthCompareType.Less,
+            TestFunc.Equal    => DepthCompareType.Equal,
+            TestFunc.Lequal   => DepthCompareType.LEqual,
+            TestFunc.Greater  => DepthCompareType.Greater,
+            TestFunc.Notequal => DepthCompareType.NEqual,
+            TestFunc.Gequal   => DepthCompareType.GEqual,
+            TestFunc.Always   => DepthCompareType.Always,
         };
 
         finMaterial.DepthMode = DepthMode.NONE;
@@ -302,10 +302,10 @@ public sealed class CmbFixedFunctionMaterial {
 
       this.Material.Name = $"material{materialIndex}";
       this.Material.CullingMode = cmbMaterial.faceCulling switch {
-          CullMode.FRONT_AND_BACK => CullingMode.SHOW_NEITHER,
-          CullMode.FRONT        => CullingMode.SHOW_BACK_ONLY,
-          CullMode.BACK         => CullingMode.SHOW_FRONT_ONLY,
-          CullMode.NEVER        => CullingMode.SHOW_BOTH,
+          CullMode.FrontAndBack => CullingMode.SHOW_NEITHER,
+          CullMode.Front        => CullingMode.SHOW_BACK_ONLY,
+          CullMode.Back         => CullingMode.SHOW_FRONT_ONLY,
+          CullMode.Never        => CullingMode.SHOW_BOTH,
           _                     => throw new ArgumentOutOfRangeException()
       };
     }
@@ -314,22 +314,22 @@ public sealed class CmbFixedFunctionMaterial {
 
   public WrapMode CmbToFinWrapMode(TextureWrapMode cmbMode)
     => cmbMode switch {
-        TextureWrapMode.CLAMP_TO_BORDER => WrapMode.CLAMP,
-        TextureWrapMode.REPEAT        => WrapMode.REPEAT,
-        TextureWrapMode.CLAMP_TO_EDGE   => WrapMode.CLAMP,
-        TextureWrapMode.MIRROR        => WrapMode.MIRROR_REPEAT,
+        TextureWrapMode.ClampToBorder => WrapMode.CLAMP,
+        TextureWrapMode.Repeat        => WrapMode.REPEAT,
+        TextureWrapMode.ClampToEdge   => WrapMode.CLAMP,
+        TextureWrapMode.Mirror        => WrapMode.MIRROR_REPEAT,
         _                             => throw new ArgumentOutOfRangeException(nameof(cmbMode), cmbMode, null)
     };
 
   public FinBlendEquation CmbBlendEquationToFin(
       BlendEquation cmbBlendEquation)
     => cmbBlendEquation switch {
-        BlendEquation.FUNC_ADD      => FinBlendEquation.ADD,
-        BlendEquation.FUNC_SUBTRACT => FinBlendEquation.SUBTRACT,
-        BlendEquation.FUNC_REVERSE_SUBTRACT => FinBlendEquation
+        BlendEquation.FuncAdd      => FinBlendEquation.ADD,
+        BlendEquation.FuncSubtract => FinBlendEquation.SUBTRACT,
+        BlendEquation.FuncReverseSubtract => FinBlendEquation
             .REVERSE_SUBTRACT,
-        BlendEquation.MIN => FinBlendEquation.MIN,
-        BlendEquation.MAX => FinBlendEquation.MAX,
+        BlendEquation.Min => FinBlendEquation.MIN,
+        BlendEquation.Max => FinBlendEquation.MAX,
         _ => throw new ArgumentOutOfRangeException(
             nameof(cmbBlendEquation),
             cmbBlendEquation,
@@ -338,22 +338,22 @@ public sealed class CmbFixedFunctionMaterial {
 
   public FinBlendFactor CmbBlendFactorToFin(BlendFactor cmbBlendFactor)
     => cmbBlendFactor switch {
-        BlendFactor.ZERO        => FinBlendFactor.ZERO,
-        BlendFactor.ONE         => FinBlendFactor.ONE,
-        BlendFactor.SOURCE_COLOR => FinBlendFactor.SRC_COLOR,
-        BlendFactor.ONE_MINUS_SOURCE_COLOR => FinBlendFactor
+        BlendFactor.Zero        => FinBlendFactor.ZERO,
+        BlendFactor.One         => FinBlendFactor.ONE,
+        BlendFactor.SourceColor => FinBlendFactor.SRC_COLOR,
+        BlendFactor.OneMinusSourceColor => FinBlendFactor
             .ONE_MINUS_SRC_COLOR,
-        BlendFactor.SOURCE_ALPHA => FinBlendFactor.SRC_ALPHA,
-        BlendFactor.ONE_MINUS_SOURCE_ALPHA => FinBlendFactor
+        BlendFactor.SourceAlpha => FinBlendFactor.SRC_ALPHA,
+        BlendFactor.OneMinusSourceAlpha => FinBlendFactor
             .ONE_MINUS_SRC_ALPHA,
-        BlendFactor.DESTINATION_COLOR => FinBlendFactor.DST_COLOR,
-        BlendFactor.ONE_MINUS_DESTINATION_COLOR => FinBlendFactor
+        BlendFactor.DestinationColor => FinBlendFactor.DST_COLOR,
+        BlendFactor.OneMinusDestinationColor => FinBlendFactor
             .ONE_MINUS_DST_COLOR,
-        BlendFactor.DESTINATION_ALPHA => FinBlendFactor.DST_ALPHA,
-        BlendFactor.ONE_MINUS_DESTINATION_ALPHA => FinBlendFactor
+        BlendFactor.DestinationAlpha => FinBlendFactor.DST_ALPHA,
+        BlendFactor.OneMinusDestinationAlpha => FinBlendFactor
             .ONE_MINUS_DST_ALPHA,
-        BlendFactor.CONSTANT_ALPHA => FinBlendFactor.CONST_ALPHA,
-        BlendFactor.ONE_MINUS_CONSTANT_ALPHA => FinBlendFactor.ONE_MINUS_CONST_ALPHA,
+        BlendFactor.ConstantAlpha => FinBlendFactor.CONST_ALPHA,
+        BlendFactor.OneMinusConstantAlpha => FinBlendFactor.ONE_MINUS_CONST_ALPHA,
         _ => throw new NotSupportedException(),
     };
 }

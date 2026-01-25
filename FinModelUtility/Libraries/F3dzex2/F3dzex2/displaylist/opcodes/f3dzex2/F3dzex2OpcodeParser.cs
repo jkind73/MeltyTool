@@ -26,7 +26,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
     return opcodeCommand;
   }
 
-  public DisplayListType Type => DisplayListType.F_3DZEX2;
+  public DisplayListType Type => DisplayListType.F3DZEX2;
 
   [Unknown]
   private IOpcodeCommand ParseOpcodeCommand_(IReadOnlyN64Memory n64Memory,

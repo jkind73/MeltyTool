@@ -83,7 +83,7 @@ public sealed class XmodModelImporter : IModelImporter<XmodModelFileBundle> {
                       var position = xmod.Positions[adjunct.PositionIndex];
                       var normal = xmod.Normals[adjunct.NormalIndex];
                       var color = xmod.Colors[adjunct.ColorIndex];
-                      var uv1 = xmod.Uv1S[adjunct.Uv1Index];
+                      var uv1 = xmod.Uv1s[adjunct.Uv1Index];
 
                       var vertex = finSkin.AddVertex(position);
                       vertex.SetLocalNormal(normal);

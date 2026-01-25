@@ -19,12 +19,12 @@ namespace KSoft.Reflection
 	{
 		/// <summary>Name of the internal member used to represent an enum's integral value</summary>
 		/// <remarks>.NET uses this for the name...not sure if Mono or other implementations do as well</remarks>
-		public const string K_MEMBER_NAME = "value__";
+		public const string kMemberName = "value__";
 
 		#region Underlying Type support utils
 		/// <summary>TypeCodes for supported underlying types</summary>
 		/// <remarks>Even indices represent signed types, odd are unsigned</remarks>
-		public static readonly TypeCode[] KSupportedTypeCodes = [
+		public static readonly TypeCode[] kSupportedTypeCodes = [
 			TypeCode.SByte,	TypeCode.Byte,
 			TypeCode.Int16,	TypeCode.UInt16,
 			TypeCode.Int32, TypeCode.UInt32,
@@ -32,7 +32,7 @@ namespace KSoft.Reflection
 		];
 		/// <summary>Types for supported underlying types</summary>
 		/// <remarks>Even indices represent signed types, odd are unsigned</remarks>
-		public static readonly Type[] KSupportedTypes = [
+		public static readonly Type[] kSupportedTypes = [
 			typeof(SByte), typeof(Byte),
 			typeof(Int16), typeof(UInt16),
 			typeof(Int32), typeof(UInt32),
@@ -124,7 +124,7 @@ namespace KSoft.Reflection
 			var results = new List<FieldInfo>(fields.Length - 1);
 			foreach (var field in fields)
 			{
-				if (field.Name == K_MEMBER_NAME)
+				if (field.Name == kMemberName)
 					continue;
 
 				results.Add(field);
@@ -141,17 +141,17 @@ namespace KSoft.Reflection
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
 		/// <summary>Enum type we're dealing with</summary>
-		protected static readonly Type KEnumType =				typeof(TEnum);
+		protected static readonly Type kEnumType =				typeof(TEnum);
 		/// <summary>Enum (by-reference) type we're dealing with</summary>
-		protected static readonly Type KEnumTypeByRef =			KEnumType.MakeByRefType();
-		/// <summary><see cref="KEnumType"/>'s integer type used to represent its raw value</summary>
-		protected static readonly Type KUnderlyingType =		Enum.GetUnderlyingType(KEnumType);
-		protected static readonly TypeCode KUnderlyingTypeCode=	Type.GetTypeCode(KUnderlyingType);
+		protected static readonly Type kEnumTypeByRef =			kEnumType.MakeByRefType();
+		/// <summary><see cref="kEnumType"/>'s integer type used to represent its raw value</summary>
+		protected static readonly Type kUnderlyingType =		Enum.GetUnderlyingType(kEnumType);
+		protected static readonly TypeCode kUnderlyingTypeCode=	Type.GetTypeCode(kUnderlyingType);
 		/// <summary>Does the underlying enumeration have a <see cref="FlagsAttribute"/>?</summary>
-		protected static readonly bool KIsFlags =				KEnumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
+		protected static readonly bool kIsFlags =				kEnumType.GetCustomAttributes(typeof(FlagsAttribute), false).Length > 0;
 
-		protected static readonly string[] KEnumNames =			Enum.GetNames(KEnumType);
-		protected static readonly TEnum[] KEnumValues =			(TEnum[])Enum.GetValues(KEnumType);
+		protected static readonly string[] kEnumNames =			Enum.GetNames(kEnumType);
+		protected static readonly TEnum[] kEnumValues =			(TEnum[])Enum.GetValues(kEnumType);
 
 		/// <summary>
 		/// Sign extends the Enum value's hash-code if its underlying type is:
@@ -164,7 +164,7 @@ namespace KSoft.Reflection
 		{
 			int hc = value.GetHashCode();
 
-			switch (KUnderlyingTypeCode)
+			switch (kUnderlyingTypeCode)
 			{
 				case TypeCode.SByte:
 					return (int)((sbyte)hc);
@@ -182,7 +182,7 @@ namespace KSoft.Reflection
 		#region EnumValue helpers that can be helpful elsewhere
 		static ExprParam GenerateParamValue()
 		{
-			return Expr.Parameter(KEnumType, "value");	// TEnum value
+			return Expr.Parameter(kEnumType, "value");	// TEnum value
 		}
 		internal static Func<TEnum, TInt> GenerateToMethod<TInt>()
 		{
@@ -190,38 +190,38 @@ namespace KSoft.Reflection
 
 			//////////////////////////////////////////////////////////////////////////
 			// Define the generated method's parameters
-			var paramV = GenerateParamValue();
+			var param_v = GenerateParamValue();
 #if false
 			var param_v_member = Expr.PropertyOrField(param_v, EnumUtils.kMemberName); // value.value__
 #endif
 
 			//////////////////////////////////////////////////////////////////////////
 			// [result] = (TInt)value.value__
-			var intType = typeof(TInt);
+			var TIntType = typeof(TInt);
 #if false
 			var value_expr = TIntType != kUnderlyingType ?
 				Expr.Convert(param_v_member, TIntType) :
 				param_v_member as Expr;
 #else
-			var valueExpr = Expr.Convert(paramV, intType);
+			var value_expr = Expr.Convert(param_v, TIntType);
 #endif
 
 			//////////////////////////////////////////////////////////////////////////
 			// return (TInt)value.value__
-			var ret = valueExpr;
+			var ret = value_expr;
 
-			var lambda = Expr.Lambda<Func<TEnum, TInt>>(ret, paramV);
+			var lambda = Expr.Lambda<Func<TEnum, TInt>>(ret, param_v);
 			return lambda.Compile();
 		}
 
 		internal static Func<TInt, TEnum> GenerateFromMethod<TInt>()
 		{
-			var intType = typeof(TInt);
-			var paramV = Expr.Parameter(intType, "value");
+			var TIntType = typeof(TInt);
+			var param_v = Expr.Parameter(TIntType, "value");
 
-			var ret = Expr.Convert(paramV, KEnumType);
+			var ret = Expr.Convert(param_v, kEnumType);
 
-			var lambda = Expr.Lambda<Func<TInt, TEnum>>(ret, paramV);
+			var lambda = Expr.Lambda<Func<TInt, TEnum>>(ret, param_v);
 			return lambda.Compile();
 		}
 		#endregion
@@ -230,23 +230,23 @@ namespace KSoft.Reflection
 		where TEnum : struct, IComparable, IFormattable, IConvertible
 	{
 		/// <summary>Enum type we're dealing with</summary>
-		public static Type EnumType					{ get => KEnumType; }
+		public static Type EnumType					{ get => kEnumType; }
 		/// <summary>Enum (by-reference) type we're dealing with</summary>
-		public static Type EnumTypeByRef			{ get => KEnumTypeByRef; }
+		public static Type EnumTypeByRef			{ get => kEnumTypeByRef; }
 		/// <summary><see cref="EnumType"/>'s integer type used to represent its raw value</summary>
-		public static Type UnderlyingType			{ get => KUnderlyingType; }
-		public static TypeCode UnderlyingTypeCode	{ get => KUnderlyingTypeCode; }
+		public static Type UnderlyingType			{ get => kUnderlyingType; }
+		public static TypeCode UnderlyingTypeCode	{ get => kUnderlyingTypeCode; }
 		/// <summary>Does the underlying enumeration have a <see cref="FlagsAttribute"/>?</summary>
-		public static bool IsFlags					{ get => KIsFlags; }
+		public static bool IsFlags					{ get => kIsFlags; }
 
 		[SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-		public static string[] Names				{ get => KEnumNames; }
+		public static string[] Names				{ get => kEnumNames; }
 		[SuppressMessage("Microsoft.Design", "CA1819:PropertiesShouldNotReturnArrays")]
-		public static TEnum[] Values				{ get => KEnumValues; }
+		public static TEnum[] Values				{ get => kEnumValues; }
 
 		static EnumUtil()
 		{
-			EnumUtils.AssertTypeIsEnum(KEnumType);
+			EnumUtils.AssertTypeIsEnum(kEnumType);
 		}
 	};
 }

@@ -7,7 +7,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.IO
 {
-	[Contracts.ContractClass(typeof(TagElementStreamableContract<>))]
+	[Contracts.ContractClass(typeof(ITagElementStreamableContract<>))]
 	public interface ITagElementStreamable<TName>
 	{
 		void Serialize<TDoc, TCursor>(TagElementStream<TDoc, TCursor, TName> s)
@@ -15,7 +15,7 @@ namespace KSoft.IO
 			where TCursor : class;
 	};
 	[Contracts.ContractClassFor(typeof(ITagElementStreamable<>))]
-	abstract class TagElementStreamableContract<TName> : ITagElementStreamable<TName>
+	abstract class ITagElementStreamableContract<TName> : ITagElementStreamable<TName>
 	{
 		public void Serialize<TDoc, TCursor>(TagElementStream<TDoc, TCursor, TName> s)
 			where TDoc : class

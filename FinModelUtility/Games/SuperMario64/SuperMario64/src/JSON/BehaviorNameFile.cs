@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace sm64.JSON {
   public sealed class BehaviorNameFile {
-    private static uint ParseUInt_(string str) {
+    private static uint parseUInt(string str) {
       bool isHex = false;
       if (str.StartsWith("0x")) {
         str = str[2..];
@@ -19,7 +19,7 @@ namespace sm64.JSON {
         return uint.Parse(str, NumberStyles.HexNumber);
     }
 
-    public static void WriteObjectCombosFile(string filename) {
+    public static void writeObjectCombosFile(string filename) {
       Globals.objectComboEntries.Sort((x, y) => string.Compare(x.Name, y.Name));
 
       JArray array = [];
@@ -36,11 +36,11 @@ namespace sm64.JSON {
       File.WriteAllText(filename, o.ToString());
     }
 
-    private static bool CheckValidEntry_(JObject entry) {
+    private static bool checkValidEntry(JObject entry) {
       return (entry["Name"] != null && entry["Behavior"] != null);
     }
 
-    public static void ParseBehaviorNames(string filename) {
+    public static void parseBehaviorNames(string filename) {
       if (File.Exists(filename)) {
         string json = File.ReadAllText(filename);
         JObject o = JObject.Parse(json);
@@ -48,11 +48,11 @@ namespace sm64.JSON {
           JArray array = (JArray) o["BehaviorNames"];
           foreach (JToken token in array.Children()) {
             JObject entry = (JObject) token;
-            if (CheckValidEntry_(entry)) {
+            if (checkValidEntry(entry)) {
               string name = entry["Name"].ToString();
-              string behaviorS = entry["Behavior"].ToString();
-              uint behavior = ParseUInt_(behaviorS);
-              BehaviorNameEntry bne = new BehaviorNameEntry(name, behavior);
+              string Behavior_s = entry["Behavior"].ToString();
+              uint Behavior = parseUInt(Behavior_s);
+              BehaviorNameEntry bne = new BehaviorNameEntry(name, Behavior);
               Globals.behaviorNameEntries.Add(bne);
             }
           }

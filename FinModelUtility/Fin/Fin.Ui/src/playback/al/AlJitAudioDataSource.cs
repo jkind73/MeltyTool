@@ -21,9 +21,9 @@ public partial class AlAudioManager {
     public int Frequency { get; } = frequency;
 
     public int LengthInQueuedSamples
-      => this.CurrentTimeAndLengthInQueuedSamples.Item2;
+      => this.CurrentTimeAndLengthInQueuedSamples_.Item2;
 
-    private (DateTime, int) CurrentTimeAndLengthInQueuedSamples {
+    private (DateTime, int) CurrentTimeAndLengthInQueuedSamples_ {
       get {
         var now = DateTime.Now;
         var spanSinceLastQueue = now - this.lastQueueTime_;
@@ -39,7 +39,7 @@ public partial class AlAudioManager {
 
     public void PopulateNextBufferPcm(short[] data) {
       var (now, currentQueuedSamples) =
-          this.CurrentTimeAndLengthInQueuedSamples;
+          this.CurrentTimeAndLengthInQueuedSamples_;
 
       var numberOfChannels = this.AudioChannelsType switch {
           AudioChannelsType.MONO      => 1,

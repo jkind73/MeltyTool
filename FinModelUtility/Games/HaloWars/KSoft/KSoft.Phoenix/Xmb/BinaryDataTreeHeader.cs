@@ -9,51 +9,51 @@ namespace KSoft.Phoenix.Xmb
 {
 	public enum BinaryDataTreeHeaderSignature : byte
 	{
-		LITTLE_ENDIAN = 0x3E,
-		BIG_ENDIAN = 0xE3,
+		LittleEndian = 0x3E,
+		BigEndian = 0xE3,
 	};
 
-	public enum BinaryDataTreeSectionId
+	public enum BinaryDataTreeSectionID
 	{
-		NODE_SECTION_INDEX,
-		NAME_VALUE_SECTION_INDEX, // 4b align
-		NAME_DATA_SECTION_INDEX, // 4b align
-		VALUE_DATA_SECTION_INDEX, // 16b align
+		NodeSectionIndex,
+		NameValueSectionIndex, // 4b align
+		NameDataSectionIndex, // 4b align
+		ValueDataSectionIndex, // 16b align
 
-		K_NUMBER_OF,
+		kNumberOf,
 	};
 
 	public struct BinaryDataTreeHeader
 		: IO.IEndianStreamSerializable
 	{
-		private const byte K_EXPECTED_SIZE_ = 1+1+1+1+4+4+ (4 * (int)BinaryDataTreeSectionId.K_NUMBER_OF);
-		private const byte K_EXPECTED_HEADER_DWORD_COUNT_ = K_EXPECTED_SIZE_ / sizeof(uint);
+		private const byte kExpectedSize = 1+1+1+1+4+4+ (4 * (int)BinaryDataTreeSectionID.kNumberOf);
+		private const byte kExpectedHeaderDwordCount = kExpectedSize / sizeof(uint);
 
-		public const uint K_SIZE_OF = K_EXPECTED_SIZE_;
+		public const uint kSizeOf = kExpectedSize;
 
-		public BinaryDataTreeHeaderSignature signature;
+		public BinaryDataTreeHeaderSignature Signature;
 		//private byte mHeaderDwordCount;
-		public byte headerCrc8;
-		public byte userSectionCount;
+		public byte HeaderCrc8;
+		public byte UserSectionCount;
 
-		public uint dataCrc32;
-		public uint dataSize;
+		public uint DataCrc32;
+		public uint DataSize;
 
-		public uint baseSectionSize0;
-		public uint baseSectionSize1;
-		public uint baseSectionSize2;
-		public uint baseSectionSize3;
+		public uint BaseSectionSize0;
+		public uint BaseSectionSize1;
+		public uint BaseSectionSize2;
+		public uint BaseSectionSize3;
 
-		public uint this[BinaryDataTreeSectionId sectionId]
+		public uint this[BinaryDataTreeSectionID sectionId]
 		{
 			get
 			{
 				switch ((int)sectionId)
 				{
-					case 0: return this.baseSectionSize0;
-					case 1: return this.baseSectionSize1;
-					case 2: return this.baseSectionSize2;
-					case 3: return this.baseSectionSize3;
+					case 0: return this.BaseSectionSize0;
+					case 1: return this.BaseSectionSize1;
+					case 2: return this.BaseSectionSize2;
+					case 3: return this.BaseSectionSize3;
 
 					default:
 						throw new KSoft.Debug.UnreachableException(sectionId.ToString());
@@ -64,16 +64,16 @@ namespace KSoft.Phoenix.Xmb
 				switch ((int)sectionId)
 				{
 					case 0:
-						this.baseSectionSize0 = value;
+						this.BaseSectionSize0 = value;
 						break;
 					case 1:
-						this.baseSectionSize1 = value;
+						this.BaseSectionSize1 = value;
 						break;
 					case 2:
-						this.baseSectionSize2 = value;
+						this.BaseSectionSize2 = value;
 						break;
 					case 3:
-						this.baseSectionSize3 = value;
+						this.BaseSectionSize3 = value;
 						break;
 
 					default:
@@ -86,15 +86,15 @@ namespace KSoft.Phoenix.Xmb
 		{
 			get
 			{
-				return this.signature == BinaryDataTreeHeaderSignature.LITTLE_ENDIAN
-					? Shell.EndianFormat.LITTLE
-					: Shell.EndianFormat.BIG;
+				return this.Signature == BinaryDataTreeHeaderSignature.LittleEndian
+					? Shell.EndianFormat.Little
+					: Shell.EndianFormat.Big;
 			}
 			set
 			{
-				this.signature = value == Shell.EndianFormat.LITTLE
-					? BinaryDataTreeHeaderSignature.LITTLE_ENDIAN
-					: BinaryDataTreeHeaderSignature.BIG_ENDIAN;
+				this.Signature = value == Shell.EndianFormat.Little
+					? BinaryDataTreeHeaderSignature.LittleEndian
+					: BinaryDataTreeHeaderSignature.BigEndian;
 			}
 		}
 
@@ -103,20 +103,20 @@ namespace KSoft.Phoenix.Xmb
 			var computer = new Security.Cryptography.Crc16.BitComputer(PhxUtil.kCrc16Definition);
 			computer.ComputeBegin();
 
-			computer.Compute((byte) this.signature);
-			computer.Compute(K_EXPECTED_HEADER_DWORD_COUNT_);
+			computer.Compute((byte) this.Signature);
+			computer.Compute(kExpectedHeaderDwordCount);
 			computer.Compute(byte.MinValue);
-			computer.Compute(this.userSectionCount);
+			computer.Compute(this.UserSectionCount);
 
-			var byteOrder = this.SignatureAsEndianFormat;
+			var byte_order = this.SignatureAsEndianFormat;
 
-			computer.Compute(byteOrder, this.dataCrc32);
-			computer.Compute(byteOrder, this.dataSize);
+			computer.Compute(byte_order, this.DataCrc32);
+			computer.Compute(byte_order, this.DataSize);
 
-			computer.Compute(byteOrder, this.baseSectionSize0);
-			computer.Compute(byteOrder, this.baseSectionSize1);
-			computer.Compute(byteOrder, this.baseSectionSize2);
-			computer.Compute(byteOrder, this.baseSectionSize3);
+			computer.Compute(byte_order, this.BaseSectionSize0);
+			computer.Compute(byte_order, this.BaseSectionSize1);
+			computer.Compute(byte_order, this.BaseSectionSize2);
+			computer.Compute(byte_order, this.BaseSectionSize3);
 
 			return computer.ComputeFinish();
 		}
@@ -125,37 +125,37 @@ namespace KSoft.Phoenix.Xmb
 		{
 			bool reading = s.IsReading;
 
-			byte signature = (byte) this.signature;
+			byte signature = (byte) this.Signature;
 
 			if (!reading)
-				this.headerCrc8 = (byte) this.GetCrc16();
+				this.HeaderCrc8 = (byte) this.GetCrc16();
 
 			s.Stream(ref signature);
-			s.StreamSignature(K_EXPECTED_HEADER_DWORD_COUNT_);
-			s.Stream(ref this.headerCrc8);
-			s.Stream(ref this.userSectionCount);
+			s.StreamSignature(kExpectedHeaderDwordCount);
+			s.Stream(ref this.HeaderCrc8);
+			s.Stream(ref this.UserSectionCount);
 
-			s.Stream(ref this.dataCrc32);
-			s.Stream(ref this.dataSize);
+			s.Stream(ref this.DataCrc32);
+			s.Stream(ref this.DataSize);
 
-			s.Stream(ref this.baseSectionSize0);
-			s.Stream(ref this.baseSectionSize1);
-			s.Stream(ref this.baseSectionSize2);
-			s.Stream(ref this.baseSectionSize3);
+			s.Stream(ref this.BaseSectionSize0);
+			s.Stream(ref this.BaseSectionSize1);
+			s.Stream(ref this.BaseSectionSize2);
+			s.Stream(ref this.BaseSectionSize3);
 
 			if (reading)
 			{
-				this.signature = (BinaryDataTreeHeaderSignature)signature;
+				this.Signature = (BinaryDataTreeHeaderSignature)signature;
 			}
 		}
 
 		public void Validate()
 		{
-			var actualCrc = (byte) this.GetCrc16();
-			if (actualCrc != this.headerCrc8)
+			var actual_crc = (byte) this.GetCrc16();
+			if (actual_crc != this.HeaderCrc8)
 				throw new InvalidDataException(string.Format("Invalid CRC 0x{0}, expected 0x{1}",
-					actualCrc.ToString("X2"),
-					this.headerCrc8.ToString("X2")));
+					actual_crc.ToString("X2"),
+					this.HeaderCrc8.ToString("X2")));
 		}
 
 		public static BinaryDataTreeHeaderSignature PeekSignature(BinaryReader reader)
@@ -166,8 +166,8 @@ namespace KSoft.Phoenix.Xmb
 
 			switch (peek)
 			{
-				case (int)BinaryDataTreeHeaderSignature.LITTLE_ENDIAN:
-				case (int)BinaryDataTreeHeaderSignature.BIG_ENDIAN:
+				case (int)BinaryDataTreeHeaderSignature.LittleEndian:
+				case (int)BinaryDataTreeHeaderSignature.BigEndian:
 					return (BinaryDataTreeHeaderSignature)peek;
 
 				default:
@@ -181,26 +181,26 @@ namespace KSoft.Phoenix.Xmb
 
 			var signature = PeekSignature(reader);
 
-			return signature == BinaryDataTreeHeaderSignature.LITTLE_ENDIAN
-				? Shell.EndianFormat.LITTLE
-				: Shell.EndianFormat.BIG;
+			return signature == BinaryDataTreeHeaderSignature.LittleEndian
+				? Shell.EndianFormat.Little
+				: Shell.EndianFormat.Big;
 		}
 	};
 
 	public struct BinaryDataTreeSectionHeader
 		: IO.IEndianStreamSerializable
 	{
-		public const uint K_SIZE_OF = sizeof(uint) * 3;
+		public const uint kSizeOf = sizeof(uint) * 3;
 
-		public uint id;
-		public uint size;
-		public uint offset;
+		public uint Id;
+		public uint Size;
+		public uint Offset;
 
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.id);
-			s.Stream(ref this.size);
-			s.Stream(ref this.offset);
+			s.Stream(ref this.Id);
+			s.Stream(ref this.Size);
+			s.Stream(ref this.Offset);
 		}
 	};
 }

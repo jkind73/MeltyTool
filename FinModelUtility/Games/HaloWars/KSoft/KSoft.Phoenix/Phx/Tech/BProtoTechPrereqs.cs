@@ -14,8 +14,8 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			XML.XmlUtil.Serialize(s, this.TechStatus, BProtoTechPrereqTechStatus.KBListXmlParams);
-			XML.XmlUtil.Serialize(s, this.TypeCounts, BProtoTechPrereqTypeCount.KBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.TechStatus, BProtoTechPrereqTechStatus.kBListXmlParams);
+			XML.XmlUtil.Serialize(s, this.TypeCounts, BProtoTechPrereqTypeCount.kBListXmlParams);
 		}
 		#endregion
 	};

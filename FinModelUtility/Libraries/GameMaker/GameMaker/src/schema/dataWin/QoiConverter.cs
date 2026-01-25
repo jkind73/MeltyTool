@@ -14,21 +14,21 @@ using System.IO;
 /// </summary>
 /// <remarks>Ported over from DogScepter's QOI converter at <see href="https://github.com/colinator27/dog-scepter/"/>.</remarks>
 public static class QoiConverter {
-  public const int MAX_CHUNK_SIZE = 5; // according to the QOI spec: https://qoiformat.org/qoi-specification.pdf
+  public const int MaxChunkSize = 5; // according to the QOI spec: https://qoiformat.org/qoi-specification.pdf
 
-  public const int HEADER_SIZE = 12;
+  public const int HeaderSize = 12;
 
-  private const byte QOI_INDEX_ = 0x00;
-  private const byte QOI_RUN_8_ = 0x40;
-  private const byte QOI_RUN_16_ = 0x60;
-  private const byte QOI_DIFF_8_ = 0x80;
-  private const byte QOI_DIFF_16_ = 0xc0;
-  private const byte QOI_DIFF_24_ = 0xe0;
+  private const byte QOI_INDEX = 0x00;
+  private const byte QOI_RUN_8 = 0x40;
+  private const byte QOI_RUN_16 = 0x60;
+  private const byte QOI_DIFF_8 = 0x80;
+  private const byte QOI_DIFF_16 = 0xc0;
+  private const byte QOI_DIFF_24 = 0xe0;
 
-  private const byte QOI_COLOR_ = 0xf0;
-  private const byte QOI_MASK_2_ = 0xc0;
-  private const byte QOI_MASK_3_ = 0xe0;
-  private const byte QOI_MASK_4_ = 0xf0;
+  private const byte QOI_COLOR = 0xf0;
+  private const byte QOI_MASK_2 = 0xc0;
+  private const byte QOI_MASK_3 = 0xe0;
+  private const byte QOI_MASK_4 = 0xf0;
 
   /// <summary>
   /// Creates a raw format <see cref="GMImage"/> from a <see cref="Stream"/>.
@@ -96,28 +96,28 @@ public static class QoiConverter {
       } else if (pos < pixelData.Length) {
         int b1 = pixelData[pos++];
 
-        if ((b1 & QOI_MASK_2_) == QOI_INDEX_) {
-          int indexPos = (b1 ^ QOI_INDEX_) << 2;
+        if ((b1 & QOI_MASK_2) == QOI_INDEX) {
+          int indexPos = (b1 ^ QOI_INDEX) << 2;
           r = index[indexPos];
           g = index[indexPos + 1];
           b = index[indexPos + 2];
           a = index[indexPos + 3];
-        } else if ((b1 & QOI_MASK_3_) == QOI_RUN_8_) {
+        } else if ((b1 & QOI_MASK_3) == QOI_RUN_8) {
           run = b1 & 0x1f;
-        } else if ((b1 & QOI_MASK_3_) == QOI_RUN_16_) {
+        } else if ((b1 & QOI_MASK_3) == QOI_RUN_16) {
           int b2 = pixelData[pos++];
           run = (((b1 & 0x1f) << 8) | b2) + 32;
-        } else if ((b1 & QOI_MASK_2_) == QOI_DIFF_8_) {
+        } else if ((b1 & QOI_MASK_2) == QOI_DIFF_8) {
           r += (byte) (((b1 & 48) << 26 >> 30) & 0xff);
           g += (byte) (((b1 & 12) << 28 >> 22 >> 8) & 0xff);
           b += (byte) (((b1 & 3) << 30 >> 14 >> 16) & 0xff);
-        } else if ((b1 & QOI_MASK_3_) == QOI_DIFF_16_) {
+        } else if ((b1 & QOI_MASK_3) == QOI_DIFF_16) {
           int b2 = pixelData[pos++];
           int merged = b1 << 8 | b2;
           r += (byte) (((merged & 7936) << 19 >> 27) & 0xff);
           g += (byte) (((merged & 240) << 24 >> 20 >> 8) & 0xff);
           b += (byte) (((merged & 15) << 28 >> 12 >> 16) & 0xff);
-        } else if ((b1 & QOI_MASK_4_) == QOI_DIFF_24_) {
+        } else if ((b1 & QOI_MASK_4) == QOI_DIFF_24) {
           int b2 = pixelData[pos++];
           int b3 = pixelData[pos++];
           int merged = b1 << 16 | b2 << 8 | b3;
@@ -125,7 +125,7 @@ public static class QoiConverter {
           g += (byte) (((merged & 31744) << 17 >> 19 >> 8) & 0xff);
           b += (byte) (((merged & 992) << 22 >> 11 >> 16) & 0xff);
           a += (byte) (((merged & 31) << 27 >> 3 >> 24) & 0xff);
-        } else if ((b1 & QOI_MASK_4_) == QOI_COLOR_) {
+        } else if ((b1 & QOI_MASK_4) == QOI_COLOR) {
           if ((b1 & 8) != 0)
             r = pixelData[pos++];
           if ((b1 & 4) != 0)

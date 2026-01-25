@@ -41,12 +41,12 @@ public abstract class BVector2<T> {
 }
 
 [BinarySchema]
-public sealed partial class Vector2F
+public sealed partial class Vector2f
     : BVector2<float>, IVector2, IBinaryConvertible {
-  public static bool operator ==(Vector2F lhs, Vector2F rhs)
+  public static bool operator ==(Vector2f lhs, Vector2f rhs)
     => lhs.Equals(rhs);
 
-  public static bool operator !=(Vector2F lhs, Vector2F rhs)
+  public static bool operator !=(Vector2f lhs, Vector2f rhs)
     => !lhs.Equals(rhs);
 
   public override bool Equals(object? obj) {
@@ -54,7 +54,7 @@ public sealed partial class Vector2F
       return true;
     }
 
-    if (obj is Vector2F other) {
+    if (obj is Vector2f other) {
       return this.X == other.X && this.Y == other.Y;
     }
 
@@ -66,7 +66,7 @@ public sealed partial class Vector2F
 }
 
 [BinarySchema]
-public sealed partial class Vector2I : BVector2<int>, IBinaryConvertible;
+public sealed partial class Vector2i : BVector2<int>, IBinaryConvertible;
 
 [BinarySchema]
-public sealed partial class Vector2S : BVector2<short>, IBinaryConvertible;
+public sealed partial class Vector2s : BVector2<short>, IBinaryConvertible;

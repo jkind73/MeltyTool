@@ -77,7 +77,7 @@ public sealed class SchemaSharpFileLister {
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   private static unsafe nint FindFirstFileWInDirectory_(
       ReadOnlySpan<char> directoryPath,
-      out Win32FindDataw findData) {
+      out WIN32_FIND_DATAW findData) {
     Span<char> pathChars = stackalloc char[directoryPath.Length + 3];
     directoryPath.CopyTo(pathChars);
     pathChars[^3] = '\\';

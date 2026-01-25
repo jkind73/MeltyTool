@@ -15,29 +15,29 @@ namespace KSoft
 		[Contracts.Pure]
 		public static bool RequiresName(this IO.TagElementNodeType nodeType)
 		{
-			return nodeType != IO.TagElementNodeType.TEXT; // aka, Cursor
+			return nodeType != IO.TagElementNodeType.Text; // aka, Cursor
 		}
 
 		#region TagElementStreamFormat
 		[Contracts.Pure]
 		public static IO.TagElementStreamFormat GetBaseFormat(this IO.TagElementStreamFormat format)
 		{
-			return format & ~IO.TagElementStreamFormat.K_TYPE_FLAGS;
+			return format & ~IO.TagElementStreamFormat.kTypeFlags;
 		}
 		[Contracts.Pure]
 		public static IO.TagElementStreamFormat GetTypeFlags(this IO.TagElementStreamFormat format)
 		{
-			return format & IO.TagElementStreamFormat.K_TYPE_FLAGS;
+			return format & IO.TagElementStreamFormat.kTypeFlags;
 		}
 		[Contracts.Pure]
 		public static bool IsText(this IO.TagElementStreamFormat format)
 		{
-			return (format & IO.TagElementStreamFormat.BINARY) == 0;
+			return (format & IO.TagElementStreamFormat.Binary) == 0;
 		}
 		[Contracts.Pure]
 		public static bool IsBinary(this IO.TagElementStreamFormat format)
 		{
-			return (format & IO.TagElementStreamFormat.BINARY) != 0;
+			return (format & IO.TagElementStreamFormat.Binary) != 0;
 		}
 		#endregion
 
@@ -46,7 +46,7 @@ namespace KSoft
 			string elementName,
 			TContext ctxt,
 			IO.TagElementStreamDefaultSerializer.SerializeBitToTagElementStreamDelegate<TDoc, TCursor, TContext> streamElement,
-			int highestBitIndex = TypeExtensions.K_NONE_INT32)
+			int highestBitIndex = TypeExtensions.kNoneInt32)
 			where TDoc : class
 			where TCursor : class
 		{

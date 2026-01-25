@@ -3,23 +3,23 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum LocStringCategory
 	{
-		NONE,
+		None,
 
-		CODE,
-		TECHS,
-		SQUADS,
-		POWERS,
-		ABILITIES,
-		LEADERS,
-		OBJECTS,
+		Code,
+		Techs,
+		Squads,
+		Powers,
+		Abilities,
+		Leaders,
+		Objects,
 		UI,
-		CAMPAIGN,
-		CINEMATICS,
-		SKIRMISH,
+		Campaign,
+		Cinematics,
+		Skirmish,
 
-		STEAM_VERSION,
+		steamVersion,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public sealed class LocString
@@ -27,77 +27,77 @@ namespace KSoft.Phoenix.Phx
 		, IO.ITagElementStringNameStreamable
 	{
 		#region ID
-		int mId_ = TypeExtensions.K_NONE;
-		public int Id
+		int mID = TypeExtensions.kNone;
+		public int ID
 		{
-			get { return this.mId_; }
-			private set { this.SetFieldVal(ref this.mId_, value); }
+			get { return this.mID; }
+			private set { this.SetFieldVal(ref this.mID, value); }
 		}
 		#endregion
 
 		#region Category
 		// #NOTE this engine doesn't specifically limit the category values to the stuff in the enum, but, to reduce memory overhead, I am
-		LocStringCategory mCategory_ = LocStringCategory.NONE;
+		LocStringCategory mCategory = LocStringCategory.None;
 		public LocStringCategory Category
 		{
-			get { return this.mCategory_; }
-			set { this.SetFieldEnum(ref this.mCategory_, value); }
+			get { return this.mCategory; }
+			set { this.SetFieldEnum(ref this.mCategory, value); }
 		}
 		#endregion
 
 		#region Scenario
-		string mScenario_;
+		string mScenario;
 		public string Scenario
 		{
-			get { return this.mScenario_; }
-			set { this.SetFieldObj(ref this.mScenario_, value); }
+			get { return this.mScenario; }
+			set { this.SetFieldObj(ref this.mScenario, value); }
 		}
 		#endregion
 
 		#region IsSubtitle
-		bool mIsSubtitle_;
+		bool mIsSubtitle;
 		public bool IsSubtitle
 		{
-			get { return this.mIsSubtitle_; }
-			set { this.SetFieldVal(ref this.mIsSubtitle_, value); }
+			get { return this.mIsSubtitle; }
+			set { this.SetFieldVal(ref this.mIsSubtitle, value); }
 		}
 		#endregion
 
 		#region IsUpdate
-		bool mIsUpdate_;
+		bool mIsUpdate;
 		public bool IsUpdate
 		{
-			get { return this.mIsUpdate_; }
-			set { this.SetFieldVal(ref this.mIsUpdate_, value); }
+			get { return this.mIsUpdate; }
+			set { this.SetFieldVal(ref this.mIsUpdate, value); }
 		}
 		#endregion
 
 		#region MouseKeyboardID
-		int mMouseKeyboardId_ = TypeExtensions.K_NONE;
-		public int MouseKeyboardId
+		int mMouseKeyboardID = TypeExtensions.kNone;
+		public int MouseKeyboardID
 		{
-			get { return this.mMouseKeyboardId_; }
-			set { this.SetFieldVal(ref this.mMouseKeyboardId_, value); }
+			get { return this.mMouseKeyboardID; }
+			set { this.SetFieldVal(ref this.mMouseKeyboardID, value); }
 		}
 		#endregion
 
 		#region OriginalID
 		// this is a string because there are cases with "and" in them. eg:
 		// "25045 and 23441"
-		string mOriginalId_;
-		public string OriginalId
+		string mOriginalID;
+		public string OriginalID
 		{
-			get { return this.mOriginalId_; }
-			set { this.SetFieldObj(ref this.mOriginalId_, value); }
+			get { return this.mOriginalID; }
+			set { this.SetFieldObj(ref this.mOriginalID, value); }
 		}
 		#endregion
 
 		#region Text
-		string mText_;
+		string mText;
 		public string Text
 		{
-			get { return this.mText_; }
-			set { this.SetFieldObj(ref this.mText_, value); }
+			get { return this.mText; }
+			set { this.SetFieldObj(ref this.mText, value); }
 		}
 		#endregion
 
@@ -107,7 +107,7 @@ namespace KSoft.Phoenix.Phx
 
 		public LocString(int id)
 		{
-			this.mId_ = id;
+			this.mID = id;
 		}
 
 		#region ITagElementStreamable<string> Members
@@ -115,22 +115,22 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttribute("_locID", ref this.mId_);
-			s.StreamAttributeEnumOpt("category", ref this.mCategory_, e => e != LocStringCategory.NONE);
-			s.StreamAttributeOpt("scenario", ref this.mScenario_, Predicates.IsNotNullOrEmpty);
-			s.StreamAttributeOpt("subtitle", ref this.mIsSubtitle_, Predicates.IsTrue);
-			s.StreamAttributeOpt("Update", ref this.mIsUpdate_, Predicates.IsTrue);
-			s.StreamAttributeOpt("_mouseKeyboard", ref this.mMouseKeyboardId_, Predicates.IsNotNone);
-			s.StreamAttributeOpt("originally", ref this.mOriginalId_, Predicates.IsNotNullOrEmpty);
-			if (s.IsReading || this.mText_.IsNotNullOrEmpty())
-				s.StreamCursor(ref this.mText_);
+			s.StreamAttribute("_locID", ref this.mID);
+			s.StreamAttributeEnumOpt("category", ref this.mCategory, e => e != LocStringCategory.None);
+			s.StreamAttributeOpt("scenario", ref this.mScenario, Predicates.IsNotNullOrEmpty);
+			s.StreamAttributeOpt("subtitle", ref this.mIsSubtitle, Predicates.IsTrue);
+			s.StreamAttributeOpt("Update", ref this.mIsUpdate, Predicates.IsTrue);
+			s.StreamAttributeOpt("_mouseKeyboard", ref this.mMouseKeyboardID, Predicates.IsNotNone);
+			s.StreamAttributeOpt("originally", ref this.mOriginalID, Predicates.IsNotNullOrEmpty);
+			if (s.IsReading || this.mText.IsNotNullOrEmpty())
+				s.StreamCursor(ref this.mText);
 		}
 		#endregion
 
 		public override string ToString()
 		{
 			return string.Format("({0}) '{1}'",
-			                     this.Id,
+			                     this.ID,
 			                     this.Text ?? "");
 		}
 	};

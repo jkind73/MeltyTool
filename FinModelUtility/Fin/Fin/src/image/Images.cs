@@ -111,7 +111,7 @@ public static class FinImage {
         null);
   }
 
-  public static IImage Create1X1FromColor(Color color)
+  public static IImage Create1x1FromColor(Color color)
     => CreateFromColor(color, 1, 1);
 
   public static unsafe IImage CreateFromColor(

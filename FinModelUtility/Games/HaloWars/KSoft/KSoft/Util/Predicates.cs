@@ -8,48 +8,48 @@ namespace KSoft
 	public static class Predicates
 	{
 		#region IsFalse/True
-		private static Predicate<bool> gIsFalse_;
+		private static Predicate<bool> gIsFalse;
 		public static Predicate<bool> IsFalse { get {
-			if (gIsFalse_ == null)
-				gIsFalse_ = b => !b;
+			if (gIsFalse == null)
+				gIsFalse = b => !b;
 
-			return gIsFalse_;
+			return gIsFalse;
 		} }
 
-		private static Predicate<bool> gIsTrue_;
+		private static Predicate<bool> gIsTrue;
 		public static Predicate<bool> IsTrue { get {
-			if (gIsTrue_ == null)
-				gIsTrue_ = b => b;
+			if (gIsTrue == null)
+				gIsTrue = b => b;
 
-			return gIsTrue_;
+			return gIsTrue;
 		} }
 		#endregion
 
 		#region IsNotNullOrEmpty
-		private static Predicate<string> gIsNotNullOrEmpty_;
+		private static Predicate<string> gIsNotNullOrEmpty;
 		public static Predicate<string> IsNotNullOrEmpty { get {
-			if (gIsNotNullOrEmpty_ == null)
-				gIsNotNullOrEmpty_ = s => !string.IsNullOrEmpty(s);
+			if (gIsNotNullOrEmpty == null)
+				gIsNotNullOrEmpty = s => !string.IsNullOrEmpty(s);
 
-			return gIsNotNullOrEmpty_;
+			return gIsNotNullOrEmpty;
 		} }
 		#endregion
 
 		#region HasItems/Bits
-		private static Predicate<System.Collections.ICollection> gHasItems_;
+		private static Predicate<System.Collections.ICollection> gHasItems;
 		public static Predicate<System.Collections.ICollection> HasItems { get {
-			if (gHasItems_ == null)
-				gHasItems_ = coll => coll != null && coll.Count > 0;
+			if (gHasItems == null)
+				gHasItems = coll => coll != null && coll.Count > 0;
 
-			return gHasItems_;
+			return gHasItems;
 		} }
 
-		private static Predicate<Collections.IReadOnlyBitSet> gHasBits_;
+		private static Predicate<Collections.IReadOnlyBitSet> gHasBits;
 		public static Predicate<Collections.IReadOnlyBitSet> HasBits { get {
-			if (gHasBits_ == null)
-				gHasBits_ = set => set != null && set.Cardinality > 0;
+			if (gHasBits == null)
+				gHasBits = set => set != null && set.Cardinality > 0;
 
-			return gHasBits_;
+			return gHasBits;
 		} }
 		#endregion
 
@@ -85,12 +85,12 @@ namespace KSoft
 		[Pure, DebuggerStepThrough] public static bool IsNotZero(float x)	{ return x != 0.0f; }
 
 		/// <returns>x != -1</returns>
-		[Pure, DebuggerStepThrough] public static bool IsNotNone(sbyte x)	{ return x != TypeExtensions.K_NONE_INT8; }
+		[Pure, DebuggerStepThrough] public static bool IsNotNone(sbyte x)	{ return x != TypeExtensions.kNoneInt8; }
 		/// <returns>x != -1</returns>
-		[Pure, DebuggerStepThrough] public static bool IsNotNone(short x)	{ return x != TypeExtensions.K_NONE_INT16; }
+		[Pure, DebuggerStepThrough] public static bool IsNotNone(short x)	{ return x != TypeExtensions.kNoneInt16; }
 		/// <returns>x != -1</returns>
-		[Pure, DebuggerStepThrough] public static bool IsNotNone(int x)		{ return x != TypeExtensions.K_NONE_INT32; }
+		[Pure, DebuggerStepThrough] public static bool IsNotNone(int x)		{ return x != TypeExtensions.kNoneInt32; }
 		/// <returns>x != -1</returns>
-		[Pure, DebuggerStepThrough] public static bool IsNotNone(long x)	{ return x != TypeExtensions.K_NONE_INT64; }
+		[Pure, DebuggerStepThrough] public static bool IsNotNone(long x)	{ return x != TypeExtensions.kNoneInt64; }
 	};
 }

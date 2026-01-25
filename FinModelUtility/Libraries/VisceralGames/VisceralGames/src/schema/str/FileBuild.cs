@@ -23,12 +23,12 @@
 namespace visceral.schema.str;
 
 public enum FileBuild : uint {
-  DEFAULT = 0x5393AC01,          // "default"
-  DEBUG = 0x143C8453,            // "debug"
-  TEMPORARY = 0x473FCFB4,        // "temp"
-  GEOMETRY = 0x38B2B8D2,         // "geometry"
-  GEOMETRY_VOLATILE = 0x67A6002E, // "geometryvolatile"
-  VOLATILE = 0x67456B5C,         // "volatile"
-  SOUND_BANK = 0x7A10372B,        // "soundbank"
-  ANIMATION_BANK = 0x3D074740,    // "animationbank"
+  Default = 0x5393AC01,          // "default"
+  Debug = 0x143C8453,            // "debug"
+  Temporary = 0x473FCFB4,        // "temp"
+  Geometry = 0x38B2B8D2,         // "geometry"
+  GeometryVolatile = 0x67A6002E, // "geometryvolatile"
+  Volatile = 0x67456B5C,         // "volatile"
+  SoundBank = 0x7A10372B,        // "soundbank"
+  AnimationBank = 0x3D074740,    // "animationbank"
 }

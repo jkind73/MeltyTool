@@ -3,67 +3,67 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum BMinigameType
 	{
-		NONE,
+		None,
 
-		ONE_BUTTON_PRESS,
-		TWO_BUTTON_PRESS,
-		THREE_BUTTON_PRESS,
+		OneButtonPress,
+		TwoButtonPress,
+		ThreeButtonPress,
 	};
 
 	public enum BPowerFlags
 	{
-		SEQUENTIAL_RECHARGE,
-		INFINITE_USES,
-		UNIT_POWER,
-		NOT_DISRUPTABLE,
-		MULTI_RECHARGE_POWER,
-		SHOW_LIMIT,
+		SequentialRecharge,
+		InfiniteUses,
+		UnitPower,
+		NotDisruptable,
+		MultiRechargePower,
+		ShowLimit,
 		//ShowTargetHighlight,
-		LEADER_POWER,
+		LeaderPower,
 	};
 
 	// The following flags respect the true/false value in the XmlText
 	public enum BPowerToggableFlags
 	{
-		CAMERA_ENABLE_USER_SCROLL,
-		CAMERA_ENABLE_USER_YAW,
-		CAMERA_ENABLE_USER_ZOOM,
-		CAMERA_ENABLE_AUTO_ZOOM_INSTANT,
-		CAMERA_ENABLE_AUTO_ZOOM,
+		CameraEnableUserScroll,
+		CameraEnableUserYaw,
+		CameraEnableUserZoom,
+		CameraEnableAutoZoomInstant,
+		CameraEnableAutoZoom,
 
-		SHOW_IN_POWER_MENU,
-		SHOW_TRANSPORT_ARROWS,
+		ShowInPowerMenu,
+		ShowTransportArrows,
 	};
 
 	public enum BPowerType
 	{
-		INVALID,
+		Invalid,
 
-		CLEANSING,
-		ORBITAL,
-		CARPET_BOMBING,
-		CRYO,
-		RAGE,
-		WAVE,
-		DISRUPTION,
-		TRANSPORT,
+		Cleansing,
+		Orbital,
+		CarpetBombing,
+		Cryo,
+		Rage,
+		Wave,
+		Disruption,
+		Transport,
 		ODST,
-		REPAIR,
+		Repair,
 	};
 
 	public enum ProtoPowerDataType
 	{
-		INVALID,
-		FLOAT,
-		INT,
-		PROTO_OBJECT,
-		PROTO_SQUAD,
-		TECH,
-		BOOL,
+		Invalid,
+		Float,
+		Int,
+		ProtoObject,
+		ProtoSquad,
+		Tech,
+		Bool,
 		[System.Obsolete]
-		COST,
-		OBJECT_TYPE,
-		SOUND,
-		TEXTURE,
+		Cost,
+		ObjectType,
+		Sound,
+		Texture,
 	};
 }

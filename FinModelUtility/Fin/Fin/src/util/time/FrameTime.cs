@@ -6,16 +6,16 @@ using fin.ui;
 namespace fin.util.time;
 
 public static class FrameTime {
-  private static readonly DateTime FIRST_FRAME_START_ = DateTime.Now;
+  private static readonly DateTime firstFrameStart_ = DateTime.Now;
   private static DateTime previousFrameStart_;
 
-  private const int SMOOTH_COUNT_ = UiConstants.FPS;
+  private const int SMOOTH_COUNT = UiConstants.FPS;
 
-  private static readonly float[] FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_
-      = new float[SMOOTH_COUNT_];
+  private static readonly float[] frameTimesForSmoothedActualFps_
+      = new float[SMOOTH_COUNT];
 
-  private static readonly float[] FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_
-      = new float[SMOOTH_COUNT_];
+  private static readonly float[] frameTimesForSmoothedTheoreticalFps_
+      = new float[SMOOTH_COUNT];
 
   public static void Initialize() => MarkStartOfFrame();
 
@@ -24,21 +24,21 @@ public static class FrameTime {
     StartOfFrame = DateTime.Now;
 
     ElapsedTimeSinceApplicationOpened
-        = StartOfFrame - FIRST_FRAME_START_;
+        = StartOfFrame - firstFrameStart_;
 
     var elapsedSeconds =
         (float) (StartOfFrame - previousFrameStart_)
         .TotalSeconds;
     DeltaTime = elapsedSeconds;
 
-    for (var i = FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_.Length - 1; i >= 1; --i) {
-      FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_[i]
-          = FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_[i - 1];
+    for (var i = frameTimesForSmoothedActualFps_.Length - 1; i >= 1; --i) {
+      frameTimesForSmoothedActualFps_[i]
+          = frameTimesForSmoothedActualFps_[i - 1];
     }
 
-    FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_[0] = elapsedSeconds;
+    frameTimesForSmoothedActualFps_[0] = elapsedSeconds;
 
-    var smoothedFrameTime = FRAME_TIMES_FOR_SMOOTHED_ACTUAL_FPS_.Average();
+    var smoothedFrameTime = frameTimesForSmoothedActualFps_.Average();
 
     SmoothedActualFps = smoothedFrameTime == 0 ? 0 : 1 / smoothedFrameTime;
   }
@@ -47,16 +47,16 @@ public static class FrameTime {
     var elapsedSeconds
         = (float) (DateTime.Now - StartOfFrame).TotalSeconds;
 
-    for (var i = FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_.Length - 1;
+    for (var i = frameTimesForSmoothedTheoreticalFps_.Length - 1;
          i >= 1;
          --i) {
-      FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_[i]
-          = FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_[i - 1];
+      frameTimesForSmoothedTheoreticalFps_[i]
+          = frameTimesForSmoothedTheoreticalFps_[i - 1];
     }
 
-    FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_[0] = elapsedSeconds;
+    frameTimesForSmoothedTheoreticalFps_[0] = elapsedSeconds;
 
-    var smoothedFrameTime = FRAME_TIMES_FOR_SMOOTHED_THEORETICAL_FPS_.Average();
+    var smoothedFrameTime = frameTimesForSmoothedTheoreticalFps_.Average();
 
     SmoothedTheoreticalFps
         = smoothedFrameTime == 0 ? 0 : 1 / smoothedFrameTime;

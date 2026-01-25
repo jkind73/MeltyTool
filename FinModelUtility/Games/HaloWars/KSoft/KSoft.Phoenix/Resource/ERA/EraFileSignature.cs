@@ -13,47 +13,47 @@ namespace KSoft.Phoenix.Resource
 	/*public*/ sealed class EraFileSignature
 		: IO.IEndianStreamSerializable
 	{
-		const uint K_SIGNATURE_ = 0x05ABDBD8;
-		const uint K_SIGNATURE_MARKER_ = 0xAAC94350;
-		const byte K_DEFAULT_SIZE_BIT_ = 0x13;
+		const uint kSignature = 0x05ABDBD8;
+		const uint kSignatureMarker = 0xAAC94350;
+		const byte kDefaultSizeBit = 0x13;
 
-		const int K_NON_SIGNATURE_BYTES_SIZE_ = sizeof(uint) + sizeof(byte) + sizeof(uint);
+		const int kNonSignatureBytesSize = sizeof(uint) + sizeof(byte) + sizeof(uint);
 
-		const uint K_SHA1_SALT_ = 0xA7F95F9C;
+		const uint kSha1Salt = 0xA7F95F9C;
 
-		public byte sizeBit = K_DEFAULT_SIZE_BIT_;
-		public byte[] signatureData;
+		public byte SizeBit = kDefaultSizeBit;
+		public byte[] SignatureData;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
 			bool reading = s.IsReading;
 
-			int sigDataLength = reading || this.signatureData == null
+			int sig_data_length = reading || this.SignatureData == null
 				? 0
-				: this.signatureData.Length;
+				: this.SignatureData.Length;
 			int size = reading
 				? 0
-				: K_NON_SIGNATURE_BYTES_SIZE_ + sigDataLength;
+				: kNonSignatureBytesSize + sig_data_length;
 
-			s.StreamSignature(K_SIGNATURE_);
+			s.StreamSignature(kSignature);
 			s.Stream(ref size);
-			if (size < K_NON_SIGNATURE_BYTES_SIZE_)
+			if (size < kNonSignatureBytesSize)
 				throw new System.IO.InvalidDataException(size.ToString("X8"));
 			s.Pad64();
 
-			s.StreamSignature(K_SIGNATURE_MARKER_);
-			s.Stream(ref this.sizeBit);
+			s.StreamSignature(kSignatureMarker);
+			s.Stream(ref this.SizeBit);
 			if (reading)
 			{
-				Array.Resize(ref this.signatureData, size - K_NON_SIGNATURE_BYTES_SIZE_);
-				sigDataLength = this.signatureData.Length;
+				Array.Resize(ref this.SignatureData, size - kNonSignatureBytesSize);
+				sig_data_length = this.SignatureData.Length;
 			}
-			if (sigDataLength > 0)
+			if (sig_data_length > 0)
 			{
-				s.Stream(this.signatureData);
+				s.Stream(this.SignatureData);
 			}
-			s.StreamSignature(K_SIGNATURE_MARKER_);
+			s.StreamSignature(kSignatureMarker);
 		}
 		#endregion
 
@@ -69,11 +69,11 @@ namespace KSoft.Phoenix.Resource
 
 			using (var sha = new SHA1CryptoServiceProvider())
 			{
-				PhxHash.UInt32(sha, K_SHA1_SALT_);
-				PhxHash.UInt32(sha, (uint)header.headerSize);
-				PhxHash.UInt32(sha, (uint)header.chunkCount);
+				PhxHash.UInt32(sha, kSha1Salt);
+				PhxHash.UInt32(sha, (uint)header.HeaderSize);
+				PhxHash.UInt32(sha, (uint)header.ChunkCount);
 				PhxHash.UInt32(sha, (uint)header.ExtraDataSize);
-				PhxHash.UInt32(sha, (uint)header.totalSize);
+				PhxHash.UInt32(sha, (uint)header.TotalSize);
 
 				PhxHash.Stream(sha,
 					chunksStream, chunksOffset, chunksLength,

@@ -13,33 +13,33 @@ public sealed class Pikmin1VertexDescriptor(uint value, bool hasNormals)
           GxColorComponentType?)>
       GetEnumerator(uint value) {
     if ((value & 0b1) == 1) {
-      yield return (GxVertexAttribute.POS_MAT_IDX, null, null);
+      yield return (GxVertexAttribute.PosMatIdx, null, null);
     }
 
     value >>= 1;
 
     if ((value & 0b1) == 1) {
-      yield return (GxVertexAttribute.TEX1_MAT_IDX, null, null);
+      yield return (GxVertexAttribute.Tex1MatIdx, null, null);
     }
 
     value >>= 1;
 
     // Position is implied to be always enabled
-    yield return (GxVertexAttribute.POSITION, GxAttributeType.INDEX_16, null);
+    yield return (GxVertexAttribute.Position, GxAttributeType.INDEX_16, null);
 
     if (hasNormals) {
-      yield return (GxVertexAttribute.NORMAL, GxAttributeType.INDEX_16, null);
+      yield return (GxVertexAttribute.Normal, GxAttributeType.INDEX_16, null);
     }
 
     if ((value & 0b1) == 1) {
-      yield return (GxVertexAttribute.COLOR0, GxAttributeType.INDEX_16, null);
+      yield return (GxVertexAttribute.Color0, GxAttributeType.INDEX_16, null);
     }
 
     value >>= 1;
 
     for (uint i = 0; i < 8; ++i) {
       if ((value & 0b1) == 1) {
-        yield return (GxVertexAttribute.TEX0_COORD + i,
+        yield return (GxVertexAttribute.Tex0Coord + i,
                       GxAttributeType.INDEX_16,
                       null);
       }

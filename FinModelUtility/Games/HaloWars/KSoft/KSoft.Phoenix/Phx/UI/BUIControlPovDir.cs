@@ -1,11 +1,11 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public enum BuiControlPovDir
+	public enum BUIControlPovDir
 	{
-		UP,
-		RIGHT,
-		DOWN,
-		LEFT,
+		Up,
+		Right,
+		Down,
+		Left,
 	};
 }

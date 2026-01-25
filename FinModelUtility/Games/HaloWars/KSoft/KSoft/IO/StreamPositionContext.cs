@@ -15,8 +15,8 @@ namespace KSoft.IO
 	[SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 	public struct StreamPositionContext : IDisposable
 	{
-		readonly long mPosition_;
-		Stream mStream_;
+		readonly long mPosition;
+		Stream mStream;
 
 		#region Ctor
 		public StreamPositionContext(Stream baseStream)
@@ -24,8 +24,8 @@ namespace KSoft.IO
 			Contract.Requires<ArgumentNullException>(baseStream != null);
 			Contract.Requires<InvalidOperationException>(baseStream.CanSeek);
 
-			this.mPosition_ = baseStream.Position;
-			this.mStream_ = baseStream;
+			this.mPosition = baseStream.Position;
+			this.mStream = baseStream;
 		}
 
 		public StreamPositionContext(BinaryReader stream) : this(stream.BaseStream)
@@ -49,10 +49,10 @@ namespace KSoft.IO
 
 		public void Dispose()
 		{
-			if (this.mStream_ != null)
+			if (this.mStream != null)
 			{
-				this.mStream_.Seek(this.mPosition_, SeekOrigin.Begin);
-				this.mStream_ = null;
+				this.mStream.Seek(this.mPosition, SeekOrigin.Begin);
+				this.mStream = null;
 			}
 		}
 	};

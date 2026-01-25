@@ -24,28 +24,28 @@ namespace KSoft.Phoenix
 				xorIn: uint.MaxValue,
 				xorOut: uint.MaxValue);
 
-		public const int K_OBJECT_KIND_NONE = 0;
+		public const int kObjectKindNone = 0;
 
-		public const float K_INVALID_SINGLE = (float)TypeExtensions.K_NONE;
-		public const float K_INVALID_SINGLE_NA_N = float.NaN;
+		public const float kInvalidSingle = (float)TypeExtensions.kNone;
+		public const float kInvalidSingleNaN = float.NaN;
 
 		/// <summary>Sentinel for cases which reference undefined data (eg, an undefined ProtoObject)</summary>
-		public const int K_INVALID_REFERENCE = TypeExtensions.K_NONE - 1;
+		public const int kInvalidReference = TypeExtensions.kNone - 1;
 
-		private static Func<int> gGetInvalidInt32_;
-		public static Func<int> KGetInvalidInt32 { get {
-			if (gGetInvalidInt32_ == null)
-				gGetInvalidInt32_ = () => TypeExtensions.K_NONE;
+		private static Func<int> gGetInvalidInt32;
+		public static Func<int> kGetInvalidInt32 { get {
+			if (gGetInvalidInt32 == null)
+				gGetInvalidInt32 = () => TypeExtensions.kNone;
 
-			return gGetInvalidInt32_;
+			return gGetInvalidInt32;
 		} }
 
-		private static Func<float> gGetInvalidSingle_;
-		public static Func<float> KGetInvalidSingle { get {
-			if (gGetInvalidSingle_ == null)
-				gGetInvalidSingle_ = () => K_INVALID_SINGLE;
+		private static Func<float> gGetInvalidSingle;
+		public static Func<float> kGetInvalidSingle { get {
+			if (gGetInvalidSingle == null)
+				gGetInvalidSingle = () => kInvalidSingle;
 
-			return gGetInvalidSingle_;
+			return gGetInvalidSingle;
 		} }
 
 		public static bool StrEqualsIgnoreCase(string str1, string str2)
@@ -102,32 +102,32 @@ namespace KSoft.Phoenix
 			return streamed;
 		}
 
-		public static int CalculateHashCodeForDbiDs(IList<int> dbidList)
+		public static int CalculateHashCodeForDBIDs(IList<int> dbidList)
 		{
 			if (dbidList == null || dbidList.Count == 0)
 				return 0;
 
-			int hashCode = 0;
+			int hash_code = 0;
 			for (int x = 0; x < dbidList.Count; x++)
 			{
 				int dbid = dbidList[x];
-				hashCode ^= dbid.GetHashCode();
+				hash_code ^= dbid.GetHashCode();
 			}
 
-			return hashCode;
+			return hash_code;
 		}
 
 		[ThreadStatic]
-		private static List<string> gParseBVectorStringScratchList_;
+		private static List<string> gParseBVectorStringScratchList;
 		public static BVector? ParseBVectorString(string vectorString)
 		{
 			var vector = new BVector();
 			if (vectorString.IsNullOrEmpty())
 				return vector;
 
-			if (gParseBVectorStringScratchList_ == null)
-				gParseBVectorStringScratchList_ = new List<string>(4);
-			var list = gParseBVectorStringScratchList_;
+			if (gParseBVectorStringScratchList == null)
+				gParseBVectorStringScratchList = new List<string>(4);
+			var list = gParseBVectorStringScratchList;
 
 			if (!Util.ParseStringList(vectorString, list))
 				return null;
@@ -166,13 +166,13 @@ namespace KSoft.Phoenix
 
 			var sb = new System.Text.StringBuilder(32);
 			if (length >= 1)
-				sb.Append(vector.X.ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER));
+				sb.Append(vector.X.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier));
 			if (length >= 2)
-				sb.AppendFormat(",{0}", vector.Y.ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER));
+				sb.AppendFormat(",{0}", vector.Y.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier));
 			if (length >= 3)
-				sb.AppendFormat(",{0}", vector.Z.ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER));
+				sb.AppendFormat(",{0}", vector.Z.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier));
 			if (length >= 4)
-				sb.AppendFormat(",{0}", vector.W.ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER));
+				sb.AppendFormat(",{0}", vector.W.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier));
 
 			return sb.ToString();
 		}
@@ -219,55 +219,55 @@ namespace KSoft.Phoenix
 			}
 
 			// figure out the distance until the next token
-			int copyLength = 0;
-			for (; count < src.Length && srcIndex+copyLength < src.Length; count++, copyLength++)
+			int copy_length = 0;
+			for (; count < src.Length && srcIndex+copy_length < src.Length; count++, copy_length++)
 			{
-				char c = src[srcIndex+copyLength];
+				char c = src[srcIndex+copy_length];
 				if (tokens.IndexOf(c) >= 0)
 					break;
 			}
 
-			if (copyLength == 0)
+			if (copy_length == 0)
 				return -1;
 
-			distance = copyLength;
-			return srcIndex + copyLength;
+			distance = copy_length;
+			return srcIndex + copy_length;
 		}
 
-		const string K_TOKENIZE_TOKENS_ = " ,\t\r\n";
+		const string kTokenizeTokens = " ,\t\r\n";
 
 		public static bool TokenizeIntegerColor(string src, byte defaultAlpha, ref System.Drawing.Color color)
 		{
-			int nextIndex = -1;
-			int vLength = -1;
+			int next_index = -1;
+			int v_length = -1;
 
 			int v1 = 0;
-			nextIndex = NextToken(src, K_TOKENIZE_TOKENS_, nextIndex, ref vLength);
-			if (nextIndex < 0)
+			next_index = NextToken(src, kTokenizeTokens, next_index, ref v_length);
+			if (next_index < 0)
 				return false;
-			if (!Numbers.TryParseRange(src, out v1, startIndex: nextIndex - vLength, length: vLength))
+			if (!Numbers.TryParseRange(src, out v1, startIndex: next_index - v_length, length: v_length))
 				return false;
 
 			int v2 = 0;
-			nextIndex = NextToken(src, K_TOKENIZE_TOKENS_, nextIndex, ref vLength);
-			if (nextIndex < 0)
+			next_index = NextToken(src, kTokenizeTokens, next_index, ref v_length);
+			if (next_index < 0)
 				return false;
-			if (!Numbers.TryParseRange(src, out v2, startIndex: nextIndex - vLength, length: vLength))
+			if (!Numbers.TryParseRange(src, out v2, startIndex: next_index - v_length, length: v_length))
 				return false;
 
 			int v3 = 0;
-			nextIndex = NextToken(src, K_TOKENIZE_TOKENS_, nextIndex, ref vLength);
-			if (nextIndex < 0)
+			next_index = NextToken(src, kTokenizeTokens, next_index, ref v_length);
+			if (next_index < 0)
 				return false;
-			if (!Numbers.TryParseRange(src, out v3, startIndex: nextIndex - vLength, length: vLength))
+			if (!Numbers.TryParseRange(src, out v3, startIndex: next_index - v_length, length: v_length))
 				return false;
 
 			int v4 = 0;
-			nextIndex = NextToken(src, K_TOKENIZE_TOKENS_, nextIndex, ref vLength);
+			next_index = NextToken(src, kTokenizeTokens, next_index, ref v_length);
 			// if v4 is present, ARGB, else RGB
-			if (nextIndex >= 0)
+			if (next_index >= 0)
 			{
-				if (!Numbers.TryParseRange(src, out v4, startIndex: nextIndex - vLength, length: vLength))
+				if (!Numbers.TryParseRange(src, out v4, startIndex: next_index - v_length, length: v_length))
 					return false;
 
 				color = System.Drawing.Color.FromArgb(v1, v2, v3, v4);
@@ -352,47 +352,47 @@ namespace KSoft.Phoenix
 		public static bool FindBytePattern(List<int> results, byte[] input, ref int inOutOffset, params short[] pattern)
 		{
 			int end = input.Length - pattern.Length;
-			int endOffset = inOutOffset;
+			int end_offset = inOutOffset;
 
-			bool foundPattern = false;
-			for (int start = inOutOffset; start < end && !foundPattern; start++, endOffset++)
+			bool found_pattern = false;
+			for (int start = inOutOffset; start < end && !found_pattern; start++, end_offset++)
 			{
-				var firstByte = pattern[0];
-				if (firstByte != input[start])
+				var first_byte = pattern[0];
+				if (first_byte != input[start])
 					continue;
 
 				for (int offset = 1; offset < pattern.Length; offset++)
 				{
 					int index = start + offset;
-					var nextByte = pattern[offset];
-					if (nextByte < 0)
+					var next_byte = pattern[offset];
+					if (next_byte < 0)
 						continue;
-					else if (nextByte != input[index])
+					else if (next_byte != input[index])
 						break;
 					else if (offset == pattern.Length-1)
 					{
 						results.Add(start);
-						endOffset += pattern.Length;
-						foundPattern = true;
+						end_offset += pattern.Length;
+						found_pattern = true;
 						break;
 					}
 				}
 			}
 
-			inOutOffset = endOffset;
-			return foundPattern;
+			inOutOffset = end_offset;
+			return found_pattern;
 		}
 
 		[ThreadStatic]
-		private static byte[] gSharedBufferForSuperFastHash_;
+		private static byte[] gSharedBufferForSuperFastHash;
 		public static byte[] GetBufferForSuperFastHash(int bufferSize)
 		{
-			if (gSharedBufferForSuperFastHash_ == null)
-				gSharedBufferForSuperFastHash_ = new byte[16];
+			if (gSharedBufferForSuperFastHash == null)
+				gSharedBufferForSuperFastHash = new byte[16];
 			else
-				gSharedBufferForSuperFastHash_.FastClear();
+				gSharedBufferForSuperFastHash.FastClear();
 
-			var buffer = gSharedBufferForSuperFastHash_;
+			var buffer = gSharedBufferForSuperFastHash;
 			if (bufferSize > buffer.Length)
 				buffer = new byte[bufferSize];
 
@@ -415,7 +415,7 @@ namespace KSoft.Phoenix
 
 			uint hash = initialValue;
 
-			int lengthRem = length & (sizeof(uint)-1);
+			int length_rem = length & (sizeof(uint)-1);
 			int words = length / sizeof(uint);
 			int index = startIndex;
 
@@ -431,7 +431,7 @@ namespace KSoft.Phoenix
 			}
 
 			// Handle end cases
-			switch (lengthRem)
+			switch (length_rem)
 			{
 				case sizeof(ushort)+1:
 					hash += (uint)(BitConverter.ToUInt16(buffer, index));

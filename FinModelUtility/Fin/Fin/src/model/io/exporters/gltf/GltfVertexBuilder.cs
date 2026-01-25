@@ -14,7 +14,7 @@ namespace fin.model.io.exporters.gltf;
 public sealed class GltfVertexBuilder {
   public bool UvIndices { get; set; }
 
-  private static readonly (int, float)[] DEFAULT_SKINNING_ = [(0, 1)];
+  private static readonly (int, float)[] defaultSkinning_ = [(0, 1)];
 
   private readonly IndexableDictionary<IReadOnlyBoneWeights, (int, float)[]>
       skinningByBoneWeights_ = new();
@@ -102,7 +102,7 @@ public sealed class GltfVertexBuilder {
     {
       var boneWeights = vertexAccessor.BoneWeights;
       var skinningArray = boneWeights == null
-          ? DEFAULT_SKINNING_
+          ? defaultSkinning_
           : this.skinningByBoneWeights_[boneWeights];
 
       IVertexSkinning skinning = weightCount switch {

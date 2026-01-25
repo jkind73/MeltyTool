@@ -12,16 +12,16 @@ namespace KSoft.Bitwise
 	{
 		/// <summary>Maximum value that can be stored in 1 encoded 7-bit integer</summary>
 		/// <remarks>0x80 - 1</remarks>
-		public const int K_MAX_VALUE1_BYTES = 0x0000007F;
+		public const int kMaxValue1Bytes = 0x0000007F;
 		/// <summary>Maximum value that can be stored in 2 encoded 7-bit integer</summary>
 		/// <remarks>(0x80 &lt;&lt; 7) - 1</remarks>
-		public const int K_MAX_VALUE2_BYTES = 0x00003FFF;
+		public const int kMaxValue2Bytes = 0x00003FFF;
 		/// <summary>Maximum value that can be stored in 3 encoded 7-bit integer</summary>
 		/// <remarks>((0x80 &lt;&lt; 7) &lt;&lt; 7) - 1</remarks>
-		public const int K_MAX_VALUE3_BYTES = 0x001FFFFF;
+		public const int kMaxValue3Bytes = 0x001FFFFF;
 		/// <summary>Maximum value that can be stored in 4 encoded 7-bit integer</summary>
 		/// <remarks>(((0x80 &lt;&lt; 7) &lt;&lt; 7) &lt;&lt; 7) - 1</remarks>
-		public const int K_MAX_VALUE4_BYTES = 0x0FFFFFFF;
+		public const int kMaxValue4Bytes = 0x0FFFFFFF;
 
 		/// <summary>Calculate how many bytes it would take to encode a value into a 7-bit integer</summary>
 		/// <param name="value">Value to encode</param>
@@ -49,7 +49,7 @@ namespace KSoft.Bitwise
 			Contract.Requires(buffer.Length > 1);
 			Contract.Requires(startIndex > 0);
 			Contract.Requires(maxCount > 0);
-			endingIndex = TypeExtensions.K_NONE;
+			endingIndex = TypeExtensions.kNone;
 
 			int size = 0; // size (bytes) of the encoded int
 			int count = 0;
@@ -60,10 +60,10 @@ namespace KSoft.Bitwise
 				// Check for a corrupted stream.  Access a max of 5 bytes.
 				// In a future version, add a DataFormatException.
 				if (shift == 5 * 7)  // 5 bytes max per Int32, shift += 7
-					return TypeExtensions.K_NONE;
+					return TypeExtensions.kNone;
 				// Either a corrupted stream or the buffer is incomplete
 				if (size >= maxCount)
-					return TypeExtensions.K_NONE;
+					return TypeExtensions.kNone;
 
 				b = buffer[startIndex + size++];
 				count |= (b & 0x7F) << shift;
@@ -73,7 +73,7 @@ namespace KSoft.Bitwise
 			// either buffer is incomplete or
 			// this isn't even data with a 7-bit integer.
 			if ((size + count) > maxCount)
-				return TypeExtensions.K_NONE;
+				return TypeExtensions.kNone;
 
 			endingIndex = startIndex + size;
 

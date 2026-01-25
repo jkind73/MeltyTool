@@ -10,7 +10,7 @@ namespace KSoft.Phoenix.XML
 	partial class XmlUtil
 	{
 		[ThreadStatic]
-		private static BBitSetXmlSerializer gBitSetXmlSerializer_;
+		private static BBitSetXmlSerializer gBitSetXmlSerializer;
 
 		public static void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s,
 			Collections.BBitSet bits, BBitSetXmlParams @params)
@@ -20,12 +20,12 @@ namespace KSoft.Phoenix.XML
 			Contract.Requires(s != null);
 			Contract.Requires(bits != null);
 			Contract.Requires(@params != null);
-			Contract.Requires(@params.UseElementName || @params.elementItselfMeansTrue,
+			Contract.Requires(@params.UseElementName || @params.ElementItselfMeansTrue,
 				"Collection only supports element name filtering");
 
-			if (gBitSetXmlSerializer_ == null)
-				gBitSetXmlSerializer_ = new BBitSetXmlSerializer();
-			var xs = gBitSetXmlSerializer_;
+			if (gBitSetXmlSerializer == null)
+				gBitSetXmlSerializer = new BBitSetXmlSerializer();
+			var xs = gBitSetXmlSerializer;
 
 			using (xs.Reset(@params, bits))
 			{
@@ -58,7 +58,7 @@ namespace KSoft.Phoenix.XML
 			if (this.Bits.Params.kGetProtoEnum != null)
 				return this.Bits.Params.kGetProtoEnum();
 
-			return this.Bits.Params.kGetProtoEnumFromDb(db);
+			return this.Bits.Params.kGetProtoEnumFromDB(db);
 		}
 
 		void ReadNodes<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
@@ -68,18 +68,18 @@ namespace KSoft.Phoenix.XML
 			var xs = s.GetSerializerInterface();
 			Collections.IProtoEnum penum = this.Bits.InitializeFromEnum(xs.Database);
 
-			if (this.Params.elementItselfMeansTrue)
+			if (this.Params.ElementItselfMeansTrue)
 			{
 				var getDefault = this.Bits.Params.kGetMemberDefaultValue;
 				foreach (var e in s.Elements)
 				{
-					var elementName = s.GetElementName(e);
-					int id = penum.TryGetMemberId(elementName);
+					var element_name = s.GetElementName(e);
+					int id = penum.TryGetMemberId(element_name);
 					if (id.IsNone())
 						continue;
 
 					bool flag = true;
-					s.StreamElementOpt(elementName, ref flag);
+					s.StreamElementOpt(element_name, ref flag);
 
 					if (getDefault != null && flag != getDefault(id))
 					{
@@ -93,7 +93,7 @@ namespace KSoft.Phoenix.XML
 			}
 			else
 			{
-				foreach (var n in s.ElementsByName(this.Params.elementName))
+				foreach (var n in s.ElementsByName(this.Params.ElementName))
 				{
 					using (s.EnterCursorBookmark(n))
 					{
@@ -120,7 +120,7 @@ namespace KSoft.Phoenix.XML
 
 			if (this.Bits.Params.kGetMemberDefaultValue != null)
 			{
-				Contract.Assert(this.Params.elementItselfMeansTrue);
+				Contract.Assert(this.Params.ElementItselfMeansTrue);
 				this.WriteNodesNotEqualToDefaultValues(s, penum);
 				return;
 			}
@@ -129,7 +129,7 @@ namespace KSoft.Phoenix.XML
 			{
 				string name = penum.GetMemberName(bitIndex);
 
-				if (this.Params.elementItselfMeansTrue)
+				if (this.Params.ElementItselfMeansTrue)
 				{
 					using (s.EnterCursorBookmark(name))
 					{
@@ -138,7 +138,7 @@ namespace KSoft.Phoenix.XML
 				}
 				else
 				{
-					using (s.EnterCursorBookmark(this.Params.elementName))
+					using (s.EnterCursorBookmark(this.Params.ElementName))
 					{
 						this.Params.StreamDataName(s, ref name);
 					}

@@ -36,42 +36,42 @@ namespace KSoft.IO
 			if (newOrder != this.ByteOrder)
 			{
 				this.ByteOrder = newOrder;
-				this.mRequiresByteSwap_ = !this.mRequiresByteSwap_;
+				this.mRequiresByteSwap = !this.mRequiresByteSwap;
 			}
 		}
 
 		/// <summary>This will be true when the stream's byte order is not the same as the <see cref="Shell.Platform.Environment"/>'s byte order</summary>
-		/*readonly*/ bool mRequiresByteSwap_;
+		/*readonly*/ bool mRequiresByteSwap;
 
 		/// <summary>Convenience class for C# "using" statements where we want to temporarily inverse the current byte order</summary>
 		class EndianFormatSwitchBlock : IDisposable
 		{
-			readonly EndianReader mStream_;
-			readonly Shell.EndianFormat mOldByteOrder_;
-			readonly bool mOldRequiresByteSwap_;
+			readonly EndianReader mStream;
+			readonly Shell.EndianFormat mOldByteOrder;
+			readonly bool mOldRequiresByteSwap;
 			/// <summary></summary>
 			/// <param name="s"></param>
 			/// <param name="requiresSwitch">Is there an actual order switch even occurring?</param>
 			public EndianFormatSwitchBlock(EndianReader s, bool requiresSwitch)
 			{
-				this.mStream_ = requiresSwitch
+				this.mStream = requiresSwitch
 					? s
 					: null;
 
 				if (requiresSwitch) // if not, don't do anything but keep the IDisposable wheel turning
 				{
-					this.mOldByteOrder_ = s.ByteOrder;
-					this.mOldRequiresByteSwap_ = s.mRequiresByteSwap_;
+					this.mOldByteOrder = s.ByteOrder;
+					this.mOldRequiresByteSwap = s.mRequiresByteSwap;
 
-					s.ChangeByteOrder(this.mOldByteOrder_.Invert());
+					s.ChangeByteOrder(this.mOldByteOrder.Invert());
 				}
 			}
 
 			#region IDisposable Members
 			public void Dispose()
 			{
-				if (this.mStream_ != null)
-					this.mStream_.ChangeByteOrder(this.mOldByteOrder_);
+				if (this.mStream != null)
+					this.mStream.ChangeByteOrder(this.mOldByteOrder);
 			}
 			#endregion
 		};
@@ -100,7 +100,7 @@ namespace KSoft.IO
 		#endregion
 
 		#region StringEncoding
-		System.Text.Encoding mStringEncoding_;
+		System.Text.Encoding mStringEncoding;
 		#endregion
 
 		#region Seek
@@ -176,42 +176,42 @@ namespace KSoft.IO
 			if (newOrder != this.ByteOrder)
 			{
 				this.ByteOrder = newOrder;
-				this.mRequiresByteSwap_ = !this.mRequiresByteSwap_;
+				this.mRequiresByteSwap = !this.mRequiresByteSwap;
 			}
 		}
 
 		/// <summary>This will be true when the stream's byte order is not the same as the <see cref="Shell.Platform.Environment"/>'s byte order</summary>
-		/*readonly*/ bool mRequiresByteSwap_;
+		/*readonly*/ bool mRequiresByteSwap;
 
 		/// <summary>Convenience class for C# "using" statements where we want to temporarily inverse the current byte order</summary>
 		class EndianFormatSwitchBlock : IDisposable
 		{
-			readonly EndianWriter mStream_;
-			readonly Shell.EndianFormat mOldByteOrder_;
-			readonly bool mOldRequiresByteSwap_;
+			readonly EndianWriter mStream;
+			readonly Shell.EndianFormat mOldByteOrder;
+			readonly bool mOldRequiresByteSwap;
 			/// <summary></summary>
 			/// <param name="s"></param>
 			/// <param name="requiresSwitch">Is there an actual order switch even occurring?</param>
 			public EndianFormatSwitchBlock(EndianWriter s, bool requiresSwitch)
 			{
-				this.mStream_ = requiresSwitch
+				this.mStream = requiresSwitch
 					? s
 					: null;
 
 				if (requiresSwitch) // if not, don't do anything but keep the IDisposable wheel turning
 				{
-					this.mOldByteOrder_ = s.ByteOrder;
-					this.mOldRequiresByteSwap_ = s.mRequiresByteSwap_;
+					this.mOldByteOrder = s.ByteOrder;
+					this.mOldRequiresByteSwap = s.mRequiresByteSwap;
 
-					s.ChangeByteOrder(this.mOldByteOrder_.Invert());
+					s.ChangeByteOrder(this.mOldByteOrder.Invert());
 				}
 			}
 
 			#region IDisposable Members
 			public void Dispose()
 			{
-				if (this.mStream_ != null)
-					this.mStream_.ChangeByteOrder(this.mOldByteOrder_);
+				if (this.mStream != null)
+					this.mStream.ChangeByteOrder(this.mOldByteOrder);
 			}
 			#endregion
 		};
@@ -240,7 +240,7 @@ namespace KSoft.IO
 		#endregion
 
 		#region StringEncoding
-		System.Text.Encoding mStringEncoding_;
+		System.Text.Encoding mStringEncoding;
 		#endregion
 
 		#region Seek

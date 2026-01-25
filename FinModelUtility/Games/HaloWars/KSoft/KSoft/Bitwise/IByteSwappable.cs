@@ -9,7 +9,7 @@ using Contract = System.Diagnostics.Contracts.Contract; // SHIM'D
 
 namespace KSoft.Bitwise
 {
-	[Contracts.ContractClass(typeof(ByteSwappableContract))]
+	[Contracts.ContractClass(typeof(IByteSwappableContract))]
 	public interface IByteSwappable
 	{
 		int SizeOf { get; }
@@ -18,7 +18,7 @@ namespace KSoft.Bitwise
 		short[] ByteSwapCodes { get; }
 	};
 	[Contracts.ContractClassFor(typeof(IByteSwappable))]
-	abstract class ByteSwappableContract : IByteSwappable
+	abstract class IByteSwappableContract : IByteSwappable
 	{
 		#region IByteSwappable Members
 		public int SizeOf { get {
@@ -30,7 +30,7 @@ namespace KSoft.Bitwise
 
 		public short[] ByteSwapCodes { get {
 			Contract.Ensures(Contract.Result<short[]>() != null);
-			Contract.Ensures(Contract.Result<short[]>().Length >= ByteSwap.K_MINUMUM_NUMBER_OF_DEFINITION_BS_CODES,
+			Contract.Ensures(Contract.Result<short[]>().Length >= ByteSwap.kMinumumNumberOfDefinitionBsCodes,
 				"Codes should include: ArrayStart, {Count}, {Elements}, and ArrayEnd");
 
 			throw new NotImplementedException();

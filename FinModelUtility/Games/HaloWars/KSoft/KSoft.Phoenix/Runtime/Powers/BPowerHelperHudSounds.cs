@@ -6,14 +6,14 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerHelperHudSounds
 		: IO.IEndianStreamSerializable
 	{
-		public BCueIndex hudUpSound, hudAbortSound, hudFireSound,
-			hudLastFireSound, hudStartEnvSound, hudStopEnvSound;
+		public BCueIndex HudUpSound, HudAbortSound, HudFireSound,
+			HudLastFireSound, HudStartEnvSound, HudStopEnvSound;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.hudUpSound); s.Stream(ref this.hudAbortSound); s.Stream(ref this.hudFireSound);
-			s.Stream(ref this.hudLastFireSound); s.Stream(ref this.hudStartEnvSound); s.Stream(ref this.hudStopEnvSound);
+			s.Stream(ref this.HudUpSound); s.Stream(ref this.HudAbortSound); s.Stream(ref this.HudFireSound);
+			s.Stream(ref this.HudLastFireSound); s.Stream(ref this.HudStartEnvSound); s.Stream(ref this.HudStopEnvSound);
 		}
 		#endregion
 	};

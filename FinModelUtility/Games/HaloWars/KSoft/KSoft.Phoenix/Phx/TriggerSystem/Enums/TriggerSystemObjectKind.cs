@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.Phx
 {
 	public enum TriggerSystemObjectKind
 	{
-		NONE = PhxUtil.K_OBJECT_KIND_NONE,
+		None = PhxUtil.kObjectKindNone,
 
-		PROTO_CONDITION,
-		PROTO_EFFECT,
-		TEMPLATE, // is this needed?
+		ProtoCondition,
+		ProtoEffect,
+		Template, // is this needed?
 	};
 }

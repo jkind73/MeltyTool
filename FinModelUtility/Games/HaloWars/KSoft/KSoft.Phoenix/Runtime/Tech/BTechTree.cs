@@ -1,10 +1,10 @@
 ﻿
 namespace KSoft.Phoenix.Runtime
 {
-	partial class CSaveMarker
+	partial class cSaveMarker
 	{
 		public const ushort
-			TECH_TREE = 0x2710
+			TechTree = 0x2710
 			;
 	};
 
@@ -12,13 +12,13 @@ namespace KSoft.Phoenix.Runtime
 		: IO.IEndianStreamSerializable
 		//, IO.IIndentedTextWritable
 	{
-		public BTechNode[] techs;
+		public BTechNode[] Techs;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamArray16(s, ref this.techs);
-			s.StreamSignature(CSaveMarker.TECH_TREE);
+			BSaveGame.StreamArray16(s, ref this.Techs);
+			s.StreamSignature(cSaveMarker.TechTree);
 		}
 		#endregion
 

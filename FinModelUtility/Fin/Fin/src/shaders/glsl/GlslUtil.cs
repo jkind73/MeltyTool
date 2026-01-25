@@ -78,7 +78,7 @@ public static class GlslUtil {
     var numBones = modelRequirements.NumBones;
 
     vertexSrc.AppendLine($"""
-                          #version {GlslConstants.VertexShaderVersion}
+                          #version {GlslConstants.VERTEX_SHADER_VERSION}
 
                           {GetMatricesHeaders(model)}
 
@@ -292,7 +292,7 @@ public static class GlslUtil {
          };
          """;
 
-  public static string LightHeader { get; }
+  public static string LIGHT_HEADER { get; }
     = $$"""
         struct Light {
           // 0x00 (vec3 needs to be 16-byte aligned)

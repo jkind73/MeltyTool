@@ -7,24 +7,24 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerUnscOdstUser
 		: BPowerUser
 	{
-		public string helpString;
-		public BPowerHelperHudSounds hudSounds = new BPowerHelperHudSounds();
-		public int losMode;
-		public BProtoObjectID odstProtoSquadId, odstProtoObjectId;
-		public int canFire;
-		public BVector validDropLocation;
+		public string HelpString;
+		public BPowerHelperHudSounds HudSounds = new BPowerHelperHudSounds();
+		public int LOSMode;
+		public BProtoObjectID ODSTProtoSquadID, ODSTProtoObjectID;
+		public int CanFire;
+		public BVector ValidDropLocation;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.StreamPascalWideString32(ref this.helpString);
-			s.Stream(this.hudSounds);
-			s.Stream(ref this.losMode);
-			s.Stream(ref this.odstProtoSquadId); s.Stream(ref this.odstProtoObjectId);
-			s.Stream(ref this.canFire);
-			s.StreamV(ref this.validDropLocation);
+			s.StreamPascalWideString32(ref this.HelpString);
+			s.Stream(this.HudSounds);
+			s.Stream(ref this.LOSMode);
+			s.Stream(ref this.ODSTProtoSquadID); s.Stream(ref this.ODSTProtoObjectID);
+			s.Stream(ref this.CanFire);
+			s.StreamV(ref this.ValidDropLocation);
 		}
 		#endregion
 	};

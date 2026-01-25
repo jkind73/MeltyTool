@@ -15,16 +15,16 @@ namespace KSoft
 	public struct EnumeratorWrapper<T>
 		: IEnumerable<T>
 	{
-		readonly IEnumerator<T> mEnumerator_;
+		readonly IEnumerator<T> mEnumerator;
 
 		public EnumeratorWrapper(IEnumerator<T> enumerator) {
-			this.mEnumerator_ = enumerator; }
+			this.mEnumerator = enumerator; }
 		public EnumeratorWrapper(IEnumerable<T> enumerable) {
-			this.mEnumerator_ = enumerable.GetEnumerator(); }
+			this.mEnumerator = enumerable.GetEnumerator(); }
 
 		#region IEnumerable<T> Members
-		public IEnumerator<T> GetEnumerator() { return this.mEnumerator_; }
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.mEnumerator_; }
+		public IEnumerator<T> GetEnumerator() { return this.mEnumerator; }
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.mEnumerator; }
 		#endregion
 	};
 
@@ -42,16 +42,16 @@ namespace KSoft
 		: IEnumerable<T>
 		where TEnumerator : struct, IEnumerator<T>
 	{
-		readonly TEnumerator mEnumerator_;
+		readonly TEnumerator mEnumerator;
 
 		public EnumeratorWrapper(TEnumerator enumerator) {
-			this.mEnumerator_ = enumerator; }
+			this.mEnumerator = enumerator; }
 
-		public TEnumerator GetEnumerator() { return this.mEnumerator_; }
+		public TEnumerator GetEnumerator() { return this.mEnumerator; }
 
 		#region IEnumerable<T> Members
-		IEnumerator<T> IEnumerable<T>.GetEnumerator() { return this.mEnumerator_; }
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.mEnumerator_; }
+		IEnumerator<T> IEnumerable<T>.GetEnumerator() { return this.mEnumerator; }
+		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() { return this.mEnumerator; }
 		#endregion
 	};
 }

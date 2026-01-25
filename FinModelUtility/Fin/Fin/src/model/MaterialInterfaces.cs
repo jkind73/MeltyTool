@@ -66,14 +66,14 @@ public enum DepthMode {
 }
 
 public enum DepthCompareType {
-  L_EQUAL,
-  LESS,
-  EQUAL,
-  GREATER,
-  N_EQUAL,
-  G_EQUAL,
-  ALWAYS,
-  NEVER,
+  LEqual,
+  Less,
+  Equal,
+  Greater,
+  NEqual,
+  GEqual,
+  Always,
+  Never,
 }
 
 [GenerateReadOnly]
@@ -210,19 +210,19 @@ public enum LogicOp {
 }
 
 public enum AlphaCompareType : byte {
-  NEVER = 0,
-  LESS = 1,
-  EQUAL = 2,
-  L_EQUAL = 3,
-  GREATER = 4,
-  N_EQUAL = 5,
-  G_EQUAL = 6,
-  ALWAYS = 7
+  Never = 0,
+  Less = 1,
+  Equal = 2,
+  LEqual = 3,
+  Greater = 4,
+  NEqual = 5,
+  GEqual = 6,
+  Always = 7
 }
 
 public enum AlphaOp : byte {
-  AND = 0,
-  OR = 1,
+  And = 0,
+  Or = 1,
   XOR = 2,
   XNOR = 3
 }
@@ -355,24 +355,24 @@ public partial interface IFixedFunctionMaterial : IMaterialWithNormalTexture {
 
   IFixedFunctionMaterial SetAlphaCompare(AlphaCompareType alphaCompareType,
                                          float reference)
-    => this.SetAlphaCompare(AlphaOp.OR,
-                            AlphaCompareType.NEVER,
+    => this.SetAlphaCompare(AlphaOp.Or,
+                            AlphaCompareType.Never,
                             0,
                             alphaCompareType,
                             reference);
 
   IFixedFunctionMaterial DisableAlphaCompare()
-    => this.SetAlphaCompare(AlphaCompareType.ALWAYS, 0);
+    => this.SetAlphaCompare(AlphaCompareType.Always, 0);
 
   IFixedFunctionMaterial SetDefaultAlphaCompare() {
     switch (this.GetTransparencyType()) {
       case TransparencyType.MASK: {
-        this.SetAlphaCompare(AlphaCompareType.GREATER,
+        this.SetAlphaCompare(AlphaCompareType.Greater,
                              GlslConstants.MIN_ALPHA_BEFORE_DISCARD_MASK);
         break;
       }
       case TransparencyType.TRANSPARENT: {
-        this.SetAlphaCompare(AlphaCompareType.GREATER,
+        this.SetAlphaCompare(AlphaCompareType.Greater,
                              GlslConstants
                                  .MIN_ALPHA_BEFORE_DISCARD_TRANSPARENT);
         break;

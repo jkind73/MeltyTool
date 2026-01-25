@@ -103,61 +103,61 @@ public enum GxTexCoord : byte {
 }
 
 public enum GxKonstColorSel : byte {
-  KC_SEL_1 = 0x00,    // Constant 1.0
-  KC_SEL_7_8 = 0x01,  // Constant 7/8
-  KC_SEL_3_4 = 0x02,  // Constant 3/4
-  KC_SEL_5_8 = 0x03,  // Constant 5/8
-  KC_SEL_1_2 = 0x04,  // Constant 1/2
-  KC_SEL_3_8 = 0x05,  // Constant 3/8
-  KC_SEL_1_4 = 0x06,  // Constant 1/4
-  KC_SEL_1_8 = 0x07,  // Constant 1/8
-  KC_SEL_K0 = 0x0C,   // K0[RGB] Register
-  KC_SEL_K1 = 0x0D,   // K1[RGB] Register
-  KC_SEL_K2 = 0x0E,   // K2[RGB] Register
-  KC_SEL_K3 = 0x0F,   // K3[RGB] Register
-  KC_SEL_K0_R = 0x10, // K0[RRR] Register
-  KC_SEL_K1_R = 0x11, // K1[RRR] Register
-  KC_SEL_K2_R = 0x12, // K2[RRR] Register
-  KC_SEL_K3_R = 0x13, // K3[RRR] Register
-  KC_SEL_K0_G = 0x14, // K0[GGG] Register
-  KC_SEL_K1_G = 0x15, // K1[GGG] Register
-  KC_SEL_K2_G = 0x16, // K2[GGG] Register
-  KC_SEL_K3_G = 0x17, // K3[GGG] Register
-  KC_SEL_K0_B = 0x18, // K0[BBB] Register
-  KC_SEL_K1_B = 0x19, // K1[BBB] Register
-  KC_SEL_K2_B = 0x1A, // K2[BBB] Register
-  KC_SEL_K3_B = 0x1B, // K3[BBB] Register
-  KC_SEL_K0_A = 0x1C, // K0[AAA] Register
-  KC_SEL_K1_A = 0x1D, // K1[AAA] Register
-  KC_SEL_K2_A = 0x1E, // K2[AAA] Register
-  KC_SEL_K3_A = 0x1F  // K3[AAA] Register
+  KCSel_1 = 0x00,    // Constant 1.0
+  KCSel_7_8 = 0x01,  // Constant 7/8
+  KCSel_3_4 = 0x02,  // Constant 3/4
+  KCSel_5_8 = 0x03,  // Constant 5/8
+  KCSel_1_2 = 0x04,  // Constant 1/2
+  KCSel_3_8 = 0x05,  // Constant 3/8
+  KCSel_1_4 = 0x06,  // Constant 1/4
+  KCSel_1_8 = 0x07,  // Constant 1/8
+  KCSel_K0 = 0x0C,   // K0[RGB] Register
+  KCSel_K1 = 0x0D,   // K1[RGB] Register
+  KCSel_K2 = 0x0E,   // K2[RGB] Register
+  KCSel_K3 = 0x0F,   // K3[RGB] Register
+  KCSel_K0_R = 0x10, // K0[RRR] Register
+  KCSel_K1_R = 0x11, // K1[RRR] Register
+  KCSel_K2_R = 0x12, // K2[RRR] Register
+  KCSel_K3_R = 0x13, // K3[RRR] Register
+  KCSel_K0_G = 0x14, // K0[GGG] Register
+  KCSel_K1_G = 0x15, // K1[GGG] Register
+  KCSel_K2_G = 0x16, // K2[GGG] Register
+  KCSel_K3_G = 0x17, // K3[GGG] Register
+  KCSel_K0_B = 0x18, // K0[BBB] Register
+  KCSel_K1_B = 0x19, // K1[BBB] Register
+  KCSel_K2_B = 0x1A, // K2[BBB] Register
+  KCSel_K3_B = 0x1B, // K3[BBB] Register
+  KCSel_K0_A = 0x1C, // K0[AAA] Register
+  KCSel_K1_A = 0x1D, // K1[AAA] Register
+  KCSel_K2_A = 0x1E, // K2[AAA] Register
+  KCSel_K3_A = 0x1F  // K3[AAA] Register
 }
 
 public enum GxKonstAlphaSel : byte {
-  KA_SEL_1 = 0x00,    // Constant 1.0
-  KA_SEL_7_8 = 0x01,  // Constant 7/8
-  KA_SEL_3_4 = 0x02,  // Constant 3/4
-  KA_SEL_5_8 = 0x03,  // Constant 5/8
-  KA_SEL_1_2 = 0x04,  // Constant 1/2
-  KA_SEL_3_8 = 0x05,  // Constant 3/8
-  KA_SEL_1_4 = 0x06,  // Constant 1/4
-  KA_SEL_1_8 = 0x07,  // Constant 1/8
-  KA_SEL_K0_R = 0x10, // K0[R] Register
-  KA_SEL_K1_R = 0x11, // K1[R] Register
-  KA_SEL_K2_R = 0x12, // K2[R] Register
-  KA_SEL_K3_R = 0x13, // K3[R] Register
-  KA_SEL_K0_G = 0x14, // K0[G] Register
-  KA_SEL_K1_G = 0x15, // K1[G] Register
-  KA_SEL_K2_G = 0x16, // K2[G] Register
-  KA_SEL_K3_G = 0x17, // K3[G] Register
-  KA_SEL_K0_B = 0x18, // K0[B] Register
-  KA_SEL_K1_B = 0x19, // K1[B] Register
-  KA_SEL_K2_B = 0x1A, // K2[B] Register
-  KA_SEL_K3_B = 0x1B, // K3[B] Register
-  KA_SEL_K0_A = 0x1C, // K0[A] Register
-  KA_SEL_K1_A = 0x1D, // K1[A] Register
-  KA_SEL_K2_A = 0x1E, // K2[A] Register
-  KA_SEL_K3_A = 0x1F  // K3[A] Register
+  KASel_1 = 0x00,    // Constant 1.0
+  KASel_7_8 = 0x01,  // Constant 7/8
+  KASel_3_4 = 0x02,  // Constant 3/4
+  KASel_5_8 = 0x03,  // Constant 5/8
+  KASel_1_2 = 0x04,  // Constant 1/2
+  KASel_3_8 = 0x05,  // Constant 3/8
+  KASel_1_4 = 0x06,  // Constant 1/4
+  KASel_1_8 = 0x07,  // Constant 1/8
+  KASel_K0_R = 0x10, // K0[R] Register
+  KASel_K1_R = 0x11, // K1[R] Register
+  KASel_K2_R = 0x12, // K2[R] Register
+  KASel_K3_R = 0x13, // K3[R] Register
+  KASel_K0_G = 0x14, // K0[G] Register
+  KASel_K1_G = 0x15, // K1[G] Register
+  KASel_K2_G = 0x16, // K2[G] Register
+  KASel_K3_G = 0x17, // K3[G] Register
+  KASel_K0_B = 0x18, // K0[B] Register
+  KASel_K1_B = 0x19, // K1[B] Register
+  KASel_K2_B = 0x1A, // K2[B] Register
+  KASel_K3_B = 0x1B, // K3[B] Register
+  KASel_K0_A = 0x1C, // K0[A] Register
+  KASel_K1_A = 0x1D, // K1[A] Register
+  KASel_K2_A = 0x1E, // K2[A] Register
+  KASel_K3_A = 0x1F  // K3[A] Register
 }
 
 public enum GxTextureFormat : byte {
@@ -171,7 +171,7 @@ public enum GxTextureFormat : byte {
   INDEX4 = 8,
   INDEX8 = 9,
   INDEX14_X2 = 10, // 0x0000000A
-  S3_TC1 = 14,      // 0x0000000E
+  S3TC1 = 14,      // 0x0000000E
 }
 
 public enum GxPaletteFormat : byte {

@@ -4,8 +4,8 @@ namespace KSoft.T4
 {
 	public static class TextT4
 	{
-		const int K_MAX_DECIMAL_ = 10;
-		const int K_MAX_HEXIDECIMAL_ = 16;
+		const int kMaxDecimal = 10;
+		const int kMaxHexidecimal = 16;
 
 		static bool IsAlphabetOrDigit(int c)
 		{
@@ -65,7 +65,7 @@ namespace KSoft.T4
 			}
 			protected virtual string DigitToElementText(int digitIndex)
 			{
-				if (digitIndex < K_MAX_HEXIDECIMAL_)
+				if (digitIndex < kMaxHexidecimal)
 				{
 					if (digitIndex == -1)
 						digitIndex = 0;
@@ -80,14 +80,14 @@ namespace KSoft.T4
 			void WriteColumnHeader()
 			{
 				this.File.Write("//\t");
-				for (int x = 0; x < K_MAX_HEXIDECIMAL_; x++)
+				for (int x = 0; x < kMaxHexidecimal; x++)
 					this.File.Write("{0}{1}", x.ToString("X", UtilT4.InvariantCultureInfo), this.RowHeaderTabString);
 				this.File.WriteLine("");
 			}
 			void WriteColumnHeader_Numbers()
 			{
 				this.File.Write("//\t");
-				for (int x = 0; x < K_MAX_DECIMAL_; x++)
+				for (int x = 0; x < kMaxDecimal; x++)
 					this.File.Write("{0}{1}", x, this.RowHeaderTabString);
 				this.File.WriteLine("");
 			}
@@ -125,7 +125,7 @@ namespace KSoft.T4
 
 				this.WriteColumnHeader();
 
-				for (int x = byte.MinValue, column = 0, row = 0, digitIndex = 0;
+				for (int x = byte.MinValue, column = 0, row = 0, digit_index = 0;
 					x <= byte.MaxValue;
 					x++)
 				{
@@ -147,14 +147,14 @@ namespace KSoft.T4
 
 					if (this.LookupUsesCharByte(x))
 					{
-						digitIndex = this.OverrideDigitIndex(x, digitIndex);
+						digit_index = this.OverrideDigitIndex(x, digit_index);
 
-						this.File.Write(this.DigitToElementText(digitIndex++));
+						this.File.Write(this.DigitToElementText(digit_index++));
 					}
 					else
 						this.File.Write(this.DigitToElementText(-1));
 
-					if (column++ == K_MAX_HEXIDECIMAL_-1)
+					if (column++ == kMaxHexidecimal-1)
 					{
 						this.File.PopIndent();
 
@@ -180,7 +180,7 @@ namespace KSoft.T4
 			{
 			}
 
-			protected override PrimitiveCodeDefinition TableElementType { get { return PrimitiveDefinitions.KByte; } }
+			protected override PrimitiveCodeDefinition TableElementType { get { return PrimitiveDefinitions.kByte; } }
 			protected override string TableName { get { return "kCharToByteLookup"; } }
 
 			protected override void WriteXmlDoc()
@@ -248,7 +248,7 @@ namespace KSoft.T4
 			{
 			}
 
-			protected override PrimitiveCodeDefinition TableElementType { get { return PrimitiveDefinitions.KBool; } }
+			protected override PrimitiveCodeDefinition TableElementType { get { return PrimitiveDefinitions.kBool; } }
 			protected override string TableName { get { return "kCharIsDigitLookup"; } }
 
 			protected override string RowHeaderTabString { get { return "\t\t"; } }
@@ -261,9 +261,9 @@ namespace KSoft.T4
 
 			protected override string DigitToElementText(int digitIndex)
 			{
-				bool isDigit = digitIndex >= 0;
+				bool is_digit = digitIndex >= 0;
 
-				return string.Format(UtilT4.InvariantCultureInfo, "{0},\t", isDigit.ToValueKeyword());
+				return string.Format(UtilT4.InvariantCultureInfo, "{0},\t", is_digit.ToValueKeyword());
 			}
 		};
 		public sealed class CharIsDigitLookupTable62CodeGenerator
@@ -296,8 +296,8 @@ namespace KSoft.T4
 		public abstract class CharLookupBitVectorCodeGeneratorBase
 			: CharLookupCodeGeneratorBase
 		{
-			const int K_VECTOR_ELEMENT_BIT_SIZE_ = Bitwise.BitwiseT4.K_BITS_PER_BYTE;
-			static readonly PrimitiveCodeDefinition KVectorElementDef = PrimitiveDefinitions.KByte;
+			const int kVectorElementBitSize = Bitwise.BitwiseT4.kBitsPerByte;
+			static readonly PrimitiveCodeDefinition kVectorElementDef = PrimitiveDefinitions.kByte;
 
 			protected CharLookupBitVectorCodeGeneratorBase(TextTemplating.TextTransformation ttFile)
 				: base(ttFile)
@@ -326,7 +326,7 @@ namespace KSoft.T4
 			}
 			System.Collections.BitArray BuildBitArray()
 			{
-				var bits = new System.Collections.BitArray(sizeof(byte) * Bitwise.BitwiseT4.K_BITS_PER_BYTE);
+				var bits = new System.Collections.BitArray(sizeof(byte) * Bitwise.BitwiseT4.kBitsPerByte);
 
 				for (int x = byte.MinValue;
 					x <= byte.MaxValue;
@@ -347,13 +347,13 @@ namespace KSoft.T4
 				{
 					this.WriteXmlDoc();
 					this.File.WriteLine("static readonly {0}[] {1}{2} = {{",
-					                    KVectorElementDef.Keyword,
+					                    kVectorElementDef.Keyword,
 					                    this.TableName,
 					                    this.TableNamePostfix);
 				}
 
 				var bits = this.BuildBitArray();
-				var bitvector = new byte[GetBitArrayLength(bits.Length, K_VECTOR_ELEMENT_BIT_SIZE_)];
+				var bitvector = new byte[GetBitArrayLength(bits.Length, kVectorElementBitSize)];
 				bits.CopyTo(bitvector, 0);
 
 				for (int x = 0, column = 0, row = 0;
@@ -365,7 +365,7 @@ namespace KSoft.T4
 
 					this.File.Write(this.BitArrayElementToElementText(bitvector[x]));
 
-					if (column++ == K_MAX_HEXIDECIMAL_-1)
+					if (column++ == kMaxHexidecimal-1)
 					{
 						this.File.PopIndent();
 

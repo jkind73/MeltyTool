@@ -93,7 +93,7 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
     }
 
     var hasMaterialAnimation = mod.materials.materials.Any(
-        m => m.texInfo.texturesInMaterial.Any(t => t.animationLength > 0));
+        m => m.texInfo.TexturesInMaterial.Any(t => t.AnimationLength > 0));
     IModelAnimation? materialAnimation = null;
     if (hasMaterialAnimation) {
       materialAnimation = model.AnimationManager.AddAnimation();
@@ -106,14 +106,14 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
             => $"{gxTextureBundle.GetHashCode()},{modMaterial.GetHashCode()}",
         (gxTextureBundle, modMaterial, finTexture) => {
           var modTextureData
-              = modMaterial.texInfo.texturesInMaterial[
+              = modMaterial.texInfo.TexturesInMaterial[
                   (int) gxTextureBundle.TexMap];
-          var animationLength = modTextureData.animationLength;
+          var animationLength = modTextureData.AnimationLength;
           if (animationLength == 0 || materialAnimation == null) {
             return;
           }
 
-          var animationSpeed = modTextureData.animationSpeed;
+          var animationSpeed = modTextureData.AnimationSpeed;
           var adjustedAnimationLength
               = (int) (animationLength / animationSpeed);
 
@@ -123,98 +123,98 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
           var finTextureTracks = materialAnimation.AddTextureTracks(finTexture);
           {
             var modTranslationKeyframes
-                = modTextureData.translationAnimationData;
+                = modTextureData.TranslationAnimationData;
             var finTranslationKeyframes = finTextureTracks
                 .UseSeparateTranslationKeyframesWithTangents(
                     animationLength: adjustedAnimationLength);
             foreach (var modTranslationKeyframe in modTranslationKeyframes) {
-              var adjustedFrame = modTranslationKeyframe.frame / animationSpeed;
+              var adjustedFrame = modTranslationKeyframe.Frame / animationSpeed;
               finTranslationKeyframes
                   .Axes[0]
                   .SetKeyframe(adjustedFrame,
-                               modTranslationKeyframe.X.value,
-                               modTranslationKeyframe.X.inTangent *
+                               modTranslationKeyframe.X.Value,
+                               modTranslationKeyframe.X.InTangent *
                                animationSpeed,
-                               modTranslationKeyframe.X.outTangent *
+                               modTranslationKeyframe.X.OutTangent *
                                animationSpeed);
               finTranslationKeyframes
                   .Axes[1]
                   .SetKeyframe(adjustedFrame,
-                               modTranslationKeyframe.Y.value,
-                               modTranslationKeyframe.Y.inTangent *
+                               modTranslationKeyframe.Y.Value,
+                               modTranslationKeyframe.Y.InTangent *
                                animationSpeed,
-                               modTranslationKeyframe.Y.outTangent *
+                               modTranslationKeyframe.Y.OutTangent *
                                animationSpeed);
               finTranslationKeyframes
                   .Axes[2]
                   .SetKeyframe(adjustedFrame,
-                               modTranslationKeyframe.Z.value,
-                               modTranslationKeyframe.Z.inTangent *
+                               modTranslationKeyframe.Z.Value,
+                               modTranslationKeyframe.Z.InTangent *
                                animationSpeed,
-                               modTranslationKeyframe.Z.outTangent *
+                               modTranslationKeyframe.Z.OutTangent *
                                animationSpeed);
             }
           }
           {
-            var modRotationKeyframes = modTextureData.rotationAnimationData;
+            var modRotationKeyframes = modTextureData.RotationAnimationData;
             var finRotationKeyframes
                 = finTextureTracks.UseSeparateRotationKeyframesWithTangents(
                     animationLength: adjustedAnimationLength);
             foreach (var modRotationKeyframe in modRotationKeyframes) {
-              var adjustedFrame = modRotationKeyframe.frame / animationSpeed;
+              var adjustedFrame = modRotationKeyframe.Frame / animationSpeed;
               finRotationKeyframes
                   .Axes[0]
                   .SetKeyframe(adjustedFrame,
-                               modRotationKeyframe.X.value,
-                               modRotationKeyframe.X.inTangent *
+                               modRotationKeyframe.X.Value,
+                               modRotationKeyframe.X.InTangent *
                                animationSpeed,
-                               modRotationKeyframe.X.outTangent *
+                               modRotationKeyframe.X.OutTangent *
                                animationSpeed);
               finRotationKeyframes
                   .Axes[1]
                   .SetKeyframe(adjustedFrame,
-                               modRotationKeyframe.Y.value,
-                               modRotationKeyframe.Y.inTangent *
+                               modRotationKeyframe.Y.Value,
+                               modRotationKeyframe.Y.InTangent *
                                animationSpeed,
-                               modRotationKeyframe.Y.outTangent *
+                               modRotationKeyframe.Y.OutTangent *
                                animationSpeed);
               finRotationKeyframes
                   .Axes[2]
                   .SetKeyframe(adjustedFrame,
-                               modRotationKeyframe.Z.value,
-                               modRotationKeyframe.Z.inTangent *
+                               modRotationKeyframe.Z.Value,
+                               modRotationKeyframe.Z.InTangent *
                                animationSpeed,
-                               modRotationKeyframe.Z.outTangent *
+                               modRotationKeyframe.Z.OutTangent *
                                animationSpeed);
             }
           }
           {
-            var modScaleKeyframes = modTextureData.scaleAnimationData;
+            var modScaleKeyframes = modTextureData.ScaleAnimationData;
             var finScaleKeyframes
                 = finTextureTracks.UseSeparateScaleKeyframesWithTangents(
                     animationLength: adjustedAnimationLength);
             foreach (var modScaleKeyframe in modScaleKeyframes) {
-              var adjustedFrame = modScaleKeyframe.frame / animationSpeed;
+              var adjustedFrame = modScaleKeyframe.Frame / animationSpeed;
               finScaleKeyframes.Axes[0]
                                .SetKeyframe(adjustedFrame,
-                                            modScaleKeyframe.X.value,
-                                            modScaleKeyframe.X.inTangent *
+                                            modScaleKeyframe.X.Value,
+                                            modScaleKeyframe.X.InTangent *
                                             animationSpeed,
-                                            modScaleKeyframe.X.outTangent *
+                                            modScaleKeyframe.X.OutTangent *
                                             animationSpeed);
               finScaleKeyframes.Axes[1]
                                .SetKeyframe(adjustedFrame,
-                                            modScaleKeyframe.Y.value,
-                                            modScaleKeyframe.Y.inTangent *
+                                            modScaleKeyframe.Y.Value,
+                                            modScaleKeyframe.Y.InTangent *
                                             animationSpeed,
-                                            modScaleKeyframe.Y.outTangent *
+                                            modScaleKeyframe.Y.OutTangent *
                                             animationSpeed);
               finScaleKeyframes.Axes[2]
                                .SetKeyframe(adjustedFrame,
-                                            modScaleKeyframe.Z.value,
-                                            modScaleKeyframe.Z.inTangent *
+                                            modScaleKeyframe.Z.Value,
+                                            modScaleKeyframe.Z.InTangent *
                                             animationSpeed,
-                                            modScaleKeyframe.Z.outTangent *
+                                            modScaleKeyframe.Z.OutTangent *
                                             animationSpeed);
             }
           }
@@ -234,9 +234,9 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
                     new ModPopulatedMaterial(
                         materialIndex,
                         modMaterial,
-                        (int) modMaterial.tevGroupId,
+                        (int) modMaterial.TevGroupId,
                         mod.materials.texEnvironments[
-                            (int) modMaterial.tevGroupId]);
+                            (int) modMaterial.TevGroupId]);
 
                 finMaterial = new GxFixedFunctionMaterial(
                     model,
@@ -301,9 +301,9 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
     while (jointQueue.TryDequeue(out var jointIndex, out var parent)) {
       var joint = mod.joints[jointIndex];
 
-      var bone = (parent ?? model.Skeleton.Root).AddChild(joint.Position);
-      bone.Transform.SetRotationRadians(joint.Rotation);
-      bone.Transform.SetScale(joint.Scale);
+      var bone = (parent ?? model.Skeleton.Root).AddChild(joint.position);
+      bone.Transform.SetRotationRadians(joint.rotation);
+      bone.Transform.SetScale(joint.scale);
 
       if (mod.jointNames.Count > 0) {
         var jointName = mod.jointNames[jointIndex];
@@ -419,7 +419,7 @@ public sealed class ModModelImporter : IModelImporter<ModModelFileBundle> {
             = lazyMaterialDictionary[(matPoly.matIdx, dlist.CullMode)];
 
         var br =
-            new SchemaBinaryReader(dlist.DlistData, Endianness.BigEndian);
+            new SchemaBinaryReader(dlist.dlistData, Endianness.BigEndian);
 
         while (!br.Eof) {
           var gxPrimitive = gxDisplayListReader.Read(br, vertexDescriptor);

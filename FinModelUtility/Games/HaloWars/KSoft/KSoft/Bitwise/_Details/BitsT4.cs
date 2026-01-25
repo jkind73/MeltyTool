@@ -17,12 +17,12 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static void BitmaskLookUpTableGenerate(int wordBitSize, out byte[] lut)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_BYTE_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kByteBitCount);
 			Contract.Ensures(Contract.ValueAtReturn(out lut) != null);
 
-			if (wordBitSize == K_BYTE_BIT_COUNT && KBitmaskLookup8 != null)
+			if (wordBitSize == kByteBitCount && kBitmaskLookup8 != null)
 			{
-				lut = KBitmaskLookup8;
+				lut = kBitmaskLookup8;
 			}
 			else
 			{
@@ -37,7 +37,7 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static byte[] BitmaskByteLookUpTableGenerate(int wordBitSize)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_BYTE_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kByteBitCount);
 
 			BitmaskLookUpTableGenerate(wordBitSize, out byte[] lut);
 
@@ -50,12 +50,12 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static void BitmaskLookUpTableGenerate(int wordBitSize, out ushort[] lut)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT16_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt16BitCount);
 			Contract.Ensures(Contract.ValueAtReturn(out lut) != null);
 
-			if (wordBitSize == K_U_INT16_BIT_COUNT && KBitmaskLookup16 != null)
+			if (wordBitSize == kUInt16BitCount && kBitmaskLookup16 != null)
 			{
-				lut = KBitmaskLookup16;
+				lut = kBitmaskLookup16;
 			}
 			else
 			{
@@ -70,7 +70,7 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static ushort[] BitmaskUInt16LookUpTableGenerate(int wordBitSize)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT16_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt16BitCount);
 
 			BitmaskLookUpTableGenerate(wordBitSize, out ushort[] lut);
 
@@ -83,12 +83,12 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static void BitmaskLookUpTableGenerate(int wordBitSize, out uint[] lut)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt32BitCount);
 			Contract.Ensures(Contract.ValueAtReturn(out lut) != null);
 
-			if (wordBitSize == K_U_INT32_BIT_COUNT && KBitmaskLookup32 != null)
+			if (wordBitSize == kUInt32BitCount && kBitmaskLookup32 != null)
 			{
-				lut = KBitmaskLookup32;
+				lut = kBitmaskLookup32;
 			}
 			else
 			{
@@ -103,7 +103,7 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static uint[] BitmaskUInt32LookUpTableGenerate(int wordBitSize)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt32BitCount);
 
 			BitmaskLookUpTableGenerate(wordBitSize, out uint[] lut);
 
@@ -116,12 +116,12 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static void BitmaskLookUpTableGenerate(int wordBitSize, out ulong[] lut)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt64BitCount);
 			Contract.Ensures(Contract.ValueAtReturn(out lut) != null);
 
-			if (wordBitSize == K_U_INT64_BIT_COUNT && KBitmaskLookup64 != null)
+			if (wordBitSize == kUInt64BitCount && kBitmaskLookup64 != null)
 			{
-				lut = KBitmaskLookup64;
+				lut = kBitmaskLookup64;
 			}
 			else
 			{
@@ -136,7 +136,7 @@ namespace KSoft
 		/// <remarks>Treat <paramref name="lut"/> as <b>read-only</b></remarks>
 		public static ulong[] BitmaskUInt64LookUpTableGenerate(int wordBitSize)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= K_U_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(wordBitSize > 0 && wordBitSize <= kUInt64BitCount);
 
 			BitmaskLookUpTableGenerate(wordBitSize, out ulong[] lut);
 
@@ -274,7 +274,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int GetMaxEnumBits(uint maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetMaxEnumBits_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<int>() > 0);
 
 			return IndexOfHighestBitSet(maxValue - 1) + 1;
@@ -286,7 +286,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int GetMaxEnumBits(int maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetMaxEnumBits_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<int>() > 0);
 
 			return IndexOfHighestBitSet((uint)maxValue - 1) + 1;
@@ -299,7 +299,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int GetMaxEnumBits(ulong maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetMaxEnumBits_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<int>() > 0);
 
 			return IndexOfHighestBitSet(maxValue - 1) + 1;
@@ -311,7 +311,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int GetMaxEnumBits(long maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_MAX_ENUM_BITS_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetMaxEnumBits_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<int>() > 0);
 
 			return IndexOfHighestBitSet((ulong)maxValue - 1) + 1;
@@ -327,12 +327,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static uint GetBitmaskEnum(uint maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_BITMASK_ENUM_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetBitmaskEnum_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<uint>() > 0);
 
-			int bitCount = GetMaxEnumBits(maxValue);
+			int bit_count = GetMaxEnumBits(maxValue);
 
-			return BitCountToMask32(bitCount);
+			return BitCountToMask32(bit_count);
 		}
 		/// <summary>Calculate the masking value for a series of flags</summary>
 		/// <param name="maxValue">A bit enumeration's <b>kMax</b> value. IE, the 'highest bit' plus one</param>
@@ -341,8 +341,8 @@ namespace KSoft
 		[Contracts.Pure]
 		public static uint GetBitmaskFlags(uint maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 0, K_GET_BITMASK_FLAG_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue <= K_U_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 0, kGetBitmaskFlag_MaxValueOutOfRangeMessage);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue <= kUInt32BitCount);
 			Contract.Ensures(Contract.Result<uint>() > 0);
 
 			return BitCountToMask32((int)--maxValue);
@@ -355,12 +355,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static ulong GetBitmaskEnum(ulong maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, K_GET_BITMASK_ENUM_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 1, kGetBitmaskEnum_MaxValueOutOfRangeMessage);
 			Contract.Ensures(Contract.Result<ulong>() > 0);
 
-			int bitCount = GetMaxEnumBits(maxValue);
+			int bit_count = GetMaxEnumBits(maxValue);
 
-			return BitCountToMask64(bitCount);
+			return BitCountToMask64(bit_count);
 		}
 		/// <summary>Calculate the masking value for a series of flags</summary>
 		/// <param name="maxValue">A bit enumeration's <b>kMax</b> value. IE, the 'highest bit' plus one</param>
@@ -369,8 +369,8 @@ namespace KSoft
 		[Contracts.Pure]
 		public static ulong GetBitmaskFlags(ulong maxValue)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 0, K_GET_BITMASK_FLAG_MAX_VALUE_OUT_OF_RANGE_MESSAGE_);
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue <= K_U_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue > 0, kGetBitmaskFlag_MaxValueOutOfRangeMessage);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(maxValue <= kUInt64BitCount);
 			Contract.Ensures(Contract.Result<ulong>() > 0);
 
 			return BitCountToMask64((int)--maxValue);
@@ -384,53 +384,53 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int SignExtend(int value, int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= K_U_INT32_BIT_COUNT);
-			const uint kOne = 1;
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= kUInt32BitCount);
+			const uint k_one = 1;
 
-			var bitMask = (int)BitCountToMask32(bitCount);
-			var extMask = (int)(kOne << (bitCount - 1));
+			var bit_mask = (int)BitCountToMask32(bitCount);
+			var ext_mask = (int)(k_one << (bitCount - 1));
 
 			// clear the bits outside of our bit count range
-			value &= bitMask;
+			value &= bit_mask;
 
 			// if the clear operation above isn't needed, we could do the following instead:
 			// (value << ext_mask) >> ext_mask
-			return (value ^ extMask) - extMask;
+			return (value ^ ext_mask) - ext_mask;
 		}
 		[Contracts.Pure]
 		public static int SignExtendWithoutClear(int value, int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= K_U_INT32_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= kUInt32BitCount);
 
-			int extShift = K_U_INT32_BIT_COUNT - bitCount;
+			int ext_shift = kUInt32BitCount - bitCount;
 
-			return (value << extShift) >> extShift;
+			return (value << ext_shift) >> ext_shift;
 		}
 
 		[Contracts.Pure]
 		public static long SignExtend(long value, int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= K_U_INT64_BIT_COUNT);
-			const ulong kOne = 1;
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= kUInt64BitCount);
+			const ulong k_one = 1;
 
-			var bitMask = (long)BitCountToMask64(bitCount);
-			var extMask = (long)(kOne << (bitCount - 1));
+			var bit_mask = (long)BitCountToMask64(bitCount);
+			var ext_mask = (long)(k_one << (bitCount - 1));
 
 			// clear the bits outside of our bit count range
-			value &= bitMask;
+			value &= bit_mask;
 
 			// if the clear operation above isn't needed, we could do the following instead:
 			// (value << ext_mask) >> ext_mask
-			return (value ^ extMask) - extMask;
+			return (value ^ ext_mask) - ext_mask;
 		}
 		[Contracts.Pure]
 		public static long SignExtendWithoutClear(long value, int bitCount)
 		{
-			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= K_U_INT64_BIT_COUNT);
+			Contract.Requires/*<ArgumentOutOfRangeException>*/(bitCount > 0 && bitCount <= kUInt64BitCount);
 
-			int extShift = K_U_INT64_BIT_COUNT - bitCount;
+			int ext_shift = kUInt64BitCount - bitCount;
 
-			return (value << extShift) >> extShift;
+			return (value << ext_shift) >> ext_shift;
 		}
 
 		#endregion

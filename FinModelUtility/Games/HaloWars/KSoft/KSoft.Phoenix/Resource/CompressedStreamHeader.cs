@@ -6,24 +6,24 @@ namespace KSoft.Phoenix.Resource
 		struct Header
 			: IO.IEndianStreamSerializable
 		{
-			public const int K_SIZE_OF = 0x24;
+			public const int kSizeOf = 0x24;
 
-			internal uint headerAdler32;
-			public uint streamMode;
-			public ulong uncompressedSize, compressedSize;
-			public uint uncompressedAdler32, compressedAdler32;
+			internal uint HeaderAdler32;
+			public uint StreamMode;
+			public ulong UncompressedSize, CompressedSize;
+			public uint UncompressedAdler32, CompressedAdler32;
 
 			public bool UseBufferedStreaming { get {
-				return this.streamMode == (uint)Mode.BUFFERED;
+				return this.StreamMode == (uint)Mode.Buffered;
 			} }
 
 			public void UpdateHeaderCrc()
 			{
-				this.headerAdler32 = InMemoryRep.Checksum(this.uncompressedSize,
-				                                          this.uncompressedAdler32,
-				                                          this.compressedSize,
-				                                          this.compressedAdler32,
-				                                          this.streamMode);
+				this.HeaderAdler32 = InMemoryRep.Checksum(this.UncompressedSize,
+				                                          this.UncompressedAdler32,
+				                                          this.CompressedSize,
+				                                          this.CompressedAdler32,
+				                                          this.StreamMode);
 			}
 
 			#region IEndianStreamSerializable Members
@@ -32,13 +32,13 @@ namespace KSoft.Phoenix.Resource
 				if (s.IsWriting)
 					this.UpdateHeaderCrc();
 
-				s.StreamSignature(K_SIGNATURE);
-				s.Stream(ref this.headerAdler32);
-				s.Stream(ref this.streamMode);
-				s.Stream(ref this.uncompressedSize);
-				s.Stream(ref this.compressedSize);
-				s.Stream(ref this.uncompressedAdler32);
-				s.Stream(ref this.compressedAdler32);
+				s.StreamSignature(kSignature);
+				s.Stream(ref this.HeaderAdler32);
+				s.Stream(ref this.StreamMode);
+				s.Stream(ref this.UncompressedSize);
+				s.Stream(ref this.CompressedSize);
+				s.Stream(ref this.UncompressedAdler32);
+				s.Stream(ref this.CompressedAdler32);
 			}
 			#endregion
 		};

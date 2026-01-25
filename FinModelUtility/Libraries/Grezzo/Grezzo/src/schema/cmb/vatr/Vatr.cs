@@ -18,10 +18,10 @@ public partial class Vatr : IBinaryConvertible {
   public readonly AttributeSlice normal = new();
 
   [Skip]
-  private bool HasTangent 
+  private bool hasTangent_ 
     => CmbHeader.Version > Version.OCARINA_OF_TIME_3D;
 
-  [RIfBoolean(nameof(HasTangent))]
+  [RIfBoolean(nameof(hasTangent_))]
   public AttributeSlice? tangent;
     
   public readonly AttributeSlice color = new();

@@ -12,36 +12,36 @@ namespace KSoft.Collections
 	internal sealed class ProtoEnumWithUndefinedImpl
 		: IProtoEnumWithUndefined
 	{
-		IProtoEnum mRoot_;
-		ObservableCollection<string> mUndefined_;
+		IProtoEnum mRoot;
+		ObservableCollection<string> mUndefined;
 
 		public ProtoEnumWithUndefinedImpl(IProtoEnum root)
 		{
 			Contract.Requires(root != null);
 
-			this.mRoot_ = root;
+			this.mRoot = root;
 		}
 
 		void InitializeUndefined()
 		{
-			if (this.mUndefined_ == null)
-				this.mUndefined_ = [];
+			if (this.mUndefined == null)
+				this.mUndefined = [];
 		}
 
 		public void Clear()
 		{
-			if (this.mUndefined_ != null)
-				this.mUndefined_.Clear();
+			if (this.mUndefined != null)
+				this.mUndefined.Clear();
 		}
 
 		#region IProtoEnum Members
-		public int TryGetMemberId(string memberName)		{ return this.mRoot_.TryGetMemberId(memberName); }
-		public string TryGetMemberName(int memberId)		{ return this.mRoot_.TryGetMemberName(memberId); }
-		public bool IsValidMemberId(int memberId)			{ return this.mRoot_.IsValidMemberId(memberId); }
-		public bool IsValidMemberName(string memberName)	{ return this.mRoot_.IsValidMemberName(memberName); }
-		public int GetMemberId(string memberName)			{ return this.mRoot_.GetMemberId(memberName); }
-		public string GetMemberName(int memberId)			{ return this.mRoot_.GetMemberName(memberId); }
-		public int MemberCount						{ get	{ return this.mRoot_.MemberCount; } }
+		public int TryGetMemberId(string memberName)		{ return this.mRoot.TryGetMemberId(memberName); }
+		public string TryGetMemberName(int memberId)		{ return this.mRoot.TryGetMemberName(memberId); }
+		public bool IsValidMemberId(int memberId)			{ return this.mRoot.IsValidMemberId(memberId); }
+		public bool IsValidMemberName(string memberName)	{ return this.mRoot.IsValidMemberName(memberName); }
+		public int GetMemberId(string memberName)			{ return this.mRoot.GetMemberId(memberName); }
+		public string GetMemberName(int memberId)			{ return this.mRoot.GetMemberName(memberId); }
+		public int MemberCount						{ get	{ return this.mRoot.MemberCount; } }
 		#endregion
 
 		#region IProtoEnumWithUndefined Members
@@ -51,7 +51,7 @@ namespace KSoft.Collections
 
 			if (id.IsNone() && this.MemberUndefinedCount != 0)
 			{
-				id = this.mUndefined_.FindIndex(str => PhxUtil.StrEqualsIgnoreCase(str, memberName));
+				id = this.mUndefined.FindIndex(str => PhxUtil.StrEqualsIgnoreCase(str, memberName));
 				if (id.IsNotNone())
 					id = PhxUtil.GetUndefinedReferenceHandle(id);
 			}
@@ -67,8 +67,8 @@ namespace KSoft.Collections
 			{
 				this.InitializeUndefined();
 
-				id = this.mUndefined_.Count;
-				this.mUndefined_.Add(memberName);
+				id = this.mUndefined.Count;
+				this.mUndefined.Add(memberName);
 				id = PhxUtil.GetUndefinedReferenceHandle(id);
 			}
 
@@ -81,8 +81,8 @@ namespace KSoft.Collections
 
 			if (PhxUtil.IsUndefinedReferenceHandle(memberId))
 			{
-				Contract.Assert(this.mUndefined_ != null);
-				name = this.mUndefined_[PhxUtil.GetUndefinedReferenceDataIndex(memberId)];
+				Contract.Assert(this.mUndefined != null);
+				name = this.mUndefined[PhxUtil.GetUndefinedReferenceDataIndex(memberId)];
 			}
 			else
 			{
@@ -93,12 +93,12 @@ namespace KSoft.Collections
 		}
 
 		public int MemberUndefinedCount { get {
-			return this.mUndefined_ != null
-				? this.mUndefined_.Count
+			return this.mUndefined != null
+				? this.mUndefined.Count
 				: 0;
 		} }
 
-		public ObservableCollection<string> UndefinedMembers { get { return this.mUndefined_; } }
+		public ObservableCollection<string> UndefinedMembers { get { return this.mUndefined; } }
 		#endregion
 	};
 }

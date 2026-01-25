@@ -12,7 +12,7 @@ namespace KSoft.DDS
 	public static class DirectXTex
 	{
 		// BMP, JPG, JPEG, PNG, TIF, TIFF, WDP
-		public static string defaultFileExtensionForWic = ".png";
+		public static string DefaultFileExtensionForWIC = ".png";
 
 		public static string ToFileExtension(this DirectXTexFileType type)
 		{
@@ -25,7 +25,7 @@ namespace KSoft.DDS
 				case DirectXTexFileType.TGA:
 					return ".tga";
 				case DirectXTexFileType.WIC:
-					return defaultFileExtensionForWic;
+					return DefaultFileExtensionForWIC;
 
 				default:
 					return "";
@@ -59,12 +59,12 @@ namespace KSoft.DDS
 					return DirectXTexFileType.WIC;
 
 				default:
-					return DirectXTexFileType.UNKNOWN;
+					return DirectXTexFileType.Unknown;
 			}
 		}
 
 		public static TexMetadata GetMetadataFromFile(string file
-			, DirectXTexFileType fileType = DirectXTexFileType.UNKNOWN
+			, DirectXTexFileType fileType = DirectXTexFileType.Unknown
 			, uint flags = 0)
 		{
 			Contract.Requires(!string.IsNullOrEmpty(file));
@@ -72,27 +72,27 @@ namespace KSoft.DDS
 			if (!File.Exists(file))
 				throw new FileNotFoundException(file);
 
-			if (fileType == DirectXTexFileType.UNKNOWN)
+			if (fileType == DirectXTexFileType.Unknown)
 			{
 				fileType = FileTypeFromFileExtension(file);
 			}
-			if (fileType == DirectXTexFileType.UNKNOWN)
+			if (fileType == DirectXTexFileType.Unknown)
 				throw new NotSupportedException(file);
 
 			var result = TexMetadata.Empty;
 
-			if (DirectXTexDll.EntryPointsNotFound)
+			if (DirectXTexDLL.EntryPointsNotFound)
 				return result;
 
 			try
 			{
-				var hresult = DirectXTexDll.DirectXTex_GetMetadataFromFile(
+				var hresult = DirectXTexDLL.DirectXTex_GetMetadataFromFile(
 					fileType, out result, file, flags);
-				DirectXTexDll.ThrowIfFailed(hresult);
+				DirectXTexDLL.ThrowIfFailed(hresult);
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDll.HandleEntryPointNotFound(ex);
+				DirectXTexDLL.HandleEntryPointNotFound(ex);
 			}
 
 			return result;
@@ -110,7 +110,7 @@ namespace KSoft.DDS
 
 			var result = TexMetadata.Empty;
 
-			if (DirectXTexDll.EntryPointsNotFound)
+			if (DirectXTexDLL.EntryPointsNotFound)
 				return result;
 
 			var bufferHandle = GCHandle.Alloc(buffer, GCHandleType.Pinned);
@@ -119,13 +119,13 @@ namespace KSoft.DDS
 				var buf = bufferHandle.AddrOfPinnedObject();
 				buf += startIndex;
 
-				var hresult = DirectXTexDll.DirectXTex_GetMetadataFromMemory(
+				var hresult = DirectXTexDLL.DirectXTex_GetMetadataFromMemory(
 					fileType, out result, buf, (uint)length, flags);
-				DirectXTexDll.ThrowIfFailed(hresult);
+				DirectXTexDLL.ThrowIfFailed(hresult);
 			}
 			catch (EntryPointNotFoundException ex)
 			{
-				DirectXTexDll.HandleEntryPointNotFound(ex);
+				DirectXTexDLL.HandleEntryPointNotFound(ex);
 			}
 			finally
 			{

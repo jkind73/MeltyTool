@@ -16,7 +16,7 @@ public sealed class FinMatrix4x4UtilTests {
   public void TestTranslation() {
       var expectedTranslation = new Vector3(2, 3, 4);
 
-      var matrix = FinMatrix4X4Util.FromTranslation(
+      var matrix = FinMatrix4x4Util.FromTranslation(
           expectedTranslation);
 
       matrix.CopyTranslationInto(out var actualTranslation);
@@ -28,7 +28,7 @@ public sealed class FinMatrix4x4UtilTests {
   public void TestRotation() {
       var expectedRotation = QuaternionUtil.CreateZyxRadians(1.2f, 2.3f, 3.4f);
 
-      var matrix = FinMatrix4X4Util.FromRotation(
+      var matrix = FinMatrix4x4Util.FromRotation(
           expectedRotation);
 
       matrix.CopyRotationInto(out var actualRotation);
@@ -43,7 +43,7 @@ public sealed class FinMatrix4x4UtilTests {
   public void TestScale() {
       var expectedScale = new Vector3(3, 4, 5);
 
-      var matrix = FinMatrix4X4Util.FromScale(
+      var matrix = FinMatrix4x4Util.FromScale(
           expectedScale);
 
       matrix.CopyScaleInto(out var actualScale);
@@ -58,7 +58,7 @@ public sealed class FinMatrix4x4UtilTests {
       var expectedRotation = QuaternionUtil.CreateZyxRadians(1.2f, 2.3f, 3.4f);
       var expectedScale = new Vector3(3, 4, 5);
 
-      var trs = FinMatrix4X4Util.FromTrs(
+      var trs = FinMatrix4x4Util.FromTrs(
           expectedTranslation,
           expectedRotation,
           expectedScale);
@@ -78,7 +78,7 @@ public sealed class FinMatrix4x4UtilTests {
 
   [Test]
   public void TestDecompose() {
-      var expectedMatrix = new FinMatrix4X4(new[] {
+      var expectedMatrix = new FinMatrix4x4(new[] {
           -0.690858f,
           0.000000f,
           0.722991f,
@@ -103,7 +103,7 @@ public sealed class FinMatrix4x4UtilTests {
       Assert.AreEqual(new Vector3(-189.294998f, -2.000000f, -265.059998f),
                       translation);
 
-      var actualMatrix = FinMatrix4X4Util.FromTrs(translation, rotation, scale);
+      var actualMatrix = FinMatrix4x4Util.FromTrs(translation, rotation, scale);
       Assert.AreEqual(expectedMatrix, actualMatrix);
     }
 }

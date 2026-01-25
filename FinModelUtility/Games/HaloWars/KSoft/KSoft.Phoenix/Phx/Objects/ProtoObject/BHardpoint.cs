@@ -5,213 +5,213 @@ namespace KSoft.Phoenix.Phx
 	public sealed class BHardpoint
 		: IO.ITagElementStringNameStreamable
 	{
-		const double C_PI_OVER12_ = (float)((1.0 / 12.0) * System.Math.PI);
-		const float C_PI_OVER12_IN_DEGREES_ = (float)(C_PI_OVER12_ * TypeExtensions.K_DEGREES_PER_RADIAN);
+		const double cPiOver12 = (float)((1.0 / 12.0) * System.Math.PI);
+		const float cPiOver12InDegrees = (float)(cPiOver12 * TypeExtensions.kDegreesPerRadian);
 
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			elementName = "Hardpoint",
+			ElementName = "Hardpoint",
 		};
 		#endregion
 
 		#region Name
-		string mName_;
+		string mName;
 		public string Name
 		{
-			get { return this.mName_; }
-			set { this.mName_ = value; }
+			get { return this.mName; }
+			set { this.mName = value; }
 		}
 		#endregion
 
 		#region YawAttachment
-		string mYawAttachment_;
+		string mYawAttachment;
 		[Meta.AttachmentTypeReference]
 		public string YawAttachment
 		{
-			get { return this.mYawAttachment_; }
-			set { this.mYawAttachment_ = value; }
+			get { return this.mYawAttachment; }
+			set { this.mYawAttachment = value; }
 		}
 		#endregion
 
 		#region PitchAttachment
-		string mPitchAttachment_;
+		string mPitchAttachment;
 		[Meta.AttachmentTypeReference]
 		public string PitchAttachment
 		{
-			get { return this.mPitchAttachment_; }
-			set { this.mPitchAttachment_ = value; }
+			get { return this.mPitchAttachment; }
+			set { this.mPitchAttachment = value; }
 		}
 		#endregion
 
 		#region AutoCenter
-		bool mAutoCenter_ = true;
+		bool mAutoCenter = true;
 		public bool AutoCenter
 		{
-			get { return this.mAutoCenter_; }
-			set { this.mAutoCenter_ = value; }
+			get { return this.mAutoCenter; }
+			set { this.mAutoCenter = value; }
 		}
 		#endregion
 
 		#region SingleBoneIK
-		bool mSingleBoneIk_;
-		public bool SingleBoneIk
+		bool mSingleBoneIK;
+		public bool SingleBoneIK
 		{
-			get { return this.mSingleBoneIk_; }
-			set { this.mSingleBoneIk_ = value; }
+			get { return this.mSingleBoneIK; }
+			set { this.mSingleBoneIK = value; }
 		}
 		#endregion
 
 		#region Combined
-		bool mCombined_;
+		bool mCombined;
 		public bool Combined
 		{
-			get { return this.mCombined_; }
-			set { this.mCombined_ = value; }
+			get { return this.mCombined; }
+			set { this.mCombined = value; }
 		}
 		#endregion
 
 		#region HardPitchLimits
-		bool mHardPitchLimits_;
+		bool mHardPitchLimits;
 		public bool HardPitchLimits
 		{
-			get { return this.mHardPitchLimits_; }
-			set { this.mHardPitchLimits_ = value; }
+			get { return this.mHardPitchLimits; }
+			set { this.mHardPitchLimits = value; }
 		}
 		#endregion
 
 		#region RelativeToUnit
-		bool mRelativeToUnit_;
+		bool mRelativeToUnit;
 		public bool RelativeToUnit
 		{
-			get { return this.mRelativeToUnit_; }
-			set { this.mRelativeToUnit_ = value; }
+			get { return this.mRelativeToUnit; }
+			set { this.mRelativeToUnit = value; }
 		}
 		#endregion
 
 		#region UseYawAndPitchAsTolerance
-		bool mUseYawAndPitchAsTolerance_;
+		bool mUseYawAndPitchAsTolerance;
 		public bool UseYawAndPitchAsTolerance
 		{
-			get { return this.mUseYawAndPitchAsTolerance_; }
-			set { this.mUseYawAndPitchAsTolerance_ = value; }
+			get { return this.mUseYawAndPitchAsTolerance; }
+			set { this.mUseYawAndPitchAsTolerance = value; }
 		}
 		#endregion
 
 		#region InfiniteRateWhenHasTarget
-		bool mInfiniteRateWhenHasTarget_;
+		bool mInfiniteRateWhenHasTarget;
 		public bool InfiniteRateWhenHasTarget
 		{
-			get { return this.mInfiniteRateWhenHasTarget_; }
-			set { this.mInfiniteRateWhenHasTarget_ = value; }
+			get { return this.mInfiniteRateWhenHasTarget; }
+			set { this.mInfiniteRateWhenHasTarget = value; }
 		}
 		#endregion
 
 		#region YawRotationRate
-		float mYawRotationRate_ = C_PI_OVER12_IN_DEGREES_;
+		float mYawRotationRate = cPiOver12InDegrees;
 		// angle
 		public float YawRotationRate
 		{
-			get { return this.mYawRotationRate_; }
-			set { this.mYawRotationRate_ = value; }
+			get { return this.mYawRotationRate; }
+			set { this.mYawRotationRate = value; }
 		}
 		#endregion
 
 		#region PitchRotationRate
-		float mPitchRotationRate_ = C_PI_OVER12_IN_DEGREES_;
+		float mPitchRotationRate = cPiOver12InDegrees;
 		// angle
 		public float PitchRotationRate
 		{
-			get { return this.mPitchRotationRate_; }
-			set { this.mPitchRotationRate_ = value; }
+			get { return this.mPitchRotationRate; }
+			set { this.mPitchRotationRate = value; }
 		}
 		#endregion
 
 		#region YawLeftMaxAngle
-		const float C_DEFAULT_YAW_LEFT_MAX_ANGLE_ = (float)-(System.Math.PI * TypeExtensions.K_DEGREES_PER_RADIAN);
+		const float cDefaultYawLeftMaxAngle = (float)-(System.Math.PI * TypeExtensions.kDegreesPerRadian);
 
-		float mYawLeftMaxAngle_ = C_DEFAULT_YAW_LEFT_MAX_ANGLE_;
+		float mYawLeftMaxAngle = cDefaultYawLeftMaxAngle;
 		// angle
 		public float YawLeftMaxAngle
 		{
-			get { return this.mYawLeftMaxAngle_; }
-			set { this.mYawLeftMaxAngle_ = value; }
+			get { return this.mYawLeftMaxAngle; }
+			set { this.mYawLeftMaxAngle = value; }
 		}
 		#endregion
 
 		#region YawRightMaxAngle
-		const float C_DEFAULT_YAW_RIGHT_MAX_ANGLE_ = (float)+(System.Math.PI * TypeExtensions.K_DEGREES_PER_RADIAN);
+		const float cDefaultYawRightMaxAngle = (float)+(System.Math.PI * TypeExtensions.kDegreesPerRadian);
 
-		float mYawRightMaxAngle_ = C_DEFAULT_YAW_RIGHT_MAX_ANGLE_;
+		float mYawRightMaxAngle = cDefaultYawRightMaxAngle;
 		// angle
 		public float YawRightMaxAngle
 		{
-			get { return this.mYawRightMaxAngle_; }
-			set { this.mYawRightMaxAngle_ = value; }
+			get { return this.mYawRightMaxAngle; }
+			set { this.mYawRightMaxAngle = value; }
 		}
 		#endregion
 
 		#region PitchMaxAngle
-		const float C_DEFAULT_PITCH_MAX_ANGLE_ = (float)-(System.Math.PI * TypeExtensions.K_DEGREES_PER_RADIAN);
+		const float cDefaultPitchMaxAngle = (float)-(System.Math.PI * TypeExtensions.kDegreesPerRadian);
 
-		float mPitchMaxAngle_ = C_DEFAULT_PITCH_MAX_ANGLE_;
+		float mPitchMaxAngle = cDefaultPitchMaxAngle;
 		// angle
 		public float PitchMaxAngle
 		{
-			get { return this.mPitchMaxAngle_; }
-			set { this.mPitchMaxAngle_ = value; }
+			get { return this.mPitchMaxAngle; }
+			set { this.mPitchMaxAngle = value; }
 		}
 		#endregion
 
 		#region PitchMinAngle
-		const float C_DEFAULT_PITCH_MIN_ANGLE_ = (float)+(System.Math.PI * TypeExtensions.K_DEGREES_PER_RADIAN);
+		const float cDefaultPitchMinAngle = (float)+(System.Math.PI * TypeExtensions.kDegreesPerRadian);
 
-		float mPitchMinAngle_ = C_DEFAULT_PITCH_MIN_ANGLE_;
+		float mPitchMinAngle = cDefaultPitchMinAngle;
 		// angle
 		public float PitchMinAngle
 		{
-			get { return this.mPitchMinAngle_; }
-			set { this.mPitchMinAngle_ = value; }
+			get { return this.mPitchMinAngle; }
+			set { this.mPitchMinAngle = value; }
 		}
 		#endregion
 
 		#region StartYawSound
-		string mStartYawSound_;
+		string mStartYawSound;
 		[Meta.SoundCueReference]
 		public string StartYawSound
 		{
-			get { return this.mStartYawSound_; }
-			set { this.mStartYawSound_ = value; }
+			get { return this.mStartYawSound; }
+			set { this.mStartYawSound = value; }
 		}
 		#endregion
 
 		#region StopYawSound
-		string mStopYawSound_;
+		string mStopYawSound;
 		[Meta.SoundCueReference]
 		public string StopYawSound
 		{
-			get { return this.mStopYawSound_; }
-			set { this.mStopYawSound_ = value; }
+			get { return this.mStopYawSound; }
+			set { this.mStopYawSound = value; }
 		}
 		#endregion
 
 		#region StartPitchSound
-		string mStartPitchSound_;
+		string mStartPitchSound;
 		[Meta.SoundCueReference]
 		public string StartPitchSound
 		{
-			get { return this.mStartPitchSound_; }
-			set { this.mStartPitchSound_ = value; }
+			get { return this.mStartPitchSound; }
+			set { this.mStartPitchSound = value; }
 		}
 		#endregion
 
 		#region StopPitchSound
-		string mStopPitchSound_;
+		string mStopPitchSound;
 		[Meta.SoundCueReference]
 		public string StopPitchSound
 		{
-			get { return this.mStopPitchSound_; }
-			set { this.mStopPitchSound_ = value; }
+			get { return this.mStopPitchSound; }
+			set { this.mStopPitchSound = value; }
 		}
 		#endregion
 
@@ -220,60 +220,60 @@ namespace KSoft.Phoenix.Phx
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamAttribute("name", ref this.mName_);
-			s.StreamStringOpt("yawattachment", ref this.mYawAttachment_, toLower: false);
-			s.StreamStringOpt("pitchattachment", ref this.mPitchAttachment_, toLower: false);
-			s.StreamAttributeOpt("autocenter", ref this.mAutoCenter_, Predicates.IsFalse);
-			s.StreamAttributeOpt("singleboneik", ref this.mSingleBoneIk_, Predicates.IsTrue);
-			s.StreamAttributeOpt("combined", ref this.mCombined_, Predicates.IsTrue);
-			s.StreamAttributeOpt("hardpitchlimits", ref this.mHardPitchLimits_, Predicates.IsTrue);
-			s.StreamAttributeOpt("relativeToUnit", ref this.mRelativeToUnit_, Predicates.IsTrue);
-			s.StreamAttributeOpt("useYawAndPitchAsTolerance", ref this.mUseYawAndPitchAsTolerance_, Predicates.IsTrue);
-			s.StreamAttributeOpt("infiniteRateWhenHasTarget", ref this.mInfiniteRateWhenHasTarget_, Predicates.IsTrue);
-			s.StreamAttributeOpt("yawrate", ref this.mYawRotationRate_, x => x != C_PI_OVER12_IN_DEGREES_);
-			s.StreamAttributeOpt("pitchrate", ref this.mPitchRotationRate_, x => x != C_PI_OVER12_IN_DEGREES_);
+			s.StreamAttribute("name", ref this.mName);
+			s.StreamStringOpt("yawattachment", ref this.mYawAttachment, toLower: false);
+			s.StreamStringOpt("pitchattachment", ref this.mPitchAttachment, toLower: false);
+			s.StreamAttributeOpt("autocenter", ref this.mAutoCenter, Predicates.IsFalse);
+			s.StreamAttributeOpt("singleboneik", ref this.mSingleBoneIK, Predicates.IsTrue);
+			s.StreamAttributeOpt("combined", ref this.mCombined, Predicates.IsTrue);
+			s.StreamAttributeOpt("hardpitchlimits", ref this.mHardPitchLimits, Predicates.IsTrue);
+			s.StreamAttributeOpt("relativeToUnit", ref this.mRelativeToUnit, Predicates.IsTrue);
+			s.StreamAttributeOpt("useYawAndPitchAsTolerance", ref this.mUseYawAndPitchAsTolerance, Predicates.IsTrue);
+			s.StreamAttributeOpt("infiniteRateWhenHasTarget", ref this.mInfiniteRateWhenHasTarget, Predicates.IsTrue);
+			s.StreamAttributeOpt("yawrate", ref this.mYawRotationRate, x => x != cPiOver12InDegrees);
+			s.StreamAttributeOpt("pitchrate", ref this.mPitchRotationRate, x => x != cPiOver12InDegrees);
 
 			#region YawLeftMaxAngle and YawRightMaxAngle
 			if (s.IsReading)
 			{
-				float yawMaxAngle = PhxUtil.K_INVALID_SINGLE_NA_N;
+				float yawMaxAngle = PhxUtil.kInvalidSingleNaN;
 				if (s.ReadAttributeOpt("yawMaxAngle", ref yawMaxAngle) ||
 					// #HACK fucking deal with original HW game data that was hand edited, but only when reading
 					s.ReadAttributeOpt("yawmaxangle", ref yawMaxAngle))
 				{
-					this.mYawLeftMaxAngle_ = -yawMaxAngle;
-					this.mYawRightMaxAngle_ = yawMaxAngle;
+					this.mYawLeftMaxAngle = -yawMaxAngle;
+					this.mYawRightMaxAngle = yawMaxAngle;
 				}
 
-				s.StreamAttributeOpt("YawLeftMaxAngle", ref this.mYawLeftMaxAngle_, x => x != C_DEFAULT_YAW_LEFT_MAX_ANGLE_);
-				s.StreamAttributeOpt("YawRightMaxAngle", ref this.mYawRightMaxAngle_, x => x != C_DEFAULT_YAW_RIGHT_MAX_ANGLE_);
+				s.StreamAttributeOpt("YawLeftMaxAngle", ref this.mYawLeftMaxAngle, x => x != cDefaultYawLeftMaxAngle);
+				s.StreamAttributeOpt("YawRightMaxAngle", ref this.mYawRightMaxAngle, x => x != cDefaultYawRightMaxAngle);
 			}
 			else if (s.IsWriting)
 			{
-				if (this.mYawLeftMaxAngle_ == C_DEFAULT_YAW_LEFT_MAX_ANGLE_ &&
-				    this.mYawRightMaxAngle_ == C_DEFAULT_YAW_RIGHT_MAX_ANGLE_)
+				if (this.mYawLeftMaxAngle == cDefaultYawLeftMaxAngle &&
+				    this.mYawRightMaxAngle == cDefaultYawRightMaxAngle)
 				{
 					// don't stream anything
 				}
-				else if (System.Math.Abs(this.mYawLeftMaxAngle_) == this.mYawRightMaxAngle_)
+				else if (System.Math.Abs(this.mYawLeftMaxAngle) == this.mYawRightMaxAngle)
 				{
-					s.WriteAttribute("yawMaxAngle", this.mYawRightMaxAngle_);
+					s.WriteAttribute("yawMaxAngle", this.mYawRightMaxAngle);
 				}
 				else
 				{
-					s.StreamAttributeOpt("YawLeftMaxAngle", ref this.mYawLeftMaxAngle_, x => x != C_DEFAULT_YAW_LEFT_MAX_ANGLE_);
-					s.StreamAttributeOpt("YawRightMaxAngle", ref this.mYawRightMaxAngle_, x => x != C_DEFAULT_YAW_RIGHT_MAX_ANGLE_);
+					s.StreamAttributeOpt("YawLeftMaxAngle", ref this.mYawLeftMaxAngle, x => x != cDefaultYawLeftMaxAngle);
+					s.StreamAttributeOpt("YawRightMaxAngle", ref this.mYawRightMaxAngle, x => x != cDefaultYawRightMaxAngle);
 				}
 			}
 			#endregion
 
-			s.StreamAttributeOpt("pitchMaxAngle", ref this.mPitchMaxAngle_, x => x != C_DEFAULT_PITCH_MAX_ANGLE_);
-			s.StreamAttributeOpt("pitchMinAngle", ref this.mPitchMinAngle_, x => x != C_DEFAULT_PITCH_MIN_ANGLE_);
+			s.StreamAttributeOpt("pitchMaxAngle", ref this.mPitchMaxAngle, x => x != cDefaultPitchMaxAngle);
+			s.StreamAttributeOpt("pitchMinAngle", ref this.mPitchMinAngle, x => x != cDefaultPitchMinAngle);
 
-			s.StreamStringOpt("StartYawSound", ref this.mStartYawSound_, toLower: false);
-			s.StreamStringOpt("StopYawSound", ref this.mStopYawSound_, toLower: false);
-			s.StreamStringOpt("StartPitchSound", ref this.mStartPitchSound_, toLower: false);
-			s.StreamStringOpt("StopPitchSound", ref this.mStopPitchSound_, toLower: false);
+			s.StreamStringOpt("StartYawSound", ref this.mStartYawSound, toLower: false);
+			s.StreamStringOpt("StopYawSound", ref this.mStopYawSound, toLower: false);
+			s.StreamStringOpt("StartPitchSound", ref this.mStartPitchSound, toLower: false);
+			s.StreamStringOpt("StopPitchSound", ref this.mStopPitchSound, toLower: false);
 		}
 		#endregion
 	};

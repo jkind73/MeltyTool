@@ -73,7 +73,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref byte, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, byte, NumeralBase)"/>
-		public void StreamCursor(ref byte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref byte value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -85,7 +85,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref sbyte, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, sbyte, NumeralBase)"/>
-		public void StreamCursor(ref sbyte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref sbyte value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -97,7 +97,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref ushort, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, ushort, NumeralBase)"/>
-		public void StreamCursor(ref ushort value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref ushort value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -109,7 +109,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref short, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, short, NumeralBase)"/>
-		public void StreamCursor(ref short value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref short value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -121,7 +121,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref uint, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, uint, NumeralBase)"/>
-		public void StreamCursor(ref uint value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref uint value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -133,7 +133,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref int, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, int, NumeralBase)"/>
-		public void StreamCursor(ref int value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref int value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -145,7 +145,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref ulong, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, ulong, NumeralBase)"/>
-		public void StreamCursor(ref ulong value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref ulong value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -157,7 +157,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadCursor(string, ref long, NumeralBase)"/>
 		/// <seealso cref="WriteCursor(string, long, NumeralBase)"/>
-		public void StreamCursor(ref long value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor(ref long value, NumeralBase numBase=kDefaultRadix)
 		{
 				 if (this.IsReading)
 					 this.ReadCursor(ref value, numBase);
@@ -236,7 +236,7 @@ namespace KSoft.IO
 				this.WriteCursor( (double)property.GetValue(theObj, null) );
 		}
 
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -250,7 +250,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (byte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -264,7 +264,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (sbyte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -278,7 +278,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (ushort)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -292,7 +292,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (short)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -306,7 +306,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (uint)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -320,7 +320,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (int)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -334,7 +334,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteCursor( (ulong)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamCursor<T>( T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			var property = Reflection.Util.PropertyFromExpr(propExpr);
 			if (this.IsReading)
@@ -444,7 +444,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref byte, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, byte, NumeralBase)"/>
-		public void StreamElement(TName name, ref byte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref byte value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -459,7 +459,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref sbyte, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, sbyte, NumeralBase)"/>
-		public void StreamElement(TName name, ref sbyte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref sbyte value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -474,7 +474,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref ushort, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, ushort, NumeralBase)"/>
-		public void StreamElement(TName name, ref ushort value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref ushort value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -489,7 +489,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref short, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, short, NumeralBase)"/>
-		public void StreamElement(TName name, ref short value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref short value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -504,7 +504,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref uint, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, uint, NumeralBase)"/>
-		public void StreamElement(TName name, ref uint value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref uint value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -519,7 +519,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref int, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, int, NumeralBase)"/>
-		public void StreamElement(TName name, ref int value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref int value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -534,7 +534,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref ulong, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, ulong, NumeralBase)"/>
-		public void StreamElement(TName name, ref ulong value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref ulong value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -549,7 +549,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadElement(string, ref long, NumeralBase)"/>
 		/// <seealso cref="WriteElement(string, long, NumeralBase)"/>
-		public void StreamElement(TName name, ref long value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement(TName name, ref long value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -640,7 +640,7 @@ namespace KSoft.IO
 				this.WriteElement(name, (double)property.GetValue(theObj, null) );
 		}
 
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -656,7 +656,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (byte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -672,7 +672,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (sbyte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -688,7 +688,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (ushort)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -704,7 +704,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (short)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -720,7 +720,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (uint)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -736,7 +736,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (int)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -752,7 +752,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElement(name, (ulong)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElement<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -893,7 +893,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref byte, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, byte, Predicate{byte}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref byte value, Predicate<byte> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref byte value, Predicate<byte> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -913,7 +913,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref sbyte, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, sbyte, Predicate{sbyte}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref sbyte value, Predicate<sbyte> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref sbyte value, Predicate<sbyte> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -933,7 +933,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref ushort, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, ushort, Predicate{ushort}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref ushort value, Predicate<ushort> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref ushort value, Predicate<ushort> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -953,7 +953,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref short, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, short, Predicate{short}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref short value, Predicate<short> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref short value, Predicate<short> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -973,7 +973,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref uint, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, uint, Predicate{uint}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref uint value, Predicate<uint> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref uint value, Predicate<uint> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -993,7 +993,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref int, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, int, Predicate{int}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref int value, Predicate<int> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref int value, Predicate<int> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1013,7 +1013,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref ulong, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, ulong, Predicate{ulong}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref ulong value, Predicate<ulong> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref ulong value, Predicate<ulong> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1033,7 +1033,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadElementOpt(TName, ref long, NumeralBase)"/>
 		/// <seealso cref="WriteElementOptOnTrue(TName, long, Predicate{long}, NumeralBase)"/>
-		public bool StreamElementOpt(TName name, ref long value, Predicate<long> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt(TName name, ref long value, Predicate<long> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1162,7 +1162,7 @@ namespace KSoft.IO
 			return executed;
 		}
 
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr , Predicate<byte> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr , Predicate<byte> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1185,7 +1185,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr , Predicate<sbyte> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr , Predicate<sbyte> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1208,7 +1208,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr , Predicate<ushort> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr , Predicate<ushort> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1231,7 +1231,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr , Predicate<short> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr , Predicate<short> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1254,7 +1254,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr , Predicate<uint> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr , Predicate<uint> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1277,7 +1277,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr , Predicate<int> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr , Predicate<int> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1300,7 +1300,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr , Predicate<ulong> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr , Predicate<ulong> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1323,7 +1323,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr , Predicate<long> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamElementOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr , Predicate<long> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1451,7 +1451,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref byte, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, byte, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref byte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref byte value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1466,7 +1466,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref sbyte, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, sbyte, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref sbyte value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref sbyte value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1481,7 +1481,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref ushort, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, ushort, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref ushort value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref ushort value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1496,7 +1496,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref short, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, short, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref short value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref short value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1511,7 +1511,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref uint, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, uint, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref uint value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref uint value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1526,7 +1526,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref int, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, int, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref int value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref int value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1541,7 +1541,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref ulong, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, ulong, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref ulong value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref ulong value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1556,7 +1556,7 @@ namespace KSoft.IO
 		/// <param name="numBase">numerical base to use</param>
 		/// <seealso cref="ReadAttribute(TName, ref long, NumeralBase)"/>
 		/// <seealso cref="WriteAttribute(TName, long, NumeralBase)"/>
-		public void StreamAttribute(TName name, ref long value, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute(TName name, ref long value, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1647,7 +1647,7 @@ namespace KSoft.IO
 				this.WriteAttribute(name, (double)property.GetValue(theObj, null) );
 		}
 
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1663,7 +1663,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (byte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1679,7 +1679,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (sbyte)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1695,7 +1695,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (ushort)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1711,7 +1711,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (short)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1727,7 +1727,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (uint)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1743,7 +1743,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (int)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1759,7 +1759,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteAttribute(name, (ulong)property.GetValue(theObj, null) , numBase);
 		}
-		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamAttribute<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr  , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1900,7 +1900,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref byte, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, byte, Predicate{byte}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref byte value, Predicate<byte> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref byte value, Predicate<byte> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1920,7 +1920,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref sbyte, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, sbyte, Predicate{sbyte}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref sbyte value, Predicate<sbyte> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref sbyte value, Predicate<sbyte> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1940,7 +1940,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref ushort, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, ushort, Predicate{ushort}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref ushort value, Predicate<ushort> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref ushort value, Predicate<ushort> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1960,7 +1960,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref short, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, short, Predicate{short}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref short value, Predicate<short> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref short value, Predicate<short> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -1980,7 +1980,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref uint, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, uint, Predicate{uint}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref uint value, Predicate<uint> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref uint value, Predicate<uint> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2000,7 +2000,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref int, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, int, Predicate{int}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref int value, Predicate<int> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref int value, Predicate<int> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2020,7 +2020,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref ulong, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, ulong, Predicate{ulong}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref ulong value, Predicate<ulong> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref ulong value, Predicate<ulong> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2040,7 +2040,7 @@ namespace KSoft.IO
 		/// <returns>True if <paramref name="value"/> was read/written from/to stream</returns>
 		/// <seealso cref="ReadAttributeOpt(string, ref long, NumeralBase)"/>
 		/// <seealso cref="WriteAttributeOptOnTrue(string, long, Predicate{long}, NumeralBase)"/>
-		public bool StreamAttributeOpt(TName name, ref long value, Predicate<long> predicate = null, NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt(TName name, ref long value, Predicate<long> predicate = null, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2169,7 +2169,7 @@ namespace KSoft.IO
 			return executed;
 		}
 
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr , Predicate<byte> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, byte >> propExpr , Predicate<byte> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2192,7 +2192,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr , Predicate<sbyte> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, sbyte >> propExpr , Predicate<sbyte> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2215,7 +2215,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr , Predicate<ushort> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ushort >> propExpr , Predicate<ushort> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2238,7 +2238,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr , Predicate<short> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, short >> propExpr , Predicate<short> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2261,7 +2261,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr , Predicate<uint> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, uint >> propExpr , Predicate<uint> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2284,7 +2284,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr , Predicate<int> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, int >> propExpr , Predicate<int> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2307,7 +2307,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr , Predicate<ulong> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, ulong >> propExpr , Predicate<ulong> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2330,7 +2330,7 @@ namespace KSoft.IO
 
 			return executed;
 		}
-		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr , Predicate<long> predicate = null , NumeralBase numBase=K_DEFAULT_RADIX)
+		public bool StreamAttributeOpt<T>(TName name, T theObj, Exprs.Expression<Func<T, long >> propExpr , Predicate<long> predicate = null , NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -2432,7 +2432,7 @@ namespace KSoft.IO
 				this.WriteElements(name, coll);
 		}
 
-		public void StreamElements(TName name, ICollection< byte > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< byte > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2442,7 +2442,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< sbyte > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< sbyte > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2452,7 +2452,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< ushort > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< ushort > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2462,7 +2462,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< short > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< short > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2472,7 +2472,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< uint > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< uint > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2482,7 +2482,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< int > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< int > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2492,7 +2492,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< ulong > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< ulong > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2502,7 +2502,7 @@ namespace KSoft.IO
 			else if (this.IsWriting)
 				this.WriteElements(name, coll, numBase);
 		}
-		public void StreamElements(TName name, ICollection< long > coll, NumeralBase numBase=K_DEFAULT_RADIX)
+		public void StreamElements(TName name, ICollection< long > coll, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -2572,7 +2572,7 @@ namespace KSoft.IO
 			return array.Length;
 		}
 
-		public int StreamFixedArray(TName name, byte[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, byte[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2583,7 +2583,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, sbyte[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, sbyte[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2594,7 +2594,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, ushort[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, ushort[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2605,7 +2605,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, short[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, short[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2616,7 +2616,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, uint[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, uint[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2627,7 +2627,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, int[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, int[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2638,7 +2638,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, ulong[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, ulong[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);
@@ -2649,7 +2649,7 @@ namespace KSoft.IO
 
 			return array.Length;
 		}
-		public int StreamFixedArray(TName name, long[] array, NumeralBase numBase=K_DEFAULT_RADIX)
+		public int StreamFixedArray(TName name, long[] array, NumeralBase numBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(array != null);

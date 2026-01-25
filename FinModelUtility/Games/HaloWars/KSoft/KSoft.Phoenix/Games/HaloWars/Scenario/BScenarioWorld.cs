@@ -3,10 +3,10 @@ namespace KSoft.Phoenix.HaloWars
 {
 	public enum BScenarioWorld
 	{
-		NONE,
+		None,
 
-		HARVEST,
-		ARCADIA,
+		Harvest,
+		Arcadia,
 		/// <summary>Shield World Interior</summary>
 		SWI,
 		/// <summary>Shield World Exterior</summary>

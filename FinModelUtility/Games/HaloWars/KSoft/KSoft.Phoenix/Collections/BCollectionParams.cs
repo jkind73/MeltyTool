@@ -6,26 +6,26 @@ namespace KSoft.Collections
 	[Flags]
 	public enum BCollectionParamsFlags
 	{
-		TO_LOWER_DATA_NAMES,
+		ToLowerDataNames,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public abstract class BCollectionParams
 	{
-		public const int K_DEFAULT_CAPACITY = 16;
+		public const int kDefaultCapacity = 16;
 
 		/// <summary>For fine tuning the BDictionary initialization, to avoid reallocations</summary>
-		public /*readonly*/ int initialCapacity = K_DEFAULT_CAPACITY;
+		public /*readonly*/ int InitialCapacity = kDefaultCapacity;
 
 		#region Flags
 		/// <summary>BCollectionParamsFlags</summary>
-		public BitVector32 flags;
+		public BitVector32 Flags;
 
 		public bool ToLowerDataNames
 		{
-			get { return this.flags.Test(BCollectionParamsFlags.TO_LOWER_DATA_NAMES); }
-			set { this.flags.Set(BCollectionParamsFlags.TO_LOWER_DATA_NAMES, value); }
+			get { return this.Flags.Test(BCollectionParamsFlags.ToLowerDataNames); }
+			set { this.Flags.Set(BCollectionParamsFlags.ToLowerDataNames, value); }
 		}
 		#endregion
 

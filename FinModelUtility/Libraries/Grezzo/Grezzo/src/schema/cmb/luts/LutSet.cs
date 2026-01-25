@@ -7,16 +7,16 @@ namespace grezzo.schema.cmb.luts;
 
 [BinarySchema]
 public sealed partial class LutSet : IBinaryConvertible {
-  public ushort bitFlags; //Not sure
+  public ushort BitFlags; //Not sure
 
-  [WLengthOfSequence(nameof(keyframes))]
+  [WLengthOfSequence(nameof(Keyframes))]
   private ushort keyframeCount_;
 
-  public short start;
-  public short end;
+  public short Start;
+  public short End;
 
   [RSequenceLengthSource(nameof(keyframeCount_))]
-  public LutKeyframe[] keyframes;
+  public LutKeyframe[] Keyframes;
 
   [Unknown]
   public float unk1;

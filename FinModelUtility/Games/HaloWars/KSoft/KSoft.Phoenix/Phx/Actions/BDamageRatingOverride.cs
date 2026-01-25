@@ -8,21 +8,21 @@ namespace KSoft.Phoenix.Phx
 		, IEqualityComparer<BDamageRatingOverride>
 	{
 		#region Xml constants
-		public static readonly Collections.BTypeValuesParams<BDamageRatingOverride> KBListParams = new
+		public static readonly Collections.BTypeValuesParams<BDamageRatingOverride> kBListParams = new
 			Collections.BTypeValuesParams<BDamageRatingOverride>(db => db.DamageTypes);
-		public static readonly XML.BTypeValuesXmlParams<BDamageRatingOverride> KBListXmlParams = new
+		public static readonly XML.BTypeValuesXmlParams<BDamageRatingOverride> kBListXmlParams = new
 			XML.BTypeValuesXmlParams<BDamageRatingOverride>("DamageRatingOverride", "type");
 		#endregion
 
-		float mRating_ = PhxUtil.K_INVALID_SINGLE;
-		public float Rating { get { return this.mRating_; } }
+		float mRating = PhxUtil.kInvalidSingle;
+		public float Rating { get { return this.mRating; } }
 
 		#region ITagElementStreamable<string> Members
 		public void Serialize<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s)
 			where TDoc : class
 			where TCursor : class
 		{
-			s.StreamCursor(ref this.mRating_);
+			s.StreamCursor(ref this.mRating);
 		}
 		#endregion
 

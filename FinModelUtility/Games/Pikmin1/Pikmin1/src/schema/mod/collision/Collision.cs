@@ -17,7 +17,7 @@ public sealed partial class BaseRoomInfo : IBinaryConvertible {
 [BinarySchema]
 public sealed partial class BaseCollTriInfo : IBinaryConvertible {
   public uint mapCode = 0;
-  public readonly Vector3I indice = new();
+  public readonly Vector3i indice = new();
 
   [Unknown]
   public ushort unknown2 = 0;
@@ -76,9 +76,9 @@ public sealed partial class CollGroup : IBinaryConvertible {
 [BinarySchema]
 public sealed partial class CollGrid : IBinaryConvertible {
   [AlignStart(0x20)]
-  public Vector3 BoundsMin { get; set; }
+  public Vector3 boundsMin { get; set; }
 
-  public Vector3 BoundsMax { get; set; }
+  public Vector3 boundsMax { get; set; }
 
   [Unknown]
   public float unknown1 = 0;
@@ -90,10 +90,10 @@ public sealed partial class CollGrid : IBinaryConvertible {
   public readonly List<CollGroup> groups = [];
 
   [Skip]
-  private uint GridSize => this.gridX * this.gridY;
+  private uint gridSize_ => this.gridX * this.gridY;
 
   [Unknown]
-  [RSequenceLengthSource(nameof(GridSize))]
+  [RSequenceLengthSource(nameof(gridSize_))]
   public readonly List<int> unknown2 = [];
 
   [AlignStart(0x20)]

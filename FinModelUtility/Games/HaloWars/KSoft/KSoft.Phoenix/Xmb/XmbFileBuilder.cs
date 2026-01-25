@@ -7,42 +7,42 @@ namespace KSoft.Phoenix.Xmb
 	{
 		[Display(	Name="Force string encoding",
 					Description="XML element and attribute values are treated as string data, even if it could be detected as a integer, bool, etc")]
-		FORCE_STRING_VARIANTS,
+		ForceStringVariants,
 		[Browsable(false)]
 		[Display(	Name="Unicode strings are permitted",
 					Description="")]
-		ALLOW_UNICODE,
+		AllowUnicode,
 		[Display(	Name="Force Unicode strings",
 					Description="XML element and attribute values are treated as Unicode strings")]
-		FORCE_UNICODE,
+		ForceUnicode,
 		[Browsable(false)]
-		LITTLE_ENDIAN,
+		LittleEndian,
 
-		K_NUMBER_OF
+		kNumberOf
 	};
 
 	public sealed class XmbFileBuilder
 	{
-		public const int K_CREATOR_TOOL_VERSION = 1;
+		public const int kCreatorToolVersion = 1;
 
 		#region BuilderOptions
-		public Collections.BitVector32 builderOptions;
+		public Collections.BitVector32 BuilderOptions;
 		public string DebugBuilderOptions { get {
-			return this.builderOptions.ToString(XmbFileBuilderOptions.K_NUMBER_OF);
+			return this.BuilderOptions.ToString(XmbFileBuilderOptions.kNumberOf);
 		} }
 
 		public bool ForceStringVariants { get {
-			return this.builderOptions.Test(XmbFileBuilderOptions.FORCE_STRING_VARIANTS);
+			return this.BuilderOptions.Test(XmbFileBuilderOptions.ForceStringVariants);
 		} }
 		public bool AllowUnicode { get {
-			return this.builderOptions.Test(XmbFileBuilderOptions.ALLOW_UNICODE);
+			return this.BuilderOptions.Test(XmbFileBuilderOptions.AllowUnicode);
 		} }
 		public bool ForceUnicode { get {
-			return this.builderOptions.Test(XmbFileBuilderOptions.FORCE_UNICODE);
+			return this.BuilderOptions.Test(XmbFileBuilderOptions.ForceUnicode);
 		} }
 		#endregion
 
-		internal XmbFile xmb;
+		internal XmbFile Xmb;
 
 		#region Stats
 		public int NumberOfElements { get; set; }
@@ -74,7 +74,7 @@ namespace KSoft.Phoenix.Xmb
 
 		public XmbFileBuilder()
 		{
-			this.builderOptions.Set(XmbFileBuilderOptions.ALLOW_UNICODE);
+			this.BuilderOptions.Set(XmbFileBuilderOptions.AllowUnicode);
 		}
 
 		public string GetCreatorToolCommandLine(string xmlFileName)
@@ -83,7 +83,7 @@ namespace KSoft.Phoenix.Xmb
 
 			sb.AppendFormat("XMLCOMP -file {0}",
 				xmlFileName);
-			sb.Append(this.builderOptions.Test(XmbFileBuilderOptions.LITTLE_ENDIAN)==false ? "" :
+			sb.Append(this.BuilderOptions.Test(XmbFileBuilderOptions.LittleEndian)==false ? "" :
 				" -littleEndian");
 			sb.Append(this.ForceStringVariants==false ? "" :
 				" -disableNumerics");

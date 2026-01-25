@@ -18,10 +18,10 @@ namespace KSoft
 		[Contracts.Pure]
 		public static uint Align(int alignmentBit, uint value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
-			uint alignSize = 1U << alignmentBit;
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
+			uint align_size = 1U << alignmentBit;
 
-			return (value + (alignSize-1)) & ~(alignSize-1);
+			return (value + (align_size-1)) & ~(align_size-1);
 		}
 
 		/// <summary>Takes <paramref name="value"/> and returns what it would be if it were aligned to <paramref name="align_size"/> bytes</summary>
@@ -31,12 +31,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int Align(int alignmentBit, int value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 			Contract.Requires<System.ArgumentOutOfRangeException>(value >= 0);
 			Contract.Ensures(Contract.Result<int>() >= 0);
-			int alignSize = 1 << alignmentBit;
+			int align_size = 1 << alignmentBit;
 
-			return (value + (alignSize-1)) & ~(alignSize-1);
+			return (value + (align_size-1)) & ~(align_size-1);
 		}
 
 		/// <summary>Takes <paramref name="value"/> and returns what it would be if it were aligned to <paramref name="align_size"/> bytes</summary>
@@ -46,10 +46,10 @@ namespace KSoft
 		[Contracts.Pure]
 		public static ulong Align(int alignmentBit, ulong value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
-			ulong alignSize = 1UL << alignmentBit;
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
+			ulong align_size = 1UL << alignmentBit;
 
-			return (value + (alignSize-1)) & ~(alignSize-1);
+			return (value + (align_size-1)) & ~(align_size-1);
 		}
 
 		/// <summary>Takes <paramref name="value"/> and returns what it would be if it were aligned to <paramref name="align_size"/> bytes</summary>
@@ -59,12 +59,12 @@ namespace KSoft
 		[Contracts.Pure]
 		public static long Align(int alignmentBit, long value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 			Contract.Requires<System.ArgumentOutOfRangeException>(value >= 0);
 			Contract.Ensures(Contract.Result<long>() >= 0);
-			long alignSize = 1L << alignmentBit;
+			long align_size = 1L << alignmentBit;
 
-			return (value + (alignSize-1)) & ~(alignSize-1);
+			return (value + (align_size-1)) & ~(align_size-1);
 		}
 
 		#endregion
@@ -77,7 +77,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int PaddingRequired(int alignmentBit, uint value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 
 			return (int)(Align(alignmentBit, value) - value);
 		}
@@ -89,7 +89,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int PaddingRequired(int alignmentBit, int value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 			Contract.Requires<System.ArgumentOutOfRangeException>(value >= 0);
 			Contract.Ensures(Contract.Result<int>() >= 0);
 
@@ -103,7 +103,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int PaddingRequired(int alignmentBit, ulong value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 
 			return (int)(Align(alignmentBit, value) - value);
 		}
@@ -115,7 +115,7 @@ namespace KSoft
 		[Contracts.Pure]
 		public static int PaddingRequired(int alignmentBit, long value)
 		{
-			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= K_MAX_ALIGNMENT_BIT);
+			Contract.Requires<System.ArgumentOutOfRangeException>(alignmentBit <= kMaxAlignmentBit);
 			Contract.Requires<System.ArgumentOutOfRangeException>(value >= 0);
 			Contract.Ensures(Contract.Result<int>() >= 0);
 

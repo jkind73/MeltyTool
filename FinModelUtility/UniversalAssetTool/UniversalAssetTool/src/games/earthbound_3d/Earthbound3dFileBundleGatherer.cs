@@ -46,7 +46,7 @@ public sealed class Earthbound3dFileBundleGatherer
 
     foreach (var waterShoreMaterial in
              model.MaterialManager.All.Where(m => m.Name is "water_shore")) {
-      waterShoreMaterial.DepthCompareType = DepthCompareType.L_EQUAL;
+      waterShoreMaterial.DepthCompareType = DepthCompareType.LEqual;
     }
 
     foreach (var mesh in model.Skin.Meshes) {

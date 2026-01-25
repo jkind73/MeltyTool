@@ -10,20 +10,20 @@ namespace grezzo.schema.cmb.qtrs;
 public sealed partial class BoundingBox : IBinaryConvertible {
   // M-1 checked all files, and Min/Max are the only values to ever change
   [Unknown]
-  public uint Unk0 { get; private set; }
+  public uint unk0 { get; private set; }
 
   [Unknown]
-  public uint Unk1 { get; private set; }
+  public uint unk1 { get; private set; }
 
-  public Vector3 Min { get; private set; }
-  public Vector3 Max { get; private set; }
-
-  [Unknown]
-  public int Unk2 { get; private set; }
+  public Vector3 min { get; private set; }
+  public Vector3 max { get; private set; }
 
   [Unknown]
-  public int Unk3 { get; private set; }
+  public int unk2 { get; private set; }
 
   [Unknown]
-  public uint Unk4 { get; private set; }
+  public int unk3 { get; private set; }
+
+  [Unknown]
+  public uint unk4 { get; private set; }
 }

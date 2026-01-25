@@ -12,7 +12,7 @@ namespace KSoft.Phoenix.Resource.ECF
 	public sealed class EcfFileDefinition
 		: IO.ITagElementStringNameStreamable
 	{
-		public const string K_FILE_EXTENSION = ".ecfdef";
+		public const string kFileExtension = ".ecfdef";
 
 		public string WorkingDirectory { get; set; }
 
@@ -37,8 +37,8 @@ namespace KSoft.Phoenix.Resource.ECF
 
 				using (s.EnterCursorBookmark("Header"))
 				{
-					s.StreamAttribute("id", this, obj => this.HeaderId, NumeralBase.HEX);
-					s.StreamAttributeOpt("ChunkExtraDataSize", this, obj => this.ChunkExtraDataSize, Predicates.IsNotZero, NumeralBase.HEX);
+					s.StreamAttribute("id", this, obj => this.HeaderId, NumeralBase.Hex);
+					s.StreamAttributeOpt("ChunkExtraDataSize", this, obj => this.ChunkExtraDataSize, Predicates.IsNotZero, NumeralBase.Hex);
 				}
 
 				using (var bm = s.EnterCursorBookmarkOpt("Chunks", this.Chunks, Predicates.HasItems))
@@ -79,10 +79,10 @@ namespace KSoft.Phoenix.Resource.ECF
 			Contract.Requires(chunk != null && chunk.Parent == this);
 
 			Contract.Assert(this.WorkingDirectory.IsNotNullOrEmpty());
-			string absPath = Path.Combine(this.WorkingDirectory, chunk.FilePath);
+			string abs_path = Path.Combine(this.WorkingDirectory, chunk.FilePath);
 
-			absPath = Path.GetFullPath(absPath);
-			return absPath;
+			abs_path = Path.GetFullPath(abs_path);
+			return abs_path;
 		}
 
 		public void Initialize(string ecfFileName)
@@ -133,8 +133,8 @@ namespace KSoft.Phoenix.Resource.ECF
 			}
 			else
 			{
-				var sourceFile = this.GetChunkAbsolutePath(chunk);
-				using (var fs = File.OpenRead(sourceFile))
+				var source_file = this.GetChunkAbsolutePath(chunk);
+				using (var fs = File.OpenRead(source_file))
 				{
 					ms = new MemoryStream((int)fs.Length);
 					fs.CopyTo(ms);

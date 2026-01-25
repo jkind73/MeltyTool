@@ -15,7 +15,7 @@ namespace KSoft.Phoenix.Engine
 			, bool targets360 = false)
 		{
 			var e = new PhxEngine();
-			e.Build = PhxEngineBuild.RELEASE;
+			e.Build = PhxEngineBuild.Release;
 			e.TargetsXbox360 = targets360;
 			e.InitializeEngine(new GameDirectories(gameRoot, updateRoot));
 
@@ -24,7 +24,7 @@ namespace KSoft.Phoenix.Engine
 		public static PhxEngine CreateForHaloWarsAlpha(string gameRoot)
 		{
 			var e = new PhxEngine();
-			e.Build = PhxEngineBuild.ALPHA;
+			e.Build = PhxEngineBuild.Alpha;
 			e.TargetsXbox360 = true;
 			e.InitializeEngine(new GameDirectories(gameRoot));
 

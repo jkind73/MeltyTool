@@ -20,7 +20,7 @@ public sealed class QuaternionUtilTests {
   public void TestCreateZyx(float xRadians,
                             float yRadians,
                             float zRadians,
-                            float expectedQx,
+                            float expectedQX,
                             float expectedQy,
                             float expectedQz,
                             float expectedQw) {
@@ -29,7 +29,7 @@ public sealed class QuaternionUtilTests {
     var actualQuaternion =
         QuaternionUtil.CreateZyxRadians(xRadians, yRadians, zRadians);
 
-    Assert.AreEqual(expectedQx, actualQuaternion.X, tolerance);
+    Assert.AreEqual(expectedQX, actualQuaternion.X, tolerance);
     Assert.AreEqual(expectedQy, actualQuaternion.Y, tolerance);
     Assert.AreEqual(expectedQz, actualQuaternion.Z, tolerance);
     Assert.AreEqual(expectedQw, actualQuaternion.W, tolerance);

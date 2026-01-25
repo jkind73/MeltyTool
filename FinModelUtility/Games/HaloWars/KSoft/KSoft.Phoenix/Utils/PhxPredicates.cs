@@ -6,7 +6,7 @@ namespace KSoft.Phoenix
 {
 	static class PhxPredicates
 	{
-		[Contracts.Pure] public static bool IsNotInvalid(float x)		{ return x > PhxUtil.K_INVALID_SINGLE; }
+		[Contracts.Pure] public static bool IsNotInvalid(float x)		{ return x > PhxUtil.kInvalidSingle; }
 		[Contracts.Pure] public static bool IsNotInvalidNaN(float x)	{ return !float.IsNaN(x); }
 
 		public static bool IsNotOne(float x) { return x != 1.0f; }

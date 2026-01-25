@@ -6,13 +6,13 @@ namespace KSoft.Phoenix
 {
 	using PhxHash = Security.Cryptography.PhxHash;
 
-	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=K_SIZE_OF)]
-	public struct PhxSystemtime
+	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=kSizeOf)]
+	public struct PhxSYSTEMTIME
 		: IO.IEndianStreamSerializable
 	{
-		public const int K_SIZE_OF = sizeof(ulong);
-		public static PhxSystemtime MinValue { get { return new PhxSystemtime(1601, 1, 1); } }
-		public static PhxSystemtime MaxValue { get { return new PhxSystemtime(30827, 12, 31, 23, 59, 59, 999); } }
+		public const int kSizeOf = sizeof(ulong);
+		public static PhxSYSTEMTIME MinValue { get { return new PhxSYSTEMTIME(1601, 1, 1); } }
+		public static PhxSYSTEMTIME MaxValue { get { return new PhxSYSTEMTIME(30827, 12, 31, 23, 59, 59, 999); } }
 
 		[Interop.FieldOffset(0)] public ulong Bits;
 
@@ -25,12 +25,12 @@ namespace KSoft.Phoenix
 		[Interop.FieldOffset(12)] public ushort Second;
 		[Interop.FieldOffset(14)] public ushort Milliseconds;
 
-		public PhxSystemtime(ulong bits) : this()
+		public PhxSYSTEMTIME(ulong bits) : this()
 		{
 			this.Bits = bits;
 		}
 
-		public PhxSystemtime(ushort year, ushort month, ushort day
+		public PhxSYSTEMTIME(ushort year, ushort month, ushort day
 			, ushort hour = 0, ushort minute = 0, ushort second = 0, ushort ms = 0)
 		{
 			this.Bits = 0;
@@ -43,7 +43,7 @@ namespace KSoft.Phoenix
 			this.Milliseconds = ms;
 			this.DayOfWeek = 0;
 		}
-		public PhxSystemtime(DateTime dt)
+		public PhxSYSTEMTIME(DateTime dt)
 		{
 			this.Bits = 0;
 			dt = dt.ToUniversalTime();
@@ -85,8 +85,8 @@ namespace KSoft.Phoenix
 
 		public override bool Equals(object obj)
 		{
-			if (obj is PhxSystemtime)
-				return ((PhxSystemtime)obj) == this;
+			if (obj is PhxSYSTEMTIME)
+				return ((PhxSYSTEMTIME)obj) == this;
 
 			return base.Equals(obj);
 		}
@@ -96,7 +96,7 @@ namespace KSoft.Phoenix
 			return base.GetHashCode();
 		}
 
-		public static bool operator ==(PhxSystemtime s1, PhxSystemtime s2)
+		public static bool operator ==(PhxSYSTEMTIME s1, PhxSYSTEMTIME s2)
 		{
 #if false
 			return s1.Year == s2.Year
@@ -111,7 +111,7 @@ namespace KSoft.Phoenix
 #endif
 		}
 
-		public static bool operator !=(PhxSystemtime s1, PhxSystemtime s2)
+		public static bool operator !=(PhxSYSTEMTIME s1, PhxSYSTEMTIME s2)
 		{
 			return !(s1 == s2);
 		}

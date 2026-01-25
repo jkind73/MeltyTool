@@ -5,21 +5,21 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		const string K_XML_ROOT_ = "ShieldBubbleTypes";
+		const string kXmlRoot = "ShieldBubbleTypes";
 		#endregion
 
-		int mDefaultShieldSquadId_ = TypeExtensions.K_NONE;
+		int mDefaultShieldSquadID = TypeExtensions.kNone;
 		[Meta.BProtoSquadReference]
-		public int DefaultShieldSquadId
+		public int DefaultShieldSquadID
 		{
-			get { return this.mDefaultShieldSquadId_; }
-			set { this.mDefaultShieldSquadId_ = value; }
+			get { return this.mDefaultShieldSquadID; }
+			set { this.mDefaultShieldSquadID = value; }
 		}
 
 		public Collections.BListArray<BProtoSquadShieldBubble> ProtoShieldIDs { get; private set; } = new Collections.BListArray<BProtoSquadShieldBubble>();
 
 		public bool IsNotEmpty { get {
-			return this.DefaultShieldSquadId.IsNotNone()
+			return this.DefaultShieldSquadID.IsNotNone()
 				|| !this.ProtoShieldIDs.IsEmpty;
 		} }
 
@@ -30,10 +30,10 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			using (var bm = s.EnterCursorBookmarkOpt(K_XML_ROOT_)) if (bm.IsNotNull)
+			using (var bm = s.EnterCursorBookmarkOpt(kXmlRoot)) if (bm.IsNotNull)
 			{
-				xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mDefaultShieldSquadId_, DatabaseObjectKind.SQUAD, false, XML.XmlUtil.K_SOURCE_CURSOR);
-				XML.XmlUtil.Serialize(s, this.ProtoShieldIDs, BProtoSquadShieldBubble.KBListXmlParams);
+				xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mDefaultShieldSquadID, DatabaseObjectKind.Squad, false, XML.XmlUtil.kSourceCursor);
+				XML.XmlUtil.Serialize(s, this.ProtoShieldIDs, BProtoSquadShieldBubble.kBListXmlParams);
 			}
 		}
 		#endregion

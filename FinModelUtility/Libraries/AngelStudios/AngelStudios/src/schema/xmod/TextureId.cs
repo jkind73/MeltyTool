@@ -13,6 +13,6 @@ public sealed class TextureId : ITextDeserializable {
     this.Index = tr.ReadInt32();
     tr.SkipManyIfPresent(TextReaderConstants.WHITESPACE_CHARS);
     tr.AssertChar('"');
-    this.Name = tr.ReadUpToAndPastTerminator(TextReaderUtils.quote);
+    this.Name = tr.ReadUpToAndPastTerminator(TextReaderUtils.QUOTE);
   }
 }

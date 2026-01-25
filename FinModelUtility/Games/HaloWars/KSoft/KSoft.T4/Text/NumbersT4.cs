@@ -14,19 +14,19 @@ namespace KSoft.T4
 		public static bool ParseShouldAllowLeadingWhite { get; } = true; // a la NumberStyles.AllowLeadingWhite
 
 		public static IEnumerable<NumberCodeDefinition> ParseableIntegersSmall { get {
-			yield return PrimitiveDefinitions.KByte;
-			yield return PrimitiveDefinitions.KSByte;
+			yield return PrimitiveDefinitions.kByte;
+			yield return PrimitiveDefinitions.kSByte;
 
-			yield return PrimitiveDefinitions.KUInt16;
-			yield return PrimitiveDefinitions.KInt16;
+			yield return PrimitiveDefinitions.kUInt16;
+			yield return PrimitiveDefinitions.kInt16;
 		} }
 
 		public static IEnumerable<NumberCodeDefinition> ParseableIntegersWordAligned { get {
-			yield return PrimitiveDefinitions.KUInt32;
-			yield return PrimitiveDefinitions.KInt32;
+			yield return PrimitiveDefinitions.kUInt32;
+			yield return PrimitiveDefinitions.kInt32;
 
-			yield return PrimitiveDefinitions.KUInt64;
-			yield return PrimitiveDefinitions.KInt64;
+			yield return PrimitiveDefinitions.kUInt64;
+			yield return PrimitiveDefinitions.kInt64;
 		} }
 	};
 }

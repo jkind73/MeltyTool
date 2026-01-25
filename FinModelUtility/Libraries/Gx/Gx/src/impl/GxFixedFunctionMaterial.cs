@@ -18,7 +18,7 @@ namespace gx;
 ///   http://www.amnoid.de/gc/tev.html
 /// </summary>
 public partial class GxFixedFunctionMaterial {
-  private const bool STRICT_ = false;
+  private const bool STRICT = false;
 
   public override string ToString() => this.Material.Name ?? "(n/a)";
 
@@ -79,8 +79,8 @@ public partial class GxFixedFunctionMaterial {
           = populatedMaterial.TexCoordGens[(int) indirectTexture.TexCoord]!;
 
       var texMatrixType = texCoordGen.TexMatrix;
-      var texMatrixIndex = (texMatrixType - GxTexMatrix.TEX_MTX0) / 3;
-      var texMatrix = texMatrixType != GxTexMatrix.IDENTITY
+      var texMatrixIndex = (texMatrixType - GxTexMatrix.TexMtx0) / 3;
+      var texMatrix = texMatrixType != GxTexMatrix.Identity
           ? populatedMaterial.TextureMatrices?[texMatrixIndex]
           : null;
       var wrapModeOverrides
@@ -168,14 +168,14 @@ public partial class GxFixedFunctionMaterial {
             = populatedMaterial.MaterialColors[colorIndex];
         var materialColorRegisterValue =
             colorChannelControl.MaterialSrc switch {
-                GxColorSrc.REGISTER => registers.GetOrCreateColorRegister(
+                GxColorSrc.Register => registers.GetOrCreateColorRegister(
                     $"GxMaterialColor{materialColorIndex}",
                     equations.CreateColorConstant(
                         materialColor.R / 255f,
                         materialColor.G / 255f,
                         materialColor.B / 255f)
                 ),
-                GxColorSrc.VERTEX => vertexColor,
+                GxColorSrc.Vertex => vertexColor,
                 _                 => throw new ArgumentOutOfRangeException()
             };
 
@@ -187,13 +187,13 @@ public partial class GxFixedFunctionMaterial {
               = populatedMaterial.AmbientColors[colorIndex];
           var ambientColorRegisterValue =
               colorChannelControl.AmbientSrc switch {
-                  GxColorSrc.REGISTER => registers.GetOrCreateColorRegister(
+                  GxColorSrc.Register => registers.GetOrCreateColorRegister(
                       $"GxAmbientColor{ambientColorIndex}",
                       equations.CreateColorConstant(
                           ambientColor.R / 255f,
                           ambientColor.G / 255f,
                           ambientColor.B / 255f)),
-                  GxColorSrc.VERTEX => vertexColor,
+                  GxColorSrc.Vertex => vertexColor,
                   _                 => throw new ArgumentOutOfRangeException()
               };
 
@@ -220,8 +220,8 @@ public partial class GxFixedFunctionMaterial {
         var color = colorValue ?? colorZero;
         valueManager.UpdateColorChannelColor(
             colorIndex switch {
-                0 => GxColorChannel.GX_COLOR0_A0,
-                1 => GxColorChannel.GX_COLOR1_A1,
+                0 => GxColorChannel.GX_COLOR0A0,
+                1 => GxColorChannel.GX_COLOR1A1,
                 _ => throw new ArgumentOutOfRangeException()
             },
             color);
@@ -242,11 +242,11 @@ public partial class GxFixedFunctionMaterial {
             = populatedMaterial.MaterialColors[alphaIndex];
         var materialAlphaRegisterValue =
             colorChannelControl.MaterialSrc switch {
-                GxColorSrc.REGISTER => registers.GetOrCreateScalarRegister(
+                GxColorSrc.Register => registers.GetOrCreateScalarRegister(
                     $"GxMaterialAlpha{materialColorIndex}",
                     equations.CreateScalarConstant(
                         materialColor.A / 255f)),
-                GxColorSrc.VERTEX => vertexAlpha,
+                GxColorSrc.Vertex => vertexAlpha,
                 _                 => throw new ArgumentOutOfRangeException()
             };
 
@@ -258,11 +258,11 @@ public partial class GxFixedFunctionMaterial {
               = populatedMaterial.AmbientColors[alphaIndex];
           var ambientAlphaRegisterValue =
               colorChannelControl.AmbientSrc switch {
-                  GxColorSrc.REGISTER => registers.GetOrCreateScalarRegister(
+                  GxColorSrc.Register => registers.GetOrCreateScalarRegister(
                       $"GxAmbientAlpha{ambientColorIndex}",
                       equations.CreateScalarConstant(
                           ambientColor.A / 255f)),
-                  GxColorSrc.VERTEX => vertexAlpha,
+                  GxColorSrc.Vertex => vertexAlpha,
                   _                 => throw new ArgumentOutOfRangeException()
               };
 
@@ -291,8 +291,8 @@ public partial class GxFixedFunctionMaterial {
         var alpha = alphaValue;
         valueManager.UpdateColorChannelAlpha(
             alphaIndex switch {
-                0 => GxColorChannel.GX_COLOR0_A0,
-                1 => GxColorChannel.GX_COLOR1_A1,
+                0 => GxColorChannel.GX_COLOR0A0,
+                1 => GxColorChannel.GX_COLOR1A1,
                 _ => throw new ArgumentOutOfRangeException()
             },
             alpha
@@ -320,7 +320,7 @@ public partial class GxFixedFunctionMaterial {
       // Updates which texture is referred to by TEXC
       var textureIndex = tevOrder.TexMap;
       if (textureIndex == GxTexMap.GX_TEXMAP_NULL ||
-          (!STRICT_ && (int) textureIndex >= textures.Count)) {
+          (!STRICT && (int) textureIndex >= textures.Count)) {
         valueManager.UpdateTextureIndex(null);
       } else {
         var gxTexture = textures[(int) textureIndex];
@@ -329,8 +329,8 @@ public partial class GxFixedFunctionMaterial {
             populatedMaterial.TexCoordGens[(int) tevOrder.TexCoordId]!;
 
         var texMatrixType = texCoordGen.TexMatrix;
-        var texMatrixIndex = (texMatrixType - GxTexMatrix.TEX_MTX0) / 3;
-        var texMatrix = texMatrixType != GxTexMatrix.IDENTITY
+        var texMatrixIndex = (texMatrixType - GxTexMatrix.TexMtx0) / 3;
+        var texMatrix = texMatrixType != GxTexMatrix.Identity
             ? populatedMaterial.TextureMatrices?[texMatrixIndex]
             : null;
         var wrapModeOverrides
@@ -363,19 +363,19 @@ public partial class GxFixedFunctionMaterial {
 
       // Set up color logic
       {
-        var colorA = valueManager.GetColor(tevStage.ColorA);
-        var colorB = valueManager.GetColor(tevStage.ColorB);
-        var colorC = valueManager.GetColor(tevStage.ColorC);
-        var colorD = valueManager.GetColor(tevStage.ColorD);
+        var colorA = valueManager.GetColor(tevStage.color_a);
+        var colorB = valueManager.GetColor(tevStage.color_b);
+        var colorC = valueManager.GetColor(tevStage.color_c);
+        var colorD = valueManager.GetColor(tevStage.color_d);
 
         IColorValue colorValue;
 
-        var colorOp = tevStage.ColorOp;
+        var colorOp = tevStage.color_op;
         switch (colorOp) {
           // ADD: out = a*(1 - c) + b*c + d
           case TevOp.GX_TEV_ADD:
           case TevOp.GX_TEV_SUB: {
-            var bias = tevStage.ColorBias switch {
+            var bias = tevStage.color_bias switch {
                 TevBias.GX_TB_ZERO    => ScalarConstant.ZERO,
                 TevBias.GX_TB_ADDHALF => scHalf,
                 TevBias.GX_TB_SUBHALF => scMinusHalf,
@@ -383,7 +383,7 @@ public partial class GxFixedFunctionMaterial {
                     "Unsupported color bias!")
             };
 
-            var scale = tevStage.ColorScale switch {
+            var scale = tevStage.color_scale switch {
                 TevScale.GX_CS_SCALE_1  => scOne,
                 TevScale.GX_CS_SCALE_2  => scTwo,
                 TevScale.GX_CS_SCALE_4  => scFour,
@@ -403,7 +403,7 @@ public partial class GxFixedFunctionMaterial {
                     scale
                 );
 
-            colorValue.Clamp = tevStage.ColorClamp;
+            colorValue.Clamp = tevStage.color_clamp;
 
             break;
           }
@@ -454,7 +454,7 @@ public partial class GxFixedFunctionMaterial {
           }
 
           default: {
-            if (STRICT_) {
+            if (STRICT) {
               throw new NotImplementedException();
             } else {
               colorValue = colorC;
@@ -464,26 +464,26 @@ public partial class GxFixedFunctionMaterial {
           }
         }
 
-        valueManager.UpdateColorRegister(tevStage.ColorRegid,
+        valueManager.UpdateColorRegister(tevStage.color_regid,
                                          colorValue ?? colorZero);
       }
 
       // Set up alpha logic
       {
-        var alphaA = valueManager.GetAlpha(tevStage.AlphaA);
-        var alphaB = valueManager.GetAlpha(tevStage.AlphaB);
-        var alphaC = valueManager.GetAlpha(tevStage.AlphaC);
-        var alphaD = valueManager.GetAlpha(tevStage.AlphaD);
+        var alphaA = valueManager.GetAlpha(tevStage.alpha_a);
+        var alphaB = valueManager.GetAlpha(tevStage.alpha_b);
+        var alphaC = valueManager.GetAlpha(tevStage.alpha_c);
+        var alphaD = valueManager.GetAlpha(tevStage.alpha_d);
 
         IScalarValue? alphaValue = null;
 
         // TODO: Switch this to an enum
-        var alphaOp = tevStage.AlphaOp;
+        var alphaOp = tevStage.alpha_op;
         switch (alphaOp) {
           // ADD: out = a*(1 - c) + b*c + d
           case TevOp.GX_TEV_ADD:
           case TevOp.GX_TEV_SUB: {
-            var bias = tevStage.AlphaBias switch {
+            var bias = tevStage.alpha_bias switch {
                 TevBias.GX_TB_ZERO    => ScalarConstant.ZERO,
                 TevBias.GX_TB_ADDHALF => scHalf,
                 TevBias.GX_TB_SUBHALF => scMinusHalf,
@@ -491,7 +491,7 @@ public partial class GxFixedFunctionMaterial {
                     "Unsupported alpha bias!")
             };
 
-            var scale = tevStage.AlphaScale switch {
+            var scale = tevStage.alpha_scale switch {
                 TevScale.GX_CS_SCALE_1  => scOne,
                 TevScale.GX_CS_SCALE_2  => scTwo,
                 TevScale.GX_CS_SCALE_4  => scFour,
@@ -511,13 +511,13 @@ public partial class GxFixedFunctionMaterial {
                     scale
                 );
 
-            alphaValue.Clamp = tevStage.AlphaClamp;
+            alphaValue.Clamp = tevStage.alpha_clamp;
 
             break;
           }
 
           default: {
-            if (STRICT_) {
+            if (STRICT) {
               throw new NotImplementedException();
             } else {
               alphaValue = scZero;
@@ -527,7 +527,7 @@ public partial class GxFixedFunctionMaterial {
           }
         }
 
-        valueManager.UpdateAlphaRegister(tevStage.AlphaRegid, alphaValue);
+        valueManager.UpdateAlphaRegister(tevStage.alpha_regid, alphaValue);
       }
     }
 
@@ -558,7 +558,7 @@ public partial class GxFixedFunctionMaterial {
         return;
       }
 
-      var colorImage = FinImage.Create1X1FromColor(colorConstant);
+      var colorImage = FinImage.Create1x1FromColor(colorConstant);
       var colorTexture = materialManager.CreateTexture(colorImage);
       material.CompiledTexture = colorTexture;
     }

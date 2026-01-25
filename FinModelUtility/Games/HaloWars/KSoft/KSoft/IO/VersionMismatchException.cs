@@ -8,8 +8,8 @@ namespace KSoft.IO
 	public partial class VersionMismatchException
 		: Exception
 	{
-		const string K_FORMAT_ = "Invalid version! @{0} Expected '{1}', got '{2}' ({3} data)";
-		const string K_DESC_FORMAT_ = "Invalid '{0}' version! Expected '{1}', got '{2}' ({3} data)";
+		const string kFormat = "Invalid version! @{0} Expected '{1}', got '{2}' ({3} data)";
+		const string kDescFormat = "Invalid '{0}' version! Expected '{1}', got '{2}' ({3} data)";
 
 		static string VersionCompareDesc<T>(T expected, T found)
 			where T : struct, IComparable<T>
@@ -21,7 +21,7 @@ namespace KSoft.IO
 		}
 
 		VersionMismatchException(long pos, string cmp, string expected, string found)
-			: base(string.Format(Util.InvariantCultureInfo, K_FORMAT_, pos.ToFilePositionHexString(), expected, found, cmp))
+			: base(string.Format(Util.InvariantCultureInfo, kFormat, pos.ToFilePositionHexString(), expected, found, cmp))
 		{
 		}
 	};
@@ -31,8 +31,8 @@ namespace KSoft.IO
 	public partial class VersionOutOfRangeException
 		: Exception
 	{
-		const string K_FORMAT_ = "Invalid version! @{0} Expected value between {1} and {2}, got '{3}' ({4} data)";
-		const string K_DESC_FORMAT_ = "Invalid '{0}' version! Expected value between {1} and {2}, got '{3}' ({4} data)";
+		const string kFormat = "Invalid version! @{0} Expected value between {1} and {2}, got '{3}' ({4} data)";
+		const string kDescFormat = "Invalid '{0}' version! Expected value between {1} and {2}, got '{3}' ({4} data)";
 
 		static string VersionCompareDesc<T>(
 			[SuppressMessage("Microsoft.Design", "CA1801:ReviewUnusedParameters")]
@@ -52,7 +52,7 @@ namespace KSoft.IO
 			, string expectedMin
 			, string expectedMax
 			, string found)
-			: base(string.Format(Util.InvariantCultureInfo, K_FORMAT_, pos.ToFilePositionHexString(), expectedMin, expectedMax, found, cmp))
+			: base(string.Format(Util.InvariantCultureInfo, kFormat, pos.ToFilePositionHexString(), expectedMin, expectedMax, found, cmp))
 		{
 		}
 
@@ -68,10 +68,10 @@ namespace KSoft.IO
 			, TEnum maxCount)
 			where TEnum : struct, IComparable, IFormattable, IConvertible
 		{
-			var typeCode = Reflection.EnumUtil<TEnum>.UnderlyingTypeCode;
+			var type_code = Reflection.EnumUtil<TEnum>.UnderlyingTypeCode;
 
 			var result = new TEnum();
-			switch (typeCode)
+			switch (type_code)
 			{
 				case TypeCode.SByte:
 				case TypeCode.Byte:
@@ -106,7 +106,7 @@ namespace KSoft.IO
 				} break;
 
 				default:
-					throw new Debug.UnreachableException(typeCode.ToString());
+					throw new Debug.UnreachableException(type_code.ToString());
 			}
 
 			return result;

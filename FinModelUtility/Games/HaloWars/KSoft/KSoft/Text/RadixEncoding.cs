@@ -26,22 +26,22 @@ namespace KSoft.Text
 	// Based on the answers from http://codereview.stackexchange.com/questions/14084/base-36-encoding-of-a-byte-array/
 	public sealed class RadixEncoding
 	{
-		readonly string kDigits_;
-		readonly double kBitsPerDigit_;
-		readonly BigInteger kRadixBig_;
-		readonly Shell.EndianFormat kEndian_;
-		readonly bool kIncludeProceedingZeros_;
+		readonly string kDigits;
+		readonly double kBitsPerDigit;
+		readonly BigInteger kRadixBig;
+		readonly Shell.EndianFormat kEndian;
+		readonly bool kIncludeProceedingZeros;
 
 		/// <summary>Numerial base of this encoding</summary>
-		public int Radix { get { return this.kDigits_.Length; } }
+		public int Radix { get { return this.kDigits.Length; } }
 		/// <summary>Endian ordering of bytes input to Encode and output by Decode</summary>
-		public Shell.EndianFormat Endian { get { return this.kEndian_; } }
+		public Shell.EndianFormat Endian { get { return this.kEndian; } }
 		/// <summary>True if we want ending zero bytes to be encoded</summary>
-		public bool IncludeProceedingZeros { get { return this.kIncludeProceedingZeros_; } }
+		public bool IncludeProceedingZeros { get { return this.kIncludeProceedingZeros; } }
 
 		public override string ToString()
 		{
-			return string.Format(KSoft.Util.InvariantCultureInfo, "Base-{0} {1}", this.Radix.ToString(KSoft.Util.InvariantCultureInfo), this.kDigits_);
+			return string.Format(KSoft.Util.InvariantCultureInfo, "Base-{0} {1}", this.Radix.ToString(KSoft.Util.InvariantCultureInfo), this.kDigits);
 		}
 
 		/// <summary>Create a radix encoder using the given characters as the digits in the radix</summary>
@@ -49,27 +49,27 @@ namespace KSoft.Text
 		/// <param name="bytesEndian">Endian ordering of bytes input to Encode and output by Decode</param>
 		/// <param name="includeProceedingZeros">True if we want ending zero bytes to be encoded</param>
 		public RadixEncoding(string digits,
-			Shell.EndianFormat bytesEndian = Shell.EndianFormat.LITTLE, bool includeProceedingZeros = false)
+			Shell.EndianFormat bytesEndian = Shell.EndianFormat.Little, bool includeProceedingZeros = false)
 		{
 			Contract.Requires<ArgumentNullException>(digits != null);
 			int radix = digits.Length;
 
-			this.kDigits_ = digits;
-			this.kBitsPerDigit_ = Math.Log(radix, 2);
-			this.kRadixBig_ = new BigInteger(radix);
-			this.kEndian_ = bytesEndian;
-			this.kIncludeProceedingZeros_ = includeProceedingZeros;
+			this.kDigits = digits;
+			this.kBitsPerDigit = Math.Log(radix, 2);
+			this.kRadixBig = new BigInteger(radix);
+			this.kEndian = bytesEndian;
+			this.kIncludeProceedingZeros = includeProceedingZeros;
 		}
 
 		// Number of characters needed for encoding the specified number of bytes
 		int EncodingCharsCount(int bytesLength)
 		{
-			return (int)Math.Ceiling((bytesLength * Bits.K_BYTE_BIT_COUNT) / this.kBitsPerDigit_);
+			return (int)Math.Ceiling((bytesLength * Bits.kByteBitCount) / this.kBitsPerDigit);
 		}
 		// Number of bytes needed to decoding the specified number of characters
 		int DecodingBytesCount(int charsCount)
 		{
-			return (int)Math.Ceiling((charsCount * this.kBitsPerDigit_) / Bits.K_BYTE_BIT_COUNT);
+			return (int)Math.Ceiling((charsCount * this.kBitsPerDigit) / Bits.kByteBitCount);
 		}
 
 		/// <summary>Encode a byte array into a radix-encoded string</summary>
@@ -87,9 +87,9 @@ namespace KSoft.Text
 
 			// if the array ends with zeros, having the capacity set to this will help us know how much
 			// 'padding' we will need to add
-			int resultLength = this.EncodingCharsCount(bytes.Length);
+			int result_length = this.EncodingCharsCount(bytes.Length);
 			// List<> has a(n in-place) Reverse method. StringBuilder doesn't. That's why.
-			var result = new List<char>(resultLength);
+			var result = new List<char>(result_length);
 
 			// HACK: BigInteger uses the last byte as the 'sign' byte. If the byte's MSB is set,
 			// we need to pad the input with an extra 0 (ie, make it positive)
@@ -101,17 +101,17 @@ namespace KSoft.Text
 			// which invokes BigInteger.CompareTo(BigInteger)
 			while (!dividend.IsZero)
 			{
-				dividend = BigInteger.DivRem(dividend, this.kRadixBig_, out BigInteger remainder);
-				int digitIndex = Math.Abs((int)remainder);
-				result.Add(this.kDigits_[digitIndex]);
+				dividend = BigInteger.DivRem(dividend, this.kRadixBig, out BigInteger remainder);
+				int digit_index = Math.Abs((int)remainder);
+				result.Add(this.kDigits[digit_index]);
 			}
 
-			if (this.kIncludeProceedingZeros_)
+			if (this.kIncludeProceedingZeros)
 				for (int x = result.Count; x < result.Capacity; x++)
-					result.Add(this.kDigits_[0]); // pad with the character that represents 'zero'
+					result.Add(this.kDigits[0]); // pad with the character that represents 'zero'
 
 			// orientate the characters in big-endian ordering
-			if (this.kEndian_ == Shell.EndianFormat.LITTLE)
+			if (this.kEndian == Shell.EndianFormat.Little)
 				result.Reverse();
 			// If we didn't end up adding padding, ToArray will end up returning a TrimExcess'd array,
 			// so nothing wasted
@@ -122,8 +122,8 @@ namespace KSoft.Text
 		{
 			if (padCount > 0)
 			{
-				int newLength = result.Length + this.DecodingBytesCount(padCount);
-				Array.Resize(ref result, newLength); // new bytes will be zero, just the way we want it
+				int new_length = result.Length + this.DecodingBytesCount(padCount);
+				Array.Resize(ref result, new_length); // new bytes will be zero, just the way we want it
 			}
 		}
 		#region Decode (Little Endian)
@@ -132,9 +132,9 @@ namespace KSoft.Text
 			var bi = new BigInteger();
 			for (int x = startIndex; x < chars.Length; x++)
 			{
-				int i = this.kDigits_.IndexOf(chars[x]);
+				int i = this.kDigits.IndexOf(chars[x]);
 				if (i < 0) return null; // invalid character
-				bi *= this.kRadixBig_;
+				bi *= this.kRadixBig;
 				bi += i;
 			}
 
@@ -142,12 +142,12 @@ namespace KSoft.Text
 		}
 		byte[] DecodeImplWithPadding(string chars)
 		{
-			int padCount = 0;
-			for (int x = 0; x < chars.Length; x++, padCount++)
-				if (chars[x] != this.kDigits_[0]) break;
+			int pad_count = 0;
+			for (int x = 0; x < chars.Length; x++, pad_count++)
+				if (chars[x] != this.kDigits[0]) break;
 
-			var result = this.DecodeImpl(chars, padCount);
-			this.DecodeImplPadResult(ref result, padCount);
+			var result = this.DecodeImpl(chars, pad_count);
+			this.DecodeImplPadResult(ref result, pad_count);
 
 			return result;
 		}
@@ -158,9 +158,9 @@ namespace KSoft.Text
 			var bi = new BigInteger();
 			for (int x = (chars.Length-1)-startIndex; x >= 0; x--)
 			{
-				int i = this.kDigits_.IndexOf(chars[x]);
+				int i = this.kDigits.IndexOf(chars[x]);
 				if (i < 0) return null; // invalid character
-				bi *= this.kRadixBig_;
+				bi *= this.kRadixBig;
 				bi += i;
 			}
 
@@ -168,12 +168,12 @@ namespace KSoft.Text
 		}
 		byte[] DecodeImplReversedWithPadding(string chars)
 		{
-			int padCount = 0;
-			for (int x = chars.Length - 1; x >= 0; x--, padCount++)
-				if (chars[x] != this.kDigits_[0]) break;
+			int pad_count = 0;
+			for (int x = chars.Length - 1; x >= 0; x--, pad_count++)
+				if (chars[x] != this.kDigits[0]) break;
 
-			var result = this.DecodeImplReversed(chars, padCount);
-			this.DecodeImplPadResult(ref result, padCount);
+			var result = this.DecodeImplReversed(chars, pad_count);
+			this.DecodeImplPadResult(ref result, pad_count);
 
 			return result;
 		}
@@ -192,10 +192,10 @@ namespace KSoft.Text
 		{
 			Contract.Requires<ArgumentNullException>(radixChars != null);
 
-			if (this.kEndian_ == Shell.EndianFormat.BIG)
-				return this.kIncludeProceedingZeros_ ? this.DecodeImplReversedWithPadding(radixChars) : this.DecodeImplReversed(radixChars);
+			if (this.kEndian == Shell.EndianFormat.Big)
+				return this.kIncludeProceedingZeros ? this.DecodeImplReversedWithPadding(radixChars) : this.DecodeImplReversed(radixChars);
 			else
-				return this.kIncludeProceedingZeros_ ? this.DecodeImplWithPadding(radixChars) : this.DecodeImpl(radixChars);
+				return this.kIncludeProceedingZeros ? this.DecodeImplWithPadding(radixChars) : this.DecodeImpl(radixChars);
 		}
 	};
 };

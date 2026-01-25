@@ -111,56 +111,56 @@ namespace KSoft.IO
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(byte value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(byte value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(sbyte value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(sbyte value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(ushort value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(ushort value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(short value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(short value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(uint value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(uint value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(int value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(int value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(ulong value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(ulong value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
 		/// <summary>Set <see cref="Cursor"/>'s value to <paramref name="value"/></summary>
 		/// <param name="value">Data to set the <see cref="Cursor"/> to</param>
 		/// <param name="toBase">Numerical base to use</param>
-		public void WriteCursor(long value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteCursor(long value, NumeralBase toBase=kDefaultRadix)
 		{
 			this.WriteElement(this.Cursor, value, toBase);
 		}
@@ -225,7 +225,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, byte value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, byte value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -236,7 +236,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, sbyte value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, sbyte value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -247,7 +247,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, ushort value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, ushort value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -258,7 +258,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, short value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, short value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -269,7 +269,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, uint value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, uint value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -280,7 +280,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, int value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, int value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -291,7 +291,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, ulong value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, ulong value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -302,7 +302,7 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the element's <see cref="XmlElement.InnerText"/> to</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
-		public void WriteElement(TName name, long value, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElement(TName name, long value, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 
@@ -337,42 +337,42 @@ namespace KSoft.IO
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, byte value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, byte value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, sbyte value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, sbyte value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, ushort value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, ushort value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, short value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, short value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, uint value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, uint value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, int value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, int value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, ulong value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, ulong value, NumeralBase toBase=kDefaultRadix);
 		/// <summary>Create a new attribute for <see cref="Cursor"/></summary>
 		/// <param name="name">Name of the <see cref="XmlAttribute"/></param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <param name="value">Data to set the attribute text to</param>
-		public abstract void WriteAttribute(TName name, long value, NumeralBase toBase=K_DEFAULT_RADIX);
+		public abstract void WriteAttribute(TName name, long value, NumeralBase toBase=kDefaultRadix);
 		#endregion
 
 
@@ -567,11 +567,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -587,11 +587,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -607,11 +607,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -627,11 +627,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -647,11 +647,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -667,11 +667,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -687,11 +687,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -707,11 +707,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -727,11 +727,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -747,11 +747,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -767,11 +767,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -787,11 +787,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -807,11 +807,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -827,11 +827,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -847,11 +847,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnTrue(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnTrue(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -867,11 +867,11 @@ namespace KSoft.IO
 		/// <param name="toBase">Numerical base to use</param>
 		/// <remarks>Does not change <see cref="Cursor"/></remarks>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteElementOptOnFalse(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteElementOptOnFalse(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -893,7 +893,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -911,7 +911,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 			if (predicate != string.IsNullOrEmpty && value == null)
 				throw new ArgumentNullException(nameof(value));
 
@@ -931,7 +931,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -949,7 +949,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -967,7 +967,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -985,7 +985,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1003,7 +1003,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1021,7 +1021,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1039,7 +1039,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1057,7 +1057,7 @@ namespace KSoft.IO
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1073,11 +1073,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1092,11 +1092,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, byte value, Predicate<byte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1111,11 +1111,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1130,11 +1130,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, sbyte value, Predicate<sbyte> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1149,11 +1149,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1168,11 +1168,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, ushort value, Predicate<ushort> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1187,11 +1187,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1206,11 +1206,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, short value, Predicate<short> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1225,11 +1225,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1244,11 +1244,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, uint value, Predicate<uint> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1263,11 +1263,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1282,11 +1282,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, int value, Predicate<int> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1301,11 +1301,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1320,11 +1320,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, ulong value, Predicate<ulong> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1339,11 +1339,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>is</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnTrue(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnTrue(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || predicate(value);
 
@@ -1358,11 +1358,11 @@ namespace KSoft.IO
 		/// <param name="predicate">Predicate that defines the conditions for when <paramref name="value"/> <b>isn't</b> written</param>
 		/// <param name="toBase">Numerical base to use</param>
 		/// <returns>True if <paramref name="value"/> was written</returns>
-		public bool WriteAttributeOptOnFalse(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.DECIMAL)
+		public bool WriteAttributeOptOnFalse(TName name, long value, Predicate<long> predicate, NumeralBase toBase=NumeralBase.Decimal)
 		{
 			Contract.Requires(predicate != null);
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, TagElementStreamContract<TDoc,TCursor,TName>.kCursorNullMsg);
 
 			bool result = this.IgnoreWritePredicates || !predicate(value);
 
@@ -1416,7 +1416,7 @@ namespace KSoft.IO
 				this.WriteElement(elementName, value);
 		}
 
-		public void WriteElements(TName elementName, ICollection< byte > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< byte > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1424,7 +1424,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< sbyte > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< sbyte > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1432,7 +1432,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< ushort > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< ushort > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1440,7 +1440,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< short > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< short > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1448,7 +1448,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< uint > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< uint > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1456,7 +1456,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< int > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< int > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1464,7 +1464,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< ulong > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< ulong > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1472,7 +1472,7 @@ namespace KSoft.IO
 			foreach (var value in coll)
 				this.WriteElement(elementName, value, toBase);
 		}
-		public void WriteElements(TName elementName, ICollection< long > coll, NumeralBase toBase=K_DEFAULT_RADIX)
+		public void WriteElements(TName elementName, ICollection< long > coll, NumeralBase toBase=kDefaultRadix)
 		{
 			Contract.Requires(this.ValidateNameArg(elementName));
 			Contract.Requires<ArgumentNullException>(coll != null);
@@ -1491,35 +1491,35 @@ namespace KSoft.IO
 		{
 			Contract.Requires(this.ValidateNameArg(name));
 			Contract.Requires<ArgumentNullException>(value != null);
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, char value)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, bool value)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, float value)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, double value)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
@@ -1527,56 +1527,56 @@ namespace KSoft.IO
 		public override void WriteAttribute(TName name, byte value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, sbyte value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, ushort value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, short value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, uint value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, int value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, ulong value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}
 		public override void WriteAttribute(TName name, long value, NumeralBase toBase)
 		{
 			Contract.Requires(this.ValidateNameArg(name));
-			Contract.Requires(this.Cursor != null, K_CURSOR_NULL_MSG);
+			Contract.Requires(this.Cursor != null, kCursorNullMsg);
 
 			throw new NotImplementedException();
 		}

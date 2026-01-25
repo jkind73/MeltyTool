@@ -86,7 +86,7 @@ public sealed class TexImageReader {
         break;
       }
       default:
-        return FinImage.Create1X1FromColor(Color.Magenta);
+        return FinImage.Create1x1FromColor(Color.Magenta);
     }
 
     var rgbaImage = new Rgba32Image(pixelFormat, width, height);

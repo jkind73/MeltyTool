@@ -69,14 +69,14 @@ public static class DatKeyframesUtil {
       }
 
       if (interpolation.InterpolationType is GxInterpolationType
-              .CONSTANT_SECTION) {
+              .ConstantSection) {
         currentKeyframe.OutgoingValue
             = nextKeyframe.IncomingValue = interpolation.ToValue;
       }
 
       if (interpolation.InterpolationType is
-          GxInterpolationType.CONSTANT_SECTION
-          or GxInterpolationType.LINEAR_SECTION) {
+          GxInterpolationType.ConstantSection
+          or GxInterpolationType.LinearSection) {
         currentKeyframe.OutgoingTangent = nextKeyframe.IncomingTangent = null;
       }
     }
@@ -115,7 +115,7 @@ public static class DatKeyframesUtil {
       var timeChanged = false;
 
       switch (interpolationType) {
-        case GxInterpolationType.CONSTANT_SECTION:
+        case GxInterpolationType.ConstantSection:
           fromValue = toValue = key.Value;
           fromTangent = toTangent = 0;
           fromFrame = toFrame;
@@ -123,7 +123,7 @@ public static class DatKeyframesUtil {
 
           timeChanged = true;
           break;
-        case GxInterpolationType.LINEAR_SECTION:
+        case GxInterpolationType.LinearSection:
           fromValue = toValue;
           toValue = key.Value;
           fromTangent = toTangent = 0;
@@ -132,7 +132,7 @@ public static class DatKeyframesUtil {
 
           timeChanged = true;
           break;
-        case GxInterpolationType.SPLINE_TO0_SECTION:
+        case GxInterpolationType.SplineTo0Section:
           fromValue = toValue;
           fromTangent = toTangent;
           toValue = key.Value;
@@ -142,7 +142,7 @@ public static class DatKeyframesUtil {
 
           timeChanged = true;
           break;
-        case GxInterpolationType.SPLINE_SECTION:
+        case GxInterpolationType.SplineSection:
           fromValue = toValue;
           toValue = key.Value;
           fromTangent = toTangent;
@@ -152,11 +152,11 @@ public static class DatKeyframesUtil {
 
           timeChanged = true;
           break;
-        case GxInterpolationType.FROM_TANGENT_SETTER:
+        case GxInterpolationType.FromTangentSetter:
           fromTangent = toTangent;
           toTangent = key.Tangent;
           break;
-        case GxInterpolationType.FROM_VALUE_SETTER:
+        case GxInterpolationType.FromValueSetter:
           toValue = key.Value;
           fromValue = key.Value;
           break;
@@ -199,8 +199,8 @@ public static class DatKeyframesUtil {
     var valueScale = (uint) (1 << (datKeyframes.ValueFlag & 0x1F));
     var tangentScale = (uint) (1 << (datKeyframes.TangentFlag & 0x1F));
 
-    var valueFormat = (GxAnimDataFormat) (datKeyframes.ValueFlag & 0xE0);
-    var tangentFormat = (GxAnimDataFormat) (datKeyframes.TangentFlag & 0xE0);
+    var valueFormat = (GXAnimDataFormat) (datKeyframes.ValueFlag & 0xE0);
+    var tangentFormat = (GXAnimDataFormat) (datKeyframes.TangentFlag & 0xE0);
 
     var keys = new List<FObjKey>();
     br.SubreadAt(
@@ -215,7 +215,7 @@ public static class DatKeyframesUtil {
             var interpolation = (GxInterpolationType) (type & 0x0F);
             int numOfKey = (type >> 4) + 1;
 
-            if (interpolation == GxInterpolationType.NONE) {
+            if (interpolation == GxInterpolationType.None) {
               break;
             }
 
@@ -225,21 +225,21 @@ public static class DatKeyframesUtil {
               var time = 0;
 
               switch (interpolation) {
-                case GxInterpolationType.CONSTANT_SECTION:
-                case GxInterpolationType.LINEAR_SECTION:
-                case GxInterpolationType.SPLINE_TO0_SECTION:
+                case GxInterpolationType.ConstantSection:
+                case GxInterpolationType.LinearSection:
+                case GxInterpolationType.SplineTo0Section:
                   value = ParseFloat_(br, valueFormat, valueScale);
                   time = ReadPacked_(br);
                   break;
-                case GxInterpolationType.SPLINE_SECTION:
+                case GxInterpolationType.SplineSection:
                   value = ParseFloat_(br, valueFormat, valueScale);
                   tan = ParseFloat_(br, tangentFormat, tangentScale);
                   time = ReadPacked_(br);
                   break;
-                case GxInterpolationType.FROM_TANGENT_SETTER:
+                case GxInterpolationType.FromTangentSetter:
                   tan = ParseFloat_(br, tangentFormat, tangentScale);
                   break;
-                case GxInterpolationType.FROM_VALUE_SETTER:
+                case GxInterpolationType.FromValueSetter:
                   value = ParseFloat_(br, valueFormat, valueScale);
                   break;
                 default:
@@ -283,14 +283,14 @@ public static class DatKeyframesUtil {
   }
 
   private static float ParseFloat_(IBinaryReader br,
-                                   GxAnimDataFormat format,
+                                   GXAnimDataFormat format,
                                    float scale)
     => format switch {
-        GxAnimDataFormat.FLOAT  => br.ReadSingle(),
-        GxAnimDataFormat.SHORT  => br.ReadInt16() / scale,
-        GxAnimDataFormat.U_SHORT => br.ReadUInt16() / scale,
-        GxAnimDataFormat.S_BYTE  => br.ReadSByte() / scale,
-        GxAnimDataFormat.BYTE   => br.ReadByte() / scale,
+        GXAnimDataFormat.Float  => br.ReadSingle(),
+        GXAnimDataFormat.Short  => br.ReadInt16() / scale,
+        GXAnimDataFormat.UShort => br.ReadUInt16() / scale,
+        GXAnimDataFormat.SByte  => br.ReadSByte() / scale,
+        GXAnimDataFormat.Byte   => br.ReadByte() / scale,
         _                       => 0
     };
 }

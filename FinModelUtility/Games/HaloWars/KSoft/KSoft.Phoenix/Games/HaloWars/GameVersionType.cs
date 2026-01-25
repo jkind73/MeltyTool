@@ -3,16 +3,16 @@ namespace KSoft.Phoenix.HaloWars
 {
 	public enum GameVersionType
 	{
-		DEFINITIVE_EDITION,
-		XBOX360,
+		DefinitiveEdition,
+		Xbox360,
 	};
 
 	public enum DefinitiveEditionSku
 	{
-		UNDEFINED,
+		Undefined,
 
-		STEAM,
-		WINDOWS_STORE,
+		Steam,
+		WindowsStore,
 	};
 }
 
@@ -22,27 +22,27 @@ namespace KSoft.Phoenix
 	{
 		public static string GetModManifestPath(this HaloWars.DefinitiveEditionSku sku)
 		{
-			var localAppData = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
-			if (localAppData.IsNullOrEmpty())
+			var local_app_data = System.Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData);
+			if (local_app_data.IsNullOrEmpty())
 				return null;
 
-			string skuSubdir = null;
+			string sku_subdir = null;
 			switch (sku)
 			{
-				case HaloWars.DefinitiveEditionSku.STEAM:
-					skuSubdir = @"Halo Wars\";
+				case HaloWars.DefinitiveEditionSku.Steam:
+					sku_subdir = @"Halo Wars\";
 					break;
 
-				case HaloWars.DefinitiveEditionSku.WINDOWS_STORE:
-					skuSubdir = @"Packages\Microsoft.BulldogThreshold_8wekyb3d8bbwe\LocalState\";
+				case HaloWars.DefinitiveEditionSku.WindowsStore:
+					sku_subdir = @"Packages\Microsoft.BulldogThreshold_8wekyb3d8bbwe\LocalState\";
 					break;
 
 				default:
 					return null;
 			}
 
-			string modmanifestFile = skuSubdir + "ModManifest.txt";
-			string path = System.IO.Path.Combine(localAppData, modmanifestFile);
+			string modmanifest_file = sku_subdir + "ModManifest.txt";
+			string path = System.IO.Path.Combine(local_app_data, modmanifest_file);
 
 			return path;
 		}

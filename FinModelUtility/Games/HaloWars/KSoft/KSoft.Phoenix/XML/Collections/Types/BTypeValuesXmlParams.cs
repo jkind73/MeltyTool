@@ -8,9 +8,9 @@ namespace KSoft.Phoenix.XML
 		/// <param name="typeName">Name of the xml node which represents the type (enum) value</param>
 		public BTypeValuesXmlParams(string elementName, string typeName, BCollectionXmlParamsFlags flags = 0)
 		{
-			this.elementName = elementName;
-			this.dataName = typeName;
-			this.flags = flags;
+			this.ElementName = elementName;
+			this.DataName = typeName;
+			this.Flags = flags;
 		}
 	};
 }

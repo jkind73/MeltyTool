@@ -10,16 +10,16 @@ namespace KSoft.Phoenix.XML
 	internal abstract class BTypeValuesXmlSerializerBase<T>
 		: BListExplicitIndexXmlSerializerBase<T>
 	{
-		Collections.BTypeValuesBase<T> mList_;
+		Collections.BTypeValuesBase<T> mList;
 
-		public override Collections.BListExplicitIndexBase<T> ListExplicitIndex { get { return this.mList_; } }
+		public override Collections.BListExplicitIndexBase<T> ListExplicitIndex { get { return this.mList; } }
 
 		protected BTypeValuesXmlSerializerBase(BTypeValuesXmlParams<T> @params, Collections.BTypeValuesBase<T> list) : base(@params)
 		{
 			Contract.Requires<ArgumentNullException>(@params != null);
 			Contract.Requires<ArgumentNullException>(list != null);
 
-			this.mList_ = list;
+			this.mList = list;
 		}
 
 		#region IXmlElementStreamable Members
@@ -28,13 +28,13 @@ namespace KSoft.Phoenix.XML
 			string name = null;
 			this.Params.StreamDataName(s, ref name);
 
-			int index = this.mList_.TypeValuesParams.kGetProtoEnumFromDb(xs.Database).GetMemberId(name);
+			int index = this.mList.TypeValuesParams.kGetProtoEnumFromDB(xs.Database).GetMemberId(name);
 
 			return index;
 		}
 		protected override void WriteExplicitIndex<TDoc, TCursor>(IO.TagElementStream<TDoc, TCursor, string> s, BXmlSerializerInterface xs, int index)
 		{
-			string name = this.mList_.TypeValuesParams.kGetProtoEnumFromDb(xs.Database).GetMemberName(index);
+			string name = this.mList.TypeValuesParams.kGetProtoEnumFromDB(xs.Database).GetMemberName(index);
 
 			this.Params.StreamDataName(s, ref name);
 		}

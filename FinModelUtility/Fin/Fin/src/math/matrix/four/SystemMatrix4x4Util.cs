@@ -10,7 +10,7 @@ using fin.util.hash;
 
 namespace fin.math.matrix.four;
 
-public static class SystemMatrix4X4Util {
+public static class SystemMatrix4x4Util {
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static unsafe bool IsRoughly(this in Matrix4x4 lhs, in Matrix4x4 rhs) {
     fixed (float* lhsPtr = &lhs.M11) {
@@ -138,7 +138,7 @@ public static class SystemMatrix4X4Util {
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static Matrix4x4 AssertInvert(this in Matrix4x4 matrix) {
     Asserts.True(Matrix4x4.Invert(matrix, out var inverted) ||
-                 !FinMatrix4X4.STRICT_INVERTING,
+                 !FinMatrix4x4.STRICT_INVERTING,
                  "Failed to invert matrix!");
     return inverted;
   }
@@ -151,7 +151,7 @@ public static class SystemMatrix4X4Util {
                                         out scale,
                                         out quaternion,
                                         out translation) ||
-                    !FinMatrix4X4.STRICT_DECOMPOSITION,
+                    !FinMatrix4x4.STRICT_DECOMPOSITION,
                     "Failed to decompose matrix!");
 
   public static Matrix4x4 FilterTrs(this in Matrix4x4 matrix,

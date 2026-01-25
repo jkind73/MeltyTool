@@ -3,12 +3,12 @@ using schema.binary.attributes;
 
 namespace sysdolphin.schema.animation;
 
-public enum GxAnimDataFormat {
-  FLOAT = 0x00,
-  SHORT = 0x20,
-  U_SHORT = 0x40,
-  S_BYTE = 0x60,
-  BYTE = 0x80
+public enum GXAnimDataFormat {
+  Float = 0x00,
+  Short = 0x20,
+  UShort = 0x40,
+  SByte = 0x60,
+  Byte = 0x80
 }
 
 public enum JointTrackType : byte {
@@ -24,13 +24,13 @@ public enum JointTrackType : byte {
 }
 
 public enum GxInterpolationType {
-  NONE = 0,
-  CONSTANT_SECTION = 1,
-  LINEAR_SECTION = 2,
-  SPLINE_TO0_SECTION = 3,
-  SPLINE_SECTION = 4,
-  FROM_TANGENT_SETTER = 5,
-  FROM_VALUE_SETTER = 6,
+  None = 0,
+  ConstantSection = 1,
+  LinearSection = 2,
+  SplineTo0Section = 3,
+  SplineSection = 4,
+  FromTangentSetter = 5,
+  FromValueSetter = 6,
 }
 
 /// <summary>

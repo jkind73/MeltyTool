@@ -17,117 +17,117 @@ using schema.binary;
 
 namespace jsystem.GCN;
 
-public partial class Bmd {
-  public partial class Vtx1Section {
-    public IColor[][] colors = new IColor[2][];
-    public Vector2[][] texCoords = new Vector2[8][];
-    public const string SIGNATURE = "VTX1";
-    public DataBlockHeader header;
-    public uint arrayFormatOffset;
-    public uint[] offsets;
-    public ArrayFormat[] arrayFormats;
-    public Vector3[] positions;
-    public Vector3[] normals;
-    public Vector3[] tangents;
-    public Vector3[] binormals;
+public partial class BMD {
+  public partial class VTX1Section {
+    public IColor[][] Colors = new IColor[2][];
+    public Vector2[][] TexCoords = new Vector2[8][];
+    public const string Signature = "VTX1";
+    public DataBlockHeader Header;
+    public uint ArrayFormatOffset;
+    public uint[] Offsets;
+    public ArrayFormat[] ArrayFormats;
+    public Vector3[] Positions;
+    public Vector3[] Normals;
+    public Vector3[] Tangents;
+    public Vector3[] Binormals;
 
-    public Vtx1Section(IBinaryReader br, out bool ok) {
+    public VTX1Section(IBinaryReader br, out bool OK) {
       long position1 = br.Position;
-      bool ok1;
-      this.header = new DataBlockHeader(br, "VTX1", out ok1);
-      if (!ok1) {
-        ok = false;
+      bool OK1;
+      this.Header = new DataBlockHeader(br, "VTX1", out OK1);
+      if (!OK1) {
+        OK = false;
       } else {
-        this.arrayFormatOffset = br.ReadUInt32();
-        this.offsets = br.ReadUInt32s(13);
+        this.ArrayFormatOffset = br.ReadUInt32();
+        this.Offsets = br.ReadUInt32s(13);
         long position2 = br.Position;
         int length1 = 0;
-        foreach (uint offset in this.offsets) {
+        foreach (uint offset in this.Offsets) {
           if (offset != 0U)
             ++length1;
         }
 
-        br.Position = position1 + (long) this.arrayFormatOffset;
-        this.arrayFormats = br.ReadNews<ArrayFormat>(length1);
+        br.Position = position1 + (long) this.ArrayFormatOffset;
+        this.ArrayFormats = br.ReadNews<ArrayFormat>(length1);
 
         int index1 = 0;
         for (int k = 0; k < 13; ++k) {
-          if (this.offsets[k] != 0U) {
-            ArrayFormat arrayFormat = this.arrayFormats[index1];
-            int length2 = this.GetLength_(k);
-            br.Position = position1 + (long) this.offsets[k];
-            if (arrayFormat.arrayType is GxVertexAttribute.COLOR0
-                                         or GxVertexAttribute.COLOR1) {
-              this.ReadColorArray_(arrayFormat, length2, br);
+          if (this.Offsets[k] != 0U) {
+            ArrayFormat arrayFormat = this.ArrayFormats[index1];
+            int length2 = this.GetLength(k);
+            br.Position = position1 + (long) this.Offsets[k];
+            if (arrayFormat.ArrayType is GxVertexAttribute.Color0
+                                         or GxVertexAttribute.Color1) {
+              this.ReadColorArray(arrayFormat, length2, br);
             } else {
-              this.ReadVertexArray_(arrayFormat, length2, br);
+              this.ReadVertexArray(arrayFormat, length2, br);
             }
 
             ++index1;
           }
         }
 
-        br.Position = position1 + (long) this.header.size;
-        ok = true;
+        br.Position = position1 + (long) this.Header.size;
+        OK = true;
       }
     }
 
-    private int GetLength_(int k) {
-      int offset = (int) this.offsets[k];
+    private int GetLength(int k) {
+      int offset = (int) this.Offsets[k];
       for (int index = k + 1; index < 13; ++index) {
-        if (this.offsets[index] != 0U)
-          return (int) this.offsets[index] - offset;
+        if (this.Offsets[index] != 0U)
+          return (int) this.Offsets[index] - offset;
       }
 
-      return (int) this.header.size - offset;
+      return (int) this.Header.size - offset;
     }
 
-    private void ReadVertexArray_(
-        ArrayFormat format,
+    private void ReadVertexArray(
+        ArrayFormat Format,
         int dataLength,
         IBinaryReader br) {
-      var axisComponentType = (GxAxisComponentType) format.dataType;
+      var axisComponentType = (GxAxisComponentType) Format.DataType;
       var valueCount = dataLength / axisComponentType.GetByteCount();
-      var componentCount = GxAttributeUtil.GetComponentCount(format.arrayType,
-        format.ComponentCountType);
+      var componentCount = GxAttributeUtil.GetComponentCount(Format.ArrayType,
+        Format.ComponentCountType);
       var vectorCount = valueCount / componentCount;
 
-      switch (format.arrayType) {
-        case GxVertexAttribute.POSITION: {
-          this.positions = new Vector3[vectorCount];
+      switch (Format.ArrayType) {
+        case GxVertexAttribute.Position: {
+          this.Positions = new Vector3[vectorCount];
           for (var i = 0; i < vectorCount; ++i) {
-            this.positions[i] = GxAttributeUtil.ReadPosition(
+            this.Positions[i] = GxAttributeUtil.ReadPosition(
                 br,
-                format.ComponentCountType,
+                Format.ComponentCountType,
                 axisComponentType,
-                format.decimalPoint);
+                Format.DecimalPoint);
           }
 
           break;
         }
-        case GxVertexAttribute.NORMAL: {
-          this.normals = new Vector3[vectorCount];
+        case GxVertexAttribute.Normal: {
+          this.Normals = new Vector3[vectorCount];
           for (var i = 0; i < vectorCount; ++i) {
-            this.normals[i] = GxAttributeUtil.ReadNormal(
+            this.Normals[i] = GxAttributeUtil.ReadNormal(
                 br,
-                format.ComponentCountType,
+                Format.ComponentCountType,
                 axisComponentType,
-                format.decimalPoint);
+                Format.DecimalPoint);
           }
 
           break;
         }
-        case >= GxVertexAttribute.TEX0_COORD
-             and <= GxVertexAttribute.TEX7_COORD: {
-          var texCoordIndex = format.arrayType - GxVertexAttribute.TEX0_COORD;
-          var texCoords = this.texCoords[texCoordIndex]
+        case >= GxVertexAttribute.Tex0Coord
+             and <= GxVertexAttribute.Tex7Coord: {
+          var texCoordIndex = Format.ArrayType - GxVertexAttribute.Tex0Coord;
+          var texCoords = this.TexCoords[texCoordIndex]
               = new Vector2[vectorCount];
           for (var i = 0; i < vectorCount; ++i) {
             texCoords[i] = GxAttributeUtil.ReadTexCoord(
                 br,
-                format.ComponentCountType,
+                Format.ComponentCountType,
                 axisComponentType,
-                format.decimalPoint);
+                Format.DecimalPoint);
           }
 
           break;
@@ -141,13 +141,13 @@ public partial class Bmd {
     ///   Colors are a special case:
     ///   https://wiki.cloudmodding.com/tww/BMD_and_BDL#Data_Types
     /// </summary>
-    private void ReadColorArray_(
-        ArrayFormat format,
+    private void ReadColorArray(
+        ArrayFormat Format,
         int byteLength,
         IBinaryReader br) {
-      var colorIndex = format.arrayType - GxVertexAttribute.COLOR0;
+      var colorIndex = Format.ArrayType - GxVertexAttribute.Color0;
 
-      var colorDataType = (GxColorComponentType) format.dataType;
+      var colorDataType = (GxColorComponentType) Format.DataType;
       var expectedComponentCount = colorDataType switch {
           GxColorComponentType.RGB565 => 3,
           GxColorComponentType.RGB8   => 3,
@@ -159,7 +159,7 @@ public partial class Bmd {
       };
 
       var actualComponentCount
-          = GxAttributeUtil.GetColorComponentCount(format.ComponentCountType);
+          = GxAttributeUtil.GetColorComponentCount(Format.ComponentCountType);
       Asserts.Equal(expectedComponentCount, actualComponentCount);
 
       var colorCount = colorDataType switch {
@@ -172,7 +172,7 @@ public partial class Bmd {
           _                           => throw new ArgumentOutOfRangeException()
       };
 
-      var colors = this.colors[colorIndex] = new IColor[colorCount];
+      var colors = this.Colors[colorIndex] = new IColor[colorCount];
       for (var i = 0; i < colorCount; ++i) {
         colors[i] = GxAttributeUtil.ReadColor(br, colorDataType);
       }

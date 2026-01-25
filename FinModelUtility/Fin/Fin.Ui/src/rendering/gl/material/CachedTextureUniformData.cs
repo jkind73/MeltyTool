@@ -13,7 +13,7 @@ public sealed class CachedTextureUniformData {
 
   public int TextureIndex { get; }
   public IReadOnlyTexture? FinTexture { get; }
-  public readonly IReadOnlyTextureTransformManager? textureTransformManager;
+  public readonly IReadOnlyTextureTransformManager? textureTransformManager_;
   public IGlTexture GlTexture { get; }
 
   public IShaderUniform<int> SamplerUniform { get; }
@@ -32,7 +32,7 @@ public sealed class CachedTextureUniformData {
       GlShaderProgram shaderProgram) {
     this.TextureIndex = textureIndex;
     this.FinTexture = finTexture;
-    this.textureTransformManager = textureTransformManager;
+    this.textureTransformManager_ = textureTransformManager;
     this.GlTexture = glTexture;
 
     this.needsStruct_ = finTexture.NeedsTextureShaderStruct(animations);
@@ -46,7 +46,7 @@ public sealed class CachedTextureUniformData {
       this.ClampMaxUniform =
           shaderProgram.GetUniformVec2($"{textureName}.clampMax");
       this.Transform2dUniform =
-          shaderProgram.GetUniformMat3X2($"{textureName}.transform2d");
+          shaderProgram.GetUniformMat3x2($"{textureName}.transform2d");
       this.Transform3dUniform =
           shaderProgram.GetUniformMat4($"{textureName}.transform3d");
     }
@@ -87,9 +87,9 @@ public sealed class CachedTextureUniformData {
       this.ClampMaxUniform.SetAndMaybeMarkDirty(clampMax);
 
       var setMatrix = false;
-      if (this.FinTexture != null && this.textureTransformManager != null) {
+      if (this.FinTexture != null && this.textureTransformManager_ != null) {
         var matrixValues
-            = this.textureTransformManager.GetMatrix(this.FinTexture);
+            = this.textureTransformManager_.GetMatrix(this.FinTexture);
         if (matrixValues != null) {
           setMatrix = true;
 

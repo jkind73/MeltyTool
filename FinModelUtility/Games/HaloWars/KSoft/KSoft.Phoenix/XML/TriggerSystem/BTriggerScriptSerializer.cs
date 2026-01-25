@@ -12,24 +12,24 @@ namespace KSoft.Phoenix.XML
 	{
 		static Engine.XmlFileInfo GetFileInfo(FA mode, Phx.BTriggerScriptType type, string filename = null)
 		{
-			string rootName = Phx.BTriggerSystem.K_XML_ROOT_NAME;
+			string root_name = Phx.BTriggerSystem.kXmlRootName;
 			Engine.GameDirectory dir;
-			var location = Engine.ContentStorage.GAME;
+			var location = Engine.ContentStorage.Game;
 
 			switch (type)
 			{
-			case Phx.BTriggerScriptType.TRIGGER_SCRIPT:
-				dir = Engine.GameDirectory.TRIGGER_SCRIPTS;
-				location = Engine.ContentStorage.UPDATE_OR_GAME; // TUs have only included updated TS files only
+			case Phx.BTriggerScriptType.TriggerScript:
+				dir = Engine.GameDirectory.TriggerScripts;
+				location = Engine.ContentStorage.UpdateOrGame; // TUs have only included updated TS files only
 				break;
-			case Phx.BTriggerScriptType.SCENARIO:
-				dir = Engine.GameDirectory.SCENARIO;
+			case Phx.BTriggerScriptType.Scenario:
+				dir = Engine.GameDirectory.Scenario;
 				break;
-			case Phx.BTriggerScriptType.ABILITY:
-				dir = Engine.GameDirectory.ABILITY_SCRIPTS;
+			case Phx.BTriggerScriptType.Ability:
+				dir = Engine.GameDirectory.AbilityScripts;
 				break;
-			case Phx.BTriggerScriptType.POWER:
-				dir = Engine.GameDirectory.POWER_SCRIPTS;
+			case Phx.BTriggerScriptType.Power:
+				dir = Engine.GameDirectory.PowerScripts;
 				break;
 
 			default: throw new KSoft.Debug.UnreachableException(type.ToString());
@@ -40,15 +40,15 @@ namespace KSoft.Phoenix.XML
 				Location = location,
 				Directory = dir,
 
-				RootName = rootName,
+				RootName = root_name,
 				FileName = filename,
 
 				Writable = mode == FA.Write,
 			};
 		}
 
-		Phx.BDatabaseBase mDatabase_;
-		internal override Phx.BDatabaseBase Database { get { return this.mDatabase_; } }
+		Phx.BDatabaseBase mDatabase;
+		internal override Phx.BDatabaseBase Database { get { return this.mDatabase; } }
 
 		public Phx.TriggerDatabase TriggerDb { get; private set; }
 
@@ -58,7 +58,7 @@ namespace KSoft.Phoenix.XML
 		{
 			Contract.Requires(phx != null);
 
-			this.mDatabase_ = phx.Database;
+			this.mDatabase = phx.Database;
 			this.TriggerDb = phx.TriggerDb;
 			this.Scenario = scnr;
 		}
@@ -99,7 +99,7 @@ namespace KSoft.Phoenix.XML
 		{
 			s.SetSerializerInterface(this);
 
-			foreach (var e in s.ElementsByName(Phx.BTriggerSystem.K_XML_ROOT_NAME))
+			foreach (var e in s.ElementsByName(Phx.BTriggerSystem.kXmlRootName))
 			{
 				using (s.EnterCursorBookmark(e))
 					new Phx.BTriggerSystem().Serialize(s);

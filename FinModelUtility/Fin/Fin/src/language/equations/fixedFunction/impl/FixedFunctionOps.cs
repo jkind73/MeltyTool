@@ -70,7 +70,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
     IFixedFunctionEquations<TIdentifier> equations)
     : BFixedFunctionOps<IColorValue, IColorConstant>, IColorOps
     where TIdentifier : notnull {
-  private IScalarOps ScalarOps => equations.ScalarOps;
+  private IScalarOps ScalarOps_ => equations.ScalarOps;
 
   private readonly IScalarConstant scMinusOne_
       = equations.CreateScalarConstant(-1);
@@ -135,7 +135,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
                                             IScalarValue rhs) {
     if (!FixedFunctionConstants.SIMPLIFY) {
       lhs ??= this.Zero;
-      rhs ??= this.ScalarOps.Zero;
+      rhs ??= this.ScalarOps_.Zero;
     } else {
       var lhsIsZero = lhs.IsZero();
       var rhsIsZero = rhs.IsZero();
@@ -153,7 +153,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
       }
 
       if (this.IsSingleScalarValue(lhs, out var lhsScalar)) {
-        return this.ScalarOps.Add(lhsScalar, rhs).Wrap();
+        return this.ScalarOps_.Add(lhsScalar, rhs).Wrap();
       }
     }
 
@@ -221,7 +221,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
       IScalarValue rhs) {
     if (!FixedFunctionConstants.SIMPLIFY) {
       lhs ??= this.Zero;
-      rhs ??= this.ScalarOps.Zero;
+      rhs ??= this.ScalarOps_.Zero;
     } else {
       if (lhs.IsZero() || rhs.IsZero()) {
         return ColorConstant.ZERO;
@@ -243,7 +243,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
       }
 
       if (this.IsSingleScalarValue(lhs, out var lhsScalar)) {
-        return this.ScalarOps.Multiply(lhsScalar, rhs).Wrap();
+        return this.ScalarOps_.Multiply(lhsScalar, rhs).Wrap();
       }
     }
 
@@ -280,7 +280,7 @@ public sealed class ColorFixedFunctionOps<TIdentifier>(
     // Some combination
     lhs = this.MultiplyWithScalar(
         lhs,
-        this.ScalarOps.Subtract(this.ScalarOps.One, mixAmount));
+        this.ScalarOps_.Subtract(this.ScalarOps_.One, mixAmount));
     rhs = this.MultiplyWithScalar(rhs, mixAmount);
 
     return this.Add(lhs, rhs);

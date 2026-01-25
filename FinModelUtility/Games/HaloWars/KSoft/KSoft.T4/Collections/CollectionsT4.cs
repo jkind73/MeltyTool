@@ -16,8 +16,8 @@ namespace KSoft.T4
 			}
 		};
 		public static IEnumerable<BitSetEnumeratorDef> BitSetEnumeratorDefs { get {
-			yield return new BitSetEnumeratorDef("State", PrimitiveDefinitions.KBool);
-			yield return new BitSetEnumeratorDef("StateFilter", PrimitiveDefinitions.KInt32);
+			yield return new BitSetEnumeratorDef("State", PrimitiveDefinitions.kBool);
+			yield return new BitSetEnumeratorDef("StateFilter", PrimitiveDefinitions.kInt32);
 		} }
 
 		public sealed class BitStateDef

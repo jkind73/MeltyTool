@@ -6,14 +6,14 @@ namespace KSoft.Phoenix.Runtime
 		public struct TemplateEntry
 			: IO.IEndianStreamSerializable
 		{
-			public string name; // path
-			public int modelIndex;
+			public string Name; // path
+			public int ModelIndex;
 
 			#region IEndianStreamSerializable Members
 			public void Serialize(IO.EndianStream s)
 			{
-				s.StreamPascalString32(ref this.name);
-				s.Stream(ref this.modelIndex);
+				s.StreamPascalString32(ref this.Name);
+				s.Stream(ref this.ModelIndex);
 			}
 			#endregion
 		};

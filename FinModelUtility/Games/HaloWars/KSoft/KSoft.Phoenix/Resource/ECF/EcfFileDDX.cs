@@ -1,6 +1,6 @@
 ﻿
 namespace KSoft.Phoenix.Resource.ECF
 {
-	public sealed class EcfFileDdx
+	public sealed class EcfFileDDX
 		: EcfFile;
 }

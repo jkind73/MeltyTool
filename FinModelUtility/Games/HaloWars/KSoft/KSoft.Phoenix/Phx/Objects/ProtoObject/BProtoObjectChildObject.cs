@@ -7,73 +7,73 @@ namespace KSoft.Phoenix.Phx
 		: IO.ITagElementStringNameStreamable
 	{
 		#region Xml constants
-		public static readonly XML.BListXmlParams KBListXmlParams = new XML.BListXmlParams
+		public static readonly XML.BListXmlParams kBListXmlParams = new XML.BListXmlParams
 		{
-			rootName = "ChildObjects",
-			elementName = "Object",
+			RootName = "ChildObjects",
+			ElementName = "Object",
 		};
 		#endregion
 
 		#region Type
-		ChildObjectType mType_ = ChildObjectType.OBJECT;
+		ChildObjectType mType = ChildObjectType.Object;
 		public ChildObjectType Type
 		{
-			get { return this.mType_; }
-			set { this.mType_ = value; }
+			get { return this.mType; }
+			set { this.mType = value; }
 		}
 		#endregion
 
 		#region ID
-		int mId_ = TypeExtensions.K_NONE;
-		public int Id
+		int mID = TypeExtensions.kNone;
+		public int ID
 		{
-			get { return this.mId_; }
-			set { this.mId_ = value; }
+			get { return this.mID; }
+			set { this.mID = value; }
 		}
 		#endregion
 
 		#region AttachBone
-		string mAttachBone_;
+		string mAttachBone;
 		public string AttachBone
 		{
-			get { return this.mAttachBone_; }
-			set { this.mAttachBone_ = value; }
+			get { return this.mAttachBone; }
+			set { this.mAttachBone = value; }
 		}
 		#endregion
 
 		#region Offset
-		BVector mOffset_;
+		BVector mOffset;
 		public BVector Offset
 		{
-			get { return this.mOffset_; }
-			set { this.mOffset_ = value; }
+			get { return this.mOffset; }
+			set { this.mOffset = value; }
 		}
 		#endregion
 
 		#region Rotation
-		float mRotation_;
+		float mRotation;
 		public float Rotation
 		{
-			get { return this.mRotation_; }
-			set { this.mRotation_ = value; }
+			get { return this.mRotation; }
+			set { this.mRotation = value; }
 		}
 		#endregion
 
 		#region UserCivID
-		int mUserCivId_ = TypeExtensions.K_NONE;
+		int mUserCivID = TypeExtensions.kNone;
 		[Meta.BCivReference]
-		public int UserCivId
+		public int UserCivID
 		{
-			get { return this.mUserCivId_; }
-			set { this.mUserCivId_ = value; }
+			get { return this.mUserCivID; }
+			set { this.mUserCivID = value; }
 		}
 		#endregion
 
 		public DatabaseObjectKind TypeObjectKind { get {
-			if (this.Type == ChildObjectType.ONE_TIME_SPAWN_SQUAD)
-				return DatabaseObjectKind.SQUAD;
+			if (this.Type == ChildObjectType.OneTimeSpawnSquad)
+				return DatabaseObjectKind.Squad;
 
-			return DatabaseObjectKind.OBJECT;
+			return DatabaseObjectKind.Object;
 		} }
 
 		#region ITagElementStreamable<string> Members
@@ -83,13 +83,13 @@ namespace KSoft.Phoenix.Phx
 		{
 			var xs = s.GetSerializerInterface();
 
-			s.StreamAttributeEnumOpt("Type", ref this.mType_, e => e != ChildObjectType.OBJECT);
+			s.StreamAttributeEnumOpt("Type", ref this.mType, e => e != ChildObjectType.Object);
 
-			xs.StreamDbid(s, XML.XmlUtil.K_NO_XML_NAME, ref this.mId_, this.TypeObjectKind, isOptional: false, xmlSource: XML.XmlUtil.K_SOURCE_CURSOR);
-			s.StreamAttributeOpt("AttachBone", ref this.mAttachBone_, Predicates.IsNotNullOrEmpty);
-			s.StreamBVector("Offset", ref this.mOffset_, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
-			s.StreamAttributeOpt("Rotation", ref this.mRotation_, Predicates.IsNotZero);
-			xs.StreamDbid(s, "UserCiv", ref this.mUserCivId_, DatabaseObjectKind.CIV, xmlSource: XML.XmlUtil.K_SOURCE_ATTR);
+			xs.StreamDBID(s, XML.XmlUtil.kNoXmlName, ref this.mID, this.TypeObjectKind, isOptional: false, xmlSource: XML.XmlUtil.kSourceCursor);
+			s.StreamAttributeOpt("AttachBone", ref this.mAttachBone, Predicates.IsNotNullOrEmpty);
+			s.StreamBVector("Offset", ref this.mOffset, xmlSource: XML.XmlUtil.kSourceAttr);
+			s.StreamAttributeOpt("Rotation", ref this.mRotation, Predicates.IsNotZero);
+			xs.StreamDBID(s, "UserCiv", ref this.mUserCivID, DatabaseObjectKind.Civ, xmlSource: XML.XmlUtil.kSourceAttr);
 		}
 		#endregion
 	};

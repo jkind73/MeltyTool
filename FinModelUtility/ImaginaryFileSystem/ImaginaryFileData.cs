@@ -14,13 +14,13 @@ public class ImaginaryFileData {
   /// <summary>
   /// The default encoding.
   /// </summary>
-  public static readonly Encoding DEFAULT_ENCODING
+  public static readonly Encoding DefaultEncoding
       = new UTF8Encoding(false, true);
 
   /// <summary>
   /// The null object. It represents the data of a non-existing file or directory.
   /// </summary>
-  internal static readonly ImaginaryFileData NULL_OBJECT_
+  internal static readonly ImaginaryFileData NullObject
       = new ImaginaryFileData(string.Empty) {
           LastWriteTime
               = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc),
@@ -35,7 +35,7 @@ public class ImaginaryFileData {
   /// Gets the default date time offset.
   /// E.g. for not existing files.
   /// </summary>
-  public static readonly DateTimeOffset DEFAULT_DATE_TIME_OFFSET
+  public static readonly DateTimeOffset DefaultDateTimeOffset
       = new DateTime(1601, 01, 01, 00, 00, 00, DateTimeKind.Utc);
 
   /// <summary>
@@ -44,7 +44,7 @@ public class ImaginaryFileData {
 #if FEATURE_SERIALIZABLE
     [NonSerialized]
 #endif
-  private FileSecurity accessControl_;
+  private FileSecurity accessControl;
 
   /// <summary>
   /// Gets a value indicating whether the <see cref="ImaginaryFileData"/> is a directory or not.
@@ -64,11 +64,11 @@ public class ImaginaryFileData {
   }
 
   /// <summary>
-  /// Initializes a new instance of the <see cref="ImaginaryFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <see cref="DEFAULT_ENCODING"/>.
+  /// Initializes a new instance of the <see cref="ImaginaryFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <see cref="DefaultEncoding"/>.
   /// </summary>
-  /// <param name="textContents">The textual content encoded into bytes with <see cref="DEFAULT_ENCODING"/>.</param>
+  /// <param name="textContents">The textual content encoded into bytes with <see cref="DefaultEncoding"/>.</param>
   public ImaginaryFileData(string textContents)
-      : this(DEFAULT_ENCODING.GetBytes(textContents)) { }
+      : this(DefaultEncoding.GetBytes(textContents)) { }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="ImaginaryFileData"/> class with the content of <paramref name="textContents"/> using the encoding of <paramref name="encoding"/>.
@@ -104,7 +104,7 @@ public class ImaginaryFileData {
       throw new ArgumentNullException(nameof(template));
     }
 
-    this.accessControl_ = template.accessControl_;
+    accessControl = template.accessControl;
     Attributes = template.Attributes;
     Contents = template.Contents.ToArray();
     CreationTime = template.CreationTime;
@@ -129,42 +129,42 @@ public class ImaginaryFileData {
   /// Gets or sets the string contents of the <see cref="ImaginaryFileData"/>.
   /// </summary>
   /// <remarks>
-  /// The setter uses the <see cref="DEFAULT_ENCODING"/> using this can scramble the actual contents.
+  /// The setter uses the <see cref="DefaultEncoding"/> using this can scramble the actual contents.
   /// </remarks>
   public string TextContents {
-    get { return ImaginaryFile.ReadAllBytes(Contents, DEFAULT_ENCODING); }
-    set { Contents = DEFAULT_ENCODING.GetBytes(value); }
+    get { return ImaginaryFile.ReadAllBytes(Contents, DefaultEncoding); }
+    set { Contents = DefaultEncoding.GetBytes(value); }
   }
 
   /// <summary>
   /// Gets or sets the date and time the <see cref="ImaginaryFileData"/> was created.
   /// </summary>
   public DateTimeOffset CreationTime {
-    get { return this.creationTime_; }
-    set { this.creationTime_ = value.ToUniversalTime(); }
+    get { return creationTime; }
+    set { creationTime = value.ToUniversalTime(); }
   }
 
-  private DateTimeOffset creationTime_;
+  private DateTimeOffset creationTime;
 
   /// <summary>
   /// Gets or sets the date and time of the <see cref="ImaginaryFileData"/> was last accessed to.
   /// </summary>
   public DateTimeOffset LastAccessTime {
-    get { return this.lastAccessTime_; }
-    set { this.lastAccessTime_ = value.ToUniversalTime(); }
+    get { return lastAccessTime; }
+    set { lastAccessTime = value.ToUniversalTime(); }
   }
 
-  private DateTimeOffset lastAccessTime_;
+  private DateTimeOffset lastAccessTime;
 
   /// <summary>
   /// Gets or sets the date and time of the <see cref="ImaginaryFileData"/> was last written to.
   /// </summary>
   public DateTimeOffset LastWriteTime {
-    get { return this.lastWriteTime_; }
-    set { this.lastWriteTime_ = value.ToUniversalTime(); }
+    get { return lastWriteTime; }
+    set { lastWriteTime = value.ToUniversalTime(); }
   }
 
-  private DateTimeOffset lastWriteTime_;
+  private DateTimeOffset lastWriteTime;
 
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
     /// <summary>
@@ -194,9 +194,9 @@ public class ImaginaryFileData {
     get {
       // FileSecurity's constructor will throw PlatformNotSupportedException on non-Windows platform, so we initialize it in lazy way.
       // This let's us use this class as long as we don't use AccessControl property.
-      return this.accessControl_ ?? (this.accessControl_ = new FileSecurity());
+      return accessControl ?? (accessControl = new FileSecurity());
     }
-    set { this.accessControl_ = value; }
+    set { accessControl = value; }
   }
 
   /// <summary>

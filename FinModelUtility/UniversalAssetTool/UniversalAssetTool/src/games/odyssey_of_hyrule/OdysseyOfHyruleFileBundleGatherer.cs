@@ -13,7 +13,7 @@ public sealed class OdysseyOfHyruleFileBundleGatherer : IAnnotatedFileBundleGath
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
-      if (!DirectoryConstants.romsDirectory.TryToGetExistingSubdir(
+      if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingSubdir(
               Path.Join("odyssey_of_hyrule", ExtractorUtil.PREREQS),
               out var vrwdwDir)) {
         return;

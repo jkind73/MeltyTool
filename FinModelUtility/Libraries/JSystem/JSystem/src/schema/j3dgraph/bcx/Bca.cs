@@ -21,17 +21,17 @@ namespace jsystem.schema.j3dgraph.bcx;
 /// </summary>
 [Endianness(Endianness.BigEndian)]
 public partial class Bca : IBcx {
-  public BcaHeader header;
-  public Anf1Section anf1;
+  public BcaHeader Header;
+  public ANF1Section ANF1;
 
   public Bca(byte[] file) {
     using var br = new SchemaBinaryReader((Stream) new MemoryStream(file),
                                           Endianness.BigEndian);
-    this.header = br.ReadNew<BcaHeader>();
-    this.anf1 = new Anf1Section(br, out _);
+    this.Header = br.ReadNew<BcaHeader>();
+    this.ANF1 = new ANF1Section(br, out _);
   }
 
-  public IAnx1 Anx1 => this.anf1;
+  public IAnx1 Anx1 => this.ANF1;
 
   [BinarySchema]
   public sealed partial class BcaHeader : IBinaryConvertible {
@@ -46,65 +46,65 @@ public partial class Bca : IBcx {
     private byte[] padding_;
   }
 
-  public partial class Anf1Section : IAnx1 {
-    public const string SIGNATURE = "ANF1";
-    public DataBlockHeader header;
-    public byte loopFlags;
-    public byte angleMultiplier;
-    public ushort animLength;
-    public ushort nrJoints;
-    public ushort nrScale;
-    public ushort nrRot;
-    public ushort nrTrans;
-    public uint jointOffset;
-    public uint scaleOffset;
-    public uint rotOffset;
-    public uint transOffset;
-    public float[] scale;
-    public short[] rotation;
-    public float[] translation;
+  public partial class ANF1Section : IAnx1 {
+    public const string Signature = "ANF1";
+    public DataBlockHeader Header;
+    public byte LoopFlags;
+    public byte AngleMultiplier;
+    public ushort AnimLength;
+    public ushort NrJoints;
+    public ushort NrScale;
+    public ushort NrRot;
+    public ushort NrTrans;
+    public uint JointOffset;
+    public uint ScaleOffset;
+    public uint RotOffset;
+    public uint TransOffset;
+    public float[] Scale;
+    public short[] Rotation;
+    public float[] Translation;
 
-    public Anf1Section(IBinaryReader br, out bool ok) {
-      bool ok1;
+    public ANF1Section(IBinaryReader br, out bool OK) {
+      bool OK1;
 
-      this.header = new DataBlockHeader(br, "ANF1", out ok1);
-      if (!ok1) {
-        ok = false;
+      this.Header = new DataBlockHeader(br, "ANF1", out OK1);
+      if (!OK1) {
+        OK = false;
       } else {
-        this.loopFlags = br.ReadByte();
-        this.angleMultiplier = br.ReadByte();
-        this.animLength = br.ReadUInt16();
-        this.nrJoints = br.ReadUInt16();
-        this.nrScale = br.ReadUInt16();
-        this.nrRot = br.ReadUInt16();
-        this.nrTrans = br.ReadUInt16();
-        this.jointOffset = br.ReadUInt32();
-        this.scaleOffset = br.ReadUInt32();
-        this.rotOffset = br.ReadUInt32();
-        this.transOffset = br.ReadUInt32();
+        this.LoopFlags = br.ReadByte();
+        this.AngleMultiplier = br.ReadByte();
+        this.AnimLength = br.ReadUInt16();
+        this.NrJoints = br.ReadUInt16();
+        this.NrScale = br.ReadUInt16();
+        this.NrRot = br.ReadUInt16();
+        this.NrTrans = br.ReadUInt16();
+        this.JointOffset = br.ReadUInt32();
+        this.ScaleOffset = br.ReadUInt32();
+        this.RotOffset = br.ReadUInt32();
+        this.TransOffset = br.ReadUInt32();
 
-        br.Position = (long) (32U + this.scaleOffset);
-        this.scale = br.ReadSingles((int) this.nrScale);
-        br.Position = (long) (32U + this.rotOffset);
-        this.rotation = br.ReadInt16s((int) this.nrRot);
-        br.Position = (long) (32U + this.transOffset);
-        this.translation = br.ReadSingles((int) this.nrTrans);
+        br.Position = (long) (32U + this.ScaleOffset);
+        this.Scale = br.ReadSingles((int) this.NrScale);
+        br.Position = (long) (32U + this.RotOffset);
+        this.Rotation = br.ReadInt16s((int) this.NrRot);
+        br.Position = (long) (32U + this.TransOffset);
+        this.Translation = br.ReadSingles((int) this.NrTrans);
         float rotScale = (float) (1 * Math.PI / 32768f);
-        br.Position = (long) (32U + this.jointOffset);
-        this.Joints = new AnimatedJoint[(int) this.nrJoints];
-        for (int index = 0; index < (int) this.nrJoints; ++index) {
+        br.Position = (long) (32U + this.JointOffset);
+        this.Joints = new AnimatedJoint[(int) this.NrJoints];
+        for (int index = 0; index < (int) this.NrJoints; ++index) {
           var animatedJoint = new AnimatedJoint(br);
-          animatedJoint.SetValues(this.scale,
-                                  this.rotation,
-                                  this.translation,
+          animatedJoint.SetValues(this.Scale,
+                                  this.Rotation,
+                                  this.Translation,
                                   rotScale);
           this.Joints[index] = animatedJoint;
         }
-        ok = true;
+        OK = true;
       }
     }
 
-    public int FrameCount => this.animLength;
+    public int FrameCount => this.AnimLength;
     public IAnimatedJoint[] Joints { get; }
 
     public partial class AnimatedJoint : IAnimatedJoint {
@@ -147,8 +147,8 @@ public partial class Bca : IBcx {
 
         [BinarySchema]
         public sealed partial class AnimIndex : IBinaryConvertible {
-          public ushort count;
-          public ushort index;
+          public ushort Count;
+          public ushort Index;
         }
       }
 
@@ -195,15 +195,15 @@ public partial class Bca : IBcx {
             out IJointAnimKey[] dst,
             float[] src,
             AnimComponent.AnimIndex component) {
-          dst = new IJointAnimKey[component.count];
-          if (component.count <= 0)
+          dst = new IJointAnimKey[component.Count];
+          if (component.Count <= 0)
             throw new Exception("Count <= 0");
-          if (component.count == 1) {
-            dst[0] = new Key(0, src[component.index]);
+          if (component.Count == 1) {
+            dst[0] = new Key(0, src[component.Index]);
           } else {
-            for (var index = 0; index < component.count; ++index)
+            for (var index = 0; index < component.Count; ++index)
               dst[index] =
-                  new Key(index, src[component.index + index]);
+                  new Key(index, src[component.Index + index]);
           }
         }
 
@@ -212,17 +212,17 @@ public partial class Bca : IBcx {
             short[] src,
             float rotScale,
             AnimComponent.AnimIndex component) {
-          dst = new IJointAnimKey[component.count];
-          if (component.count <= 0)
+          dst = new IJointAnimKey[component.Count];
+          if (component.Count <= 0)
             throw new Exception("Count <= 0");
-          if (component.count == 1) {
+          if (component.Count == 1) {
             dst[0] =
-                new Key(0, src[component.index] * rotScale);
+                new Key(0, src[component.Index] * rotScale);
           } else {
-            for (var index = 0; index < component.count; ++index)
+            for (var index = 0; index < component.Count; ++index)
               dst[index] =
                   new Key(index,
-                          src[component.index + index] *
+                          src[component.Index + index] *
                           rotScale);
           }
         }

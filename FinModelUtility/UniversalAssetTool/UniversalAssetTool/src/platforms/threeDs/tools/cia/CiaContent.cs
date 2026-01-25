@@ -35,7 +35,7 @@ public partial class CiaContent : IChildOf<Cia>, IBinaryDeserializable {
               IsEncrypted = false,
               IsHashed = false,
               HashCode = new(),
-              ValidState = ValidState.UNCHECKED,
+              ValidState = ValidState.Unchecked,
           },
       ];
     }
@@ -53,7 +53,7 @@ public sealed class ContentInfo {
 }
 
 public enum ValidState {
-  UNCHECKED,
-  GOOD,
-  FAIL,
+  Unchecked,
+  Good,
+  Fail,
 }

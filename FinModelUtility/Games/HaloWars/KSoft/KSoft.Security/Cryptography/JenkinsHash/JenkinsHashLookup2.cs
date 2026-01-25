@@ -10,86 +10,86 @@ namespace KSoft.Security.Cryptography
 	// http://burtleburtle.net/bob/c/lookup2.c
 	public abstract class JenkinsHashLookup2 : JenkinsHashLookup
 	{
-		const uint K_GOLDEN_RATIO_ = 0x9E3779B9;
-		const int K_BLOCK_SIZE_ = 12; // 96 bits
+		const uint kGoldenRatio = 0x9E3779B9;
+		const int kBlockSize = 12; // 96 bits
 
 		struct HashState
 		{
-			uint a_, b_, c_;
+			uint a, b, c;
 
-			public uint Result { get { return this.c_; } }
+			public uint Result { get { return this.c; } }
 
 			public HashState(uint seed)
 			{
-				this.a_ = this.b_ = K_GOLDEN_RATIO_;
-				this.c_ = seed;
+				this.a = this.b = kGoldenRatio;
+				this.c = seed;
 			}
 
 			void Mix()
 			{
-				this.a_ -= this.b_;
-				this.a_ -= this.c_;
-				this.a_ ^= (this.c_ >> 13);
-				this.b_ -= this.c_;
-				this.b_ -= this.a_;
-				this.b_ ^= (this.a_ <<  8);
-				this.c_ -= this.a_;
-				this.c_ -= this.b_;
-				this.c_ ^= (this.b_ >> 13);
-				this.a_ -= this.b_;
-				this.a_ -= this.c_;
-				this.a_ ^= (this.c_ >> 12);
-				this.b_ -= this.c_;
-				this.b_ -= this.a_;
-				this.b_ ^= (this.a_ << 16);
-				this.c_ -= this.a_;
-				this.c_ -= this.b_;
-				this.c_ ^= (this.b_ >>  5);
-				this.a_ -= this.b_;
-				this.a_ -= this.c_;
-				this.a_ ^= (this.c_ >>  3);
-				this.b_ -= this.c_;
-				this.b_ -= this.a_;
-				this.b_ ^= (this.a_ << 10);
-				this.c_ -= this.a_;
-				this.c_ -= this.b_;
-				this.c_ ^= (this.b_ >> 15);
+				this.a -= this.b;
+				this.a -= this.c;
+				this.a ^= (this.c >> 13);
+				this.b -= this.c;
+				this.b -= this.a;
+				this.b ^= (this.a <<  8);
+				this.c -= this.a;
+				this.c -= this.b;
+				this.c ^= (this.b >> 13);
+				this.a -= this.b;
+				this.a -= this.c;
+				this.a ^= (this.c >> 12);
+				this.b -= this.c;
+				this.b -= this.a;
+				this.b ^= (this.a << 16);
+				this.c -= this.a;
+				this.c -= this.b;
+				this.c ^= (this.b >>  5);
+				this.a -= this.b;
+				this.a -= this.c;
+				this.a ^= (this.c >>  3);
+				this.b -= this.c;
+				this.b -= this.a;
+				this.b ^= (this.a << 10);
+				this.c -= this.a;
+				this.c -= this.b;
+				this.c ^= (this.b >> 15);
 			}
 
 			void Fill(byte[] data, ref int i)
 			{
-				JenkinsHashLookup.Fill(ref this.a_, ref this.b_, ref this.c_, data, ref i);
+				JenkinsHashLookup.Fill(ref this.a, ref this.b, ref this.c, data, ref i);
 			}
 
 			void Fill(char[] data, ref int i)
 			{
-				JenkinsHashLookup.Fill(ref this.a_, ref this.b_, ref this.c_, data, ref i);
+				JenkinsHashLookup.Fill(ref this.a, ref this.b, ref this.c, data, ref i);
 			}
 
 			void Fill(string data, ref int i)
 			{
-				JenkinsHashLookup.Fill(ref this.a_, ref this.b_, ref this.c_, data, ref i);
+				JenkinsHashLookup.Fill(ref this.a, ref this.b, ref this.c, data, ref i);
 			}
 
 			void FinalFill(byte[] data, ref int i, int length)
 			{
-				this.c_ += (uint)length;
+				this.c += (uint)length;
 
-				JenkinsHashLookup.FinalFill(ref this.a_, ref this.b_, ref this.c_, data, ref i, length);
+				JenkinsHashLookup.FinalFill(ref this.a, ref this.b, ref this.c, data, ref i, length);
 			}
 
 			void FinalFill(char[] data, ref int i, int length)
 			{
-				this.c_ += (uint)length;
+				this.c += (uint)length;
 
-				JenkinsHashLookup.FinalFill(ref this.a_, ref this.b_, ref this.c_, data, ref i, length);
+				JenkinsHashLookup.FinalFill(ref this.a, ref this.b, ref this.c, data, ref i, length);
 			}
 
 			void FinalFill(string data, ref int i, int length)
 			{
-				this.c_ += (uint)length;
+				this.c += (uint)length;
 
-				JenkinsHashLookup.FinalFill(ref this.a_, ref this.b_, ref this.c_, data, ref i, length);
+				JenkinsHashLookup.FinalFill(ref this.a, ref this.b, ref this.c, data, ref i, length);
 			}
 
 			public void ProcessBlock(byte[] buffer, ref int index)
@@ -137,7 +137,7 @@ namespace KSoft.Security.Cryptography
 				length = buffer.Length - index;
 
 			HashState state = new HashState(seed);
-			for (; index + K_BLOCK_SIZE_ <= length; )
+			for (; index + kBlockSize <= length; )
 				state.ProcessBlock(buffer, ref index);
 
 			state.ProcessFinalBlock(buffer, ref index, length);
@@ -154,7 +154,7 @@ namespace KSoft.Security.Cryptography
 				length = buffer.Length - index;
 
 			HashState state = new HashState(seed);
-			for (; index + K_BLOCK_SIZE_ <= length; )
+			for (; index + kBlockSize <= length; )
 				state.ProcessBlock(buffer, ref index);
 
 			state.ProcessFinalBlock(buffer, ref index, length);
@@ -171,7 +171,7 @@ namespace KSoft.Security.Cryptography
 			int index = 0;
 
 			HashState state = new HashState(seed);
-			for (; index + K_BLOCK_SIZE_ <= length; )
+			for (; index + kBlockSize <= length; )
 				state.ProcessBlock(buffer, ref index);
 
 			state.ProcessFinalBlock(buffer, ref index, length);

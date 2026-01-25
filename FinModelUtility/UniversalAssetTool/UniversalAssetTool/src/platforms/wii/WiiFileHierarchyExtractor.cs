@@ -21,7 +21,7 @@ public sealed class WiiFileHierarchyExtractor {
   }
 
   private static bool TryToFindRom_(string gameName, out ISystemFile romFile)
-    => DirectoryConstants.romsDirectory
+    => DirectoryConstants.ROMS_DIRECTORY
                          .TryToGetExistingFileWithFileType(
                              gameName,
                              out romFile,

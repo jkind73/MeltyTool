@@ -12,32 +12,32 @@ namespace KSoft.Bitwise
 	{
 		public HandleBitEncoder(uint initialBits)
 		{
-			this.mBits_.u64 = 0;
-			this.mBits_.u32 = 0;
-			this.mBitIndex_ = 0;
+			this.mBits.u64 = 0;
+			this.mBits.u32 = 0;
+			this.mBitIndex = 0;
 
-			this.mBits_.u32 = initialBits;
+			this.mBits.u32 = initialBits;
 		}
 		public HandleBitEncoder(ulong initialBits)
 		{
-			this.mBits_.u64 = 0;
-			this.mBits_.u32 = 0;
-			this.mBitIndex_ = 0;
+			this.mBits.u64 = 0;
+			this.mBits.u32 = 0;
+			this.mBitIndex = 0;
 
-			this.mBits_.u64 = initialBits;
+			this.mBits.u64 = initialBits;
 		}
 
 		/// <summary>Get the 32-bit handle value</summary>
 		/// <returns></returns>
 		public uint GetHandle32()
 		{
-			return this.mBits_.u32;
+			return this.mBits.u32;
 		}
 		/// <summary>Get the 64-bit handle value</summary>
 		/// <returns></returns>
 		public ulong GetHandle64()
 		{
-			return this.mBits_.u64;
+			return this.mBits.u64;
 		}
 
 		#region Encode
@@ -53,7 +53,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentNullException>(encoder != null);
 
-			encoder.BitEncode(value, ref this.mBits_.u64, ref this.mBitIndex_);
+			encoder.BitEncode(value, ref this.mBits.u64, ref this.mBitIndex);
 		}
 		/// <summary>Encode an enumeration value using an enumeration encoder object</summary>
 		/// <typeparam name="TEnum">Enumeration type to encode</typeparam>
@@ -67,7 +67,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentNullException>(encoder != null);
 
-			encoder.BitEncode(value, ref this.mBits_.u64, ref this.mBitIndex_);
+			encoder.BitEncode(value, ref this.mBits.u64, ref this.mBitIndex);
 		}
 
 		/// <summary>Bit encode a value into this handle</summary>
@@ -80,7 +80,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			Bits.BitEncodeEnum(value, ref this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			Bits.BitEncodeEnum(value, ref this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit encode a none-able value into this handle</summary>
@@ -91,7 +91,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentException>(bitMask != 0);
 			Contract.Requires<ArgumentOutOfRangeException>(value.IsNoneOrPositive());
 
-			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit encode a value into this handle</summary>
@@ -101,7 +101,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			Bits.BitEncodeEnum(value, ref this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask32);
+			Bits.BitEncodeEnum(value, ref this.mBits.u64, ref this.mBitIndex, traits.Bitmask32);
 		}
 		/// <summary>Bit encode a none-able value into this handle</summary>
 		/// <param name="value">Value to encode</param>
@@ -111,7 +111,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 			Contract.Requires<ArgumentOutOfRangeException>(value.IsNoneOrPositive());
 
-			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask32);
+			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits.u64, ref this.mBitIndex, traits.Bitmask32);
 		}
 
 		/// <summary>Bit encode a value into this handle</summary>
@@ -124,7 +124,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			Bits.BitEncodeEnum(value, ref this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			Bits.BitEncodeEnum(value, ref this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit encode a none-able value into this handle</summary>
@@ -135,7 +135,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentException>(bitMask != 0);
 			Contract.Requires<ArgumentOutOfRangeException>(value.IsNoneOrPositive());
 
-			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit encode a value into this handle</summary>
@@ -145,7 +145,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			Bits.BitEncodeEnum(value, ref this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask64);
+			Bits.BitEncodeEnum(value, ref this.mBits.u64, ref this.mBitIndex, traits.Bitmask64);
 		}
 		/// <summary>Bit encode a none-able value into this handle</summary>
 		/// <param name="value">Value to encode</param>
@@ -155,7 +155,7 @@ namespace KSoft.Bitwise
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 			Contract.Requires<ArgumentOutOfRangeException>(value.IsNoneOrPositive());
 
-			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask64);
+			Bits.BitEncodeEnum((ulong)(value+1), ref this.mBits.u64, ref this.mBitIndex, traits.Bitmask64);
 		}
 
 		#endregion
@@ -170,7 +170,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentNullException>(decoder != null);
 
-			value = decoder.BitDecode(this.mBits_.u64, ref this.mBitIndex_);
+			value = decoder.BitDecode(this.mBits.u64, ref this.mBitIndex);
 		}
 		/// <summary>Decode an enumeration value using an enumeration encoder object</summary>
 		/// <typeparam name="TEnum">Enumeration type to decode</typeparam>
@@ -181,7 +181,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentNullException>(decoder != null);
 
-			value = decoder.BitDecode(this.mBits_.u64, ref this.mBitIndex_);
+			value = decoder.BitDecode(this.mBits.u64, ref this.mBitIndex);
 		}
 
 		/// <summary>Bit decode a value from this handle</summary>
@@ -191,7 +191,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			value = (uint)Bits.BitDecode(this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			value = (uint)Bits.BitDecode(this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 		/// <summary>Bit decode a value from this handle</summary>
 		/// <param name="value">Value decoded from this handle</param>
@@ -200,7 +200,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			value = (int)Bits.BitDecodeNoneable(this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			value = (int)Bits.BitDecodeNoneable(this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit decode a value from this handle</summary>
@@ -210,7 +210,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			value = (uint)Bits.BitDecode(this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask32);
+			value = (uint)Bits.BitDecode(this.mBits.u64, ref this.mBitIndex, traits.Bitmask32);
 		}
 		/// <summary>Bit decode a value from this handle</summary>
 		/// <param name="value">Value decoded from this handle</param>
@@ -219,7 +219,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			value = (int)Bits.BitDecodeNoneable(this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask32);
+			value = (int)Bits.BitDecodeNoneable(this.mBits.u64, ref this.mBitIndex, traits.Bitmask32);
 		}
 
 		/// <summary>Bit decode a value from this handle</summary>
@@ -229,7 +229,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			value = (ulong)Bits.BitDecode(this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			value = (ulong)Bits.BitDecode(this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 		/// <summary>Bit decode a value from this handle</summary>
 		/// <param name="value">Value decoded from this handle</param>
@@ -238,7 +238,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(bitMask != 0);
 
-			value = (long)Bits.BitDecodeNoneable(this.mBits_.u64, ref this.mBitIndex_, bitMask);
+			value = (long)Bits.BitDecodeNoneable(this.mBits.u64, ref this.mBitIndex, bitMask);
 		}
 
 		/// <summary>Bit decode a value from this handle</summary>
@@ -248,7 +248,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			value = (ulong)Bits.BitDecode(this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask64);
+			value = (ulong)Bits.BitDecode(this.mBits.u64, ref this.mBitIndex, traits.Bitmask64);
 		}
 		/// <summary>Bit decode a value from this handle</summary>
 		/// <param name="value">Value decoded from this handle</param>
@@ -257,7 +257,7 @@ namespace KSoft.Bitwise
 		{
 			Contract.Requires<ArgumentException>(!traits.IsEmpty);
 
-			value = (long)Bits.BitDecodeNoneable(this.mBits_.u64, ref this.mBitIndex_, traits.Bitmask64);
+			value = (long)Bits.BitDecodeNoneable(this.mBits.u64, ref this.mBitIndex, traits.Bitmask64);
 		}
 
 		#endregion

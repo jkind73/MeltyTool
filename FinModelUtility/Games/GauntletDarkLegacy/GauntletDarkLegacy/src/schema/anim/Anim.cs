@@ -17,12 +17,12 @@ public sealed partial class Anim : IBinaryDeserializable {
   public uint EffectPointer { get; set; }
 
   [Skip]
-  private bool HasPsys => this.Version != 0;
+  private bool HasPsys_ => this.Version != 0;
 
-  [RIfBoolean(nameof(HasPsys))]
+  [RIfBoolean(nameof(HasPsys_))]
   public int? PsysCount { get; set; }
 
-  [RIfBoolean(nameof(HasPsys))]
+  [RIfBoolean(nameof(HasPsys_))]
   public int? PsysPointer { get; set; }
 
   [RSequenceLengthSource(nameof(ATreeCount))]

@@ -18,20 +18,20 @@ namespace KSoft
 {
 	partial class TypeExtensions
 	{
-		public const string K_DEFAULT_ARRAY_VALUE_SEPERATOR = ",";
+		public const string kDefaultArrayValueSeperator = ",";
 
 		#region TypeCode
 		[Contracts.Pure]
 		public static TypeCode TryGetTypeCode(this object theObj)
 		{
-			var typeCode = TypeCode.Empty;
+			var type_code = TypeCode.Empty;
 
 			if (theObj != null)
 			{
-				typeCode = Type.GetTypeCode(theObj.GetType());
+				type_code = Type.GetTypeCode(theObj.GetType());
 			}
 
-			return typeCode;
+			return type_code;
 		}
 
 		[Contracts.Pure]
@@ -338,10 +338,10 @@ namespace KSoft
 					//path = path.Replace('\\', '/');
 
 					const string kBasePath = @"KStudio\Vita\"; // #TODO need a better way of doing this
-					int basePathIndex = path.IndexOf(kBasePath, StringComparison.InvariantCultureIgnoreCase);
-					if (basePathIndex >= 0)
+					int base_path_index = path.IndexOf(kBasePath, StringComparison.InvariantCultureIgnoreCase);
+					if (base_path_index >= 0)
 					{
-						path = path.Substring(basePathIndex + kBasePath.Length);
+						path = path.Substring(base_path_index + kBasePath.Length);
 					}
 
 					sb.Append(" (");
@@ -551,7 +551,7 @@ namespace KSoft
 
 		[Contracts.Pure]
 		public static string ArrayToConcatString(this Array array
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR)
+			, string valueSeperator = kDefaultArrayValueSeperator)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
@@ -632,16 +632,16 @@ namespace KSoft
 
 		#region FastFill
 		// currently based on http://stackoverflow.com/a/33865267/444977
-		public const int K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD = 100;
-		public const int K_FAST_MEM_SET_BLOCK_SIZE = 32;
+		public const int kDefaultFastMemSetLoopThreshold = 100;
+		public const int kFastMemSetBlockSize = 32;
 
 		public static void FastClear<T>(this T[] array
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			FastClear(array, array.Length, loopThreshold);
 		}
 		public static void FastClear<T>(this T[] array, int length
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			if (length <= loopThreshold)
 			{
@@ -656,12 +656,12 @@ namespace KSoft
 		}
 
 		public static void FastFill<T>(this T[] array, T fillValue, int sizeOfT
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			FastFill(array, array.Length, fillValue, sizeOfT, loopThreshold);
 		}
 		public static void FastFill<T>(this T[] array, int length, T fillValue, int sizeOfT
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			if (length <= loopThreshold)
 			{
@@ -670,35 +670,35 @@ namespace KSoft
 			}
 			else
 			{
-				int blockSize = K_FAST_MEM_SET_BLOCK_SIZE;
+				int block_size = kFastMemSetBlockSize;
 
 				// fill the starting block in the array
 				int index = 0;
-				for (int initializeLength = Math.Min(blockSize, length); index < initializeLength; index++)
+				for (int initializeLength = Math.Min(block_size, length); index < initializeLength; index++)
 				{
 					array[index] = fillValue;
 				}
 
 				// use the starting block to fill the rest, increasing the block size by however much we've filled so far or what's left
-				for (; index < length; index += blockSize, blockSize *= 2)
+				for (; index < length; index += block_size, block_size *= 2)
 				{
-					int copyLength = Math.Min(blockSize, length-index) * sizeOfT;
+					int copy_length = Math.Min(block_size, length-index) * sizeOfT;
 					// Array.Copy is not the same as BlockCopy. We want BlockCopy.
 					Buffer.BlockCopy(
 						array, 0,
 						array, index*sizeOfT,
-						copyLength);
+						copy_length);
 				}
 			}
 		}
 
 		public static void FastFillOrClear<T>(this T[] array, bool fillOrClear, T fillValue, int sizeOfT
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			FastFillOrClear(array, array.Length, fillOrClear, fillValue, sizeOfT, loopThreshold);
 		}
 		public static void FastFillOrClear<T>(this T[] array, int length, bool fillOrClear, T fillValue, int sizeOfT
-			, int loopThreshold = K_DEFAULT_FAST_MEM_SET_LOOP_THRESHOLD)
+			, int loopThreshold = kDefaultFastMemSetLoopThreshold)
 		{
 			if (fillOrClear)
 			{
@@ -740,9 +740,9 @@ namespace KSoft
 			Contract.Requires(genericType.IsGenericType && genericType.IsGenericTypeDefinition);
 			Contract.Requires(genericType.GetGenericArguments().Length == 1);
 
-			var concreteType = genericType.MakeGenericType(subject);
+			var concrete_type = genericType.MakeGenericType(subject);
 
-			return concreteType.IsAssignableFrom(subject);
+			return concrete_type.IsAssignableFrom(subject);
 		}
 
 		/// <summary>Force the .cctor of a type to run by invoking the getter of a static property</summary>
@@ -753,12 +753,12 @@ namespace KSoft
 			Contract.Requires(subject != null);
 			Contract.Requires(!string.IsNullOrEmpty(staticPropertyName));
 
-			const BindingFlags kStaticPropertyBindingFlags
+			const BindingFlags k_static_property_binding_flags
 				= BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty | BindingFlags.DeclaredOnly;
 
-			var staticProps = subject.GetProperties(kStaticPropertyBindingFlags);
-			var staticProp = (
-					from prop in staticProps
+			var static_props = subject.GetProperties(k_static_property_binding_flags);
+			var static_prop = (
+					from prop in static_props
 					where prop.Name == staticPropertyName
 					select prop
 				).First();
@@ -767,7 +767,7 @@ namespace KSoft
 			//Activator.CreateInstance(concrete_type);
 
 			// However, effectively invoking a static property does
-			staticProp.GetValue(null);
+			static_prop.GetValue(null);
 		}
 		#endregion
 
@@ -831,7 +831,7 @@ namespace KSoft
 				.Select((v, i) => new KeyValuePair<T, int?>(v, i))
 				.FirstOrDefault(kvp => match(kvp.Key));
 
-			return found.Value ?? K_NONE;
+			return found.Value ?? kNone;
 		}
 
 		[Contracts.Pure]
@@ -845,14 +845,14 @@ namespace KSoft
 			Contract.Ensures(Contract.Result<int>().IsNoneOrPositive());
 			Contract.Ensures(Contract.Result<int>() < startIndex+count);
 
-			int endIndex = startIndex + count;
-			for (int x = startIndex; x < endIndex; x++)
+			int end_index = startIndex + count;
+			for (int x = startIndex; x < end_index; x++)
 			{
 				if (match(list[x]))
 					return x;
 			}
 
-			return K_NONE;
+			return kNone;
 		}
 		[Contracts.Pure]
 		public static int FindIndex<T>(this IReadOnlyList<T> list,
@@ -889,21 +889,21 @@ namespace KSoft
 
 			if (collection.Count < requiredCount)
 			{
-				var defaultValue = default(T);
-				int addCount = requiredCount - collection.Count;
+				var default_value = default(T);
+				int add_count = requiredCount - collection.Count;
 
 				// arbitrary add threshold for List optimization
-				if (addCount > 16)
+				if (add_count > 16)
 				{
 					if (collection is List<T> list && list.Capacity < requiredCount)
 					{
-						list.Capacity += addCount;
+						list.Capacity += add_count;
 					}
 				}
 
-				for (int x = 0; x < addCount; x++)
+				for (int x = 0; x < add_count; x++)
 				{
-					collection.Add(defaultValue);
+					collection.Add(default_value);
 				}
 			}
 		}
@@ -929,7 +929,7 @@ namespace KSoft
 
 		[Contracts.Pure]
 		public static string ToConcatString<T>(this IEnumerable<T> e
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR)
+			, string valueSeperator = kDefaultArrayValueSeperator)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
@@ -949,7 +949,7 @@ namespace KSoft
 		}
 		[Contracts.Pure]
 		public static string ToConcatBinaryString(this IEnumerable<bool> e
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR)
+			, string valueSeperator = kDefaultArrayValueSeperator)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
@@ -969,7 +969,7 @@ namespace KSoft
 		}
 		[Contracts.Pure]
 		public static string ToConcatLowerString(this IEnumerable<bool> e
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR)
+			, string valueSeperator = kDefaultArrayValueSeperator)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
 
@@ -989,7 +989,7 @@ namespace KSoft
 		}
 		[Contracts.Pure]
 		public static string ToConcatStringInvariant(this IEnumerable<float> e
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR
+			, string valueSeperator = kDefaultArrayValueSeperator
 			, string format = null)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
@@ -1010,7 +1010,7 @@ namespace KSoft
 		}
 		[Contracts.Pure]
 		public static string ToConcatStringInvariant(this IEnumerable<double> e
-			, string valueSeperator = K_DEFAULT_ARRAY_VALUE_SEPERATOR
+			, string valueSeperator = kDefaultArrayValueSeperator
 			, string format = null)
 		{
 			Contract.Ensures(Contract.Result<string>() != null);
@@ -1042,14 +1042,14 @@ namespace KSoft
 		{
 			Contract.Requires(source != null);
 
-			source.TraceData(eventType, K_NONE, data);
+			source.TraceData(eventType, kNone, data);
 		}
 
 		public static void TraceDataSansId(this TraceSource source, TraceEventType eventType, object data)
 		{
 			Contract.Requires(source != null);
 
-			source.TraceData(eventType, K_NONE, data);
+			source.TraceData(eventType, kNone, data);
 		}
 		#endregion
 
@@ -1143,52 +1143,52 @@ namespace KSoft
 			Contract.Requires<ArgumentOutOfRangeException>(count >= 0);
 			Contract.Requires<ArgumentOutOfRangeException>(offset.IsNone() || (offset+count) <= inputStream.Length);
 
-			int bufferSize;
+			int buffer_size;
 			byte[] buffer;
 
 			if (preallocatedBuffer == null)
 			{
-				bufferSize = Math.Min((int)count, 0x1000);
-				buffer = new byte[bufferSize];
+				buffer_size = Math.Min((int)count, 0x1000);
+				buffer = new byte[buffer_size];
 			}
 			else
 			{
 				buffer = preallocatedBuffer;
-				bufferSize = buffer.Length;
+				buffer_size = buffer.Length;
 			}
 
 			algo.Initialize();
 
-			long origPos = inputStream.Position;
-			if (offset.IsNotNone() && offset != origPos)
+			long orig_pos = inputStream.Position;
+			if (offset.IsNotNone() && offset != orig_pos)
 				inputStream.Seek(offset, System.IO.SeekOrigin.Begin);
 
-			for (long bytesRemaining = count; bytesRemaining > 0; )
+			for (long bytes_remaining = count; bytes_remaining > 0; )
 			{
-				long numBytesToRead = Math.Min(bytesRemaining, bufferSize);
-				int numBytesRead = 0;
+				long num_bytes_to_read = Math.Min(bytes_remaining, buffer_size);
+				int num_bytes_read = 0;
 				do
 				{
-					int n = inputStream.Read(buffer, numBytesRead, (int)numBytesToRead);
+					int n = inputStream.Read(buffer, num_bytes_read, (int)num_bytes_to_read);
 					if (n == 0)
 						break;
 
-					numBytesRead += n;
-					numBytesToRead -= n;
-				} while (numBytesToRead > 0);
+					num_bytes_read += n;
+					num_bytes_to_read -= n;
+				} while (num_bytes_to_read > 0);
 
-				if (numBytesRead > 0)
-					algo.TransformBlock(buffer, 0, numBytesRead, null, 0);
+				if (num_bytes_read > 0)
+					algo.TransformBlock(buffer, 0, num_bytes_read, null, 0);
 				else
 					break;
 
-				bytesRemaining -= numBytesRead;
+				bytes_remaining -= num_bytes_read;
 			}
 
 			algo.TransformFinalBlock(buffer, 0, 0); // yes, 0 bytes, all bytes should have been taken care of already
 
 			if (restorePosition)
-				inputStream.Seek(origPos, System.IO.SeekOrigin.Begin);
+				inputStream.Seek(orig_pos, System.IO.SeekOrigin.Begin);
 
 			return algo.Hash;
 		}
@@ -1206,39 +1206,39 @@ namespace KSoft
 
 			algo.Initialize();
 
-			int bufferSize = algo.BlockSize;
+			int buffer_size = algo.BlockSize;
 			byte[] buffer = algo.InternalBlockBuffer;
 
-			long origPos = inputStream.Position;
-			if (offset.IsNotNone() && offset != origPos)
+			long orig_pos = inputStream.Position;
+			if (offset.IsNotNone() && offset != orig_pos)
 				inputStream.Seek(offset, System.IO.SeekOrigin.Begin);
 
-			for (long bytesRemaining = count; bytesRemaining > 0; )
+			for (long bytes_remaining = count; bytes_remaining > 0; )
 			{
-				long numBytesToRead = Math.Min(bytesRemaining, bufferSize);
-				int numBytesRead = 0;
+				long num_bytes_to_read = Math.Min(bytes_remaining, buffer_size);
+				int num_bytes_read = 0;
 				do
 				{
-					int n = inputStream.Read(buffer, numBytesRead, (int)numBytesToRead);
+					int n = inputStream.Read(buffer, num_bytes_read, (int)num_bytes_to_read);
 					if (n == 0)
 						break;
 
-					numBytesRead += n;
-					numBytesToRead -= n;
-				} while (numBytesToRead > 0);
+					num_bytes_read += n;
+					num_bytes_to_read -= n;
+				} while (num_bytes_to_read > 0);
 
-				if (numBytesRead > 0)
-					algo.TransformBlock(buffer, 0, numBytesRead, null, 0);
+				if (num_bytes_read > 0)
+					algo.TransformBlock(buffer, 0, num_bytes_read, null, 0);
 				else
 					break;
 
-				bytesRemaining -= numBytesRead;
+				bytes_remaining -= num_bytes_read;
 			}
 
 			algo.TransformFinalBlock(buffer, 0, 0); // yes, 0 bytes, all bytes should have been taken care of already
 
 			if (restorePosition)
-				inputStream.Seek(origPos, System.IO.SeekOrigin.Begin);
+				inputStream.Seek(orig_pos, System.IO.SeekOrigin.Begin);
 
 			return algo.Hash;
 		}
@@ -1472,30 +1472,30 @@ namespace KSoft
 			private delegate void OnCollectionChangedDelegate(NotifyCollectionChangedEventArgs e);
 			public delegate void OnCollectionChangedWithThis(ObservableCollection<T> @this, NotifyCollectionChangedEventArgs e);
 
-			private static Func<ObservableCollection<T>, IList<T>> gGetItems_;
+			private static Func<ObservableCollection<T>, IList<T>> gGetItems;
 			public static Func<ObservableCollection<T>, IList<T>> GetItems { get {
-				if (gGetItems_ == null)
-					gGetItems_ = Reflection.Util.GenerateMemberGetter<ObservableCollection<T>, IList<T>>("Items");
+				if (gGetItems == null)
+					gGetItems = Reflection.Util.GenerateMemberGetter<ObservableCollection<T>, IList<T>>("Items");
 
-				return gGetItems_;
+				return gGetItems;
 			} }
 
-			private static OnPropertyChangedDelegateWithThis gOnPropertyChangedFunc_;
+			private static OnPropertyChangedDelegateWithThis gOnPropertyChangedFunc;
 			public static OnPropertyChangedDelegateWithThis OnPropertyChangedFunc { get {
-				if (gOnPropertyChangedFunc_ == null)
-					gOnPropertyChangedFunc_ = Reflection.Util.GenerateObjectMethodProxy<ObservableCollection<T>, OnPropertyChangedDelegateWithThis, OnPropertyChangedDelegate>
+				if (gOnPropertyChangedFunc == null)
+					gOnPropertyChangedFunc = Reflection.Util.GenerateObjectMethodProxy<ObservableCollection<T>, OnPropertyChangedDelegateWithThis, OnPropertyChangedDelegate>
 						("OnPropertyChanged");
 
-				return gOnPropertyChangedFunc_;
+				return gOnPropertyChangedFunc;
 			} }
 
-			private static OnCollectionChangedWithThis gOnCollectionChangedFunc_;
+			private static OnCollectionChangedWithThis gOnCollectionChangedFunc;
 			public static OnCollectionChangedWithThis OnCollectionChangedFunc { get {
-				if (gOnCollectionChangedFunc_ == null)
-					gOnCollectionChangedFunc_ = Reflection.Util.GenerateObjectMethodProxy<ObservableCollection<T>, OnCollectionChangedWithThis, OnCollectionChangedDelegate>
+				if (gOnCollectionChangedFunc == null)
+					gOnCollectionChangedFunc = Reflection.Util.GenerateObjectMethodProxy<ObservableCollection<T>, OnCollectionChangedWithThis, OnCollectionChangedDelegate>
 						("OnCollectionChanged");
 
-				return gOnCollectionChangedFunc_;
+				return gOnCollectionChangedFunc;
 			} }
 		}
 
@@ -1512,10 +1512,10 @@ namespace KSoft
 
 		public static void TriggerAllItemsChanged<T>(this ObservableCollection<T> list)
 		{
-			var onPropChanged = ObservableCollectionHacks<T>.OnPropertyChangedFunc;
-			var onCollChanged = ObservableCollectionHacks<T>.OnCollectionChangedFunc;
-			onPropChanged(list, new PropertyChangedEventArgs(ObjectModel.Util.K_INDEXER_PROPERTY_NAME));
-			onCollChanged(list, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, null, -1));
+			var on_prop_changed = ObservableCollectionHacks<T>.OnPropertyChangedFunc;
+			var on_coll_changed = ObservableCollectionHacks<T>.OnCollectionChangedFunc;
+			on_prop_changed(list, new PropertyChangedEventArgs(ObjectModel.Util.kIndexerPropertyName));
+			on_coll_changed(list, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset, null, -1));
 		}
 
 		public static void AddRange<T>(this ObservableCollection<T> list, IEnumerable<T> collection)

@@ -4,12 +4,12 @@ namespace KSoft.Phoenix.Runtime
 	struct BPlayerPop
 		: IO.IEndianStreamSerializable
 	{
-		public float existing, cap, max, future;
+		public float Existing, Cap, Max, Future;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.existing); s.Stream(ref this.cap); s.Stream(ref this.max); s.Stream(ref this.future);
+			s.Stream(ref this.Existing); s.Stream(ref this.Cap); s.Stream(ref this.Max); s.Stream(ref this.Future);
 		}
 		#endregion
 #if false

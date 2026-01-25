@@ -1,7 +1,7 @@
 ﻿
 namespace KSoft.Phoenix.Phx
 {
-	public enum BuiControlBaseType
+	public enum BUIControlBaseType
 	{
 		X,
 		Y,
@@ -10,7 +10,7 @@ namespace KSoft.Phoenix.Phx
 		RY,
 		RZ,
 		POV,
-		SLIDER,
-		BUTTON,
+		Slider,
+		Button,
 	};
 }

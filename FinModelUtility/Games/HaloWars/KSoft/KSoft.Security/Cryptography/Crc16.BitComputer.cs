@@ -12,33 +12,33 @@ namespace KSoft.Security.Cryptography
 		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes")]
 		public struct BitComputer
 		{
-			Definition mDefinition_;
-			ushort mCrc_;
+			Definition mDefinition;
+			ushort mCrc;
 
 			public BitComputer(Definition definition)
 			{
 				Contract.Requires(definition != null);
 
-				this.mDefinition_ = definition;
-				this.mCrc_ = this.mDefinition_.InitialValue;
+				this.mDefinition = definition;
+				this.mCrc = this.mDefinition.InitialValue;
 			}
 			public BitComputer(Definition definition, ushort initialValue)
 			{
 				Contract.Requires(definition != null);
 
-				this.mDefinition_ = definition;
-				this.mCrc_ = initialValue;
+				this.mDefinition = definition;
+				this.mCrc = initialValue;
 			}
 
 			public void ComputeBegin()
 			{
-				this.mCrc_ ^= this.mDefinition_.XorIn;
+				this.mCrc ^= this.mDefinition.XorIn;
 			}
 
 			public ushort ComputeFinish()
 			{
-				this.mCrc_ ^= this.mDefinition_.XorOut;
-				return this.mCrc_;
+				this.mCrc ^= this.mDefinition.XorOut;
+				return this.mCrc;
 			}
 
 			public void Compute(byte[] buffer, int offset, int length)
@@ -48,75 +48,75 @@ namespace KSoft.Security.Cryptography
 				Contract.Requires<ArgumentOutOfRangeException>(offset+length <= buffer.Length);
 
 				for (int x = 0; x < length; x++)
-					this.mDefinition_.ComputeUpdate(buffer[offset+x], ref this.mCrc_);
+					this.mDefinition.ComputeUpdate(buffer[offset+x], ref this.mCrc);
 			}
 
 			public void Compute(byte value)
 			{
-				this.mDefinition_.ComputeUpdate(value, ref this.mCrc_);
+				this.mDefinition.ComputeUpdate(value, ref this.mCrc);
 			}
 
 			#region Compute 16-bits
-			public void ComputeLe(ushort value)
+			public void ComputeLE(ushort value)
 			{
-				this.mDefinition_.ComputeUpdate((value & 0x00FFU) >> 0, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0xFF00U) >> 8, ref this.mCrc_);
+				this.mDefinition.ComputeUpdate((value & 0x00FFU) >> 0, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0xFF00U) >> 8, ref this.mCrc);
 			}
-			public void ComputeBe(ushort value)
+			public void ComputeBE(ushort value)
 			{
-				this.mDefinition_.ComputeUpdate((value & 0xFF00U) >> 8, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x00FFU) >> 0, ref this.mCrc_);
+				this.mDefinition.ComputeUpdate((value & 0xFF00U) >> 8, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x00FFU) >> 0, ref this.mCrc);
 			}
 			#endregion
 
 			#region Compute 32-bits
 			public void Compute(Shell.EndianFormat byteOrder, uint value)
 			{
-				if (byteOrder == Shell.EndianFormat.LITTLE)
-					this.ComputeLe(value);
+				if (byteOrder == Shell.EndianFormat.Little)
+					this.ComputeLE(value);
 				else
-					this.ComputeBe(value);
+					this.ComputeBE(value);
 			}
-			public void ComputeLe(uint value)
+			public void ComputeLE(uint value)
 			{
-				this.mDefinition_.ComputeUpdate((value & 0x000000FFU) >> 0, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0xFF000000U) >> 24, ref this.mCrc_);
+				this.mDefinition.ComputeUpdate((value & 0x000000FFU) >> 0, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0xFF000000U) >> 24, ref this.mCrc);
 			}
-			public void ComputeBe(uint value)
+			public void ComputeBE(uint value)
 			{
-				this.mDefinition_.ComputeUpdate((value & 0xFF000000U) >> 24, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.mCrc_);
-				this.mDefinition_.ComputeUpdate((value & 0x000000FFU) >> 0, ref this.mCrc_);
+				this.mDefinition.ComputeUpdate((value & 0xFF000000U) >> 24, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x00FF0000U) >> 16, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x0000FF00U) >> 8, ref this.mCrc);
+				this.mDefinition.ComputeUpdate((value & 0x000000FFU) >> 0, ref this.mCrc);
 			}
 			#endregion
 
 			#region Compute 64-bits
-			public void ComputeLe(ulong value)
+			public void ComputeLE(ulong value)
 			{
 				uint lo = Bits.GetLowBits(value);
 				uint hi = Bits.GetHighBits(value);
-				uint value;
+				uint _value;
 
-				value = lo;
-				this.ComputeLe(value);
+				_value = lo;
+				this.ComputeLE(_value);
 
-				value = hi;
-				this.ComputeLe(value);
+				_value = hi;
+				this.ComputeLE(_value);
 			}
-			public void ComputeBe(ulong value)
+			public void ComputeBE(ulong value)
 			{
 				uint lo = Bits.GetLowBits(value);
 				uint hi = Bits.GetHighBits(value);
-				uint value;
+				uint _value;
 
-				value = hi;
-				this.ComputeBe(value);
+				_value = hi;
+				this.ComputeBE(_value);
 
-				value = lo;
-				this.ComputeBe(value);
+				_value = lo;
+				this.ComputeBE(_value);
 			}
 			#endregion
 		};

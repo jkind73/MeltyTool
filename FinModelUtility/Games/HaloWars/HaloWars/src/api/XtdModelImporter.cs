@@ -15,7 +15,7 @@ public sealed class XtdModelImporter : IModelImporter<XtdModelFileBundle> {
 
     var mapName = xtdFile.AssertGetParent().Name;
 
-    var xtd = HwXtdResource.FromFile(null, xtdFile.FullPath);
+    var xtd = HWXtdResource.FromFile(null, xtdFile.FullPath);
     var xtt = xttFile.ReadNew<Xtt>();
 
     var finModel = xtd.Mesh;

@@ -8,43 +8,43 @@ namespace KSoft.Phoenix.Runtime
 {
 	using BActionTypeStreamer = IO.EnumBinaryStreamer<Phx.BActionType, byte>;
 
-	partial class CSaveMarker
+	partial class cSaveMarker
 	{
 		public const ushort
 			#region 0x1
-			C_SAVE_MARKER_B_ENTITY_ACTION_IDLE = 0x2710,
-			C_SAVE_MARKER_B_ENTITY_ACTION_LISTEN = 0x2711,
-			C_SAVE_MARKER_B_UNIT_ACTION_MOVE = 0x2712,
-			C_SAVE_MARKER_B_UNIT_ACTION_MOVE_AIR = 0x2713,
+			cSaveMarkerBEntityActionIdle = 0x2710,
+			cSaveMarkerBEntityActionListen = 0x2711,
+			cSaveMarkerBUnitActionMove = 0x2712,
+			cSaveMarkerBUnitActionMoveAir = 0x2713,
 
 			#endregion
 
-			C_SAVE_MARKER_B_UNIT_ACTION_RAGE = 0x276A
+			cSaveMarkerBUnitActionRage = 0x276A
 			;
 	};
 
 	public struct ActionListEntry
 		: IO.IEndianStreamSerializable
 	{
-		internal static ActionListEntry invalid = new ActionListEntry();
+		internal static ActionListEntry Invalid = new ActionListEntry();
 
-		public bool action;
-		public Phx.BActionType actionType;
-		public int actionPtr;
+		public bool Action;
+		public Phx.BActionType ActionType;
+		public int ActionPtr;
 
 	#region IEndianStreamSerializable Members
 	public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.action);
-			if (this.action)
+			s.Stream(ref this.Action);
+			if (this.Action)
 			{
-				s.Stream(ref this.actionType, BActionTypeStreamer.Instance);
-				BSaveGame.StreamFreeListItemPtr(s, ref this.actionPtr);
+				s.Stream(ref this.ActionType, BActionTypeStreamer.Instance);
+				BSaveGame.StreamFreeListItemPtr(s, ref this.ActionPtr);
 			}
 			else
 			{
-				this.actionType = Phx.BActionType.INVALID;
-				this.actionPtr = TypeExtensions.K_NONE;
+				this.ActionType = Phx.BActionType.Invalid;
+				this.ActionPtr = TypeExtensions.kNone;
 			}
 		}
 		#endregion
@@ -52,7 +52,7 @@ namespace KSoft.Phoenix.Runtime
 
 	public sealed class BActionManager
 	{
-		const int C_ACTION_LIST_MAXIMUM_COUNT_ = 0xC8;
+		const int cActionListMaximumCount = 0xC8;
 
 		public static IO.EndianStream StreamActionList(IO.EndianStream s, ref ActionListEntry[] actionList)
 		{
@@ -64,27 +64,27 @@ namespace KSoft.Phoenix.Runtime
 			s.Stream(ref count);
 			if (reading)
 			{
-				Contract.Assert(count <= C_ACTION_LIST_MAXIMUM_COUNT_);
+				Contract.Assert(count <= cActionListMaximumCount);
 				actionList = new ActionListEntry[count];
 			}
 
 			for (byte x = 0; x < count; x++)
 			{
-				var expectedIndex = x;
-				s.Stream(ref expectedIndex);
+				var expected_index = x;
+				s.Stream(ref expected_index);
 				if (reading)
 				{
-					Contract.Assert(expectedIndex != CSaveMarker.ITERATOR_END_U_INT8);
-					Contract.Assert(expectedIndex == x);
+					Contract.Assert(expected_index != cSaveMarker.IteratorEndUInt8);
+					Contract.Assert(expected_index == x);
 				}
 
-				var t = reading ? ActionListEntry.invalid : actionList[x];
+				var t = reading ? ActionListEntry.Invalid : actionList[x];
 				t.Serialize(s);
 				if (reading)
 					actionList[x] = t;
 			}
 
-			s.StreamSignature(CSaveMarker.ITERATOR_END_U_INT8);
+			s.StreamSignature(cSaveMarker.IteratorEndUInt8);
 
 			return s;
 		}

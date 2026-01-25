@@ -6,28 +6,28 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BSaveUser
 		: IO.IEndianStreamSerializable
 	{
-		public int currentPlayer, coopPlayer;
-		public BVector hoverPoint, cameraHoverPoint, cameraPosition, 
-			cameraForward, cameraRight, cameraUp;
-		public float cameraDefaultPitch, cameraDefaultYaw, cameraDefaultZoom,
-			cameraPitch, cameraYaw, cameraZoom,
-			cameraFov, cameraHoverPointOffsetHeight;
-		public bool haveHoverPoint, defaultCamera;
+		public int CurrentPlayer, CoopPlayer;
+		public BVector HoverPoint, CameraHoverPoint, CameraPosition, 
+			CameraForward, CameraRight, CameraUp;
+		public float CameraDefaultPitch, CameraDefaultYaw, CameraDefaultZoom,
+			CameraPitch, CameraYaw, CameraZoom,
+			CameraFOV, CameraHoverPointOffsetHeight;
+		public bool HaveHoverPoint, DefaultCamera;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			s.Stream(ref this.currentPlayer);
-			s.Stream(ref this.coopPlayer);
-			s.StreamV(ref this.hoverPoint); s.StreamV(ref this.cameraHoverPoint); s.StreamV(ref this.cameraPosition);
-			s.StreamV(ref this.cameraForward); s.StreamV(ref this.cameraRight); s.StreamV(ref this.cameraUp);
-			s.Stream(ref this.cameraDefaultPitch); s.Stream(ref this.cameraDefaultYaw); s.Stream(ref this.cameraDefaultZoom);
-			s.Stream(ref this.cameraPitch); s.Stream(ref this.cameraYaw); s.Stream(ref this.cameraZoom);
-			s.Stream(ref this.cameraFov);
-			s.Stream(ref this.cameraHoverPointOffsetHeight);
-			s.Stream(ref this.haveHoverPoint);
-			s.Stream(ref this.defaultCamera);
-			s.StreamSignature(CSaveMarker.USER1);
+			s.Stream(ref this.CurrentPlayer);
+			s.Stream(ref this.CoopPlayer);
+			s.StreamV(ref this.HoverPoint); s.StreamV(ref this.CameraHoverPoint); s.StreamV(ref this.CameraPosition);
+			s.StreamV(ref this.CameraForward); s.StreamV(ref this.CameraRight); s.StreamV(ref this.CameraUp);
+			s.Stream(ref this.CameraDefaultPitch); s.Stream(ref this.CameraDefaultYaw); s.Stream(ref this.CameraDefaultZoom);
+			s.Stream(ref this.CameraPitch); s.Stream(ref this.CameraYaw); s.Stream(ref this.CameraZoom);
+			s.Stream(ref this.CameraFOV);
+			s.Stream(ref this.CameraHoverPointOffsetHeight);
+			s.Stream(ref this.HaveHoverPoint);
+			s.Stream(ref this.DefaultCamera);
+			s.StreamSignature(cSaveMarker.User1);
 		}
 		#endregion
 	};

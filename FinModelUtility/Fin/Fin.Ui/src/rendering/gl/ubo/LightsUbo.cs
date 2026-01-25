@@ -8,19 +8,19 @@ using Vector4 = System.Numerics.Vector4;
 namespace fin.ui.rendering.gl.ubo;
 
 public sealed class LightsUbo : IDisposable {
-  private const int SIZE_OF_LIGHT_ = (UboUtil.SIZE_OF_VECTOR3 + 4) +
+  private const int SIZE_OF_LIGHT = (UboUtil.SIZE_OF_VECTOR3 + 4) +
                                     (UboUtil.SIZE_OF_VECTOR3 + 4) +
                                     UboUtil.SIZE_OF_VECTOR4 +
                                     (UboUtil.SIZE_OF_VECTOR3 + 4) +
                                     (UboUtil.SIZE_OF_VECTOR3 + 4);
 
-  private const int SIZE_OF_BUFFER_
-      = SIZE_OF_LIGHT_ * MaterialConstants.MAX_LIGHTS +
+  private const int SIZE_OF_BUFFER
+      = SIZE_OF_LIGHT * MaterialConstants.MAX_LIGHTS +
         UboUtil.SIZE_OF_VECTOR4 +
         4;
 
   private readonly GlUbo impl_
-      = new(SIZE_OF_BUFFER_, GlslConstants.UBO_LIGHTS_BINDING_INDEX);
+      = new(SIZE_OF_BUFFER, GlslConstants.UBO_LIGHTS_BINDING_INDEX);
 
   ~LightsUbo() => this.ReleaseUnmanagedResources_();
 
@@ -33,10 +33,10 @@ public sealed class LightsUbo : IDisposable {
 
   public void UpdateData(IReadOnlyLighting? lighting) {
     var offset = 0;
-    Span<byte> buffer = stackalloc byte[SIZE_OF_BUFFER_];
+    Span<byte> buffer = stackalloc byte[SIZE_OF_BUFFER];
 
     if (lighting == null) {
-      offset += SIZE_OF_LIGHT_ * MaterialConstants.MAX_LIGHTS +
+      offset += SIZE_OF_LIGHT * MaterialConstants.MAX_LIGHTS +
                 UboUtil.SIZE_OF_VECTOR4;
       UboUtil.AppendFloat(buffer, ref offset, 0);
     } else {
@@ -67,7 +67,7 @@ public sealed class LightsUbo : IDisposable {
     if (light == null) {
       offset += 3;
       buffer.Cast<byte, int>()[0] = 0;
-      offset += SIZE_OF_LIGHT_ - 3;
+      offset += SIZE_OF_LIGHT - 3;
       return;
     }
 

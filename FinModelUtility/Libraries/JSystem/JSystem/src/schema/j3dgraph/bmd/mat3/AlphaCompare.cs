@@ -19,7 +19,7 @@ public sealed partial class AlphaCompare : IAlphaCompare, IBinaryConvertible {
   [NumberFormat(SchemaNumberType.UN8)]
   public float Reference1 { get; set; }
 
-  public readonly byte padding1 = byte.MaxValue;
-  public readonly byte padding2 = byte.MaxValue;
-  public readonly byte padding3 = byte.MaxValue;
+  public readonly byte padding1_ = byte.MaxValue;
+  public readonly byte padding2_ = byte.MaxValue;
+  public readonly byte padding3_ = byte.MaxValue;
 }

@@ -6,24 +6,24 @@ using uni.util.image;
 namespace uni.img;
 
 public static class Icons {
-  private static readonly Assembly ASSEMBLY_ =
+  private static readonly Assembly assembly_ =
       Assembly.GetExecutingAssembly();
 
-  public static readonly Image FOLDER_CLOSED_IMAGE =
+  public static readonly Image folderClosedImage =
       LoadIcon_("uni.src.img.folder_closed.png");
 
-  public static readonly Image FOLDER_OPEN_IMAGE =
+  public static readonly Image folderOpenImage =
       LoadIcon_("uni.src.img.folder_open.png");
 
-  public static readonly Image MODEL_IMAGE =
+  public static readonly Image modelImage =
       LoadIcon_("uni.src.img.model.png");
 
-  public static readonly Image SCENE_IMAGE =
+  public static readonly Image sceneImage =
       LoadIcon_("uni.src.img.scene.png");
 
-  public static readonly Image MUSIC_IMAGE =
+  public static readonly Image musicImage =
       LoadIcon_("uni.src.img.music.png");
 
   private static Image LoadIcon_(string embeddedResourceName)
-    => EmbeddedResourceImageUtil.Load(ASSEMBLY_, embeddedResourceName);
+    => EmbeddedResourceImageUtil.Load(assembly_, embeddedResourceName);
 }

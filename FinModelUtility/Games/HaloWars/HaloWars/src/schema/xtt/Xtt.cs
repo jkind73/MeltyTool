@@ -14,7 +14,7 @@ public sealed class Xtt : IBinaryDeserializable {
     var binaryResource = br.ReadNew<BinaryResource>();
 
     var albedoChunk = binaryResource.GetFirstChunkOfType(
-        BinaryResourceChunkType.XTT_ATLAS_CHUNK_ALBEDO);
+        BinaryResourceChunkType.XTT_AtlasChunkAlbedo);
     this.AlbedoTexture = ExtractEmbeddedDxt1_(albedoChunk);
   }
 

@@ -30,8 +30,8 @@ namespace sm64.scripts.geo {
         ParseImpl_(uint address, byte? areaId) {
       IoUtils.SplitSegmentedAddress(address, out var seg, out var off);
 
-      Rom rom = Rom.Instance;
-      byte[] data = rom.GetSegment(seg, areaId)!;
+      ROM rom = ROM.Instance;
+      byte[] data = rom.getSegment(seg, areaId)!;
 
       if (data == null) {
         return null;
@@ -224,7 +224,7 @@ namespace sm64.scripts.geo {
             command = br.ReadNew<GeoBackgroundCommand>();
             break;
           }
-          case GeoCommandId.NOOP_1_A: {
+          case GeoCommandId.NOOP_1A: {
             command = br.ReadNew<GeoNoopCommand>();
             break;
           }

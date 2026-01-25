@@ -9,10 +9,10 @@ namespace System.IO.Abstractions.TestingHelpers;
 #endif
 public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   private readonly IImaginaryFileDataAccessor imaginaryFileDataAccessor_;
-  private string directoryPath_;
-  private string originalPath_;
+  private string directoryPath;
+  private string originalPath;
   private ImaginaryFileData cachedImaginaryFileData_;
-  private bool refreshOnNextRead_;
+  private bool refreshOnNextRead;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="ImaginaryDirectoryInfo"/> class.
@@ -38,7 +38,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
       throw CommonExceptions.PathIsNotOfALegalForm("path");
     }
 
-    this.SetDirectoryPath_(directoryPath);
+    SetDirectoryPath(directoryPath);
     Refresh();
   }
 
@@ -51,14 +51,14 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override void Delete() {
-    this.imaginaryFileDataAccessor_.Directory.Delete(this.directoryPath_);
-    this.refreshOnNextRead_ = true;
+    this.imaginaryFileDataAccessor_.Directory.Delete(directoryPath);
+    refreshOnNextRead = true;
   }
 
   /// <inheritdoc />
   public override void Refresh() {
-    var mockFileData = this.imaginaryFileDataAccessor_.GetFile(this.directoryPath_) ??
-                       ImaginaryFileData.NULL_OBJECT_;
+    var mockFileData = this.imaginaryFileDataAccessor_.GetFile(directoryPath) ??
+                       ImaginaryFileData.NullObject;
     this.cachedImaginaryFileData_ = mockFileData.Clone();
   }
 
@@ -71,28 +71,28 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override FileAttributes Attributes {
-    get { return this.GetMockFileDataForRead_().Attributes; }
+    get { return GetMockFileDataForRead().Attributes; }
     set {
-      this.GetMockFileDataForWrite_().Attributes = value | FileAttributes.Directory;
+      GetMockFileDataForWrite().Attributes = value | FileAttributes.Directory;
     }
   }
 
   /// <inheritdoc />
   public override DateTime CreationTime {
-    get { return this.GetMockFileDataForRead_().CreationTime.LocalDateTime; }
-    set { this.GetMockFileDataForWrite_().CreationTime = value; }
+    get { return GetMockFileDataForRead().CreationTime.LocalDateTime; }
+    set { GetMockFileDataForWrite().CreationTime = value; }
   }
 
   /// <inheritdoc />
   public override DateTime CreationTimeUtc {
-    get { return this.GetMockFileDataForRead_().CreationTime.UtcDateTime; }
-    set { this.GetMockFileDataForWrite_().CreationTime = value; }
+    get { return GetMockFileDataForRead().CreationTime.UtcDateTime; }
+    set { GetMockFileDataForWrite().CreationTime = value; }
   }
 
   /// <inheritdoc />
   public override bool Exists {
     get {
-      var mockFileData = this.GetMockFileDataForRead_();
+      var mockFileData = GetMockFileDataForRead();
       return (int) mockFileData.Attributes != -1 && mockFileData.IsDirectory;
     }
   }
@@ -102,7 +102,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
     get {
       // System.IO.Path.GetExtension does only string manipulation,
       // so it's safe to delegate.
-      return Path.GetExtension(this.directoryPath_);
+      return Path.GetExtension(directoryPath);
     }
   }
 
@@ -110,48 +110,48 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   public override string FullName {
     get {
       var root
-          = this.imaginaryFileDataAccessor_.Path.GetPathRoot(this.directoryPath_);
+          = this.imaginaryFileDataAccessor_.Path.GetPathRoot(directoryPath);
 
       if (this.imaginaryFileDataAccessor_.StringOperations.Equals(
-              this.directoryPath_,
+              directoryPath,
               root)) {
         // drives have the trailing slash
-        return this.directoryPath_;
+        return directoryPath;
       }
 
       // directories do not have a trailing slash
-      return this.directoryPath_.TrimEnd('\\').TrimEnd('/');
+      return directoryPath.TrimEnd('\\').TrimEnd('/');
     }
   }
 
   /// <inheritdoc />
   public override DateTime LastAccessTime {
-    get { return this.GetMockFileDataForRead_().LastAccessTime.LocalDateTime; }
-    set { this.GetMockFileDataForWrite_().LastAccessTime = value; }
+    get { return GetMockFileDataForRead().LastAccessTime.LocalDateTime; }
+    set { GetMockFileDataForWrite().LastAccessTime = value; }
   }
 
   /// <inheritdoc />
   public override DateTime LastAccessTimeUtc {
-    get { return this.GetMockFileDataForRead_().LastAccessTime.UtcDateTime; }
-    set { this.GetMockFileDataForWrite_().LastAccessTime = value; }
+    get { return GetMockFileDataForRead().LastAccessTime.UtcDateTime; }
+    set { GetMockFileDataForWrite().LastAccessTime = value; }
   }
 
   /// <inheritdoc />
   public override DateTime LastWriteTime {
-    get { return this.GetMockFileDataForRead_().LastWriteTime.LocalDateTime; }
-    set { this.GetMockFileDataForWrite_().LastWriteTime = value; }
+    get { return GetMockFileDataForRead().LastWriteTime.LocalDateTime; }
+    set { GetMockFileDataForWrite().LastWriteTime = value; }
   }
 
   /// <inheritdoc />
   public override DateTime LastWriteTimeUtc {
-    get { return this.GetMockFileDataForRead_().LastWriteTime.UtcDateTime; }
-    set { this.GetMockFileDataForWrite_().LastWriteTime = value; }
+    get { return GetMockFileDataForRead().LastWriteTime.UtcDateTime; }
+    set { GetMockFileDataForWrite().LastWriteTime = value; }
   }
 
 #if FEATURE_FILE_SYSTEM_INFO_LINK_TARGET
   /// <inheritdoc />
   public override string LinkTarget {
-    get { return this.GetMockFileDataForRead_().LinkTarget; }
+    get { return GetMockFileDataForRead().LinkTarget; }
   }
 #endif
 
@@ -159,9 +159,9 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   public override string Name {
     get {
       var mockPath = new ImaginaryPath(this.imaginaryFileDataAccessor_);
-      return string.Equals(mockPath.GetPathRoot(this.directoryPath_), this.directoryPath_)
-          ? this.directoryPath_
-          : mockPath.GetFileName(this.directoryPath_.TrimEnd(
+      return string.Equals(mockPath.GetPathRoot(directoryPath), directoryPath)
+          ? directoryPath
+          : mockPath.GetFileName(directoryPath.TrimEnd(
                                      this.imaginaryFileDataAccessor_.Path
                                          .DirectorySeparatorChar));
     }
@@ -170,7 +170,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override void Create() {
     this.imaginaryFileDataAccessor_.Directory.CreateDirectory(FullName);
-    this.refreshOnNextRead_ = true;
+    refreshOnNextRead = true;
   }
 
   /// <inheritdoc />
@@ -181,8 +181,8 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override void Delete(bool recursive) {
-    this.imaginaryFileDataAccessor_.Directory.Delete(this.directoryPath_, recursive);
-    this.refreshOnNextRead_ = true;
+    this.imaginaryFileDataAccessor_.Directory.Delete(directoryPath, recursive);
+    refreshOnNextRead = true;
   }
 
   /// <inheritdoc />
@@ -267,16 +267,16 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override IDirectoryInfo[] GetDirectories() {
-    return this.ConvertStringsToDirectories_(
+    return ConvertStringsToDirectories(
         this.imaginaryFileDataAccessor_.Directory
-            .GetDirectories(this.directoryPath_));
+            .GetDirectories(directoryPath));
   }
 
   /// <inheritdoc />
   public override IDirectoryInfo[] GetDirectories(string searchPattern) {
-    return this.ConvertStringsToDirectories_(
+    return ConvertStringsToDirectories(
         this.imaginaryFileDataAccessor_.Directory.GetDirectories(
-            this.directoryPath_,
+            directoryPath,
             searchPattern));
   }
 
@@ -284,9 +284,9 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   public override IDirectoryInfo[] GetDirectories(
       string searchPattern,
       SearchOption searchOption) {
-    return this.ConvertStringsToDirectories_(
+    return ConvertStringsToDirectories(
         this.imaginaryFileDataAccessor_.Directory.GetDirectories(
-            this.directoryPath_,
+            directoryPath,
             searchPattern,
             searchOption));
   }
@@ -296,15 +296,15 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   public override IDirectoryInfo[] GetDirectories(
       string searchPattern,
       EnumerationOptions enumerationOptions) {
-    return this.ConvertStringsToDirectories_(
+    return ConvertStringsToDirectories(
         imaginaryFileDataAccessor_.Directory.GetDirectories(
-            this.directoryPath_,
+            directoryPath,
             searchPattern,
             enumerationOptions));
   }
 #endif
 
-  private DirectoryInfoBase[] ConvertStringsToDirectories_(
+  private DirectoryInfoBase[] ConvertStringsToDirectories(
       IEnumerable<string> paths) {
     return paths
            .Select(path => new ImaginaryDirectoryInfo(
@@ -316,13 +316,13 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override IFileInfo[] GetFiles() {
-    return this.ConvertStringsToFiles_(
+    return ConvertStringsToFiles(
         this.imaginaryFileDataAccessor_.Directory.GetFiles(FullName));
   }
 
   /// <inheritdoc />
   public override IFileInfo[] GetFiles(string searchPattern) {
-    return this.ConvertStringsToFiles_(
+    return ConvertStringsToFiles(
         this.imaginaryFileDataAccessor_.Directory.GetFiles(
             FullName,
             searchPattern));
@@ -331,7 +331,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override IFileInfo[] GetFiles(string searchPattern,
                                        SearchOption searchOption) {
-    return this.ConvertStringsToFiles_(
+    return ConvertStringsToFiles(
         this.imaginaryFileDataAccessor_.Directory.GetFiles(
             FullName,
             searchPattern,
@@ -342,7 +342,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   /// <inheritdoc />
   public override IFileInfo[] GetFiles(string searchPattern,
                                        EnumerationOptions enumerationOptions) {
-    return this.ConvertStringsToFiles_(
+    return ConvertStringsToFiles(
         imaginaryFileDataAccessor_.Directory.GetFiles(
             FullName,
             searchPattern,
@@ -350,7 +350,7 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
   }
 #endif
 
-  IFileInfo[] ConvertStringsToFiles_(IEnumerable<string> paths) {
+  IFileInfo[] ConvertStringsToFiles(IEnumerable<string> paths) {
     return paths
            .Select(this.imaginaryFileDataAccessor_.FileInfo.New)
            .ToArray();
@@ -390,14 +390,14 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
 
   /// <inheritdoc />
   public override void MoveTo(string destDirName) {
-    this.imaginaryFileDataAccessor_.Directory.Move(this.directoryPath_, destDirName);
-    this.SetDirectoryPath_(destDirName);
+    this.imaginaryFileDataAccessor_.Directory.Move(directoryPath, destDirName);
+    SetDirectoryPath(destDirName);
   }
 
   /// <inheritdoc />
   public override IDirectoryInfo Parent {
     get {
-      return this.imaginaryFileDataAccessor_.Directory.GetParent(this.directoryPath_);
+      return this.imaginaryFileDataAccessor_.Directory.GetParent(directoryPath);
     }
   }
 
@@ -411,47 +411,47 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
     }
   }
 
-  private ImaginaryFileData GetMockFileDataForRead_() {
-    if (this.refreshOnNextRead_) {
+  private ImaginaryFileData GetMockFileDataForRead() {
+    if (refreshOnNextRead) {
       Refresh();
-      this.refreshOnNextRead_ = false;
+      refreshOnNextRead = false;
     }
 
     return this.cachedImaginaryFileData_;
   }
 
-  private ImaginaryFileData GetMockFileDataForWrite_() {
-    this.refreshOnNextRead_ = true;
-    return this.imaginaryFileDataAccessor_.GetFile(this.directoryPath_) ??
-           throw CommonExceptions.CouldNotFindPartOfPath(this.directoryPath_);
+  private ImaginaryFileData GetMockFileDataForWrite() {
+    refreshOnNextRead = true;
+    return this.imaginaryFileDataAccessor_.GetFile(directoryPath) ??
+           throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
   }
 
   /// <inheritdoc />
   public override string ToString() {
-    return this.originalPath_;
+    return originalPath;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl()" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl() {
-    return this.GetMockDirectoryData_().AccessControl;
+    return GetMockDirectoryData().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.GetAccessControl(IFileSystemAclSupport.AccessControlSections)" />
   [SupportedOSPlatform("windows")]
   public object GetAccessControl(
       IFileSystemAclSupport.AccessControlSections includeSections) {
-    return this.GetMockDirectoryData_().AccessControl;
+    return GetMockDirectoryData().AccessControl;
   }
 
   /// <inheritdoc cref="IFileSystemAclSupport.SetAccessControl(object)" />
   [SupportedOSPlatform("windows")]
   public void SetAccessControl(object value) {
-    this.GetMockDirectoryData_().AccessControl = value as DirectorySecurity;
+    GetMockDirectoryData().AccessControl = value as DirectorySecurity;
   }
 
-  private void SetDirectoryPath_(string path) {
-    this.originalPath_ = path;
+  private void SetDirectoryPath(string path) {
+    originalPath = path;
     path = this.imaginaryFileDataAccessor_.Path.GetFullPath(path);
 
     path = path.TrimSlashes();
@@ -459,12 +459,12 @@ public class ImaginaryDirectoryInfo : DirectoryInfoBase, IFileSystemAclSupport {
       path = path.TrimEnd(' ');
     }
 
-    this.directoryPath_ = path;
+    this.directoryPath = path;
   }
 
-  private ImaginaryDirectoryData GetMockDirectoryData_() {
-    return this.imaginaryFileDataAccessor_.GetFile(this.directoryPath_) as
+  private ImaginaryDirectoryData GetMockDirectoryData() {
+    return this.imaginaryFileDataAccessor_.GetFile(directoryPath) as
                ImaginaryDirectoryData ??
-           throw CommonExceptions.CouldNotFindPartOfPath(this.directoryPath_);
+           throw CommonExceptions.CouldNotFindPartOfPath(directoryPath);
   }
 }

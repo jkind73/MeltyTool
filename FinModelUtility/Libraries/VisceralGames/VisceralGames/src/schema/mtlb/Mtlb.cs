@@ -51,10 +51,10 @@ public sealed class Mtlb : IBinaryDeserializable {
 
             var valueOffset = valuesOffset + br.ReadUInt32();
             Vector4? colorValues = null;
-            Vector2I? idValues = null;
+            Vector2i? idValues = null;
             if (type.IsSampler()) {
               idValues
-                  = br.SubreadAt(valueOffset, () => br.ReadNew<Vector2I>());
+                  = br.SubreadAt(valueOffset, () => br.ReadNew<Vector2i>());
             } else {
               colorValues = br.SubreadAt(valueOffset, br.ReadVector4);
             }
@@ -87,65 +87,65 @@ public sealed class Mtlb : IBinaryDeserializable {
 }
 
 public enum MtlbChannelCategory {
-  SAMPLER = 5,
+  Sampler = 5,
 }
 
 public enum MtlbChannelType {
-  NOT_SUPPORTED,
-  OCCLUSION_SAMPLER,
-  DIFFUSE_SAMPLER,
-  NORMAL_SAMPLER,
-  EMISSIVE_SAMPLER,
-  SPEC_ENV_MAP_SAMPLER,
-  SPECULAR_TEX_SAMPLER,
-  AMB_LIGHT_AMB_OCCL_INTENSITY_FACING_RATIO,
-  BUMP_DIFF_LGT_SPEC_MOD_SHINNYNESS,
-  G_BLINK_PARAMS,
-  G_MATERIAL_NORMAL_MAP_SCALE,
-  G_SKIN_PS_PARAMS,
-  SHININESS,
+  NotSupported,
+  OcclusionSampler,
+  DiffuseSampler,
+  NormalSampler,
+  EmissiveSampler,
+  SpecEnvMapSampler,
+  SpecularTexSampler,
+  AmbLightAmbOcclIntensityFacingRatio,
+  bumpDiffLgtSpecModShinnyness,
+  g_blinkParams,
+  g_materialNormalMapScale,
+  g_skinPSParams,
+  Shininess,
 }
 
 internal static class MtlbChannelTypeExtensions {
   public static MtlbChannelType ToMtlbChannelType(this string typeText)
     => typeText switch {
         "AmbLightAmbOcclIntensityFacingRatio" => MtlbChannelType
-            .AMB_LIGHT_AMB_OCCL_INTENSITY_FACING_RATIO,
+            .AmbLightAmbOcclIntensityFacingRatio,
         "bumpDiffLgtSpecModShinnyness" => MtlbChannelType
-            .BUMP_DIFF_LGT_SPEC_MOD_SHINNYNESS,
+            .bumpDiffLgtSpecModShinnyness,
         "colorTexSampler"
-            or "g_Sampler" => MtlbChannelType.DIFFUSE_SAMPLER,
-        "g_blinkParams" => MtlbChannelType.G_BLINK_PARAMS,
+            or "g_Sampler" => MtlbChannelType.DiffuseSampler,
+        "g_blinkParams" => MtlbChannelType.g_blinkParams,
         "g_materialNormalMapScale" => MtlbChannelType
-            .G_MATERIAL_NORMAL_MAP_SCALE,
-        "g_skinPSParams" => MtlbChannelType.G_SKIN_PS_PARAMS,
+            .g_materialNormalMapScale,
+        "g_skinPSParams" => MtlbChannelType.g_skinPSParams,
         "normalSampler"
-            or "g_materialNormalMap" => MtlbChannelType.NORMAL_SAMPLER,
+            or "g_materialNormalMap" => MtlbChannelType.NormalSampler,
         "OcclusionTexSampler"
-            or "AoMapSampler" => MtlbChannelType.OCCLUSION_SAMPLER,
+            or "AoMapSampler" => MtlbChannelType.OcclusionSampler,
         "SelfIllumTexSampler"
-            or "LightMapSampler" => MtlbChannelType.EMISSIVE_SAMPLER,
+            or "LightMapSampler" => MtlbChannelType.EmissiveSampler,
         "Shinnyness"
-            or "g_SpecularExponent" => MtlbChannelType.SHININESS,
+            or "g_SpecularExponent" => MtlbChannelType.Shininess,
         "SpecEnvMapSampler"
-            or "g_materialSpecMap" => MtlbChannelType.SPEC_ENV_MAP_SAMPLER,
+            or "g_materialSpecMap" => MtlbChannelType.SpecEnvMapSampler,
         "SpecularTexSampler"
-            or "g_GlossMapSampler" => MtlbChannelType.SPECULAR_TEX_SAMPLER,
-        _ => MtlbChannelType.NOT_SUPPORTED
+            or "g_GlossMapSampler" => MtlbChannelType.SpecularTexSampler,
+        _ => MtlbChannelType.NotSupported
     };
 
   public static bool IsSampler(this MtlbChannelType type)
-    => type is MtlbChannelType.DIFFUSE_SAMPLER
-               or MtlbChannelType.NORMAL_SAMPLER
-               or MtlbChannelType.OCCLUSION_SAMPLER
-               or MtlbChannelType.EMISSIVE_SAMPLER
-               or MtlbChannelType.SPECULAR_TEX_SAMPLER;
+    => type is MtlbChannelType.DiffuseSampler
+               or MtlbChannelType.NormalSampler
+               or MtlbChannelType.OcclusionSampler
+               or MtlbChannelType.EmissiveSampler
+               or MtlbChannelType.SpecularTexSampler;
 }
 
 public sealed class MtlbChannel {
   public MtlbChannelCategory MtlbChannelCategory { get; set; }
   public MtlbChannelType Type { get; set; }
   public Vector4? ColorValues { get; set; }
-  public Vector2I? IdValues { get; set; }
+  public Vector2i? IdValues { get; set; }
   public string Path { get; set; }
 }

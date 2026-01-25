@@ -3,32 +3,32 @@ using BVector = System.Numerics.Vector4;
 
 namespace KSoft.Phoenix.Runtime
 {
-	partial class CSaveMarker
+	partial class cSaveMarker
 	{
 		public const ushort
-			C_SAVE_MARKER_PATH1 = 0x2710
+			cSaveMarkerPath1 = 0x2710
 			;
 	};
 
 	public sealed class BPath
 		: IO.IEndianStreamSerializable
 	{
-		const int C_MAXIMUM_WAYPOINTS_ = 0x2710;
+		const int cMaximumWaypoints = 0x2710;
 
-		public BVector[] waypoints;
-		public byte flags;
-		public float pathLength;
-		public uint creationTime;
+		public BVector[] Waypoints;
+		public byte Flags;
+		public float PathLength;
+		public uint CreationTime;
 
 		#region IEndianStreamSerializable Members
 		public void Serialize(IO.EndianStream s)
 		{
-			BSaveGame.StreamVectorArray16(s, ref this.waypoints, C_MAXIMUM_WAYPOINTS_);
-			s.Stream(ref this.flags);
-			s.Stream(ref this.pathLength);
-			s.Stream(ref this.creationTime);
+			BSaveGame.StreamVectorArray16(s, ref this.Waypoints, cMaximumWaypoints);
+			s.Stream(ref this.Flags);
+			s.Stream(ref this.PathLength);
+			s.Stream(ref this.CreationTime);
 
-			s.StreamSignature(CSaveMarker.C_SAVE_MARKER_PATH1);
+			s.StreamSignature(cSaveMarker.cSaveMarkerPath1);
 		}
 		#endregion
 	};

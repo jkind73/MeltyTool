@@ -16,34 +16,34 @@ namespace KSoft.Memory
 	class VirtualAddressTranslationStack
 		: Stack<Values.PtrHandle>
 	{
-		const int K_DEFAULT_CAPACITY_ = 8;
+		const int kDefaultCapacity = 8;
 
-		readonly Values.PtrHandle mNull_;
-		Values.PtrHandle mCurrentPa_;
+		readonly Values.PtrHandle mNull;
+		Values.PtrHandle mCurrentPA;
 		/// <summary>The top PA on the stack</summary>
-		public Values.PtrHandle CurrentAddress { get { return this.mCurrentPa_; } }
+		public Values.PtrHandle CurrentAddress { get { return this.mCurrentPA; } }
 
 		#region Ctor
 		public VirtualAddressTranslationStack(Shell.ProcessorSize ptrSize)
-			: this(ptrSize, K_DEFAULT_CAPACITY_)
+			: this(ptrSize, kDefaultCapacity)
 		{
 		}
 
 		public VirtualAddressTranslationStack(Shell.ProcessorSize ptrSize, int capacity)
-			: base(capacity != 0 ? capacity : K_DEFAULT_CAPACITY_)
+			: base(capacity != 0 ? capacity : kDefaultCapacity)
 		{
 			Contract.Requires<ArgumentOutOfRangeException>(
-				ptrSize == Shell.ProcessorSize.X32 || ptrSize == Shell.ProcessorSize.X64);
+				ptrSize == Shell.ProcessorSize.x32 || ptrSize == Shell.ProcessorSize.x64);
 
 			switch (ptrSize)
 			{
-			case Shell.ProcessorSize.X32:
-				this.mNull_ = Values.PtrHandle.Null32; break;
-			case Shell.ProcessorSize.X64:
-				this.mNull_ = Values.PtrHandle.Null64; break;
+			case Shell.ProcessorSize.x32:
+				this.mNull = Values.PtrHandle.Null32; break;
+			case Shell.ProcessorSize.x64:
+				this.mNull = Values.PtrHandle.Null64; break;
 			}
 
-			this.mCurrentPa_ = this.mNull_;
+			this.mCurrentPA = this.mNull;
 		}
 		#endregion
 
@@ -52,7 +52,7 @@ namespace KSoft.Memory
 		/// <param name="pa">PA to push</param>
 		public void PushPhysicalAddress(Values.PtrHandle pa)
 		{
-			this.mCurrentPa_ = pa;
+			this.mCurrentPA = pa;
 
 			this.Push(pa);
 		}
@@ -61,15 +61,15 @@ namespace KSoft.Memory
 		/// <param name="relativeOffset">offset relative to <see cref="CurrentAddress"/></param>
 		public void PushPhysicalAddressOffset(Values.PtrHandle relativeOffset)
 		{
-			var newPa = this.CurrentAddress + relativeOffset;
+			var new_pa = this.CurrentAddress + relativeOffset;
 
-			this.PushPhysicalAddress(newPa);
+			this.PushPhysicalAddress(new_pa);
 		}
 		/// <summary>Push the null identifier on to the PA stack</summary>
 		/// <remarks><see cref="CurrentAddress"/> gets set to the null identifier as well</remarks>
 		public void PushNull()
 		{
-			this.PushPhysicalAddress(this.mNull_);
+			this.PushPhysicalAddress(this.mNull);
 		}
 
 		/// <summary>
@@ -81,9 +81,9 @@ namespace KSoft.Memory
 			var pop = this.Pop();
 
 			if (this.Count != 0)
-				this.mCurrentPa_ = this.Peek();
+				this.mCurrentPA = this.Peek();
 			else
-				this.mCurrentPa_ = this.mNull_;
+				this.mCurrentPA = this.mNull;
 
 			return pop;
 		}
@@ -96,7 +96,7 @@ namespace KSoft.Memory
 		/// <remarks>If the VA read is a <see cref="PtrHandle.IsInvalidHandle">InvalidHandle</see>, it is returned without fix-up</remarks>
 		public Values.PtrHandle ReadVirtualAsPhysicalAddress(IO.EndianReader s)
 		{
-			Values.PtrHandle va = this.mNull_;
+			Values.PtrHandle va = this.mNull;
 			s.ReadRawPointer(ref va);
 
 			if (va.IsInvalidHandle)

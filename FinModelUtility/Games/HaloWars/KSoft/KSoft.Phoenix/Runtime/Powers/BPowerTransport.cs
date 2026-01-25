@@ -7,18 +7,18 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerTransport
 		: BPower
 	{
-		public BVector pickupLocation;
-		public BEntityID[] squadsToTransport;
-		public bool gotPickupLocation;
+		public BVector PickupLocation;
+		public BEntityID[] SquadsToTransport;
+		public bool GotPickupLocation;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.StreamV(ref this.pickupLocation);
-			BSaveGame.StreamArray(s, ref this.squadsToTransport);
-			s.Stream(ref this.gotPickupLocation);
+			s.StreamV(ref this.PickupLocation);
+			BSaveGame.StreamArray(s, ref this.SquadsToTransport);
+			s.Stream(ref this.GotPickupLocation);
 		}
 		#endregion
 	};

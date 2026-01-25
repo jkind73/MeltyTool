@@ -6,28 +6,28 @@ namespace KSoft.Phoenix.Runtime
 	sealed class BPowerUnscMacUser
 		: BPowerUser
 	{
-		public BPowerHelperHudSounds hudSounds = new BPowerHelperHudSounds();
-		public string helpString;
-		public BEntityID fakeTargettingLaserId, realTargettingLaserId, targettedSquadId;
-		public uint shotsRemaining;
-		public float lastCommandSent, commandInterval, lastShotSent, shotInterval;
-		public int losMode;
-		public bool flagLastCameraAutoZoomInstantEnabled, flagLastCameraAutoZoomEnabled,
-			flagLastCameraZoomEnabled, flagLastCameraYawEnabled;
+		public BPowerHelperHudSounds HudSounds = new BPowerHelperHudSounds();
+		public string HelpString;
+		public BEntityID FakeTargettingLaserID, RealTargettingLaserID, TargettedSquadID;
+		public uint ShotsRemaining;
+		public float LastCommandSent, CommandInterval, LastShotSent, ShotInterval;
+		public int LOSMode;
+		public bool FlagLastCameraAutoZoomInstantEnabled, FlagLastCameraAutoZoomEnabled,
+			FlagLastCameraZoomEnabled, FlagLastCameraYawEnabled;
 
 		#region IEndianStreamSerializable Members
 		public override void Serialize(IO.EndianStream s)
 		{
 			base.Serialize(s);
 
-			s.Stream(this.hudSounds);
-			s.StreamPascalWideString32(ref this.helpString);
-			s.Stream(ref this.fakeTargettingLaserId); s.Stream(ref this.realTargettingLaserId); s.Stream(ref this.targettedSquadId);
-			s.Stream(ref this.shotsRemaining);
-			s.Stream(ref this.lastCommandSent); s.Stream(ref this.commandInterval); s.Stream(ref this.lastShotSent); s.Stream(ref this.shotInterval);
-			s.Stream(ref this.losMode);
-			s.Stream(ref this.flagLastCameraAutoZoomInstantEnabled); s.Stream(ref this.flagLastCameraAutoZoomEnabled);
-			s.Stream(ref this.flagLastCameraZoomEnabled); s.Stream(ref this.flagLastCameraYawEnabled);
+			s.Stream(this.HudSounds);
+			s.StreamPascalWideString32(ref this.HelpString);
+			s.Stream(ref this.FakeTargettingLaserID); s.Stream(ref this.RealTargettingLaserID); s.Stream(ref this.TargettedSquadID);
+			s.Stream(ref this.ShotsRemaining);
+			s.Stream(ref this.LastCommandSent); s.Stream(ref this.CommandInterval); s.Stream(ref this.LastShotSent); s.Stream(ref this.ShotInterval);
+			s.Stream(ref this.LOSMode);
+			s.Stream(ref this.FlagLastCameraAutoZoomInstantEnabled); s.Stream(ref this.FlagLastCameraAutoZoomEnabled);
+			s.Stream(ref this.FlagLastCameraZoomEnabled); s.Stream(ref this.FlagLastCameraYawEnabled);
 		}
 		#endregion
 	};

@@ -5,12 +5,12 @@ using BVector = System.Numerics.Vector4;
 
 namespace KSoft.Phoenix.Xmb
 {
-	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=K_SIZE_OF_)]
+	[Interop.StructLayout(Interop.LayoutKind.Explicit, Size=kSizeOf)]
 	/*public*/ struct XmbVariant
 	{
-		const int K_SIZE_OF_ = 8;
+		const int kSizeOf = 8;
 
-		public static XmbVariant Empty { get { return new XmbVariant() { Type = XmbVariantType.NULL }; } }
+		public static XmbVariant Empty { get { return new XmbVariant() { Type = XmbVariantType.Null }; } }
 
 		#region Properties
 		[Interop.FieldOffset(0)]
@@ -26,10 +26,10 @@ namespace KSoft.Phoenix.Xmb
 		[Interop.FieldOffset(2)]
 		public byte VectorLength;
 
-		public bool IsEmpty { get { return this.Type == XmbVariantType.NULL; } }
+		public bool IsEmpty { get { return this.Type == XmbVariantType.Null; } }
 
 		public bool HasUnicodeData { get {
-			return this.Type == XmbVariantType.STRING && this.IsUnicode;
+			return this.Type == XmbVariantType.String && this.IsUnicode;
 		} }
 		#endregion
 
@@ -117,14 +117,14 @@ namespace KSoft.Phoenix.Xmb
 
 			switch (this.Type)
 			{
-				case XmbVariantType.SINGLE: {
+				case XmbVariantType.Single: {
 					float f = this.Single;
 					if (this.IsIndirect)
 						f = pool.GetSingle(this.Offset);
-					result = f.ToStringInvariant(Numbers.K_FLOAT_ROUND_TRIP_FORMAT_SPECIFIER);
+					result = f.ToStringInvariant(Numbers.kFloatRoundTripFormatSpecifier);
 				} break;
 
-				case XmbVariantType.INT: {
+				case XmbVariantType.Int: {
 					uint i = this.Int;
 					if (this.IsIndirect)
 						i = pool.GetUInt32(this.Offset);
@@ -133,21 +133,21 @@ namespace KSoft.Phoenix.Xmb
 						: ((int)i).ToString();
 				} break;
 
-				case XmbVariantType.DOUBLE: {
+				case XmbVariantType.Double: {
 					double d = pool.GetDouble(this.Offset);
-					result = d.ToStringInvariant(Numbers.K_DOUBLE_ROUND_TRIP_FORMAT_SPECIFIER);
+					result = d.ToStringInvariant(Numbers.kDoubleRoundTripFormatSpecifier);
 				} break;
 
-				case XmbVariantType.BOOL: {
+				case XmbVariantType.Bool: {
 					// Phoenix uses lower case and Boolean.ToString uppercases the first letter
 					result = this.Bool ? "true" : "false";
 				} break;
 
-				case XmbVariantType.STRING: {
+				case XmbVariantType.String: {
 					result = this.StringToString(pool);
 				} break;
 
-				case XmbVariantType.VECTOR: {
+				case XmbVariantType.Vector: {
 					result = VectorToString(this.Offset, this.VectorLength, pool);
 				} break;
 			}

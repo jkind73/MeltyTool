@@ -123,8 +123,8 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
     // Gets nodes for track
     var trackNodes = trackItems
-                     .Where(i => i is { type: "Node", myArray: not null })
-                     .Select(i => new TrackNode(i.myArray!))
+                     .Where(i => i is { type: "Node", my_array: not null })
+                     .Select(i => new TrackNode(i.my_array!))
                      .ToArray();
     var nodePositions = trackNodes.Select(n => n.Translation).ToArray();
     {
@@ -132,7 +132,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
           { FileBundle = fileBundle, Files = fileSet };
       var nodesMaterial = nodesModel.MaterialManager.AddNullMaterial();
       nodesMaterial.DepthMode = DepthMode.NONE;
-      nodesMaterial.DepthCompareType = DepthCompareType.ALWAYS;
+      nodesMaterial.DepthCompareType = DepthCompareType.Always;
 
       var nodesSkin = nodesModel.Skin;
       var nodeVertices =
@@ -149,7 +149,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
     var visibleItems =
         trackItems.Where(i => i.type is "Model" or "Object" or "Sprite");
     foreach (var trackItem in visibleItems) {
-      var myStruct = trackItem.myStruct;
+      var myStruct = trackItem.my_struct;
 
       var position = myStruct != null
           ? new Vector3(myStruct.x ?? 0,
@@ -160,12 +160,12 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
       if (position.IsRoughly0()) {
         position = trackPath.GetTranslationAtOffset(
             (myStruct.position ?? 0) * 33f,
-            -myStruct.xoffPercent ?? 0);
+            -myStruct.xoff_percent ?? 0);
       }
 
-      var xScale = (myStruct?.imageXscale ?? 1) *
+      var xScale = (myStruct?.image_xscale ?? 1) *
                    (myStruct?.xscale ?? 1);
-      var yScale = (myStruct?.imageYscale ?? 1) *
+      var yScale = (myStruct?.image_yscale ?? 1) *
                    (myStruct?.yscale ?? 1);
 
       var trackItemObj = finArea.AddRootNode();
@@ -174,7 +174,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
       switch (trackItem.type) {
         case "Model": {
-          var modelIndex = trackItem.myStruct?.modelIndex ?? -1;
+          var modelIndex = trackItem.my_struct?.model_index ?? -1;
 
           var sb = new StringBuilder();
           sb.Append($"Model# {modelIndex}");
@@ -184,13 +184,13 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
             sb.Append($" ({path})");
           }
 
-          var sprite = GetSpriteNamesForModel_(trackItem.myStruct).FirstOrDefault();
+          var sprite = GetSpriteNamesForModel_(trackItem.my_struct).FirstOrDefault();
           sb.Append($", tex: {sprite}");
 
           trackItemObj.Name = sb.ToString();
 
           var finModels
-              = GenerateModelForTrackItemModel_(trackItem.myStruct,
+              = GenerateModelForTrackItemModel_(trackItem.my_struct,
                                                 lazyTrackItemModels);
 
           trackItemObj.SetScale(myStruct?.scale ?? 1);
@@ -208,7 +208,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
           var spriteModel = new ModelImpl
               { FileBundle = fileBundle, Files = fileSet };
 
-          var spriteIndex = trackItem.myStruct.spriteIndex.AssertNonnull();
+          var spriteIndex = trackItem.my_struct.sprite_index.AssertNonnull();
           var spriteImage = lazySpriteImages[spriteIndex];
 
           trackItemObj.Name = $"Sprite {spriteIndex}";
@@ -229,7 +229,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
               spriteImage.Height * yScale,
               spriteMaterial,
               true,
-              (myStruct.flipX ?? 1) == -1);
+              (myStruct.flip_x ?? 1) == -1);
 
           trackItemObj.AddSceneModel(spriteModel);
 
@@ -355,7 +355,7 @@ public sealed partial class VictoryHeatRallyTrackSceneImporter
 
     var spriteNames = GetSpriteNamesForModel_(trackItem).ToArray();
 
-    if (trackItem.modelIndex is { } modelIndex &&
+    if (trackItem.model_index is { } modelIndex &&
         lazyTrackItemModels[(modelIndex, spriteNames)] is { } lazyModel) {
       yield return lazyModel;
       yield break;
