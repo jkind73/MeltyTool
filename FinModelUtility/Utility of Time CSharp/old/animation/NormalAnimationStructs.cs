@@ -6,7 +6,7 @@ namespace UoT {
 
   public sealed class NormalAnimation : IAnimation {
     public ushort[] angles = [];
-    public IList<Vec3s> positions;
+    public IList<Vec3S> positions;
     public NormalAnimationTrack[] tracks = [];
     public uint trackOffset;
     public uint angleCount;
@@ -16,7 +16,7 @@ namespace UoT {
     public ushort FrameCount { get; set; }
 
     public int PositionCount => this.positions.Count;
-    public Vec3s GetPosition(int i) => this.positions[i];
+    public Vec3S GetPosition(int i) => this.positions[i];
 
     public int TrackCount => this.tracks.Length;
     public IAnimationTrack GetTrack(int i) => this.tracks[i];

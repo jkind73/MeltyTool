@@ -48,7 +48,7 @@ public sealed class ZsiSceneImporter : ISceneImporter<ZsiSceneFileBundle> {
 
         var light0 = finLighting.CreateLight();
         light0.SetColor(colorWhite);
-        light0.SetNormal(new Vector3f() {
+        light0.SetNormal(new Vector3F() {
             X = 0.57715f,
             Y = 0.57715f,
             Z = 0.57715f
@@ -56,7 +56,7 @@ public sealed class ZsiSceneImporter : ISceneImporter<ZsiSceneFileBundle> {
 
         var light1 = finLighting.CreateLight();
         light1.SetColor(FinColor.FromRgbFloats(0, .2f, .3f));
-        light1.SetNormal(new Vector3f() {
+        light1.SetNormal(new Vector3F() {
             X = -0.57715f,
             Y = -0.57715f,
             Z = -0.57715f

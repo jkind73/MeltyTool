@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace fin.schema.color;
 
 [BinarySchema]
-public sealed partial class Rgba4f : IColor, IBinaryConvertible {
+public sealed partial class Rgba4F : IColor, IBinaryConvertible {
   public float Rf { get; set; }
   public float Gf { get; set; }
   public float Bf { get; set; }

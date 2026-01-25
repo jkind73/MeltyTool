@@ -45,8 +45,8 @@ internal interface IGdp {
 }
 
 public interface IN64Vertex {
-  Vector3s Xyz { get; }
-  Vector2s TextureCoordinates { get; }
+  Vector3S Xyz { get; }
+  Vector2S TextureCoordinates { get; }
   Rgba32 ColorOrNormalAndAlpha { get; }
 }
 

@@ -37,8 +37,8 @@
     public double scale;
     public double shiftS;
     public double shiftT;
-    public double tShiftS;
-    public double tShiftT;
+    public double shiftS;
+    public double shiftT;
     public int originalMaskS;
     public int originalMaskT;
     public int maskS;

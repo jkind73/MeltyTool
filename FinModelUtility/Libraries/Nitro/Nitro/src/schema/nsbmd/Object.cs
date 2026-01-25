@@ -27,14 +27,14 @@ namespace nitro.schema.nsbmd {
 
 
     [RIfBoolean(nameof(HasTranslation))]
-    public Vector3f? Translation { get; set; }
+    public Vector3F? Translation { get; set; }
 
     [ReadLogic]
     public void ReadRotation_(IBinaryReader br) {
       if (this.Flags.CheckFlag(ObjectFlags.USE_PIVOT_MATRIX)) {
         // TODO: Implement
       } else if (!this.Flags.CheckFlag(ObjectFlags.NO_ROTATION)) {
-        this.Rotation ??= new Matrix3X3f();
+        this.Rotation ??= new Matrix3X3F();
 
         Span<float> m1To9 = stackalloc float[8];
         br.ReadUn16s(m1To9);
@@ -49,11 +49,11 @@ namespace nitro.schema.nsbmd {
     }
 
     [RIfBoolean(nameof(HasScale))]
-    public Vector3f? Scale { get; set; }
+    public Vector3F? Scale { get; set; }
 
 
     [Skip]
-    public Matrix3X3f? Rotation { get; set; }
+    public Matrix3X3F? Rotation { get; set; }
 
 
     [Skip]

@@ -147,7 +147,7 @@ public sealed class FixedFunctionShaderSourceGlslTests {
                         },
                         mm => {
                           var texture = mm.CreateTexture(
-                              FinImage.Create1x1FromColor(Color.White));
+                              FinImage.Create1X1FromColor(Color.White));
                           var material = mm.AddFixedFunctionMaterial();
                           createMaterial(material, texture);
                           return material;

@@ -43,7 +43,7 @@ public sealed partial class Jnt1Entry : IBinaryConvertible {
 
   private readonly byte padding1_ = byte.MaxValue;
   public Vector3 Scale { get; private set; }
-  public Vector3s Rotation { get; } = new();
+  public Vector3S Rotation { get; } = new();
 
   private readonly ushort padding2_ = ushort.MaxValue;
   public Vector3 Translation { get; private set; }

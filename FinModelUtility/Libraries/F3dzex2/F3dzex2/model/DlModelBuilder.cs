@@ -80,11 +80,11 @@ public sealed class DlModelBuilder {
           if (!TmemUtil.AreColorFormatAndBitsPerTexelValid(
                   imageParams.ColorFormat,
                   imageParams.BitsPerTexel)) {
-            return FinImage.Create1x1FromColor(Color.Magenta);
+            return FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           if (imageParams.IsInvalid) {
-            return FinImage.Create1x1FromColor(
+            return FinImage.Create1X1FromColor(
                 this.vertices_.OverrideVertexColor);
           }
 
@@ -157,7 +157,7 @@ public sealed class DlModelBuilder {
                     imageParams.Height);
           }
 
-          return FinImage.Create1x1FromColor(Color.Magenta);
+          return FinImage.Create1X1FromColor(Color.Magenta);
         });
 
     var textureByImageAndParams

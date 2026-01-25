@@ -4,7 +4,7 @@ using schema.binary.attributes;
 namespace sysdolphin.schema.animation;
 
 [Flags]
-public enum AObjFlags : uint {
+public enum AobjFlags : uint {
   ANIM_REWINDED = (1 << 26),
   FIRST_PLAY = (1 << 27),
   NO_UPDATE = (1 << 28),
@@ -20,7 +20,7 @@ public enum AObjFlags : uint {
 /// </summary>
 [BinarySchema]
 public sealed partial class AObj : IBinaryDeserializable {
-  public AObjFlags Flags { get; set; }
+  public AobjFlags Flags { get; set; }
   public float EndFrame { get; set; }
   public uint FObjOffset { get; set; }
   public uint JObjOffset { get; set; }

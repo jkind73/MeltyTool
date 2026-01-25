@@ -102,7 +102,7 @@ public sealed class OutModelImporter : IModelImporter<OutModelFileBundle> {
     var lazyImageDictionary = new LazyDictionary<string, IImage>(
         imageName => {
           if (imageName == "Dummy") {
-            return FinImage.Create1x1FromColor(Color.Magenta);
+            return FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           var textureFile =
@@ -113,7 +113,7 @@ public sealed class OutModelImporter : IModelImporter<OutModelFileBundle> {
                   .FirstOrDefault();
 
           if (textureFile == null) {
-            return FinImage.Create1x1FromColor(Color.Magenta);
+            return FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           files.Add(textureFile);

@@ -7,7 +7,7 @@ namespace UoT {
     ushort FrameCount { get; }
 
     int PositionCount { get; }
-    Vec3s GetPosition(int frameIndex);
+    Vec3S GetPosition(int frameIndex);
 
     int TrackCount { get; }
     IAnimationTrack GetTrack(int i);
@@ -21,7 +21,7 @@ namespace UoT {
     IList<ushort> Frames { get; }
   }
 
-  public sealed class Vec3s {
+  public sealed class Vec3S {
     public short X { get; set; }
     public short Y { get; set; }
     public short Z { get; set; }

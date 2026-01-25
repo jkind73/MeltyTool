@@ -133,9 +133,9 @@ namespace UoT.model {
                   limit,
                   animation);
 
-          animation.positions = new Vec3s[animation.FrameCount];
+          animation.positions = new Vec3S[animation.FrameCount];
           for (var pi = 0; pi < animation.FrameCount; ++pi) {
-            animation.positions[pi] = new Vec3s {
+            animation.positions[pi] = new Vec3S {
                 X = this.ConvertUShortToShort_(xList[Math.Min(pi, xList.Length - 1)]),
                 Y = this.ConvertUShortToShort_(yList[Math.Min(pi, yList.Length - 1)]),
                 Z = this.ConvertUShortToShort_(zList[Math.Min(pi, zList.Length - 1)]),
@@ -229,7 +229,7 @@ namespace UoT.model {
 
         // Starts parsing animation from this spot.
         var tracks = new LinkAnimetionTrack[(int) (trackCount - 1L + 1)];
-        var positions = new Vec3s[frameCount];
+        var positions = new Vec3S[frameCount];
         var facialStates = new FacialState[frameCount];
 
         for (int t = 0, loopTo = (int) (trackCount - 1L);
@@ -243,7 +243,7 @@ namespace UoT.model {
         for (int f = 0; f < frameCount; f++) {
           var frameOffset = animationEr.Position = (uint) (originalAnimationOffset + f * frameSize);
 
-          positions[f] = new Vec3s {
+          positions[f] = new Vec3S {
               X = animationEr.ReadInt16(),
               Y = animationEr.ReadInt16(),
               Z = animationEr.ReadInt16(),

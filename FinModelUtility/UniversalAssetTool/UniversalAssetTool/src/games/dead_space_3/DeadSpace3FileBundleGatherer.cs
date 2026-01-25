@@ -50,7 +50,7 @@ public sealed class DeadSpace3FileBundleGatherer : INamedAnnotatedFileBundleGath
     var mtlbFileIdsDictionary = new MtlbFileIdsDictionary(
         extractedDir,
         new FinFile(Path.Join(cacheDir.FullPath, "mtlbs.ids")));
-    var tg4HFileIdDictionary = new Tg4hFileIdDictionary(
+    var tg4HFileIdDictionary = new Tg4HFileIdDictionary(
         extractedDir,
         new FinFile(Path.Join(cacheDir.FullPath, "tg4hs.ids")));
 

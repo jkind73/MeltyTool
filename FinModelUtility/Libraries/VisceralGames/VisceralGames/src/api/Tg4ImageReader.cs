@@ -63,7 +63,7 @@ public sealed class Tg4ImageReader {
     };
 
     if (compressionFormat == null) {
-      return FinImage.Create1x1FromColor(Color.Magenta);
+      return FinImage.Create1X1FromColor(Color.Magenta);
     }
 
     var isNormal = format == "DXT5_NM";

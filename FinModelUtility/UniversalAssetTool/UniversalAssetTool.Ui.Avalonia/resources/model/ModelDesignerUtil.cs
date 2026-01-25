@@ -50,14 +50,14 @@ public static class ModelDesignerUtil {
 
       {
         var emissiveTexture = materialManager.CreateTexture(
-            FinImage.Create1x1FromColor(Color.Orange));
+            FinImage.Create1X1FromColor(Color.Orange));
         emissiveTexture.Name = "Emissive (Orange)";
         material.EmissiveTexture = emissiveTexture;
       }
 
       {
         var specularTexture = materialManager.CreateTexture(
-            FinImage.Create1x1FromColor(Color.Red));
+            FinImage.Create1X1FromColor(Color.Red));
         specularTexture.Name = "Specular (Red)";
         material.SpecularTexture = specularTexture;
       }

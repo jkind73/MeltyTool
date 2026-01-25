@@ -181,7 +181,7 @@ public sealed class CmbModelBuilder {
             image = ctxb != null
                 ? cmbTexture.GetImageReader()
                             .ReadImage(ctxb.Chunk.Entry.Data)
-                : FinImage.Create1x1FromColor(Color.Magenta);
+                : FinImage.Create1X1FromColor(Color.Magenta);
           }
 
           return image;

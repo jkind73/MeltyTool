@@ -47,7 +47,7 @@ public sealed class AssimpModelImporter : IModelImporter<AssimpModelFileBundle> 
                 return FinImage.FromFile(imageFile);
               }
 
-              return FinImage.Create1x1FromColor(Color.Magenta);
+              return FinImage.Create1X1FromColor(Color.Magenta);
             });
     var lazyFinEmbeddedImages = new LazyDictionary<EmbeddedTexture, IImage>(
         assEmbeddedImage => {

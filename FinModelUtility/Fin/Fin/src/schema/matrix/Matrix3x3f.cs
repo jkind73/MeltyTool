@@ -3,7 +3,7 @@
 namespace fin.schema.matrix;
 
 [BinarySchema]
-public sealed partial class Matrix3X3f : IBinaryConvertible {
+public sealed partial class Matrix3X3F : IBinaryConvertible {
   public float[] Values { get; } = new float[3 * 3];
 
   public float this[int row, int column] {

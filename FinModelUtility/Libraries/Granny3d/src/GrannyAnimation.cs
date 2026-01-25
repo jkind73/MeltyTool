@@ -34,7 +34,7 @@ namespace granny3d {
     public string Name { get; private set; }
 
     public GrannyTransform InitialPlacement { get; } = new();
-    public Vector3f LoopTranslation { get; } = new();
+    public Vector3F LoopTranslation { get; } = new();
     public GrannyVariant ExtendedData { get; } = new();
 
     public void Read(IBinaryReader br) {

@@ -153,9 +153,9 @@ namespace KSoft.Shell
 		/// <returns></returns>
 		int IComparable.CompareTo(object obj)
 		{
-			Debug.TypeCheck.CastValue(obj, out Processor processor);
+			Debug.TypeCheck.CastValue(obj, out Processor obj);
 
-			return StaticCompare(this, processor);
+			return StaticCompare(this, obj);
 		}
 		#endregion
 

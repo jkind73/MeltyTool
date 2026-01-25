@@ -24,7 +24,7 @@ public sealed class GeoModelGoldenTests
                            .SingleOrDefault(f => f.Name.EndsWith(".rcb.WIN")),
         BnkFileIdsDictionary = new BnkFileIdsDictionary(directory),
         MtlbFileIdsDictionary = new MtlbFileIdsDictionary(directory),
-        Tg4HFileIdDictionary = new Tg4hFileIdDictionary(directory),
+        Tg4HFileIdDictionary = new Tg4HFileIdDictionary(directory),
     };
 
   private static IFileHierarchyDirectory[] GetGoldenDirectories_()

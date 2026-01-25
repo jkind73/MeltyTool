@@ -49,14 +49,14 @@ public abstract class BVector3<T> {
 }
 
 [BinarySchema]
-public sealed partial class Vector3f
+public sealed partial class Vector3F
     : BVector3<float>,
       IXyz,
       IBinaryConvertible {
-  public static bool operator==(Vector3f? lhs, Vector3f? rhs)
+  public static bool operator==(Vector3F? lhs, Vector3F? rhs)
     => lhs?.Equals(rhs) ?? (rhs == null);
 
-  public static bool operator!=(Vector3f? lhs, Vector3f? rhs)
+  public static bool operator!=(Vector3F? lhs, Vector3F? rhs)
     => (!lhs?.Equals(rhs)) ?? (rhs != null);
 
   public override bool Equals(object? obj) {
@@ -64,7 +64,7 @@ public sealed partial class Vector3f
       return true;
     }
 
-    if (obj is Vector3f other) {
+    if (obj is Vector3F other) {
       return this.X == other.X &&
              this.Y == other.Y &&
              this.Z == other.Z;
@@ -73,7 +73,7 @@ public sealed partial class Vector3f
     return false;
   }
 
-  public static explicit operator Vector3(Vector3f value)
+  public static explicit operator Vector3(Vector3F value)
     => new(value.X, value.Y, value.Z);
 
   public void Set(in Vector3 xyz) {
@@ -87,10 +87,10 @@ public sealed partial class Vector3f
 }
 
 [BinarySchema]
-public sealed partial class Vector3i : BVector3<int>, IBinaryConvertible;
+public sealed partial class Vector3I : BVector3<int>, IBinaryConvertible;
 
 [BinarySchema]
-public sealed partial class Vector3s : BVector3<short>, IBinaryConvertible;
+public sealed partial class Vector3S : BVector3<short>, IBinaryConvertible;
 
 [BinarySchema]
 public sealed partial class

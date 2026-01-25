@@ -558,7 +558,7 @@ public partial class GxFixedFunctionMaterial {
         return;
       }
 
-      var colorImage = FinImage.Create1x1FromColor(colorConstant);
+      var colorImage = FinImage.Create1X1FromColor(colorConstant);
       var colorTexture = materialManager.CreateTexture(colorImage);
       material.CompiledTexture = colorTexture;
     }

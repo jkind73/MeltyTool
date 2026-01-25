@@ -920,7 +920,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
 [BinarySchema]
 public sealed partial class Vertex : IBinaryDeserializable {
-  public Vector3s Position { get; } = new();
+  public Vector3S Position { get; } = new();
 
   private ushort padding_ = 0;
 

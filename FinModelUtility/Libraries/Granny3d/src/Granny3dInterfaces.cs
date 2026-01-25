@@ -49,9 +49,9 @@ namespace granny3d {
 
   public interface IGrannyTransform {
     GrannyTransformFlags Flags { get; }
-    Vector3f Position { get; }
+    Vector3F Position { get; }
     Quaternion Orientation { get; }
-    Vector3f[] ScaleShear { get; }
+    Vector3F[] ScaleShear { get; }
   }
 
   [Flags]
