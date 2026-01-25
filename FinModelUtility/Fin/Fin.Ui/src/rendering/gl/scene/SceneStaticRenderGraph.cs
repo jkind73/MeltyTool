@@ -164,7 +164,9 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       modelRenderComponents_ = new();
 
   private RenderGraphElement[] elements_;
+  private ISkeletonRenderer[] skeletonRenderers_;
 
+  private IReadOnlyBone? selectedBone_;
   private IReadOnlySceneNode? selectedNode_;
   private IReadOnlyMesh? selectedMesh_;
   private IReadOnlySet<IReadOnlyMaterial>? selectedMaterials_;
@@ -176,6 +178,8 @@ public sealed class SceneStaticRenderGraph : IRenderable {
   public SceneStaticRenderGraph(ISceneInstance scene) {
     this.scene_ = scene;
 
+    SelectedBoneService.OnBoneSelected += selectedBone
+        => this.selectedBone_ = selectedBone;
     SelectedNodeService.OnNodeSelected += selectedNode
         => this.selectedNode_ = selectedNode;
     SelectedMeshService.OnMeshSelected += selectedMesh
@@ -236,6 +240,10 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     }
 
     this.elements_ = elements.ToArray();
+    this.skeletonRenderers_
+        = this.modelRenderComponents_
+              .Select(t => t.Item2.SkeletonRenderer)
+              .ToArray();
   }
 
   public void Render() {
@@ -282,6 +290,12 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
           GlUtil.RenderHighlight(() => RenderParams_(prms));
         }
+      }
+    }
+
+    if (this.selectedBone_ != null) {
+      foreach (var skeletonRenderer in this.skeletonRenderers_) {
+        skeletonRenderer.Render();
       }
     }
   }
