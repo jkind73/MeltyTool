@@ -30,9 +30,11 @@ namespace fin.image;
 public static class FinImage {
   public static bool IsSupportedFileType(IReadOnlyTreeFile file) {
     var extension = file.FileType.ToLower()[1..];
-    return ImageSharpConfig.ImageFormats.Any(
-        format => format.FileExtensions.Any(otherExtension =>
-                                                extension == otherExtension));
+    return ImageSharpConfig.ImageFormats.Any(format
+                                                 => format.FileExtensions
+                                                     .Any(otherExtension =>
+                                                           extension ==
+                                                           otherExtension));
   }
 
   public static IImage FromFile(IReadOnlyGenericFile file) {
@@ -47,6 +49,37 @@ public static class FinImage {
   public static async Task<IImage> FromFileAsync(IReadOnlyGenericFile file) {
     await using var stream = file.OpenRead();
     return await FromStreamAsync(stream);
+  }
+
+  public static unsafe IImage RemoveBackgroundColor(this IReadOnlyImage src,
+                                                    Color color) {
+    var width = src.Width;
+    var height = src.Height;
+
+    var textureImageWithAlpha = new Rgba32Image(src.PixelFormat, width, height);
+    using var alphaLock = textureImageWithAlpha.UnsafeLock();
+    var alphaScan0 = alphaLock.pixelScan0;
+
+    src.Access(getHandler => {
+      for (var y = 0; y < height; ++y) {
+        for (var x = 0; x < width; ++x) {
+          getHandler(x,
+                     y,
+                     out var r,
+                     out var g,
+                     out var b,
+                     out var a);
+
+          if (r == color.R && g == color.G && b == color.B) {
+            a = 0;
+          }
+
+          alphaScan0[y * width + x] = new Rgba32(r, g, b, a);
+        }
+      }
+    });
+
+    return textureImageWithAlpha;
   }
 
   public static IImage SubImage(this IReadOnlyImage src, Rectangle region) {

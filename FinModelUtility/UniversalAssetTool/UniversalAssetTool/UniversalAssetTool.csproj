@@ -134,6 +134,7 @@
     <ProjectReference Include="..\..\Formats\Ssm\Ssm\Ssm.csproj" />
     <ProjectReference Include="..\..\Formats\Vrml\Vrml\Vrml.csproj" />
     <ProjectReference Include="..\..\Games\AnimalCrossing\AnimalCrossing\AnimalCrossing.csproj" />
+    <ProjectReference Include="..\..\Games\Facade\Facade\Facade.csproj" />
     <ProjectReference Include="..\..\Games\PokemonColosseum\PokemonColosseum\PokemonColosseum.csproj" />
 
     <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios\AngelStudios.csproj" />
@@ -154,8 +155,7 @@
     <ProjectReference Include="..\..\Games\MarioKartDoubleDash\MarioKartDoubleDash\MarioKartDoubleDash.csproj" />
     <ProjectReference Include="..\..\Games\MariosPicross\MariosPicross\MariosPicross.csproj" />
     <ProjectReference Include="..\..\Games\PaperMarioDirectorsCut\PaperMarioDirectorsCut\PaperMarioDirectorsCut.csproj" />
-    <ProjectReference
-      Include="..\..\Games\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor.csproj" />
+    <ProjectReference Include="..\..\Games\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor\PaperMarioTheThousandYearDoor.csproj" />
     <ProjectReference Include="..\..\Games\Pikmin1\Pikmin1\Pikmin1.csproj" />
     <ProjectReference Include="..\..\Games\Pikmin2\Pikmin2\Pikmin2.csproj" />
     <ProjectReference Include="..\..\Games\RollingMadness3d\RollingMadness3d\RollingMadness3d.csproj" />

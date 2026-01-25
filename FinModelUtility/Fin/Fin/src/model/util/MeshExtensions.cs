@@ -64,10 +64,10 @@ public static class MeshExtensions {
   public static void AddSimpleQuad<TVertex>(
       this IMesh mesh,
       ISkin<TVertex> skin,
-      (Vector3 position, Vector2 uv, Vector3 normal) ulP,
-      (Vector3 position, Vector2 uv, Vector3 normal) urP,
-      (Vector3 position, Vector2 uv, Vector3 normal) lrP,
-      (Vector3 position, Vector2 uv, Vector3 normal) llP,
+      (Vector3 position, Vector2 uv, Vector3? normal) ulP,
+      (Vector3 position, Vector2 uv, Vector3? normal) urP,
+      (Vector3 position, Vector2 uv, Vector3? normal) lrP,
+      (Vector3 position, Vector2 uv, Vector3? normal) llP,
       IReadOnlyMaterial? material = null,
       IReadOnlyBone? bone = null)
       where TVertex : INormalVertex, ISingleUvVertex {

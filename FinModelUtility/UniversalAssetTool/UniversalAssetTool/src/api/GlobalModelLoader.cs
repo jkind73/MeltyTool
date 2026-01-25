@@ -2,6 +2,8 @@
 
 using Celeste64.api;
 
+using facade.api;
+
 using grezzo.api;
 
 using sysdolphin.api;
@@ -75,6 +77,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new DatModelImporter().Import(datModelFileBundle),
         D3dModelFileBundle modModelFileBundle
             => new D3dModelImporter().Import(modModelFileBundle),
+        FacadeRoomModelFileBundle facadeRoomModelFileBundle
+            => new FacadeRoomModelImporter().Import(facadeRoomModelFileBundle),
         GauntletDarkLegacyModelFileBundle animModelFileBundle
             => new GauntletDarkLegacyModelImporter().Import(animModelFileBundle),
         GauntletDarkLegacyWorldModelFileBundle animModelFileBundle
