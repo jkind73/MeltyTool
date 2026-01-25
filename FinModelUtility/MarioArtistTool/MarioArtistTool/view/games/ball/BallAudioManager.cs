@@ -34,7 +34,7 @@ public sealed class BallAudioManager {
       IAudioManager<short> audioManager,
       string assetPath) {
     using var oggStream = AssetLoaderUtil.Open(assetPath);
-    return new OggAudioImporter().ImportAudio(audioManager, oggStream)[0];
+    return OggAudioImporter.ImportAudio(audioManager, oggStream)[0];
   }
 
   ~BallAudioManager() => this.ReleaseUnmanagedResources_();

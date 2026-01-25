@@ -8,7 +8,7 @@ namespace grezzo.schema.cmb;
 
 public sealed class CmbHeader : IBinaryDeserializable {
   // TODO: Better way to do this?
-  public static Version Version { get; set; }
+  public static Version FileVersion { get; set; }
 
   public uint FileSize { get; private set; }
   public Version Version { get; private set; }
@@ -32,7 +32,7 @@ public sealed class CmbHeader : IBinaryDeserializable {
 
       this.FileSize = br.ReadUInt32();
 
-      this.version = Version = (Version) br.ReadUInt32();
+      this.Version = FileVersion = (Version) br.ReadUInt32();
 
 
       Asserts.Equal(0, br.ReadInt32());
@@ -40,7 +40,7 @@ public sealed class CmbHeader : IBinaryDeserializable {
       this.FaceIndicesCount = br.ReadUInt32();
       this.SklOffset = br.ReadUInt32();
 
-      if (this.version.SupportsQtrs()) {
+      if (this.Version.SupportsQtrs()) {
         this.QtrsOffset = br.ReadUInt32();
       }
 
@@ -52,7 +52,7 @@ public sealed class CmbHeader : IBinaryDeserializable {
       this.FaceIndicesOffset = br.ReadUInt32();
       this.TextureDataOffset = br.ReadUInt32();
 
-      if (this.version > cmb.Version.OCARINA_OF_TIME_3D) {
+      if (this.Version > cmb.Version.OCARINA_OF_TIME_3D) {
         this.Unk0 = br.ReadUInt32();
       }
     }
