@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
 
-using fin.color;
 using fin.data.lazy;
 using fin.image;
 using fin.io;
@@ -67,6 +66,7 @@ public enum FilmstripId {
 }
 
 public enum ColorId {
+  WINDOW = 0x20,
   COLOR_0x2E = 0x2E,
   COLOR_0x2F = 0x2F,
   COLOR_0x30 = 0x30,
@@ -144,52 +144,56 @@ file class FacadeRoomModelBuilder {
           };
 
           Color? color = colorId switch {
-              ColorId.COLOR_0x2E => Color.FromArgb((byte) (255 * .63f), 
+              ColorId.WINDOW => Color.FromArgb((byte) (255 * .2f),
+                                               (byte) (255 * .2f),
+                                               (byte) (255 * .2f),
+                                               (byte) (255 * .4f)),
+              ColorId.COLOR_0x2E => Color.FromArgb((byte) (255 * .63f),
                                                    (byte) (255 * .46f),
                                                    (byte) (255 * .32f)),
-              ColorId.COLOR_0x2F => Color.FromArgb((byte) (255 * .23f), 
+              ColorId.COLOR_0x2F => Color.FromArgb((byte) (255 * .23f),
                                                    (byte) (255 * .16f),
                                                    (byte) (255 * .02f)),
-              ColorId.COLOR_0x30 => Color.FromArgb((byte) (255 * .33f), 
+              ColorId.COLOR_0x30 => Color.FromArgb((byte) (255 * .33f),
                                                    (byte) (255 * .26f),
                                                    (byte) (255 * .12f)),
-              ColorId.COLOR_0x31 => Color.FromArgb((byte) (255 * .43f), 
+              ColorId.COLOR_0x31 => Color.FromArgb((byte) (255 * .43f),
                                                    (byte) (255 * .36f),
                                                    (byte) (255 * .22f)),
-              ColorId.COLOR_0x32 => Color.FromArgb((byte) (255 * .48f), 
+              ColorId.COLOR_0x32 => Color.FromArgb((byte) (255 * .48f),
                                                    (byte) (255 * .41f),
                                                    (byte) (255 * .27f)),
 
               // Dark grays
-              ColorId.COLOR_0x33 => Color.FromArgb((byte) (255 * .05f), 
+              ColorId.COLOR_0x33 => Color.FromArgb((byte) (255 * .05f),
                                                    (byte) (255 * .05f),
                                                    (byte) (255 * .05f)),
-              ColorId.COLOR_0x34 => Color.FromArgb((byte) (255 * .1f), 
+              ColorId.COLOR_0x34 => Color.FromArgb((byte) (255 * .1f),
                                                    (byte) (255 * .1f),
                                                    (byte) (255 * .1f)),
-              ColorId.COLOR_0x35 => Color.FromArgb((byte) (255 * .15f), 
+              ColorId.COLOR_0x35 => Color.FromArgb((byte) (255 * .15f),
                                                    (byte) (255 * .15f),
                                                    (byte) (255 * .15f)),
-              ColorId.COLOR_0x36 => Color.FromArgb((byte) (255 * .2f), 
+              ColorId.COLOR_0x36 => Color.FromArgb((byte) (255 * .2f),
                                                    (byte) (255 * .2f),
                                                    (byte) (255 * .2f)),
-              ColorId.COLOR_0x37 => Color.FromArgb((byte) (255 * .25f), 
+              ColorId.COLOR_0x37 => Color.FromArgb((byte) (255 * .25f),
                                                    (byte) (255 * .25f),
                                                    (byte) (255 * .25f)),
-              ColorId.COLOR_0x38 => Color.FromArgb((byte) (255 * .3f), 
+              ColorId.COLOR_0x38 => Color.FromArgb((byte) (255 * .3f),
                                                    (byte) (255 * .3f),
                                                    (byte) (255 * .3f)),
-              ColorId.COLOR_0x39 => Color.FromArgb((byte) (255 * .35f), 
+              ColorId.COLOR_0x39 => Color.FromArgb((byte) (255 * .35f),
                                                    (byte) (255 * .35f),
                                                    (byte) (255 * .35f)),
-              ColorId.COLOR_0x3A => Color.FromArgb((byte) (255 * .4f), 
+              ColorId.COLOR_0x3A => Color.FromArgb((byte) (255 * .4f),
                                                    (byte) (255 * .4f),
                                                    (byte) (255 * .4f)),
-              ColorId.FLOOR => Color.FromArgb((byte) (255 * .45f), 
+              ColorId.FLOOR => Color.FromArgb((byte) (255 * .45f),
                                               (byte) (255 * .45f),
                                               (byte) (255 * .45f)),
               ColorId.WALL => Color.Black,
-              _             => null,
+              _            => null,
           };
 
           if (textureFileName == null) {
@@ -357,12 +361,27 @@ file class FacadeRoomModelBuilder {
         new Vector3(200, 80, -450),
         90);
 
-    /*this.AddPlane_(
+    this.AddPlane_(
         "LR_backwindow1",
-        "wall.bmp",
+        null,
+        ColorId.WINDOW,
         new Vector2(66, 150),
         new Vector3(-101, 77, -498),
-        0);*/
+        0);
+    this.AddPlane_(
+        "LR_backwindow2",
+        null,
+        ColorId.WINDOW,
+        new Vector2(66, 150),
+        new Vector3(-30, 77, -498),
+        0);
+    this.AddPlane_(
+        "LR_backwindow3",
+        null,
+        ColorId.WINDOW,
+        new Vector2(66, 150),
+        new Vector3(41, 77, -498),
+        0);
 
     this.AddFloor_(
         "floor1",
