@@ -4,6 +4,7 @@ using System.Numerics;
 using fin.data.lazy;
 using fin.image;
 using fin.io;
+using fin.io.bundles;
 using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
@@ -11,6 +12,8 @@ using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
 using fin.util.sets;
+
+using schema.binary;
 
 namespace facade.api;
 
@@ -85,6 +88,8 @@ public enum ColorId {
 }
 
 file class FacadeRoomModelBuilder {
+  private readonly FacadeRoomModelFileBundle fileBundle_;
+
   private readonly
       LazyDictionary<(
           FilmstripId? filmstripId,
@@ -95,6 +100,8 @@ file class FacadeRoomModelBuilder {
   public ModelImpl Model { get; }
 
   public FacadeRoomModelBuilder(FacadeRoomModelFileBundle fileBundle) {
+    this.fileBundle_ = fileBundle;
+
     var files = fileBundle.MainFile.AsFileSet();
     this.Model = new ModelImpl {
         FileBundle = fileBundle,
@@ -227,8 +234,69 @@ file class FacadeRoomModelBuilder {
           }
         });
 
+    this.AddScenery_();
     this.AddRoom_();
     this.AddSprites_();
+  }
+
+  private void AddScenery_() {
+    this.AddSceneryObject_(
+        "bar",
+        0x1bcfdc,
+        [
+            (4, 10, 9, 6),
+            (2, 4, 10, 0xb),
+            (1, 2, 0xb, 0xc),
+        ]);
+    this.AddSceneryObject_(
+        "cabinet",
+        0x1b4c24,
+        [
+            (0, 1, 2, 3),
+            (0xe, 0xf, 0x10, 0x11),
+            (0x12, 0x13, 0x14, 0x15),
+            (6, 7, 8, 9),
+            (0x1e, 0x1f, 0x20, 0x21),
+            (0x22, 0x23, 0x24, 0x25),
+            (0x26, 0x27, 0x28, 0x29),
+            (0x2a, 0x2b, 0x2c, 0x2d),
+        ]);
+  }
+
+  private void AddSceneryObject_(
+      string name,
+      uint offset,
+      IEnumerable<(int, int, int, int)> allQuadIndices) {
+    var animEngineDll = this.fileBundle_.PrereqsDirectory.AssertGetExistingFile(
+        "animEngineDLL.dll");
+    using var br = animEngineDll.OpenReadAsBinary();
+
+    var skin = this.Model.Skin;
+    var mesh = skin.AddMesh();
+    mesh.Name = name;
+
+    var quads
+        = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex,
+            IReadOnlyVertex)>();
+    foreach (var quadIndices in allQuadIndices) {
+      var (i0, i1, i2, i3) = quadIndices;
+
+      br.Position = offset + 4 * 3 * i0;
+      var v0 = skin.AddVertex(br.ReadVector3());
+
+      br.Position = offset + 4 * 3 * i1;
+      var v1 = skin.AddVertex(br.ReadVector3());
+
+      br.Position = offset + 4 * 3 * i2;
+      var v2 = skin.AddVertex(br.ReadVector3());
+
+      br.Position = offset + 4 * 3 * i3;
+      var v3 = skin.AddVertex(br.ReadVector3());
+
+      quads.Add((v0, v1, v2, v3));
+    }
+
+    mesh.AddQuads(quads);
   }
 
   private void AddRoom_() {
