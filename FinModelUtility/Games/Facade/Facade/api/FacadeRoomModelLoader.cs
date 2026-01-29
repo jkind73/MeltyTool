@@ -2,15 +2,18 @@
 using System.Numerics;
 
 using fin.data.lazy;
+using fin.data.sets;
 using fin.image;
 using fin.io;
 using fin.io.bundles;
+using fin.math.floats;
 using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enumerables;
 using fin.util.sets;
 
 using schema.binary;
@@ -241,16 +244,16 @@ file class FacadeRoomModelBuilder {
 
   private void AddScenery_() {
     this.AddSceneryObject_(
-        "bar",
-        0x1bcfdc,
-        [
-            (4, 10, 9, 6),
-            (2, 4, 10, 0xb),
-            (1, 2, 0xb, 0xc),
-        ]);
+        "couch",
+        new Vector3(150, 0, -350),
+        0x1ac5fc,
+        0x1aeeb4,
+        []);
     this.AddSceneryObject_(
         "cabinet",
+        new Vector3(-177, 0, -350),
         0x1b4c24,
+        0x1b70dc,
         [
             (0, 1, 2, 3),
             (0xe, 0xf, 0x10, 0x11),
@@ -261,40 +264,117 @@ file class FacadeRoomModelBuilder {
             (0x26, 0x27, 0x28, 0x29),
             (0x2a, 0x2b, 0x2c, 0x2d),
         ]);
+    this.AddSceneryObject_(
+        "side table",
+        new Vector3(170, 0, -210),
+        0x1af6b4,
+        0x1b1b6c,
+        [
+            (0x21, 0x24, 0x26, 0x22),
+        ]);
+    this.AddSceneryObject_(
+        "work table",
+        new Vector3(160, 0, -30),
+        0x1b1f6c,
+        0x1b4424,
+        []);
+    this.AddSceneryObject_(
+        "bar",
+        new Vector3(-160, 0, -120),
+        0x1bcfdc,
+        0x1bf494,
+        [
+            (4, 10, 9, 6),
+            (2, 4, 10, 0xb),
+            (1, 2, 0xb, 0xc),
+        ]);
+    this.AddSceneryObject_(
+        "side table 2",
+        new Vector3(-180, 0, -60),
+        0x1af6b4,
+        0x1b1b6c,
+        []);
   }
 
   private void AddSceneryObject_(
       string name,
-      uint offset,
-      IEnumerable<(int, int, int, int)> allQuadIndices) {
+      Vector3 objectPosition,
+      uint vertexOffset,
+      uint faceOffset,
+      IEnumerable<(int, int, int, int)> collisionQuadIndices) {
     var animEngineDll = this.fileBundle_.PrereqsDirectory.AssertGetExistingFile(
         "animEngineDLL.dll");
     using var br = animEngineDll.OpenReadAsBinary();
 
+    var bone = this.Model.Skeleton.Root.AddChild(objectPosition);
+    bone.Name = name;
+
     var skin = this.Model.Skin;
+    var boneWeights
+        = skin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE, bone);
+
+    br.Position = vertexOffset;
+
+    var vertices = new List<IReadOnlyVertex>();
+    while (!br.ReadSingle().IsRoughly(666)) {
+      br.Position -= sizeof(float);
+
+      var vertex = skin.AddVertex(br.ReadVector3());
+      vertex.SetBoneWeights(boneWeights);
+
+      vertices.Add(vertex);
+    }
+
+    br.Position = faceOffset;
+    var allFaceInts = new List<int>();
+    while (br.ReadUInt32() != 666) {
+      br.Position -= sizeof(int);
+      allFaceInts.AddRange(br.ReadInt32s(60));
+    }
+
+    // (The collision is just the subset of vertices from collisionQuadIndices.)
+
     var mesh = skin.AddMesh();
     mesh.Name = name;
 
-    var quads
-        = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex,
-            IReadOnlyVertex)>();
-    foreach (var quadIndices in allQuadIndices) {
-      var (i0, i1, i2, i3) = quadIndices;
+    var faceInts = new List<int>();
+    var quads = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex,
+        IReadOnlyVertex)>();
 
-      br.Position = offset + 4 * 3 * i0;
-      var v0 = skin.AddVertex(br.ReadVector3());
+    void TryToAddFace() {
+      if (faceInts.Count == 0) {
+        return;
+      }
 
-      br.Position = offset + 4 * 3 * i1;
-      var v1 = skin.AddVertex(br.ReadVector3());
+      // TODO: What on earth is all the other data here
+      // TODO: What on earth does it mean if the count is less than 4?
+      if (faceInts.Count >= 4) {
+        var v0 = faceInts[0];
+        var v1 = faceInts[1];
+        var v2 = faceInts[2];
+        var v3 = faceInts[3];
 
-      br.Position = offset + 4 * 3 * i2;
-      var v2 = skin.AddVertex(br.ReadVector3());
+        if (v0 < vertices.Count &&
+            v1 < vertices.Count &&
+            v2 < vertices.Count &&
+            v3 < vertices.Count) {
+          quads.Add((vertices[v0], vertices[v1], vertices[v2], vertices[v3]));
+        }
+      }
 
-      br.Position = offset + 4 * 3 * i3;
-      var v3 = skin.AddVertex(br.ReadVector3());
-
-      quads.Add((v0, v1, v2, v3));
+      faceInts.Clear();
     }
+
+    foreach (var faceInt in allFaceInts) {
+      if (faceInt == -1) {
+        TryToAddFace();
+        continue;
+      }
+
+      faceInts.Add(faceInt);
+    }
+
+    TryToAddFace();
 
     mesh.AddQuads(quads);
   }

@@ -93,10 +93,12 @@ public static class EnumerableExtensions {
     while (iterator.MoveNext()) {
       var v1 = iterator.Current;
 
-      iterator.MoveNext();
+      var hadNext = iterator.MoveNext();
       var v2 = iterator.Current;
 
-      yield return (v1, v2);
+      if (hadNext) {
+        yield return (v1, v2);
+      }
     }
   }
 
@@ -106,13 +108,15 @@ public static class EnumerableExtensions {
     while (iterator.MoveNext()) {
       var v1 = iterator.Current;
 
-      iterator.MoveNext();
+      var hadNexts = iterator.MoveNext();
       var v2 = iterator.Current;
 
-      iterator.MoveNext();
+      hadNexts &= iterator.MoveNext();
       var v3 = iterator.Current;
 
-      yield return (v1, v2, v3);
+      if (hadNexts) {
+        yield return (v1, v2, v3);
+      }
     }
   }
 
@@ -122,16 +126,18 @@ public static class EnumerableExtensions {
     while (iterator.MoveNext()) {
       var v1 = iterator.Current;
 
-      iterator.MoveNext();
+      var hadNexts = iterator.MoveNext();
       var v2 = iterator.Current;
 
-      iterator.MoveNext();
+      hadNexts &= iterator.MoveNext();
       var v3 = iterator.Current;
 
-      iterator.MoveNext();
+      hadNexts &= iterator.MoveNext();
       var v4 = iterator.Current;
 
-      yield return (v1, v2, v3, v4);
+      if (hadNexts) {
+        yield return (v1, v2, v3, v4);
+      }
     }
   }
 
