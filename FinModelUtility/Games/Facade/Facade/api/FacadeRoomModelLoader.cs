@@ -341,6 +341,8 @@ file class FacadeRoomModelBuilder {
     var quads = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex,
         IReadOnlyVertex)>();
 
+    // TODO: God, this is just like super duper wrong. Haven't been able to
+    // find this in the decomp so I just threw some bullshit together.
     void TryToAddFace() {
       if (faceInts.Count == 0) {
         return;
