@@ -154,6 +154,7 @@ file class FacadeRoomModelBuilder {
               _                                => null,
           };
 
+          // From function at 0x100910f0
           Color? color = colorId switch {
               (ColorId) 0x0 => Color.FromArgb((byte) (255 * .96f),
                                               (byte) (255 * .87f),
@@ -164,21 +165,123 @@ file class FacadeRoomModelBuilder {
               (ColorId) 0x2 => Color.FromArgb((byte) (255 * .52f),
                                               (byte) (255 * .515f),
                                               (byte) (255 * .52f)),
-
+              (ColorId) 0x3 => Color.FromArgb((byte) (255 * .2f),
+                                              (byte) (255 * .2f),
+                                              (byte) (255 * .3f)),
+              (ColorId) 0x4 => Color.FromArgb((byte) (255 * .42f),
+                                              (byte) (255 * .415f),
+                                              (byte) (255 * .42f)),
+              (ColorId) 0x5 => Color.FromArgb((byte) (255 * .428f),
+                                              (byte) (255 * .534f),
+                                              (byte) (255 * .721f)),
+              (ColorId) 0x6 => Color.White,
+              (ColorId) 0x7 => Color.FromArgb((byte) (255 * .25f),
+                                              (byte) (255 * .15f),
+                                              (byte) (255 * .1f)),
+              (ColorId) 0x8 => Color.FromArgb((byte) (255 * 1f),
+                                              (byte) (255 * .75f),
+                                              (byte) (255 * .7f)),
+              (ColorId) 0x9 => Color.FromArgb((byte) (255 * 1f),
+                                              (byte) (255 * .8f),
+                                              (byte) (255 * 0f)),
+              (ColorId) 0xA => Color.FromArgb((byte) (255 * 1f),
+                                              (byte) (255 * .6f),
+                                              (byte) (255 * 0f)),
               (ColorId) 0xB => Color.FromArgb((byte) (255 * 1f),
                                               (byte) (255 * 1f),
                                               (byte) (255 * .95f)),
               (ColorId) 0xC => Color.FromArgb((byte) (255 * .83f),
                                               (byte) (255 * .83f),
                                               (byte) (255 * .83f)),
+              (ColorId) 0xD => Color.FromArgb((byte) (255 * .75f),
+                                              (byte) (255 * 1f),
+                                              (byte) (255 * .75f)),
+              (ColorId) 0xE => Color.FromArgb((byte) (255 * .9f),
+                                              (byte) (255 * 1f),
+                                              (byte) (255 * 1f)),
+              (ColorId) 0xF => Color.FromArgb((byte) (255 * 1f),
+                                              (byte) (255 * 1f),
+                                              (byte) (255 * .9f)),
+              (ColorId) 0x10 => Color.FromArgb((byte) (255 * .9f),
+                                               (byte) (255 * .9f),
+                                               (byte) (255 * .9f)),
+              (ColorId) 0x11 => Color.FromArgb((byte) (255 * 1f),
+                                               (byte) (255 * 1f),
+                                               (byte) (255 * .2f)),
+              (ColorId) 0x12 => Color.FromArgb((byte) (255 * .6f),
+                                               (byte) (255 * .6f),
+                                               (byte) (255 * .6f)),
               (ColorId) 0x13 => Color.FromArgb((byte) (255 * .5f),
                                                (byte) (255 * .5f),
                                                (byte) (255 * .5f)),
-
+              (ColorId) 0x14 => Color.FromArgb((byte) (255 * .6f),
+                                               (byte) (255 * .7f),
+                                               (byte) (255 * 1f)),
+              (ColorId) 0x15 => Color.FromArgb((byte) (255 * .62f),
+                                               (byte) (255 * .53f),
+                                               (byte) (255 * .57f)),
+              (ColorId) 0x16 => Color.FromArgb((byte) (255 * .42f),
+                                               (byte) (255 * .33f),
+                                               (byte) (255 * .37f)),
+              (ColorId) 0x17 => Color.FromArgb((byte) (255 * .273f),
+                                               (byte) (255 * .222f),
+                                               (byte) (255 * .191f)),
+              (ColorId) 0x18 => Color.FromArgb((byte) (255 * .83f),
+                                               (byte) (255 * .77f),
+                                               (byte) (255 * .7f)),
+              (ColorId) 0x19 => Color.FromArgb((byte) (255 * .4f),
+                                               (byte) (255 * .45f),
+                                               (byte) (255 * .4f)),
+              (ColorId) 0x1A => Color.FromArgb((byte) (255 * .35f),
+                                               (byte) (255 * .4f),
+                                               (byte) (255 * .35f)),
+              (ColorId) 0x1B => Color.FromArgb((byte) (255 * .6f),
+                                               (byte) (255 * .5f),
+                                               (byte) (255 * .3f)),
+              (ColorId) 0x1C => Color.FromArgb((byte) (255 * .5f),
+                                               (byte) (255 * .4f),
+                                               (byte) (255 * .25f)),
+              (ColorId) 0x1D => Color.FromArgb((byte) (255 * .95f),
+                                               (byte) (255 * .8f),
+                                               (byte) (255 * .75f)),
+              (ColorId) 0x1E => Color.FromArgb((byte) (255 * .5f),
+                                               (byte) (255 * .9f),
+                                               (byte) (255 * .55f)),
+              (ColorId) 0x1F => Color.FromArgb((byte) (255 * .77f),
+                                               (byte) (255 * .73f),
+                                               (byte) (255 * .7f)),
               ColorId.WINDOW => Color.FromArgb((byte) (255 * .2f),
                                                (byte) (255 * .2f),
                                                (byte) (255 * .2f),
                                                (byte) (255 * .4f)),
+              (ColorId) 0x21 => Color.FromArgb((byte) (255 * 1f),
+                                               (byte) (255 * 1f),
+                                               (byte) (255 * .8f)),
+              (ColorId) 0x22 => Color.FromArgb((byte) (255 * .95f),
+                                               (byte) (255 * .85f),
+                                               (byte) (255 * .78f)),
+              (ColorId) 0x23 => Color.FromArgb((byte) (255 * .3f),
+                                               (byte) (255 * .2f),
+                                               (byte) (255 * .2f),
+                                               (byte) (255 * .2f)),
+              (ColorId) 0x24 => Color.FromArgb((byte) (255 * .9f),
+                                               (byte) (255 * .9f),
+                                               (byte) (255 * .95f)),
+              (ColorId) 0x26 => Color.FromArgb((byte) (255 * 1f),
+                                               (byte) (255 * 0f),
+                                               (byte) (255 * 0f)),
+              (ColorId) 0x27 => Color.FromArgb((byte) (255 * 0f),
+                                               (byte) (255 * 0f),
+                                               (byte) (255 * 1f)),
+              (ColorId) 0x28 => Color.FromArgb((byte) (255 * 0f),
+                                               (byte) (255 * 1f),
+                                               (byte) (255 * 0f)),
+              (ColorId) 0x29 => Color.FromArgb((byte) (255 * 1f),
+                                               (byte) (255 * 0f),
+                                               (byte) (255 * 1f)),
+              (ColorId) 0x2A => Color.FromArgb((byte) (255 * .6f),
+                                               (byte) (255 * .8f),
+                                               (byte) (255 * 1f)),
               (ColorId) 0x2B => Color.FromArgb((byte) (255 * .33f),
                                                (byte) (255 * .16f),
                                                (byte) (255 * .02f)),
@@ -391,11 +494,10 @@ file class FacadeRoomModelBuilder {
           var faceColorId = (ColorId) (faceInts[5] - 1);
           var faceMaterial = this.lazyMaterials_[(null, faceColorId, false, false)];
 
-          // TODO: Probably whether to add lines?
-          var b0 = faceInts[6] == 0;
-          var b1 = faceInts[7] == 0;
-          var b2 = faceInts[8] == 0;
-          var b3 = faceInts[9] == 0;
+          var hasLine0 = faceInts[6] == 0;
+          var hasLine1 = faceInts[7] == 0;
+          var hasLine2 = faceInts[8] == 0;
+          var hasLine3 = faceInts[9] == 0;
 
           var lineColorId0 = (ColorId) (faceInts[10] - 1);
           var lineColorId1 = (ColorId) (faceInts[11] - 1);
@@ -404,25 +506,32 @@ file class FacadeRoomModelBuilder {
 
           var quad = mesh.AddQuads((v0, v1, v2, v3));
           quad.SetMaterial(faceMaterial);
+          quad.SetInversePriority(1);
 
-          if (b0) {
+          uint linePriority = 0;
+
+          if (hasLine0) {
             var line0 = mesh.AddLines((v0, v1));
             line0.SetMaterial(this.lazyMaterials_[(null, lineColorId0, false, true)]);
+            line0.SetInversePriority(linePriority);
           }
 
-          if (b1) {
+          if (hasLine1) {
             var line1 = mesh.AddLines((v1, v2));
             line1.SetMaterial(this.lazyMaterials_[(null, lineColorId1, false, true)]);
+            line1.SetInversePriority(linePriority);
           }
 
-          if (b2) {
+          if (hasLine2) {
             var line2 = mesh.AddLines((v2, v3));
             line2.SetMaterial(this.lazyMaterials_[(null, lineColorId2, false, true)]);
+            line2.SetInversePriority(linePriority);
           }
 
-          if (b3) {
+          if (hasLine3) {
             var line3 = mesh.AddLines((v3, v0));
             line3.SetMaterial(this.lazyMaterials_[(null, lineColorId3, false, true)]);
+            line3.SetInversePriority(linePriority);
           }
 
           return true;
