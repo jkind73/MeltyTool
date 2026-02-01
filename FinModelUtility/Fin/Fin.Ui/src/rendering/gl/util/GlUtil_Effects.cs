@@ -53,6 +53,7 @@ public static partial class GlUtil {
     ResetBlending();
     ResetDepth();
     GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
+    GL.LineWidth(1);
   }
 
   public static void RenderAsShadow(
