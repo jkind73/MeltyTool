@@ -97,7 +97,8 @@ file class FacadeRoomModelBuilder {
       LazyDictionary<(
           FilmstripId? filmstripId,
           ColorId? colorId,
-          bool removeBackground),
+          bool removeBackground, 
+          bool isLine),
           IReadOnlyMaterial> lazyMaterials_;
 
   public ModelImpl Model { get; }
@@ -113,9 +114,9 @@ file class FacadeRoomModelBuilder {
 
     this.lazyMaterials_
         = new LazyDictionary<(FilmstripId? filmstripId, ColorId? colorId, bool
-            removeBackground),
+            removeBackground, bool isLine),
             IReadOnlyMaterial>(tuple => {
-          var (filmstripId, colorId, removeBackground) = tuple;
+          var (filmstripId, colorId, removeBackground, isLine) = tuple;
 
           var textureFileName = filmstripId switch {
               FilmstripId.PLANT                => "plant.bmp",
@@ -154,13 +155,43 @@ file class FacadeRoomModelBuilder {
           };
 
           Color? color = colorId switch {
+              (ColorId) 0x0 => Color.FromArgb((byte) (255 * .96f),
+                                              (byte) (255 * .87f),
+                                              (byte) (255 * .81f)),
+              (ColorId) 0x1 => Color.FromArgb((byte) (255 * .628f),
+                                              (byte) (255 * .734f),
+                                              (byte) (255 * .921f)),
+              (ColorId) 0x2 => Color.FromArgb((byte) (255 * .52f),
+                                              (byte) (255 * .515f),
+                                              (byte) (255 * .52f)),
+
+              (ColorId) 0xB => Color.FromArgb((byte) (255 * 1f),
+                                              (byte) (255 * 1f),
+                                              (byte) (255 * .95f)),
+              (ColorId) 0xC => Color.FromArgb((byte) (255 * .83f),
+                                              (byte) (255 * .83f),
+                                              (byte) (255 * .83f)),
+              (ColorId) 0x13 => Color.FromArgb((byte) (255 * .5f),
+                                               (byte) (255 * .5f),
+                                               (byte) (255 * .5f)),
+
               ColorId.WINDOW => Color.FromArgb((byte) (255 * .2f),
                                                (byte) (255 * .2f),
                                                (byte) (255 * .2f),
                                                (byte) (255 * .4f)),
-              ColorId.COLOR_0x2E => Color.FromArgb((byte) (255 * .63f),
-                                                   (byte) (255 * .46f),
-                                                   (byte) (255 * .32f)),
+              (ColorId) 0x2B => Color.FromArgb((byte) (255 * .33f),
+                                               (byte) (255 * .16f),
+                                               (byte) (255 * .02f)),
+              (ColorId) 0x2C => Color.FromArgb((byte) (255 * .43f),
+                                               (byte) (255 * .26f),
+                                               (byte) (255 * .12f)),
+              (ColorId) 0x2D => Color.FromArgb((byte) (255 * .53f),
+                                               (byte) (255 * .36f),
+                                               (byte) (255 * .22f)),
+              ColorId.COLOR_0x2E => Color.FromArgb(
+                  (byte) (255 * .63f),
+                  (byte) (255 * .46f),
+                  (byte) (255 * .32f)),
               ColorId.COLOR_0x2F => Color.FromArgb((byte) (255 * .23f),
                                                    (byte) (255 * .16f),
                                                    (byte) (255 * .02f)),
@@ -206,10 +237,18 @@ file class FacadeRoomModelBuilder {
               _            => null,
           };
 
+          // This is a guess
+          if (isLine && color != null) {
+            var colorValue = color.Value;
+            color = Color.FromArgb(255 - colorValue.R,
+                                   255 - colorValue.G,
+                                   255 - colorValue.B);
+          }
+
           if (textureFileName == null) {
             var colorMaterial
-                = this.Model.MaterialManager.AddColorMaterial(
-                    color ?? Color.White);
+                    = this.Model.MaterialManager.AddColorMaterial(
+                        color ?? Color.Magenta);
             colorMaterial.CullingMode = CullingMode.SHOW_BOTH;
             return colorMaterial;
           } else {
@@ -327,7 +366,7 @@ file class FacadeRoomModelBuilder {
 
     br.Position = faceOffset;
     var allFaceInts = new List<int>();
-    while (br.ReadUInt32() != 666) {
+    while (br.ReadInt32() != 666) {
       br.Position -= sizeof(int);
       allFaceInts.AddRange(br.ReadInt32s(60));
     }
@@ -337,48 +376,57 @@ file class FacadeRoomModelBuilder {
     var mesh = skin.AddMesh();
     mesh.Name = name;
 
-    var faceInts = new List<int>();
-    var quads = new List<(IReadOnlyVertex, IReadOnlyVertex, IReadOnlyVertex,
-        IReadOnlyVertex)>();
+    allFaceInts.ForEachNlet(
+        15,
+        faceInts => {
+          if (faceInts[0] == 666) {
+            return false;
+          }
 
-    // TODO: God, this is just like super duper wrong. Haven't been able to
-    // find this in the decomp so I just threw some bullshit together.
-    void TryToAddFace() {
-      if (faceInts.Count == 0) {
-        return;
-      }
+          var v0 = vertices[faceInts[0]];
+          var v1 = vertices[faceInts[1]];
+          var v2 = vertices[faceInts[2]];
+          var v3 = vertices[faceInts[3]];
 
-      // TODO: What on earth is all the other data here
-      // TODO: What on earth does it mean if the count is less than 4?
-      if (faceInts.Count >= 4) {
-        var v0 = faceInts[0];
-        var v1 = faceInts[1];
-        var v2 = faceInts[2];
-        var v3 = faceInts[3];
+          var faceColorId = (ColorId) (faceInts[5] - 1);
+          var faceMaterial = this.lazyMaterials_[(null, faceColorId, false, false)];
 
-        if (v0 < vertices.Count &&
-            v1 < vertices.Count &&
-            v2 < vertices.Count &&
-            v3 < vertices.Count) {
-          quads.Add((vertices[v0], vertices[v1], vertices[v2], vertices[v3]));
-        }
-      }
+          // TODO: Probably whether to add lines?
+          var b0 = faceInts[6] == 0;
+          var b1 = faceInts[7] == 0;
+          var b2 = faceInts[8] == 0;
+          var b3 = faceInts[9] == 0;
 
-      faceInts.Clear();
-    }
+          var lineColorId0 = (ColorId) (faceInts[10] - 1);
+          var lineColorId1 = (ColorId) (faceInts[11] - 1);
+          var lineColorId2 = (ColorId) (faceInts[12] - 1);
+          var lineColorId3 = (ColorId) (faceInts[13] - 1);
 
-    foreach (var faceInt in allFaceInts) {
-      if (faceInt == -1) {
-        TryToAddFace();
-        continue;
-      }
+          var quad = mesh.AddQuads((v0, v1, v2, v3));
+          quad.SetMaterial(faceMaterial);
 
-      faceInts.Add(faceInt);
-    }
+          if (b0) {
+            var line0 = mesh.AddLines((v0, v1));
+            line0.SetMaterial(this.lazyMaterials_[(null, lineColorId0, false, true)]);
+          }
 
-    TryToAddFace();
+          if (b1) {
+            var line1 = mesh.AddLines((v1, v2));
+            line1.SetMaterial(this.lazyMaterials_[(null, lineColorId1, false, true)]);
+          }
 
-    mesh.AddQuads(quads);
+          if (b2) {
+            var line2 = mesh.AddLines((v2, v3));
+            line2.SetMaterial(this.lazyMaterials_[(null, lineColorId2, false, true)]);
+          }
+
+          if (b3) {
+            var line3 = mesh.AddLines((v3, v0));
+            line3.SetMaterial(this.lazyMaterials_[(null, lineColorId3, false, true)]);
+          }
+
+          return true;
+        });
   }
 
   private void AddRoom_() {
@@ -680,7 +728,7 @@ file class FacadeRoomModelBuilder {
                                      0,
                                      0));
 
-    var material = this.lazyMaterials_[(filmstripId, null, true)];
+    var material = this.lazyMaterials_[(filmstripId, null, true, false)];
 
     var (width, height) = (widthAndHeight.X, widthAndHeight.Y);
 
@@ -708,7 +756,7 @@ file class FacadeRoomModelBuilder {
       in Vector2 widthAndHeight,
       Vector3 position,
       float degrees) {
-    var material = this.lazyMaterials_[(filmstripId, colorId, false)];
+    var material = this.lazyMaterials_[(filmstripId, colorId, false, false)];
 
     var (width, height) = (widthAndHeight.X, widthAndHeight.Y);
 
@@ -740,7 +788,7 @@ file class FacadeRoomModelBuilder {
       ColorId? colorId,
       in Vector2 widthAndHeight,
       Vector3 position) {
-    var material = this.lazyMaterials_[(filmstripId, colorId, false)];
+    var material = this.lazyMaterials_[(filmstripId, colorId, false, false)];
 
     var (width, height) = (widthAndHeight.X, widthAndHeight.Y);
 

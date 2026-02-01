@@ -141,6 +141,28 @@ public static class EnumerableExtensions {
     }
   }
 
+  public static void ForEachNlet<T>(
+      this IEnumerable<T> enumerable,
+      int count,
+      Func<ReadOnlySpan<T>, bool> handler) where T : unmanaged {
+    Span<T> span = stackalloc T[count];
+
+    using var iterator = enumerable.GetEnumerator();
+    while (true) {
+      for (var i = 0; i < count; i++) {
+        if (!iterator.MoveNext()) {
+          return;
+        }
+
+        span[i] = iterator.Current;
+      }
+
+      if (!handler(span)) {
+        return;
+      }
+    }
+  }
+
 
   public static void AddTo<T>(this IEnumerable<T> src,
                               ICollection<T> dst) {
