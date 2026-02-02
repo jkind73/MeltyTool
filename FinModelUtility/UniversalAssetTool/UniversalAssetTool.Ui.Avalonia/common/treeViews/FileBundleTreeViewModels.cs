@@ -165,9 +165,9 @@ public sealed class FileBundleTreeViewModelForDesigner()
             [
                 new FileBundleLeafNode("Lion",
                                        new CmbModelFileBundle(
-                                           new FinFile()).Annotate(null)),
+                                           new FinFile("")).Annotate(null)),
                 new FileBundleLeafNode("Cat",
-                                       new OggAudioFileBundle(new FinFile())
+                                       new OggAudioFileBundle(new FinFile(""))
                                            .Annotate(null))
             ])
         ])

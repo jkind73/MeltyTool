@@ -8,7 +8,7 @@ using fin.util.asserts;
 
 namespace fin.io;
 
-public readonly struct FinDirectory(string fullName) : ISystemDirectory {
+public sealed class FinDirectory(string fullName) : ISystemDirectory {
   public override string ToString() => this.DisplayFullName;
 
 
