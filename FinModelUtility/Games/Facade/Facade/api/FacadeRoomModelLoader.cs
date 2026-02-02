@@ -97,7 +97,7 @@ file class FacadeRoomModelBuilder {
       LazyDictionary<(
           FilmstripId? filmstripId,
           ColorId? colorId,
-          bool removeBackground, 
+          bool removeBackground,
           bool isLine),
           IReadOnlyMaterial> lazyMaterials_;
 
@@ -148,6 +148,7 @@ file class FacadeRoomModelBuilder {
               FilmstripId.BEDROOM_DOOR         => "bedroomdoor.bmp",
               FilmstripId.ELEVATOR             => "elevator.bmp",
               FilmstripId.ELEVATOR_BUTTON      => "elevatorbutton.bmp",
+              (FilmstripId) 0x2b               => "blackstripes.bmp",
               FilmstripId.WHITE_CABINET_DOOR   => "whitecabinetdoor.bmp",
               FilmstripId.WHITE_CABINET_DOOR_2 => "whitecabinetdoor2.bmp",
               FilmstripId.NYC                  => "nyc.bmp",
@@ -350,14 +351,20 @@ file class FacadeRoomModelBuilder {
 
           if (textureFileName == null) {
             var colorMaterial
-                    = this.Model.MaterialManager.AddColorMaterial(
-                        color ?? Color.Magenta);
+                = this.Model.MaterialManager.AddColorMaterial(
+                    color ?? Color.Magenta);
             colorMaterial.CullingMode = CullingMode.SHOW_BOTH;
             return colorMaterial;
           } else {
-            var textureFile
+            if (!fileBundle.PrereqsDirectory.TryToGetExistingFile(
+                    textureFileName,
+                    out var textureFile)) {
+              ;
+            }
+
+            /*var textureFile
                 = fileBundle.PrereqsDirectory.AssertGetExistingFile(
-                    textureFileName);
+                    textureFileName);*/
             files.Add(textureFile);
 
             var image = FinImage.FromFile(textureFile);
@@ -457,15 +464,28 @@ file class FacadeRoomModelBuilder {
 
     br.Position = vertexOffset;
 
-    var vertices = new List<IReadOnlyVertex>();
+    var positions = new List<Vector3>();
     while (!br.ReadSingle().IsRoughly(666)) {
       br.Position -= sizeof(float);
-
-      var vertex = skin.AddVertex(br.ReadVector3());
-      vertex.SetBoneWeights(boneWeights);
-
-      vertices.Add(vertex);
+      positions.Add(br.ReadVector3());
     }
+
+    var vertices
+        = new LazyDictionary<(int index, int corner), IReadOnlyVertex>(tuple
+            => {
+            var (index, corner) = tuple;
+
+            var vertex = skin.AddVertex(positions[index]);
+            vertex.SetBoneWeights(boneWeights);
+            vertex.SetUv(corner switch {
+                0 => new Vector2(0, 0),
+                1 => new Vector2(1, 0),
+                2 => new Vector2(1, 1),
+                3 => new Vector2(0, 1),
+            });
+
+            return vertex;
+          });
 
     br.Position = faceOffset;
     var allFaceInts = new List<int>();
@@ -486,13 +506,16 @@ file class FacadeRoomModelBuilder {
             return false;
           }
 
-          var v0 = vertices[faceInts[0]];
-          var v1 = vertices[faceInts[1]];
-          var v2 = vertices[faceInts[2]];
-          var v3 = vertices[faceInts[3]];
+          var v0 = vertices[(faceInts[0], 0)];
+          var v1 = vertices[(faceInts[1], 1)];
+          var v2 = vertices[(faceInts[2], 2)];
+          var v3 = vertices[(faceInts[3], 3)];
 
           var faceColorId = (ColorId) (faceInts[5] - 1);
-          var faceMaterial = this.lazyMaterials_[(null, faceColorId, false, false)];
+          var faceFilmstripId = (FilmstripId) faceInts[14];
+          var faceMaterial
+              = this.lazyMaterials_[
+                  (faceFilmstripId, faceColorId, false, false)];
 
           var hasLine0 = faceInts[6] == 0;
           var hasLine1 = faceInts[7] == 0;
@@ -512,25 +535,29 @@ file class FacadeRoomModelBuilder {
 
           if (hasLine0) {
             var line0 = mesh.AddLines((v0, v1));
-            line0.SetMaterial(this.lazyMaterials_[(null, lineColorId0, false, true)]);
+            line0.SetMaterial(
+                this.lazyMaterials_[(null, lineColorId0, false, true)]);
             line0.SetInversePriority(linePriority);
           }
 
           if (hasLine1) {
             var line1 = mesh.AddLines((v1, v2));
-            line1.SetMaterial(this.lazyMaterials_[(null, lineColorId1, false, true)]);
+            line1.SetMaterial(
+                this.lazyMaterials_[(null, lineColorId1, false, true)]);
             line1.SetInversePriority(linePriority);
           }
 
           if (hasLine2) {
             var line2 = mesh.AddLines((v2, v3));
-            line2.SetMaterial(this.lazyMaterials_[(null, lineColorId2, false, true)]);
+            line2.SetMaterial(
+                this.lazyMaterials_[(null, lineColorId2, false, true)]);
             line2.SetInversePriority(linePriority);
           }
 
           if (hasLine3) {
             var line3 = mesh.AddLines((v3, v0));
-            line3.SetMaterial(this.lazyMaterials_[(null, lineColorId3, false, true)]);
+            line3.SetMaterial(
+                this.lazyMaterials_[(null, lineColorId3, false, true)]);
             line3.SetInversePriority(linePriority);
           }
 
@@ -732,7 +759,21 @@ file class FacadeRoomModelBuilder {
         FilmstripId.PHONE,
         new Vector2(16),
         new Vector3(145, 60, -60));
-
+    this.AddSprite_(
+        "answering machine",
+        FilmstripId.ANSWERING_MACHINE,
+        new Vector2(16),
+        new Vector3(170, 60, -70));
+    this.AddSprite_(
+        "red wine bottle",
+        FilmstripId.RED_WINE_BOTTLE,
+        new Vector2(25),
+        new Vector3(-185, 80, -108));
+    this.AddSprite_(
+        "white wine bottle",
+        FilmstripId.WHITE_WINE_BOTTLE,
+        new Vector2(25),
+        new Vector3(-193, 80, -112));
     this.AddSprite_("martini glass 1",
                     FilmstripId.MARTINI_GLASS,
                     new Vector2(12),
@@ -745,6 +786,18 @@ file class FacadeRoomModelBuilder {
                     FilmstripId.MARTINI_GLASS,
                     new Vector2(12),
                     new Vector3(-183.5f, 41, -297));
+    this.AddSprite_("martini glass 4",
+                    FilmstripId.MARTINI_GLASS,
+                    new Vector2(12),
+                    new Vector3(-183f, 41, -308));
+    this.AddSprite_("bar_redwinebottle",
+                    FilmstripId.RED_WINE_BOTTLE,
+                    new Vector2(25),
+                    new Vector3(-100f, -100, -100));
+    this.AddSprite_("bar_whitewinebottle",
+                    FilmstripId.WHITE_WINE_BOTTLE,
+                    new Vector2(25),
+                    new Vector3(-100f, -100, -100));
 
     this.AddPlane_(
         "big abstract painting",
@@ -754,20 +807,25 @@ file class FacadeRoomModelBuilder {
         new Vector3(190, 100, -380),
         90);
     this.AddPlane_(
-        "maoPainting",
-        FilmstripId.LITTLE_PAINTING,
-        null,
-        new Vector2(40, 50),
-        new Vector3(215, 100, 400),
-        90);
-    this.AddPlane_(
         "little painting",
         FilmstripId.LITTLE_PAINTING,
         null,
         new Vector2(20, 32),
         new Vector3(190, 118, -335),
         90);
-    // (rug)
+    this.AddPlane_(
+        "maoPainting",
+        FilmstripId.LITTLE_PAINTING,
+        null,
+        new Vector2(40, 50),
+        new Vector3(215, 100, 400),
+        90);
+    this.AddFloor_(
+        "rug",
+        FilmstripId.RUG,
+        null,
+        new Vector2(50, 100),
+        new Vector3(85, 3, -350));
     this.AddPlane_(
         "wedding photo",
         FilmstripId.WEDDING_PHOTO,
@@ -782,7 +840,13 @@ file class FacadeRoomModelBuilder {
         new Vector2(32),
         new Vector3(-199, 90, -60),
         270);
-
+    this.AddPlane_(
+        "wedding gown sketch",
+        FilmstripId.GOWN_SKETCH_1,
+        null,
+        new Vector2(32),
+        new Vector3(190, 90, 0),
+        90);
     this.AddPlane_(
         "wedding gown post its",
         FilmstripId.POST_ITS,
@@ -791,13 +855,33 @@ file class FacadeRoomModelBuilder {
         new Vector3(190, 50, -28),
         90);
     this.AddPlane_(
+        "wedding gown sketch 3",
+        FilmstripId.GOWN_SKETCH_4,
+        null,
+        new Vector2(30),
+        new Vector3(190, 83, -35),
+        90);
+    this.AddPlane_(
         "wedding gown sketch 4",
         FilmstripId.GOWN_SKETCH_4,
         null,
         new Vector2(30),
         new Vector3(190, 83, -35),
         90);
-
+    this.AddPlane_(
+        "tuxedosketch1",
+        FilmstripId.GOWN_SKETCH_1,
+        null,
+        new Vector2(32),
+        new Vector3(190, 95, 25),
+        90);
+    this.AddPlane_(
+        "tuxedosketch2",
+        FilmstripId.GOWN_SKETCH_1,
+        null,
+        new Vector2(25),
+        new Vector3(160, 58, -15),
+        90);
     this.AddSprite_(
         "advice ball",
         FilmstripId.EIGHT_BALL,
@@ -823,6 +907,16 @@ file class FacadeRoomModelBuilder {
         FilmstripId.TRINKET_3,
         new Vector2(20),
         new Vector3(-184, 46, -400));
+    this.AddSprite_(
+        "trinket 4",
+        FilmstripId.TRINKET_4,
+        new Vector2(16),
+        new Vector3(-185, 75, -443));
+    this.AddSprite_(
+        "trinket 5",
+        FilmstripId.TRINKET_5,
+        new Vector2(16),
+        new Vector3(-186, 75, -405));
   }
 
   private void AddSprite_(
