@@ -12,14 +12,14 @@ public sealed class CounterPercentageProgress(int total) : IPercentageProgress {
       return;
     }
 
-    var current = this.current_++;
+    var current = ++this.current_;
     if (current >= total) {
       this.isComplete_ = true;
       this.OnComplete?.Invoke(this, EventArgs.Empty);
       return;
     }
 
-    this.Progress = (100f * current) / total;
+    this.Progress = 1f * current / total;
     this.OnProgressChanged?.Invoke(this, this.Progress);
   }
 

@@ -12,7 +12,7 @@ public sealed class DelayedSplitPercentageProgress(int capacity = 0)
 
   public PercentageProgress this[int index] => this.progresses_[index];
 
-  public IPercentageProgress Add() {
+  public PercentageProgress Add() {
     var currentIndex = this.progresses_.Count;
 
     var progress = new PercentageProgress();
@@ -31,9 +31,9 @@ public sealed class DelayedSplitPercentageProgress(int capacity = 0)
     }
 
     var totalProgress = 0f;
-
-    foreach (var progress in this.progresses_) {
-      totalProgress += progress.Progress;
+    foreach (var (progress, isComplete) in this.progresses_.Zip(
+                 this.eachIsComplete_)) {
+      totalProgress += !isComplete ? progress.Progress : 1;
     }
 
     this.Progress = totalProgress / this.progresses_.Count;
@@ -47,7 +47,9 @@ public sealed class DelayedSplitPercentageProgress(int capacity = 0)
 
     this.eachIsComplete_[index] = true;
     this.isComplete_ = this.eachIsComplete_.All(b => b);
-    if (this.isComplete_) {
+    if (!this.isComplete_) {
+      this.ReportProgressChanged_();
+    } else {
       this.OnComplete?.Invoke(this, EventArgs.Empty);
     }
   }
