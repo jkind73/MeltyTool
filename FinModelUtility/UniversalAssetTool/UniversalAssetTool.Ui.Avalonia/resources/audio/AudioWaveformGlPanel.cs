@@ -5,12 +5,14 @@ using Avalonia;
 using fin.audio;
 using fin.ui.avalonia.gl;
 using fin.ui.rendering.gl;
+using fin.ui.rendering.gl.ubo;
 
 
 namespace uni.ui.avalonia.resources.audio;
 
 public sealed class AudioWaveformGlPanel : BGlPanel {
   private readonly AotWaveformRenderer waveformRenderer_ = new();
+  private ViewMatricesUbo? viewMatricesUbo_;
 
   public static readonly DirectProperty<AudioWaveformGlPanel,
           IAotAudioPlayback<short>?>
@@ -46,6 +48,10 @@ public sealed class AudioWaveformGlPanel : BGlPanel {
 
       GlTransform.MatrixMode(TransformMatrixMode.MODEL);
       GlTransform.LoadIdentity();
+
+      this.viewMatricesUbo_ ??= new ViewMatricesUbo();
+      this.viewMatricesUbo_.UpdateData();
+      this.viewMatricesUbo_.Bind();
     }
 
     var amplitude = height * .45f;
