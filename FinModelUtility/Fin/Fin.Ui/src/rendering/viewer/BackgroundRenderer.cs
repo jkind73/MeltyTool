@@ -185,7 +185,13 @@ public sealed class BackgroundRenderer : IRenderable, IDisposable {
 
     mesh.AddQuads(v0, v1, v2, v3).SetMaterial(material);
 
-    var modelRenderer = new ModelRenderer(model);
+    var textureFlipbookManager =
+        new TextureFlipbookSwapManager(model.MaterialManager.Textures);
+    textureFlipbookManager.UpdateCurrentFlipbookSwaps(null);
+    var modelRenderer = new ModelRenderer(model,
+                                          null,
+                                          null,
+                                          textureFlipbookManager);
     modelRenderer.GenerateModelIfNull();
 
     var shaders = modelRenderer
