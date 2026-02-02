@@ -16,9 +16,24 @@ public sealed class PaperMarioDirectorsCutFileBundleGatherer
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
-    foreach (var modFile in fileHierarchy.Root.GetFilesWithFileType(
-                 ".mod",
-                 true)) {
+    var volcanicPanicDir
+        = fileHierarchy.Root.AssertGetExistingSubdir("volcanic_panic");
+    var volcanicPanicModFiles
+        = volcanicPanicDir.GetFilesWithFileType(".mod").ToHashSet();
+    var bacRockFile = volcanicPanicDir.AssertGetExistingFile("bacRock.png");
+    foreach (var modFile in volcanicPanicModFiles) {
+      organizer.Add(new AnnotatedFileBundle<D3dModelFileBundle>(
+                        new D3dModelFileBundle {
+                            ModFile = modFile,
+                            TextureFile = bacRockFile,
+                            FlipNormals = true,
+                        },
+                        modFile));
+    }
+
+    foreach (var modFile in fileHierarchy
+                            .Root.GetFilesWithFileType(".mod", true)
+                            .Where(f => !volcanicPanicModFiles.Contains(f))) {
       organizer.Add(new AnnotatedFileBundle<D3dModelFileBundle>(
                         new D3dModelFileBundle {
                             ModFile = modFile

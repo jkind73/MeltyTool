@@ -7,6 +7,7 @@ using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
+using fin.model.util;
 using fin.util.sets;
 
 using gm.schema.d3d;
@@ -15,7 +16,9 @@ namespace gm.api;
 
 public sealed class D3dModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile ModFile { get; init; }
+  public IReadOnlyTreeFile? TextureFile { get; init; }
   public IReadOnlyTreeFile MainFile => this.ModFile;
+  public bool FlipNormals { get; init; }
 }
 
 public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
@@ -25,7 +28,18 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
 
     var (finModel, finRootBone)
         = CreateModel((modelFileBundle, modFile.AsFileSet()));
-    AddToModel(mod, finModel, finRootBone, out _);
+
+    ITextureMaterial? material = null;
+    if (modelFileBundle.TextureFile is {} textureFile) {
+      (material, _) = finModel.MaterialManager.AddSimpleTextureMaterialFromFile(
+          textureFile);
+    }
+
+    AddToModel(mod, finModel, finRootBone, out _, material);
+
+    if (modelFileBundle.FlipNormals) {
+      finModel.FlipAllNormals();
+    }
 
     return finModel;
   }

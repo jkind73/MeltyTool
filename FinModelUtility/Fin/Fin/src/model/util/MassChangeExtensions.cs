@@ -25,6 +25,13 @@ public static class MassChangeExtensions {
     }
   }
 
+  public static void FlipAllNormals(this IModel model) {
+    foreach (var vertex in
+             model.Skin.Vertices.WhereIs<IVertex, INormalVertex>()) {
+      vertex.SetLocalNormal(-vertex.LocalNormal);
+    }
+  }
+
   public static void SetAllTextureFiltering(this IModel model,
                                             TextureMinFilter minFilter,
                                             TextureMagFilter magFilter) {
