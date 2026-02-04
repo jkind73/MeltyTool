@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -38,8 +39,9 @@ public static class FileBundleGatherersService {
       var totalNodeCount
           = GetTotalNodeCountWithinDirectory_(rootDirectory);
       var counterProgress = new CounterPercentageProgress(totalNodeCount);
-      counterProgress.OnProgressChanged += (_, progress)
-          => fileTreeProgress.ReportProgress(progress);
+      counterProgress.OnProgressChanged += (_, progress) => {
+        fileTreeProgress.ReportProgress(progress);
+      };
 
       var fileTreeViewModel
           = GetFileTreeViewModel_(rootDirectory,

@@ -48,6 +48,11 @@ public sealed class ParallelAnnotatedFileBundleGathererAccumulator
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
+    this.progress_.OnProgressChanged += (_, progress)
+        => mutablePercentageProgress.ReportProgress(progress);
+    this.progress_.OnComplete
+        += (_, _) => mutablePercentageProgress.ReportCompletion();
+
     ParallelHelper.For(
         0,
         this.gatherers_.Count,

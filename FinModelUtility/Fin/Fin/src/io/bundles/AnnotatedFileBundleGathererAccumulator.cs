@@ -46,6 +46,11 @@ public class AnnotatedFileBundleGathererAccumulator<TSelf>
   public void GatherFileBundles(
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress) {
+    this.progress_.OnProgressChanged += (_, progress)
+        => mutablePercentageProgress.ReportProgress(progress);
+    this.progress_.OnComplete
+        += (_, _) => mutablePercentageProgress.ReportCompletion();
+
     for (var i = 0; i < this.gatherers_.Count; ++i) {
       this.gatherers_[i]
           .TryToGatherAndReportCompletion(organizer, this.progress_[i]);
