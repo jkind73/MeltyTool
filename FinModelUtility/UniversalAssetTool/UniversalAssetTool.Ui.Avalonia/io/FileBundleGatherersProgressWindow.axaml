@@ -23,13 +23,13 @@
 
     <ListBox.ItemTemplate>
       <DataTemplate x:DataType="io:FileBundleGathererProgressViewModel">
-        <ProgressBar Value="{Binding Progress.Progress}"
+        <ProgressBar Value="{Binding Progress.Progress0To100}"
                      ShowProgressText="True"
                      Height="30">
           <ProgressBar.ProgressTextFormat>
             <MultiBinding StringFormat="{}{0} ({1:0}%)">
               <Binding Path="Name" />
-              <Binding Path="Progress.Progress" />
+              <Binding Path="Progress.Progress0To100" />
             </MultiBinding>
           </ProgressBar.ProgressTextFormat>
         </ProgressBar>

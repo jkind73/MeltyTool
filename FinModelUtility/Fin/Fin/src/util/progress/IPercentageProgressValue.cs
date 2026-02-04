@@ -23,6 +23,8 @@ public interface IMutableIndeterminateProgressValue<T>
 public interface IPercentageProgress : IIndeterminateProgress {
   float Progress { get; }
   event EventHandler<float> OnProgressChanged;
+
+  float Progress0To100 => 100 * this.Progress;
 }
 
 public interface IMutablePercentageProgress

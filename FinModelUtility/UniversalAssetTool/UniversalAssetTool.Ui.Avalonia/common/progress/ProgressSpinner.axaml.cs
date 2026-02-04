@@ -26,7 +26,6 @@ public sealed class ProgressSpinnerViewModelForDesigner
             current = DateTime.Now;
             elapsedSeconds = (current - start).TotalSeconds;
             this.Progress.ReportProgress(
-                100 *
                 Math.Clamp((float) (elapsedSeconds / secondsToWait), 0, 1));
 
             await Task.Delay(50);

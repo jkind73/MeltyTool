@@ -13,15 +13,27 @@ public sealed class ValueFractionProgress
     : BViewModel, IMutablePercentageProgressValue<object> {
   private bool isComplete_;
 
-  public float Progress { get; private set; }
+  public float Progress {
+    get;
+    private set {
+      this.RaiseAndSetIfChanged(ref field, value);
+      this.Progress0To100 = 100 * value;
+    }
+  }
+
+  public float Progress0To100 {
+    get;
+    private set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
   public object? Value { get; private set; }
 
-  public void ReportProgress(float progress1To100) {
+  public void ReportProgress(float progress) {
     if (this.isComplete_) {
       return;
     }
 
-    this.Progress = progress1To100;
+    this.Progress = progress;
 
     this.OnProgressChanged?.Invoke(this, this.Progress);
     this.RaisePropertyChanged(nameof(this.Progress));
@@ -61,7 +73,6 @@ public sealed class ValueFractionProgress
         current = DateTime.Now;
         elapsedSeconds = (current - start).TotalSeconds;
         progress.ReportProgress(
-            100 *
             Math.Clamp((float) (elapsedSeconds / secondsToWait), 0, 1));
 
         await Task.Delay(50);

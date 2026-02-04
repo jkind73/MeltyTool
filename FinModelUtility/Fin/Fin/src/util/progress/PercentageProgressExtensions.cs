@@ -3,7 +3,7 @@
 public static class SplitPercentageProgressExtensions {
   public static void ReportProgressAndCompletion(
       this IMutablePercentageProgress p) {
-    p.ReportProgress(100);
+    p.ReportProgress(1);
     p.ReportCompletion();
   }
 
