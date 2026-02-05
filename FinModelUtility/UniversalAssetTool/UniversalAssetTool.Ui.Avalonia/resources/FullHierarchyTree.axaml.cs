@@ -101,6 +101,10 @@ public class FullHierarchyTreeViewModel : BViewModel {
             selectedBone = boneNode.Bone;
             break;
           }
+          case MeshFullHierarchyNode meshNode: {
+            selectedMesh = meshNode.Mesh;
+            break;
+          }
           case NodeFullHierarchyNode nodeNode: {
             selectedNode = nodeNode.Node;
             break;

@@ -41,9 +41,7 @@ public class ModelPanelViewModel : BViewModel {
       this.RegistersPanel = new RegistersPanelViewModel() {
           Registers = value.MaterialManager.Registers,
       };
-      this.SkeletonTree = new SkeletonTreeViewModel {
-          Skeleton = value.Skeleton,
-      };
+      this.SkeletonTree = new SkeletonTreeViewModel { Model = value };
       this.TexturesPanel = new TexturesPanelViewModel {
           ModelAndTextures = (value, value.MaterialManager.Textures),
       };

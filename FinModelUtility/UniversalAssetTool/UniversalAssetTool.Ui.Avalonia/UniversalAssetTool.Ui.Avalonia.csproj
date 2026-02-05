@@ -66,6 +66,9 @@
     <Compile Update="resources\FullHierarchyTree.axaml.cs">
       <DependentUpon>FullHierarchyTree.axaml</DependentUpon>
     </Compile>
+    <Compile Update="resources\model\skeleton\SkeletonPanel.axaml.cs">
+      <DependentUpon>SkeletonPanel.axaml</DependentUpon>
+    </Compile>
     <Compile Update="resources\scene\areas\AreasPanel.axaml.cs">
       <DependentUpon>AreasPanel.axaml</DependentUpon>
     </Compile>
