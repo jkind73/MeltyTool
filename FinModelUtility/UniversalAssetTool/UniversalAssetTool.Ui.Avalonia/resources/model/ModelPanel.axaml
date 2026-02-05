@@ -62,7 +62,7 @@
           <TextBlock Text="Meshes" />
         </StackPanel>
       </TabItem.Header>
-      <mesh:MeshTree DataContext="{Binding MeshTree}" />
+      <mesh:MeshesPanel DataContext="{Binding MeshesPanel}" />
     </TabItem>
     <TabItem>
       <TabItem.Header>

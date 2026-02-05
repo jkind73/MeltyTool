@@ -20,7 +20,9 @@ using fin.util.enums;
 using Material.Icons;
 using Material.Icons.Avalonia;
 
-namespace uni.ui.avalonia.resources.scene.areas;
+using uni.ui.avalonia.resources.scene;
+
+namespace uni.ui.avalonia.resources;
 
 [Flags]
 public enum FullHierarchyTreeType {
@@ -52,7 +54,7 @@ public class FullHierarchyTreeViewModel : BViewModel {
   public static FullHierarchyTreeViewModel FromModel(
       IReadOnlyModel model,
       FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
-    => new([new ModelFullHierarchyNode(model, type)]);
+    => new(ModelFullHierarchyNode.GetChildren(model, type));
 
   public FullHierarchyTreeViewModel(IFullHierarchyNode[] rootNodes) {
     var regularFontSize = (double) TopLevelService.Instance.FindResource(
@@ -283,8 +285,21 @@ public sealed class MeshFullHierarchyNode(
 public sealed class PrimitiveFullHierarchyNode(IReadOnlyPrimitive primitive)
     : IFullHierarchyNode {
   public IReadOnlyPrimitive Primitive => primitive;
-  public string Name => $"Primitive {primitive.Index}";
-  public MaterialIconKind Icon => MaterialIconKind.VectorPolygon;
+  public string Name => $"Primitive {primitive.Index} [{primitive.Type}, {primitive.Vertices.Count} vertices]";
+
+  public MaterialIconKind Icon
+    => primitive.Type switch {
+        PrimitiveType.POINTS => MaterialIconKind.VectorPoint,
+        PrimitiveType.LINES
+            or PrimitiveType.LINE_STRIP => MaterialIconKind.VectorLine,
+        PrimitiveType.TRIANGLES
+            or PrimitiveType.TRIANGLE_STRIP
+            or PrimitiveType.TRIANGLE_FAN => MaterialIconKind.VectorTriangle,
+        PrimitiveType.QUADS or PrimitiveType.QUAD_STRIP
+            => MaterialIconKind.Rectangle,
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
   public FullHierarchyTreeType Type => FullHierarchyTreeType.PRIMITIVES;
   public IFullHierarchyNode[] Children => [];
 }

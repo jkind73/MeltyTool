@@ -60,10 +60,10 @@
     <Compile Update="io\FileBundleGatherersProgressWindow.axaml.cs">
       <DependentUpon>FileBundleGatherersProgressWindow.axaml</DependentUpon>
     </Compile>
-    <Compile Update="resources\model\mesh\MeshTree.axaml.cs">
-      <DependentUpon>MeshTree.axaml</DependentUpon>
+    <Compile Update="resources\model\mesh\MeshesPanel.axaml.cs">
+      <DependentUpon>MeshesPanel.axaml</DependentUpon>
     </Compile>
-    <Compile Update="resources\scene\areas\FullHierarchyTree.axaml.cs">
+    <Compile Update="resources\FullHierarchyTree.axaml.cs">
       <DependentUpon>FullHierarchyTree.axaml</DependentUpon>
     </Compile>
     <Compile Update="resources\scene\areas\AreasPanel.axaml.cs">

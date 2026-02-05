@@ -36,7 +36,7 @@ public class ModelPanelViewModel : BViewModel {
       this.MaterialsPanel = new MaterialsPanelViewModel {
           ModelAndMaterials = (value, value.MaterialManager.All)
       };
-      this.MeshTree = new MeshTreeViewModel { Meshes = value.Skin.RootMeshes };
+      this.MeshesPanel = new MeshesPanelViewModel { Model = value };
       this.FilesPanel = new FilesPanelViewModel(value);
       this.RegistersPanel = new RegistersPanelViewModel() {
           Registers = value.MaterialManager.Registers,
@@ -66,7 +66,7 @@ public class ModelPanelViewModel : BViewModel {
     private set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  public MeshTreeViewModel MeshTree {
+  public MeshesPanelViewModel MeshesPanel {
     get;
     private set => this.RaiseAndSetIfChanged(ref field, value);
   }
