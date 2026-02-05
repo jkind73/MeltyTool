@@ -27,11 +27,11 @@ public enum FullHierarchyTreeType {
   AREAS = 1 << 0,
   NODES = 1 << 1,
   MODELS = 1 << 2,
-  MESHES = 1 << 3,
-  PRIMITIVES = 1 << 4,
-  BONES = 1 << 5,
+  BONES = 1 << 3,
+  MESHES = 1 << 4,
+  PRIMITIVES = 1 << 5,
 
-  ALL = AREAS | NODES | MODELS | MESHES | PRIMITIVES | BONES,
+  ALL = AREAS | NODES | MODELS | BONES | MESHES | PRIMITIVES,
 }
 
 public sealed class FullHierarchyTreeViewModelForDesigner
@@ -125,49 +125,69 @@ public interface IFullHierarchyNode {
   IFullHierarchyNode[] Children { get; }
 }
 
-public sealed record AreaFullHierarchyNode(
-    IReadOnlySceneArea Area,
-    FullHierarchyTreeType Type = FullHierarchyTreeType.ALL)
+public sealed class AreaFullHierarchyNode(
+    IReadOnlySceneArea area,
+    IFullHierarchyNode[] children)
     : IFullHierarchyNode {
+  public IReadOnlySceneArea Area => area;
   public string Name => "Area";
   public MaterialIconKind Icon => MaterialIconKind.ChartAreasplineVariant;
   public FullHierarchyTreeType Type => FullHierarchyTreeType.AREAS;
+  public IFullHierarchyNode[] Children => children;
 
-  public IFullHierarchyNode[] Children { get; }
-    = Type.CheckFlag(FullHierarchyTreeType.NODES)
-        ? ((Area.CustomSkyboxNode != null
-                ? new NodeFullHierarchyNode(Area.CustomSkyboxNode)
+  public AreaFullHierarchyNode(
+      IReadOnlySceneArea area,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+      : this(area, GetChildren(area, type)) { }
+
+  public static IFullHierarchyNode[] GetChildren(
+      IReadOnlySceneArea area,
+      FullHierarchyTreeType type)
+    => type.CheckFlag(FullHierarchyTreeType.NODES)
+        ? ((area.CustomSkyboxNode != null
+                ? new NodeFullHierarchyNode(area.CustomSkyboxNode, type)
                 : null).Yield()
                        .Concat(
-                           Area.RootNodes.Select(n => new NodeFullHierarchyNode(
-                                                     n)))
+                           area.RootNodes.Select(n => new NodeFullHierarchyNode(
+                                                     n,
+                                                     type)))
                        .Nonnull()
                        .ToArray())
         : [];
 }
 
-public sealed record NodeFullHierarchyNode(
-    IReadOnlySceneNode Node,
-    FullHierarchyTreeType Type = FullHierarchyTreeType.ALL)
+public sealed class NodeFullHierarchyNode(
+    IReadOnlySceneNode node,
+    IFullHierarchyNode[] children)
     : IFullHierarchyNode {
-  public string Name => this.Node.Name ?? "Node";
+  public IReadOnlySceneNode Node => node;
+  public string Name => node.Name ?? "Node";
   public MaterialIconKind Icon => MaterialIconKind.AccountOutline;
   public FullHierarchyTreeType Type => FullHierarchyTreeType.NODES;
+  public IFullHierarchyNode[] Children => children;
 
-  public IFullHierarchyNode[] Children { get; }
-    = (Type.CheckFlag(FullHierarchyTreeType.MODELS)
-          ? Node.Components
-                .OfType<IModelRenderComponent>()
-                .Select(m => (IFullHierarchyNode) new ModelFullHierarchyNode(
-                            m.Model))
-          : [])
-      .Concat(
-          (Type.CheckFlag(FullHierarchyTreeType.NODES)
-              ? Node
-                .ChildNodes
-                .Select(n => new NodeFullHierarchyNode(n))
-              : []))
-      .ToArray();
+  public NodeFullHierarchyNode(
+      IReadOnlySceneNode node,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+      : this(node, GetChildren(node, type)) { }
+
+  public static IFullHierarchyNode[] GetChildren(
+      IReadOnlySceneNode node,
+      FullHierarchyTreeType type)
+    => (type.CheckFlag(FullHierarchyTreeType.MODELS)
+           ? node.Components
+                 .OfType<IModelRenderComponent>()
+                 .Select(m => (IFullHierarchyNode) new ModelFullHierarchyNode(
+                             m.Model,
+                             type))
+           : [])
+       .Concat(
+           (type.CheckFlag(FullHierarchyTreeType.NODES)
+               ? node
+                 .ChildNodes
+                 .Select(n => new NodeFullHierarchyNode(n, type))
+               : []))
+       .ToArray();
 }
 
 public sealed class ModelFullHierarchyNode(
@@ -189,13 +209,22 @@ public sealed class ModelFullHierarchyNode(
       IReadOnlyModel model,
       FullHierarchyTreeType type)
     => (type.CheckFlag(FullHierarchyTreeType.BONES)
-            ? model
-              .Skeleton
-              .Root
-              .Children
-              .Select(b => new BoneFullHierarchyNode(b))
-            : [])
-        .ToArray();
+           ? model
+             .Skeleton
+             .Root
+             .Children
+             .Select(b => (IFullHierarchyNode) new BoneFullHierarchyNode(
+                         b,
+                         type))
+           : [])
+       .Concat(
+           (type.CheckFlag(FullHierarchyTreeType.MESHES)
+               ? model
+                 .Skin
+                 .RootMeshes
+                 .Select(m => new MeshFullHierarchyNode(m, type))
+               : []))
+       .ToArray();
 }
 
 public sealed class BoneFullHierarchyNode(
@@ -219,6 +248,45 @@ public sealed class BoneFullHierarchyNode(
     => type.CheckFlag(FullHierarchyTreeType.BONES)
         ? bone.Children.Select(b => new BoneFullHierarchyNode(b)).ToArray()
         : [];
+}
+
+public sealed class MeshFullHierarchyNode(
+    IReadOnlyMesh mesh,
+    IFullHierarchyNode[] children)
+    : IFullHierarchyNode {
+  public IReadOnlyMesh Mesh => mesh;
+  public string Name => mesh.Name ?? $"Mesh {mesh.Index}";
+  public MaterialIconKind Icon => MaterialIconKind.ShapeOutline;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.BONES;
+  public IFullHierarchyNode[] Children => children;
+
+  public MeshFullHierarchyNode(
+      IReadOnlyMesh mesh,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+      : this(mesh, GetChildren(mesh, type)) { }
+
+  public static IFullHierarchyNode[] GetChildren(
+      IReadOnlyMesh mesh,
+      FullHierarchyTreeType type)
+    => (type.CheckFlag(FullHierarchyTreeType.PRIMITIVES)
+           ? mesh.Primitives.Select(p => (IFullHierarchyNode)
+                                        new PrimitiveFullHierarchyNode(p))
+           : [])
+       .Concat(type.CheckFlag(FullHierarchyTreeType.MESHES)
+                   ? mesh.SubMeshes.Select(b => new MeshFullHierarchyNode(
+                                               b,
+                                               type))
+                   : [])
+       .ToArray();
+}
+
+public sealed class PrimitiveFullHierarchyNode(IReadOnlyPrimitive primitive)
+    : IFullHierarchyNode {
+  public IReadOnlyPrimitive Primitive => primitive;
+  public string Name => $"Primitive {primitive.Index}";
+  public MaterialIconKind Icon => MaterialIconKind.VectorPolygon;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.PRIMITIVES;
+  public IFullHierarchyNode[] Children => [];
 }
 
 public partial class FullHierarchyTree : UserControl {
