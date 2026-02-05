@@ -1,6 +1,7 @@
 ﻿using Avalonia.Controls;
 using Avalonia.Threading;
 
+using fin.config.avalonia.services;
 using fin.services;
 using fin.ui.avalonia.dialogs;
 using fin.util.time;
@@ -32,5 +33,7 @@ public partial class MainWindow : Window {
 
       dialog.ShowDialog(this);
     };
+
+    TopLevelService.Init(this);
   }
 }

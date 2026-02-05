@@ -1,0 +1,228 @@
+using System;
+using System.Linq;
+
+using Avalonia;
+using Avalonia.Controls;
+using Avalonia.Controls.Models.TreeDataGrid;
+using Avalonia.Controls.Templates;
+using Avalonia.Data;
+using Avalonia.Layout;
+
+using fin.config.avalonia.services;
+using fin.model;
+using fin.scene;
+using fin.scene.components;
+using fin.ui.avalonia;
+using fin.ui.rendering;
+using fin.util.enumerables;
+using fin.util.enums;
+
+using Material.Icons;
+using Material.Icons.Avalonia;
+
+namespace uni.ui.avalonia.resources.scene.areas;
+
+[Flags]
+public enum FullHierarchyTreeType {
+  AREAS = 1 << 0,
+  NODES = 1 << 1,
+  MODELS = 1 << 2,
+  MESHES = 1 << 3,
+  PRIMITIVES = 1 << 4,
+  BONES = 1 << 5,
+
+  ALL = AREAS | NODES | MODELS | MESHES | PRIMITIVES | BONES,
+}
+
+public sealed class FullHierarchyTreeViewModelForDesigner
+    : FullHierarchyTreeViewModel {
+  public FullHierarchyTreeViewModelForDesigner() : base(
+      SceneDesignerUtil.CreateStubScene()
+                       .Areas.Select(a => new AreaFullHierarchyNode(a))
+                       .ToArray()) { }
+}
+
+public class FullHierarchyTreeViewModel : BViewModel {
+  public static FullHierarchyTreeViewModel FromScene(
+      IReadOnlyScene scene,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+    => new(scene.Areas.Select(a => new AreaFullHierarchyNode(a, type))
+                .ToArray());
+
+  public static FullHierarchyTreeViewModel FromModel(
+      IReadOnlyModel model,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+    => new([new ModelFullHierarchyNode(model, type)]);
+
+  public FullHierarchyTreeViewModel(IFullHierarchyNode[] rootNodes) {
+    var regularFontSize = (double) TopLevelService.Instance.FindResource(
+        "RegularFontSize");
+
+    this.Source = new(rootNodes) {
+        Columns = {
+            new HierarchicalExpanderColumn<IFullHierarchyNode>(
+                new TemplateColumn<IFullHierarchyNode>("Name",
+                  new FuncDataTemplate<IFullHierarchyNode>((_, _) => {
+                    var stackPanel = new StackPanel {
+                        Orientation = Orientation.Horizontal,
+                    };
+                    stackPanel.Children.AddRange([
+                        new MaterialIcon {
+                            Height = regularFontSize,
+                            Margin = new Thickness(0),
+                            [!MaterialIcon.KindProperty]
+                                = new Binding(nameof(IFullHierarchyNode.Icon)),
+                        },
+                        new TextBlock {
+                            Classes = { "regular" },
+                            Margin = new Thickness(3, 0, 0, 0),
+                            VerticalAlignment = VerticalAlignment.Center,
+                            [!TextBlock.TextProperty]
+                                = new Binding(nameof(IFullHierarchyNode.Name)),
+                        }
+                    ]);
+                    return stackPanel;
+                  })),
+                x => x.Children),
+        },
+    };
+
+    this.Source.RowSelection!.SelectionChanged += (_, e) => {
+      IReadOnlyBone? selectedBone = null;
+      IReadOnlyMesh? selectedMesh = null;
+      IReadOnlySceneNode? selectedNode = null;
+
+      if (e.SelectedItems.Count == 1) {
+        var selectedFullHierarchyNode = e.SelectedItems[0];
+        switch (selectedFullHierarchyNode) {
+          case BoneFullHierarchyNode boneNode: {
+            selectedBone = boneNode.Bone;
+            break;
+          }
+          case NodeFullHierarchyNode nodeNode: {
+            selectedNode = nodeNode.Node;
+            break;
+          }
+        }
+      }
+
+      SelectedBoneService.SelectBone(selectedBone);
+      SelectedMeshService.SelectMesh(selectedMesh);
+      SelectedNodeService.SelectNode(selectedNode);
+    };
+  }
+
+  public HierarchicalTreeDataGridSource<IFullHierarchyNode> Source { get; }
+
+  public void ExpandCollapse(FullHierarchyTreeType type)
+    => this.Source.ExpandCollapseRecursive(n => type.CheckFlag(n.Type));
+}
+
+public interface IFullHierarchyNode {
+  string Name { get; }
+  MaterialIconKind Icon { get; }
+  FullHierarchyTreeType Type { get; }
+  IFullHierarchyNode[] Children { get; }
+}
+
+public sealed record AreaFullHierarchyNode(
+    IReadOnlySceneArea Area,
+    FullHierarchyTreeType Type = FullHierarchyTreeType.ALL)
+    : IFullHierarchyNode {
+  public string Name => "Area";
+  public MaterialIconKind Icon => MaterialIconKind.ChartAreasplineVariant;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.AREAS;
+
+  public IFullHierarchyNode[] Children { get; }
+    = Type.CheckFlag(FullHierarchyTreeType.NODES)
+        ? ((Area.CustomSkyboxNode != null
+                ? new NodeFullHierarchyNode(Area.CustomSkyboxNode)
+                : null).Yield()
+                       .Concat(
+                           Area.RootNodes.Select(n => new NodeFullHierarchyNode(
+                                                     n)))
+                       .Nonnull()
+                       .ToArray())
+        : [];
+}
+
+public sealed record NodeFullHierarchyNode(
+    IReadOnlySceneNode Node,
+    FullHierarchyTreeType Type = FullHierarchyTreeType.ALL)
+    : IFullHierarchyNode {
+  public string Name => this.Node.Name ?? "Node";
+  public MaterialIconKind Icon => MaterialIconKind.AccountOutline;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.NODES;
+
+  public IFullHierarchyNode[] Children { get; }
+    = (Type.CheckFlag(FullHierarchyTreeType.MODELS)
+          ? Node.Components
+                .OfType<IModelRenderComponent>()
+                .Select(m => (IFullHierarchyNode) new ModelFullHierarchyNode(
+                            m.Model))
+          : [])
+      .Concat(
+          (Type.CheckFlag(FullHierarchyTreeType.NODES)
+              ? Node
+                .ChildNodes
+                .Select(n => new NodeFullHierarchyNode(n))
+              : []))
+      .ToArray();
+}
+
+public sealed class ModelFullHierarchyNode(
+    IReadOnlyModel model,
+    IFullHierarchyNode[] children)
+    : IFullHierarchyNode {
+  public IReadOnlyModel Model => model;
+  public string Name => "Model";
+  public MaterialIconKind Icon => MaterialIconKind.CubeOutline;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.MODELS;
+  public IFullHierarchyNode[] Children => children;
+
+  public ModelFullHierarchyNode(
+      IReadOnlyModel model,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+      : this(model, GetChildren(model, type)) { }
+
+  public static IFullHierarchyNode[] GetChildren(
+      IReadOnlyModel model,
+      FullHierarchyTreeType type)
+    => (type.CheckFlag(FullHierarchyTreeType.BONES)
+            ? model
+              .Skeleton
+              .Root
+              .Children
+              .Select(b => new BoneFullHierarchyNode(b))
+            : [])
+        .ToArray();
+}
+
+public sealed class BoneFullHierarchyNode(
+    IReadOnlyBone bone,
+    IFullHierarchyNode[] children)
+    : IFullHierarchyNode {
+  public IReadOnlyBone Bone => bone;
+  public string Name => bone.Name ?? $"Bone {bone.Index}";
+  public MaterialIconKind Icon => MaterialIconKind.CardsDiamondOutline;
+  public FullHierarchyTreeType Type => FullHierarchyTreeType.BONES;
+  public IFullHierarchyNode[] Children => children;
+
+  public BoneFullHierarchyNode(
+      IReadOnlyBone bone,
+      FullHierarchyTreeType type = FullHierarchyTreeType.ALL)
+      : this(bone, GetChildren(bone, type)) { }
+
+  public static IFullHierarchyNode[] GetChildren(
+      IReadOnlyBone bone,
+      FullHierarchyTreeType type)
+    => type.CheckFlag(FullHierarchyTreeType.BONES)
+        ? bone.Children.Select(b => new BoneFullHierarchyNode(b)).ToArray()
+        : [];
+}
+
+public partial class FullHierarchyTree : UserControl {
+  public FullHierarchyTree() {
+    this.InitializeComponent();
+  }
+}

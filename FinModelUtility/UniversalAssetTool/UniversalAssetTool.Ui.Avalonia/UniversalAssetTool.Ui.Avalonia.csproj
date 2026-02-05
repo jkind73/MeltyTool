@@ -63,8 +63,11 @@
     <Compile Update="resources\model\mesh\MeshTree.axaml.cs">
       <DependentUpon>MeshTree.axaml</DependentUpon>
     </Compile>
-    <Compile Update="resources\scene\areas\AreasTree.axaml.cs">
-      <DependentUpon>AreasTree.axaml</DependentUpon>
+    <Compile Update="resources\scene\areas\FullHierarchyTree.axaml.cs">
+      <DependentUpon>FullHierarchyTree.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="resources\scene\areas\AreasPanel.axaml.cs">
+      <DependentUpon>AreasPanel.axaml</DependentUpon>
     </Compile>
     <Compile Update="resources\scene\ScenePanel.axaml.cs">
       <DependentUpon>ScenePanel.axaml</DependentUpon>

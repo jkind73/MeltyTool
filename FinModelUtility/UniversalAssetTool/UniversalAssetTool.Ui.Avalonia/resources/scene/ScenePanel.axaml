@@ -46,7 +46,7 @@
           <TextBlock Text="Areas" />
         </StackPanel>
       </TabItem.Header>
-      <areas:AreasTree DataContext="{Binding AreasTree}" />
+      <areas:AreasPanel DataContext="{Binding AreasPanel}" />
     </TabItem>
   </TabControl>
 </UserControl>

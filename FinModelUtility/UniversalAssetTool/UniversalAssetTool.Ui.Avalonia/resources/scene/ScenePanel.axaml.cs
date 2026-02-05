@@ -21,12 +21,12 @@ public class ScenePanelViewModel : BViewModel {
     get;
     set {
       this.RaiseAndSetIfChanged(ref field, value);
-      this.AreasTree = new AreasTreeViewModel { Areas = value.Areas, };
+      this.AreasPanel = new AreasPanelViewModel { Scene = value, };
       this.FilesPanel = new FilesPanelViewModel(value);
     }
   }
 
-  public AreasTreeViewModel AreasTree {
+  public AreasPanelViewModel AreasPanel {
     get;
     private set => this.RaiseAndSetIfChanged(ref field, value);
   }
