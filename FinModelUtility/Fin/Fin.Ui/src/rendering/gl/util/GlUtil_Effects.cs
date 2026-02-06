@@ -29,8 +29,7 @@ public static partial class GlUtil {
 
   public static void RenderOutline(
       Action render,
-      Color? outlineColor = null,
-      float lineWidth = 8) {
+      Color? outlineColor = null) {
     if (OpenGlVersionService.Es) {
       return;
     }
@@ -41,7 +40,6 @@ public static partial class GlUtil {
                 BlendFactor.CONST_COLOR);
     SetDepth(DepthMode.READ_ONLY);
     GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Line);
-    GL.LineWidth(lineWidth);
     DisableChangingBlending = true;
     DisableChangingDepth = true;
 
@@ -53,7 +51,6 @@ public static partial class GlUtil {
     ResetBlending();
     ResetDepth();
     GL.PolygonMode(TriangleFace.FrontAndBack, PolygonMode.Fill);
-    GL.LineWidth(1);
   }
 
   public static void RenderAsShadow(

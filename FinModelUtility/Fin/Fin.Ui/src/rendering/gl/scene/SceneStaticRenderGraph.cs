@@ -270,14 +270,14 @@ public sealed class SceneStaticRenderGraph : IRenderable {
                               this.selectedMesh_ != null ||
                               (this.selectedMaterials_?.Any() ?? false);
 
-    if (isSomethingSelected) {
+    /*if (isSomethingSelected) {
       foreach (var element in this.elements_) {
         var prms = element.Params;
         if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
           GlUtil.RenderOutline(() => RenderParams_(prms));
         }
       }
-    }
+    }*/
 
     foreach (var element in this.elements_) {
       var prms = element.Params;

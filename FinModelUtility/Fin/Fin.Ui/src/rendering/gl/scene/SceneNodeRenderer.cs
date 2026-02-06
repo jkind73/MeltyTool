@@ -38,9 +38,9 @@ public sealed class SceneNodeRenderer : IRenderable {
 
   public void Render() {
     var isSelected = this.selectedNode_ == this.sceneNode_.Definition;
-    if (isSelected) {
+    /*if (isSelected) {
       GlUtil.RenderOutline(this.RenderImpl_);
-    }
+    }*/
 
     this.RenderImpl_();
 
