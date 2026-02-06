@@ -62,6 +62,11 @@ public sealed class FrameAdvancer : IAnimationPlaybackManager {
       return;
     }
 
+    if (this.TotalFrames == 1) {
+      this.Frame = 0;
+      return;
+    }
+
     var elapsedSeconds = this.impl_.Elapsed.TotalSeconds;
     var elapsedFrames
         = elapsedSeconds * this.FrameRate * this.SpeedMultiplier;
