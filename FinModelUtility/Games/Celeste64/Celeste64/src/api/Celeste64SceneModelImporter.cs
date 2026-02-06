@@ -191,6 +191,7 @@ public sealed class Celeste64MapSceneImporter
           entity.GetIntProperty("angle", 0) * FinTrig.DEG_2_RAD + MathF.PI;
 
       var finObj = finArea.AddRootNode();
+      finObj.Name = entity.ClassName;
       finObj.SetPosition(origin);
       finObj.SetRotationRadians(0, angleRadians, 0);
       finObj.SetScale(modelScale, modelScale, modelScale);
