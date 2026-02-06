@@ -11,7 +11,8 @@
 
   <PropertyGroup>
     <SelfContained>true</SelfContained>
-    <PublishTrimmed>true</PublishTrimmed>
+    <!--<PublishTrimmed>true</PublishTrimmed>-->
+    <TrimMode>partial</TrimMode>
     <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
