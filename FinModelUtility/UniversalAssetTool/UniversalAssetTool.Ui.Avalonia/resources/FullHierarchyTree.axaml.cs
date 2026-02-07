@@ -151,14 +151,15 @@ public sealed class AreaFullHierarchyNode(
       FullHierarchyTreeType type)
     => type.CheckFlag(FullHierarchyTreeType.NODES)
         ? ((area.CustomSkyboxNode != null
-                ? new NodeFullHierarchyNode(area.CustomSkyboxNode, type)
-                : null).Yield()
-                       .Concat(
-                           area.RootNodes.Select(n => new NodeFullHierarchyNode(
-                                                     n,
-                                                     type)))
-                       .Nonnull()
-                       .ToArray())
+               ? new NodeFullHierarchyNode(area.CustomSkyboxNode, type)
+               : null)
+           .Yield()
+           .Concat(
+               area.RootNodes.Select(n => new NodeFullHierarchyNode(
+                                         n,
+                                         type)))
+           .Nonnull()
+           .ToArray())
         : [];
 }
 
@@ -289,7 +290,9 @@ public sealed class MeshFullHierarchyNode(
 public sealed class PrimitiveFullHierarchyNode(IReadOnlyPrimitive primitive)
     : IFullHierarchyNode {
   public IReadOnlyPrimitive Primitive => primitive;
-  public string Name => $"Primitive {primitive.Index} [{primitive.Type}, {primitive.Vertices.Count} vertices]";
+
+  public string Name
+    => $"Primitive {primitive.Index} [{primitive.Type}, {primitive.Vertices.Count} vertices]";
 
   public MaterialIconKind Icon
     => primitive.Type switch {

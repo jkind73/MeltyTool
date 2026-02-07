@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using fin.importers;
+using fin.io;
 using fin.io.bundles;
 
 namespace fin.archives;
@@ -21,4 +22,9 @@ public interface IArchive : IResource, IDisposable {
 }
 
 public interface IArchiveImporter<in TBundle> : IImporter<IArchive, TBundle>
-    where TBundle : IArchiveBundle;
+    where TBundle : IArchiveBundle {
+  void ImportAndExtractRelativeTo(
+      TBundle bundle,
+      ISystemDirectory directory,
+      bool cleanUp = false);
+}
