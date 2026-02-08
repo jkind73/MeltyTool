@@ -4,17 +4,19 @@ using Celeste64.api;
 
 using facade.api;
 
-using grezzo.api;
-
-using sysdolphin.api;
-
 using fin.model;
 using fin.model.io;
 using fin.model.io.importers;
+using fin.model.io.importers.assimp;
+using fin.model.io.importers.gltf;
+
+using gdl.api;
 
 using glo.api;
 
 using gm.api;
+
+using grezzo.api;
 
 using hw.api;
 
@@ -22,13 +24,23 @@ using jsystem.api;
 
 using level5.api;
 
-using pikmin1.api;
+using marioartist.api;
 
 using modl.api;
 
 using nitro.api;
 
+using pikmin1.api;
+
+using pmdc.api;
+
+using rollingMadness.api;
+
 using sm64ds.api;
+
+using sonicadventure.api;
+
+using sysdolphin.api;
 
 using ttyd.api;
 
@@ -39,17 +51,6 @@ using visceral.api;
 using vrml.api;
 
 using xmod.api;
-
-using fin.model.io.importers.assimp;
-using fin.model.io.importers.gltf;
-
-using gdl.api;
-
-using marioartist.api;
-
-using rollingMadness.api;
-
-using sonicadventure.api;
 
 
 namespace uni.api;
@@ -103,6 +104,9 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new OotModelImporter().Import(ootModelFileBundle),
         PedModelFileBundle pedModelFileBundle
             => new PedModelImporter().Import(pedModelFileBundle),
+        PmdcCharacterModelFileBundle pmdcCharacterModelFileBundle
+            => new PmdcCharacterModelImporter().Import(
+                pmdcCharacterModelFileBundle),
         Sm64dsModelFileBundle sm64dsModelFileBundle
             => new Sm64dsModelImporter().Import(sm64dsModelFileBundle),
         SonicAdventureModelFileBundle sonicAdventureModelFileBundle

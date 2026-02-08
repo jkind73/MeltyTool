@@ -285,8 +285,11 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
     public IFileHierarchyFile AssertGetExistingFile(
         ReadOnlySpan<char> relativePath) {
-      Asserts.True(
-          this.TryToGetExistingFile(relativePath, out var outFile));
+      if (!this.TryToGetExistingFile(relativePath, out var outFile)) {
+        Asserts.Fail(
+            $"Expected to find file '{relativePath}' in '{this.FullPath}'");
+      }
+
       return outFile;
     }
 
@@ -331,8 +334,11 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
     public IFileHierarchyDirectory AssertGetExistingSubdir(
         ReadOnlySpan<char> relativePath) {
-      Asserts.True(
-          this.TryToGetExistingSubdir(relativePath, out var outDir));
+      if (!this.TryToGetExistingSubdir(relativePath, out var outDir)) {
+        Asserts.Fail(
+            $"Expected to find subdir '{relativePath}' in '{this.FullPath}'");
+      }
+
       return outDir;
     }
 

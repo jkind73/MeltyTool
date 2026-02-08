@@ -51,6 +51,21 @@ public static class FinImage {
     return await FromStreamAsync(stream);
   }
 
+  public static IImage[] FromGifFile(IReadOnlyGenericFile file) {
+    try {
+      using var stream = file.OpenRead();
+      return FromGifStream(stream);
+    } catch (Exception e) {
+      throw new Exception($"Failed to load image \"{file}\"!", e);
+    }
+  }
+
+  public static async Task<IImage[]>
+      FromGifFileAsync(IReadOnlyGenericFile file) {
+    await using var stream = file.OpenRead();
+    return await FromGifStreamAsync(stream);
+  }
+
   public static Configuration ImageSharpConfig { get; }
 
   static FinImage() {
@@ -67,11 +82,35 @@ public static class FinImage {
   public static async Task<IImage> FromStreamAsync(Stream stream) {
     var decoderOptions =
         new DecoderOptions { Configuration = ImageSharpConfig };
-    var image = await Image.LoadAsync(decoderOptions, stream);
-    return FromImageSharpImage(image);
+    var image = Image.Load(decoderOptions, stream);
+    return FromImageSharpImage_(image);
   }
 
-  public static IImage FromImageSharpImage(Image image) {
+  public static IImage[] FromGifStream(Stream stream) {
+    var imageTask = FromGifStreamAsync(stream);
+    imageTask.Wait();
+    return imageTask.Result;
+  }
+
+  public static async Task<IImage[]> FromGifStreamAsync(Stream stream) {
+    var decoderOptions =
+        new DecoderOptions { Configuration = ImageSharpConfig };
+    var mergedFramesImage = Image.Load(decoderOptions, stream);
+    var mergedFrames = mergedFramesImage.Frames;
+
+    var separateImages = new IImage[mergedFrames.Count];
+    for (var i = 0; i < separateImages.Length; ++i) {
+      var frameImage = i < separateImages.Length - 1
+          ? mergedFrames.ExportFrame(0)
+          : mergedFramesImage;
+
+      separateImages[i] = FromImageSharpImage_(frameImage);
+    }
+
+    return separateImages;
+  }
+
+  private static IImage FromImageSharpImage_(Image image) {
     var pixelFormat = image.GetType().GenericTypeArguments[0];
     if (pixelFormat == typeof(Rgba32)) {
       return new Rgba32Image(PixelFormat.RGBA8888,

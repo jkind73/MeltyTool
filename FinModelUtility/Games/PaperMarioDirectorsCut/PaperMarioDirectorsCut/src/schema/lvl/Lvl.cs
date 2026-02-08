@@ -25,12 +25,13 @@ public sealed class Lvl : ITextDeserializable {
   public string? BackgroundName { get; set; }
   public bool HasRoomModel { get; set; }
 
-  public List<Vector3> Trees { get; set; } = [];
 
   public List<(Vector3 start, Vector3 end, string? textureName, FloorBlockType
       type, FloorBlockFlags flags)> FloorBlocks { get; set; } = [];
 
+  public List<(Vector3, string name, string characterType)> Npcs { get; set; } = [];
   public List<Vector3> SaveBlocks { get; set; } = [];
+  public List<Vector3> Trees { get; set; } = [];
 
   public void Read(ITextReader tr) {
     this.HasRoomModel = false;
@@ -52,14 +53,6 @@ public sealed class Lvl : ITextDeserializable {
         this.BackgroundName = backgroundName.Trim();
       } else if (TryToParseObj(line, out var objType, out var objParams)) {
         switch (objType) {
-          case "objTree1": {
-            this.Trees.Add(ParseVector3(objParams));
-            break;
-          }
-          case "objSaveBlock": {
-            this.SaveBlocks.Add(ParseVector3(objParams));
-            break;
-          }
           case "objFloorBlock": {
             var start = ParseVector3(objParams);
             var end = ParseVector3(objParams.AsSpan(3));
@@ -72,6 +65,24 @@ public sealed class Lvl : ITextDeserializable {
             var flags = GetFloorBlockFlags(behavior);
 
             this.FloorBlocks.Add((start, end, textureName, type, flags));
+            break;
+          }
+          case "objNPC": {
+            var position = ParseVector3(objParams);
+
+            var name = objParams[7].Replace(@"""", "");
+            var characterType = objParams[8];
+            characterType = characterType.SubstringUpTo('-');
+
+            this.Npcs.Add((position, name, characterType));
+            break;
+          }
+          case "objSaveBlock": {
+            this.SaveBlocks.Add(ParseVector3(objParams));
+            break;
+          }
+          case "objTree1": {
+            this.Trees.Add(ParseVector3(objParams));
             break;
           }
         }

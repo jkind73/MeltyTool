@@ -17,7 +17,8 @@ public interface IFileBundle : IUiFile {
 
   IReadOnlyTreeDirectory Directory => this.MainFile.AssertGetParent();
 
-  ReadOnlySpan<char> IUiFile.RawName => this.MainFile.Name;
+  ReadOnlySpan<char> IUiFile.RawName
+    => FinIoStatic.GetName(this.DisplayFullPath);
   ReadOnlySpan<char> DisplayName => this.HumanReadableName ?? this.RawName;
 
   ReadOnlySpan<char> DisplayFullPath => this.MainFile.DisplayFullPath;

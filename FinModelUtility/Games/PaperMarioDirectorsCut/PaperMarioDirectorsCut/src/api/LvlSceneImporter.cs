@@ -10,6 +10,7 @@ using fin.math.transform;
 using fin.model;
 using fin.model.util;
 using fin.scene;
+using fin.ui.rendering.gl.scene;
 using fin.util.asserts;
 using fin.util.enums;
 using fin.util.sets;
@@ -127,13 +128,29 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
       }
     }
 
-    if (lvl.Trees.Count > 0) {
-      var treeModel = CreateTreeModel_(sceneFileBundle.RootDirectory);
+    var characterDirectory
+        = sceneFileBundle.RootDirectory.AssertGetExistingSubdir("Characters");
 
-      foreach (var treePosition in lvl.Trees) {
-        finArea.AddRootNode()
-               .SetPosition(treePosition.X, treePosition.Z, treePosition.Y)
-               .AddSceneModel(treeModel);
+    if (lvl.Npcs.Count > 0) {
+      var lazyNpcModels
+          = new LazyCaseInvariantStringDictionary<IReadOnlyModel>(characterType
+              => new PmdcCharacterModelImporter().Import(
+                  new PmdcCharacterModelFileBundle {
+                      AnimationImageFiles = characterDirectory
+                                            .AssertGetExistingSubdir(
+                                                characterType)
+                                            .GetFilesWithFileType(".gif")
+                                            .ToArray(),
+                  }));
+
+      foreach (var (npcPosition, npcName, npcCharacterType) in lvl.Npcs) {
+        var npcNode
+            = finArea.AddRootNode()
+                     .SetPosition(npcPosition.X, npcPosition.Z, npcPosition.Y)
+                     .AddComponent(
+                         new SimpleModelRenderComponent(
+                             lazyNpcModels[npcCharacterType]));
+        npcNode.Name = npcName;
       }
     }
 
@@ -144,6 +161,26 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
         finArea.AddRootNode()
                .SetPosition(saveBlockPosition.X, saveBlockPosition.Z, saveBlockPosition.Y)
                .AddSceneModel(saveBlockModel);
+      }
+    }
+
+    if (lvl.SaveBlocks.Count > 0) {
+      var saveBlockModel = CreateSaveBlockModel_(sceneFileBundle.RootDirectory);
+
+      foreach (var saveBlockPosition in lvl.SaveBlocks) {
+        finArea.AddRootNode()
+               .SetPosition(saveBlockPosition.X, saveBlockPosition.Z, saveBlockPosition.Y)
+               .AddSceneModel(saveBlockModel);
+      }
+    }
+
+    if (lvl.Trees.Count > 0) {
+      var treeModel = CreateTreeModel_(sceneFileBundle.RootDirectory);
+
+      foreach (var treePosition in lvl.Trees) {
+        finArea.AddRootNode()
+               .SetPosition(treePosition.X, treePosition.Z, treePosition.Y)
+               .AddSceneModel(treeModel);
       }
     }
 
