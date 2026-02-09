@@ -1,0 +1,46 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2006 Google, Inc.
+
+newmtl _auto_
+Ka 0.000000 0.000000 0.000000
+Kd 0.462745 0.486275 0.419608
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_.bmp
+
+newmtl _auto_1
+Ka 0.000000 0.000000 0.000000
+Kd 0.639216 0.658824 0.596078
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_1.bmp
+
+newmtl _auto_2
+Ka 0.000000 0.000000 0.000000
+Kd 0.482353 0.501961 0.435294
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_2.bmp
+
+newmtl _auto_3
+Ka 0.000000 0.000000 0.000000
+Kd 0.349020 0.376471 0.305882
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_3.bmp
+
+newmtl _auto_4
+Ka 0.000000 0.000000 0.000000
+Kd 0.482353 0.498039 0.435294
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_4.bmp
+
+newmtl _auto_5
+Ka 0.000000 0.000000 0.000000
+Kd 0.356863 0.388235 0.317647
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_5.bmp
+
+newmtl _auto_6
+Ka 0.000000 0.000000 0.000000
+Kd 0.639216 0.658824 0.596078
+Ks 0.330000 0.330000 0.330000
+map_Kd smallrock/_auto_6.bmp
+

@@ -38,8 +38,8 @@ objFloorBlock(32,512,1,32,544,-31,bacExitSide,"wall-noRepeat")
 
 objFloorBlock(96,0,0,224,480,0,bacGrassFloor,"floor;-1")
 
-objFloorBlock(128,0,0,128,480,64,bacFrontFloorCover,"wall")
-objNPC(48,96,0,0,0,0,-1,"goompa,toad-noWait,`global.camFocus=npc_get('goompa');global.appearType='dropIn';global.textType='normal'`Mario, thank the Goompa-gods you're here!\Goombaria was looking for the doll Kammy\Koopa stole when she noticed a strange\wooden man wandering around with it!\She followed after him but never returned!\I think she must have gotten lost!\\\`objGlobalInformation.goToZoom=90;global.appearType='fade'`Please, Mario, you have to help!\You will, won't you?\\\`global.camFocus=parPlayer;objGlobalInformation.goToZoom=150;npc_set_speech('goompa','/global.appearType=~fade~;global.textType=~normal~/Please Mario, help me find Goombaria...\\\\^')`^")
+objFloorBlock(128,0,64,128,480,0,bacFrontFloorCover,"wall")
+objNPC(48,96,0,0,0,0,-1,"goompa,goompa-noWait,`global.camFocus=npc_get('goompa');global.appearType='dropIn';global.textType='normal'`Mario, thank the Goompa-gods you're here!\Goombaria was looking for the doll Kammy\Koopa stole when she noticed a strange\wooden man wandering around with it!\She followed after him but never returned!\I think she must have gotten lost!\\\`objGlobalInformation.goToZoom=90;global.appearType='fade'`Please, Mario, you have to help!\You will, won't you?\\\`global.camFocus=parPlayer;objGlobalInformation.goToZoom=150;npc_set_speech('goompa','/global.appearType=~fade~;global.textType=~normal~/Please Mario, help me find Goombaria...\\\\^')`^")
 //objBoardSign(48,64,0,0,0,0,bacBoardSign,"pooSign,\To Mario\You're fat.\\\Nah...\Just kidding.\\^")
 objEnemy(96,300,0,0,0,0,-1,"bottom,goomba,(,,goomba,goomba,),instance_destroy()")
 objTree1(160,64,0,0,0,0,-1,"")

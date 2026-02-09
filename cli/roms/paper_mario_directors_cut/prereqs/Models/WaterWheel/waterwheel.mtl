@@ -1,0 +1,16 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2006 Google, Inc.
+
+newmtl waterWheelWood
+Ka 0.000000 0.000000 0.000000
+Kd 0.156863 0.141176 0.109804
+Ks 0.330000 0.330000 0.330000
+map_Kd waterwheel/waterWheelWood.png
+
+newmtl waterWheelWood1_
+Ka 0.000000 0.000000 0.000000
+Kd 0.156863 0.141176 0.109804
+Ks 0.330000 0.330000 0.330000
+map_Kd waterwheel/waterWheelWood1_.png
+

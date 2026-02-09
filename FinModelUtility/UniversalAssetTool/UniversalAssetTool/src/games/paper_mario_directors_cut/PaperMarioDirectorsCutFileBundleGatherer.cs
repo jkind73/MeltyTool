@@ -1,5 +1,6 @@
 ﻿using fin.io;
 using fin.io.bundles;
+using fin.model.io.importers.assimp;
 using fin.util.progress;
 
 using gm.api;
@@ -39,6 +40,16 @@ public sealed class PaperMarioDirectorsCutFileBundleGatherer
                             ModFile = modFile
                         },
                         modFile));
+    }
+
+    foreach (var objFile in fileHierarchy.Root.GetFilesWithFileType(
+                 ".obj",
+                 true)) {
+      organizer.Add(new AnnotatedFileBundle<AssimpModelFileBundle>(
+                        new AssimpModelFileBundle {
+                            MainFile = objFile
+                        },
+                        objFile));
     }
 
     foreach (var omdFile in fileHierarchy.Root.GetFilesWithFileType(
