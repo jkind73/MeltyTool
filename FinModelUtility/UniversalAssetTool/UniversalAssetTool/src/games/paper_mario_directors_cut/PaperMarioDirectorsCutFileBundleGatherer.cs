@@ -62,14 +62,13 @@ public sealed class PaperMarioDirectorsCutFileBundleGatherer
                         lvlFile));
     }
 
-    foreach (var characterDir in fileHierarchy.Root
-                                              .AssertGetExistingSubdir(
-                                                  "Characters")
-                                              .GetExistingSubdirs()) {
+    var charactersDir = fileHierarchy.Root.AssertGetExistingSubdir("Characters");
+    foreach (var characterDir in charactersDir.GetExistingSubdirs()) {
       var animationImageFiles
           = characterDir.GetFilesWithFileType(".gif").ToArray();
       organizer.Add(new PmdcCharacterModelFileBundle {
           AnimationImageFiles = animationImageFiles,
+          CharactersDirectory = charactersDir,
       }.Annotate(animationImageFiles[0]));
     }
   }

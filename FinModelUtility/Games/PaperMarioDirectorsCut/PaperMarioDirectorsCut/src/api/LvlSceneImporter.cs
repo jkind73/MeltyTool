@@ -141,6 +141,7 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                                                 characterType)
                                             .GetFilesWithFileType(".gif")
                                             .ToArray(),
+                      CharactersDirectory = characterDirectory,
                   }));
 
       foreach (var (npcPosition, npcName, npcCharacterType) in lvl.Npcs) {

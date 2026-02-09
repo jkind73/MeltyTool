@@ -10,11 +10,14 @@ using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
 
+
 namespace pmdc.api;
 
 public sealed class PmdcCharacterModelFileBundle : IModelFileBundle {
+  public required IReadOnlyTreeFile[] AnimationImageFiles { get; init; }
+  public required IReadOnlyTreeDirectory CharactersDirectory { get; init; }
+
   public IReadOnlyTreeFile MainFile => this.AnimationImageFiles[0];
-  public IReadOnlyTreeFile[] AnimationImageFiles { get; init; }
 
   public ReadOnlySpan<char> DisplayFullPath
     => this.MainFile.AssertGetParent().FullPath;
@@ -32,9 +35,9 @@ public sealed class PmdcCharacterModelImporter
 
     var orderedAnimationImageFiles
         = bundle.AnimationImageFiles.OrderByDescending(f => f.Name.Equals(
-                                                 "s.gif",
-                                                 StringComparison
-                                                     .OrdinalIgnoreCase));
+              "s.gif",
+              StringComparison
+                  .OrdinalIgnoreCase));
 
     ITexture baseTexture = null!;
     ITextureMaterial material = null!;
@@ -76,30 +79,60 @@ public sealed class PmdcCharacterModelImporter
       }
     }
 
-    var bone = model.Skeleton.Root;
-    bone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
-                                 QuaternionUtil.CreateZyxRadians(
-                                     -MathF.PI / 2,
-                                     0,
-                                     0));
+    var rootBone = model.Skeleton.Root;
 
-    var (width, height) = (32, 32);
+    var billboardBone = rootBone.AddChild(new Vector3(0, -1, 0));
+    billboardBone.Name = "billboard";
+    billboardBone.AlwaysFaceTowardsCamera(FaceTowardsCameraType.YAW_ONLY,
+                                          QuaternionUtil.CreateZyxRadians(
+                                              -MathF.PI / 2,
+                                              0,
+                                              0));
 
-    var ul = new Vector3(-width / 2, height, 0);
-    var ur = new Vector3(width / 2, height, 0);
-    var lr = new Vector3(width / 2, 0, 0);
-    var ll = new Vector3(-width / 2, 0, 0);
+    var (width, height) = (32f, 32f);
 
     var skin = model.Skin;
     var mesh = skin.AddMesh();
     mesh.Name = "mesh";
-    mesh.AddSimpleQuad(skin,
-                       (ul, new Vector2(0, 0), null),
-                       (ur, new Vector2(1, 0), null),
-                       (lr, new Vector2(1, 1), null),
-                       (ll, new Vector2(0, 1), null),
-                       material,
-                       bone);
+
+    {
+      var ul = new Vector3(-width / 2, height, 0);
+      var ur = new Vector3(width / 2, height, 0);
+      var lr = new Vector3(width / 2, 0, 0);
+      var ll = new Vector3(-width / 2, 0, 0);
+
+      mesh.AddSimpleQuad(skin,
+                         (ul, new Vector2(0, 0), null),
+                         (ur, new Vector2(1, 0), null),
+                         (lr, new Vector2(1, 1), null),
+                         (ll, new Vector2(0, 1), null),
+                         material,
+                         billboardBone);
+    }
+
+    {
+      var shadowBone = rootBone.AddChild(Vector3.Zero);
+      shadowBone.Name = "shadow";
+
+      var (shadowMaterial, shadowTexture) = finMaterialManager.AddSimpleTextureMaterialFromFile(
+              bundle.CharactersDirectory
+                    .AssertGetExistingFile("bacShadow.png"));
+      shadowTexture.WrapModeU = shadowTexture.WrapModeV = WrapMode.CLAMP;
+      shadowMaterial.DepthCompareType = DepthCompareType.LEqual;
+
+      var ul = new Vector3(-width / 2, 0, -height/2);
+      var ur = new Vector3(width / 2, 0, -height / 2);
+      var lr = new Vector3(width / 2, 0, height / 2);
+      var ll = new Vector3(-width / 2, 0, height / 2);
+
+      mesh.AddSimpleQuad(skin,
+                         (ul, new Vector2(0, 0), null),
+                         (ur, new Vector2(1, 0), null),
+                         (lr, new Vector2(1, 1), null),
+                         (ll, new Vector2(0, 1), null),
+                         shadowMaterial,
+                         shadowBone);
+    }
 
     return model;
   }
