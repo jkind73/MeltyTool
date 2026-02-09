@@ -8,6 +8,8 @@ class FinIoStaticTests {
   [TestCase("foo", ExpectedResult = "foo")]
   [TestCase("foo/bar", ExpectedResult = "bar")]
   [TestCase("foo/bar/", ExpectedResult = "bar")]
+  [TestCase("//foo/bar", ExpectedResult = "bar")]
+  [TestCase("//foo/bar/", ExpectedResult = "bar")]
   public string TestGetName(string path)
     => FinIoStatic.GetName(path).ToString();
 
@@ -16,6 +18,8 @@ class FinIoStaticTests {
   [TestCase("foo", ExpectedResult = "")]
   [TestCase("foo/bar", ExpectedResult = "foo")]
   [TestCase("foo/bar/", ExpectedResult = "foo")]
+  [TestCase("//foo/bar", ExpectedResult = "foo")]
+  [TestCase("//foo/bar/", ExpectedResult = "foo")]
   public string TestGetParentFullName(string path)
     => FinIoStatic.GetParentFullName(path).ToString();
 }
