@@ -1,0 +1,29 @@
+//HOTEL LOBBY
+//////////////////
+
+global.newRoomMusic:musBooMansion
+parCamera.img:bacBlack
+global.roomIsModel:0
+global.lightColor:make_color_rgb(120,120,255)
+
+parCamera.direction:0
+goToDirection:0
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.goToZoom:130
+goToZoom:130
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:-300
+global.roomXMax:300
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+objFloorBlock(0,0,128,  240,0,0,bacHotelWall,"wall-noRepe\]at")
+objFloorBlock(0,0,0,240,64,0,bacHotelFloor,"floor;-1")
+objFloorBlock(0,64,128,  240,64,0,bacHotelWall,"wall-noRepeat")

@@ -25,6 +25,7 @@ public enum FloorBlockFlags {
 public sealed class Lvl : ITextDeserializable {
   public string? BackgroundName { get; set; }
   public bool HasRoomModel { get; set; }
+  public float RoomScale { get; set; } = 1;
 
   public List<(Vector3, string characterType)> Enemies { get; set; } = [];
 
@@ -39,6 +40,7 @@ public sealed class Lvl : ITextDeserializable {
 
   public void Read(ITextReader tr) {
     this.HasRoomModel = false;
+    this.RoomScale = 5;
     this.BackgroundName = null;
     this.Trees.Clear();
 
@@ -52,49 +54,52 @@ public sealed class Lvl : ITextDeserializable {
       if (line.TryRemoveStart("global.roomIsModel:",
                               out var roomIsModelValue)) {
         this.HasRoomModel = CoerceStringToBool_(roomIsModelValue);
+      } else if (line.TryRemoveStart("global.roomScale:",
+                                     out var roomScaleValue)) {
+        this.RoomScale = float.Parse(roomScaleValue);
       } else if (
           line.TryRemoveStart("parCamera.img:", out var backgroundName)) {
         this.BackgroundName = backgroundName.Trim();
       } else if (TryToParseObj(line, out var objType, out var objParams)) {
         switch (objType) {
           case "objEnemy": {
-            var position = ParseVector3(objParams);
-            var characterType = objParams[8];
-            this.Enemies.Add((position, characterType));
-            break;
-          }
+              var position = ParseVector3(objParams);
+              var characterType = objParams[8];
+              this.Enemies.Add((position, characterType));
+              break;
+            }
           case "objFloorBlock": {
-            var start = ParseVector3(objParams);
-            var end = ParseVector3(objParams.AsSpan(3));
-            var textureName = objParams[6] == "-1"
-                ? null
-                : objParams[6];
+              var start = ParseVector3(objParams);
+              var end = ParseVector3(objParams.AsSpan(3));
+              var textureName = objParams[6] == "-1"
+                  ? null
+                  : objParams[6];
 
-            var behavior = objParams[7].Replace(@"""", "");
-            var type = GetFloorBlockType(behavior);
-            var flags = GetFloorBlockFlags(behavior);
+              var behavior = objParams[7].Replace(@"""", "");
+              var type = GetFloorBlockType(behavior);
+              var flags = GetFloorBlockFlags(behavior);
 
-            this.FloorBlocks.Add((start, end, textureName, type, flags));
-            break;
-          }
+              this.FloorBlocks.Add((start, end, textureName, type, flags));
+              break;
+            }
           case "objNPC": {
-            var position = ParseVector3(objParams);
+              var position = ParseVector3(objParams);
 
-            var name = objParams[7].Replace(@"""", "");
-            var characterType = objParams[8];
-            characterType = characterType.SubstringUpTo('-');
+              var name = objParams[7].Replace(@"""", "");
+              var characterType = objParams[8];
+              characterType = characterType.SubstringUpTo('-');
 
-            this.Npcs.Add((position, name, characterType));
-            break;
-          }
+              this.Npcs.Add((position, name, characterType));
+              break;
+            }
           case "objSaveBlock": {
-            this.SaveBlocks.Add(ParseVector3(objParams));
-            break;
-          }
+              this.SaveBlocks.Add(ParseVector3(objParams));
+              break;
+            }
           case "objTree1": {
-            this.Trees.Add(ParseVector3(objParams));
-            break;
-          }
+              this.Trees.Add(ParseVector3(objParams));
+              break;
+            }
         }
       }
     }

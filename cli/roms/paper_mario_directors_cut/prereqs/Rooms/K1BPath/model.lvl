@@ -30,7 +30,10 @@ objCameraPreset(900,538,52,350,538,52,-1,"roomStart,90,-10,6,,text_advanceable(t
 //>>player_to_point(350,410,-2,global.charSpeed,"")
 //>>player_controllable(false,false)
 //>>text_advanceable(false)
-objSwitch(507,450,26.2,0,0,0,c_red,"room_goto(rmKBFLS)")
+//objSwitch(507,450,26.2,0,0,0,c_red,"room_goto(rmKBFLS)")
+
+
+objDoor(275,422,-2,0,0,0,-1,"rmTownNorth,240,422,-2,175,360,0,270,360,0")
 
 //DEBUG
 

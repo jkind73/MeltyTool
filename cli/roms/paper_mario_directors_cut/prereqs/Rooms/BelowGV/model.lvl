@@ -1,0 +1,34 @@
+//Below GV
+///////////////////////
+
+global.newRoomMusic:musRoute
+parCamera.img:bacMountains
+global.roomIsModel:1
+global.roomScale:4.8
+global.lightColor:make_color_rgb(255,255,200)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:220
+goToZoom:220
+pov:35
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:165
+global.roomXMax:706
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+objTrampoline(680,54,51,0,0,0,-1,"")
+
+objEventZone(0,0,1000,455,1000,-1000,-1,"var dir;dir=point_direction(454,750,parPlayer.x,parPlayer.y);dir=contain_variable(90,dir,135);camera_set_todir(dir,.5,id,1);")
+objEventZone(0,0,1000,455,271,-1000,-1,"var dir;dir=70;camera_set_todir(dir,.4,id,0);")
+
+objDoor(770,237,0,0,0,0,-1,"rmGVReturnPath,800,237,0,   2,188,64.54,  90,188,64.54")
+objDoor(147,504,0,0,0,0,-1,"rmBelowGVHammer,125,524,0,   876,335,0,  800,335,0")

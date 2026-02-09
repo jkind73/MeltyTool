@@ -62,11 +62,7 @@ else if(global.badPhase == 3)
     	if(global.battleTimer == 0)
     	{
         	global.badPhase += 1;
-        	global.hp -= (attack - global.addedDefense);
-        	global.damageStar = (attack - global.addedDefense);
-        	global.starImageIndex = 0;
-		with(objBattlePlayer)
-        		sprite = sprHurt;
+        	battle_enemy_damage(attack - global.addedDefense);	
     	}
 }
 else if(global.badPhase == 4)

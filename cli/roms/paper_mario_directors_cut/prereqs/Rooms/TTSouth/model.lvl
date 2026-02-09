@@ -1,0 +1,30 @@
+//TT South
+///////////////////////
+
+global.newRoomMusic:musRoute
+parCamera.img:bacMountains
+global.roomIsModel:1
+global.roomScale:6
+global.lightColor:make_color_rgb(255,255,255)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:220
+goToZoom:220
+pov:35
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:140
+global.roomXMax:1000
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+objDoor(516,30,-13,0,0,0,-1,"rmTTCenter,516,3,-13,   517,997,0,  517,900,0")
+objDoor(1065,65,193,0,0,0,-1,"rmGoombaVillage,1080,46, 193,   1,334,0,  80,334,0")

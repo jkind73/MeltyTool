@@ -1,0 +1,38 @@
+//GV Return Path
+///////////////////////
+
+global.newRoomMusic:musRoute
+parCamera.img:bacMountains
+global.roomIsModel:1
+global.roomScale:4.8
+global.lightColor:make_color_rgb(255,255,255)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:210
+goToZoom:210
+pov:35
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:130
+global.roomXMax:1096
+global.roomYMin:130
+global.roomYMax:267
+
+
+
+objBadge(240,93,165,0,0,0,-1,"Shrink Stomp")
+
+objDoor(22,188,64.54,0,0,0,-1,"rmBelowGV,2,188, 64.54,   800,237,0,  720,237,0")
+objDoor(1135,70,207,0,0,0,-1,"rmGoombaVillage,1152,45,207,   1,360,0,  90,360,0")
+
+objEnemy(542,240,137,0,0,0,-1,"bottom,goomba,(,,goomba,goomba,),instance_destroy()")
+
+
+
+objEventZone(980,0,1000,1300,1200,-1000,-1,"dir=point_direction(980,90,parPlayer.x,parPlayer.y)-180;dir=contain_variable(90,dir,150);if(parPlayer.x>1080&&parPlayer.y<100){dir=150};goToDirection=dir;parCamera.direction=dir;")

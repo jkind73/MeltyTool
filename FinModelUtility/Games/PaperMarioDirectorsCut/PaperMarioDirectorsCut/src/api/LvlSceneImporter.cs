@@ -8,6 +8,7 @@ using fin.io;
 using fin.math;
 using fin.math.transform;
 using fin.model;
+using fin.model.io.importers.assimp;
 using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.scene;
@@ -19,6 +20,7 @@ using gm.api;
 using gm.schema.d3d;
 
 using pmdc.schema.lvl;
+
 
 namespace pmdc.api;
 
@@ -42,25 +44,38 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
 
     var finArea = finScene.AddArea();
 
+    var roomName = sceneFileBundle.LvlFile.AssertGetParent().Name;
     if (lvl.HasRoomModel) {
-      var modelFile = lvlFile.AssertGetParent()
-                             .AssertGetExistingFile("model.omd");
-      files.Add(modelFile);
-
-      var finModel
-          = new OmdModelImporter().Import(new OmdModelFileBundle {
-              OmdFile = modelFile
-          });
-      finArea.AddRootNode().AddSceneModel(finModel);
+      if (lvlFile.AssertGetParent()
+                 .TryToGetExistingFile("model.omd",
+                                       out var omdFile)) {
+        files.Add(omdFile);
+        var roomModel = new OmdModelImporter().Import(new OmdModelFileBundle {
+            OmdFile = omdFile
+        });
+        finArea.AddRootNode().AddSceneModel(roomModel);
+      } else if (lvlFile.AssertGetParent()
+                        .TryToGetExistingFile($"{roomName}.obj",
+                                              out var objFile)) {
+        files.Add(objFile);
+        var roomModel = new AssimpModelImporter().Import(
+            new AssimpModelFileBundle {
+                MainFile = objFile
+            });
+        finArea.AddRootNode()
+               .SetRotationDegrees(-90, 180, 0)
+               .SetScale(lvl.RoomScale)
+               .AddSceneModel(roomModel);
+      }
     }
 
     var textureDirectory
         = sceneFileBundle.RootDirectory.AssertGetExistingSubdir("Textures");
-    var lazyImageMap = new LazyDictionary<string?, IImage?>(
-        imageName => imageName != null &&
-                     textureDirectory.TryToGetExistingFile(
-                         $"{imageName}.png",
-                         out var textureFile)
+    var lazyImageMap = new LazyDictionary<string?, IImage?>(imageName
+        => imageName != null &&
+           textureDirectory.TryToGetExistingFile(
+               $"{imageName}.png",
+               out var textureFile)
             ? FinImage.FromFile(textureFile)
             : null);
 
@@ -170,7 +185,9 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
 
       foreach (var saveBlockPosition in lvl.SaveBlocks) {
         finArea.AddRootNode()
-               .SetPosition(saveBlockPosition.X, saveBlockPosition.Z, saveBlockPosition.Y)
+               .SetPosition(saveBlockPosition.X,
+                            saveBlockPosition.Z,
+                            saveBlockPosition.Y)
                .AddSceneModel(saveBlockModel);
       }
     }
@@ -180,7 +197,9 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
 
       foreach (var saveBlockPosition in lvl.SaveBlocks) {
         finArea.AddRootNode()
-               .SetPosition(saveBlockPosition.X, saveBlockPosition.Z, saveBlockPosition.Y)
+               .SetPosition(saveBlockPosition.X,
+                            saveBlockPosition.Z,
+                            saveBlockPosition.Y)
                .AddSceneModel(saveBlockModel);
       }
     }

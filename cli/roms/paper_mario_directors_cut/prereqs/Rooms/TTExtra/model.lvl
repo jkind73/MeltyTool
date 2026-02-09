@@ -1,0 +1,44 @@
+//OUTSIDE HOTEL
+///////////////////////
+
+global.newRoomMusic:musOutsideMansion
+parCamera.img:bacCastleSky
+global.roomIsModel:1
+global.lightColor:make_color_rgb(60,60,195)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:280
+goToZoom:280
+pov:35;
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:165
+global.roomXMax:605
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+
+objFog(388,310,8.5,0,0,0,-1,"")
+
+//objTreeTop(515,190,32,0,0,0,-1,"");
+
+objTree1(160,280,8.1,0,0,0,-1,"")
+objOverhang(515,327,105,0,0,0,-1,"")
+
+objNPC(300,400,0,0,0,0,-1,"boo1,boo-noWait,`global.appearType='fade';global.textType='normal';parCamera.goToZoom=80;`Hello, sir. Welcome to our world-renowned,\five-star resort, the Horrid Hotel.\\I hope you enjoy your sta--\Wait a minute..`text_wait(10)`.`text_wait(10)` `text_wait(time_to_steps(1))`\Those overalls..`text_wait(10)`.`text_wait(10)` `text_wait(time_to_steps(1))`	\That cap...\That stache...\ARE YOU LUIGI??\EVERYONE, BATTLESTATIONS!\THE GREEN ONE IS HERE!\\`objGlobalInformation.goToZoom=130`^")
+objNPC(300,500,0,0,0,0,-1,"boo2,boo-noWait,`global.appearType='fade';global.textType='normal'`HELLO DUDE\\\\^")
+
+
+//objEnemy(96,300,0,0,0,0,-1,"bottom,goomba,(,,goomba,goomba,),instance_destroy()")
+
+
+//objDoor(245,315,8,0,0,0,-1,"rmHotelLobby,225,300,8,   0,0,0,  32,0,0")
+objDoor(130,560,0,0,0,0,-1,"rmTTOld,128,586,0,   750,330,0,  680,330,0")

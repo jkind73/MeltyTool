@@ -1,0 +1,32 @@
+//Below GV Hammer
+///////////////////////
+
+global.newRoomMusic:musRoute
+parCamera.img:bacHills
+global.roomIsModel:1
+global.roomScale:4.7
+global.lightColor:make_color_rgb(255,255,200)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:220
+goToZoom:220
+pov:35
+//40, 180
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:165
+global.roomXMax:1000
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+objDoor(844,335,0,  0,0,0,-1,"rmBelowGV,876,335,0,   125,524,0,  203,454,0")
+
+objItemBlock(508,318,0,0,0,0,-1,"mushroom")

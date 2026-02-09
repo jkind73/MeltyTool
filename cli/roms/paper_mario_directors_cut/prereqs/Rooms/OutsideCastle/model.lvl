@@ -1,0 +1,35 @@
+//Outside Peach's Castle
+/////////////////////////
+
+
+global.newRoomMusic:musToadTown
+parCamera.img:bacMountains
+global.roomIsModel:1
+global.roomScale:5
+global.lightColor:make_color_rgb(255,255,230)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:220
+goToZoom:220
+pov:35
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`We're currently in Bob-omb Village. Most\people stay away from this... um... rather\explosive spot for their own safety, but\a strong guy like you should be A-OK.\^"
+global.roomXMin:331
+global.roomXMax:839
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+
+objFlag(504,190,210,0,0,0,-1,"")
+objFlag(269,190,210,0,0,0,-1,"")
+
+objFlag(296,30,200,0,0,0,-1,"")
+objFlag(478,30,200,0,0,0,-1,"")

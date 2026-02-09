@@ -14,12 +14,18 @@ if(animated_sprite_check_run())
         else if(image_index > 0 && image_index < 1)
             	stepSound = false;
         
+	
+	var toFlyZ;
+	toFlyZ = abs(lengthdir_y(2,image_index*30));
+	flyZ += (toFlyZ - flyZ)/1.5;
+	/*
         if(image_index >= 0 && image_index < 2)
             	flyZ += -flyZ/1.5;
         else if((image_index >= 2 && image_index < 3) || (image_index >= 5 && image_index < 6))
             	flyZ += (1 - flyZ)/1.5; //1
         else if(image_index >= 3 && image_index < 5)
             	flyZ += (2 - flyZ)/1.5; //2
+	*/
 }
 else
 	flyZ += -flyZ/1.5;

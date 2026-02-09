@@ -1,0 +1,45 @@
+//Goomba Village
+///////////////////////
+
+global.newRoomMusic:musGoombaVillage
+parCamera.img:bacHills
+global.roomIsModel:1
+global.roomScale:4.8
+global.lightColor:make_color_rgb(255,255,240)
+
+parCamera.direction:90
+goToDirection:90
+parCamera.zDirection:-10
+goToZDirection:-10
+parCamera.zoom:260
+goToZoom:260
+pov:35
+
+parPlayer.x:350
+parPlayer.y:350
+
+global.roomSpeech:"`global.appearType='fade';global.textType='normal'`This is eastern Toad Town's old hotel. It\sure is creepy... rumor is, this place is\haunted. And you know what? I totally\believe that. It's probably fact.\^"
+global.roomXMin:10
+global.roomXMax:605
+global.roomYMin:-10000
+global.roomYMax:10000
+
+
+
+objFire(400,400,0,0,0,0,-1,"")
+
+objFloorBlock(70,503,1000,270,703,-1000,-1,"wall-invisible")
+
+objNPC(300,450,0,0,0,0,-1,"goomama,goomama-vLock-hLock,`global.appearType='fade';global.textType='normal'`Hello, Mario! Thank you so much for helping\us out before. We have finally fixed the\veranda, so feel free to take a rest there\at any time.\^")
+objNPC(290,400,0,0,0,0,-1,"goompa,goompa-vLock-hLock,`global.appearType='fade';global.textType='normal'`Hello, Mario! Thank you so much for helping\us out before. We have finally fixed the\veranda, so feel free to take a rest there\at any time.\^")
+//objNPC(402,283,0,0,0,0,-1,"goompa,goompa-vLock-hLock,`global.appearType='fade';global.textType='normal'`Hello, Mario! Thank you so much for helping\us out before. We have finally fixed the\veranda, so feel free to take a rest there\at any time.\^")
+objNPC(600,400,0,0,0,0,-1,"goompapa,goompapa-vLock-hLock,`var mar,npc;mar=parPlayer;npc=npc_get('goompapa');goToZoom=170;camera_focus_point(mean(mar.x,npc.x),mean(mar.y,npc.y),0);global.appearType='fade';global.textType='normal'`It's been so hard to sleep lately. It sounds\like some hooligan is working on a\construction project down this road. But it\only happens at night.\`camera_focus_object(parPlayer);goToZoom=260;`^")
+
+
+objSaveBlock(540,382,0,0,0,0,-1,"")
+
+
+objDoor(32,360,0,0,0,0,-1,"rmGVReturnPath,1,360,0,   1152,45,207,  1105,120,207")
+
+
+objEventZone(0,0,1000,1000,1000,-1000,-1,"var dir;dir=point_direction(413,840,parPlayer.x,parPlayer.y);goToDirection=dir;parCamera.direction=dir;")
