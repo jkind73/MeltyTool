@@ -5,6 +5,7 @@ using fin.util.strings;
 using schema.text;
 using schema.text.reader;
 
+
 namespace pmdc.schema.lvl;
 
 public enum FloorBlockType {
@@ -25,11 +26,14 @@ public sealed class Lvl : ITextDeserializable {
   public string? BackgroundName { get; set; }
   public bool HasRoomModel { get; set; }
 
+  public List<(Vector3, string characterType)> Enemies { get; set; } = [];
 
   public List<(Vector3 start, Vector3 end, string? textureName, FloorBlockType
       type, FloorBlockFlags flags)> FloorBlocks { get; set; } = [];
 
-  public List<(Vector3, string name, string characterType)> Npcs { get; set; } = [];
+  public List<(Vector3, string name, string characterType)> Npcs { get; set; } =
+    [];
+
   public List<Vector3> SaveBlocks { get; set; } = [];
   public List<Vector3> Trees { get; set; } = [];
 
@@ -53,6 +57,12 @@ public sealed class Lvl : ITextDeserializable {
         this.BackgroundName = backgroundName.Trim();
       } else if (TryToParseObj(line, out var objType, out var objParams)) {
         switch (objType) {
+          case "objEnemy": {
+            var position = ParseVector3(objParams);
+            var characterType = objParams[8];
+            this.Enemies.Add((position, characterType));
+            break;
+          }
           case "objFloorBlock": {
             var start = ParseVector3(objParams);
             var end = ParseVector3(objParams.AsSpan(3));

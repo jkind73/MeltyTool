@@ -131,26 +131,36 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
     var characterDirectory
         = sceneFileBundle.RootDirectory.AssertGetExistingSubdir("Characters");
 
-    if (lvl.Npcs.Count > 0) {
-      var lazyNpcModels
-          = new LazyCaseInvariantStringDictionary<IReadOnlyModel>(characterType
-              => new PmdcCharacterModelImporter().Import(
-                  new PmdcCharacterModelFileBundle {
-                      AnimationImageFiles = characterDirectory
-                                            .AssertGetExistingSubdir(
-                                                characterType)
-                                            .GetFilesWithFileType(".gif")
-                                            .ToArray(),
-                      CharactersDirectory = characterDirectory,
-                  }));
+    var lazyCharacterModels
+        = new LazyCaseInvariantStringDictionary<IReadOnlyModel>(characterType
+            => new PmdcCharacterModelImporter().Import(
+                new PmdcCharacterModelFileBundle {
+                    AnimationImageFiles = characterDirectory
+                                          .AssertGetExistingSubdir(
+                                              characterType)
+                                          .GetFilesWithFileType(".gif")
+                                          .ToArray(),
+                    CharactersDirectory = characterDirectory,
+                }));
 
+    if (lvl.Enemies.Count > 0) {
+      foreach (var (npcPosition, npcCharacterType) in lvl.Enemies) {
+        finArea.AddRootNode()
+               .SetPosition(npcPosition.X, npcPosition.Z, npcPosition.Y)
+               .AddComponent(
+                   new SimpleModelRenderComponent(
+                       lazyCharacterModels[npcCharacterType]));
+      }
+    }
+
+    if (lvl.Npcs.Count > 0) {
       foreach (var (npcPosition, npcName, npcCharacterType) in lvl.Npcs) {
         var npcNode
             = finArea.AddRootNode()
                      .SetPosition(npcPosition.X, npcPosition.Z, npcPosition.Y)
                      .AddComponent(
                          new SimpleModelRenderComponent(
-                             lazyNpcModels[npcCharacterType]));
+                             lazyCharacterModels[npcCharacterType]));
         npcNode.Name = npcName;
       }
     }
