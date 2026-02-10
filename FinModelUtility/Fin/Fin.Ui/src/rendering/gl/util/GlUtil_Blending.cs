@@ -124,6 +124,27 @@ public static partial class GlUtil {
 
     if (logicOp != FinLogicOp.UNDEFINED) {
       GL.Enable(EnableCap.ColorLogicOp);
+      GL.LogicOp(logicOp switch {
+          FinLogicOp.AND           => LogicOp.And,
+          FinLogicOp.AND_INVERTED  => LogicOp.AndInverted,
+          FinLogicOp.AND_REVERSE   => LogicOp.AndReverse,
+          FinLogicOp.CLEAR         => LogicOp.Clear,
+          FinLogicOp.COPY          => LogicOp.Copy,
+          FinLogicOp.COPY_INVERTED => LogicOp.CopyInverted,
+          FinLogicOp.EQUIV         => LogicOp.Equiv,
+          FinLogicOp.INVERT        => LogicOp.Invert,
+          FinLogicOp.NAND          => LogicOp.Nand,
+          FinLogicOp.NOOP          => LogicOp.Noop,
+          FinLogicOp.NOR           => LogicOp.Nor,
+          FinLogicOp.OR            => LogicOp.Or,
+          FinLogicOp.OR_INVERTED   => LogicOp.OrInverted,
+          FinLogicOp.OR_REVERSE    => LogicOp.OrReverse,
+          FinLogicOp.SET           => LogicOp.Set,
+          FinLogicOp.XOR           => LogicOp.Xor,
+          _                        => throw new ArgumentOutOfRangeException(nameof(logicOp), logicOp, null)
+      });
+    } else {
+      GL.Disable(EnableCap.ColorLogicOp);
     }
 
     return true;
