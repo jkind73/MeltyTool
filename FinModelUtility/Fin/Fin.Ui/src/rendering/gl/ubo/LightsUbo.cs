@@ -65,9 +65,9 @@ public sealed class LightsUbo : IDisposable {
                                         ref int offset,
                                         IReadOnlyLight? light) {
     if (light == null) {
-      offset += 3;
-      buffer.Cast<byte, int>()[0] = 0;
-      offset += SIZE_OF_LIGHT - 3;
+      offset += UboUtil.SIZE_OF_VECTOR3;
+      UboUtil.AppendBool(buffer, ref offset, false);
+      offset += SIZE_OF_LIGHT - UboUtil.SIZE_OF_VECTOR3 - sizeof(int);
       return;
     }
 
