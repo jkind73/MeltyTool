@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 
 using fin.model;
+using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.OpenGL4;
@@ -74,5 +75,8 @@ public static partial class GlUtil {
     for (var i = 0; i < MaterialConstants.MAX_TEXTURES; ++i) {
       UnbindTexture(i);
     }
+
+    // This index is used for normals
+    UnbindTexture(MaterialConstants.MAX_TEXTURES);
   }
 }
