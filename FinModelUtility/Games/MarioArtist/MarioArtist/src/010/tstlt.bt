@@ -254,11 +254,21 @@ typedef struct {
 
   uint unkForChosenPattern[2];
   uint address0 <bgcolor=COLOR_OFFSET>;
+  
+  enum <uint> MaterialType {
+    COMBINE_1x1 = 0x0,
+    COMBINE_2x2 = 0x1,
+    MULTIPLY_1x1 = 0x2,
+    MULTIPLY_2x2 = 0x3,
+    SPHERICAL = 0x4,
+  };
 
-  uint unk2[3];
+  MaterialType materialType0;
+  uint unk2[2];
   uint address1 <bgcolor=COLOR_OFFSET>;
   
-  uint unk3[3];
+  MaterialType materialType1;
+  uint unk3[2];
   uint address1 <bgcolor=COLOR_OFFSET>;
 
   uint unk4;

@@ -536,14 +536,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                 out var compiledDiffuseImage)) {
           // HACK: Generates compiled textures for each material.
           // TODO: Move this upstream so it happens automatically
-          var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
+          /*var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
           compiledDiffuseTexture.Name = fixedFunctionMaterial.Name;
 
           var patternTexture = material.Textures.First();
           compiledDiffuseTexture.WrapModeU = patternTexture.WrapModeU;
           compiledDiffuseTexture.WrapModeV = patternTexture.WrapModeV;
           
-          fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;
+          fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;*/
 
           // HACK: Fixes transparency
           // TODO: Move this to within F3dzex2 logic
@@ -574,9 +574,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         meshDefinition.MeshSetId != HARDCODED_MESH_SET_ID) {
       return;
     }
-
-    // TODO: This still doesn't properly set when materials are shiny. Where
-    // the heck does this come from???
 
     n64Hardware.Memory.SetSegment(0xF, segment);
 
@@ -633,7 +630,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                        withTexture,
                        false,
                        OneOf<uint, Color>.FromT1(
-                           chosenPart0.ChosenColor0.Color.ToSystemColor()));
+                           chosenPart0.ChosenColor0.Color.ToSystemColor()),
+                       chosenPart0.Pattern0MaterialType);
         } else {
           SetCombiner_(n64Hardware,
                        withTexture,
@@ -641,7 +639,10 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                        OneOf<uint, Color>.FromT0(
                            i == 1
                                ? chosenPart0.Pattern1SegmentedAddress
-                               : chosenPart0.Pattern0SegmentedAddress));
+                               : chosenPart0.Pattern0SegmentedAddress),
+                       i == 1
+                           ? chosenPart0.Pattern1MaterialType
+                           : chosenPart0.Pattern0MaterialType);
         }
       } else {
         SetCombiner_(n64Hardware, true, false);
@@ -864,13 +865,21 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       IN64Hardware<N64Memory> n64Hardware,
       bool withTexture0,
       bool withAlpha,
-      OneOf<uint, Color>? patternSegmentedOffsetOrColor = null) {
+      OneOf<uint, Color>? patternSegmentedOffsetOrColor = null,
+      PatternMaterialType patternMaterialType = PatternMaterialType.COMBINE_1X1) {
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;
 
-    rsp.UvType = N64UvType.STANDARD;
-    rdp.Tmem.GsSpTexture(1,
-                         1,
+    ushort scale = patternMaterialType switch {
+        PatternMaterialType.COMBINE_2X2 or PatternMaterialType.MULTIPLY_2X2 => 2,
+        _ => 1,
+    };
+
+    rsp.UvType = patternMaterialType == PatternMaterialType.SPHERICAL
+        ? N64UvType.SPHERICAL
+        : N64UvType.STANDARD;
+    rdp.Tmem.GsSpTexture(scale,
+                         scale,
                          0,
                          TileDescriptorIndex.TX_LOADTILE,
                          withTexture0
