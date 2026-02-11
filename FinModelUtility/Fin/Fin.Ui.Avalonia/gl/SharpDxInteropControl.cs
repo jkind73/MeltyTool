@@ -56,16 +56,20 @@ public class SharpDxInteropControl : Control {
       Action initGl,
       Action renderGl,
       Action teardownGl) {
-    var control = new SharpDxInteropControl(initGl, renderGl, teardownGl);
-
     bool success = false;
+
+    SharpDxInteropControl? control = null;
     try {
+      control = new SharpDxInteropControl(initGl, renderGl, teardownGl);
       parent.Children.Add(control);
       success = control.initialized_;
-    } catch { }
+    } catch {
+    }
 
     if (!success) {
-      parent.Children.Remove(control);
+      if (control != null) {
+        parent.Children.Remove(control);
+      }
       return false;
     }
 
@@ -133,10 +137,11 @@ public class SharpDxInteropControl : Control {
                           .Arb.GetExtensionsString(hDc)
                           .Split(' ', StringSplitOptions.RemoveEmptyEntries);
     bool hasInterop = extensions.Contains("WGL_NV_DX_interop");
-    if (!hasInterop)
+    if (!hasInterop) {
       throw new PlatformNotSupportedException(
           "NV_DX_interop not available on this device."
       );
+    }
 
     this.initGl_();
     this.OnInit?.Invoke();
@@ -226,7 +231,9 @@ public class SharpDxInteropControl : Control {
       this.swapchain_ = null;
     }
 
-    Wgl.DXCloseDeviceNV(this.hDevice_);
+    if (this.hDevice_ != IntPtr.Zero) {
+      Wgl.DXCloseDeviceNV(this.hDevice_);
+    }
 
     Utilities.Dispose(ref this.context_);
     Utilities.Dispose(ref this.device_);
