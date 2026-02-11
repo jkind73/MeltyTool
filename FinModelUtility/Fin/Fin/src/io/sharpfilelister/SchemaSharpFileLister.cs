@@ -14,6 +14,7 @@ namespace fin.io.sharpDirLister;
 
 [BinarySchema]
 public sealed partial class SchemaDirectoryInformation : IBinaryConvertible {
+  [StringEncoding(StringEncodingType.UTF8)]
   [StringLengthSource(SchemaIntegerType.INT16)]
   public string Name { get; set; }
 
@@ -26,6 +27,7 @@ public sealed partial class SchemaDirectoryInformation : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class Uint16SizedString : IBinaryConvertible {
+  [StringEncoding(StringEncodingType.UTF8)]
   [StringLengthSource(SchemaIntegerType.UINT16)]
   public string Name { get; set; }
 }

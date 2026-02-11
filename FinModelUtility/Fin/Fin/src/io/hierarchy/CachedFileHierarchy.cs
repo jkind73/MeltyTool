@@ -90,7 +90,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
   [BinarySchema]
   private sealed partial class CachedFileHierarchyDataHeader : IBinaryConvertible {
-    public const uint CURRENT_VERSION = 0;
+    public const uint CURRENT_VERSION = 1;
     public uint Version { get; set; } = CURRENT_VERSION;
     public long Size { get; set; }
   }
