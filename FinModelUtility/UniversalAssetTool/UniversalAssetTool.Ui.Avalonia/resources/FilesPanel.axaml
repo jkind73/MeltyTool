@@ -39,12 +39,12 @@
                 <DataGridTemplateColumn.CellTemplate>
                   <DataTemplate>
                     <!-- Make this selectable when it's no longer bugged. -->
+                    <!-- Use TextTrimming="LeadingCharacterEllipsis" when it's no longer broken. -->
                     <TextBlock
                         Classes="regular"
                         Margin="7 0"
                         VerticalAlignment="Center"
                         HorizontalAlignment="Left"
-                        TextTrimming="LeadingCharacterEllipsis"
                         Text="{Binding}" />
                   </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
