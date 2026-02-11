@@ -536,14 +536,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                 out var compiledDiffuseImage)) {
           // HACK: Generates compiled textures for each material.
           // TODO: Move this upstream so it happens automatically
-          /*var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
+          var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
           compiledDiffuseTexture.Name = fixedFunctionMaterial.Name;
 
           var patternTexture = material.Textures.First();
           compiledDiffuseTexture.WrapModeU = patternTexture.WrapModeU;
           compiledDiffuseTexture.WrapModeV = patternTexture.WrapModeV;
           
-          fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;*/
+          fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;
 
           // HACK: Fixes transparency
           // TODO: Move this to within F3dzex2 logic
