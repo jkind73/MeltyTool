@@ -4,18 +4,19 @@ using fin.ui.rendering.gl.texture;
 
 using readOnly;
 
-using SharpGLTF.Schema2;
-
 
 namespace fin.math;
 
 [GenerateReadOnly]
 public partial interface ITextureFlipbookSwapManager : IDisposable {
+  [Const]
+  void GenerateGlTexturesIfNull();
+  
   void UpdateCurrentFlipbookSwaps(
       (IReadOnlyModelAnimation, float)? animationAndFrame);
 
   [Const]
-  public IGlTexture GetCurrentFlipbookSwap(IReadOnlyTexture texture);
+  IGlTexture GetCurrentFlipbookSwap(IReadOnlyTexture texture);
 }
 
 public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
@@ -48,14 +49,22 @@ public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
     }
   }
 
+  public void GenerateGlTexturesIfNull() {
+    if (this.hasCreatedTextures_) {
+      return;
+    }
+
+    this.hasCreatedTextures_ = true;
+    foreach (var texture in this.textures_) {
+      this.texturesToCurrentFlipbookSwaps_[texture]
+          = this.texturesToGlTextures_[texture]
+              = GlTexture.FromTexture(texture);
+    }
+  }
+
   public void UpdateCurrentFlipbookSwaps(
       (IReadOnlyModelAnimation, float)? animationAndFrame) {
-    if (!this.hasCreatedTextures_) {
-      this.hasCreatedTextures_ = true;
-      foreach (var texture in this.textures_) {
-        this.texturesToGlTextures_[texture] = GlTexture.FromTexture(texture);
-      }
-    }
+    this.GenerateGlTexturesIfNull();
 
     this.texturesToCurrentFlipbookSwaps_.Clear();
 
