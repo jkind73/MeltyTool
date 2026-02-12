@@ -28,6 +28,8 @@ public interface IRsp {
   IReadOnlyBoneWeights? ActiveBoneWeights { get; set; }
 
   Color EnvironmentColor { get; set; }
+
+  float PrimLodFraction { get; set; }
   Color PrimColor { get; set; }
 
   N64UvType UvType {
@@ -56,10 +58,10 @@ public sealed class Rsp : IRsp {
   public ushort TexScaleYShort {
     get => this.texScaleYShort_;
     set {
-        this.texScaleYShort_ = value;
-        this.texScaleYFloat_ =
-            (float) BitLogic.ConvertBinaryFractionToDouble(value);
-      }
+      this.texScaleYShort_ = value;
+      this.texScaleYFloat_ =
+          (float) BitLogic.ConvertBinaryFractionToDouble(value);
+    }
   }
 
   public float TexScaleXFloat => this.texScaleXFloat_;
@@ -69,6 +71,7 @@ public sealed class Rsp : IRsp {
   public IReadOnlyBoneWeights? ActiveBoneWeights { get; set; }
 
   public Color EnvironmentColor { get; set; }
+  public float PrimLodFraction { get; set; } = .5f;
   public Color PrimColor { get; set; }
 
   public CombinerCycleParams CombinerCycleParams0 { get; set; }

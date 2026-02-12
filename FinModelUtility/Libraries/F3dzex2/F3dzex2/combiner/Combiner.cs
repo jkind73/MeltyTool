@@ -75,31 +75,6 @@ public sealed class CombinerCycleParams {
             AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
         });
 
-  public static (CombinerCycleParams, CombinerCycleParams)
-      FromBlendingTexture0AndTexture1WithEnvColorAndShade(bool withAlpha)
-    => (new() {
-            ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
-            ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-            ColorMuxC = GenericColorMux.G_CCMUX_TEXEL0,
-            ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = withAlpha
-                ? GenericAlphaMux.G_ACMUX_TEXEL0
-                : GenericAlphaMux.G_ACMUX_1,
-        },
-        new() {
-            ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-            ColorMuxB = GenericColorMux.G_CCMUX_0,
-            ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-            ColorMuxD = GenericColorMux.G_CCMUX_0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-        });
-
   public static CombinerCycleParams FromTexture0AndShade(bool withAlpha)
     => new() {
         ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,

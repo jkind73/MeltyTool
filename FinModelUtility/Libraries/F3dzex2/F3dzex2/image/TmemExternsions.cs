@@ -1,5 +1,7 @@
 ﻿using f3dzex2.displaylist.opcodes;
 
+using fin.math;
+
 
 namespace f3dzex2.image;
 
@@ -47,8 +49,8 @@ public static class TmemExtensions {
     var width = (ushort) (lrs - uls);
     var height = (ushort) (lrt - ult);
 
-    tmem.GsSpTexture(1,
-                     1,
+    tmem.GsSpTexture(BitLogic.ConvertDoubleToBinaryFraction(1),
+                     BitLogic.ConvertDoubleToBinaryFraction(1),
                      0,
                      TileDescriptorIndex.TX_LOADTILE,
                      TileDescriptorState.ENABLED);

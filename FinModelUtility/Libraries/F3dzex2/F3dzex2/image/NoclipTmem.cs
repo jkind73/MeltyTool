@@ -273,6 +273,10 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
                           uint maxExtraMipmapLevels,
                           TileDescriptorIndex tileDescriptor,
                           TileDescriptorState tileDescriptorState) {
+    // (Melty inclusion)
+    n64Hardware.Rsp.TexScaleXShort = scaleS;
+    n64Hardware.Rsp.TexScaleYShort = scaleT;
+
     // This is the texture we're using to rasterize triangles going forward.
     this.spTextureState_.Set((1f * scaleS) / 0x10000,
                              (1f * scaleT) / 0x10000,

@@ -72,5 +72,10 @@ public static partial class BitLogic {
   }
 
   public static double ConvertBinaryFractionToDouble(ushort binaryFraction)
-    => binaryFraction / (ushort.MaxValue + 1.0);
+    => 1f * binaryFraction / 0x10000;
+
+  public static ushort ConvertDoubleToBinaryFraction(double doubleFraction)
+    => (ushort) (doubleFraction * 0x10000).Clamp(
+        ushort.MinValue,
+        ushort.MaxValue);
 }

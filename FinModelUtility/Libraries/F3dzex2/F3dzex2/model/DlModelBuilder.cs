@@ -16,6 +16,7 @@ using fin.image.util;
 using fin.io;
 using fin.io.bundles;
 using fin.language.equations.fixedFunction;
+using fin.language.equations.fixedFunction.impl;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
@@ -293,13 +294,14 @@ public sealed class DlModelBuilder {
                   rsp.EnvironmentColor.B / 255f);
               var environmentAlpha = equations.CreateScalarConstant(
                   rsp.EnvironmentColor.A / 255f);
+              var primLodFrac
+                  = equations.CreateScalarConstant(rsp.PrimLodFraction);
               var primColor = equations.CreateColorConstant(
                   rsp.PrimColor.R / 255f,
                   rsp.PrimColor.G / 255f,
                   rsp.PrimColor.B / 255f);
               var primAlpha = equations.CreateScalarConstant(
                   rsp.PrimColor.A / 255f);
-
               var shadeColor =
                   rsp.GeometryMode.CheckFlag(GeometryMode.G_LIGHTING)
                       ? equations.GetMergedLightDiffuseColor()
@@ -341,7 +343,8 @@ public sealed class DlModelBuilder {
                               FixedFunctionSource.VERTEX_ALPHA_0),
                       GenericColorMux.G_CCMUX_ENV_ALPHA =>
                           equations.CreateColor(environmentAlpha),
-                      GenericColorMux.G_CCMUX_PRIM_LOD_FRAC => color1,
+                      GenericColorMux.G_CCMUX_PRIM_LOD_FRAC
+                          => primLodFrac.Wrap(),
                       GenericColorMux.G_CCMUX_SCALE         => color1,
                       GenericColorMux.G_CCMUX_K5            => color1,
                       _ => throw new ArgumentOutOfRangeException(
@@ -366,7 +369,7 @@ public sealed class DlModelBuilder {
                       GenericAlphaMux.G_ACMUX_ENVIRONMENT   => environmentAlpha,
                       GenericAlphaMux.G_ACMUX_1             => scalar1,
                       GenericAlphaMux.G_ACMUX_0             => scalar0,
-                      GenericAlphaMux.G_ACMUX_PRIM_LOD_FRAC => scalar1,
+                      GenericAlphaMux.G_ACMUX_PRIM_LOD_FRAC => primLodFrac,
                       GenericAlphaMux.G_ACMUX_LOD_FRACTION  => scalar1,
                       _ => throw new ArgumentOutOfRangeException(
                           nameof(alphaMux),

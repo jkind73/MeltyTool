@@ -11,9 +11,11 @@ public sealed partial class ChosenColor : IBinaryDeserializable {
   public Rgba32 Color { get; set; }
 }
 
+// Blend/Multiply are kind of just random names, I'm not really sure what these
+// are meant to be.
 public enum PatternMaterialType : uint {
-  COMBINE_1X1,
-  COMBINE_2X2,
+  BLEND_1X1,
+  BLEND_2X2,
   MULTIPLY_1X1,
   MULTIPLY_2X2,
   SPHERICAL,

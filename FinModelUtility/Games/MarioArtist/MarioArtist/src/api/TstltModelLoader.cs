@@ -2,10 +2,12 @@
 using System.Numerics;
 
 using CommunityToolkit.Diagnostics;
+using CommunityToolkit.HighPerformance;
 
 using f3dzex2.combiner;
 using f3dzex2.displaylist;
 using f3dzex2.displaylist.opcodes;
+using f3dzex2.displaylist.opcodes.f3d;
 using f3dzex2.displaylist.opcodes.f3dzex2;
 using f3dzex2.image;
 using f3dzex2.io;
@@ -15,6 +17,7 @@ using fin.color;
 using fin.data.dictionaries;
 using fin.data.queues;
 using fin.io;
+using fin.math;
 using fin.math.matrix.four;
 using fin.math.rotations;
 using fin.model;
@@ -98,7 +101,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
   public IModel Import(TstltModelFileBundle fileBundle)
     => Import(fileBundle, out _);
 
-  public static IModel Import(TstltModelFileBundle fileBundle, out Gender gender) {
+  public static IModel Import(TstltModelFileBundle fileBundle,
+                              out Gender gender) {
     using var br = fileBundle.MainFile.OpenReadAsBinary(Endianness.BigEndian);
 
     var n64Hardware = new N64Hardware<N64Memory>();
@@ -222,9 +226,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           JointIndex.HEAD_ROOT   => JointIndex.BODY_HEAD_ADAPTER,
           < JointIndex.BODY_ROOT => JointIndex.HEAD_ROOT,
 
-          JointIndex.HIP      => JointIndex.BODY_ROOT,
-          JointIndex.TORSO    => JointIndex.HIP,
-          JointIndex.NECK => JointIndex.TORSO,
+          JointIndex.HIP   => JointIndex.BODY_ROOT,
+          JointIndex.TORSO => JointIndex.HIP,
+          JointIndex.NECK  => JointIndex.TORSO,
 
           JointIndex.BODY_HEAD_ADAPTER => JointIndex.NECK,
 
@@ -453,7 +457,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var headChosenPart1Tuples = headChosenPart1s.Select(chosenPart => {
       var segment = headSegment;
       return (segment, chosenPart,
-              finBonesAndJoints[(uint) JointIndex.BODY_HEAD_ADAPTER].Item1, true);
+              finBonesAndJoints[(uint) JointIndex.BODY_HEAD_ADAPTER].Item1,
+              true);
     });
     var bodyChosenPart1Tuples = bodyChosenPart1s.Select(chosenPart => {
       var segment = bodySegment;
@@ -525,6 +530,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       if (texture.WrapModeU == WrapMode.CLAMP) {
         texture.WrapModeU = WrapMode.REPEAT;
       }
+
       if (texture.WrapModeV == WrapMode.CLAMP) {
         texture.WrapModeV = WrapMode.REPEAT;
       }
@@ -536,13 +542,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                 out var compiledDiffuseImage)) {
           // HACK: Generates compiled textures for each material.
           // TODO: Move this upstream so it happens automatically
-          var compiledDiffuseTexture = model.MaterialManager.CreateTexture(compiledDiffuseImage);
+          var compiledDiffuseTexture
+              = model.MaterialManager.CreateTexture(compiledDiffuseImage);
           compiledDiffuseTexture.Name = fixedFunctionMaterial.Name;
 
           var patternTexture = material.Textures.First();
           compiledDiffuseTexture.WrapModeU = patternTexture.WrapModeU;
           compiledDiffuseTexture.WrapModeV = patternTexture.WrapModeV;
-          
+
           fixedFunctionMaterial.CompiledTexture = compiledDiffuseTexture;
 
           // HACK: Fixes transparency
@@ -722,13 +729,13 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     switch (isHead, chosenPart1Tuple.chosenPart.MeshSetId) {
       // Ear
       case (true, 6): {
-          // HACK: Hardcodes ear color to skin color.
-          SetCombiner_(
-              n64Hardware,
-              true,
-              false,
-              OneOf<uint, Color>.FromT1(skinColor.ToSystemColor()));
-          n64Hardware.Rsp.EnvironmentColor = Color.FromArgb(
+        // HACK: Hardcodes ear color to skin color.
+        SetCombiner_(
+            n64Hardware,
+            true,
+            false,
+            OneOf<uint, Color>.FromT1(skinColor.ToSystemColor()));
+        n64Hardware.Rsp.EnvironmentColor = Color.FromArgb(
             0xFF,
             (byte) (0xFF - skinColor.Rb),
             (byte) (0xFF - skinColor.Gb),
@@ -786,6 +793,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     rsp.UvType = N64UvType.LINEAR;
     rsp.EnvironmentColor = Color.White;
     rsp.PrimColor = Color.White;
+    rsp.TexScaleXShort
+        = rsp.TexScaleYShort = BitLogic.ConvertDoubleToBinaryFraction(1);
 
     var rdp = n64Hardware.Rdp;
     rdp.ForceBlending = false;
@@ -866,20 +875,24 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       bool withTexture0,
       bool withAlpha,
       OneOf<uint, Color>? patternSegmentedOffsetOrColor = null,
-      PatternMaterialType patternMaterialType = PatternMaterialType.COMBINE_1X1) {
+      PatternMaterialType patternMaterialType = PatternMaterialType.BLEND_1X1) {
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;
 
-    ushort scale = patternMaterialType switch {
-        PatternMaterialType.COMBINE_2X2 or PatternMaterialType.MULTIPLY_2X2 => 2,
+    var multiply = patternMaterialType is PatternMaterialType.MULTIPLY_1X1
+                                          or PatternMaterialType.MULTIPLY_2X2;
+    var doubleScale = patternMaterialType switch {
+        PatternMaterialType.BLEND_2X2
+            or PatternMaterialType.MULTIPLY_2X2 => .5,
         _ => 1,
     };
+    var binaryScale = BitLogic.ConvertDoubleToBinaryFraction(doubleScale);
 
     rsp.UvType = patternMaterialType == PatternMaterialType.SPHERICAL
         ? N64UvType.SPHERICAL
         : N64UvType.STANDARD;
-    rdp.Tmem.GsSpTexture(scale,
-                         scale,
+    rdp.Tmem.GsSpTexture(binaryScale,
+                         binaryScale,
                          0,
                          TileDescriptorIndex.TX_LOADTILE,
                          withTexture0
@@ -891,10 +904,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         if (patternSegmentedOffsetOrColor.Value.TryPickT0(
                 out var patternSegmentedOffset,
                 out var color)) {
-          rdp.SetCombinerCycleParams(
-              CombinerCycleParams
-                  .FromBlendingTexture0AndTexture1WithEnvColorAndShade(
-                      withAlpha));
           rdp.Tmem.SetImage(patternSegmentedOffset,
                             N64ColorFormat.RGBA,
                             BitsPerTexel._16BPT,
@@ -903,7 +912,19 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                             F3dWrapMode.REPEAT,
                             F3dWrapMode.REPEAT,
                             1);
-          rsp.EnvironmentColor = Color.FromArgb(0xff, 0xc8, 0xc8, 0xc8);
+
+          // From decomp, 0x801162a4 onwards
+          var (envValue, envAlpha) = patternMaterialType switch {
+              PatternMaterialType.BLEND_1X1
+                  or PatternMaterialType.BLEND_2X2 => (0xc8, 0xff),
+              PatternMaterialType.MULTIPLY_1X1
+                  or PatternMaterialType.MULTIPLY_2X2 => (0xd7, 0xff),
+              PatternMaterialType.SPHERICAL => (0xff, 0x30),
+          };
+          rsp.EnvironmentColor = Color.FromArgb(envAlpha,
+                                                envValue,
+                                                envValue,
+                                                envValue);
         } else {
           rdp.SetCombinerCycleParams(
               CombinerCycleParams
@@ -924,6 +945,63 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       }
     }
   }
+
+  // From decomp, 0x801162a4 onwards
+  public static (CombinerCycleParams, CombinerCycleParams)
+      FromBlendingTexture0AndTexture1WithEnvColorAndShade(
+          PatternMaterialType patternMaterialType,
+          bool withAlpha)
+    => (patternMaterialType switch {
+            PatternMaterialType.BLEND_1X1 or PatternMaterialType.BLEND_2X2 =>
+                new() {
+                    ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
+                    ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+                    ColorMuxC = GenericColorMux.G_CCMUX_TEXEL0,
+                    ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+                    AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxD = withAlpha
+                        ? GenericAlphaMux.G_ACMUX_TEXEL0
+                        : GenericAlphaMux.G_ACMUX_1,
+                },
+            PatternMaterialType.MULTIPLY_1X1 or PatternMaterialType.MULTIPLY_2X2 =>
+                new() {
+                    ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
+                    ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+                    ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
+                    ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+                    AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxD = withAlpha
+                        ? GenericAlphaMux.G_ACMUX_TEXEL0
+                        : GenericAlphaMux.G_ACMUX_1,
+                },
+            PatternMaterialType.SPHERICAL =>
+                new() {
+                    ColorMuxA = GenericColorMux.G_CCMUX_1,
+                    ColorMuxB = GenericColorMux.G_CCMUX_TEXEL1,
+                    ColorMuxC = GenericColorMux.G_CCMUX_ENV_ALPHA,
+                    ColorMuxD = GenericColorMux.G_CCMUX_TEXEL1,
+                    AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                    AlphaMuxD = withAlpha
+                        ? GenericAlphaMux.G_ACMUX_TEXEL0
+                        : GenericAlphaMux.G_ACMUX_1,
+                },
+        },
+        new() {
+            ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+            ColorMuxB = GenericColorMux.G_CCMUX_0,
+            ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+            ColorMuxD = GenericColorMux.G_CCMUX_0,
+            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+        });
 }
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
