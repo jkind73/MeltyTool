@@ -52,6 +52,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
   }
 
   private void ReleaseUnmanagedResources_() {
+    this.viewMatricesUbo_?.Dispose();
     this.backgroundRenderer_.Dispose();
     this.floorShadowRenderer_.Dispose();
     this.sceneryRenderer_.Dispose();
