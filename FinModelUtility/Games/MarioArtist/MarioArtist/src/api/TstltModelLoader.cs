@@ -2,12 +2,10 @@
 using System.Numerics;
 
 using CommunityToolkit.Diagnostics;
-using CommunityToolkit.HighPerformance;
 
 using f3dzex2.combiner;
 using f3dzex2.displaylist;
 using f3dzex2.displaylist.opcodes;
-using f3dzex2.displaylist.opcodes.f3d;
 using f3dzex2.displaylist.opcodes.f3dzex2;
 using f3dzex2.image;
 using f3dzex2.io;
@@ -316,7 +314,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
       for (var i = 0; i < 3; ++i) {
         var offset = 0x4b0 + (uint) (i * 2 * 64 * 32);
-        rdp.Tmem.SetImage(offset,
+        rdp.Tmem.SetImageSimple(offset,
                           N64ColorFormat.RGBA,
                           BitsPerTexel._16BPT,
                           64,
@@ -339,7 +337,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       // Top of head (for bald characters)
       {
         var headDlSegmentedAddresses = br.ReadUInt32s(2);
-        rdp.Tmem.SetImage(0x4b0,
+        rdp.Tmem.SetImageSimple(0x4b0,
                           N64ColorFormat.RGBA,
                           BitsPerTexel._16BPT,
                           64,
@@ -793,8 +791,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     rsp.UvType = N64UvType.LINEAR;
     rsp.EnvironmentColor = Color.White;
     rsp.PrimColor = Color.White;
-    rsp.TexScaleXShort
-        = rsp.TexScaleYShort = BitLogic.ConvertDoubleToBinaryFraction(1);
 
     var rdp = n64Hardware.Rdp;
     rdp.ForceBlending = false;
@@ -879,20 +875,18 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;
 
-    var multiply = patternMaterialType is PatternMaterialType.MULTIPLY_1X1
-                                          or PatternMaterialType.MULTIPLY_2X2;
     var doubleScale = patternMaterialType switch {
         PatternMaterialType.BLEND_2X2
             or PatternMaterialType.MULTIPLY_2X2 => .5,
         _ => 1,
     };
-    var binaryScale = BitLogic.ConvertDoubleToBinaryFraction(doubleScale);
+    ushort shift = 0xf;
 
     rsp.UvType = patternMaterialType == PatternMaterialType.SPHERICAL
         ? N64UvType.SPHERICAL
         : N64UvType.STANDARD;
-    rdp.Tmem.GsSpTexture(binaryScale,
-                         binaryScale,
+    rdp.Tmem.GsSpTexture(BitLogic.ConvertDoubleToBinaryFraction(1),
+                         BitLogic.ConvertDoubleToBinaryFraction(1),
                          0,
                          TileDescriptorIndex.TX_LOADTILE,
                          withTexture0
@@ -904,14 +898,16 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         if (patternSegmentedOffsetOrColor.Value.TryPickT0(
                 out var patternSegmentedOffset,
                 out var color)) {
-          rdp.Tmem.SetImage(patternSegmentedOffset,
-                            N64ColorFormat.RGBA,
-                            BitsPerTexel._16BPT,
-                            32,
-                            32,
-                            F3dWrapMode.REPEAT,
-                            F3dWrapMode.REPEAT,
-                            1);
+          rdp.Tmem.SetImageSimple(
+              patternSegmentedOffset,
+              N64ColorFormat.RGBA,
+              BitsPerTexel._16BPT,
+              32,
+              32,
+              F3dWrapMode.REPEAT,
+              F3dWrapMode.REPEAT,
+              1,
+              shift);
 
           rdp.SetCombinerCycleParams(
               FromBlendingTexture0AndTexture1WithEnvColorAndShade(

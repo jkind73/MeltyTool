@@ -60,6 +60,9 @@ public sealed class TextureParams : IEquatable<TextureParams> {
   public F3dWrapMode WrapModeT { get; set; } = F3dWrapMode.REPEAT;
   public F3dWrapMode WrapModeS { get; set; } = F3dWrapMode.REPEAT;
 
+  public ushort ShiftS { get; set; }
+  public ushort ShiftT { get; set; }
+
   public UvType UvType { get; set; } = UvType.STANDARD;
 
   public (ushort fullWidth, ushort uls, ushort ult)? LoadTileParams {

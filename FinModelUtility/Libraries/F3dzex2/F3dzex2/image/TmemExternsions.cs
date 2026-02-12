@@ -6,7 +6,7 @@ using fin.math;
 namespace f3dzex2.image;
 
 public static class TmemExtensions {
-  public static void SetImage(
+  public static void SetImageSimple(
       this ITmem tmem,
       uint imageSegmentedAddress,
       N64ColorFormat colorFormat,
@@ -15,7 +15,8 @@ public static class TmemExtensions {
       ushort height,
       F3dWrapMode wrapModeS,
       F3dWrapMode wrapModeT,
-      uint tileDescriptorIndex = 0) {
+      uint tileDescriptorIndex = 0,
+      ushort shift = 0) {
     --width;
     --height;
 
@@ -30,7 +31,8 @@ public static class TmemExtensions {
         height,
         wrapModeS,
         wrapModeT,
-        tileDescriptorIndex);
+        tileDescriptorIndex,
+        shift);
   }
 
   public static void SetImage(
@@ -45,7 +47,8 @@ public static class TmemExtensions {
       ushort lrt,
       F3dWrapMode wrapModeS,
       F3dWrapMode wrapModeT,
-      uint tileDescriptorIndex = 0) {
+      uint tileDescriptorIndex = 0,
+      ushort shift = 0) {
     var width = (ushort) (lrs - uls);
     var height = (ushort) (lrt - ult);
 
@@ -67,10 +70,10 @@ public static class TmemExtensions {
                      0,
                      wrapModeS,
                      0,
-                     0,
+                     shift,
                      wrapModeT,
                      0,
-                     0);
+                     shift);
     if (uls == 0 && ult == 0) {
       tmem.GsDpLoadBlock(0,
                          0,
@@ -94,10 +97,10 @@ public static class TmemExtensions {
                      0,
                      wrapModeS,
                      0,
-                     0,
+                     shift,
                      wrapModeT,
                      0,
-                     0);
+                     shift);
     tmem.GsDpSetTileSize(uls,
                          ult,
                          (TileDescriptorIndex) tileDescriptorIndex,

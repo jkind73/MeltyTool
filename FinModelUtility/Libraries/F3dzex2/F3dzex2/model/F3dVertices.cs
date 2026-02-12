@@ -81,6 +81,12 @@ public sealed class F3dVertices(
     var materialParams = n64Hardware.Rdp.Tmem.GetMaterialParams();
     var textureParams0 = materialParams.TextureParams0;
     var textureParams1 = materialParams.TextureParams1;
+
+    var shiftS0 = textureParams0?.ShiftS ?? 0;
+    var shiftT0 = textureParams0?.ShiftT ?? 0;
+    var shiftS1 = textureParams1?.ShiftS ?? 0;
+    var shiftT1 = textureParams1?.ShiftT ?? 0;
+
     var bmpWidth0 = Math.Max(textureParams0?.Width ?? 0, (ushort) 0);
     var bmpHeight0 = Math.Max(textureParams0?.Height ?? 0, (ushort) 0);
     var bmpWidth1 = Math.Max(textureParams1?.Width ?? 0, (ushort) 0);
@@ -89,14 +95,18 @@ public sealed class F3dVertices(
     var newVertex = model.Skin.AddVertex(position);
     newVertex.SetUv(0,
                     definition.GetUv(
+                        ShiftToScale_(shiftS0) *
                         n64Hardware.Rsp.TexScaleXFloat /
                         (bmpWidth0 * 32),
+                        ShiftToScale_(shiftT0) *
                         n64Hardware.Rsp.TexScaleYFloat /
                         (bmpHeight0 * 32)));
     newVertex.SetUv(1,
                     definition.GetUv(
+                        ShiftToScale_(shiftS1) *
                         n64Hardware.Rsp.TexScaleXFloat /
                         (bmpWidth1 * 32),
+                        ShiftToScale_(shiftT1) *
                         n64Hardware.Rsp.TexScaleYFloat /
                         (bmpHeight1 * 32)));
 
@@ -122,4 +132,7 @@ public sealed class F3dVertices(
 
   public Color OverrideVertexColor { get; set; } = Color.White;
   public Matrix4x4 Matrix { get; set; } = Matrix4x4.Identity;
+
+  private static float ShiftToScale_(ushort shift)
+    => shift <= 10 ? 1f / (1 << shift) : 1 << (16 - shift);
 }
