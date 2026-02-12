@@ -115,7 +115,8 @@
           IsTabStop="True"
           TabIndex="0"
           Focusable="True"
-          ShowGrid="True" />
+          ShowGrid="True"
+          UseRenderGraph="False" />
       <TextBlock Text="{Binding FileLabel}"
                  Foreground="White"
                  HorizontalAlignment="Center"

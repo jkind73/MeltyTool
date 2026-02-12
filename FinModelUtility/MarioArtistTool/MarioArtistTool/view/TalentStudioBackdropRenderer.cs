@@ -1,7 +1,9 @@
 ﻿using System;
 
+using fin.math.matrix.four;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
+using fin.ui.rendering.gl.ubo;
 using fin.ui.rendering.viewer;
 
 using marioartist.schema.talent_studio;
@@ -12,6 +14,7 @@ using marioartisttool.util;
 namespace marioartisttool.view;
 
 public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
+  private ViewMatricesUbo? viewMatricesUbo_;
   private readonly BackgroundRenderer backgroundRenderer_;
   private readonly FloorShadowRenderer floorShadowRenderer_ = new();
   private readonly IRenderable sceneryRenderer_;
@@ -63,6 +66,10 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
     GlTransform.PushMatrix();
     GlTransform.LoadIdentity();
 
+    this.viewMatricesUbo_ ??= new ViewMatricesUbo();
+    this.viewMatricesUbo_.UpdateData();
+    this.viewMatricesUbo_.Bind();
+
     {
       GlTransform.MatrixMode(TransformMatrixMode.MODEL);
       GlTransform.LoadIdentity();
@@ -101,5 +108,7 @@ public sealed class TalentStudioBackdropRenderer : IOrthoRenderable {
 
     GlTransform.MatrixMode(TransformMatrixMode.VIEW);
     GlTransform.PopMatrix();
+
+    this.viewMatricesUbo_.UpdateData();
   }
 }

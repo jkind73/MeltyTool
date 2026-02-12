@@ -315,4 +315,9 @@ public sealed class SceneInstanceViewerGlPanel : BGlPanel, ISceneViewer {
     get => this.viewerImpl_.UseOrthoCamera;
     set => this.viewerImpl_.UseOrthoCamera = value;
   }
+
+  public bool UseRenderGraph {
+    get => this.viewerImpl_.UseRenderGraph;
+    set => this.viewerImpl_.UseRenderGraph = value;
+  }
 }

@@ -43,6 +43,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
     this.sceneRenderer_?.Dispose();
   }
 
+  public bool UseRenderGraph { get; set; } = true;
+
   public ISceneInstance? Scene {
     get => this.scene_;
     set {
@@ -58,7 +60,8 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
       } else {
         this.scene_ = value;
 
-        this.sceneRenderer_ = new SceneRenderer(this.scene_);
+        this.sceneRenderer_
+            = new SceneRenderer(this.scene_, this.UseRenderGraph);
 
         var areas = this.scene_?.Areas;
         this.singleArea_ = areas is { Count: 1 } ? areas[0] : null;

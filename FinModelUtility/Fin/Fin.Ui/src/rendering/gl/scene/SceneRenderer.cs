@@ -5,8 +5,6 @@ using fin.ui.rendering.gl.ubo;
 namespace fin.ui.rendering.gl.scene;
 
 public sealed class SceneRenderer : IRenderable {
-  private const bool USE_RENDER_GRAPH = true;
-
   private readonly ISceneInstance scene_;
 
   private LightsUbo? lightsUbo_;
@@ -17,21 +15,23 @@ public sealed class SceneRenderer : IRenderable {
   public float Scale {
     set => this.renderGraph_?.Scale = value;
   }
+
   public float NearPlane {
     set => this.renderGraph_?.NearPlane = value;
   }
+
   public float FarPlane {
     set => this.renderGraph_?.FarPlane = value;
   }
 
-  public SceneRenderer(ISceneInstance scene) {
+  public SceneRenderer(ISceneInstance scene, bool useRenderGraph) {
     this.scene_ = scene;
-    if (USE_RENDER_GRAPH) {
+    if (useRenderGraph) {
       this.renderGraph_ = new(scene);
     } else {
       this.areaRenderers_ = scene.Areas
-      .Select(area => new SceneAreaRenderer(area))
-      .ToArray();
+                                 .Select(area => new SceneAreaRenderer(area))
+                                 .ToArray();
     }
   }
 
@@ -45,12 +45,9 @@ public sealed class SceneRenderer : IRenderable {
   private void ReleaseUnmanagedResources_() {
     this.lightsUbo_?.Dispose();
 
-    if (USE_RENDER_GRAPH) {
-      this.renderGraph_.Dispose();
-    } else {
-      foreach (var areaRenderer in this.areaRenderers_) {
-        areaRenderer.Dispose();
-      }
+    this.renderGraph_?.Dispose();
+    foreach (var areaRenderer in this.areaRenderers_ ?? []) {
+      areaRenderer.Dispose();
     }
   }
 
@@ -59,7 +56,7 @@ public sealed class SceneRenderer : IRenderable {
     this.lightsUbo_.UpdateData(this.scene_.Lighting);
     this.lightsUbo_.Bind();
 
-    if (USE_RENDER_GRAPH) {
+    if (this.renderGraph_ != null) {
       this.renderGraph_.Render();
     } else {
       foreach (var areaRenderer in this.areaRenderers_) {
