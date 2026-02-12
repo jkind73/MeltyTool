@@ -875,12 +875,11 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;
 
-    var doubleScale = patternMaterialType switch {
+    ushort shift = patternMaterialType switch {
         PatternMaterialType.BLEND_2X2
-            or PatternMaterialType.MULTIPLY_2X2 => .5,
-        _ => 1,
+            or PatternMaterialType.MULTIPLY_2X2 => 0xf,
+        _ => 0,
     };
-    ushort shift = 0xf;
 
     rsp.UvType = patternMaterialType == PatternMaterialType.SPHERICAL
         ? N64UvType.SPHERICAL
