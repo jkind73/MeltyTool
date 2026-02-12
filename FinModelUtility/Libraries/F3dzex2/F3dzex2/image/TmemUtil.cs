@@ -28,6 +28,7 @@ public static class TmemUtil {
         (N64ColorFormat.RGBA, BitsPerTexel._32BPT) => true,
         (N64ColorFormat.L, BitsPerTexel._4BPT)     => true,
         (N64ColorFormat.L, BitsPerTexel._8BPT)     => true,
+        (N64ColorFormat.LA, BitsPerTexel._4BPT)    => true,
         (N64ColorFormat.LA, BitsPerTexel._8BPT)    => true,
         (N64ColorFormat.LA, BitsPerTexel._16BPT)   => true,
         (N64ColorFormat.CI, BitsPerTexel._4BPT)    => true,

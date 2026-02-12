@@ -7,6 +7,8 @@ public enum PixelFormat {
   A4,
   A8,
 
+  AL13,
+
   LA44,
   LA88,
 

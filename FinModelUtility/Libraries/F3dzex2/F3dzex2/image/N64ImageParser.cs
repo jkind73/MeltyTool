@@ -151,6 +151,11 @@ public sealed class N64ImageParser(IN64Hardware n64Hardware) {
       }
       case N64ColorFormat.LA: {
         switch (bitsPerTexel) {
+          case BitsPerTexel._4BPT:
+            return PixelImageReader.New(imageWidth,
+                                        imageHeight,
+                                        new Al13PixelReader())
+                                   .ReadImage(data, Endianness.BigEndian);
           case BitsPerTexel._8BPT:
               return PixelImageReader.New(imageWidth,
                                           imageHeight,
