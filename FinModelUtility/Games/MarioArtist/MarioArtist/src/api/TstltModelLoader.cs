@@ -913,6 +913,11 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                             F3dWrapMode.REPEAT,
                             1);
 
+          rdp.SetCombinerCycleParams(
+              FromBlendingTexture0AndTexture1WithEnvColorAndShade(
+                  patternMaterialType,
+                  withAlpha));
+
           // From decomp, 0x801162a4 onwards
           var (envValue, envAlpha) = patternMaterialType switch {
               PatternMaterialType.BLEND_1X1
