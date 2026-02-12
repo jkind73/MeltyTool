@@ -650,7 +650,16 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                            : chosenPart0.Pattern0MaterialType);
         }
       } else {
-        SetCombiner_(n64Hardware, true, false);
+        SetCombiner_(n64Hardware,
+                     true,
+                     false,
+                     OneOf<uint, Color>.FromT0(
+                         i == 1
+                             ? chosenPart0.Pattern1SegmentedAddress
+                             : chosenPart0.Pattern0SegmentedAddress),
+                     i == 1
+                         ? chosenPart0.Pattern1MaterialType
+                         : chosenPart0.Pattern0MaterialType);
       }
 
       var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(

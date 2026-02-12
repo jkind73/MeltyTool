@@ -294,7 +294,9 @@ UnkSection5 headUnkSection5s[8] <optimize=false>;
 
 FSeek(0xBCC0);
 struct ChosenBodyPart0s {
-    ChosenPart0 bodyChosenParts[4] <optimize=false>;
+    ChosenPart0 bodyChosenParts[2] <optimize=false>;
+    ChosenPart0 underwear;
+    ChosenPart0 bodyChosenParts;
     ChosenPart0 pants;
     ChosenPart0 shirt;
     ChosenPart0 back;
