@@ -663,7 +663,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       }
 
       n64Hardware.Rsp.CullingMode
-          = GetCullingModeForMeshSetId_(joint.MeshSetId);
+          = GetCullingModeForChosenPartId_(chosenPart0.Id);
 
       var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
           VertexSpace.RELATIVE_TO_BONE,
@@ -704,7 +704,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           segment,
           n64Hardware,
           dlModelBuilder,
-          $"joint({(JointIndex) jointIndex}): chosenPart0(meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {meshSegmentedAddress.ToHexString()}",
+          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {meshSegmentedAddress.ToHexString()}",
           joint.isLeft,
           displayLists);
 
@@ -1032,6 +1032,15 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         // By default, only shows front face
         _ => CullingMode.SHOW_FRONT_ONLY,
     };
+
+  private static CullingMode GetCullingModeForChosenPartId_(uint chosenPartId)
+    => chosenPartId switch {
+        // HACK: Disables culling for accessories worn on back
+        6 => CullingMode.SHOW_BOTH,
+        // By default, only shows front face
+        _ => CullingMode.SHOW_FRONT_ONLY,
+    };
+
 }
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
