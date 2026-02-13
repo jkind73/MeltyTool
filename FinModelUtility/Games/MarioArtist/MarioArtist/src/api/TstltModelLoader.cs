@@ -1033,8 +1033,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
   private static CullingMode GetCullingModeForMeshSetId_(uint meshSetId)
     => meshSetId switch {
-        // HACK: Disables culling for hats
-        3 => CullingMode.SHOW_BOTH,
         // HACK: Disables culling for glasses
         8 => CullingMode.SHOW_BOTH,
         // HACK: Disables culling for head accessories
@@ -1045,6 +1043,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
   private static CullingMode GetCullingModeForChosenPartId_(uint chosenPartId)
     => chosenPartId switch {
+        // HACK: Disables culling for hats
+        3 => CullingMode.SHOW_BOTH,
         // HACK: Disables culling for accessories worn on back
         6 => CullingMode.SHOW_BOTH,
         // By default, only shows front face
