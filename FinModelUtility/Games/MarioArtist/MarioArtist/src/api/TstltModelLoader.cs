@@ -108,7 +108,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         Tmem = new NoclipTmem(n64Hardware),
     };
     var rsp = n64Hardware.Rsp = new Rsp {
-        GeometryMode = GeometryMode.G_LIGHTING
+        GeometryMode = GeometryMode.G_LIGHTING,
+        // Based on decomp, function at 0x801160d0 disables all culling
+        CullingMode = CullingMode.SHOW_BOTH,
     };
     var n64Memory = n64Hardware.Memory = new N64Memory(fileBundle.MainFile);
     n64Memory.SetSegment(0, 0, (uint) br.Length);

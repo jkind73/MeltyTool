@@ -801,9 +801,8 @@ public sealed class DlModelBuilder {
         flagsToEnable;
 
     var newCullingMode = this.GetCullingMode_(displayListType);
-
     if (newCullingMode != originalCullingMode) {
-      this.n64Hardware_.Rdp.Tmem.CullingMode = newCullingMode;
+      this.n64Hardware_.Rsp.CullingMode = newCullingMode;
     }
   }
 

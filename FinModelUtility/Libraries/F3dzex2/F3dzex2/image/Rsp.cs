@@ -32,6 +32,8 @@ public interface IRsp {
   float PrimLodFraction { get; set; }
   Color PrimColor { get; set; }
 
+  CullingMode CullingMode { get; set; }
+
   N64UvType UvType {
     get => (N64UvType) ((uint) this.GeometryMode).ExtractFromRight(18, 2);
     set => this.GeometryMode = (GeometryMode) ((uint) this.GeometryMode).SetFromRight(18, 2, (uint) value);
@@ -73,6 +75,8 @@ public sealed class Rsp : IRsp {
   public Color EnvironmentColor { get; set; }
   public float PrimLodFraction { get; set; } = .5f;
   public Color PrimColor { get; set; }
+
+  public CullingMode CullingMode { get; set; }
 
   public CombinerCycleParams CombinerCycleParams0 { get; set; }
   public CombinerCycleParams CombinerCycleParams1 { get; set; }

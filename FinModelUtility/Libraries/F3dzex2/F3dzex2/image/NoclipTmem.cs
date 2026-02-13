@@ -304,7 +304,7 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
         CombinerCycleParams1 = n64Hardware.Rdp.CycleType == CycleType.TWO_CYCLE
             ? n64Hardware.Rdp.CombinerCycleParams1
             : null,
-        CullingMode = this.cullingMode_
+        CullingMode = n64Hardware.Rsp.CullingMode,
     };
   }
 
@@ -348,15 +348,5 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
     }
 
     return textureParams;
-  }
-
-  private CullingMode cullingMode_;
-
-  public CullingMode CullingMode {
-    set {
-      if (this.cullingMode_ != value) {
-        this.cullingMode_ = value;
-      }
-    }
   }
 }

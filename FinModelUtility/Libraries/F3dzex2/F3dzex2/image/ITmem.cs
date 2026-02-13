@@ -68,6 +68,4 @@ public interface ITmem {
                            uint imageSegmentedAddress);
 
   MaterialParams GetMaterialParams();
-
-  CullingMode CullingMode { set; }
 }
