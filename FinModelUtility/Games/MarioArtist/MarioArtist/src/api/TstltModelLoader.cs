@@ -109,8 +109,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     };
     var rsp = n64Hardware.Rsp = new Rsp {
         GeometryMode = GeometryMode.G_LIGHTING,
-        // Based on decomp, function at 0x801160d0 disables all culling
-        CullingMode = CullingMode.SHOW_BOTH,
     };
     var n64Memory = n64Hardware.Memory = new N64Memory(fileBundle.MainFile);
     n64Memory.SetSegment(0, 0, (uint) br.Length);
@@ -317,12 +315,12 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       for (var i = 0; i < 3; ++i) {
         var offset = 0x4b0 + (uint) (i * 2 * 64 * 32);
         rdp.Tmem.SetImageSimple(offset,
-                          N64ColorFormat.RGBA,
-                          BitsPerTexel._16BPT,
-                          64,
-                          32,
-                          F3dWrapMode.CLAMP,
-                          F3dWrapMode.CLAMP);
+                                N64ColorFormat.RGBA,
+                                BitsPerTexel._16BPT,
+                                64,
+                                32,
+                                F3dWrapMode.CLAMP,
+                                F3dWrapMode.CLAMP);
 
         var faceDlSegmentedAddress = faceDlSegmentedAddresses[i];
         var faceMesh =
@@ -340,12 +338,12 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       {
         var headDlSegmentedAddresses = br.ReadUInt32s(2);
         rdp.Tmem.SetImageSimple(0x4b0,
-                          N64ColorFormat.RGBA,
-                          BitsPerTexel._16BPT,
-                          64,
-                          1,
-                          F3dWrapMode.CLAMP,
-                          F3dWrapMode.CLAMP);
+                                N64ColorFormat.RGBA,
+                                BitsPerTexel._16BPT,
+                                64,
+                                1,
+                                F3dWrapMode.CLAMP,
+                                F3dWrapMode.CLAMP);
         for (var i = 1; i >= 0; --i) {
           var headDlSegmentedAddress = headDlSegmentedAddresses[i];
           if (headDlSegmentedAddress == 0) {
@@ -664,6 +662,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                          : chosenPart0.Pattern0MaterialType);
       }
 
+      n64Hardware.Rsp.CullingMode
+          = GetCullingModeForMeshSetId_(joint.MeshSetId);
+
       var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
           VertexSpace.RELATIVE_TO_BONE,
           childBone);
@@ -734,6 +735,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var dlCount = 2;
 
     ResetRspAndRdp_(n64Hardware);
+
+    n64Hardware.Rsp.CullingMode = GetCullingModeForMeshSetId_(joint.MeshSetId);
 
     switch (isHead, chosenPart1Tuple.chosenPart.MeshSetId) {
       // Ear
@@ -979,7 +982,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                         ? GenericAlphaMux.G_ACMUX_TEXEL0
                         : GenericAlphaMux.G_ACMUX_1,
                 },
-            PatternMaterialType.MULTIPLY_1X1 or PatternMaterialType.MULTIPLY_2X2 =>
+            PatternMaterialType.MULTIPLY_1X1
+                or PatternMaterialType.MULTIPLY_2X2 =>
                 new() {
                     ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
                     ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
@@ -1016,6 +1020,18 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
             AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
         });
+
+  private static CullingMode GetCullingModeForMeshSetId_(uint meshSetId)
+    => meshSetId switch {
+        // HACK: Disables culling for hats
+        3 => CullingMode.SHOW_BOTH,
+        // HACK: Disables culling for glasses
+        8 => CullingMode.SHOW_BOTH,
+        // HACK: Disables culling for head accessories
+        10 => CullingMode.SHOW_BOTH,
+        // By default, only shows front face
+        _ => CullingMode.SHOW_FRONT_ONLY,
+    };
 }
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
