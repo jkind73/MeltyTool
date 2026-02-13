@@ -886,6 +886,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;
 
+    // Based on decomp, early in function at 0x801150e8
+    rsp.PrimLodFraction = 1f * 0x7f / 0x100;
+
     ushort shift = patternMaterialType switch {
         PatternMaterialType.BLEND_2X2
             or PatternMaterialType.MULTIPLY_2X2 => 0xf,
