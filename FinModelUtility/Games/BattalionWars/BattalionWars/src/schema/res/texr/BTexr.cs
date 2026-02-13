@@ -134,7 +134,7 @@ public abstract class BTexr {
   protected IImage ReadIA8_(IBinaryReader br, uint width, uint height) {
     SectionHeaderUtil.AssertNameAndSize(br, "MIP ", 2 * width * height);
     return TiledImageReader
-           .New((int) width, (int) height, 4, 4, new La16PixelReader())
+           .New((int) width, (int) height, 4, 4, new Al16PixelReader())
            .ReadImage(br);
   }
 

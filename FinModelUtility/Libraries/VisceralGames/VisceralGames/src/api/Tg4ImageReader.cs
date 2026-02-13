@@ -49,7 +49,7 @@ public sealed class Tg4ImageReader {
     // Try to handle easy formats first.
     switch (format) {
       case "L8A8": {
-        return PixelImageReader.New(width, height, new La16PixelReader())
+        return PixelImageReader.New(width, height, new Al16PixelReader())
                                .ReadImage(dataFile.OpenReadAsBinary());
       }
     }

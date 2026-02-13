@@ -43,7 +43,7 @@ public sealed class TplImageReader : IImageReader {
               height,
               4,
               4,
-              new Al16PixelReader()),
+              new La16PixelReader()),
           TplImageFormat.RGB565 => TiledImageReader.New(
               width,
               height,

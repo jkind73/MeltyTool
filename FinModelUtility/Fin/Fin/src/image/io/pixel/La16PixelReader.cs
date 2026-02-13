@@ -17,8 +17,8 @@ public sealed class La16PixelReader : IPixelReader<La16> {
 
   public void Decode(ReadOnlySpan<byte> data, Span<La16> scan0, int offset) {
     var la = data.Cast<byte, ushort>()[0];
-    var a = (byte) (la & 0xFF);
-    var l = (byte) (la >> 8);
+    var l = (byte) (la & 0xFF);
+    var a = (byte) (la >> 8);
     scan0[offset] = new La16(l, a);
   }
 

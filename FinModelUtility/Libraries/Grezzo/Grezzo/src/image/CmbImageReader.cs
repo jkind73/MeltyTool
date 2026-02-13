@@ -97,7 +97,7 @@ public sealed class CmbImageReader : IImageReader {
     if (format.IsLuminanceAlpha()) {
       IPixelReader<La16> pixelReader = format switch {
           GlTextureFormat.LA4    => new La8PixelReader(),
-          GlTextureFormat.LA8    => new La16PixelReader(),
+          GlTextureFormat.LA8    => new Al16PixelReader(),
           _ => throw new ArgumentOutOfRangeException(
               nameof(format),
               format,
