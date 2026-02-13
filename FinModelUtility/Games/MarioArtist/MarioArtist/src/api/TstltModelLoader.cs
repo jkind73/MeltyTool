@@ -403,10 +403,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       }
     }
 
-    var faceTextures = faceMeshes.SelectMany(m => m.Primitives)
-                                 .SelectMany(p => p.Material?.Textures ?? [])
-                                 .ToHashSet();
-
     var headChosenPart0Tuples = headUnkSection5s
         .Select((unkSection5, unkSection5I) => {
           var segment = headSegment;
@@ -473,6 +469,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           chosenPart1Tuple);
     }
 
+    var hairTextures = new HashSet<ITexture>();
+
     foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
       var meshSetId = joint.MeshSetId;
       if (chosenPart0TuplesByMeshSetId.TryGetList(
@@ -489,7 +487,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           var isFirst = chosenPart0Tuple.unkSection5I ==
                         firstChosenPart0Tuple.unkSection5I;
 
-          TryToAddChosenPart0Tuple_(
+          var meshes = TryToAddChosenPart0Tuple_(
               model,
               skinChosenPart,
               chosenPart0Tuple,
@@ -500,6 +498,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
               isFirst,
               bone.Parent!,
               bone);
+
+          if (chosenPart0Tuple.chosenPart.Id == 2) {
+            hairTextures.Add(
+                meshes.SelectMany(m => m.Primitives.SelectMany(p => p.Material
+                                          ?.Textures ??
+                                      []))
+                      .Select(t => (ITexture) t));
+          }
         }
       }
 
@@ -522,9 +528,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     // HACK: Fixes textures so that they actually wrap. For some reason,
     // a lot of these are incorrectly set to clamp (e.g. hair).
-    foreach (var texture in
-             model.MaterialManager.Textures
-                  .Where(t => !faceTextures.Contains(t))) {
+    foreach (var texture in hairTextures) {
       if (texture.WrapModeU == WrapMode.CLAMP) {
         texture.WrapModeU = WrapMode.REPEAT;
       }
@@ -560,7 +564,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     return model;
   }
 
-  private static void TryToAddChosenPart0Tuple_(
+  private static IReadOnlyList<IMesh> TryToAddChosenPart0Tuple_(
       IModel model,
       ChosenPart0 skinChosenPart,
       ChosenPart0Tuple chosenPart0Tuple,
@@ -577,7 +581,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     if (HARDCODED_MESH_SET_ID != -1 &&
         meshDefinition.MeshSetId != HARDCODED_MESH_SET_ID) {
-      return;
+      return [];
     }
 
     n64Hardware.Memory.SetSegment(0xF, segment);
@@ -590,6 +594,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                                .ToArray();
 
     var addedDisplayList = false;
+    var meshes = new List<IMesh>();
     for (var i = 0; i < 4; ++i) {
       var (meshSegmentedAddress,
           vertexDlSegmentedAddress,
@@ -699,7 +704,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                   (primitiveDlSegmentedAddress, null, primitiveDlBoneWeights)
               ];
 
-      TryToAddDisplayLists_(
+      var mesh = AddDisplayLists_(
           model,
           segment,
           n64Hardware,
@@ -707,10 +712,15 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {meshSegmentedAddress.ToHexString()}",
           joint.isLeft,
           displayLists);
+      if (mesh != null) {
+        meshes.Add(mesh);
+      }
 
       ResetRspAndRdp_(n64Hardware);
       dlModelBuilder.TransparentCutoff = .5f;
     }
+
+    return meshes;
   }
 
   private static void TryToAddChosenPart1Tuple_(
@@ -779,7 +789,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     var boneWeights
         = model.Skin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE, bone);
-    TryToAddDisplayLists_(
+    AddDisplayLists_(
         model,
         segment,
         n64Hardware,
@@ -819,7 +829,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     rdp.CycleType = CycleType.TWO_CYCLE;
   }
 
-  private static bool TryToAddDisplayLists_(
+  private static IMesh? AddDisplayLists_(
       IModel model,
       Segment segment,
       N64Hardware<N64Memory> n64Hardware,
@@ -851,7 +861,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                             .ToArray();
 
     if (!displayListTuples.Any()) {
-      return false;
+      return null;
     }
 
     var mesh = dlModelBuilder.StartNewMesh(meshName);
@@ -877,7 +887,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                            : VertexOrder.COUNTER_CLOCKWISE);
     }
 
-    return true;
+    return mesh;
   }
 
   private static void SetCombiner_(
@@ -1040,7 +1050,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         // By default, only shows front face
         _ => CullingMode.SHOW_FRONT_ONLY,
     };
-
 }
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
