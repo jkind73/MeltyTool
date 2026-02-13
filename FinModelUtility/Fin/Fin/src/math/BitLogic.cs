@@ -78,4 +78,28 @@ public static partial class BitLogic {
     => (ushort) (doubleFraction * 0x10000).Clamp(
         ushort.MinValue,
         ushort.MaxValue);
+
+  /// <summary>
+  ///   Shamelessly stolen from:
+  ///   https://github.com/magcius/noclip.website/blob/1d5ee0e1c4fd4f447456f0019b6d64dff2fc9bd1/src/Common/N64/Image.ts#L56-L58
+  /// </summary>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static byte Expand3To8(int n)
+    => (byte) ((n << (8 - 3)) | (n << (8 - 6)) | (n >>> (9 - 8)));
+
+  /// <summary>
+  ///   Shamelessly stolen from:
+  ///   https://github.com/magcius/noclip.website/blob/1d5ee0e1c4fd4f447456f0019b6d64dff2fc9bd1/src/Common/N64/Image.ts#L60-L62
+  /// </summary>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static byte Expand4To8(int n)
+    => (byte) ((n << (8 - 4)) | (n >>> (8 - 8)));
+
+  /// <summary>
+  ///   Shamelessly stolen from:
+  ///   https://github.com/magcius/noclip.website/blob/1d5ee0e1c4fd4f447456f0019b6d64dff2fc9bd1/src/Common/N64/Image.ts#L64-L66
+  /// </summary>
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static byte Expand5To8(int n)
+    => (byte) ((n << (8 - 5)) | (n >>> (10 - 8)));
 }

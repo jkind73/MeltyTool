@@ -16,21 +16,8 @@ public sealed class Rgba5553PixelReader : IPixelReader<Rgba32> {
 
   public void Decode(ReadOnlySpan<byte> data, Span<Rgba32> scan0, int offset) {
     var pix = data.Cast<byte, ushort>()[0];
-
-    // Alpha flag
-    if (BitLogic.ExtractFromRight(pix, 15, 1) == 1) {
-      scan0[offset] = new Rgba32(
-          ColorUtil.ExtractScaled(pix, 10, 5),
-          ColorUtil.ExtractScaled(pix, 5, 5),
-          ColorUtil.ExtractScaled(pix, 0, 5),
-          255);
-    } else {
-      scan0[offset] = new Rgba32(
-          ColorUtil.ExtractScaled(pix, 8, 4, 17),
-          ColorUtil.ExtractScaled(pix, 4, 4, 17),
-          ColorUtil.ExtractScaled(pix, 0, 4, 17),
-          ColorUtil.ExtractScaled(pix, 12, 3));
-    }
+    ColorUtil.SplitRgb5A3(pix, out var r, out var g, out var b, out var a);
+    scan0[offset] = new Rgba32(r, g, b, a);
   }
 
   public int BitsPerPixel => 16;

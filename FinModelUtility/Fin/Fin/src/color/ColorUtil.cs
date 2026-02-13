@@ -28,9 +28,9 @@ public static class ColorUtil {
       out byte r,
       out byte g,
       out byte b) {
-    r = (byte) ((color >> 8) & 0b11111000);
+    r = BitLogic.Expand5To8((color >> 11) & 0x1F);
     g = (byte) ((color >> 3) & 0b11111100);
-    b = (byte) (color << 3 & 0b11111000);
+    b = BitLogic.Expand5To8(color & 0x1F);
   }
 
   public static IColor ParseRgb565(ushort color) {
@@ -44,18 +44,18 @@ public static class ColorUtil {
       out byte g,
       out byte b,
       out byte a) {
-    var alphaFlag = color.ExtractFromRight(15, 1);
+    var alphaFlag = color.GetBit(15);
 
-    if (alphaFlag == 1) {
+    if (alphaFlag) {
       a = 255;
-      r = ExtractScaled(color, 10, 5);
-      g = ExtractScaled(color, 5, 5);
-      b = ExtractScaled(color, 0, 5);
+      r = BitLogic.Expand5To8((color >> 10) & 0x1F);
+      g = BitLogic.Expand5To8((color >> 5) & 0x1F);
+      b = BitLogic.Expand5To8(color & 0x1F);
     } else {
-      a = ExtractScaled(color, 12, 3);
-      r = ExtractScaled(color, 8, 4, 17);
-      g = ExtractScaled(color, 4, 4, 17);
-      b = ExtractScaled(color, 0, 4, 17);
+      a = BitLogic.Expand3To8((color >> 12) & 0x7);
+      r = BitLogic.Expand4To8((color >> 8) & 0xF);
+      g = BitLogic.Expand4To8((color >> 4) & 0xF);
+      b = BitLogic.Expand4To8(color & 0xF);
     }
   }
 
@@ -70,19 +70,10 @@ public static class ColorUtil {
       out byte g,
       out byte b,
       out byte a) {
-    var alphaFlag = BitLogic.ExtractFromRight(color, 15, 1);
-
-    if (alphaFlag == 1) {
-      a = 255;
-      r = ExtractScaled(color, 10, 5);
-      g = ExtractScaled(color, 5, 5);
-      b = ExtractScaled(color, 0, 5);
-    } else {
-      a = 0;
-      r = ExtractScaled(color, 10, 5);
-      g = ExtractScaled(color, 5, 5);
-      b = ExtractScaled(color, 0, 5);
-    }
+    a = (byte) (color.GetBit(15) ? 255 : 0);
+    r = BitLogic.Expand5To8((color >> 10) & 0x1F);
+    g = BitLogic.Expand5To8((color >> 5) & 0x1F);
+    b = BitLogic.Expand5To8(color & 0x1F);
   }
 
   public static IColor ParseRgb5A1(ushort color) {
@@ -103,9 +94,9 @@ public static class ColorUtil {
       out byte b,
       out byte a) {
     a = (byte) ((color & 1) == 1 ? 255 : 0);
-    r = (byte) ((color & 0xF800) >> 8);
-    g = (byte) ((color & 0x07C0) >> 3);
-    b = (byte) ((color & 0x003E) << 2);
+    r = BitLogic.Expand5To8((color >> 11) & 0x1F);
+    g = BitLogic.Expand5To8((color >> 6) & 0x1F);
+    b = BitLogic.Expand5To8((color >> 1) & 0x1F);
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -115,9 +106,9 @@ public static class ColorUtil {
       out byte g,
       out byte b,
       out byte a) {
-    r = ExtractScaled(color, 12, 4);
-    g = ExtractScaled(color, 8, 4);
-    b = ExtractScaled(color, 4, 4);
-    a = ExtractScaled(color, 0, 4);
+    r = BitLogic.Expand4To8((color >> 12) & 0xF);
+    g = BitLogic.Expand4To8((color >> 8) & 0xF);
+    b = BitLogic.Expand4To8((color >> 4) & 0xF);
+    a = BitLogic.Expand4To8(color & 0xF);
   }
 }

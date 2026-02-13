@@ -1,6 +1,15 @@
 #version 460
 precision mediump float;
 
+layout (std140, binding = 1) uniform GlobalMatrices {
+  mat4 projectionViewMatrix;
+};
+
+layout (std140, binding = 2) uniform CurrentMatrices {
+  mat4 modelMatrix;
+  mat4 boneMatrices[21];  
+};
+
 struct Light {
   // 0x00 (vec3 needs to be 16-byte aligned)
   vec3 position;
@@ -140,13 +149,10 @@ vec4 texture_3point(sampler2D tex, vec2 uv) {
 
     return lambda0*t0 + lambda1*t1 + lambda2*t2;
 }
-uniform sampler2D texture0;
 uniform sampler2D texture1;
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
-in vec2 uv0;
-in vec2 uv1;
 
 out vec4 fragColor;
 
@@ -236,11 +242,13 @@ void main() {
   // Have to renormalize because the vertex normals can become distorted when interpolated.
   vec3 fragNormal = normalize(vertexNormal);
 
+  vec2 sphericalReflectionUv = acos(normalize(projectionViewMatrix * vec4(fragNormal, 0)).xy) / 3.14159;
+
   vec4 mergedLightDiffuseColor = vec4(0);
   vec4 mergedLightSpecularColor = vec4(0);
   getMergedLightColors(vertexPosition, fragNormal, shininess, mergedLightDiffuseColor, mergedLightSpecularColor);
 
-  vec3 colorComponent = ((texture_3point(texture1, uv1).rgb + vec3(-1.0)*vec3(0.7843137))*texture_3point(texture0, uv0).rgb + texture_3point(texture0, uv0).rgb)*mergedLightDiffuseColor.rgb;
+  vec3 colorComponent = ((vec3(1.0) + vec3(-1.0)*texture_3point(texture1, sphericalReflectionUv).rgb)*vec3(0.1882353) + texture_3point(texture1, sphericalReflectionUv).rgb)*mergedLightDiffuseColor.rgb;
 
   float alphaComponent = 1.0;
 
