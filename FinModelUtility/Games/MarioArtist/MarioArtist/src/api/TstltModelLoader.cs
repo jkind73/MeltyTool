@@ -171,8 +171,23 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     br.Position = 0xa934;
     var joints = br.ReadNews<Joint>(0x1F);
+    var originalFlipByJoint = new Dictionary<Joint, Vector3>();
+
     foreach (var joint in joints) {
-      joint.matrix = Matrix4x4.Transpose(joint.matrix);
+      var matrix = Matrix4x4.Transpose(joint.matrix);
+      matrix.AssertDecompose(out var translation,
+                             out var rotation,
+                             out var scale);
+
+      originalFlipByJoint[joint] = new Vector3(
+          Math.Sign(scale.X),
+          Math.Sign(scale.Y),
+          Math.Sign(scale.Z));
+
+      joint.matrix = SystemMatrix4x4Util.FromTrs(
+          translation,
+          rotation,
+          new Vector3(Math.Abs(scale.X), Math.Abs(scale.Y), Math.Abs(scale.Z)));
     }
 
     var neckJoint = joints[(int) JointIndex.BODY_HEAD_ADAPTER];
@@ -267,6 +282,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
 
     var finBonesAndJoints = new (IBone, Joint, int)[joints.Length];
+    var originalFlipByBone = new Dictionary<IReadOnlyBone, Vector3>();
     var jointQueue =
         new FinTuple3Queue<(Joint joint, int index), Matrix4x4, IBone>(
             jointsByParent[(Joint?) null]
@@ -284,6 +300,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       var finBone = parentFinBone.AddChild(localMatrix);
       finBone.Name = $"{(JointIndex) index}: {index}";
       finBonesAndJoints[index] = (finBone, joint, index);
+
+      originalFlipByBone[finBone] = originalFlipByJoint[joint];
 
       if (jointsByParent.ContainsKey(joint)) {
         jointQueue.Enqueue(jointsByParent[joint]
@@ -497,7 +515,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
               jointIndex,
               isFirst,
               bone.Parent!,
-              bone);
+              bone,
+              originalFlipByBone);
 
           if (chosenPart0Tuple.chosenPart.Id == 2) {
             hairTextures.Add(
@@ -574,7 +593,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       int jointIndex,
       bool useParentBone,
       IBone parentBone,
-      IBone childBone) {
+      IBone childBone,
+      IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
     var (segment, meshDefinition, unkSection5, chosenPart0, unkSection5I,
             subUnkSection5I) =
         chosenPart0Tuple;
@@ -670,38 +690,46 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       n64Hardware.Rsp.CullingMode
           = GetCullingModeForChosenPartId_(chosenPart0.Id);
 
+      var primitiveDlVertexMatrix = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
       var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
           VertexSpace.RELATIVE_TO_BONE,
           childBone);
 
       // HACK: What a fucking nightmare. Why does being first impact this????
-      Matrix4x4? vertexMatrix = null;
+      Matrix4x4 vertexMatrix;
       IBoneWeights vertexDlBoneWeights;
       if (!useParentBone) {
+        vertexMatrix = primitiveDlVertexMatrix;
         vertexDlBoneWeights = primitiveDlBoneWeights;
       } else if (!joint.isLeft ||
                  jointIndex is not ((int) JointIndex.UPPER_ARM_1
                                     or (int) JointIndex.UPPER_LEG_1)) {
+        vertexMatrix = Matrix4x4.CreateScale(originalFlipByBone[parentBone]);
         vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
             VertexSpace.RELATIVE_TO_BONE,
             parentBone);
       } else {
         // HACK: Flips shoulder/hip across the axis.
+        vertexMatrix = Matrix4x4.CreateScale(1, -1, 1);
         vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
             VertexSpace.RELATIVE_TO_BONE,
             parentBone);
-
-        vertexMatrix = Matrix4x4.CreateScale(1, -1, 1);
       }
 
       (uint, Matrix4x4?, IBoneWeights)[] displayLists
           = vertexDlSegmentedAddress == 0
               ? [
-                  (primitiveDlSegmentedAddress, null, primitiveDlBoneWeights)
+                  (primitiveDlSegmentedAddress, 
+                   primitiveDlVertexMatrix,
+                   primitiveDlBoneWeights)
               ]
               : [
-                  (vertexDlSegmentedAddress, vertexMatrix, vertexDlBoneWeights),
-                  (primitiveDlSegmentedAddress, null, primitiveDlBoneWeights)
+                  (vertexDlSegmentedAddress, 
+                   vertexMatrix, 
+                   vertexDlBoneWeights),
+                  (primitiveDlSegmentedAddress, 
+                   primitiveDlVertexMatrix,
+                   primitiveDlBoneWeights)
               ];
 
       var mesh = AddDisplayLists_(
