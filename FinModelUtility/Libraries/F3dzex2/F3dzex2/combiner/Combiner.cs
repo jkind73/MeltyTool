@@ -75,6 +75,20 @@ public sealed class CombinerCycleParams {
             AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
         });
 
+  public static CombinerCycleParams FromPrimitiveAndLighting(bool withAlpha)
+    => new() {
+        ColorMuxA = GenericColorMux.G_CCMUX_PRIMITIVE,
+        ColorMuxB = GenericColorMux.G_CCMUX_0,
+        ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+        ColorMuxD = GenericColorMux.G_CCMUX_0,
+        AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+        AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+        AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+        AlphaMuxD = withAlpha
+            ? GenericAlphaMux.G_ACMUX_PRIMITIVE
+            : GenericAlphaMux.G_ACMUX_1,
+    };
+
   public static CombinerCycleParams FromTexture0AndShade(bool withAlpha)
     => new() {
         ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,

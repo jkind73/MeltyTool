@@ -613,12 +613,21 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                                        .PrimitiveDisplayListSegmentedAddresses)
                                .ToArray();
 
+    var nonzeroMeshCount
+        = meshDefinition.MeshSegmentedAddresses.Count(a => a != 0);
+
     var addedDisplayList = false;
     var meshes = new List<IMesh>();
     for (var i = 0; i < 4; ++i) {
       var (meshSegmentedAddress,
           vertexDlSegmentedAddress,
           primitiveDlSegmentedAddress) = tuples[i];
+
+      var isLast = i == nonzeroMeshCount - 1;
+
+      // HACK: Surely there's a better way to determine this???
+      var usePattern
+          = (primitiveDlSegmentedAddress != 0 || !isLast) && i != 3;
 
       if (meshSegmentedAddress != 0 &&
           n64Hardware.Memory
@@ -645,7 +654,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         var primitiveDlOffset = sbr.ReadUInt32();
         var vertexDlOffset = sbr.ReadUInt32();
 
-        // Not really sure why, but sometimes these aren't set.
+        // HACK: Not really sure why, but sometimes these aren't set.
         if (primitiveDlSegmentedAddress == 0) {
           primitiveDlSegmentedAddress
               = meshSegmentedAddress + primitiveDlOffset;
@@ -664,6 +673,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
         ResetRspAndRdp_(n64Hardware);
 
+        // HACK: This branching if is based on what seems to work, but ideally
+        // this should be based on decomp.
+        // Check decomp, at 0x80116a9c
         var withTexture = imageCount > 0;
         if (chosenPart0 == skinChosenPart) {
           SetCombiner_(n64Hardware,
@@ -673,28 +685,20 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                            chosenPart0.ChosenColor0.Color.ToSystemColor()),
                        chosenPart0.Pattern0MaterialType);
         } else {
-          SetCombiner_(n64Hardware,
-                       withTexture,
-                       false,
-                       OneOf<uint, Color>.FromT0(
-                           i == 1
-                               ? chosenPart0.Pattern1SegmentedAddress
-                               : chosenPart0.Pattern0SegmentedAddress),
-                       i == 1
-                           ? chosenPart0.Pattern1MaterialType
-                           : chosenPart0.Pattern0MaterialType);
+          if (usePattern) {
+            SetCombinerForPattern_(n64Hardware, chosenPart0, i, withTexture);
+          } else {
+            SetAdditiveBlending_(n64Hardware);
+            SetCombiner_(n64Hardware, withTexture, true);
+          }
         }
       } else {
-        SetCombiner_(n64Hardware,
-                     true,
-                     false,
-                     OneOf<uint, Color>.FromT0(
-                         i == 1
-                             ? chosenPart0.Pattern1SegmentedAddress
-                             : chosenPart0.Pattern0SegmentedAddress),
-                     i == 1
-                         ? chosenPart0.Pattern1MaterialType
-                         : chosenPart0.Pattern0MaterialType);
+        if (usePattern) {
+          SetCombinerForPattern_(n64Hardware, chosenPart0, i, true);
+        } else {
+          SetAdditiveBlending_(n64Hardware);
+          SetCombiner_(n64Hardware, true, true);
+        }
       }
 
       if (primitiveDlSegmentedAddress == 0) {
@@ -704,7 +708,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       n64Hardware.Rsp.CullingMode
           = GetCullingModeForChosenPartId_(chosenPart0.Id);
 
-      var primitiveDlVertexMatrix = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
+      var primitiveDlVertexMatrix
+          = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
       var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
           VertexSpace.RELATIVE_TO_BONE,
           childBone);
@@ -733,15 +738,15 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       (uint, Matrix4x4?, IBoneWeights)[] displayLists
           = vertexDlSegmentedAddress == 0
               ? [
-                  (primitiveDlSegmentedAddress, 
+                  (primitiveDlSegmentedAddress,
                    primitiveDlVertexMatrix,
                    primitiveDlBoneWeights)
               ]
               : [
-                  (vertexDlSegmentedAddress, 
-                   vertexMatrix, 
+                  (vertexDlSegmentedAddress,
+                   vertexMatrix,
                    vertexDlBoneWeights),
-                  (primitiveDlSegmentedAddress, 
+                  (primitiveDlSegmentedAddress,
                    primitiveDlVertexMatrix,
                    primitiveDlBoneWeights)
               ];
@@ -869,6 +874,29 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     rdp.M1 = BlenderPm.G_BL_CLR_IN;
     rdp.B1 = BlenderB.G_BL_1;
     rdp.CycleType = CycleType.TWO_CYCLE;
+
+    rdp.UseCoverageForAlpha = true;
+  }
+
+  private static void SetAdditiveBlending_(IN64Hardware n64Hardware) {
+    var rsp = n64Hardware.Rsp;
+    rsp.UvType = N64UvType.LINEAR;
+    rsp.EnvironmentColor = Color.White;
+    rsp.PrimColor = Color.White;
+
+    var rdp = n64Hardware.Rdp;
+    rdp.ForceBlending = true;
+    rdp.P0 = BlenderPm.G_BL_CLR_MEM;
+    rdp.A0 = BlenderA.G_BL_A_IN;
+    rdp.M0 = BlenderPm.G_BL_CLR_IN;
+    rdp.B0 = BlenderB.G_BL_1MA;
+    rdp.P1 = BlenderPm.G_BL_CLR_MEM;
+    rdp.A1 = BlenderA.G_BL_A_IN;
+    rdp.M1 = BlenderPm.G_BL_CLR_IN;
+    rdp.B1 = BlenderB.G_BL_1MA;
+    rdp.CycleType = CycleType.TWO_CYCLE;
+
+    rdp.UseCoverageForAlpha = false;
   }
 
   private static IMesh? AddDisplayLists_(
@@ -930,6 +958,32 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
 
     return mesh;
+  }
+
+  private static void SetCombinerForPattern_(
+      IN64Hardware<N64Memory> n64Hardware,
+      ChosenPart0 chosenPart0,
+      int patternI,
+      bool withTexture) {
+    var isMark = patternI == 2;
+    SetCombiner_(n64Hardware,
+                 withTexture,
+                 isMark,
+                 OneOf<uint, Color>.FromT0(
+                     patternI switch {
+                         0 => chosenPart0.Pattern0SegmentedAddress,
+                         1 => chosenPart0.Pattern1SegmentedAddress,
+                         2 => chosenPart0.MarkSegmentedAddress,
+                     }),
+                 patternI switch {
+                     0 => chosenPart0.Pattern0MaterialType,
+                     1 => chosenPart0.Pattern1MaterialType,
+                     2 => chosenPart0.MarkMaterialType,
+                 });
+
+    if (isMark) {
+      SetAdditiveBlending_(n64Hardware);
+    }
   }
 
   private static void SetCombiner_(
@@ -1008,8 +1062,34 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             CombinerCycleParams.FromTexture0AndShade(withAlpha));
         break;
       }
+      case (false, not null): {
+        if (patternSegmentedOffsetOrColor.Value.TryPickT0(
+                out var patternSegmentedOffset,
+                out var color)) {
+          rdp.Tmem.SetImageSimple(
+              patternSegmentedOffset,
+              N64ColorFormat.RGBA,
+              BitsPerTexel._16BPT,
+              32,
+              32,
+              F3dWrapMode.REPEAT,
+              F3dWrapMode.REPEAT,
+              0,
+              shift);
+
+          rdp.SetCombinerCycleParams(
+              CombinerCycleParams.FromTexture0AndShade(withAlpha));
+        } else {
+          rdp.SetCombinerCycleParams(
+              CombinerCycleParams.FromPrimitiveAndLighting(withAlpha));
+          rsp.PrimColor = color;
+        }
+
+        break;
+      }
       default: {
-        rdp.SetCombinerCycleParams(CombinerCycleParams.FromShade(withAlpha));
+        rdp.SetCombinerCycleParams(
+            CombinerCycleParams.FromTexture0AndShade(withAlpha));
         break;
       }
     }
