@@ -241,13 +241,13 @@ public sealed class DlModelBuilder {
               var usesTexel1 = cycleParams0.DependsOnTexel(1) ||
                                (cycleParams1?.DependsOnTexel(1) ?? false);
 
-              if (!usesTexel0 &&
+              /*if (!usesTexel0 &&
                   (!usesTexel1 || segmentAndTextureParams1 != null)) {
                 segmentAndTextureParams0 = null;
               }
               if (!usesTexel1) {
                 segmentAndTextureParams1 = null;
-              }
+              }*/
 
               var texture0 =
                   this.lazyTextureDictionary_[segmentAndTextureParams0];
