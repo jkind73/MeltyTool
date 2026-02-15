@@ -619,9 +619,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       var (meshSegmentedAddress,
           vertexDlSegmentedAddress,
           primitiveDlSegmentedAddress) = tuples[i];
-      if (primitiveDlSegmentedAddress == 0) {
-        continue;
-      }
 
       if (meshSegmentedAddress != 0 &&
           n64Hardware.Memory
@@ -644,7 +641,20 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         var imageSectionOffset = sbr.ReadUInt32();
         var vertexSectionOffset = sbr.ReadUInt32();
 
-        sbr.Position = meshBaseOffset + 4 * 14;
+        sbr.Position = meshBaseOffset + 4 * 12;
+        var primitiveDlOffset = sbr.ReadUInt32();
+        var vertexDlOffset = sbr.ReadUInt32();
+
+        // Not really sure why, but sometimes these aren't set.
+        if (primitiveDlSegmentedAddress == 0) {
+          primitiveDlSegmentedAddress
+              = meshSegmentedAddress + primitiveDlOffset;
+        }
+
+        if (vertexDlSegmentedAddress == 0) {
+          vertexDlSegmentedAddress = meshSegmentedAddress + vertexDlOffset;
+        }
+
         var imageCount = sbr.ReadUInt16();
 
         n64Hardware.Memory.SetSegment(
@@ -685,6 +695,10 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                      i == 1
                          ? chosenPart0.Pattern1MaterialType
                          : chosenPart0.Pattern0MaterialType);
+      }
+
+      if (primitiveDlSegmentedAddress == 0) {
+        continue;
       }
 
       n64Hardware.Rsp.CullingMode

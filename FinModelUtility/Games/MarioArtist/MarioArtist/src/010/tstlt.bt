@@ -430,11 +430,14 @@ typedef struct (uint fSegmentOffset) {
 typedef struct (uint fSegmentOffset) {
     uint meshSegmentedAddresses[4] <bgcolor=COLOR_OFFSET>;
     
-    local uint firstMeshSegmentedAddress = meshSegmentedAddresses[0];
-    if (firstMeshSegmentedAddress != 0) {
-        local uint meshOffset = fSegmentOffset + (firstMeshSegmentedAddress & 0xffffff);
+    local uint meshI;
+    local uint meshOffset;
+    local uint tempOffset;
+    for (meshI = 0; meshI < 4; ++meshI) {
+        meshOffset = fSegmentOffset + (meshSegmentedAddresses[meshI] & 0xffffff);;
+        
         if (meshOffset < FileSize()) {
-            local uint tempOffset = FTell();
+            tempOffset = FTell();
             FSeek(meshOffset);
             uint firstMeshUint;
             if (firstMeshUint == 0) {
