@@ -121,7 +121,7 @@ public sealed class N64ImageParser(IN64Hardware n64Hardware) {
           case BitsPerTexel._32BPT:
             return PixelImageReader.New(imageWidth,
                                         imageHeight,
-                                        new Rgba32PixelReader())
+                                        new Argb32PixelReader())
                                    .ReadImage(data, Endianness.BigEndian);
           default:
             throw new ArgumentOutOfRangeException(
