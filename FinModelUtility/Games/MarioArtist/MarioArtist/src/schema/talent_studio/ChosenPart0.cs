@@ -39,5 +39,5 @@ public sealed partial class ChosenPart0 : IBinaryDeserializable {
 
   public uint[] Unk3 { get; } = new uint[2];
   public uint MarkSegmentedAddress { get; set; }
-  public PatternMaterialType MarkMaterialType { get; set; }
+  public uint Unk4 { get; set; }
 }

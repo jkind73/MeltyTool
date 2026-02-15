@@ -616,6 +616,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var nonzeroMeshCount
         = meshDefinition.MeshSegmentedAddresses.Count(a => a != 0);
 
+    string name = "";
+
     var addedDisplayList = false;
     var meshes = new List<IMesh>();
     for (var i = 0; i < 4; ++i) {
@@ -684,20 +686,29 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                        OneOf<uint, Color>.FromT1(
                            chosenPart0.ChosenColor0.Color.ToSystemColor()),
                        chosenPart0.Pattern0MaterialType);
+
+          name = "w mesh, skin";
         } else {
           if (usePattern) {
             SetCombinerForPattern_(n64Hardware, chosenPart0, i, withTexture);
+
+            name = $"w mesh, pattern {i}";
           } else {
             SetAdditiveBlending_(n64Hardware);
             SetCombiner_(n64Hardware, withTexture, true);
+
+            name = $"w mesh, extra";
           }
         }
       } else {
         if (usePattern) {
           SetCombinerForPattern_(n64Hardware, chosenPart0, i, true);
+          name = $"w/o mesh, pattern {i}";
         } else {
           SetAdditiveBlending_(n64Hardware);
           SetCombiner_(n64Hardware, true, true);
+
+          name = $"w/o mesh, extra";
         }
       }
 
@@ -756,7 +767,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           segment,
           n64Hardware,
           dlModelBuilder,
-          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {meshSegmentedAddress.ToHexString()}",
+          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {name}, {meshSegmentedAddress.ToHexString()}",
           joint.isLeft,
           displayLists);
       if (mesh != null) {
@@ -978,7 +989,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                  patternI switch {
                      0 => chosenPart0.Pattern0MaterialType,
                      1 => chosenPart0.Pattern1MaterialType,
-                     2 => chosenPart0.MarkMaterialType,
+                     2 => PatternMaterialType.BLEND_1X1,
                  });
 
     if (isMark) {
