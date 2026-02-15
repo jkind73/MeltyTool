@@ -29,7 +29,11 @@ public sealed class AudioWaveformGlPanel : BGlPanel {
   }
 
   protected override void InitGl() => GlUtil.InitGl();
-  protected override void TeardownGl() { }
+
+  protected override void TeardownGl() {
+    this.waveformRenderer_.Dispose();
+    this.viewMatricesUbo_?.Dispose();
+  }
 
   protected override void RenderGl() {
     this.GetBoundsForGlViewport(out var width, out var height);
