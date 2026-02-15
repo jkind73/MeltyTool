@@ -390,7 +390,7 @@ typedef struct (uint fSegmentOffset) {
     ushort triangleCount <bgcolor=COLOR_COUNT>;
     
     // These shorts are the same values as the floats in the mesh definition
-    short unk2[6];
+    short maybeBounds[6] <bgcolor=COLOR_ORIENTATION>;
     
     ubyte unkByte4[4 * 5];
     
@@ -409,7 +409,8 @@ typedef struct (uint fSegmentOffset) {
             FSeek(tmp);
         }
     }
-   
+    
+    FSeek(baseOffset + imageMetadataSectionOffset);   
     struct ImageMetadata {
         uint offset;
         ushort maybeColorFormat;
@@ -431,12 +432,14 @@ typedef struct (uint fSegmentOffset) {
     uint meshSegmentedAddresses[4] <bgcolor=COLOR_OFFSET>;
     
     local uint meshI;
+    local uint meshSegmentedAddress;
     local uint meshOffset;
     local uint tempOffset;
     for (meshI = 0; meshI < 4; ++meshI) {
-        meshOffset = fSegmentOffset + (meshSegmentedAddresses[meshI] & 0xffffff);;
+        meshSegmentedAddress = meshSegmentedAddresses[meshI];
+        meshOffset = fSegmentOffset + (meshSegmentedAddress & 0xffffff);;
         
-        if (meshOffset < FileSize()) {
+        if (meshSegmentedAddress != 0 &&meshOffset < FileSize()) {
             tempOffset = FTell();
             FSeek(meshOffset);
             uint firstMeshUint;
@@ -458,7 +461,7 @@ typedef struct (uint fSegmentOffset) {
     uint unk4[3];
     
     // These floats are the same values as the shorts in the mesh
-    float unk5[6];
+    float maybeBounds[6] <bgcolor=COLOR_ORIENTATION>;
     uint unk6;
     
     // First sets up the vertices via vertexDl, then renders primitiveDl.

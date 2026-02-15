@@ -146,3 +146,26 @@ public sealed class CombinerCycleParams {
     return false;
   }
 }
+
+public static class CombinerCycleParamsExtensions {
+  public static bool DependsOnTexel(this CombinerCycleParams prms,
+                                    int texelNumber) {
+    var ccMuxColor = GenericColorMux.G_CCMUX_TEXEL0 + texelNumber;
+    var ccMuxAlpha = GenericColorMux.G_CCMUX_TEXEL0_ALPHA + texelNumber;
+
+    var acMux = GenericAlphaMux.G_ACMUX_TEXEL0 + texelNumber;
+
+    return prms.ColorMuxA == ccMuxColor ||
+           prms.ColorMuxA == ccMuxAlpha ||
+           prms.ColorMuxB == ccMuxColor ||
+           prms.ColorMuxB == ccMuxAlpha ||
+           prms.ColorMuxC == ccMuxColor ||
+           prms.ColorMuxC == ccMuxAlpha ||
+           prms.ColorMuxD == ccMuxColor ||
+           prms.ColorMuxD == ccMuxAlpha ||
+           prms.AlphaMuxA == acMux ||
+           prms.AlphaMuxB == acMux ||
+           prms.AlphaMuxC == acMux ||
+           prms.AlphaMuxD == acMux;
+  }
+}

@@ -232,6 +232,23 @@ public sealed class DlModelBuilder {
                              24),
                          materialParams.TextureParams1)
                       : null;
+
+              var cycleParams0 = materialParams.CombinerCycleParams0;
+              var cycleParams1 = materialParams.CombinerCycleParams1;
+
+              var usesTexel0 = cycleParams0.DependsOnTexel(0) ||
+                               (cycleParams1?.DependsOnTexel(0) ?? false);
+              var usesTexel1 = cycleParams0.DependsOnTexel(1) ||
+                               (cycleParams1?.DependsOnTexel(1) ?? false);
+
+              if (!usesTexel0 &&
+                  (!usesTexel1 || segmentAndTextureParams1 != null)) {
+                segmentAndTextureParams0 = null;
+              }
+              if (!usesTexel1) {
+                segmentAndTextureParams1 = null;
+              }
+
               var texture0 =
                   this.lazyTextureDictionary_[segmentAndTextureParams0];
               var texture1 =
@@ -377,8 +394,6 @@ public sealed class DlModelBuilder {
                           null)
                   };
 
-              var cycleParams0 = materialParams.CombinerCycleParams0;
-              var cycleParams1 = materialParams.CombinerCycleParams1;
               ReadOnlySpan<CombinerCycleParams> cycleParams =
                   cycleParams1 != null
                       ? [
@@ -468,8 +483,8 @@ public sealed class DlModelBuilder {
                   srcFactor == BlenderA.G_BL_A_IN &&
                   dstFactor == BlenderB.G_BL_1MA) {
                 finMaterial.SetBlending(BlendEquation.ADD,
-                                        BlendFactor.ONE,
-                                        BlendFactor.ZERO,
+                                        BlendFactor.SRC_ALPHA,
+                                        BlendFactor.ONE_MINUS_SRC_ALPHA,
                                         LogicOp.UNDEFINED);
               } else {
                 BlendFactor blendSrcFactor;
