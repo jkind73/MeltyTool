@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 using f3dzex2.combiner;
 using f3dzex2.image;
 using f3dzex2.model;
 
+using fin.math;
 using fin.model;
 using fin.util.enums;
 using fin.util.hex;
+using fin.util.strings;
 
 
 namespace f3dzex2.displaylist.opcodes;
@@ -24,7 +27,8 @@ public sealed class DlOpcodeCommand : IOpcodeCommand {
   public required IReadOnlyList<IDisplayList> PossibleBranches { get; set; }
   public required bool PushCurrentDlToStack { get; set; }
 
-  public override string ToString() => $"0xDE / G_DL: Addresses: 0x{this.SegmentedAddress.ToHex()}, Branches: {this.PossibleBranches.Count}, PushToStack: {this.PushCurrentDlToStack}";
+  public override string ToString()
+    => $"0xDE / G_DL: Addresses: 0x{this.SegmentedAddress.ToHex()}, Branches: {this.PossibleBranches.Count}, PushToStack: {this.PushCurrentDlToStack}";
 }
 
 /// <summary>
@@ -362,4 +366,73 @@ public sealed class SetOtherModeLOpcodeCommand : IOpcodeCommand {
   public ushort Shift { get; set; }
   public ushort Length { get; set; }
   public uint Data { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetOtherModeL",
+        () => {
+          isb.AppendLine($"- shift: {this.Shift}");
+          isb.AppendLine($"- length: {this.Length}");
+          isb.AppendBlock(
+              "- otherModeL",
+              () => {
+                var otherModeL = this.Data;
+
+                var zCompare = otherModeL.GetBit(3 + 1);
+                isb.AppendLine($"- zCompare: {zCompare}");
+
+                var zUpdate = otherModeL.GetBit(3 + 2);
+                isb.AppendLine($"- zUpdate: {zUpdate}");
+
+                var zMode = (ZMode) otherModeL.ExtractFromRight(3 + 7, 2);
+                isb.AppendLine($"- zMode: {zMode}");
+
+                var multiplyCoverageWithAlpha = otherModeL.GetBit(3 + 9);
+                isb.AppendLine(
+                    $"- multiplyCoverageWithAlpha: {multiplyCoverageWithAlpha}");
+
+                var useCoverageForAlpha = otherModeL.GetBit(3 + 10);
+                isb.AppendLine($"- useCoverageForAlpha: {useCoverageForAlpha}");
+
+                var forceBlending = otherModeL.GetBit(3 + 11);
+                isb.AppendLine($"- forceBlending: {forceBlending}");
+
+                var p0 = (BlenderPm) otherModeL.ExtractFromRight(16 + 14, 2);
+                var p1 = (BlenderPm) otherModeL.ExtractFromRight(16 + 12, 2);
+                var a0 = (BlenderA) otherModeL.ExtractFromRight(16 + 10, 2);
+                var a1 = (BlenderA) otherModeL.ExtractFromRight(16 + 8, 2);
+                var m0 = (BlenderPm) otherModeL.ExtractFromRight(16 + 6, 2);
+                var m1 = (BlenderPm) otherModeL.ExtractFromRight(16 + 4, 2);
+                var b0 = (BlenderB) otherModeL.ExtractFromRight(16 + 2, 2);
+                var b1 = (BlenderB) otherModeL.ExtractFromRight(16 + 0, 2);
+                isb.AppendBlock(
+                    "- cycle-dependent settings",
+                    () => {
+                      isb.AppendBlock(
+                          "- cycle 0",
+                          () => {
+                            isb.AppendLine(
+                                $"- formula: ({p0} * {a0} + {m0} * {b0}) / ({a0} + {b0})");
+                            isb.AppendLine($"- P: {p0}");
+                            isb.AppendLine($"- A: {a0}");
+                            isb.AppendLine($"- M: {m0}");
+                            isb.AppendLine($"- B: {b0}");
+                          });
+                      isb.AppendBlock(
+                          "- cycle 1",
+                          () => {
+                            isb.AppendLine(
+                                $"- formula: ({p1} * {a1} + {m1} * {b1}) / ({a1} + {b1})");
+                            isb.AppendLine($"- P: {p1}");
+                            isb.AppendLine($"- A: {a1}");
+                            isb.AppendLine($"- M: {m1}");
+                            isb.AppendLine($"- B: {b1}");
+                          });
+                    });
+              });
+        });
+
+    return isb.ToString();
+  }
 }
