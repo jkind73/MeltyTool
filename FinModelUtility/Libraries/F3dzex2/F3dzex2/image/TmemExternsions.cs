@@ -16,7 +16,8 @@ public static class TmemExtensions {
       F3dWrapMode wrapModeS,
       F3dWrapMode wrapModeT,
       uint tileDescriptorIndex = 0,
-      ushort shift = 0) {
+      ushort shift = 0,
+      ushort? scale = null) {
     --width;
     --height;
 
@@ -32,7 +33,8 @@ public static class TmemExtensions {
         wrapModeS,
         wrapModeT,
         tileDescriptorIndex,
-        shift);
+        shift,
+        scale);
   }
 
   public static void SetImage(
@@ -48,12 +50,14 @@ public static class TmemExtensions {
       F3dWrapMode wrapModeS,
       F3dWrapMode wrapModeT,
       uint tileDescriptorIndex = 0,
-      ushort shift = 0) {
+      ushort shift = 0,
+      ushort? scale = null) {
     var width = (ushort) (lrs - uls);
     var height = (ushort) (lrt - ult);
 
-    tmem.GsSpTexture(BitLogic.ConvertDoubleToBinaryFraction(1),
-                     BitLogic.ConvertDoubleToBinaryFraction(1),
+    scale ??= BitLogic.ConvertDoubleToBinaryFraction(1);
+    tmem.GsSpTexture(scale.Value, 
+                     scale.Value,
                      0,
                      TileDescriptorIndex.TX_LOADTILE,
                      TileDescriptorState.ENABLED);

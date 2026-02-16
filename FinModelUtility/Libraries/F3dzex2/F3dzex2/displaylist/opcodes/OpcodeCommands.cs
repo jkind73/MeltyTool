@@ -309,6 +309,31 @@ public sealed class SetTileOpcodeCommand : IOpcodeCommand {
 
   public ushort Num64BitValuesPerRow { get; set; }
   public ushort OffsetOfTextureInTmem { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetTile",
+        () => {
+          isb.AppendLine(
+              $"- tileDescriptorIndex: {this.TileDescriptorIndex}");
+          isb.AppendLine($"- colorFormat: {this.ColorFormat}");
+          isb.AppendLine($"- bitsPerTexel: {this.BitsPerTexel}");
+          isb.AppendLine($"- palette: {this.Palette}");
+          
+          isb.AppendLine($"- wrapModeS: {this.WrapModeS}");
+          isb.AppendLine($"- maskS: {this.MaskS}");
+          isb.AppendLine($"- shiftS: {this.ShiftS}");
+
+          isb.AppendLine($"- wrapModeT: {this.WrapModeT}");
+          isb.AppendLine($"- maskT: {this.MaskT}");
+          isb.AppendLine($"- shiftT: {this.ShiftT}");
+
+          isb.AppendLine($"- num64BitValuesPerRow: {this.Num64BitValuesPerRow}");
+          isb.AppendLine($"- offsetOfTextureInTmem: {this.OffsetOfTextureInTmem}");
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class SetTileSizeOpcodeCommand : IOpcodeCommand {
@@ -317,11 +342,89 @@ public sealed class SetTileSizeOpcodeCommand : IOpcodeCommand {
   public float Ult { get; set; }
   public float Lrs { get; set; }
   public float Lrt { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetTileSize",
+        () => {
+          isb.AppendLine(
+              $"- tileDescriptorIndex: {(int) this.TileDescriptorIndex}");
+          isb.AppendLine($"- uls: {(int) this.Uls}");
+          isb.AppendLine($"- ult: {(int) this.Ult}");
+          isb.AppendLine($"- lrs: {(int) this.Lrs}");
+          isb.AppendLine($"- lrt: {(int) this.Lrt}");
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class SetCombineOpcodeCommand : IOpcodeCommand {
   public required CombinerCycleParams CombinerCycleParams0 { get; init; }
   public required CombinerCycleParams CombinerCycleParams1 { get; init; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetCombine",
+        () => {
+          isb.AppendBlock(
+              "- cycle 0",
+              () => {
+                var prms = this.CombinerCycleParams0;
+                var ccMuxA = prms.ColorMuxA;
+                var ccMuxB = prms.ColorMuxB;
+                var ccMuxC = prms.ColorMuxC;
+                var ccMuxD = prms.ColorMuxD;
+                var acMuxA = prms.AlphaMuxA;
+                var acMuxB = prms.AlphaMuxB;
+                var acMuxC = prms.AlphaMuxC;
+                var acMuxD = prms.AlphaMuxD;
+
+                isb.AppendLine(
+                    $"- color: ({ccMuxA} - {ccMuxB}) * {ccMuxC} + {ccMuxD}");
+                isb.AppendLine($"- A: {ccMuxA}");
+                isb.AppendLine($"- B: {ccMuxB}");
+                isb.AppendLine($"- C: {ccMuxC}");
+                isb.AppendLine($"- D: {ccMuxD}");
+
+                isb.AppendLine(
+                    $"- alpha: ({acMuxA} - {acMuxB}) * {acMuxC} + {acMuxD}");
+                isb.AppendLine($"- A: {acMuxA}");
+                isb.AppendLine($"- B: {acMuxB}");
+                isb.AppendLine($"- C: {acMuxC}");
+                isb.AppendLine($"- D: {acMuxD}");
+              });
+          isb.AppendBlock(
+              "- cycle 1",
+              () => {
+                var prms = this.CombinerCycleParams1;
+                var ccMuxA = prms.ColorMuxA;
+                var ccMuxB = prms.ColorMuxB;
+                var ccMuxC = prms.ColorMuxC;
+                var ccMuxD = prms.ColorMuxD;
+                var acMuxA = prms.AlphaMuxA;
+                var acMuxB = prms.AlphaMuxB;
+                var acMuxC = prms.AlphaMuxC;
+                var acMuxD = prms.AlphaMuxD;
+
+                isb.AppendLine(
+                    $"- color: ({ccMuxA} - {ccMuxB}) * {ccMuxC} + {ccMuxD}");
+                isb.AppendLine($"- A: {ccMuxA}");
+                isb.AppendLine($"- B: {ccMuxB}");
+                isb.AppendLine($"- C: {ccMuxC}");
+                isb.AppendLine($"- D: {ccMuxD}");
+
+                isb.AppendLine(
+                    $"- alpha: ({acMuxA} - {acMuxB}) * {acMuxC} + {acMuxD}");
+                isb.AppendLine($"- A: {acMuxA}");
+                isb.AppendLine($"- B: {acMuxB}");
+                isb.AppendLine($"- C: {acMuxC}");
+                isb.AppendLine($"- D: {acMuxD}");
+              });
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class LoadBlockOpcodeCommand : IOpcodeCommand {
@@ -330,6 +433,21 @@ public sealed class LoadBlockOpcodeCommand : IOpcodeCommand {
   public float Uls { get; set; }
   public float Ult { get; set; }
   public ushort Dxt { get; init; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetTileSize",
+        () => {
+          isb.AppendLine(
+              $"- tileDescriptorIndex: {(int) this.TileDescriptorIndex}");
+          isb.AppendLine($"- texels: {(int) this.Texels}");
+          isb.AppendLine($"- uls: {(int) this.Uls}");
+          isb.AppendLine($"- ult: {(int) this.Ult}");
+          isb.AppendLine($"- dxt: {(int) this.Dxt}");
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class LoadTileOpcodeCommand : IOpcodeCommand {
