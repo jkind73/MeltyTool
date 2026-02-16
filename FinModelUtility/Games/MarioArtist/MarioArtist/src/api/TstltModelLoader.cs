@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Numerics;
+using System.Xml.Linq;
 
 using CommunityToolkit.Diagnostics;
 
@@ -487,8 +488,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           chosenPart1Tuple);
     }
 
-    var hairTextures = new HashSet<ITexture>();
-
     foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
       var meshSetId = joint.MeshSetId;
       if (chosenPart0TuplesByMeshSetId.TryGetList(
@@ -517,14 +516,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
               bone.Parent!,
               bone,
               originalFlipByBone);
-
-          if (chosenPart0Tuple.chosenPart.Id == 2) {
-            hairTextures.Add(
-                meshes.SelectMany(m => m.Primitives.SelectMany(p => p.Material
-                                          ?.Textures ??
-                                      []))
-                      .Select(t => (ITexture) t));
-          }
         }
       }
 
@@ -542,18 +533,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
               skinColor
           );
         }
-      }
-    }
-
-    // HACK: Fixes textures so that they actually wrap. For some reason,
-    // a lot of these are incorrectly set to clamp (e.g. hair).
-    foreach (var texture in hairTextures) {
-      if (texture.WrapModeU == WrapMode.CLAMP) {
-        texture.WrapModeU = WrapMode.REPEAT;
-      }
-
-      if (texture.WrapModeV == WrapMode.CLAMP) {
-        texture.WrapModeV = WrapMode.REPEAT;
       }
     }
 
@@ -595,6 +574,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       IBone parentBone,
       IBone childBone,
       IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
+    // Loosely based on logic from decomp at 0x803186d8
+
     var (segment, meshDefinition, unkSection5, chosenPart0, unkSection5I,
             subUnkSection5I) =
         chosenPart0Tuple;
@@ -606,116 +587,58 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     n64Hardware.Memory.SetSegment(0xF, segment);
 
-    var tuples = meshDefinition.MeshSegmentedAddresses.Zip(
-                                   meshDefinition
-                                       .VertexDisplayListSegmentedAddresses,
-                                   meshDefinition
-                                       .PrimitiveDisplayListSegmentedAddresses)
-                               .ToArray();
+    // From decomp, at 0x801970ac and 0x
+    var patternIndexByIndex = new int[] {
+        0x0,
+        0x1,
+        0x3,
+        0x4,
+        0x5,
+        0x2,
+        0x6,
+        0x7,
+        0x8,
+        0x9,
+        0xa,
+        0xb,
+        0xc
+    };
 
-    var nonzeroMeshCount
-        = meshDefinition.MeshSegmentedAddresses.Count(a => a != 0);
+    var primitiveVertexDlTuples
+        = meshDefinition
+          .PrimitiveDisplayListSegmentedAddresses
+          .Zip(meshDefinition.VertexDisplayListSegmentedAddresses)
+          .Index()
+          .Select(t => (patternIndexByIndex[t.Index], t.Item));
 
-    string name = "";
+    // From decomp, at 0x80116b6c
+    var rsp = n64Hardware.Rsp;
+    rsp.PrimColor = Color.FromArgb(0xd2, 0xff, 0xff, 0xff);
+    rsp.PrimLodFraction = 1f * 0x7f / 0x100;
 
     var addedDisplayList = false;
     var meshes = new List<IMesh>();
-    for (var i = 0; i < 4; ++i) {
-      var (meshSegmentedAddress,
-          vertexDlSegmentedAddress,
-          primitiveDlSegmentedAddress) = tuples[i];
-
-      var isLast = i == nonzeroMeshCount - 1;
-
-      // HACK: Surely there's a better way to determine this???
-      var usePattern
-          = (primitiveDlSegmentedAddress != 0 || !isLast) && i != 3;
-
-      if (meshSegmentedAddress != 0 &&
-          n64Hardware.Memory
-                     .TryToOpenPossibilitiesAtSegmentedAddress(
-                         meshSegmentedAddress,
-                         out var possibilities) &&
-          possibilities.TryGetFirst(out var sbr)) {
-        var meshBaseOffset = sbr.Position;
-        if (sbr.ReadUInt32() != 0) {
-          continue;
-        }
-
-        sbr.Position = meshBaseOffset;
-
-        sbr.Position = meshBaseOffset + 4 * 2;
-        var imageSectionSize = sbr.ReadUInt32();
-        var vertexSectionSize = sbr.ReadUInt32();
-
-        sbr.Position = meshBaseOffset + 4 * 7;
-        var imageSectionOffset = sbr.ReadUInt32();
-        var vertexSectionOffset = sbr.ReadUInt32();
-
-        sbr.Position = meshBaseOffset + 4 * 12;
-        var primitiveDlOffset = sbr.ReadUInt32();
-        var vertexDlOffset = sbr.ReadUInt32();
-
-        // HACK: Not really sure why, but sometimes these aren't set.
-        if (primitiveDlSegmentedAddress == 0) {
-          primitiveDlSegmentedAddress
-              = meshSegmentedAddress + primitiveDlOffset;
-        }
-
-        if (vertexDlSegmentedAddress == 0) {
-          vertexDlSegmentedAddress = meshSegmentedAddress + vertexDlOffset;
-        }
-
-        var imageCount = sbr.ReadUInt16();
-
-        n64Hardware.Memory.SetSegment(
-            0xE,
-            (uint) (segment.Offset + meshBaseOffset + vertexSectionOffset),
-            (uint) vertexSectionSize);
-
-        ResetRspAndRdp_(n64Hardware);
-
-        // HACK: This branching if is based on what seems to work, but ideally
-        // this should be based on decomp.
-        // Check decomp, at 0x80116a9c
-        var withTexture = imageCount > 0;
-        if (chosenPart0 == skinChosenPart) {
-          SetCombiner_(n64Hardware,
-                       withTexture,
-                       false,
-                       OneOf<uint, Color>.FromT1(
-                           chosenPart0.ChosenColor0.Color.ToSystemColor()),
-                       chosenPart0.Pattern0MaterialType);
-
-          name = "w mesh, skin";
-        } else {
-          if (usePattern) {
-            SetCombinerForPattern_(n64Hardware, chosenPart0, i, withTexture);
-
-            name = $"w mesh, pattern {i}";
-          } else {
-            SetAdditiveBlending_(n64Hardware);
-            SetCombiner_(n64Hardware, withTexture, true);
-
-            name = $"w mesh, extra";
-          }
-        }
-      } else {
-        if (usePattern) {
-          SetCombinerForPattern_(n64Hardware, chosenPart0, i, true);
-          name = $"w/o mesh, pattern {i}";
-        } else {
-          SetAdditiveBlending_(n64Hardware);
-          SetCombiner_(n64Hardware, true, true);
-
-          name = $"w/o mesh, extra";
-        }
-      }
-
+    foreach (var (patternIndex, (primitiveDlSegmentedAddress,
+                 vertexDlSegmentedAddress)) in primitiveVertexDlTuples) {
       if (primitiveDlSegmentedAddress == 0) {
         continue;
       }
 
+      ChosenPart0Util.SetUpOtherModeLAndCombiner(
+          n64Hardware,
+          patternIndex,
+          0);
+
+      ChosenPart0Util.SetUp(n64Hardware, chosenPart0, patternIndex);
+      if (chosenPart0.Id == 0) {
+        ChosenPart0Util.SetUpInvertedEnvironmentColorOrSomethingElse(
+            n64Hardware,
+            skinChosenPart.ChosenColor0);
+      }
+
+      // TODO: It does something here with a hardcoded chosen part
+
+      // TODO: Remove this
       n64Hardware.Rsp.CullingMode
           = GetCullingModeForChosenPartId_(chosenPart0.Id);
 
@@ -767,7 +690,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           segment,
           n64Hardware,
           dlModelBuilder,
-          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}): {name}, {meshSegmentedAddress.ToHexString()}",
+          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}, patternIndex: {patternIndex})",
           joint.isLeft,
           displayLists);
       if (mesh != null) {
@@ -891,7 +814,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
   private static void SetAdditiveBlending_(IN64Hardware n64Hardware) {
     var rsp = n64Hardware.Rsp;
-    rsp.UvType = N64UvType.LINEAR;
+    rsp.UvType = N64UvType.STANDARD;
     rsp.EnvironmentColor = Color.White;
     rsp.PrimColor = Color.White;
 
@@ -969,32 +892,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
 
     return mesh;
-  }
-
-  private static void SetCombinerForPattern_(
-      IN64Hardware<N64Memory> n64Hardware,
-      ChosenPart0 chosenPart0,
-      int patternI,
-      bool withTexture) {
-    var isMark = patternI == 2;
-    SetCombiner_(n64Hardware,
-                 withTexture,
-                 isMark,
-                 OneOf<uint, Color>.FromT0(
-                     patternI switch {
-                         0 => chosenPart0.Pattern0SegmentedAddress,
-                         1 => chosenPart0.Pattern1SegmentedAddress,
-                         2 => chosenPart0.MarkSegmentedAddress,
-                     }),
-                 patternI switch {
-                     0 => chosenPart0.Pattern0MaterialType,
-                     1 => chosenPart0.Pattern1MaterialType,
-                     2 => PatternMaterialType.BLEND_1X1,
-                 });
-
-    if (isMark) {
-      SetAdditiveBlending_(n64Hardware);
-    }
   }
 
   private static void SetCombiner_(

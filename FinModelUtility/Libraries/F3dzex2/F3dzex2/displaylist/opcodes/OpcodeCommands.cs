@@ -209,6 +209,19 @@ public sealed class SetTimgOpcodeCommand : IOpcodeCommand {
   public BitsPerTexel BitsPerTexel { get; set; }
   public ushort Width { get; set; }
   public uint TextureSegmentedAddress { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetTimg",
+        () => {
+          isb.AppendLine($"- colorFormat: {this.ColorFormat}");
+          isb.AppendLine($"- bitsPerTexel: {this.BitsPerTexel}");
+          isb.AppendLine($"- width: {this.Width}");
+          isb.AppendLine($"- textureSegmentedAddress: {this.TextureSegmentedAddress}");
+        });
+    return isb.ToString();
+  }
 }
 
 [Flags]

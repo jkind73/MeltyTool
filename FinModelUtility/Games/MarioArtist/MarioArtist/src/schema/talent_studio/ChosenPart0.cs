@@ -29,15 +29,15 @@ public sealed partial class ChosenPart0 : IBinaryDeserializable {
   public ChosenColor ChosenColor0 { get; } = new();
   public ChosenColor ChosenColor1 { get; } = new();
 
-  public uint[] UnkForPattern0 { get; } = new uint[2];
-  public uint Pattern0SegmentedAddress { get; set; }
-  public PatternMaterialType Pattern0MaterialType { get; set; }
-  
-  public uint[] Unk2 { get; } = new uint[2];
-  public uint Pattern1SegmentedAddress { get; set; }
-  public PatternMaterialType Pattern1MaterialType { get; set; }
+  public ChosenPart0PatternParams Pattern0Params { get; } = new();
+  public ChosenPart0PatternParams Pattern1Params { get; } = new();
+  public ChosenPart0PatternParams MarkParams { get; } = new();
+}
 
-  public uint[] Unk3 { get; } = new uint[2];
-  public uint MarkSegmentedAddress { get; set; }
-  public uint Unk4 { get; set; }
+[BinarySchema]
+public sealed partial class ChosenPart0PatternParams : IBinaryDeserializable {
+  public uint Unk0 { get; set; }
+  public uint Unk1 { get; set; }
+  public uint ImageSegmentedAddress { get; set; }
+  public PatternMaterialType MaterialType { get; set; }
 }
