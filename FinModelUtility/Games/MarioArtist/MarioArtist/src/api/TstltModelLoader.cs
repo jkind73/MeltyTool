@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using System.Numerics;
-using System.Xml.Linq;
 
 using CommunityToolkit.Diagnostics;
 
@@ -26,7 +25,6 @@ using fin.model.util;
 using fin.schema.color;
 using fin.schema.vector;
 using fin.util.enumerables;
-using fin.util.linq;
 using fin.util.sets;
 
 using marioartist.schema;
@@ -635,8 +633,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             n64Hardware,
             skinChosenPart.ChosenColor0);
       }
-
-      // TODO: It does something here with a hardcoded chosen part
 
       // TODO: Remove this
       n64Hardware.Rsp.CullingMode

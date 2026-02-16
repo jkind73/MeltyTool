@@ -47,6 +47,8 @@ internal class ChosenPart0Util {
 
         if (patternParams.Unk1 == 0 && chosenPart0.Id == 0) {
           rsp.UvType = N64UvType.STANDARD;
+          rsp.TexScaleXShort = rsp.TexScaleYShort = 0xffff;
+
           rdp.CombinerCycleParams0 = new CombinerCycleParams {
               ColorMuxA = GenericColorMux.G_CCMUX_0,
               ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
@@ -156,7 +158,9 @@ internal class ChosenPart0Util {
           32,
           32,
           F3dWrapMode.CLAMP,
-          F3dWrapMode.CLAMP);
+          F3dWrapMode.CLAMP,
+          // TODO: Pretty sure this is right...???
+          tileDescriptorIndex: 1);
       return;
     }
 
@@ -168,7 +172,7 @@ internal class ChosenPart0Util {
       // TODO: I might be stupid, this might be 0x07c0?
       scale = GetTexScaleShortFromCommand_(0x07c0);
     } else {
-      rsp.UvType = N64UvType.LINEAR;
+      rsp.UvType = N64UvType.STANDARD;
       scale = GetTexScaleShortFromCommand_(0xffff);
     }
 
@@ -203,7 +207,9 @@ internal class ChosenPart0Util {
           32,
           F3dWrapMode.REPEAT,
           F3dWrapMode.MIRROR_REPEAT,
-          scale: scale);
+          scale: scale,
+          // TODO: Pretty sure this is right...???
+          tileDescriptorIndex: 1);
     } else {
       ushort shift = patternMaterialType switch {
           PatternMaterialType.BLEND_2X2
@@ -267,7 +273,9 @@ internal class ChosenPart0Util {
           F3dWrapMode.REPEAT,
           F3dWrapMode.REPEAT,
           scale: scale,
-          shift: shift);
+          shift: shift,
+          // TODO: Pretty sure this is right...???
+          tileDescriptorIndex: 1);
     }
   }
 
@@ -276,8 +284,6 @@ internal class ChosenPart0Util {
       int patternIndex,
       int someValue) {
     // From decomp, at 0x80115d08
-
-    // TODO: Implement
 
     var rdp = n64Hardware.Rdp;
     var rsp = n64Hardware.Rsp;

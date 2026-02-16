@@ -470,11 +470,8 @@ typedef struct (uint fSegmentOffset) {
     //
     // This is done for each triplet (meshSegmentedAddress, primitiveDl, vertexDl).
     
-    uint primitiveDl[4] <bgcolor=COLOR_OFFSET>;
-    uint unk7[9];
-    
-    uint vertexDl[4] <bgcolor=COLOR_OFFSET>;
-    uint unk8[9];
+    uint primitiveDl[13] <bgcolor=COLOR_OFFSET>;    
+    uint vertexDl[13] <bgcolor=COLOR_OFFSET>;
 } MeshDefinition <bgcolor=COLOR_HEADER>;
 
 FSeek(0xc6c8);

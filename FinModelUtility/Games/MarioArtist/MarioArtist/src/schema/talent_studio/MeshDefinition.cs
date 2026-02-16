@@ -15,8 +15,8 @@ public sealed partial class MeshDefinition : IBinaryDeserializable {
   public uint[] Unk3 { get; } = new uint[3];
   public float[] Unk4 { get; } = new float[6];
 
-  public uint Unk5 { get; set; }
-  
   public uint[] PrimitiveDisplayListSegmentedAddresses { get; } = new uint[13];
   public uint[] VertexDisplayListSegmentedAddresses { get; } = new uint[13];
+
+  public uint Unk5 { get; set; }
 }

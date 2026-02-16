@@ -362,8 +362,8 @@ public sealed class DlModelBuilder {
                           equations.CreateColor(environmentAlpha),
                       GenericColorMux.G_CCMUX_PRIM_LOD_FRAC
                           => primLodFrac.Wrap(),
-                      GenericColorMux.G_CCMUX_SCALE         => color1,
-                      GenericColorMux.G_CCMUX_K5            => color1,
+                      GenericColorMux.G_CCMUX_SCALE => color1,
+                      GenericColorMux.G_CCMUX_K5    => color1,
                       _ => throw new ArgumentOutOfRangeException(
                           nameof(colorMux),
                           colorMux,
@@ -433,82 +433,10 @@ public sealed class DlModelBuilder {
               equations.CreateScalarOutput(FixedFunctionSource.OUTPUT_ALPHA,
                                            combinedAlpha);
 
-              // TODO: Handle shade case by writing lighting to alpha
-
-              // Shamelessly stolen from:
-              // https://github.com/magcius/noclip.website/blob/main/src/zelview/f3dzex.ts#L135
-
-              BlenderPm srcColor, dstColor;
-              BlenderA srcFactor;
-              BlenderB dstFactor;
-
-              var doBlend = true;
-              if (rdp.ForceBlending) {
-                if (cycleParams1 != null) {
-                  srcColor = rdp.P1;
-                  srcFactor = rdp.A1;
-                  dstColor = rdp.M1;
-                  dstFactor = rdp.B1;
-                } else {
-                  srcColor = rdp.P0;
-                  srcFactor = rdp.A0;
-                  dstColor = rdp.M0;
-                  dstFactor = rdp.B0;
-                }
-              } else {
-                doBlend = cycleParams1 != null;
-                srcColor = rdp.P0;
-                srcFactor = rdp.A0;
-                dstColor = rdp.M0;
-                dstFactor = rdp.B0;
-              }
+              ApplyBlendMode_(n64Hardware, finMaterial);
 
               // TODO: I'm not sure if alpha compare is ever used on the N64
               finMaterial.DisableAlphaCompare();
-              if (!doBlend) {
-                finMaterial.SetBlending(BlendEquation.ADD,
-                                        BlendFactor.ONE,
-                                        BlendFactor.ZERO,
-                                        LogicOp.UNDEFINED);
-              }
-
-              if (srcFactor == BlenderA.G_BL_0 &&
-                  dstFactor == BlenderB.G_BL_1) {
-                finMaterial.SetBlending(BlendEquation.ADD,
-                                        BlendFactor.ONE,
-                                        BlendFactor.ZERO,
-                                        LogicOp.UNDEFINED);
-              } else if (
-                  srcColor == dstColor &&
-                  srcFactor == BlenderA.G_BL_A_IN &&
-                  dstFactor == BlenderB.G_BL_1MA) {
-                finMaterial.SetBlending(BlendEquation.ADD,
-                                        BlendFactor.SRC_ALPHA,
-                                        BlendFactor.ONE_MINUS_SRC_ALPHA,
-                                        LogicOp.UNDEFINED);
-              } else {
-                BlendFactor blendSrcFactor;
-                if (srcFactor == BlenderA.G_BL_0) {
-                  blendSrcFactor = BlendFactor.ZERO;
-                } else if
-                    (rdp is {
-                         UseCoverageForAlpha: true,
-                         MultiplyCoverageWithAlpha: false
-                     }) {
-                  // this is technically "coverage", admitting blending on edges
-                  blendSrcFactor = BlendFactor.ONE;
-                } else {
-                  blendSrcFactor = BlendFactor.SRC_ALPHA;
-                }
-
-                var blendDstFactor =
-                    TranslateBlendParamB_(dstFactor, blendSrcFactor);
-
-                finMaterial.SetBlending(BlendEquation.ADD,
-                                        blendSrcFactor,
-                                        blendDstFactor,
-                                        LogicOp.UNDEFINED);
-              }
 
               // Shamelessly stolen from:
               // https://github.com/magcius/noclip.website/blob/main/src/zelview/f3dzex.ts#L109
@@ -527,6 +455,60 @@ public sealed class DlModelBuilder {
 
               return finMaterial;
             });
+  }
+
+  private static void ApplyBlendMode_(
+      IN64Hardware n64Hardware,
+      IMaterial finMaterial) {
+    // TODO: What does "FORCE_BL" do?
+    // TODO: Is it possible to support two-cycle blending, maybe via a shader?
+    // TODO: Figure out how to better support this
+
+    // HACK: Just kind of tries to see if we should do additive blending.
+    // I have no idea how to properly implement this. 
+
+    var rdp = n64Hardware.Rdp;
+
+    var doAdditiveBlending
+        = ShouldDoAdditiveBlendingFor_(rdp.P0, rdp.A0, rdp.M0, rdp.B0);
+    if (rdp.CycleType is CycleType.TWO_CYCLE) {
+      doAdditiveBlending
+          |= ShouldDoAdditiveBlendingFor_(rdp.P1, rdp.A1, rdp.M1, rdp.B1);
+    }
+
+    var useCoverageInsteadOfAlpha = rdp is {
+        UseCoverageForAlpha: true,
+        MultiplyCoverageWithAlpha: false
+    };
+
+    if (doAdditiveBlending && !useCoverageInsteadOfAlpha) {
+      finMaterial.SetBlending(
+          BlendEquation.ADD,
+          BlendFactor.SRC_ALPHA,
+          BlendFactor.ONE_MINUS_SRC_ALPHA,
+          LogicOp.UNDEFINED);
+    } else {
+      finMaterial.SetBlending(
+          BlendEquation.ADD,
+          BlendFactor.ONE,
+          BlendFactor.ZERO,
+          LogicOp.UNDEFINED);
+    }
+  }
+
+  private static bool ShouldDoAdditiveBlendingFor_(
+      BlenderPm p,
+      BlenderA a,
+      BlenderPm m,
+      BlenderB b) {
+    if (p is BlenderPm.G_BL_CLR_IN &&
+        m is BlenderPm.G_BL_CLR_MEM &&
+        a is BlenderA.G_BL_A_IN &&
+        b is BlenderB.G_BL_1MA or BlenderB.G_BL_A_MEM) {
+      return true;
+    }
+
+    return false;
   }
 
   public ModelImpl<Normal1Color2UvVertexImpl> Model { get; }
@@ -841,22 +823,6 @@ public sealed class DlModelBuilder {
     }
 
     return this.cachedMaterial_;
-  }
-
-  private static BlendFactor TranslateBlendParamB_(
-      BlenderB paramB,
-      BlendFactor srcParam) {
-    return paramB switch {
-        BlenderB.G_BL_1MA => srcParam switch {
-            BlendFactor.SRC_ALPHA => BlendFactor.ONE_MINUS_SRC_ALPHA,
-            BlendFactor.ONE       => BlendFactor.ZERO,
-            _                     => BlendFactor.ONE
-        },
-        BlenderB.G_BL_A_MEM => BlendFactor.DST_ALPHA,
-        BlenderB.G_BL_1 => BlendFactor.ONE,
-        BlenderB.G_BL_0 => BlendFactor.ZERO,
-        _ => throw new ArgumentOutOfRangeException(nameof(paramB), paramB, null)
-    };
   }
 
   public Color OverrideVertexColor {
