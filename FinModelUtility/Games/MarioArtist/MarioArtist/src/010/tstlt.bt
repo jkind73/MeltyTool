@@ -318,18 +318,17 @@ Rgba32 skinColor;
 // - glasses are type 8
 // - earrings are type 9
 typedef struct (uint fSegmentOffset) {
-  // Attached to the joint with the same meshSet.
-  byte padding[3];
-  MeshSet meshSet;
-  uint maybeFileIndex <bgcolor=COLOR_INDEX>;
-  
-  // The current model to render
-  uint chosenModelIndex <bgcolor=COLOR_INDEX>; 
-  // Whether this is on the left side of character viewing them head-on.
-  // This means the model will be scaled by -1 horizontally, so it will be inside-out.
-  // (i.e. the vertices need to be used in the reverse order)
-  uint isLeft;
-
+    // Attached to the joint with the same meshSet.
+    byte padding[3];
+    MeshSet meshSet;
+    uint fileIndex <bgcolor=COLOR_INDEX>;
+    
+    // The current model to render
+    uint chosenModelIndex <bgcolor=COLOR_INDEX>; 
+    // Whether this is on the left side of character viewing them head-on.
+    // This means the model will be scaled by -1 horizontally, so it will be inside-out.
+    // (i.e. the vertices need to be used in the reverse order)
+    uint isLeft;
   
     // 0: ?
     // 1: ?
