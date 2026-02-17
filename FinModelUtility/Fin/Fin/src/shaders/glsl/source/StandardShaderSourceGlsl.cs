@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 
 using fin.model;
 using fin.util.enumerables;
@@ -14,6 +15,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   private readonly bool hasColor_;
 
   private readonly IReadOnlyTexture? diffuseTexture_;
+  private readonly Color? diffuseColor_;
   private readonly IReadOnlyTexture? normalTexture_;
   private readonly IReadOnlyTexture? ambientOcclusionTexture_;
   private readonly IReadOnlyTexture? emissiveTexture_;
@@ -40,6 +42,7 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     this.hasColor_ = shaderRequirements.UsedColors.AnyTrue();
 
     this.diffuseTexture_ = material.DiffuseTexture;
+    this.diffuseColor_ = material.DiffuseColor;
 
     this.normalTexture_ = material.NormalTexture;
     var hasNormals = shaderRequirements.HasNormals;
@@ -67,6 +70,10 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
     if (this.diffuseTexture_ != null) {
       sb.AppendLine(
           $"uniform {GlslUtil.GetTypeOfTexture(this.diffuseTexture_, this.animations_)} diffuseTexture;");
+      needsNewline = true;
+    }
+    if (this.diffuseColor_ != null) {
+      sb.AppendLine("uniform vec4 diffuseColor;");
       needsNewline = true;
     }
 
@@ -184,18 +191,27 @@ public sealed class StandardShaderSourceGlsl : IShaderSourceGlsl {
   public string FragmentShaderSource { get; set; }
 
   public void AppendFragmentMain(IndentedStringBuilder sb) {
-    var getDiffuseTextureColor = GlslUtil.ReadColorFromTexture(
-        "diffuseTexture",
-        $"{GlslConstants.IN_UV_NAME}{this.diffuseTexture_?.UvIndex ?? 0}",
-        this.diffuseTexture_,
-        this.animations_);
-    sb.AppendLine(
-        $"fragColor = {(this.diffuseTexture_ != null, this.hasColor_) switch {
-            (false, false) => "vec4(1)",
-            (false, true) => $"{GlslConstants.IN_VERTEX_COLOR_NAME}0",
-            (true, false) => getDiffuseTextureColor,
-            (true, true) => $"{getDiffuseTextureColor} * {GlslConstants.IN_VERTEX_COLOR_NAME}0"
-        }};");
+    var diffuseColors = new List<string>();
+    if (this.diffuseTexture_ != null) {
+      var getDiffuseTextureColor = GlslUtil.ReadColorFromTexture(
+          "diffuseTexture",
+          $"{GlslConstants.IN_UV_NAME}{this.diffuseTexture_?.UvIndex ?? 0}",
+          this.diffuseTexture_,
+          this.animations_);
+      diffuseColors.Add(getDiffuseTextureColor);
+    }
+    if (this.diffuseColor_ != null) {
+      diffuseColors.Add("diffuseColor");
+    }
+    if (this.hasColor_) {
+      diffuseColors.Add($"{GlslConstants.IN_VERTEX_COLOR_NAME}0");
+    }
+
+    if (diffuseColors.Count > 0) {
+      sb.AppendLine($"fragColor = {diffuseColors.Join(" * ")};");
+    } else {
+      sb.AppendLine("fragColor = vec4(1);");
+    }
 
     if (this.hasLighting_) {
       sb.AppendLine();

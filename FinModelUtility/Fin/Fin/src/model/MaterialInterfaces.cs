@@ -144,6 +144,7 @@ public partial interface IColorMaterial : IMaterial {
 [GenerateReadOnly]
 public partial interface IStandardMaterial : IMaterialWithNormalTexture {
   new IReadOnlyTexture? DiffuseTexture { get; set; }
+  new Color? DiffuseColor { get; set; }
   new IReadOnlyTexture? AmbientOcclusionTexture { get; set; }
   new IReadOnlyTexture? EmissiveTexture { get; set; }
   new IReadOnlyTexture? SpecularTexture { get; set; }

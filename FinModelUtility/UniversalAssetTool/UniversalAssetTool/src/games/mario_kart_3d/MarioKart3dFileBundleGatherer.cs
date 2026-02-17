@@ -28,7 +28,7 @@ public sealed class MarioKart3dFileBundleGatherer : BPrereqsFileBundleGatherer {
       organizer.Add(
           new AnnotatedFileBundle<D3dModelFileBundle>(
               new D3dModelFileBundle {
-                  ModFile = smkFile,
+                  D3dFile = smkFile,
                   TextureFile = gifFile == null ? pngFile : null,
                   AnimatedTextureFile = pngFile == null && gifFile != null
                       ? (gifFile, 30)

@@ -16,7 +16,7 @@ public static class VolcanicPanicUtil {
     foreach (var modFile in volcanicPanicModFiles) {
       organizer.Add(new AnnotatedFileBundle<D3dModelFileBundle>(
                         new D3dModelFileBundle {
-                            ModFile = modFile,
+                            D3dFile = modFile,
                             TextureFile = bacRockFile,
                             FlipNormals = true,
                         },

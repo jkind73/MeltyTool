@@ -18,7 +18,7 @@ using gm.schema.d3d;
 namespace gm.api;
 
 public sealed class D3dModelFileBundle : IModelFileBundle {
-  public required IReadOnlyTreeFile ModFile { get; init; }
+  public required IReadOnlyTreeFile D3dFile { get; init; }
 
   public IReadOnlyTreeFile? TextureFile { get; init; }
 
@@ -27,18 +27,18 @@ public sealed class D3dModelFileBundle : IModelFileBundle {
     init;
   }
 
-  public IReadOnlyTreeFile MainFile => this.ModFile;
+  public IReadOnlyTreeFile MainFile => this.D3dFile;
   public bool FlipNormals { get; init; }
   public WrapMode TextureWrapMode { get; init; }
 }
 
 public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   public IModel Import(D3dModelFileBundle modelFileBundle) {
-    var modFile = modelFileBundle.ModFile;
-    var mod = modFile.ReadNewFromText<D3d>();
+    var d3dFile = modelFileBundle.D3dFile;
+    var d3d = d3dFile.ReadNewFromText<D3d>();
 
     var (finModel, finRootBone)
-        = CreateModel((modelFileBundle, modFile.AsFileSet()));
+        = CreateModel((modelFileBundle, d3dFile.AsFileSet()));
 
     ITextureMaterial? material = null;
     if (modelFileBundle.TextureFile is { } textureFile) {
@@ -85,7 +85,7 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
       }
     }
 
-    AddToModel(mod, finModel, finRootBone, out _, material);
+    AddToModel(d3d, finModel, finRootBone, out _, material);
 
     if (modelFileBundle.FlipNormals) {
       finModel.FlipAllNormals();

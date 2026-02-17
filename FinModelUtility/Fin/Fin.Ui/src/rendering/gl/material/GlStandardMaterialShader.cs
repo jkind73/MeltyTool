@@ -1,4 +1,6 @@
-﻿using fin.math;
+﻿using System.Numerics;
+
+using fin.math;
 using fin.model;
 using fin.shaders.glsl;
 
@@ -17,6 +19,8 @@ public sealed class GlStandardMaterialShader(
         standardMaterial,
         textureTransformManager,
         textureFlipbookSwapManager) {
+  private IShaderUniform<Vector4> diffuseColor_;
+
   protected override void DisposeInternal() { }
 
   protected override void Setup(IReadOnlyStandardMaterial material,
@@ -26,6 +30,8 @@ public sealed class GlStandardMaterialShader(
                       0,
                       diffuseFinTexture,
                       GlMaterialConstants.NULL_WHITE_TEXTURE);
+
+    this.diffuseColor_ = shaderProgram.GetUniformVec4("diffuseColor");
 
     var normalFinTexture = material.NormalTexture;
     this.SetUpTexture("normalTexture",
@@ -53,5 +59,14 @@ public sealed class GlStandardMaterialShader(
   }
 
   protected override void PassUniformsAndBindTextures(
-      GlShaderProgram impl) { }
+      GlShaderProgram impl) {
+    var diffuseColorVector = standardMaterial.DiffuseColor;
+    var diffuseColor = new Vector4(diffuseColorVector?.R ?? 255,
+                                   diffuseColorVector?.G ?? 255,
+                                   diffuseColorVector?.B ?? 255,
+                                   diffuseColorVector?.A ?? 255) /
+                       255;
+
+    this.diffuseColor_.SetAndMaybeMarkDirty(diffuseColor);
+  }
 }

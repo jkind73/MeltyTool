@@ -15,7 +15,7 @@ public static class PaperMarioDirectorsCutUtil {
     foreach (var modFile in rootDir.GetFilesWithFileType(".mod", true)) {
       organizer.Add(new AnnotatedFileBundle<D3dModelFileBundle>(
                         new D3dModelFileBundle {
-                            ModFile = modFile
+                            D3dFile = modFile
                         },
                         modFile));
     }

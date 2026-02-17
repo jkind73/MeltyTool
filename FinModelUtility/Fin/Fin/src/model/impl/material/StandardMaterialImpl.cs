@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace fin.model.impl;
 
@@ -43,6 +44,7 @@ public partial class ModelImpl<TVertex> {
     }
 
     public IReadOnlyTexture? DiffuseTexture { get; set; }
+    public Color? DiffuseColor { get; set; }
     public IReadOnlyTexture? MaskTexture { get; set; }
     public IReadOnlyTexture? AmbientOcclusionTexture { get; set; }
     public IReadOnlyTexture? NormalTexture { get; set; }

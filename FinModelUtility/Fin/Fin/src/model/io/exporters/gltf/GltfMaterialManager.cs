@@ -95,6 +95,8 @@ public static class GltfMaterialBuilder {
                                 gltfImageByFinImage[diffuseTexture.Image]);
               }
 
+              // TODO: Include diffuse color
+
               var normalTexture = standardMaterial.NormalTexture;
               if (normalTexture != null) {
                 gltfMaterialBuilder.UseChannel(KnownChannel.Normal)

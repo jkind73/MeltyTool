@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Numerics;
@@ -112,7 +113,7 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
       // TODO: Handle all properties within gltfMaterial
 
       if (gltfMaterial is null) {
-        return finModel.MaterialManager.AddNullMaterial();
+        return finModel.MaterialManager.AddColorMaterial(Color.White);
       }
 
       var finMaterial = finModel.MaterialManager.AddStandardMaterial();
@@ -120,6 +121,14 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
 
       finMaterial.DiffuseTexture
           = lazyFinTextures[(gltfMaterial.GetDiffuseTexture(), gltfMaterial.GetDiffuseTextureTransform())];
+      var diffuseColor
+          = (gltfMaterial.FindChannel("BaseColor")?.Color ?? Vector4.One) *
+            gltfMaterial.GetDiffuseColor(Vector4.One) * 255;
+      finMaterial.DiffuseColor = Color.FromArgb(
+          (byte) diffuseColor.W,
+          (byte) diffuseColor.X,
+          (byte) diffuseColor.Y,
+          (byte) diffuseColor.Z);
       finMaterial.NormalTexture
           = lazyFinTextures[(gltfMaterial.FindChannel("Normal")?.Texture, null)];
       finMaterial.EmissiveTexture
@@ -269,6 +278,8 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
         var texCoord0Accessor = gltfPrimitive.GetVertexAccessor("TEXCOORD_0")
                                              ?
                                              .AsVector2Array();
+        var color0Accessor
+            = gltfPrimitive.GetVertexAccessor("COLOR_0 ")?.AsVector4Array();
 
         var joints0Accessor = gltfPrimitive.GetVertexAccessor("JOINTS_0")
                                            ?.AsVector4Array();
@@ -297,6 +308,10 @@ public sealed class GltfModelImporter : IModelImporter<GltfModelFileBundle> {
 
                 if (texCoord0Accessor != null) {
                   finVertex.SetUv(0, texCoord0Accessor[i]);
+                }
+
+                if (color0Accessor != null) {
+                  finVertex.SetColor(color0Accessor[i]);
                 }
 
                 if (joints0Accessor == null || weights0Accessor == null) {
