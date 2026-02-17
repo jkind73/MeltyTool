@@ -94,14 +94,15 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
     return finModel;
   }
 
-  public static (IModel<ISkin<NormalUvVertexImpl>>, IBone) CreateModel(
+  public static (IModel<ISkin<Normal1Color1UvVertexImpl>>, IBone) CreateModel(
       (IFileBundle fileBundle, IReadOnlySet<IReadOnlyGenericFile> files)?
           modelMetadata = null) {
     var finModel =
-        new ModelImpl<NormalUvVertexImpl>((index, position)
-                                              => new NormalUvVertexImpl(
-                                                  index,
-                                                  position)) {
+        new ModelImpl<Normal1Color1UvVertexImpl>((index, position)
+                                                     => new
+                                                         Normal1Color1UvVertexImpl(
+                                                             index,
+                                                             position)) {
             FileBundle = modelMetadata?.fileBundle!,
             Files = modelMetadata?.files!
         };
@@ -118,7 +119,8 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   }
 
   public static void AddToModel(D3d d3d,
-                                IModel<ISkin<NormalUvVertexImpl>> finModel,
+                                IModel<ISkin<Normal1Color1UvVertexImpl>>
+                                    finModel,
                                 IReadOnlyBone bone,
                                 out IMesh finMesh,
                                 IMaterial? material = null) {
@@ -139,8 +141,19 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
         }
         case D3dCommandType.END: {
           switch (d3dPrimitiveType) {
+            case D3dPrimitiveType.TRIANGLE_FAN: {
+              finMesh.AddTriangleFan(finVertices.ToArray())
+                     .SetMaterial(material);
+              break;
+            }
             case D3dPrimitiveType.TRIANGLE_LIST: {
-              finMesh.AddTriangles(finVertices.ToArray()).SetMaterial(material);
+              finMesh.AddTriangles(finVertices.ToArray())
+                     .SetMaterial(material);
+              break;
+            }
+            case D3dPrimitiveType.TRIANGLE_STRIP: {
+              finMesh.AddTriangleStrip(finVertices.ToArray())
+                     .SetMaterial(material);
               break;
             }
             default: throw new NotImplementedException();
@@ -165,6 +178,17 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
 
           var finVertex = finSkin.AddVertex(new Vector3(d3dParams[..3]));
           finVertex.SetUv(new Vector2(d3dParams.Slice(3, 2)));
+          finVertex.SetBoneWeights(boneWeights);
+
+          finVertices.AddLast(finVertex);
+          break;
+        }
+        case D3dCommandType.VERTEX_TEXTURE_COLOR: {
+          var d3dParams = d3dCommand.Parameters.AsSpan();
+
+          var finVertex = finSkin.AddVertex(new Vector3(d3dParams[..3]));
+          finVertex.SetUv(new Vector2(d3dParams.Slice(3, 2)));
+          finVertex.SetColor(new Vector3(d3dParams.Slice(5, 3)) / 255f);
           finVertex.SetBoneWeights(boneWeights);
 
           finVertices.AddLast(finVertex);
