@@ -461,7 +461,6 @@ typedef struct (uint fSegmentOffset) {
     
     // These floats are the same values as the shorts in the mesh
     float maybeBounds[6] <bgcolor=COLOR_ORIENTATION>;
-    uint unk6;
     
     // First sets up the vertices via vertexDl, then renders primitiveDl.
     // Annoying thing is that the first MeshDefinition in a given meshSet uses the
@@ -472,6 +471,8 @@ typedef struct (uint fSegmentOffset) {
     
     uint primitiveDl[13] <bgcolor=COLOR_OFFSET>;    
     uint vertexDl[13] <bgcolor=COLOR_OFFSET>;
+
+    uint unk6;
 } MeshDefinition <bgcolor=COLOR_HEADER>;
 
 FSeek(0xc6c8);
