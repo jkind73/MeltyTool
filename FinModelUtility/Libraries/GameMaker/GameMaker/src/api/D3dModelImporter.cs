@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
 
+using fin.animation.keyframes;
+using fin.image;
 using fin.io;
 using fin.io.bundles;
 using fin.math.transform;
@@ -12,13 +14,22 @@ using fin.util.sets;
 
 using gm.schema.d3d;
 
+
 namespace gm.api;
 
 public sealed class D3dModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile ModFile { get; init; }
+
   public IReadOnlyTreeFile? TextureFile { get; init; }
+
+  public (IReadOnlyTreeFile gifFile, float frameRate)? AnimatedTextureFile {
+    get;
+    init;
+  }
+
   public IReadOnlyTreeFile MainFile => this.ModFile;
   public bool FlipNormals { get; init; }
+  public WrapMode TextureWrapMode { get; init; }
 }
 
 public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
@@ -30,9 +41,48 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
         = CreateModel((modelFileBundle, modFile.AsFileSet()));
 
     ITextureMaterial? material = null;
-    if (modelFileBundle.TextureFile is {} textureFile) {
-      (material, _) = finModel.MaterialManager.AddSimpleTextureMaterialFromFile(
-          textureFile);
+    if (modelFileBundle.TextureFile is { } textureFile) {
+      (material, var texture) =
+          finModel.MaterialManager.AddSimpleTextureMaterialFromFile(
+              textureFile);
+      texture.WrapModeU = texture.WrapModeV = modelFileBundle.TextureWrapMode;
+    } else if (modelFileBundle.AnimatedTextureFile is { } gifFileAndFrameRate) {
+      var (gifFile, frameRate) = gifFileAndFrameRate;
+
+      var frameImages = FinImage.FromGifFile(gifFile);
+      var name = gifFile.NameWithoutExtension.ToString();
+
+      var finMaterialManager = finModel.MaterialManager;
+      var frameTextures
+          = frameImages
+            .Select((frameImage, i) => {
+              var frameTexture = finMaterialManager.CreateTexture(
+                  frameImage.RemoveTopLeftBackgroundColor());
+              frameTexture.Name =
+                  frameImages.Length > 0 ? $"{name}_{i}" : name;
+              frameTexture.WrapModeU = frameTexture.WrapModeV =
+                  modelFileBundle.TextureWrapMode;
+              return frameTexture;
+            })
+            .ToArray();
+
+      var baseTexture = frameTextures[0];
+
+      material = finMaterialManager.AddTextureMaterial(baseTexture);
+      material.Name = "diffuse";
+
+      var animation = finModel.AnimationManager.AddAnimation();
+      animation.Name = name;
+      animation.FrameCount = frameImages.Length;
+      animation.FrameRate = frameRate;
+
+      var textureTracks = animation.AddTextureTracks(baseTexture);
+      var flipbookSwapKeyframes
+          = textureTracks.UseFlipbookSwapKeyframes(frameTextures.Length);
+      for (var f = 0; f < frameTextures.Length; ++f) {
+        flipbookSwapKeyframes.Add(
+            new Keyframe<IReadOnlyTexture?>(f, frameTextures[f]));
+      }
     }
 
     AddToModel(mod, finModel, finRootBone, out _, material);
@@ -47,11 +97,14 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   public static (IModel<ISkin<NormalUvVertexImpl>>, IBone) CreateModel(
       (IFileBundle fileBundle, IReadOnlySet<IReadOnlyGenericFile> files)?
           modelMetadata = null) {
-    var finModel = new ModelImpl<NormalUvVertexImpl>(
-        (index, position) => new NormalUvVertexImpl(index, position)) {
-        FileBundle = modelMetadata?.fileBundle!,
-        Files = modelMetadata?.files!
-    };
+    var finModel =
+        new ModelImpl<NormalUvVertexImpl>((index, position)
+                                              => new NormalUvVertexImpl(
+                                                  index,
+                                                  position)) {
+            FileBundle = modelMetadata?.fileBundle!,
+            Files = modelMetadata?.files!
+        };
     var finRootBone = CreateAdjustedRootBone(finModel);
     return (finModel, finRootBone);
   }
@@ -102,6 +155,16 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
           var finVertex = finSkin.AddVertex(new Vector3(d3dParams[..3]));
           finVertex.SetLocalNormal(-new Vector3(d3dParams.Slice(3, 3)));
           finVertex.SetUv(new Vector2(d3dParams.Slice(6, 2)));
+          finVertex.SetBoneWeights(boneWeights);
+
+          finVertices.AddLast(finVertex);
+          break;
+        }
+        case D3dCommandType.VERTEX_TEXTURE: {
+          var d3dParams = d3dCommand.Parameters.AsSpan();
+
+          var finVertex = finSkin.AddVertex(new Vector3(d3dParams[..3]));
+          finVertex.SetUv(new Vector2(d3dParams.Slice(3, 2)));
           finVertex.SetBoneWeights(boneWeights);
 
           finVertices.AddLast(finVertex);
