@@ -67,6 +67,7 @@ public sealed class GlStandardMaterialShader(
                                    diffuseColorVector?.A ?? 255) /
                        255;
 
-    this.diffuseColor_.SetAndMaybeMarkDirty(diffuseColor);
+    // TODO: Can we switch this to only be updated sometimes?
+    this.diffuseColor_.SetAndMarkDirty(diffuseColor);
   }
 }
