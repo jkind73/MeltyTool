@@ -238,6 +238,14 @@ public sealed class Normal1Color1UvVertexImpl
                              color.Value.W)
                          : null);
 
+  public void SetColor(Vector3? color)
+    => this.SetColor(color != null
+                         ? FinColor.FromRgbFloats(
+                             color.Value.X,
+                             color.Value.Y,
+                             color.Value.Z)
+                         : null);
+
   public void SetColor(IReadOnlyVector4? color)
     => this.SetColor(color != null
                          ? FinColor.FromRgbaFloats(
