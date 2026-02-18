@@ -14,8 +14,8 @@ public sealed partial class UnkSection5 : IBinaryDeserializable {
 
 [BinarySchema]
 public sealed partial class SubUnkSection5 : IBinaryDeserializable {
-  public uint UnkAddress { get; set; }
-  public uint ChosenPartId { get; set; }
+  public uint MeshDefinitionRamAddress { get; set; }
+  public int ChosenPartId { get; set; }
 
   [IntegerFormat(SchemaIntegerType.UINT32)]
   public bool IsEnabled { get; set; }

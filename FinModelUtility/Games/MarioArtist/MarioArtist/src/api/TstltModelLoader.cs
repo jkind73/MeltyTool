@@ -453,7 +453,9 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                        return (segment, meshDefinition, subUnkSection5,
                                chosenPart, unkSection5I, subUnkSection5I);
                      })
-                     .Where(t => t.subUnkSection5.IsEnabled)
+                     .Where(t => t.subUnkSection5 is {
+                         IsEnabled: true, MeshDefinitionRamAddress: not 0
+                     })
                      .Reverse();
             });
 
@@ -486,37 +488,46 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           chosenPart1Tuple);
     }
 
-    foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
-      var meshSetId = joint.MeshSetId;
-      if (chosenPart0TuplesByMeshSetId.TryGetList(
-              meshSetId,
-              out var chosenPart0Tuples)) {
-        // TODO: This only sometimes works
-        var chosenPart0TuplesInOrder =
-            jointIndex is not (int) JointIndex.TORSO
-                ? chosenPart0Tuples.AsEnumerable()
-                : chosenPart0Tuples.Reverse();
+    void AddAllChosenPart0sInPass_(int passId) {
+      foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
+        var meshSetId = joint.MeshSetId;
+        if (chosenPart0TuplesByMeshSetId.TryGetList(
+                meshSetId,
+                out var chosenPart0Tuples)) {
+          // TODO: This only sometimes works
+          var chosenPart0TuplesInOrder =
+              jointIndex is not (int) JointIndex.TORSO
+                  ? chosenPart0Tuples.AsEnumerable()
+                  : chosenPart0Tuples.Reverse();
 
-        var firstChosenPart0Tuple = chosenPart0TuplesInOrder.First();
-        foreach (var chosenPart0Tuple in chosenPart0TuplesInOrder) {
-          var isFirst = chosenPart0Tuple.unkSection5I ==
-                        firstChosenPart0Tuple.unkSection5I;
+          var firstChosenPart0Tuple = chosenPart0TuplesInOrder.First();
+          foreach (var chosenPart0Tuple in chosenPart0TuplesInOrder) {
+            var isFirst = chosenPart0Tuple.unkSection5I ==
+                          firstChosenPart0Tuple.unkSection5I;
 
-          var meshes = TryToAddChosenPart0Tuple_(
-              model,
-              skinChosenPart,
-              chosenPart0Tuple,
-              n64Hardware,
-              dlModelBuilder,
-              joint,
-              jointIndex,
-              isFirst,
-              bone.Parent!,
-              bone,
-              originalFlipByBone);
+            var meshes = AddChosenPart0MeshesForJoint(
+                passId,
+                model,
+                skinChosenPart,
+                chosenPart0Tuple,
+                n64Hardware,
+                dlModelBuilder,
+                joint,
+                jointIndex,
+                isFirst,
+                bone.Parent!,
+                bone,
+                originalFlipByBone);
+          }
         }
       }
+    }
 
+    AddAllChosenPart0sInPass_(0);
+    AddAllChosenPart0sInPass_(1);
+
+    foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
+      var meshSetId = joint.MeshSetId;
       if (chosenPart1TuplesByMeshSetId.TryGetList(
               meshSetId,
               out var chosenPart1Tuples)) {
@@ -560,7 +571,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     return model;
   }
 
-  private static IReadOnlyList<IMesh> TryToAddChosenPart0Tuple_(
+  public static IReadOnlyList<IMesh> AddChosenPart0MeshesForJoint(
+      int passId,
       IModel model,
       ChosenPart0 skinChosenPart,
       ChosenPart0Tuple chosenPart0Tuple,
@@ -575,8 +587,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     // Loosely based on logic from decomp at 0x803186d8
 
     var (segment, meshDefinition, unkSection5, chosenPart0, unkSection5I,
-            subUnkSection5I) =
-        chosenPart0Tuple;
+        subUnkSection5I) = chosenPart0Tuple;
 
     if (HARDCODED_MESH_SET_ID != -1 &&
         meshDefinition.MeshSetId != HARDCODED_MESH_SET_ID) {
@@ -585,116 +596,112 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     n64Hardware.Memory.SetSegment(0xF, segment);
 
-    // From decomp, at 0x801970ac and 0x
-    var patternIndexByIndex = new int[] {
-        0x0,
-        0x1,
-        0x3,
-        0x4,
-        0x5,
-        0x2,
-        0x6,
-        0x7,
-        0x8,
-        0x9,
-        0xa,
-        0xb,
-        0xc
-    };
-
-    var primitiveVertexDlTuples
-        = meshDefinition
-          .PrimitiveDisplayListSegmentedAddresses
-          .Zip(meshDefinition.VertexDisplayListSegmentedAddresses)
-          .Index()
-          .Select(t => (patternIndexByIndex[t.Index], t.Item));
-
     // From decomp, at 0x80116b6c
     var rsp = n64Hardware.Rsp;
     rsp.PrimColor = Color.FromArgb(0xd2, 0xff, 0xff, 0xff);
     rsp.PrimLodFraction = 1f * 0x7f / 0x100;
 
-    var addedDisplayList = false;
+    int[] patternIndices;
+    if (passId == 0) {
+      patternIndices = [0x0, 0x1, 0x3, 0x4, 0x5, 0x2, 0x6, 0x7, 0x8, 0x9];
+    } else {
+      patternIndices = [0xa, 0xb, 0xc];
+    }
+
     var meshes = new List<IMesh>();
-    foreach (var (patternIndex, (primitiveDlSegmentedAddress,
-                 vertexDlSegmentedAddress)) in primitiveVertexDlTuples) {
+    var previousPatternIndex = -1;
+    var previousChosenPartId = -1;
+
+    foreach (var patternIndex in patternIndices) {
+      var primitiveDlSegmentedAddress
+          = meshDefinition.PrimitiveDisplayListSegmentedAddresses[patternIndex];
+      var vertexDlSegmentedAddress
+          = meshDefinition.VertexDisplayListSegmentedAddresses[patternIndex];
+
       if (primitiveDlSegmentedAddress == 0) {
         continue;
       }
 
-      ChosenPart0Util.SetUpOtherModeLAndCombiner(
-          n64Hardware,
-          patternIndex,
-          0);
+      // TODO: Does an extra loop internally, why??
+      {
+        if (previousPatternIndex != patternIndex) {
+          previousPatternIndex = patternIndex;
+          ChosenPart0Util.SetUpOtherModeLAndCombiner(
+              n64Hardware,
+              patternIndex,
+              0);
+        }
 
-      ChosenPart0Util.SetUp(n64Hardware, chosenPart0, patternIndex);
-      if (chosenPart0.Id == 0) {
-        ChosenPart0Util.SetUpInvertedEnvironmentColorOrSomethingElse(
+        if (previousChosenPartId != chosenPart0.Id) {
+          previousChosenPartId = chosenPart0.Id;
+          ChosenPart0Util.SetUp(n64Hardware, chosenPart0, patternIndex);
+          if (chosenPart0.Id == 0) {
+            ChosenPart0Util.SetUpInvertedEnvironmentColorOrSomethingElse(
+                n64Hardware,
+                skinChosenPart.ChosenColor0);
+          }
+        }
+
+        // TODO: Sets culling here
+
+        var primitiveDlVertexMatrix
+            = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
+        var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
+            VertexSpace.RELATIVE_TO_BONE,
+            childBone);
+
+        // HACK: What a fucking nightmare. Why does being first impact this????
+        Matrix4x4 vertexMatrix;
+        IBoneWeights vertexDlBoneWeights;
+        if (!useParentBone) {
+          vertexMatrix = primitiveDlVertexMatrix;
+          vertexDlBoneWeights = primitiveDlBoneWeights;
+        } else if (!joint.isLeft ||
+                   jointIndex is not ((int) JointIndex.UPPER_ARM_1
+                                      or (int) JointIndex.UPPER_LEG_1)) {
+          vertexMatrix
+              = Matrix4x4.CreateScale(originalFlipByBone[parentBone]);
+          vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
+              VertexSpace.RELATIVE_TO_BONE,
+              parentBone);
+        } else {
+          // HACK: Flips shoulder/hip across the axis.
+          vertexMatrix = Matrix4x4.CreateScale(1, -1, 1);
+          vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
+              VertexSpace.RELATIVE_TO_BONE,
+              parentBone);
+        }
+
+        (uint, Matrix4x4?, IBoneWeights)[] displayLists
+            = vertexDlSegmentedAddress == 0
+                ? [
+                    (primitiveDlSegmentedAddress,
+                     primitiveDlVertexMatrix,
+                     primitiveDlBoneWeights)
+                ]
+                : [
+                    (vertexDlSegmentedAddress,
+                     vertexMatrix,
+                     vertexDlBoneWeights),
+                    (primitiveDlSegmentedAddress,
+                     primitiveDlVertexMatrix,
+                     primitiveDlBoneWeights)
+                ];
+
+        var mesh = AddDisplayLists_(
+            model,
+            segment,
             n64Hardware,
-            skinChosenPart.ChosenColor0);
+            dlModelBuilder,
+            $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}, patternIndex: {patternIndex})",
+            joint.isLeft,
+            displayLists);
+        if (mesh != null) {
+          meshes.Add(mesh);
+        }
+
+        dlModelBuilder.TransparentCutoff = .5f;
       }
-
-      // TODO: Remove this
-      n64Hardware.Rsp.CullingMode
-          = GetCullingModeForChosenPartId_(chosenPart0.Id);
-
-      var primitiveDlVertexMatrix
-          = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
-      var primitiveDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
-          VertexSpace.RELATIVE_TO_BONE,
-          childBone);
-
-      // HACK: What a fucking nightmare. Why does being first impact this????
-      Matrix4x4 vertexMatrix;
-      IBoneWeights vertexDlBoneWeights;
-      if (!useParentBone) {
-        vertexMatrix = primitiveDlVertexMatrix;
-        vertexDlBoneWeights = primitiveDlBoneWeights;
-      } else if (!joint.isLeft ||
-                 jointIndex is not ((int) JointIndex.UPPER_ARM_1
-                                    or (int) JointIndex.UPPER_LEG_1)) {
-        vertexMatrix = Matrix4x4.CreateScale(originalFlipByBone[parentBone]);
-        vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
-            VertexSpace.RELATIVE_TO_BONE,
-            parentBone);
-      } else {
-        // HACK: Flips shoulder/hip across the axis.
-        vertexMatrix = Matrix4x4.CreateScale(1, -1, 1);
-        vertexDlBoneWeights = model.Skin.GetOrCreateBoneWeights(
-            VertexSpace.RELATIVE_TO_BONE,
-            parentBone);
-      }
-
-      (uint, Matrix4x4?, IBoneWeights)[] displayLists
-          = vertexDlSegmentedAddress == 0
-              ? [
-                  (primitiveDlSegmentedAddress,
-                   primitiveDlVertexMatrix,
-                   primitiveDlBoneWeights)
-              ]
-              : [
-                  (vertexDlSegmentedAddress,
-                   vertexMatrix,
-                   vertexDlBoneWeights),
-                  (primitiveDlSegmentedAddress,
-                   primitiveDlVertexMatrix,
-                   primitiveDlBoneWeights)
-              ];
-
-      var mesh = AddDisplayLists_(
-          model,
-          segment,
-          n64Hardware,
-          dlModelBuilder,
-          $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}, patternIndex: {patternIndex})",
-          joint.isLeft,
-          displayLists);
-      if (mesh != null) {
-        meshes.Add(mesh);
-      }
-
-      ResetRspAndRdp_(n64Hardware);
-      dlModelBuilder.TransparentCutoff = .5f;
     }
 
     return meshes;

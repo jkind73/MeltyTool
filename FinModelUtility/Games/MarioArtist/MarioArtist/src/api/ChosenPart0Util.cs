@@ -49,26 +49,27 @@ internal class ChosenPart0Util {
           rsp.UvType = N64UvType.STANDARD;
           rsp.TexScaleXShort = rsp.TexScaleYShort = 0xffff;
 
-          rdp.CombinerCycleParams0 = new CombinerCycleParams {
-              ColorMuxA = GenericColorMux.G_CCMUX_0,
-              ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-              ColorMuxC = GenericColorMux.G_CCMUX_PRIMITIVE_ALPHA,
-              ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-          };
-          rdp.CombinerCycleParams1 = new CombinerCycleParams {
-              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-              ColorMuxB = GenericColorMux.G_CCMUX_0,
-              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-              ColorMuxD = GenericColorMux.G_CCMUX_0,
-              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-          };
+          rdp.SetCombinerCycleParams(
+              new CombinerCycleParams {
+                  ColorMuxA = GenericColorMux.G_CCMUX_0,
+                  ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+                  ColorMuxC = GenericColorMux.G_CCMUX_PRIMITIVE_ALPHA,
+                  ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+                  AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+              },
+              new CombinerCycleParams {
+                  ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+                  ColorMuxB = GenericColorMux.G_CCMUX_0,
+                  ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+                  ColorMuxD = GenericColorMux.G_CCMUX_0,
+                  AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                  AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+              });
         } else {
           SetUpTexture(n64Hardware, patternParams, patternIndex);
         }
@@ -77,7 +78,7 @@ internal class ChosenPart0Util {
   }
 
   public static void SetUpPartOfTexture(IN64Hardware n64Hardware,
-                                        uint chosenPartId,
+                                        int chosenPartId,
                                         int patternIndex) {
     // From decomp, at 0x801167b8
 
@@ -130,26 +131,27 @@ internal class ChosenPart0Util {
 
     if (patternIndex == 0x7) {
       rsp.UvType = N64UvType.STANDARD;
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_ENVIRONMENT,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_TEXEL0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_ENVIRONMENT,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_ENVIRONMENT,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_TEXEL0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_ENVIRONMENT,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
       rsp.EnvironmentColor = Color.FromArgb(0xf0, 0xf0, 0xf0, 0xff);
       tmem.SetImageSimple(
           patternParams.ImageSegmentedAddress,
@@ -177,26 +179,27 @@ internal class ChosenPart0Util {
     }
 
     if (patternMaterialType == PatternMaterialType.SPHERICAL) {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_1,
-          ColorMuxB = GenericColorMux.G_CCMUX_TEXEL1,
-          ColorMuxC = GenericColorMux.G_CCMUX_ENV_ALPHA,
-          ColorMuxD = GenericColorMux.G_CCMUX_TEXEL1,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_1,
+              ColorMuxB = GenericColorMux.G_CCMUX_TEXEL1,
+              ColorMuxC = GenericColorMux.G_CCMUX_ENV_ALPHA,
+              ColorMuxD = GenericColorMux.G_CCMUX_TEXEL1,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
       rsp.EnvironmentColor = Color.FromArgb(0x30, 0xff, 0xff, 0xff);
       // TODO: Does something weird with uls/ult/lrs/lrt, might need to copy this here?
       tmem.SetImageSimple(
@@ -219,48 +222,54 @@ internal class ChosenPart0Util {
 
       if (patternMaterialType is PatternMaterialType.MULTIPLY_1X1
                                  or PatternMaterialType.MULTIPLY_2X2) {
-        rdp.CombinerCycleParams0 = new CombinerCycleParams {
-            ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
-            ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-            ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
-            ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-        };
-        rdp.CombinerCycleParams1 = new CombinerCycleParams {
-            ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-            ColorMuxB = GenericColorMux.G_CCMUX_0,
-            ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-            ColorMuxD = GenericColorMux.G_CCMUX_0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-        };
-        rsp.EnvironmentColor = Color.FromArgb(0xff, 0xd7, 0xd7, 0xd7);
+        rdp.SetCombinerCycleParams(
+            new CombinerCycleParams {
+                ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
+                ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+                ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
+                ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+                AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+            },
+            new CombinerCycleParams {
+                ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+                ColorMuxB = GenericColorMux.G_CCMUX_0,
+                ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+                ColorMuxD = GenericColorMux.G_CCMUX_0,
+                AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+            });
+        rsp.EnvironmentColor = Color.FromArgb(0xff,
+                                              0xd7,
+                                              0xd7,
+                                              0xd7);
       } else {
-        rdp.CombinerCycleParams0 = new CombinerCycleParams {
-            ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
-            ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-            ColorMuxC = GenericColorMux.G_CCMUX_TEXEL0,
-            ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-        };
-        rdp.CombinerCycleParams1 = new CombinerCycleParams {
-            ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-            ColorMuxB = GenericColorMux.G_CCMUX_0,
-            ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-            ColorMuxD = GenericColorMux.G_CCMUX_0,
-            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-            AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-        };
+        rdp.SetCombinerCycleParams(
+            new CombinerCycleParams {
+                ColorMuxA = GenericColorMux.G_CCMUX_TEXEL1,
+                ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+                ColorMuxC = GenericColorMux.G_CCMUX_TEXEL0,
+                ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+                AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+            },
+            new CombinerCycleParams {
+                ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+                ColorMuxB = GenericColorMux.G_CCMUX_0,
+                ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+                ColorMuxD = GenericColorMux.G_CCMUX_0,
+                AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+                AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+            });
+
         rsp.EnvironmentColor = Color.FromArgb(0xff, 0xc8, 0xc8, 0xc8);
       }
 
@@ -294,111 +303,116 @@ internal class ChosenPart0Util {
         = rsp.TexScaleYShort = GetTexScaleShortFromCommand_(0xffff);
 
     if (patternIndex is 3 or 5 or 8 or 9) {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_0,
-          ColorMuxD = GenericColorMux.G_CCMUX_COMBINED,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_0,
+              ColorMuxD = GenericColorMux.G_CCMUX_COMBINED,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
     } else if (patternIndex is 0 or 6) {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_0,
-          ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-          ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
-          ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_0,
+              ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+              ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
+              ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
     } else if (patternIndex is 4) {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_ENVIRONMENT,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_TEXEL0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_ENVIRONMENT,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_ENVIRONMENT,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_TEXEL0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_ENVIRONMENT,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
       rsp.EnvironmentColor = Color.FromArgb(0xff, 0xa7, 0xa7, 0xa7);
     } else if (patternIndex is 0xb or 0xc) {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_0,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_0,
-          ColorMuxD = GenericColorMux.G_CCMUX_COMBINED,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_TEXEL0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_0,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_0,
+              ColorMuxD = GenericColorMux.G_CCMUX_COMBINED,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
     } else {
-      rdp.CombinerCycleParams0 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_0,
-          ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
-          ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
-          ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
-      };
-      rdp.CombinerCycleParams1 = new CombinerCycleParams {
-          ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
-          ColorMuxB = GenericColorMux.G_CCMUX_0,
-          ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
-          ColorMuxD = GenericColorMux.G_CCMUX_0,
-          AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
-          AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
-      };
+      rdp.SetCombinerCycleParams(
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_0,
+              ColorMuxB = GenericColorMux.G_CCMUX_ENVIRONMENT,
+              ColorMuxC = GenericColorMux.G_CCMUX_PRIM_LOD_FRAC,
+              ColorMuxD = GenericColorMux.G_CCMUX_TEXEL0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_TEXEL0,
+          },
+          new CombinerCycleParams {
+              ColorMuxA = GenericColorMux.G_CCMUX_COMBINED,
+              ColorMuxB = GenericColorMux.G_CCMUX_0,
+              ColorMuxC = GenericColorMux.G_CCMUX_SHADE,
+              ColorMuxD = GenericColorMux.G_CCMUX_0,
+              AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+              AlphaMuxD = GenericAlphaMux.G_ACMUX_COMBINED,
+          });
     }
 
     if (someValue == 0) {

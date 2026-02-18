@@ -23,7 +23,7 @@ public enum PatternMaterialType : uint {
 
 [BinarySchema]
 public sealed partial class ChosenPart0 : IBinaryDeserializable {
-  public uint Id { get; set; }
+  public int Id { get; set; }
   public uint Unk0 { get; set; }
 
   public ChosenColor ChosenColor0 { get; } = new();
