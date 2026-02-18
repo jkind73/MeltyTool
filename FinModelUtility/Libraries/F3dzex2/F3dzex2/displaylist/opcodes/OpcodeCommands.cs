@@ -274,15 +274,46 @@ public static class GeometryModeExtensions {
 
 public sealed class SetGeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToEnable { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "SetGeometryMode",
+        () => {
+          isb.AppendLine($"- enable: {this.FlagsToEnable}");
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class ClearGeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToDisable { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "ClearGeometryMode",
+        () => {
+          isb.AppendLine($"- disable: {this.FlagsToDisable}");
+        });
+    return isb.ToString();
+  }
 }
 
 public sealed class GeometryModeOpcodeCommand : IOpcodeCommand {
   public GeometryMode FlagsToDisable { get; set; }
   public GeometryMode FlagsToEnable { get; set; }
+
+  public override string ToString() {
+    var isb = new IndentedStringBuilder();
+    isb.AppendBlock(
+        "GeometryMode",
+        () => {
+          isb.AppendLine($"- disable: {this.FlagsToEnable}");
+          isb.AppendLine($"- enable: {this.FlagsToDisable}");
+        });
+    return isb.ToString();
+  }
 }
 
 public enum F3dWrapMode : byte {
