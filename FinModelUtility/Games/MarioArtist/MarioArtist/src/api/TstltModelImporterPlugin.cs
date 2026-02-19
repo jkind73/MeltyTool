@@ -13,8 +13,8 @@ public sealed class TstltModelImporterPlugin : IModelImporterPlugin {
     ["N64"];
 
   public IReadOnlyList<string> KnownGames { get; } = [
-        "Mario Artist: Talent Studio"
-    ];
+      "Mario Artist: Talent Studio"
+  ];
 
 
   public IReadOnlyList<string> MainFileExtensions { get; } = [".tstlt"];
@@ -22,12 +22,12 @@ public sealed class TstltModelImporterPlugin : IModelImporterPlugin {
 
   public IModel Import(IEnumerable<IReadOnlyTreeFile> files,
                        float frameRate = 30) {
-      var filesArray = files.ToArray();
-      var tstltFiles = filesArray.WithFileType(".tstlt").ToArray();
+    var filesArray = files.ToArray();
+    var tstltFiles = filesArray.WithFileType(".tstlt").ToArray();
 
-      var tstltBundle = new TstltModelFileBundle(tstltFiles[0]);
+    var tstltBundle = new TstltModelFileBundle(tstltFiles[0]);
 
-      var tstltImporter = new TstltModelLoader();
-      return tstltImporter.Import(tstltBundle);
-    }
+    var tstltImporter = new TstltModelLoader();
+    return tstltImporter.Import(tstltBundle);
+  }
 }
