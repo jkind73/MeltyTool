@@ -160,9 +160,7 @@ public static class ChosenPart0Util {
           32,
           32,
           F3dWrapMode.CLAMP,
-          F3dWrapMode.CLAMP,
-          // TODO: Pretty sure this is right...???
-          tileDescriptorIndex: 1);
+          F3dWrapMode.CLAMP);
       return;
     }
 

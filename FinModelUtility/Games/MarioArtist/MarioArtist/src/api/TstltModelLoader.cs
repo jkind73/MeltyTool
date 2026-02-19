@@ -713,8 +713,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
 
     var meshes = new List<IMesh>();
-    var previousPatternIndex = -1;
-    var previousChosenPartId = -1;
 
     foreach (var patternIndex in patternIndices) {
       var primitiveDlSegmentedAddress
@@ -728,22 +726,19 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
       // TODO: Does an extra loop internally, why??
       {
-        if (previousPatternIndex != patternIndex) {
-          previousPatternIndex = patternIndex;
-          ChosenPart0Util.SetUpOtherModeLAndCombiner(
-              n64Hardware,
-              patternIndex,
-              0);
-        }
+        // TODO: Does some kind of check for these to make sure it doesn't
+        // add redundant DLs. Are these needed??
 
-        if (previousChosenPartId != chosenPart0.Id) {
-          previousChosenPartId = chosenPart0.Id;
-          ChosenPart0Util.SetUp(n64Hardware, chosenPart0, patternIndex);
-          if (chosenPart0.Id == 0) {
-            ChosenPart0Util.SetUpInvertedEnvironmentColorOrSomethingElse(
-                n64Hardware,
-                skinChosenPart.ChosenColor0);
-          }
+        ChosenPart0Util.SetUpOtherModeLAndCombiner(
+            n64Hardware,
+            patternIndex,
+            0);
+
+        ChosenPart0Util.SetUp(n64Hardware, chosenPart0, patternIndex);
+        if (chosenPart0.Id == 0) {
+          ChosenPart0Util.SetUpInvertedEnvironmentColorOrSomethingElse(
+              n64Hardware,
+              skinChosenPart.ChosenColor0);
         }
 
         // TODO: Does actually set culling here internally, but we should use accurate logic

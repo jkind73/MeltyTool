@@ -255,7 +255,7 @@ public static class JankTstltUtil {
       return;
     }
     
-    var isMark = patternI == 2;
+    var isMark = patternI == 3;
     SetCombiner(n64Hardware,
                  withTexture,
                  isMark,
