@@ -19,7 +19,7 @@ namespace marioartist.api;
 ///   really nothing else to be done. Just have to suck it up and include their
 ///   same bullshit here too.
 /// </summary>
-internal class ChosenPart0Util {
+public static class ChosenPart0Util {
   public static void SetUp(
       IN64Hardware n64Hardware,
       ChosenPart0 chosenPart0,

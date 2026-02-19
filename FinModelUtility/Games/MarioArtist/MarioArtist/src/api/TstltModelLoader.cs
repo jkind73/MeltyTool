@@ -37,11 +37,12 @@ using schema.binary.attributes;
 
 namespace marioartist.api;
 
+using BoneTuple = (IReadOnlyBone bone, Joint joint, int jointIndex);
 using ChosenPart0Tuple =
     (Segment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5,
     ChosenPart0 chosenPart, int unkSection5I, int subUnkSection5I);
 using ChosenPart1Tuple
-    = (Segment segment, ChosenPart1 chosenPart, IBone bone, bool isHead);
+    = (Segment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead);
 
 public record TstltModelFileBundle(IReadOnlyTreeFile MainFile)
     : IModelFileBundle;
@@ -93,6 +94,8 @@ public enum JointIndex {
 public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
   public const int HARDCODED_MESH_SET_ID = -1;
   public const bool INCLUDE_FACE = true;
+
+  public const bool USE_JANK = true;
 
   public IModel Import(TstltModelFileBundle fileBundle)
     => Import(fileBundle, out _);
@@ -279,7 +282,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       parentChildren.Add((joint, i));
     }
 
-    var finBonesAndJoints = new (IBone, Joint, int)[joints.Length];
+    var finBonesAndJoints = new BoneTuple[joints.Length];
     var originalFlipByBone = new Dictionary<IReadOnlyBone, Vector3>();
     var jointQueue =
         new FinTuple3Queue<(Joint joint, int index), Matrix4x4, IBone>(
@@ -315,7 +318,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     if (INCLUDE_FACE) {
       n64Memory.SetSegment(0xF, headSegment);
 
-      TstltUtil.SetCombiner(n64Hardware, true, false);
+      JankTstltUtil.SetCombiner(n64Hardware, true, false);
 
       br.Position = 0xeae0;
       var nosePosition = br.ReadUInt32s(2);
@@ -487,90 +490,26 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           chosenPart1Tuple);
     }
 
-    void AddAllChosenPart0sInPass_(bool isAlphaPass) {
-      foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
-        // TODO: Clears geometry mode
-        if (isAlphaPass) {
-          rdp.ZCompare = true;
-          rdp.ZUpdate = false;
-          rdp.ZMode = ZMode.ZMODE_XLU;
-          rdp.MultiplyCoverageWithAlpha = false;
-          rdp.UseCoverageForAlpha = false;
-          rdp.ForceBlending = true;
-          rdp.P0 = BlenderPm.G_BL_CLR_IN;
-          rdp.A0 = BlenderA.G_BL_0;
-          rdp.M0 = BlenderPm.G_BL_CLR_IN;
-          rdp.B0 = BlenderB.G_BL_1;
-          rdp.P1 = BlenderPm.G_BL_CLR_IN;
-          rdp.A1 = BlenderA.G_BL_A_IN;
-          rdp.M1 = BlenderPm.G_BL_CLR_MEM;
-          rdp.B1 = BlenderB.G_BL_1MA;
-        } else {
-          rdp.ZCompare = true;
-          rdp.ZUpdate = true;
-          rdp.ZMode = ZMode.ZMODE_OPA;
-          rdp.MultiplyCoverageWithAlpha = false;
-          rdp.UseCoverageForAlpha = true;
-          rdp.ForceBlending = false;
-          rdp.P0 = BlenderPm.G_BL_CLR_IN;
-          rdp.A0 = BlenderA.G_BL_0;
-          rdp.M0 = BlenderPm.G_BL_CLR_IN;
-          rdp.B0 = BlenderB.G_BL_1;
-          rdp.P1 = BlenderPm.G_BL_CLR_IN;
-          rdp.A1 = BlenderA.G_BL_A_IN;
-          rdp.M1 = BlenderPm.G_BL_CLR_MEM;
-          rdp.B1 = BlenderB.G_BL_A_MEM;
-        }
-
-        FindCorrectJointAndClearStateAndAddChosenPart0Meshes(
-            bone,
-            joint,
-            jointIndex,
-            isAlphaPass);
-      }
-    }
-
-    void FindCorrectJointAndClearStateAndAddChosenPart0Meshes(
-        IReadOnlyBone bone,
-        Joint joint,
-        int jointIndex,
-        bool isAlphaPass) {
-      var meshSetId = joint.MeshSetId;
-      if (chosenPart0TuplesByMeshSetId.TryGetList(
-              meshSetId,
-              out var chosenPart0Tuples)) {
-        // TODO: This only sometimes works
-        var chosenPart0TuplesInOrder =
-            jointIndex is not (int) JointIndex.TORSO
-                ? chosenPart0Tuples.AsEnumerable()
-                : chosenPart0Tuples.Reverse();
-
-        var firstChosenPart0Tuple = chosenPart0TuplesInOrder.First();
-        foreach (var chosenPart0Tuple in chosenPart0TuplesInOrder) {
-          var isFirst = chosenPart0Tuple.unkSection5I ==
-                        firstChosenPart0Tuple.unkSection5I;
-
-          var meshes = AddChosenPart0MeshesForJoint(
-              isAlphaPass,
-              model,
-              skinChosenPart,
-              chosenPart0Tuple,
-              n64Hardware,
-              dlModelBuilder,
-              joint,
-              jointIndex,
-              isFirst,
-              bone.Parent!,
-              bone,
-              originalFlipByBone);
-        }
-      }
-    }
-
     // TODO: Add opaque ChosenPart1s here
-    AddAllChosenPart0sInPass_(false);
+    AddAllChosenPart0sInPass(
+        false,
+        model,
+        n64Hardware,
+        dlModelBuilder,
+        finBonesAndJoints,
+        skinChosenPart,
+        chosenPart0TuplesByMeshSetId,
+        originalFlipByBone);
     // TODO: Add transparent ChosenPart1s here
-    AddAllChosenPart0sInPass_(true);
+    AddAllChosenPart0sInPass(
+        true,
+        model,
+        n64Hardware,
+        dlModelBuilder,
+        finBonesAndJoints,
+        skinChosenPart,
+        chosenPart0TuplesByMeshSetId,
+        originalFlipByBone);
 
     foreach (var (bone, joint, jointIndex) in finBonesAndJoints) {
       var meshSetId = joint.MeshSetId;
@@ -617,18 +556,112 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     return model;
   }
 
+  public static void AddAllChosenPart0sInPass(
+      bool isAlphaPass,
+      IModel model,
+      IN64Hardware n64Hardware,
+      DlModelBuilder dlModelBuilder,
+      BoneTuple[] finBonesAndJoints,
+      ChosenPart0 skinChosenPart,
+      IReadOnlyListDictionary<uint, ChosenPart0Tuple> chosenPart0TuplesByMeshSetId,
+      IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
+    var rdp = n64Hardware.Rdp;
+
+    foreach (var boneTuple in finBonesAndJoints) {
+      // TODO: Clears geometry mode
+      if (isAlphaPass) {
+        rdp.ZCompare = true;
+        rdp.ZUpdate = false;
+        rdp.ZMode = ZMode.ZMODE_XLU;
+        rdp.MultiplyCoverageWithAlpha = false;
+        rdp.UseCoverageForAlpha = false;
+        rdp.ForceBlending = true;
+        rdp.P0 = BlenderPm.G_BL_CLR_IN;
+        rdp.A0 = BlenderA.G_BL_0;
+        rdp.M0 = BlenderPm.G_BL_CLR_IN;
+        rdp.B0 = BlenderB.G_BL_1;
+        rdp.P1 = BlenderPm.G_BL_CLR_IN;
+        rdp.A1 = BlenderA.G_BL_A_IN;
+        rdp.M1 = BlenderPm.G_BL_CLR_MEM;
+        rdp.B1 = BlenderB.G_BL_1MA;
+      } else {
+        rdp.ZCompare = true;
+        rdp.ZUpdate = true;
+        rdp.ZMode = ZMode.ZMODE_OPA;
+        rdp.MultiplyCoverageWithAlpha = false;
+        rdp.UseCoverageForAlpha = true;
+        rdp.ForceBlending = false;
+        rdp.P0 = BlenderPm.G_BL_CLR_IN;
+        rdp.A0 = BlenderA.G_BL_0;
+        rdp.M0 = BlenderPm.G_BL_CLR_IN;
+        rdp.B0 = BlenderB.G_BL_1;
+        rdp.P1 = BlenderPm.G_BL_CLR_IN;
+        rdp.A1 = BlenderA.G_BL_A_IN;
+        rdp.M1 = BlenderPm.G_BL_CLR_MEM;
+        rdp.B1 = BlenderB.G_BL_A_MEM;
+      }
+
+      FindCorrectJointAndClearStateAndAddChosenPart0Meshes(
+          isAlphaPass,
+          model,
+          n64Hardware,
+          dlModelBuilder,
+          boneTuple,
+          skinChosenPart,
+          chosenPart0TuplesByMeshSetId,
+          originalFlipByBone);
+    }
+  }
+
+  public static void FindCorrectJointAndClearStateAndAddChosenPart0Meshes(
+      bool isAlphaPass,
+      IModel model,
+      IN64Hardware n64Hardware,
+      DlModelBuilder dlModelBuilder,
+      BoneTuple boneTuple,
+      ChosenPart0 skinChosenPart,
+      IReadOnlyListDictionary<uint, ChosenPart0Tuple> chosenPart0TuplesByMeshSetId,
+      IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
+    var (_, joint, jointIndex) = boneTuple;
+
+    var meshSetId = joint.MeshSetId;
+    if (chosenPart0TuplesByMeshSetId.TryGetList(
+            meshSetId,
+            out var chosenPart0Tuples)) {
+      // TODO: This only sometimes works
+      var chosenPart0TuplesInOrder =
+          jointIndex is not (int) JointIndex.TORSO
+              ? chosenPart0Tuples.AsEnumerable()
+              : chosenPart0Tuples.Reverse();
+
+      var firstChosenPart0Tuple = chosenPart0TuplesInOrder.First();
+      foreach (var chosenPart0Tuple in chosenPart0TuplesInOrder) {
+        var isFirst = chosenPart0Tuple.unkSection5I ==
+                      firstChosenPart0Tuple.unkSection5I;
+
+        var meshes = AddChosenPart0MeshesForJoint(
+            isAlphaPass,
+            model,
+            n64Hardware,
+            dlModelBuilder,
+            chosenPart0Tuple,
+            boneTuple,
+            isFirst,
+            skinChosenPart,
+            originalFlipByBone);
+      }
+    }
+  }
+
   public static IReadOnlyList<IMesh> AddChosenPart0MeshesForJoint(
       bool isAlphaPass,
       IModel model,
-      ChosenPart0 skinChosenPart,
-      ChosenPart0Tuple chosenPart0Tuple,
-      N64Hardware<N64Memory> n64Hardware,
+      IN64Hardware n64Hardware,
       DlModelBuilder dlModelBuilder,
-      Joint joint,
-      int jointIndex,
+      ChosenPart0Tuple chosenPart0Tuple,
+      BoneTuple boneTuple,
       bool useParentBone,
-      IReadOnlyBone parentBone,
-      IReadOnlyBone childBone,
+      ChosenPart0 skinChosenPart,
       IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
     // Loosely based on logic from decomp at 0x803186d8
 
@@ -713,7 +746,14 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
           }
         }
 
-        // TODO: Sets culling here
+        // TODO: Does actually set culling here internally, but we should use accurate logic
+        if (USE_JANK) {
+          n64Hardware.Rsp.CullingMode
+              = JankTstltUtil.GetCullingModeForChosenPartId(chosenPart0.Id);
+        }
+
+        var (childBone, joint, jointIndex) = boneTuple;
+        var parentBone = childBone.Parent!;
 
         var primitiveDlVertexMatrix
             = Matrix4x4.CreateScale(originalFlipByBone[childBone]);
@@ -784,7 +824,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       N64Hardware<N64Memory> n64Hardware,
       DlModelBuilder dlModelBuilder,
       Joint joint,
-      IBone bone,
+      IReadOnlyBone bone,
       Rgba32 skinColor) {
     var (segment, chosenPart1, _, isHead) = chosenPart1Tuple;
 
@@ -799,16 +839,16 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     var dlIndex = 3;
     var dlCount = 2;
 
-    TstltUtil.ResetRspAndRdp(n64Hardware);
+    JankTstltUtil.ResetRspAndRdp(n64Hardware);
 
     n64Hardware.Rsp.CullingMode
-        = TstltUtil.GetCullingModeForMeshSetId(joint.MeshSetId);
+        = JankTstltUtil.GetCullingModeForMeshSetId(joint.MeshSetId);
 
     switch (isHead, chosenPart1Tuple.chosenPart.MeshSetId) {
       // Ear
       case (true, 6): {
         // HACK: Hardcodes ear color to skin color.
-        TstltUtil.SetCombiner(
+        JankTstltUtil.SetCombiner(
             n64Hardware,
             true,
             false,
@@ -824,7 +864,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       // Beard
       case (true, 7): {
         // HACK: Hardcodes pattern 7.
-        TstltUtil.SetCombiner(
+        JankTstltUtil.SetCombiner(
             n64Hardware,
             true,
             false,
@@ -860,7 +900,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                                => (dlSegmentedAddress, (Matrix4x4?) null,
                                    boneWeights)));
 
-    TstltUtil.ResetRspAndRdp(n64Hardware);
+    JankTstltUtil.ResetRspAndRdp(n64Hardware);
 
     dlModelBuilder.TransparentCutoff = .5f;
   }
