@@ -23,6 +23,7 @@ using fin.model.io.importers;
 using fin.model.util;
 using fin.schema.color;
 using fin.schema.vector;
+using fin.util.enumerables;
 using fin.util.linq;
 using fin.util.sets;
 
@@ -42,7 +43,8 @@ using ChosenPart0Tuple =
     (Segment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5,
     ChosenPart0 chosenPart, int unkSection5I, int subUnkSection5I);
 using ChosenPart1Tuple
-    = (Segment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead);
+    = (Segment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead
+    );
 
 public record TstltModelFileBundle(IReadOnlyTreeFile MainFile)
     : IModelFileBundle;
@@ -563,7 +565,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       DlModelBuilder dlModelBuilder,
       BoneTuple[] finBonesAndJoints,
       ChosenPart0 skinChosenPart,
-      IReadOnlyListDictionary<uint, ChosenPart0Tuple> chosenPart0TuplesByMeshSetId,
+      IReadOnlyListDictionary<uint, ChosenPart0Tuple>
+          chosenPart0TuplesByMeshSetId,
       IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
     var rdp = n64Hardware.Rdp;
 
@@ -620,7 +623,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
       DlModelBuilder dlModelBuilder,
       BoneTuple boneTuple,
       ChosenPart0 skinChosenPart,
-      IReadOnlyListDictionary<uint, ChosenPart0Tuple> chosenPart0TuplesByMeshSetId,
+      IReadOnlyListDictionary<uint, ChosenPart0Tuple>
+          chosenPart0TuplesByMeshSetId,
       IReadOnlyDictionary<IReadOnlyBone, Vector3> originalFlipByBone) {
     var (_, joint, jointIndex) = boneTuple;
 
@@ -639,7 +643,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
         var isFirst = chosenPart0Tuple.unkSection5I ==
                       firstChosenPart0Tuple.unkSection5I;
 
-        var meshes = AddChosenPart0MeshesForJoint(
+        AddChosenPart0MeshesForJoint(
             isAlphaPass,
             model,
             n64Hardware,
@@ -653,7 +657,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     }
   }
 
-  public static IReadOnlyList<IMesh> AddChosenPart0MeshesForJoint(
+  public static void AddChosenPart0MeshesForJoint(
       bool isAlphaPass,
       IModel model,
       IN64Hardware n64Hardware,
@@ -670,7 +674,7 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
     if (HARDCODED_MESH_SET_ID != -1 &&
         meshDefinition.MeshSetId != HARDCODED_MESH_SET_ID) {
-      return [];
+      return;
     }
 
     // HACK: Not really sure how this works in-game, but this is necessary to
@@ -711,8 +715,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
     } else {
       patternIndices = [0x0, 0x1, 0x3, 0x4, 0x5, 0x2, 0x6, 0x7, 0x8, 0x9];
     }
-
-    var meshes = new List<IMesh>();
 
     foreach (var patternIndex in patternIndices) {
       var primitiveDlSegmentedAddress
@@ -802,15 +804,31 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}, patternIndex: {patternIndex})",
             joint.isLeft,
             displayLists);
-        if (mesh != null) {
-          meshes.Add(mesh);
+
+        // HACK: These cases need textures to repeat, but for some reason
+        // they're loaded as clamp in the primitive DL.
+        var needRepeat
+            = mesh != null &&
+              (
+                  // No idea what this means. The suit the Steamed Ham
+                  // character wears needs to repeat though and has this set.
+                  // It is almost certainly a stupid choice to use this as a
+                  // discriminator for this.
+                  chosenPart0.Unk0 == 1 ||
+                  // Hair
+                  (chosenPart0.Id == 2 && patternIndex == 1));
+        if (needRepeat) {
+          foreach (var texture in mesh!.Primitives.Select(p => p.Material)
+                                       .WhereNonnull()
+                                       .SelectMany(m => m.Textures)
+                                       .Select(t => (ITexture) t)) {
+            texture.WrapModeU = texture.WrapModeV = WrapMode.REPEAT;
+          }
         }
 
         dlModelBuilder.TransparentCutoff = .5f;
       }
     }
-
-    return meshes;
   }
 
   private static void TryToAddChosenPart1Tuple_(
