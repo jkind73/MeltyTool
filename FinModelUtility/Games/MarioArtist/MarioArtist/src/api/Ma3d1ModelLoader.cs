@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 
+using fin.image.util;
 using fin.io;
 using fin.model;
 using fin.model.impl;
@@ -32,6 +33,9 @@ public sealed class Ma3d1ModelLoader : IModelImporter<Ma3d1ModelFileBundle> {
       var (finMaterial, finTexture)
           = finMaterialManager.AddSimpleTextureMaterialFromImage(
               ma3d1Mesh.Texture.ToImage());
+      if (finTexture.TransparencyType != TransparencyType.OPAQUE) {
+        finMaterial.CullingMode = CullingMode.SHOW_BOTH;
+      }
 
       finTexture.ThreePointFiltering = true;
 
