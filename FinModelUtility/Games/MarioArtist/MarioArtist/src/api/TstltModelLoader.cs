@@ -99,6 +99,8 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
   public const bool USE_JANK = true;
 
+  public const bool USE_GRANULAR_MESHES = false;
+
   public IModel Import(TstltModelFileBundle fileBundle)
     => Import(fileBundle, out _);
 
@@ -316,8 +318,12 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
 
 
     // Adds face
-    var faceMeshes = new List<IMesh>();
     if (INCLUDE_FACE) {
+      var faceMeshes = new List<IMesh>();
+      if (!USE_GRANULAR_MESHES) {
+        faceMeshes.Add(dlModelBuilder.StartNewMesh("face"));
+      }
+
       n64Memory.SetSegment(0xF, headSegment);
 
       JankTstltUtil.SetCombiner(n64Hardware, true, false);
@@ -344,10 +350,10 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                                 F3dWrapMode.CLAMP);
 
         var faceDlSegmentedAddress = faceDlSegmentedAddresses[i];
-        var faceMesh =
-            dlModelBuilder.StartNewMesh(
-                $"face {i}/3: {faceDlSegmentedAddress.ToHexString()}");
-        faceMeshes.Add(faceMesh);
+        if (USE_GRANULAR_MESHES) {
+          faceMeshes.Add(dlModelBuilder.StartNewMesh(
+                             $"face {i}/3: {faceDlSegmentedAddress.ToHexString()}"));
+        }
 
         dlModelBuilder.AddDl(new DisplayListReader().ReadDisplayList(
                                  n64Hardware.Memory,
@@ -371,10 +377,10 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             continue;
           }
 
-          var headMesh =
-              dlModelBuilder.StartNewMesh(
-                  $"head {i}/2: {headDlSegmentedAddress.ToHexString()}");
-          faceMeshes.Add(headMesh);
+          if (USE_GRANULAR_MESHES) {
+            faceMeshes.Add(dlModelBuilder.StartNewMesh(
+                               $"head {i}/2: {headDlSegmentedAddress.ToHexString()}"));
+          }
 
           dlModelBuilder.AddDl(new DisplayListReader().ReadDisplayList(
                                    n64Hardware.Memory,
@@ -408,10 +414,11 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
                         F3dWrapMode.CLAMP,
                         F3dWrapMode.CLAMP);
 
-      var noseMesh =
-          dlModelBuilder.StartNewMesh(
-              $"nose: {noseDlSegmentedAddress.ToHexString()}");
-      faceMeshes.Add(noseMesh);
+      if (USE_GRANULAR_MESHES) {
+        faceMeshes.Add(dlModelBuilder.StartNewMesh(
+                           $"nose: {noseDlSegmentedAddress.ToHexString()}"));
+      }
+
       dlModelBuilder.AddDl(new DisplayListReader().ReadDisplayList(
                                n64Hardware.Memory,
                                new F3dzex2OpcodeParser(),
