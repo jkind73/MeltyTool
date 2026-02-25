@@ -240,7 +240,7 @@ void main() {
 
   vec3 colorComponent = texture_3point(texture0, uv0).rgb*mergedLightDiffuseColor.rgb;
 
-  float alphaComponent = 1.0;
+  float alphaComponent = texture_3point(texture0, uv0).a;
 
   fragColor = vec4(colorComponent, 1);
 }

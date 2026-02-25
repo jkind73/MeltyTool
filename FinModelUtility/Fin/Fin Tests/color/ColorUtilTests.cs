@@ -8,12 +8,12 @@ public sealed class ColorUtilTests {
   [Test]
   [TestCase(ushort.MinValue, 0, 0, 0)]
   [TestCase((ushort) 128, 0, 16, 0)]
-  [TestCase((ushort) 255, 0, 28, 248)]
-  [TestCase((ushort) 1000, 0, 124, 64)]
-  [TestCase((ushort) 16383, 56, 252, 248)]
-  [TestCase((ushort) 32767, 120, 252, 248)]
-  [TestCase((ushort) 49151, 184, 252, 248)]
-  [TestCase(ushort.MaxValue, 248, 252, 248)]
+  [TestCase((ushort) 255, 0, 28, 255)]
+  [TestCase((ushort) 1000, 0, 124, 66)]
+  [TestCase((ushort) 16383, 57, 252, 255)]
+  [TestCase((ushort) 32767, 123, 252, 255)]
+  [TestCase((ushort) 49151, 189, 252, 255)]
+  [TestCase(ushort.MaxValue, 255, 252, 255)]
   public void TestRgb565(ushort value,
                          byte expectedR,
                          byte expectedG,
@@ -35,10 +35,10 @@ public sealed class ColorUtilTests {
   [TestCase((ushort) 128, 0, 136, 0, 0)]
   [TestCase((ushort) 255, 0, 255, 255, 0)]
   [TestCase((ushort) 1000, 51, 238, 136, 0)]
-  [TestCase((ushort) 16383, 255, 255, 255, 95)]
-  [TestCase((ushort) 32767, 255, 255, 255, 223)]
-  [TestCase((ushort) 49151, 119, 247, 247, 255)]
-  [TestCase(ushort.MaxValue, 247, 247, 247, 255)]
+  [TestCase((ushort) 16383, 255, 255, 255, 109)]
+  [TestCase((ushort) 32767, 255, 255, 255, 255)]
+  [TestCase((ushort) 49151, 123, 255, 255, 255)]
+  [TestCase(ushort.MaxValue, 255, 255, 255, 255)]
   public void TestRgb5A3(ushort value,
                          byte expectedR,
                          byte expectedG,
@@ -59,13 +59,13 @@ public sealed class ColorUtilTests {
 
   [Test]
   [TestCase(ushort.MinValue, 0, 0, 0, 0)]
-  [TestCase((ushort) 128, 0, 31, 0, 0)]
-  [TestCase((ushort) 255, 0, 55, 247, 0)]
-  [TestCase((ushort) 1000, 0, 247, 63, 0)]
-  [TestCase((ushort) 16383, 119, 247, 247, 0)]
-  [TestCase((ushort) 32767, 247, 247, 247, 0)]
-  [TestCase((ushort) 49151, 119, 247, 247, 255)]
-  [TestCase(ushort.MaxValue, 247, 247, 247, 255)]
+  [TestCase((ushort) 128, 0, 33, 0, 0)]
+  [TestCase((ushort) 255, 0, 57, 255, 0)]
+  [TestCase((ushort) 1000, 0, 255, 66, 0)]
+  [TestCase((ushort) 16383, 123, 255, 255, 0)]
+  [TestCase((ushort) 32767, 255, 255, 255, 0)]
+  [TestCase((ushort) 49151, 123, 255, 255, 255)]
+  [TestCase(ushort.MaxValue, 255, 255, 255, 255)]
   public void TestRgb5A1(ushort value,
                          byte expectedR,
                          byte expectedG,
