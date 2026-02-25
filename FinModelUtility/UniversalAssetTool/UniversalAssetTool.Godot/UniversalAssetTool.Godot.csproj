@@ -8,6 +8,10 @@
   <ItemGroup>
     <PackageReference Include="GodotSharp" Version="4.4.1" />
     <PackageReference Include="GodotSharpEditor" Version="4.4.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="4.11.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

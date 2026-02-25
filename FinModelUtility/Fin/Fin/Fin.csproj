@@ -26,14 +26,14 @@
     <PackageReference Include="FastBitmapLib" Version="2.1.0" />
     <PackageReference Include="GenerateReadOnly" Version="0.0.2" />
     <PackageReference Include="MeltySynth" Version="2.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="9.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.13.0">
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.3" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="5.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NaturalSort.Extension" Version="4.3.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NaturalSort.Extension" Version="4.4.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="Nito.Disposables" Version="2.5.0" />
     <PackageReference Include="NoAlloq" Version="0.2.0" />
     <PackageReference Include="NVorbis" Version="0.10.5" />
