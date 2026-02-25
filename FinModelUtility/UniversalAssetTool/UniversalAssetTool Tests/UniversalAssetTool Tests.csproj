@@ -11,12 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="22.0.15" />
+    <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="22.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fin\Fin\Fin.csproj" />
     <ProjectReference Include="..\UniversalAssetTool\UniversalAssetTool.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
   </ItemGroup>
 
 </Project>

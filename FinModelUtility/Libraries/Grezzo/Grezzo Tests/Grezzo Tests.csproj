@@ -19,4 +19,8 @@
     <Folder Include="goldens\shpa\luigis_mansion_3d\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

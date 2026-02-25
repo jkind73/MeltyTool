@@ -10,4 +10,8 @@
   <ItemGroup>
     <ProjectReference Include="..\F3dzex2\F3dzex2.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
+  </ItemGroup>
 </Project>

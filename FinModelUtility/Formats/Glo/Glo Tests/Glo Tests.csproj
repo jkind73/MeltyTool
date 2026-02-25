@@ -26,4 +26,8 @@
     <Folder Include="goldens\joff\output\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>

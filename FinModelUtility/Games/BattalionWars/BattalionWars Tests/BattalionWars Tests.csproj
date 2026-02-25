@@ -11,4 +11,8 @@
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
     <ProjectReference Include="..\BattalionWars\BattalionWars.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
+  </ItemGroup>
 </Project>

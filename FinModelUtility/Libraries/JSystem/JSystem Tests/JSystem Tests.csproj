@@ -19,4 +19,8 @@
     <Folder Include="goldens\super_mario_sunshine_bianco0_map\output\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
+  </ItemGroup>
+
 </Project>
