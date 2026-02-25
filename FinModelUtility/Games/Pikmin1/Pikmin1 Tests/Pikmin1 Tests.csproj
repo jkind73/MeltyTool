@@ -11,14 +11,4 @@
     <ProjectReference Include="..\Pikmin1\Pikmin1.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="goldens\chappy\output\" />
-    <Folder Include="goldens\king\output\" />
-    <Folder Include="goldens\snake\output\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

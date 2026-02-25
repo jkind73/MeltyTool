@@ -12,8 +12,4 @@
     <ProjectReference Include="..\Level5\Level5.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

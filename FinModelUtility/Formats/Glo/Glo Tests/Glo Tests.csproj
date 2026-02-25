@@ -12,22 +12,4 @@
     <ProjectReference Include="..\Glo\Glo.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="goldens\at1\at1.glo">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="goldens\joff\joff.glo">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="goldens\at1\output\" />
-    <Folder Include="goldens\joff\output\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

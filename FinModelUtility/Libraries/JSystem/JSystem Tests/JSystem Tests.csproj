@@ -12,15 +12,4 @@
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="goldens\mario_kart_double_dash_babyluigi_course\output\" />
-    <Folder Include="goldens\pikmin_2_Chappy\output\" />
-    <Folder Include="goldens\pikmin_2_Armor\output\" />
-    <Folder Include="goldens\super_mario_sunshine_bianco0_map\output\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>

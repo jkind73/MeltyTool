@@ -12,15 +12,4 @@
     <ProjectReference Include="..\..\..\Fin\Fin\Fin.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="goldens\cmb\optdemo1\output\" />
-    <Folder Include="goldens\cmb\majoras_mask_3d_zelda_cow\output\" />
-    <Folder Include="goldens\cmb\ocarina_of_time_3d_zelda_cow\output\" />
-    <Folder Include="goldens\shpa\luigis_mansion_3d\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="coverlet.msbuild" Version="8.0.0" />
-  </ItemGroup>
-
 </Project>
