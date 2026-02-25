@@ -7,6 +7,7 @@
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RootNamespace>uni.ui.avalonia.desktop</RootNamespace>
+    <AvaloniaUILicenseKey>avln_on_key:v1:c7dd585659d24491b0aa9d82df4e2387</AvaloniaUILicenseKey>
   </PropertyGroup>
 
   <PropertyGroup>

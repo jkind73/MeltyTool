@@ -14,7 +14,7 @@
     <StyleInclude Source="avares://Avalonia.Controls.TreeDataGrid/Themes/Fluent.axaml"/>
     <StyleInclude Source="avares://ConfigFactory.Avalonia/Themes/Fluent/ConfigFactory.Avalonia.axaml" />
     <avalonia:MaterialIconStyles />
-    <StyleInclude Source="avares://OxyPlot.Avalonia/Themes/Default.axaml" />
+    <!-- StyleInclude Source="avares://OxyPlot.Avalonia/Themes/Default.axaml" -->
     <StyleInclude Source="avares://UVtools.AvaloniaControls/Controls.axaml" />
 
     <StyleInclude Source="avares://Fin.Ui.Avalonia/styles/CommonStyles.axaml" />
