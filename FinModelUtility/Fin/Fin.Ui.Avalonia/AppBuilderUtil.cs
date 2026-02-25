@@ -37,5 +37,5 @@ public static class AppBuilderUtil {
                      MaxGpuResourceSizeBytes = long.MaxValue
                  })
                  .WithInterFont()
-                 .UseReactiveUI();
+                 .UseReactiveUI(reactiveUiBuilder => { });
 }

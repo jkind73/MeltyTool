@@ -1,3 +1,5 @@
+using Assert = NUnit.Framework.Assert;
+
 namespace HaloWars_Tests;
 
 public sealed class Tests {

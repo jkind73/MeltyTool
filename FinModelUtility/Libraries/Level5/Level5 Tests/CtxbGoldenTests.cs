@@ -6,6 +6,8 @@ using fin.testing;
 
 using level5.schema;
 
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+
 namespace level5;
 
 public sealed class XiGoldenTests {
@@ -28,7 +30,7 @@ public sealed class XiGoldenTests {
         = new FinFile(Path.Join(outputDirectory.FullPath, outputFileName));
     if (outputFile.Exists) {
       var outputImage = await FinImage.FromFileAsync(outputFile);
-      Assert.That(inputImage, Is.EqualTo(outputImage));
+      Assert.AreEqual(inputImage, outputImage);
     } else {
       using var s = outputFile.OpenWrite();
       inputImage.ExportToStream(s, LocalImageFormat.PNG);

@@ -23,7 +23,7 @@ public sealed class EnumerableExtensionsTests {
 
   [Test]
   public void TestSeparatePairsWithLastPartial()
-    => Assert.ThrowsException<InvalidOperationException>(
+    => Assert.Throws<InvalidOperationException>(
         () => new[] { 1, 2, 3, 4, 5 }.SeparatePairs().ToArray());
 
 
@@ -41,7 +41,7 @@ public sealed class EnumerableExtensionsTests {
 
   [Test]
   public void TestSeparateTripletsWithLastPartial()
-    => Assert.ThrowsException<InvalidOperationException>(
+    => Assert.Throws<InvalidOperationException>(
         () => new[] { 1, 2, 3, 4, 5 }.SeparateTriplets().ToArray());
 
 
@@ -59,6 +59,6 @@ public sealed class EnumerableExtensionsTests {
 
   [Test]
   public void TestSeparateQuadrupletsWithLastPartial()
-    => Assert.ThrowsException<InvalidOperationException>(
+    => Assert.Throws<InvalidOperationException>(
         () => new[] { 1, 2, 3, 4, 5 }.SeparateQuadruplets().ToArray());
 }

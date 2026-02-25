@@ -7,6 +7,8 @@ using fin.testing;
 
 using SixLabors.ImageSharp.PixelFormats;
 
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+
 namespace fin.picross.solver;
 
 public sealed class PicrossSolverGoldenTests {
@@ -108,6 +110,6 @@ public sealed class PicrossSolverGoldenTests {
       }
     }
 
-    Assert.That(isSolved, Is.EqualTo(true));
+    Assert.AreEqual(true, isSolved);
   }
 }
