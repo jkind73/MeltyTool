@@ -10,6 +10,8 @@ using grezzo.api;
 
 using hw.api;
 
+using mk3d.api;
+
 using mkdd.api;
 
 using modl.api;
@@ -38,6 +40,8 @@ public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
         GauntletDarkLegacySceneFileBundle gauntletDarkLegacySceneFileBundle
             => new GauntletDarkLegacySceneImporter().Import(
                 gauntletDarkLegacySceneFileBundle),
+        Mk3dTrackSceneFileBundle mk3dTrackSceneFileBundle
+            => new Mk3dTrackSceneImporter().Import(mk3dTrackSceneFileBundle),
         LvlSceneFileBundle lvlSceneFileBundle
             => new LvlSceneImporter().Import(lvlSceneFileBundle),
         Pikmin2SceneFileBundle pikmin2SceneFileBundle

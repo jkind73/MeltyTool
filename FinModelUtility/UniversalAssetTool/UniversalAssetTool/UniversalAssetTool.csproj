@@ -140,6 +140,7 @@
     <ProjectReference Include="..\..\Formats\Vrml\Vrml\Vrml.csproj" />
     <ProjectReference Include="..\..\Games\AnimalCrossing\AnimalCrossing\AnimalCrossing.csproj" />
     <ProjectReference Include="..\..\Games\Facade\Facade\Facade.csproj" />
+    <ProjectReference Include="..\..\Games\MarioKart3d\MarioKart3d\MarioKart3d.csproj" />
     <ProjectReference Include="..\..\Games\PokemonColosseum\PokemonColosseum\PokemonColosseum.csproj" />
 
     <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios\AngelStudios.csproj" />
