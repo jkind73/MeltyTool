@@ -23,6 +23,10 @@ public sealed class MarioKart3dFileBundleGatherer : BPrereqsFileBundleGatherer {
               .Annotate(smkFile));
     }
 
+    var kartPlaceholderFile = rootDir.AssertGetExistingFile("kart.placeholder");
+    organizer.Add(new Mk3dKartModelFileBundle(kartPlaceholderFile)
+                      .Annotate(kartPlaceholderFile));
+
     var track1PlaceholderFile
         = rootDir.AssertGetExistingFile("track1/track1.placeholder");
     organizer.Add(

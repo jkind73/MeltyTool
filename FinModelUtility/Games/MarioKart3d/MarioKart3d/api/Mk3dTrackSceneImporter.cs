@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using fin.io;
 using fin.scene;
 using fin.ui.rendering.gl.scene;
+using fin.util.sets;
 
 using gm.api;
 
@@ -35,6 +36,7 @@ public sealed class Mk3dTrackSceneImporter
     foreach (var smkFile in smkFiles) {
       var smkBundle = Mk3dModelFileBundleUtil.FromSmkFile(smkFile);
       var finModel = new D3dModelImporter().Import(smkBundle);
+      fileSet.Add(finModel.Files);
 
       var finNode = rootNode.AddChildNode();
       finNode.Name = smkFile.NameWithoutExtension.ToString();

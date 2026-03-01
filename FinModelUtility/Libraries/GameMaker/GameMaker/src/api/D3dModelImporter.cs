@@ -35,10 +35,29 @@ public sealed class D3dModelFileBundle : IModelFileBundle {
 public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
   public IModel Import(D3dModelFileBundle modelFileBundle) {
     var d3dFile = modelFileBundle.D3dFile;
-    var d3d = d3dFile.ReadNewFromText<D3d>();
+    var fileSet = new HashSet<IReadOnlyGenericFile>();
 
     var (finModel, finRootBone)
-        = CreateModel((modelFileBundle, d3dFile.AsFileSet()));
+        = CreateModel((modelFileBundle, fileSet));
+
+    AddToModel(modelFileBundle, finModel, fileSet, finRootBone);
+
+    if (modelFileBundle.FlipNormals) {
+      finModel.FlipAllNormals();
+    }
+
+    return finModel;
+  }
+
+  public static void AddToModel(
+      D3dModelFileBundle modelFileBundle,
+      IModel<ISkin<Normal1Color1UvVertexImpl>> finModel,
+      ISet<IReadOnlyGenericFile> fileSet,
+      IBone finRootBone,
+      bool flipNormals = false) {
+    var d3dFile = modelFileBundle.D3dFile;
+    var d3d = d3dFile.ReadNewFromText<D3d>();
+    fileSet.Add(d3dFile);
 
     ITextureMaterial? material = null;
     if (modelFileBundle.TextureFile is { } textureFile) {
@@ -85,13 +104,7 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
       }
     }
 
-    AddToModel(d3d, finModel, finRootBone, out _, material);
-
-    if (modelFileBundle.FlipNormals) {
-      finModel.FlipAllNormals();
-    }
-
-    return finModel;
+    AddToModel(d3d, finModel, finRootBone, out _, material, flipNormals);
   }
 
   public static (IModel<ISkin<Normal1Color1UvVertexImpl>>, IBone) CreateModel(
@@ -118,12 +131,13 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
     return bone;
   }
 
-  public static void AddToModel(D3d d3d,
-                                IModel<ISkin<Normal1Color1UvVertexImpl>>
-                                    finModel,
-                                IReadOnlyBone bone,
-                                out IMesh finMesh,
-                                IMaterial? material = null) {
+  public static void AddToModel(
+      D3d d3d,
+      IModel<ISkin<Normal1Color1UvVertexImpl>> finModel,
+      IReadOnlyBone bone,
+      out IMesh finMesh,
+      IMaterial? material = null,
+      bool flipNormals = false) {
     var finSkin = finModel.Skin;
     finMesh = finSkin.AddMesh();
 
@@ -166,7 +180,13 @@ public sealed class D3dModelImporter : IModelImporter<D3dModelFileBundle> {
           var d3dParams = d3dCommand.Parameters.AsSpan();
 
           var finVertex = finSkin.AddVertex(new Vector3(d3dParams[..3]));
-          finVertex.SetLocalNormal(-new Vector3(d3dParams.Slice(3, 3)));
+
+          var normal = -new Vector3(d3dParams.Slice(3, 3));
+          if (flipNormals) {
+            normal *= -1;
+          }
+
+          finVertex.SetLocalNormal(normal);
           finVertex.SetUv(new Vector2(d3dParams.Slice(6, 2)));
           finVertex.SetBoneWeights(boneWeights);
 

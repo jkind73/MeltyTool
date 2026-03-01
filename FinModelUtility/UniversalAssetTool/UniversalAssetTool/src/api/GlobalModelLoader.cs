@@ -26,6 +26,8 @@ using level5.api;
 
 using marioartist.api;
 
+using mk3d.api;
+
 using modl.api;
 
 using nitro.api;
@@ -92,6 +94,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new GltfModelImporter().Import(gltfModelFileBundle),
         Ma3d1ModelFileBundle ma3d1ModelFileBundle
             => new Ma3d1ModelLoader().Import(ma3d1ModelFileBundle),
+        Mk3dKartModelFileBundle mk3dKartModelFileBundle
+            => new Mk3dKartModelImporter().Import(mk3dKartModelFileBundle),
         MeleeModelFileBundle meleeModelFileBundle
             => new MeleeModelImporter().Import(meleeModelFileBundle),
         ModModelFileBundle modModelFileBundle
