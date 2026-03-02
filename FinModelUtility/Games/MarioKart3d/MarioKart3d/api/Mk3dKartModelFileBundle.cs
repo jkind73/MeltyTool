@@ -38,6 +38,7 @@ public sealed class Mk3dKartModelImporter
       foreach (var smkFile in smkFiles) {
         var smkBundle = Mk3dModelFileBundleUtil.FromSmkFile(smkFile);
 
+        // TODO: Should deduplicate textures across files
         switch (smkFile.NameWithoutExtension) {
           case "mariohead": {
             var headBone = finRootBone.AddChild(Vector3.Zero);
