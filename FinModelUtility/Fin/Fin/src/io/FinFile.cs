@@ -8,8 +8,9 @@ using fin.util.asserts;
 
 namespace fin.io;
 
-public sealed class FinFile(string fullName) : ISystemFile {
-  public FinFile(IReadOnlyTreeFile treeFile) : this(treeFile.FullPath) {}
+public sealed class FinFile(string fullName, FinRootDirectory? root = null)
+    : ISystemFile {
+  public FinFile(IReadOnlyTreeFile treeFile) : this(treeFile.FullPath) { }
 
   public override string ToString() => this.DisplayFullName;
 
@@ -40,7 +41,9 @@ public sealed class FinFile(string fullName) : ISystemFile {
   // File fields
   public ReadOnlySpan<char> Name => FinIoStatic.GetName(this.FullPath);
   public string FullPath { get; } = fullName;
-  public string DisplayFullName => this.FullPath;
+
+  public string DisplayFullName
+    => root != null ? root.GetDisplayName(this) : this.FullPath;
 
 
   // Ancestry methods

@@ -8,7 +8,8 @@ using fin.util.asserts;
 
 namespace fin.io;
 
-public sealed class FinDirectory(string fullName) : ISystemDirectory {
+public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
+    : ISystemDirectory {
   public override string ToString() => this.DisplayFullName;
 
 
@@ -38,7 +39,8 @@ public sealed class FinDirectory(string fullName) : ISystemDirectory {
   // Directory fields
   public ReadOnlySpan<char> Name => FinIoStatic.GetName(fullName);
   public string FullPath => fullName;
-  public string DisplayFullName => this.FullPath;
+  public string DisplayFullName
+    => root != null ? root.GetDisplayName(this) : this.FullPath;
 
 
   // Ancestry methods
