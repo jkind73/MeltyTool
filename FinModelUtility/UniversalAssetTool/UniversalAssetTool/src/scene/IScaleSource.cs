@@ -17,10 +17,10 @@ public interface IScaleSource {
 
 public sealed class ScaleSource(ScaleSourceType type) : IScaleSource {
   private readonly IScaleSource impl_ = type switch {
-      ScaleSourceType.NONE           => new NullScaleSource(),
+      ScaleSourceType.NONE => new NullScaleSource(),
       ScaleSourceType.MIN_MAX_BOUNDS => new MinMaxBoundsScaleSource(),
-      ScaleSourceType.GAME_CONFIG    => new GameConfigScaleSource(),
-      _                              => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+      ScaleSourceType.GAME_CONFIG => new GameConfigScaleSource(),
+      _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
   };
 
   public float GetScale(ISceneInstance scene) => this.impl_.GetScale(scene);
@@ -54,8 +54,7 @@ public sealed class GameConfigScaleSource : IScaleSource {
 
   private bool TryToGetScaleFromGameConfig_(IFileBundle? fileBundle,
                                             out float scale) {
-    var gameName = (fileBundle as IAnnotatedFileBundle)?.GameName;
-    if (gameName != null &&
+    if ((fileBundle?.MainFile.HasRoot(out var gameName, out _) ?? false) &&
         DirectoryConstants.GAME_CONFIG_DIRECTORY.TryToGetExistingFile(
             $"{gameName}.json",
             out var gameConfigFile)) {

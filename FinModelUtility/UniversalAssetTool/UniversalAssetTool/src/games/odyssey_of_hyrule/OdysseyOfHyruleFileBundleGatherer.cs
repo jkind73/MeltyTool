@@ -22,12 +22,8 @@ public sealed class OdysseyOfHyruleFileBundleGatherer : IAnnotatedFileBundleGath
       var fileHierarchy = ExtractorUtil.GetFileHierarchy("odyssey_of_hyrule", vrwdwDir);
 
       foreach (var wrlFile in fileHierarchy.Root.GetFilesWithFileType(".wrl")) {
-        organizer.Add(new VrmlModelFileBundle {
-            WrlFile = wrlFile,
-        }.Annotate(wrlFile));
-        organizer.Add(new VrmlSceneFileBundle {
-            WrlFile = wrlFile,
-        }.Annotate(wrlFile));
+        organizer.Add(new VrmlModelFileBundle { WrlFile = wrlFile });
+        organizer.Add(new VrmlSceneFileBundle { WrlFile = wrlFile });
       }
     }
 }

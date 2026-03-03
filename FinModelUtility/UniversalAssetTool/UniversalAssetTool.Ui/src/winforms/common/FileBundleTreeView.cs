@@ -64,12 +64,12 @@ public sealed class FileBundleTreeView : FileTreeView<IFileBundleDirectory> {
       }
     }
 
-  private void AddFileToNode_(IAnnotatedFileBundle fileBundle,
+  private void AddFileToNode_(IFileBundle fileBundle,
                               ParentFileNode parentNode,
                               IList<string>? parts = null) {
       string? text = null;
       if (parts != null) {
-        parts.Add(fileBundle.FileBundle.DisplayName.ToString());
+        parts.Add(fileBundle.DisplayName.ToString());
         text = Path.Join(parts.ToArray());
       }
 

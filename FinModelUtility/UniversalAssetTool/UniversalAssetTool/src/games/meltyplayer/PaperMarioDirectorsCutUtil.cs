@@ -13,36 +13,22 @@ public static class PaperMarioDirectorsCutUtil {
       IFileBundleOrganizer organizer,
       IFileHierarchyDirectory rootDir) {
     foreach (var modFile in rootDir.GetFilesWithFileType(".mod", true)) {
-      organizer.Add(new AnnotatedFileBundle<D3dModelFileBundle>(
-                        new D3dModelFileBundle {
-                            D3dFile = modFile
-                        },
-                        modFile));
+      organizer.Add(new D3dModelFileBundle { D3dFile = modFile });
     }
 
     foreach (var objFile in rootDir.GetFilesWithFileType(".obj", true)) {
-      organizer.Add(new AnnotatedFileBundle<AssimpModelFileBundle>(
-                        new AssimpModelFileBundle {
-                            MainFile = objFile
-                        },
-                        objFile));
+      organizer.Add(new AssimpModelFileBundle { MainFile = objFile });
     }
 
     foreach (var omdFile in rootDir.GetFilesWithFileType(".omd", true)) {
-      organizer.Add(new AnnotatedFileBundle<OmdModelFileBundle>(
-                        new OmdModelFileBundle {
-                            OmdFile = omdFile
-                        },
-                        omdFile));
+      organizer.Add(new OmdModelFileBundle { OmdFile = omdFile });
     }
 
     foreach (var lvlFile in rootDir.GetFilesWithFileType(".lvl", true)) {
-      organizer.Add(new AnnotatedFileBundle<LvlSceneFileBundle>(
-                        new LvlSceneFileBundle {
-                            LvlFile = lvlFile,
-                            RootDirectory = rootDir
-                        },
-                        lvlFile));
+      organizer.Add(new LvlSceneFileBundle {
+          LvlFile = lvlFile,
+          RootDirectory = rootDir
+      });
     }
 
     var charactersDir = rootDir.AssertGetExistingSubdir("Characters");
@@ -52,7 +38,7 @@ public static class PaperMarioDirectorsCutUtil {
       organizer.Add(new PmdcCharacterModelFileBundle {
           AnimationImageFiles = animationImageFiles,
           CharactersDirectory = charactersDir,
-      }.Annotate(animationImageFiles[0]));
+      });
     }
   }
 }

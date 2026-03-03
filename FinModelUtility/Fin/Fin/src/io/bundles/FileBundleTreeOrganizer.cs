@@ -5,29 +5,28 @@ using fin.data.lazy;
 namespace fin.io.bundles;
 
 public interface IFileBundleOrganizer {
-  void Add(IAnnotatedFileBundle annotatedFileBundle);
+  void Add(IFileBundle annotatedFileBundle);
 }
 
 public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
   private readonly FileBundleDirectory root_ = new("(root)");
 
   private readonly
-      LazyDictionary<IFileHierarchyDirectory, IFileBundleDirectory>
-      lazyFileHierarchyDirToBundleDir_;
+      LazyDictionary<IReadOnlyTreeDirectory, IFileBundleDirectory>
+      lazyDirToBundleDir_;
 
   public FileBundleTreeOrganizer() {
-    this.lazyFileHierarchyDirToBundleDir_ = new((lazyDict, dir) => {
-      var parent = dir.Parent;
-      if (parent == null) {
-        return this.root_.AddSubdir(dir.Hierarchy.Root);
+    this.lazyDirToBundleDir_ = new((lazyDict, dir) => {
+      if (!dir.TryGetParent(out var parent) || dir.IsRoot) {
+        return this.root_.AddSubdir(dir);
       }
 
       return lazyDict[parent].AddSubdir(dir);
     });
   }
 
-  public void Add(IAnnotatedFileBundle annotatedFileBundle) {
-    this.lazyFileHierarchyDirToBundleDir_[annotatedFileBundle.File.Parent!]
+  public void Add(IFileBundle annotatedFileBundle) {
+    this.lazyDirToBundleDir_[annotatedFileBundle.MainFile.AssertGetParent()]
         .AddFileBundle(annotatedFileBundle);
   }
 
@@ -38,8 +37,8 @@ public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
 }
 
 public sealed class FileBundleListOrganizer : IFileBundleOrganizer {
-  public List<IAnnotatedFileBundle> List { get; } = [];
+  public List<IFileBundle> List { get; } = [];
 
-  public void Add(IAnnotatedFileBundle annotatedFileBundle)
+  public void Add(IFileBundle annotatedFileBundle)
     => this.List.Add(annotatedFileBundle);
 }

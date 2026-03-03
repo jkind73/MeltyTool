@@ -47,8 +47,7 @@ public sealed class SonicAdventureDxFileBundleGatherer : INamedAnnotatedFileBund
                                             modelFile,
                                             modelFileKey,
                                             modelFileOffset,
-                                            textureFile)
-              .Annotate(modelFile));
+                                            textureFile));
     }
   }
 

@@ -15,7 +15,7 @@ public static class ModelService {
         += (fileTreeLeafNode, fileBundle) => {
           LoadingStatusService.IsLoading = true;
 
-          if (fileBundle.FileBundle is IModelFileBundle modelFileBundle) {
+          if (fileBundle is IModelFileBundle modelFileBundle) {
             try {
               var model
                   = new GlobalModelImporter().ImportAndProcess(modelFileBundle);

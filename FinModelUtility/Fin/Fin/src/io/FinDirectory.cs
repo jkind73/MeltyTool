@@ -39,9 +39,11 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   // Directory fields
   public ReadOnlySpan<char> Name => FinIoStatic.GetName(fullName);
   public string FullPath => fullName;
+
   public string DisplayFullName
     => root != null ? root.GetDisplayName(this) : this.FullPath;
 
+  public bool IsRoot => root?.Impl.Equals(this) ?? false;
 
   // Ancestry methods
   public ReadOnlySpan<char> GetParentFullPath()
@@ -58,7 +60,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   public bool TryGetParent(out ISystemDirectory parent) {
     var parentName = this.GetParentFullPath();
     if (!parentName.IsEmpty) {
-      parent = new FinDirectory(parentName.ToString());
+      parent = new FinDirectory(parentName.ToString(), root);
       return true;
     }
 
@@ -115,7 +117,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   public IEnumerable<ISystemDirectory> GetExistingSubdirs()
     => FinDirectoryStatic
        .GetExistingSubdirs(this.FullPath)
-       .Select(fullName => (ISystemDirectory) new FinDirectory(fullName));
+       .Select(fullName => (ISystemDirectory) new FinDirectory(fullName, root));
 
   public bool TryToGetExistingSubdir(
       ReadOnlySpan<char> path,
@@ -132,7 +134,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
                                      out ISystemDirectory subdir) {
     subdir = new FinDirectory(FinDirectoryStatic
                               .GetSubdir(this.FullPath, relativePath)
-                              .ToString());
+                              .ToString(), root);
     return subdir.Exists;
   }
 
@@ -150,14 +152,14 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   public ISystemDirectory GetOrCreateSubdir(ReadOnlySpan<char> relativePath)
     => new FinDirectory(FinDirectoryStatic
                         .GetSubdir(this.FullPath, relativePath, true)
-                        .ToString());
+                        .ToString(), root);
 
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public IEnumerable<ISystemFile> GetExistingFiles()
-    => FinDirectoryStatic.GetExistingFiles(this.FullPath)
-                         .Select(fullName
-                                     => (ISystemFile) new FinFile(fullName));
+    => FinDirectoryStatic
+       .GetExistingFiles(this.FullPath)
+       .Select(fullName => (ISystemFile) new FinFile(fullName, root));
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public IEnumerable<ISystemFile> SearchForFiles(
@@ -165,7 +167,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
       bool includeSubdirs = false)
     => FinDirectoryStatic
        .SearchForFiles(this.FullPath, searchPattern, includeSubdirs)
-       .Select(fullName => (ISystemFile) new FinFile(fullName));
+       .Select(fullName => (ISystemFile) new FinFile(fullName, root));
 
   public bool TryToGetExistingFile(ReadOnlySpan<char> path,
                                    out ISystemFile outFile) {
@@ -173,7 +175,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
             this.FullPath,
             path,
             out var fileFullName)) {
-      outFile = new FinFile(fileFullName);
+      outFile = new FinFile(fileFullName, root);
       return true;
     }
 
@@ -197,7 +199,7 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public ISystemFile AssertGetExistingFile(ReadOnlySpan<char> path)
-    => new FinFile(FinDirectoryStatic.GetExistingFile(this.FullPath, path));
+    => new FinFile(FinDirectoryStatic.GetExistingFile(this.FullPath, path), root);
 
   public IEnumerable<ISystemFile> GetFilesWithNameRecursive(
       string name) {
@@ -218,5 +220,5 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
       bool includeSubdirs = false)
     => FinDirectoryStatic
        .GetFilesWithExtension(this.FullPath, extension, includeSubdirs)
-       .Select(fullName => (ISystemFile) new FinFile(fullName));
+       .Select(fullName => (ISystemFile) new FinFile(fullName, root));
 }

@@ -29,13 +29,12 @@ public abstract partial class FileTreeView<TFiles> {
         this.treeNode.OpenImage = Icons.folderOpenImage;
       }
 
-    public IFileHierarchyDirectory? Directory { get; set; }
+    public IReadOnlyTreeDirectory? Directory { get; set; }
     public override string? FullName => this.Directory?.FullPath;
 
     public ParentFileNode AddChild(string text) => new(this, text);
 
-    public LeafFileNode AddChild(IAnnotatedFileBundle file,
-                                 string? text = null)
+    public LeafFileNode AddChild(IFileBundle file, string? text = null)
       => new(this, file, text);
 
     public IEnumerable<IFileTreeNode> ChildNodes

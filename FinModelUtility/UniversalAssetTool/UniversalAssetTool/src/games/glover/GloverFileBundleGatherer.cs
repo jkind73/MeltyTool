@@ -27,7 +27,7 @@ public sealed class GloverFileBundleGatherer : INamedAnnotatedFileBundleGatherer
         gloverFileHierarchy.Root.AssertGetExistingSubdir("data");
     var topLevelBgmDirectory = dataDirectory.AssertGetExistingSubdir("bgm");
     foreach (var bgmFile in topLevelBgmDirectory.GetExistingFiles()) {
-      organizer.Add(new OggAudioFileBundle(bgmFile).Annotate(bgmFile));
+      organizer.Add(new OggAudioFileBundle(bgmFile));
     }
 
     var topLevelObjectDirectory =
@@ -70,8 +70,7 @@ public sealed class GloverFileBundleGatherer : INamedAnnotatedFileBundleGatherer
     }
 
     foreach (var objectFile in objectFiles) {
-      organizer.Add(new GloModelFileBundle(objectFile, textureDirectories)
-                        .Annotate(objectFile));
+      organizer.Add(new GloModelFileBundle(objectFile, textureDirectories));
     }
   }
 }

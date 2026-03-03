@@ -52,13 +52,13 @@ public sealed class TwilightPrincessFileBundleGatherer : BGameCubeFileBundleGath
               BmdFile = bmdFiles[0],
               BcxFiles = animations.ToArray(),
               FrameRate = 30
-          }.Annotate(bmdFiles[0]));
+          });
         }
       } else {
         foreach (var bmdFile in dir.GetFilesWithFileType(".bmd", true)) {
           organizer.Add(new BmdModelFileBundle {
               BmdFile = bmdFile,
-          }.Annotate(bmdFile));
+          });
         }
       }
     }

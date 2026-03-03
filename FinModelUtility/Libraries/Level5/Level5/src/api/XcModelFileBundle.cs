@@ -9,7 +9,8 @@ public sealed class XcModelFileBundle : IModelFileBundle {
   public string? HumanReadableName { get; set; }
 
   public IReadOnlyTreeFile MainFile
-    => new FinFile(this.ModelDirectory.FullPath + ".xc");
+    => this.ModelDirectory.AssertGetParent()
+           .AssertGetExistingFile($"{this.ModelDirectory.Name}.xc");
 
   public IEnumerable<IReadOnlyGenericFile> Files
     => this.MainFile.Yield()

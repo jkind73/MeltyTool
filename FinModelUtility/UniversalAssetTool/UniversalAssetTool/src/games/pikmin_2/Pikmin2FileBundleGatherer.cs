@@ -93,7 +93,7 @@ public sealed class Pikmin2FileBundleGatherer : BGameCubeFileBundleGatherer {
 
       organizer.Add(new Pikmin2SceneFileBundle {
           LevelBmd = mapBmd, RouteTxt = routeTxt,
-      }.Annotate(mapBmd));
+      });
     }
   }
 
@@ -169,7 +169,7 @@ public sealed class Pikmin2FileBundleGatherer : BGameCubeFileBundleGatherer {
     foreach (var astFile in astFiles) {
       organizer.Add(new AstAudioFileBundle {
           AstFile = astFile
-      }.Annotate(astFile));
+      });
     }
   }
 
@@ -201,7 +201,7 @@ public sealed class Pikmin2FileBundleGatherer : BGameCubeFileBundleGatherer {
           BmdFile = bmdFile,
           BcxFiles = bcxFiles,
           BtiFiles = btiFiles,
-      }.Annotate(bmdFile));
+      });
     }
   }
 }

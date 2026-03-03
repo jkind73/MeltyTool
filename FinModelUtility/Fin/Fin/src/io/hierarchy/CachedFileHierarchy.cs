@@ -18,6 +18,8 @@ public partial class CachedFileHierarchy : IFileHierarchy {
   private readonly ISystemDirectory directory_;
   private readonly ISystemFile cacheFile_;
 
+  private readonly FinRootDirectory finRootDirectory_;
+
   public CachedFileHierarchy(string name,
                              ISystemDirectory directory,
                              ISystemFile cacheFile,
@@ -51,9 +53,8 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
     populatedSubdirs ??= GetInfo_(directory);
 
-    this.Root = new FileHierarchyDirectory(this,
-                                           directory,
-                                           populatedSubdirs);
+    this.finRootDirectory_ = new FinRootDirectory(name, directory);
+    this.Root = new FileHierarchyDirectory(this, populatedSubdirs);
   }
 
   private static SchemaDirectoryInformation GetInfo_(
@@ -102,27 +103,27 @@ public partial class CachedFileHierarchy : IFileHierarchy {
   }
 
   private abstract class BFileHierarchyIoObject : IFileHierarchyIoObject {
-    protected BFileHierarchyIoObject(IFileHierarchy hierarchy) {
-      this.Hierarchy = hierarchy;
+    protected BFileHierarchyIoObject(CachedFileHierarchy hierarchy) {
+      this.TypedHierarchy = hierarchy;
       this.LocalPath = string.Empty;
     }
 
     protected BFileHierarchyIoObject(
-        IFileHierarchy hierarchy,
-        IFileHierarchyDirectory root,
+        CachedFileHierarchy hierarchy,
         IFileHierarchyDirectory parent,
         ISystemIoObject instance) {
-      this.Hierarchy = hierarchy;
+      this.TypedHierarchy = hierarchy;
       this.Parent = parent;
 
-      this.LocalPath =
-          instance.FullPath[root.FullPath.Length..];
+      this.LocalPath = instance.FullPath[
+              hierarchy.finRootDirectory_.Impl.FullPath.Length..];
     }
 
     protected abstract ISystemIoObject Instance { get; }
 
     public string LocalPath { get; }
-    public IFileHierarchy Hierarchy { get; }
+    public IFileHierarchy Hierarchy => this.TypedHierarchy;
+    protected CachedFileHierarchy TypedHierarchy { get; }
     public IFileHierarchyDirectory? Parent { get; }
 
     public bool Equals(IReadOnlyTreeIoObject? other)
@@ -133,8 +134,10 @@ public partial class CachedFileHierarchy : IFileHierarchy {
           ? parent
           : null!;
 
-    public bool TryGetParent(out IReadOnlyTreeDirectory parent)
-      => this.Instance.TryGetParent(out parent);
+    public bool TryGetParent(out IReadOnlyTreeDirectory parent) {
+      parent = this.Parent!;
+      return this.Parent != null;
+    }
 
     public IEnumerable<IReadOnlyTreeDirectory> GetAncestry()
       => this.Instance.GetAncestry();
@@ -156,36 +159,35 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     private readonly List<IFileHierarchyFile> files_ = [];
 
     public FileHierarchyDirectory(
-        IFileHierarchy hierarchy,
-        ISystemDirectory root,
+        CachedFileHierarchy hierarchy,
         SchemaDirectoryInformation paths) : base(hierarchy) {
-      this.Impl = root;
+      this.Impl = hierarchy.finRootDirectory_.Impl;
 
       foreach (var fileName in paths.FileNames) {
-        var path = Path.Join(root.FullPath, fileName.Name);
+        var path = Path.Join(this.Impl.FullPath, fileName.Name);
         this.files_.Add(
-            new FileHierarchyFile(hierarchy, this, this, new FinFile(path)));
+            new FileHierarchyFile(hierarchy,
+                                  this,
+                                  new FinFile(path,
+                                              hierarchy.finRootDirectory_)));
       }
 
       foreach (var subdir in paths.Subdirs) {
-        var path = Path.Join(root.FullPath, subdir.Name);
+        var path = Path.Join(this.Impl.FullPath, subdir.Name);
         this.subdirs_.Add(new FileHierarchyDirectory(
                               hierarchy,
                               this,
-                              this,
-                              new FinDirectory(path),
+                              new FinDirectory(path, hierarchy.finRootDirectory_),
                               subdir));
       }
     }
 
     private FileHierarchyDirectory(
-        IFileHierarchy hierarchy,
-        IFileHierarchyDirectory root,
+        CachedFileHierarchy hierarchy,
         IFileHierarchyDirectory parent,
         ISystemDirectory directory,
         SchemaDirectoryInformation paths) : base(
         hierarchy,
-        root,
         parent,
         directory) {
       this.Impl = directory;
@@ -193,25 +195,24 @@ public partial class CachedFileHierarchy : IFileHierarchy {
       foreach (var fileName in paths.FileNames) {
         var path = Path.Join(directory.FullPath, fileName.Name);
         this.files_.Add(
-            new FileHierarchyFile(hierarchy, root, this, new FinFile(path)));
+            new FileHierarchyFile(hierarchy, this, new FinFile(path, hierarchy.finRootDirectory_)));
       }
 
       foreach (var subdir in paths.Subdirs) {
         var path = Path.Join(directory.FullPath, subdir.Name);
         this.subdirs_.Add(new FileHierarchyDirectory(
                               hierarchy,
-                              root,
                               this,
-                              new FinDirectory(path),
+                              new FinDirectory(path, hierarchy.finRootDirectory_),
                               subdir));
       }
     }
 
     private FileHierarchyDirectory(
-        IFileHierarchy hierarchy,
+        CachedFileHierarchy hierarchy,
         IFileHierarchyDirectory parent,
         ISystemDirectory directory) :
-        base(hierarchy, hierarchy.Root, parent, directory) {
+        base(hierarchy, parent, directory) {
       this.Impl = directory;
       this.Refresh();
     }
@@ -220,6 +221,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     public ISystemDirectory Impl { get; }
 
     public bool IsEmpty => this.subdirs_.Count > 0;
+    public bool IsRoot => this.Parent == null;
 
     public IEnumerable<IFileHierarchyDirectory> GetExistingSubdirs()
       => this.subdirs_;
@@ -230,7 +232,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     public void Refresh(bool recursive = false) {
       if (this.subdirs_.Count == 0) {
         foreach (var actualSubdir in this.Impl.GetExistingSubdirs()) {
-          this.subdirs_.Add(new FileHierarchyDirectory(this.Hierarchy,
+          this.subdirs_.Add(new FileHierarchyDirectory(this.TypedHierarchy,
                               this,
                               actualSubdir));
         }
@@ -244,7 +246,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
             if (this.subdirs_.All(
                     subdir => !subdir.Impl.Equals(actualSubdir))) {
               this.subdirs_.Add(
-                  new FileHierarchyDirectory(this.Hierarchy,
+                  new FileHierarchyDirectory(this.TypedHierarchy,
                                              this,
                                              actualSubdir));
             }
@@ -254,8 +256,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
       if (this.files_.Count == 0) {
         foreach (var actualFile in this.Impl.GetExistingFiles()) {
-          this.files_.Add(new FileHierarchyFile(this.Hierarchy,
-                                                this.Hierarchy.Root,
+          this.files_.Add(new FileHierarchyFile(this.TypedHierarchy,
                                                 this,
                                                 actualFile));
         }
@@ -266,11 +267,9 @@ public partial class CachedFileHierarchy : IFileHierarchy {
                                file => !actualFiles.Contains(file.Impl));
           foreach (var actualFile in actualFiles) {
             if (this.files_.All(file => !file.Impl.Equals(actualFile))) {
-              this.files_.Add(
-                  new FileHierarchyFile(this.Hierarchy,
-                                        this.Hierarchy.Root,
-                                        this,
-                                        actualFile));
+              this.files_.Add(new FileHierarchyFile(this.TypedHierarchy,
+                                                    this,
+                                                    actualFile));
             }
           }
         }
@@ -505,11 +504,10 @@ public partial class CachedFileHierarchy : IFileHierarchy {
   }
 
   private sealed class FileHierarchyFile(
-      IFileHierarchy hierarchy,
-      IFileHierarchyDirectory root,
-      IFileHierarchyDirectory parent,
+      CachedFileHierarchy hierarchy,
+      FileHierarchyDirectory parent,
       ISystemFile file)
-      : BFileHierarchyIoObject(hierarchy, root, parent, file),
+      : BFileHierarchyIoObject(hierarchy, parent, file),
         IFileHierarchyFile {
     protected override ISystemIoObject Instance => this.Impl;
     public ISystemFile Impl { get; } = file;
@@ -525,6 +523,13 @@ public partial class CachedFileHierarchy : IFileHierarchy {
 
     public string DisplayFullPath
       => $"//{this.Hierarchy.Name}{this.LocalPath.Replace('\\', '/')}";
+
+    public bool HasRoot(out string rootName, out string localPath) {
+      var root = this.TypedHierarchy.finRootDirectory_;
+      rootName = root.Name;
+      localPath = this.FullPath[root.Impl.FullPath.Length..];
+      return true;
+    }
 
     public Stream OpenRead() => this.Impl.OpenRead();
   }

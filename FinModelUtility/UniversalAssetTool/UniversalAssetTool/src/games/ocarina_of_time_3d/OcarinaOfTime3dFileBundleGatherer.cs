@@ -170,7 +170,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                                 bundle.AnimationFiles.ToArray(),
                                 ctxbFiles,
                                 null
-                            ).Annotate(bundle.ModelFile));
+                            ));
             }
           } catch { }
         }
@@ -188,17 +188,15 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
         foreach (var model in models) {
           organizer.Add(new CmbModelFileBundle(
                             model,
-                            animations).Annotate(model));
+                            animations));
         }
       }
     }
 
     var sceneDir = fileHierarchy.Root.AssertGetExistingSubdir("scene");
     foreach (var zsiFile in sceneDir.GetFilesWithFileType(".zsi")) {
-      organizer.Add(new ZsiSceneFileBundle(zsiFile)
-                        .Annotate(zsiFile));
-      organizer.Add(new ZsiModelFileBundle(zsiFile)
-                        .Annotate(zsiFile));
+      organizer.Add(new ZsiSceneFileBundle(zsiFile));
+      organizer.Add(new ZsiModelFileBundle(zsiFile));
     }
   }
 
@@ -214,7 +212,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       childModel,
                       childDir.AssertGetExistingSubdir("anim")
                               .FilesWithExtension(".csab")
-                              .ToArray()).Annotate(childModel));
+                              .ToArray()));
 
     var adultDir =
         actorsDir.AssertGetExistingSubdir("zelda_link_boy_new/boy");
@@ -223,7 +221,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       adultModel,
                       adultDir.AssertGetExistingSubdir("anim")
                               .FilesWithExtension(".csab")
-                              .ToArray()).Annotate(adultModel));
+                              .ToArray()));
   }
 
   private void GetGanondorfModels_(IFileBundleOrganizer organizer,
@@ -243,11 +241,11 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
     var ganondorfModel = modelDir.AssertGetExistingFile("ganondorf.cmb");
     organizer.Add(new CmbModelFileBundle(
                       ganondorfModel,
-                      ganondorfAnimations.ToArray()).Annotate(ganondorfModel));
+                      ganondorfAnimations.ToArray()));
     var ganonModel = modelDir.AssertGetExistingFile("ganon_mant_model.cmb");
     organizer.Add(new CmbModelFileBundle(
                       ganonModel,
-                      capeAnimations.ToArray()).Annotate(ganonModel));
+                      capeAnimations.ToArray()));
 
     foreach (var otherModel in modelDir.GetExistingFiles()
                                        .Where(
@@ -255,8 +253,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                                                    "ganondorf.cmb" &&
                                                    file.Name is not
                                                    "ganon_mant_model.cmb")) {
-      organizer.Add(new CmbModelFileBundle(otherModel)
-                        .Annotate(otherModel));
+      organizer.Add(new CmbModelFileBundle(otherModel));
     }
   }
 
@@ -273,14 +270,13 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       inGroundModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("vba_"))
-                             .ToList()).Annotate(inGroundModel));
+                             .ToList()));
 
     foreach (var otherModel in modelDir.GetExistingFiles()
                                        .Where(
                                            file => file.Name is not
                                                "valbasiagnd.cmb")) {
-      organizer.Add(new CmbModelFileBundle(otherModel)
-                        .Annotate(otherModel));
+      organizer.Add(new CmbModelFileBundle(otherModel));
     }
 
     // TODO: What does vb_FWDtest.csab belong to?
@@ -298,14 +294,14 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       moblinModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("mn_"))
-                             .ToList()).Annotate(moblinModel));
+                             .ToList()));
 
     var bossMoblinModel = modelDir.AssertGetExistingFile("bossblin.cmb");
     organizer.Add(new CmbModelFileBundle(
                       bossMoblinModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("mbV_"))
-                             .ToList()).Annotate(bossMoblinModel));
+                             .ToList()));
   }
 
   private void GetBongoBongoModels_(IFileBundleOrganizer organizer,
@@ -321,7 +317,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       bodyModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("ss_"))
-                             .ToList()).Annotate(bodyModel));
+                             .ToList()));
 
     // Left hand
     var leftHandModel = modelDir.AssertGetExistingFile("bongolhand.cmb");
@@ -329,7 +325,7 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       leftHandModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("slh_"))
-                             .ToList()).Annotate(leftHandModel));
+                             .ToList()));
 
     // Right hand
     var rightHandModel = modelDir.AssertGetExistingFile("bongorhand.cmb");
@@ -337,15 +333,14 @@ public sealed class OcarinaOfTime3dFileBundleGatherer : B3dsFileBundleGatherer {
                       rightHandModel,
                       animDir.FilesWithExtension(".csab")
                              .Where(file => file.Name.StartsWith("srh_"))
-                             .ToList()).Annotate(rightHandModel));
+                             .ToList()));
 
     foreach (var otherModel in modelDir.GetExistingFiles()
                                        .Where(file => file.Name is not
                                                   ("bongobongo.cmb"
                                                    or "bongolhand.cmb"
                                                    or "bongorhand.cmb"))) {
-      organizer.Add(new CmbModelFileBundle(otherModel)
-                        .Annotate(otherModel));
+      organizer.Add(new CmbModelFileBundle(otherModel));
     }
   }
 }

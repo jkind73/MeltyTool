@@ -90,13 +90,13 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
             GameName = "super_mario_64_ds",
             BmdFile = bmdFile,
             BcaFiles = bcaFiles,
-        }.Annotate(bmdFile));
+        });
       } else {
         foreach (var bmdFile in bmdFiles) {
           organizer.Add(new Sm64dsModelFileBundle {
               GameName = "super_mario_64_ds",
               BmdFile = bmdFile,
-          }.Annotate(bmdFile));
+          });
         }
       }
     }
@@ -118,7 +118,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BcaFiles = dsmtBcas
                      .Where(f => f.NameWithoutExtension.EndsWith("mario"))
                      .ToArray(),
-      }.Annotate(marioBmd));
+      });
     }
 
     // Star
@@ -131,7 +131,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BcaFiles = dsmtBcas
                      .Where(f => f.NameWithoutExtension.EndsWith("star"))
                      .ToArray(),
-      }.Annotate(marioBmd));
+      });
     }
 
     // Yoshi
@@ -143,7 +143,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BcaFiles = dsmtBcas
                      .Where(f => f.NameWithoutExtension.EndsWith("yoshi"))
                      .ToArray(),
-      }.Annotate(marioBmd));
+      });
     }
   }
 
@@ -166,7 +166,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
       organizer.Add(new Sm64dsModelFileBundle {
           GameName = "super_mario_64_ds",
           BmdFile = bmdFile,
-      }.Annotate(bmdFile));
+      });
     }
 
     // esp_card
@@ -177,7 +177,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BmdFile = bmdFile,
           BcaFiles = bcaFiles.Where(f => f.Name.StartsWith("esp_card_"))
                              .ToArray(),
-      }.Annotate(bmdFile));
+      });
     }
 
     // esp_hamon
@@ -188,7 +188,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BmdFile = bmdFile,
           BcaFiles = bcaFiles.Where(f => f.Name.StartsWith("esp_hamon"))
                              .ToArray(),
-      }.Annotate(bmdFile));
+      });
     }
 
     // kino_d
@@ -199,7 +199,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BmdFile = bmdFile,
           BcaFiles = bcaFiles.Where(f => f.Name.StartsWith("kino_"))
                              .ToArray(),
-      }.Annotate(bmdFile));
+      });
     }
 
     // luigi_d
@@ -210,7 +210,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           BmdFile = bmdFile,
           BcaFiles = bcaFiles.Where(f => f.Name.StartsWith("luigi_d_"))
                              .ToArray(),
-      }.Annotate(bmdFile));
+      });
     }
 
     // yoshi_model
@@ -220,7 +220,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
           GameName = "super_mario_64_ds",
           BmdFile = bmdFile,
           BcaFiles = bcaFiles.Where(f => f.Name.StartsWith("yoshi_")).ToArray(),
-      }.Annotate(bmdFile));
+      });
     }
   }
 
@@ -237,14 +237,14 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
         GameName = "super_mario_64_ds",
         BmdFile = balloonMarioBmd,
         BcaFiles = [bcaSplitter.Matching("b_mario_start.bca")],
-    }.Annotate(balloonMarioBmd));
+    });
 
     var wingBmd = bmdSplitter.Matching("wing_model.bmd");
     organizer.Add(new Sm64dsModelFileBundle {
         GameName = "super_mario_64_ds",
         BmdFile = wingBmd,
         BcaFiles = [bcaSplitter.Matching("wing_flutter.bca")],
-    }.Annotate(wingBmd));
+    });
 
     var luigiBcas = bcaSplitter.StartsWith("L_");
     var marioBcas = bcaSplitter.StartsWith("M_");
@@ -265,14 +265,14 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
         GameName = "super_mario_64_ds",
         BmdFile = luigiBmd,
         BcaFiles = luigiBcas.Concat(commonBcas).ToArray(),
-    }.Annotate(luigiBmd));
+    });
 
     // Mario
     organizer.Add(new Sm64dsModelFileBundle {
         GameName = "super_mario_64_ds",
         BmdFile = marioBmd,
         BcaFiles = marioBcas.Concat(commonBcas).ToArray(),
-    }.Annotate(marioBmd));
+    });
 
     // Wario
     {
@@ -282,7 +282,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
             GameName = "super_mario_64_ds",
             BmdFile = warioBmd,
             BcaFiles = allWarioBcas,
-        }.Annotate(warioBmd));
+        });
       }
     }
 
@@ -291,14 +291,14 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
         GameName = "super_mario_64_ds",
         BmdFile = yoshiBmd,
         BcaFiles = yoshiBcas.Concat(commonBcas).ToArray(),
-    }.Annotate(yoshiBmd));
+    });
 
     // Other models
     foreach (var bmdFile in bmdSplitter.Remaining()) {
       organizer.Add(new Sm64dsModelFileBundle {
           GameName = "super_mario_64_ds",
           BmdFile = bmdFile,
-      }.Annotate(bmdFile));
+      });
     }
   }
 
@@ -328,7 +328,7 @@ public sealed class SuperMario64DsFileBundleGatherer : BDsFileBundleGatherer {
                   GameName = "super_mario_64_ds",
                   BmdFile = bundle.ModelFile,
                   BcaFiles = bundle.AnimationFiles.ToArray(),
-              }.Annotate(bundle.ModelFile));
+              });
             }
           } catch { }
         }

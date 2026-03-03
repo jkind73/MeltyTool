@@ -1,6 +1,7 @@
 ﻿using fin.common;
 using fin.io;
 using fin.io.bundles;
+using fin.util.asserts;
 
 namespace uni.games;
 
@@ -79,10 +80,14 @@ public static class ExtractorUtil {
 
 
   public static ISystemDirectory GetOutputDirectoryForFileBundle(
-      IAnnotatedFileBundle annotatedFileBundle)
-    => new FinFile(Path.Join(
-                       DirectoryConstants.OUT_DIRECTORY.FullPath,
-                       annotatedFileBundle.GameAndLocalPath)).AssertGetParent();
+      IFileBundle annotatedFileBundle) {
+    Asserts.True(annotatedFileBundle.MainFile.HasRoot(out var gameName, out var localPath));
+    var gameAndLocalPath = Path.Join(gameName, localPath);
+    return new FinFile(Path.Join(
+                           DirectoryConstants.OUT_DIRECTORY.FullPath,
+                           gameAndLocalPath))
+        .AssertGetParent();
+  }
 }
 
 static file class ExtractorUtilExtensions {

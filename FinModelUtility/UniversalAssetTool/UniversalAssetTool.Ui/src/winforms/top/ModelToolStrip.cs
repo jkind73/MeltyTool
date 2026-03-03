@@ -150,8 +150,7 @@ public partial class ModelToolStrip : UserControl {
   }
 
   private void StartExportingModelsInBackground_(
-      IReadOnlyList<IAnnotatedFileBundle<IModelFileBundle>>
-          modelFileBundles) {
+      IReadOnlyList<IModelFileBundle> modelFileBundles) {
     var extractorPromptChoice =
         PromptIfModelFileBundlesAlreadyExported_(
             modelFileBundles,
@@ -194,7 +193,7 @@ public partial class ModelToolStrip : UserControl {
 
   private static ExporterPromptChoice
       PromptIfModelFileBundlesAlreadyExported_(
-          IReadOnlyList<IAnnotatedFileBundle> modelFileBundles,
+          IReadOnlyList<IFileBundle> modelFileBundles,
           IReadOnlySet<ExportedFormat> formats) {
     if (CheckIfModelFileBundlesAlreadyExported(
             modelFileBundles,
@@ -204,7 +203,7 @@ public partial class ModelToolStrip : UserControl {
       if (totalCount == 1) {
         var result =
             MessageBox.Show(
-                $"Model defined in \"{existingOutputFiles.First().FileBundle.DisplayFullPath}\" has already been exported. Would you like to overwrite it?",
+                $"Model defined in \"{existingOutputFiles.First().DisplayFullPath}\" has already been exported. Would you like to overwrite it?",
                 "Model has already been exported!",
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning,

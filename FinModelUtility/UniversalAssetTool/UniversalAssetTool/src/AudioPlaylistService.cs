@@ -11,7 +11,7 @@ public static class AudioPlaylistService {
   static AudioPlaylistService() {
     FileBundleService.OnFileBundleOpened
         += (_, fileBundle) => {
-          if (fileBundle.FileBundle is IAudioFileBundle audioFileBundle) {
+          if (fileBundle is IAudioFileBundle audioFileBundle) {
             UpdatePlaylist([audioFileBundle]);
           }
         };
@@ -36,7 +36,6 @@ public static class AudioPlaylistService {
           UpdatePlaylist(
               gameDirectory
                   .GetFilesOfType<IAudioFileBundle>(true)
-                  .Select(bundle => bundle.TypedFileBundle)
                   .ToArray());
         };
   }

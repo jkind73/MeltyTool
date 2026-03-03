@@ -319,5 +319,5 @@ public sealed class SuperMarioSunshineFileBundleGatherer
       BcxFiles = bcxFiles,
       BtiFiles = btiFiles,
       FrameRate = 60
-  }.Annotate(bmdFile));
+  });
 }

@@ -6,7 +6,7 @@ using fin.util.progress;
 
 namespace fin.io.bundles;
 
-public interface IFileBundle : IUiFile {
+public interface IFileBundle : IUiFile, IComparable<IFileBundle> {
   FileBundleType Type { get; }
 
   IReadOnlyTreeFile MainFile { get; }
@@ -19,11 +19,17 @@ public interface IFileBundle : IUiFile {
 
   ReadOnlySpan<char> IUiFile.RawName
     => FinIoStatic.GetName(this.DisplayFullPath);
+
   ReadOnlySpan<char> DisplayName => this.HumanReadableName ?? this.RawName;
 
   ReadOnlySpan<char> DisplayFullPath => this.MainFile.DisplayFullPath;
 
   string TrueFullPath => Asserts.CastNonnull(this.MainFile.FullPath);
+
+  int IComparable<IFileBundle>.CompareTo(IFileBundle? other)
+    => this.DisplayFullPath.CompareTo(
+        other!.DisplayFullPath,
+        StringComparison.OrdinalIgnoreCase);
 }
 
 public interface INamedAnnotatedFileBundleGatherer

@@ -17,20 +17,14 @@ public sealed class MarioKart3dFileBundleGatherer : BPrereqsFileBundleGatherer {
     var rootDir = fileHierarchy.Root;
 
     foreach (var smkFile in rootDir.FilesWithExtensionRecursive(".smk")) {
-      organizer.Add(
-          Mk3dModelFileBundleUtil
-              .FromSmkFile(smkFile)
-              .Annotate(smkFile));
+      organizer.Add(Mk3dModelFileBundleUtil.FromSmkFile(smkFile));
     }
 
     var kartPlaceholderFile = rootDir.AssertGetExistingFile("kart.placeholder");
-    organizer.Add(new Mk3dKartModelFileBundle(kartPlaceholderFile)
-                      .Annotate(kartPlaceholderFile));
+    organizer.Add(new Mk3dKartModelFileBundle(kartPlaceholderFile));
 
     var track1PlaceholderFile
         = rootDir.AssertGetExistingFile("track1/track1.placeholder");
-    organizer.Add(
-        new Mk3dTrackSceneFileBundle(track1PlaceholderFile)
-            .Annotate(track1PlaceholderFile));
+    organizer.Add(new Mk3dTrackSceneFileBundle(track1PlaceholderFile));
   }
 }

@@ -17,7 +17,7 @@ public sealed class CustomRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
              fileHierarchy.Root.FilesWithExtensionRecursive(".ssm")) {
       organizer.Add(new SsmAudioFileBundle {
           SsmFile = ssmFile,
-      }.Annotate(ssmFile));
+      });
     }
   }
 }

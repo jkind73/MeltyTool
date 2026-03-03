@@ -4,24 +4,24 @@ using System.Linq;
 namespace fin.io.bundles;
 
 public interface IFileBundleDirectory {
-  IFileHierarchyDirectory? Directory { get; }
+  IReadOnlyTreeDirectory? Directory { get; }
   string Name { get; }
 
   IReadOnlyList<IFileBundleDirectory> Subdirs { get; }
-  IReadOnlyList<IAnnotatedFileBundle> FileBundles { get; }
+  IReadOnlyList<IFileBundle> FileBundles { get; }
 
-  IFileBundleDirectory AddSubdir(IFileHierarchyDirectory directory);
+  IFileBundleDirectory AddSubdir(IReadOnlyTreeDirectory directory);
   IFileBundleDirectory AddSubdir(string name);
-  void AddFileBundle(IAnnotatedFileBundle fileBundle);
+  void AddFileBundle(IFileBundle fileBundle);
 
   void CleanUp();
 }
 
 public sealed class FileBundleDirectory : IFileBundleDirectory {
   private readonly List<IFileBundleDirectory> subdirs_ = [];
-  private readonly List<IAnnotatedFileBundle> fileBundles_ = [];
+  private readonly List<IFileBundle> fileBundles_ = [];
 
-  public FileBundleDirectory(IFileHierarchyDirectory? directory) {
+  public FileBundleDirectory(IReadOnlyTreeDirectory? directory) {
     this.Directory = directory;
     this.Name = directory.Name.ToString();
   }
@@ -30,13 +30,13 @@ public sealed class FileBundleDirectory : IFileBundleDirectory {
     this.Name = name;
   }
 
-  public IFileHierarchyDirectory? Directory { get; }
+  public IReadOnlyTreeDirectory? Directory { get; }
   public string Name { get; }
 
   public IReadOnlyList<IFileBundleDirectory> Subdirs => this.subdirs_;
-  public IReadOnlyList<IAnnotatedFileBundle> FileBundles => this.fileBundles_;
+  public IReadOnlyList<IFileBundle> FileBundles => this.fileBundles_;
 
-  public IFileBundleDirectory AddSubdir(IFileHierarchyDirectory directory) {
+  public IFileBundleDirectory AddSubdir(IReadOnlyTreeDirectory directory) {
     var subdir = new FileBundleDirectory(directory);
     this.subdirs_.Add(subdir);
     return subdir;
@@ -48,7 +48,7 @@ public sealed class FileBundleDirectory : IFileBundleDirectory {
     return subdir;
   }
 
-  public void AddFileBundle(IAnnotatedFileBundle fileBundle)
+  public void AddFileBundle(IFileBundle fileBundle)
     => this.fileBundles_.Add(fileBundle);
 
   public void CleanUp() {

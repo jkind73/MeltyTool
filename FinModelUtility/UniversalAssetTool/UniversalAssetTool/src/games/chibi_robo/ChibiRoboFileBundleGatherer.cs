@@ -25,16 +25,12 @@ public sealed class ChibiRoboFileBundleGatherer : BGameCubeFileBundleGatherer {
 
     foreach (var datFile in
              fileHierarchy.Root.FilesWithExtensionRecursive(".dat")) {
-      organizer.Add(new DatModelFileBundle {
-          DatFile = datFile
-      }.Annotate(datFile));
+      organizer.Add(new DatModelFileBundle { DatFile = datFile });
     }
 
     foreach (var ssmFile in
              fileHierarchy.Root.FilesWithExtensionRecursive(".ssm")) {
-      organizer.Add(new SsmAudioFileBundle {
-          SsmFile = ssmFile,
-      }.Annotate(ssmFile));
+      organizer.Add(new SsmAudioFileBundle { SsmFile = ssmFile });
     }
   }
 }

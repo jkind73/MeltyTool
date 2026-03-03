@@ -2,15 +2,15 @@
 
 public static class AnnotatedFileBundleExtensions {
   public static bool IsOfType<TSpecificFile>(
-      this IAnnotatedFileBundle file,
-      out IAnnotatedFileBundle<TSpecificFile> outFile)
+      this IFileBundle file,
+      out TSpecificFile outFile)
       where TSpecificFile : IFileBundle {
-    if (file is IAnnotatedFileBundle<TSpecificFile>) {
-      outFile = (IAnnotatedFileBundle<TSpecificFile>) file;
+    if (file is TSpecificFile bundle) {
+      outFile = bundle;
       return true;
     }
 
-    outFile = null!;
+    outFile = default!;
     return false;
   }
 }

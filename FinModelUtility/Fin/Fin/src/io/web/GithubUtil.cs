@@ -23,13 +23,13 @@ public sealed class LoadFileException(IReadOnlyTreeFile file) : IExceptionContex
     => $"1. Attempted to load {file.FullPath}.";
 }
 
-public sealed class LoadFileBundleExceptionContext(IGameAndLocalPath fb)
+public sealed class LoadFileBundleExceptionContext(IFileBundle fb)
     : IExceptionContext {
   public string Title
-    => $"[Bug] Failed to load {fb.GameAndLocalPath}";
+    => $"[Bug] Failed to load {fb.DisplayFullPath}";
 
   public string Steps
-    => $"1. Attempted to load {fb.GameAndLocalPath}.";
+    => $"1. Attempted to load {fb.DisplayFullPath}.";
 }
 
 public sealed class RenderFileBundleExceptionContext(IFileBundle fb)

@@ -38,9 +38,9 @@ public static class ExporterUtil {
   }
 
   public static bool CheckIfModelFileBundlesAlreadyExported(
-      IEnumerable<IAnnotatedFileBundle> modelFileBundles,
+      IEnumerable<IFileBundle> modelFileBundles,
       IReadOnlySet<ExportedFormat> formats,
-      out IReadOnlyList<IAnnotatedFileBundle> existingModelFileBundles) {
+      out IReadOnlyList<IFileBundle> existingModelFileBundles) {
     existingModelFileBundles =
         modelFileBundles
             .Where(mfb => CheckIfModelFileBundleAlreadyExported(
@@ -51,10 +51,10 @@ public static class ExporterUtil {
   }
 
   public static bool CheckIfModelFileBundleAlreadyExported(
-      IAnnotatedFileBundle annotatedModelFileBundle,
+      IFileBundle annotatedModelFileBundle,
       IEnumerable<ExportedFormat> formats) {
     // TODO: Clean this up!!
-    var bundle = annotatedModelFileBundle.FileBundle;
+    var bundle = annotatedModelFileBundle;
     var mainFile = bundle.MainFile;
 
     var parentOutputDirectory =
@@ -120,7 +120,7 @@ public static class ExporterUtil {
     OVERWRITE_EXISTING,
   }
 
-  public static List<IAnnotatedFileBundle> GatherFileBundles(
+  public static List<IFileBundle> GatherFileBundles(
       this IAnnotatedFileBundleGatherer gatherer) {
     var organizer = new FileBundleListOrganizer();
     var progress = new PercentageProgress();
@@ -143,27 +143,25 @@ public static class ExporterUtil {
       IModelImporter<TSubType> reader)
       where TSubType : IModelFileBundle
     => ExportAllForCli_(
-        gatherer.GatherFileBundles()
-                .Where(f => f is IAnnotatedFileBundle<TSubType>)
-                .Select(f => (f as IAnnotatedFileBundle<TSubType>)!),
+        gatherer.GatherFileBundles().OfType<TSubType>(),
         reader,
         Config.Instance.Exporter.General.ExportedFormats,
         false);
 
   private static void ExportAllForCli_<T>(
-      IEnumerable<IAnnotatedFileBundle> fileBundles,
+      IEnumerable<IFileBundle> fileBundles,
       IModelImporter<T> reader,
       IReadOnlySet<ExportedFormat> formats,
       bool overwriteExistingFiles)
       where T : IModelFileBundle
     => ExportAllForCli_(
-        fileBundles.WhereIs<IAnnotatedFileBundle, IAnnotatedFileBundle<T>>(),
+        fileBundles.OfType<T>(),
         reader,
         formats,
         overwriteExistingFiles);
 
   private static void ExportAllForCli_<T>(
-      IEnumerable<IAnnotatedFileBundle<T>> modelFileBundles,
+      IEnumerable<T> modelFileBundles,
       IModelImporter<T> reader,
       IReadOnlySet<ExportedFormat> formats,
       bool overwriteExistingFiles)
@@ -182,25 +180,21 @@ public static class ExporterUtil {
 
 
   public static void ExportAll<T>(
-      IEnumerable<IAnnotatedFileBundle> fileBundles,
+      IEnumerable<IFileBundle> fileBundles,
       IModelImporter<T> reader,
       IProgress<(float, T?)> progress,
       CancellationTokenSource cancellationTokenSource,
       IReadOnlySet<ExportedFormat> formats,
       bool overwriteExistingFiles)
       where T : IModelFileBundle {
-    var fileBundleArray = fileBundles
-                          .WhereIs<IAnnotatedFileBundle,
-                              IAnnotatedFileBundle<T>>()
-                          .ToArray();
+    var fileBundleArray = fileBundles.OfType<T>().ToArray();
     for (var i = 0; i < fileBundleArray.Length; ++i) {
       if (cancellationTokenSource.IsCancellationRequested) {
         break;
       }
 
       var modelFileBundle = fileBundleArray[i];
-      progress.Report((i * 1f / fileBundleArray.Length,
-                       modelFileBundle.TypedFileBundle));
+      progress.Report((i * 1f / fileBundleArray.Length, modelFileBundle));
       Export(modelFileBundle,
              reader,
              formats,
@@ -210,32 +204,31 @@ public static class ExporterUtil {
     progress.Report((1, default));
   }
 
-  public static void Export<T>(IAnnotatedFileBundle<T> modelFileBundle,
+  public static void Export<T>(T modelFileBundle,
                                IModelImporter<T> reader,
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile)
       where T : IModelFileBundle {
     Export(modelFileBundle,
-           () => reader.ImportAndProcess(modelFileBundle.TypedFileBundle),
+           () => reader.ImportAndProcess(modelFileBundle),
            formats,
            overwriteExistingFile);
   }
 
-  public static void Export<T>(IAnnotatedFileBundle<T> threeDFileBundle,
+  public static void Export<T>(T threeDFileBundle,
                                Func<IModel> loaderHandler,
                                IReadOnlySet<ExportedFormat> formats,
                                bool overwriteExistingFile)
       where T : I3dFileBundle {
-    var mainFile = Asserts.CastNonnull(threeDFileBundle.FileBundle.MainFile);
+    var mainFile = Asserts.CastNonnull(threeDFileBundle.MainFile);
 
     var parentOutputDirectory =
-        ExtractorUtil
-            .GetOutputDirectoryForFileBundle(threeDFileBundle);
+        ExtractorUtil.GetOutputDirectoryForFileBundle(threeDFileBundle);
     var outputDirectory = new FinDirectory(
         Path.Join(parentOutputDirectory.FullPath,
                   mainFile.NameWithoutExtension));
 
-    Export(threeDFileBundle.TypedFileBundle,
+    Export(threeDFileBundle,
            loaderHandler,
            outputDirectory,
            formats,

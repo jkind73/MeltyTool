@@ -22,8 +22,7 @@ public sealed class SuperPaperMarioFileBundleGatherer
           .Where(f => !f.Name.Contains('.') && !f.Name.EndsWith('-'));
 
     foreach (var modelFile in modelFiles) {
-      organizer.Add(new TtydModelFileBundle { ModelFile = modelFile }
-                        .Annotate(modelFile));
+      organizer.Add(new TtydModelFileBundle { ModelFile = modelFile });
     }
   }
 }

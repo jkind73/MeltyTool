@@ -12,17 +12,14 @@ using sm64.Scripts;
 namespace sm64.api;
 
 public sealed class Sm64LevelSceneFileBundle(
-    IReadOnlyTreeDirectory directory,
     IReadOnlyTreeFile sm64Rom,
+    IReadOnlyTreeFile levelFile,
     LevelId levelId)
     : ISceneFileBundle {
-  public IReadOnlyTreeFile MainFile => sm64Rom;
-  public IReadOnlyTreeDirectory Directory => directory;
+  public IReadOnlyTreeFile MainFile => levelFile;
 
   public IReadOnlyTreeFile Sm64Rom => sm64Rom;
   public LevelId LevelId => levelId;
-  string IUiFile.HumanReadableName => $"{this.LevelId}".ToLower();
-  public string TrueFullPath => this.Sm64Rom.FullPath;
 }
 
 public sealed class Sm64LevelSceneImporter : ISceneImporter<Sm64LevelSceneFileBundle> {

@@ -48,7 +48,7 @@ public sealed class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
         organizer.Add(new ModModelFileBundle {
             ModFile = modFile,
             AnmFile = anmFile,
-        }.Annotate(modFile));
+        });
       }
     }
   }
@@ -81,7 +81,7 @@ public sealed class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
               organizer.Add(new ModModelFileBundle {
                   ModFile = bundle.ModelFile,
                   AnmFile = bundle.AnimationFiles.SingleOrDefault(),
-              }.Annotate(bundle.ModelFile));
+              });
             }
           } catch { }
         }

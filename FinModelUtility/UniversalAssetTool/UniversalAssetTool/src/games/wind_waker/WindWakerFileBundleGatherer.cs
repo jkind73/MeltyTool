@@ -241,6 +241,6 @@ public sealed class WindWakerFileBundleGatherer : BGameCubeFileBundleGatherer {
         BcxFiles = bcxFiles,
         BtiFiles = btiFiles,
         FrameRate = 60
-    }.Annotate(bmdFile));
+    });
   }
 }

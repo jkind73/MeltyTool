@@ -201,7 +201,7 @@ public sealed class MarioKartDoubleDashFileBundleGatherer
     var courseSubdir = fileHierarchy.Root.AssertGetExistingSubdir("Course");
     foreach (var subdir in courseSubdir.GetExistingSubdirs()) {
       var bolFile = subdir.FilesWithExtension(".bol").Single();
-      organizer.Add(new BolSceneFileBundle(bolFile).Annotate(bolFile));
+      organizer.Add(new BolSceneFileBundle(bolFile));
 
       var bmdFiles = subdir.FilesWithExtension(".bmd").ToArray();
       if (bmdFiles.Length == 0) {
@@ -228,7 +228,7 @@ public sealed class MarioKartDoubleDashFileBundleGatherer
     foreach (var astFile in astFiles) {
       organizer.Add(new AstAudioFileBundle {
           AstFile = astFile,
-      }.Annotate(astFile));
+      });
     }
   }
 
@@ -316,5 +316,5 @@ public sealed class MarioKartDoubleDashFileBundleGatherer
         BcxFiles = bcxFiles,
         BtiFiles = btiFiles,
         FrameRate = 60,
-    }.Annotate(bmdFile));
+    });
 }

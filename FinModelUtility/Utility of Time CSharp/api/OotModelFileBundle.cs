@@ -5,16 +5,12 @@ using UoT.memory;
 
 namespace UoT.api {
   public sealed class OotModelFileBundle(
-      IReadOnlyTreeDirectory directory,
       IReadOnlyTreeFile ootRom,
+      IReadOnlyTreeFile zObjectFile,
       IZFile zFile) : IModelFileBundle {
-    public IReadOnlyTreeFile MainFile => ootRom;
-    public IReadOnlyTreeDirectory Directory => directory;
+    public IReadOnlyTreeFile MainFile => zObjectFile;
 
     public IReadOnlyTreeFile OotRom => ootRom;
     public IZFile ZFile => zFile;
-
-    string IUiFile.HumanReadableName => this.ZFile.FileName;
-    public string TrueFullPath => this.OotRom.FullPath;
   }
 }

@@ -18,8 +18,7 @@ public sealed class RollingMadness3dFileBundleGatherer : BPrereqsFileBundleGathe
     foreach (var aseMeshFile in fileHierarchy.Root.FilesWithExtensionRecursive(
                  ".ase.mesh")) {
       organizer.Add(
-          new AseMeshModelFileBundle(aseMeshFile, textureDirectory).Annotate(
-              aseMeshFile));
+          new AseMeshModelFileBundle(aseMeshFile, textureDirectory));
     }
   }
 }

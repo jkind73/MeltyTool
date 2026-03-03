@@ -92,7 +92,7 @@ public sealed class BattalionWars2FileBundleGatherer
                   ModlFile = modlFile,
                   GameVersion = GameVersion.BW2,
                   AnimFiles = currAnimFiles
-              }.Annotate(modlFile));
+              });
             }
           }
 
@@ -102,7 +102,7 @@ public sealed class BattalionWars2FileBundleGatherer
             organizer.Add(new OutModelFileBundle {
                 OutFile = outFile,
                 GameVersion = GameVersion.BW2,
-            }.Annotate(outFile));
+            });
           }
 
           if (directory.Name is "CompoundFiles") {
@@ -118,7 +118,7 @@ public sealed class BattalionWars2FileBundleGatherer
               organizer.Add(new BwSceneFileBundle {
                   MainXmlFile = levelXmlFile,
                   GameVersion = GameVersion.BW2,
-              }.Annotate(levelXmlFile));
+              });
             }
           }
         }

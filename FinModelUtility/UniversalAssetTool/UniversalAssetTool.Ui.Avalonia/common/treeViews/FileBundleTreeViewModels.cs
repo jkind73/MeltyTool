@@ -29,11 +29,11 @@ using uni.ui.winforms.common.fileTreeView;
 
 namespace uni.ui.avalonia.common.treeViews;
 
-using IFileBundleNode = INode<IAnnotatedFileBundle>;
+using IFileBundleNode = INode<IFileBundle>;
 
 // Top-level view model types
 public class FileBundleTreeViewModel
-    : BViewModel, IFilterTreeViewViewModel<IAnnotatedFileBundle> {
+    : BViewModel, IFilterTreeViewViewModel<IFileBundle> {
   private readonly IReadOnlyList<IFileBundleNode> nodes_;
 
   private readonly ISynchronizedView<IFileBundleNode, IFileBundleNode>
@@ -47,7 +47,7 @@ public class FileBundleTreeViewModel
     while (nodeQueue.TryDequeue(out IFileBundleNode node)) {
       var file = node.Value;
       if (file != null) {
-        autoCompleteItems.Add(file.FileBundle.DisplayFullPath.ToString());
+        autoCompleteItems.Add(file.DisplayFullPath.ToString());
       } else {
         autoCompleteItems.Add(node.Label);
       }
@@ -164,11 +164,9 @@ public sealed class FileBundleTreeViewModelForDesigner()
             new FileBundleDirectoryNode("Mammals",
             [
                 new FileBundleLeafNode("Lion",
-                                       new CmbModelFileBundle(
-                                           new FinFile("")).Annotate(null)),
+                                       new CmbModelFileBundle(new FinFile(""))),
                 new FileBundleLeafNode("Cat",
-                                       new OggAudioFileBundle(new FinFile(""))
-                                           .Annotate(null))
+                                       new OggAudioFileBundle(new FinFile("")))
             ])
         ])
     ]);
@@ -213,7 +211,7 @@ public sealed class FileBundleDirectoryNode
     this.FilteredSubNodes = this.filteredSubNodes_?.ToNotifyCollectionChanged();
   }
 
-  public IAnnotatedFileBundle? Value => null;
+  public IFileBundle? Value => null;
 
   public INotifyCollectionChangedSynchronizedViewList<
       IFileBundleNode>? FilteredSubNodes { get; }
@@ -222,7 +220,7 @@ public sealed class FileBundleDirectoryNode
   public string Label { get; }
   public IReadOnlySet<string> FilterTerms { get; }
 
-  public IFilter<IAnnotatedFileBundle>? Filter {
+  public IFilter<IFileBundle>? Filter {
     set {
       if (this.subNodes_ == null || this.FilteredSubNodes == null) {
         return;
@@ -251,23 +249,23 @@ public sealed class FileBundleDirectoryNode
 
 public sealed class FileBundleLeafNode(
     string label,
-    IAnnotatedFileBundle data)
+    IFileBundle data)
     : BFileBundleNode(label), IFileBundleNode, IFileTreeLeafNode {
   public INotifyCollectionChangedSynchronizedViewList<
       IFileBundleNode>? FilteredSubNodes => null;
 
-  public MaterialIconKind? Icon => data.FileBundle.Type switch {
+  public MaterialIconKind? Icon => data.Type switch {
       FileBundleType.AUDIO => MaterialIconKind.VolumeHigh,
       FileBundleType.IMAGE => MaterialIconKind.ImageOutline,
       FileBundleType.MODEL => MaterialIconKind.CubeOutline,
       FileBundleType.SCENE => MaterialIconKind.Web,
   };
 
-  public IAnnotatedFileBundle Value => data;
-  public IAnnotatedFileBundle File => data;
+  public IFileBundle Value => data;
+  public IFileBundle File => data;
   public string Label => label;
 
-  public IFilter<IAnnotatedFileBundle>? Filter {
+  public IFilter<IFileBundle>? Filter {
     set => this.InFilter = value?.MatchesNode(this) ?? true;
   }
 
@@ -275,7 +273,7 @@ public sealed class FileBundleLeafNode(
 }
 
 public sealed class FileBundleFilter(IReadOnlySet<string> tokens)
-    : IFilter<IAnnotatedFileBundle> {
+    : IFilter<IFileBundle> {
   public static FileBundleFilter? FromText(string? text) {
     var tokens = text?.Split([' ', '\t', '\n'],
                              StringSplitOptions.RemoveEmptyEntries |
@@ -288,13 +286,13 @@ public sealed class FileBundleFilter(IReadOnlySet<string> tokens)
   public bool MatchesNode(IFileBundleNode node) {
     foreach (var token in tokens) {
       var annotatedFileBundle = node.Value;
-      var fileBundle = annotatedFileBundle.FileBundle;
+      var fileBundle = annotatedFileBundle;
 
       if (this.ContainsToken_(node.Label, token)) {
         goto FoundMatch;
       }
 
-      if (this.ContainsToken_(annotatedFileBundle.GameName, token)) {
+      if (this.ContainsToken_(annotatedFileBundle.DisplayFullPath, token)) {
         goto FoundMatch;
       }
 
@@ -312,6 +310,6 @@ public sealed class FileBundleFilter(IReadOnlySet<string> tokens)
     return true;
   }
 
-  private bool ContainsToken_(string text, string token)
+  private bool ContainsToken_(ReadOnlySpan<char> text, ReadOnlySpan<char> token)
     => text.Contains(token, StringComparison.OrdinalIgnoreCase);
 }

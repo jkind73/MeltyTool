@@ -36,7 +36,7 @@ public sealed class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleG
                 organizer.Add(new XmodModelFileBundle {
                     XmodFile = xmodFile,
                     TextureDirectory = textureDirectory,
-                }.Annotate(xmodFile));
+                });
               }
 
               foreach (var pedFile in subdir.FilesWithExtension(".ped")) {
@@ -44,7 +44,7 @@ public sealed class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleG
                     PedFile = pedFile,
                     ModelDirectory = modelDirectory,
                     TextureDirectory = textureDirectory,
-                }.Annotate(pedFile));
+                });
               }
             })
         .GatherFileBundles(organizer, mutablePercentageProgress);

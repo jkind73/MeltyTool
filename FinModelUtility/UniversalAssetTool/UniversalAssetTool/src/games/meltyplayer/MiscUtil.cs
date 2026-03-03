@@ -25,8 +25,7 @@ public static class MiscUtil {
                   D3dFile = d3dFile,
                   TextureFile = textureFile,
                   TextureWrapMode = WrapMode.REPEAT,
-              }
-              .Annotate(d3dFile));
+              });
     }
 
     foreach (var glbFile in rootDir.FilesWithExtension(".glb")) {
@@ -36,7 +35,7 @@ public static class MiscUtil {
               texture.WrapModeU = texture.WrapModeV = WrapMode.REPEAT;
             }
           }
-      }.Annotate(glbFile));
+      });
     }
   }
 }

@@ -48,6 +48,6 @@ public sealed class AnimalCrossingFileBundleGatherer
     organizer.Add(new AnimalCrossingModelFileBundle {
         ModelFile = modelFile,
         VertexFile = vertexFile,
-    }.Annotate(modelFile));
+    });
   }
 }

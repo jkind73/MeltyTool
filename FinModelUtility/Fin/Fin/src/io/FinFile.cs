@@ -115,4 +115,15 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
   // Write methods
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public Stream OpenWrite() => FinFileStatic.OpenWrite(this.FullPath);
+
+  public bool HasRoot(out string rootName, out string localPath) {
+    if (root != null) {
+      rootName = root.Name;
+      localPath = this.FullPath[root.Impl.FullPath.Length..];
+      return true;
+    }
+
+    rootName = localPath = default!;
+    return false;
+  }
 }

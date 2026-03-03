@@ -17,9 +17,7 @@ public sealed class KirbyAirRideFileBundleGatherer : BGameCubeFileBundleGatherer
 
     foreach (var ssmFile in
              fileHierarchy.Root.FilesWithExtensionRecursive(".ssm")) {
-      organizer.Add(new SsmAudioFileBundle {
-          SsmFile = ssmFile,
-      }.Annotate(ssmFile));
+      organizer.Add(new SsmAudioFileBundle { SsmFile = ssmFile });
     }
   }
 }

@@ -123,6 +123,7 @@ public sealed class MfsTreeDirectory(
     => subdirs.CastTo<MfsTreeDirectory, MfsTreeIoObject>().Concat(files);
 
   public bool IsEmpty => subdirs.Count == 0 && files.Count == 0;
+  public bool IsRoot => parent == null;
 
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -206,6 +207,11 @@ public sealed class MfsTreeFile(
     = Path.Join(parent.FullPath, $"{impl.Name}.{impl.Ext}");
 
   public string DisplayFullPath => this.FullPath;
+
+  public bool HasRoot(out string rootName, out string localPath) {
+    rootName = localPath = default!;
+    return false;
+  }
 
   public string FileType => FinFileStatic.GetExtension(this.FullPath);
 

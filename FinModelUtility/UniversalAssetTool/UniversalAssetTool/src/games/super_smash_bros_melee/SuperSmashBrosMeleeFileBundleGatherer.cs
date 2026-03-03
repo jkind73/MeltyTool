@@ -31,7 +31,7 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
              fileHierarchy.Root.FilesWithExtensionRecursive(".ssm")) {
       organizer.Add(new SsmAudioFileBundle {
          SsmFile = ssmFile,
-      }.Annotate(ssmFile));
+      });
     }
 
     foreach (var datFile in fileHierarchy.Root.FilesWithExtension(".dat")) {
@@ -56,7 +56,7 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
     foreach (var stageOrTrophyFile in stageFiles.Concat(trophyFiles)) {
       organizer.Add(new DatModelFileBundle {
           DatFile = stageOrTrophyFile,
-      }.Annotate(stageOrTrophyFile));
+      });
     }
 
     // TODO: How to optimize this??
@@ -91,7 +91,7 @@ public sealed class SuperSmashBrosMeleeFileBundleGatherer
             PrimaryDatFile = modelFile,
             AnimationDatFile = animationFile,
             FighterDatFile = fighterFile,
-        }.Annotate(modelFile));
+        });
       }
     }
   }

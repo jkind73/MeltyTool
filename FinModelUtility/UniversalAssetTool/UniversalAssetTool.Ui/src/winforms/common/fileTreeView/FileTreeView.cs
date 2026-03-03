@@ -29,7 +29,7 @@ public abstract partial class FileTreeView<TFiles>
         var keywords = new HashSet<string>();
 
         if (fileNode is LeafFileNode leafFileNode) {
-          var file = leafFileNode.File.FileBundle;
+          var file = leafFileNode.File;
           var fileName = file.RawName;
           keywords.Add(fileName.ToString());
 

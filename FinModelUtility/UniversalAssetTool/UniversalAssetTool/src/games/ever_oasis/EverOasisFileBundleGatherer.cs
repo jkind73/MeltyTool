@@ -62,7 +62,7 @@ public sealed class EverOasisFileBundleGatherer : INamedAnnotatedFileBundleGathe
                                 cmbFile,
                                 csabFiles,
                                 ctxbFiles,
-                                null).Annotate(cmbFile));
+                                null));
             }
           }
         } else {

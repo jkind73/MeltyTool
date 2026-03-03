@@ -11,12 +11,10 @@ public static class PokemonGold3dUtil {
       IFileBundleOrganizer organizer,
       IFileHierarchyDirectory rootDir) {
     foreach (var omdFile in rootDir.GetFilesWithFileType(".omd", true)) {
-      organizer.Add(new AnnotatedFileBundle<OmdModelFileBundle>(
-                        new OmdModelFileBundle {
-                            OmdFile = omdFile,
-                            Mutator = TweakMaterials_,
-                        },
-                        omdFile));
+      organizer.Add(new OmdModelFileBundle {
+          OmdFile = omdFile,
+          Mutator = TweakMaterials_,
+      });
     }
   }
 

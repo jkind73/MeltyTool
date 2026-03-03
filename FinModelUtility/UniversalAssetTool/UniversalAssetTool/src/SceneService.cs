@@ -12,7 +12,7 @@ public static class SceneService {
   static SceneService() {
     FileBundleService.OnFileBundleOpened
         += (fileTreeLeafNode, fileBundle) => {
-          if (fileBundle.FileBundle is ISceneFileBundle sceneFileBundle) {
+          if (fileBundle is ISceneFileBundle sceneFileBundle) {
             LoadingStatusService.IsLoading = true;
 
             try {

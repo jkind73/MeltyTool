@@ -83,7 +83,7 @@ public sealed class DeadSpace3FileBundleGatherer : INamedAnnotatedFileBundleGath
             BnkFileIdsDictionary = bnkFileIdsDictionary,
             MtlbFileIdsDictionary = mtlbFileIdsDictionary,
             Tg4hFileIdDictionary = tg4hFileIdDictionary,
-        }.Annotate(geoFiles.FirstOrDefault() ?? rcbFile!));
+        });
       } else {
         ;
       }

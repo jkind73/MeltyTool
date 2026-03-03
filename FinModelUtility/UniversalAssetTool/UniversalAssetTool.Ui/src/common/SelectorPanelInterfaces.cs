@@ -24,7 +24,7 @@ public static class SelectorPanels {
   private static readonly SortedSetDictionary<object, object> handlersByKey =
       new();
 
-  public static SelectorPanelKey<IAnnotatedFileBundle> FILE_BUNDLE { get; } =
+  public static SelectorPanelKey<IFileBundle> FILE_BUNDLE { get; } =
     new();
 
   public static void RegisterPanel<T>(SelectorPanelKey<T> key,

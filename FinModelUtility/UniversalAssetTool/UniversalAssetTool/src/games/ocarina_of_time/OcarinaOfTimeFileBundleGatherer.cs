@@ -62,9 +62,9 @@ public sealed class OcarinaOfTimeFileBundleGatherer : INamedAnnotatedFileBundleG
     foreach (var (zObject, path) in zObjectsAndPaths) {
       var zObjectFile = root.AssertGetExistingFile(path);
       organizer.Add(new OotModelFileBundle(
-                        root,
                         ocarinaOfTimeRom,
-                        zObject).Annotate(zObjectFile));
+                        zObjectFile,
+                        zObject));
     }
   }
 }

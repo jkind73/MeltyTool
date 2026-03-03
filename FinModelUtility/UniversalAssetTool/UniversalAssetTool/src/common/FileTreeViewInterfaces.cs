@@ -27,7 +27,7 @@ public interface IFileTreeNode {
 public interface IFileTreeParentNode : IFileTreeNode {
   IEnumerable<IFileTreeNode> ChildNodes { get; }
 
-  IEnumerable<IAnnotatedFileBundle> GetFiles(bool recursive) {
+  IEnumerable<IFileBundle> GetFiles(bool recursive) {
     var children = this.ChildNodes.OfType<IFileTreeLeafNode>()
                        .Select(fileNode => fileNode.File);
     return !recursive
@@ -41,16 +41,13 @@ public interface IFileTreeParentNode : IFileTreeNode {
                                         true)));
   }
 
-  IEnumerable<IAnnotatedFileBundle<TSpecificFile>> GetFilesOfType<
+  IEnumerable<TSpecificFile> GetFilesOfType<
       TSpecificFile>(bool recursive) where TSpecificFile : IFileBundle
-    => this.GetFiles(recursive)
-           .SelectWhere<IAnnotatedFileBundle,
-               IAnnotatedFileBundle<TSpecificFile>>(
-               AnnotatedFileBundleExtensions.IsOfType);
+    => this.GetFiles(recursive).OfType<TSpecificFile>();
 }
 
 public interface IFileTreeLeafNode : IFileTreeNode {
-  IAnnotatedFileBundle File { get; }
+  IFileBundle File { get; }
 }
 
 public static class FileTreeExtensions {

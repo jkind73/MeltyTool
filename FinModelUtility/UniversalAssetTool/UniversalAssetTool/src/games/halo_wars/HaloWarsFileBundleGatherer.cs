@@ -44,7 +44,7 @@ public sealed class HaloWarsFileBundleGatherer : INamedAnnotatedFileBundleGather
       var xtdFile = srcMapDirectory.FilesWithExtension(".xtd").Single();
       var xttFile = srcMapDirectory.FilesWithExtension(".xtt").Single();
       organizer.Add(
-          new XtdModelFileBundle(xtdFile, xttFile).Annotate(xtdFile));
+          new XtdModelFileBundle(xtdFile, xttFile));
     }
 
     var artDirectory = fileHierarchy.Root.AssertGetExistingSubdir("art");
@@ -55,8 +55,7 @@ public sealed class HaloWarsFileBundleGatherer : INamedAnnotatedFileBundleGather
       // TODO: Parse UGX files instead, as long as they specify their own animations
       var visFiles = artSubdir.FilesWithExtension(".vis");
       foreach (var visFile in visFiles) {
-        organizer.Add(new VisSceneFileBundle(visFile, context).Annotate(
-                          visFile));
+        organizer.Add(new VisSceneFileBundle(visFile, context));
       }
 
       artSubdirQueue.Enqueue(artSubdir.GetExistingSubdirs());

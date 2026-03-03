@@ -19,13 +19,13 @@ public sealed class Celeste64FileBundleGatherer : BPrereqsFileBundleGatherer {
     var root = fileHierarchy.Root;
 
     foreach (var bankFile in root.FilesWithExtensionRecursive(".bank")) {
-      organizer.Add(new BankAudioFileBundle(bankFile).Annotate(bankFile));
+      organizer.Add(new BankAudioFileBundle(bankFile));
     }
 
     var modelDirectory = root.AssertGetExistingSubdir("Models");
     foreach (var glbFile in
              modelDirectory.FilesWithExtensionRecursive(".glb")) {
-      organizer.Add(new GltfModelFileBundle(glbFile).Annotate(glbFile));
+      organizer.Add(new GltfModelFileBundle(glbFile));
     }
 
     var spritesDirectory = root.AssertGetExistingSubdir("Sprites");
@@ -35,13 +35,13 @@ public sealed class Celeste64FileBundleGatherer : BPrereqsFileBundleGatherer {
       organizer.Add(new Celeste64MapModelFileBundle {
           MapFile = mapFile,
           TextureDirectory = textureDirectory,
-      }.Annotate(mapFile));
+      });
       organizer.Add(new Celeste64MapSceneFileBundle {
           MapFile = mapFile,
           ModelDirectory = modelDirectory,
           SpritesDirectory = spritesDirectory,
           TextureDirectory = textureDirectory,
-      }.Annotate(mapFile));
+      });
     }
   }
 }

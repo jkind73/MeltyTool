@@ -35,7 +35,7 @@ public sealed class VictoryHeatRallyBundleGatherer : INamedAnnotatedFileBundleGa
     foreach (var vbuffFile in dataDirectory
                               .AssertGetExistingSubdir("TRK\\MODEL")
                               .GetExistingFiles()) {
-      organizer.Add(new VbModelFileBundle(vbuffFile).Annotate(vbuffFile));
+      organizer.Add(new VbModelFileBundle(vbuffFile));
     }
 
     foreach (var jsonFile in dataDirectory.AssertGetExistingSubdir("TRK")
@@ -44,7 +44,7 @@ public sealed class VictoryHeatRallyBundleGatherer : INamedAnnotatedFileBundleGa
           TrackJsonFile = jsonFile,
           ExtractedDirectory = scratchDirectory,
           DataDirectory = dataDirectory,
-      }.Annotate(jsonFile));
+      });
     }
   }
 }

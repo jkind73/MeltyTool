@@ -79,16 +79,11 @@ public sealed class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
           }
 
           foreach (var xcBundle in xcBundles) {
-            var bundle = new XcModelFileBundle {
+            organizer.Add(new XcModelFileBundle {
                 HumanReadableName = xcBundle.Name,
                 ModelDirectory = xcBundle.ModelDirectory,
                 AnimationDirectories = xcBundle.AnimationDirectories,
-            };
-
-            var xcFile =
-                xcBundle.ModelDirectory.Parent.AssertGetExistingFile(
-                    $"{xcBundle.ModelDirectory.Name}.xc");
-            organizer.Add(bundle.Annotate(xcFile));
+            });
           }
 
           foreach (var xcDirectory in xcDirectories) {
@@ -111,12 +106,10 @@ public sealed class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
                                      .ToArray();
             }
 
-            var xcFile = xcDirectory.Parent.AssertGetExistingFile(
-                $"{xcDirectory.Name}.xc");
             organizer.Add(new XcModelFileBundle {
                 ModelDirectory = xcDirectory,
                 AnimationDirectories = animationDirectories,
-            }.Annotate(xcFile));
+            });
           }
         }
     ).GatherFileBundles(organizer, mutablePercentageProgress);

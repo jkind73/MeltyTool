@@ -50,7 +50,7 @@ public sealed class LuigisMansion3dFileBundleGatherer
                             bundle.AnimationFiles.ToArray(),
                             ctxbFiles,
                             shpaFiles
-                        ).Annotate(bundle.ModelFile));
+                        ));
         }
       } catch { }
     }

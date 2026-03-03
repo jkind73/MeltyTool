@@ -10,8 +10,14 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.io.web;
 
-public record MockGameAndLocalPath(string GameName, string LocalPath)
-    : IGameAndLocalPath;
+public record MockFileBundle(string GameName, string LocalPath)
+    : IFileBundle {
+  public ReadOnlySpan<char> DisplayFullPath
+    => $"//{this.GameName}/{this.LocalPath}";
+
+  public FileBundleType Type => throw new NotImplementedException();
+  public IReadOnlyTreeFile MainFile => throw new NotImplementedException();
+}
 
 public sealed class GitHubUtilTests {
   private void SomeMethod1_<T>(T value) => this.SomeMethod2_("Foobar");
@@ -67,7 +73,7 @@ public sealed class GitHubUtilTests {
           = GitHubUtil.GetNewIssueUrl(
               e,
               new LoadFileBundleExceptionContext(
-                  new MockGameAndLocalPath("mario_game", @"foo\bar\file.txt")));
+                  new MockFileBundle("mario_game", @"foo\bar\file.txt")));
       var parsedQueryString
           = HttpUtility.ParseQueryString(issueUrl.Split('?')[1]);
 

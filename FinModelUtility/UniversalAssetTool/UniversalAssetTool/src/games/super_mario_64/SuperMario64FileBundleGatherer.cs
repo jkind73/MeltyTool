@@ -54,9 +54,9 @@ public sealed class SuperMario64FileBundleGatherer : INamedAnnotatedFileBundleGa
     foreach (var (levelId, path) in levelIdsAndPaths) {
       var levelFile = root.AssertGetExistingFile(path);
       organizer.Add(new Sm64LevelSceneFileBundle(
-                        root,
                         superMario64Rom,
-                        levelId).Annotate(levelFile));
+                        levelFile,
+                        levelId));
     }
 
     var marioAnimationsFile

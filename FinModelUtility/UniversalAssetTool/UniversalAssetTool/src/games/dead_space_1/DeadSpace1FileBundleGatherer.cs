@@ -66,7 +66,7 @@ public sealed class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
             BnkFileIdsDictionary = bnkFileIdsDictionary,
             MtlbFileIdsDictionary = mtlbFileIdsDictionary,
             Tg4hFileIdDictionary = tg4hFileIdDictionary,
-        }.Annotate(geoFiles.FirstOrDefault() ?? rcbFile!));
+        });
       } else {
         ;
       }

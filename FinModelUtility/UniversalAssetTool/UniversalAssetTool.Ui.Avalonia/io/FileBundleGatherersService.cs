@@ -62,7 +62,7 @@ public static class FileBundleGatherersService {
       IFileBundleDirectory directoryRoot,
       CounterPercentageProgress counterPercentageProgress) {
     var viewModel = new FileBundleTreeViewModel(
-        new ObservableCollection<INode<IAnnotatedFileBundle>>(
+        new ObservableCollection<INode<IFileBundle>>(
             directoryRoot
                 .Subdirs
                 .Select(subdir => CreateDirectoryNode_(
@@ -91,7 +91,7 @@ public static class FileBundleGatherersService {
     return viewModel;
   }
 
-  private static INode<IAnnotatedFileBundle> CreateDirectoryNode_(
+  private static INode<IFileBundle> CreateDirectoryNode_(
       IFileBundleDirectory directory,
       CounterPercentageProgress counterPercentageProgress,
       IList<string>? parts = null) {
@@ -124,7 +124,7 @@ public static class FileBundleGatherersService {
 
     return new FileBundleDirectoryNode(
         text,
-        new ObservableCollection<INode<IAnnotatedFileBundle>>(
+        new ObservableCollection<INode<IFileBundle>>(
             directory
                 .Subdirs
                 .Select(d => CreateDirectoryNode_(
@@ -136,13 +136,13 @@ public static class FileBundleGatherersService {
                                                      counterPercentageProgress)))));
   }
 
-  private static INode<IAnnotatedFileBundle> CreateFileNode_(
-      IAnnotatedFileBundle fileBundle,
+  private static INode<IFileBundle> CreateFileNode_(
+      IFileBundle fileBundle,
       CounterPercentageProgress counterPercentageProgress,
       IList<string>? parts = null) {
     counterPercentageProgress.Increment();
 
-    var displayName = fileBundle.FileBundle.DisplayName.ToString();
+    var displayName = fileBundle.DisplayName.ToString();
 
     string? text = null;
     if (parts != null) {

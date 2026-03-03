@@ -10,10 +10,10 @@ public static class FileBundleService {
         => OpenFileBundle(fileTreeLeafNode, fileTreeLeafNode.File);
   }
 
-  public static event Action<IFileTreeLeafNode?, IAnnotatedFileBundle>
+  public static event Action<IFileTreeLeafNode?, IFileBundle>
       OnFileBundleOpened;
 
   public static void OpenFileBundle(IFileTreeLeafNode? fileTreeLeafNode,
-                                    IAnnotatedFileBundle fileBundle)
+                                    IFileBundle fileBundle)
     => OnFileBundleOpened?.Invoke(fileTreeLeafNode, fileBundle);
 }

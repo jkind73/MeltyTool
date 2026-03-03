@@ -82,7 +82,7 @@ public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
                             model,
                             animations,
                             null,
-                            null).Annotate(model));
+                            null));
         }
       } else {
         foreach (var model in models) {
@@ -90,17 +90,15 @@ public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
                             model,
                             null,
                             null,
-                            null).Annotate(model));
+                            null));
         }
       }
     }
 
     var sceneDir = fileHierarchy.Root.AssertGetExistingSubdir("scenes");
     foreach (var zsiFile in sceneDir.GetFilesWithFileType(".zsi")) {
-      organizer.Add(new ZsiSceneFileBundle(zsiFile)
-                        .Annotate(zsiFile));
-      organizer.Add(new ZsiModelFileBundle(zsiFile)
-                        .Annotate(zsiFile));
+      organizer.Add(new ZsiSceneFileBundle(zsiFile));
+      organizer.Add(new ZsiModelFileBundle(zsiFile));
     }
   }
 
@@ -136,7 +134,7 @@ public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
                                 bundle.AnimationFiles.ToArray(),
                                 ctxbFiles,
                                 null
-                            ).Annotate(bundle.ModelFile));
+                            ));
             }
           } catch { }
         }
@@ -167,7 +165,7 @@ public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
 
       organizer.Add(new CmbModelFileBundle(
                         cmbFile,
-                        csabFiles).Annotate(cmbFile));
+                        csabFiles));
     }
   }
 
@@ -190,7 +188,7 @@ public sealed class MajorasMask3dFileBundleGatherer : B3dsFileBundleGatherer {
     foreach (var model in models) {
       organizer.Add(new CmbModelFileBundle(
                         model,
-                        animations).Annotate(model));
+                        animations));
     }
   }
 }

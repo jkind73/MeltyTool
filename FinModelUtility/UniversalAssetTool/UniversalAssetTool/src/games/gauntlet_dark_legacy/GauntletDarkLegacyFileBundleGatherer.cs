@@ -41,7 +41,7 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
                 ObjectsFile = objectsFile,
                 AnimFile = animFile,
                 TexturesFile = texturesFile,
-            }.Annotate(objectsFile));
+            });
       } else {
         organizer.Add(
             new GauntletDarkLegacyWorldModelFileBundle {
@@ -49,7 +49,7 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
                 AnimFile = animFile,
                 TexturesFile = texturesFile,
                 WorldsFile = worldsFile,
-            }.Annotate(objectsFile));
+            });
         organizer.Add(
             new GauntletDarkLegacySceneFileBundle {
                 ObjectsFile = objectsFile,
@@ -57,7 +57,7 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
                 TexturesFile = texturesFile,
                 WorldsFile = worldsFile,
                 MonstersDirectory = monstersDirectory,
-            }.Annotate(worldsFile));
+            });
       }
     }
   }
