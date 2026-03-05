@@ -1,4 +1,5 @@
 ﻿using fin.io.bundles;
+using fin.util.gc;
 using fin.util.progress;
 using fin.util.types;
 
@@ -59,6 +60,8 @@ public sealed class RootFileBundleGatherer {
 
     var organizer = new FileBundleTreeOrganizer();
     rootGatherer.GatherFileBundles(organizer, mutablePercentageProgress);
-    return organizer.CleanUpAndGetRoot();
+    var root = organizer.CleanUpAndGetRoot();
+    GcUtil.ForceCollectEverything(true);
+    return root;
   }
 }

@@ -120,16 +120,17 @@ public sealed class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
                                        string modelFileName)
     => new ModelOnly(
         name,
-        directory.GetExistingSubdirs().SingleByName(modelFileName));
+        directory.GetExistingSubdirs().SingleByName(modelFileName).Impl);
 
   internal IXcDirectories GetSameFile(string name,
                                       IFileHierarchyDirectory directory,
                                       string modelFileName) {
-    var modelFile = directory.AssertGetExistingSubdir(modelFileName);
+    var modelFile = directory.AssertGetExistingSubdir(modelFileName).Impl;
     var animationFiles =
         directory.GetExistingSubdirs()
                  .Where(file => file.Name != modelFileName &&
-                                file.Name.StartsWith(modelFileName));
+                                file.Name.StartsWith(modelFileName))
+                 .Select(d => d.Impl);
     return new ModelAndAnimations(
         name,
         modelFile,
@@ -144,32 +145,33 @@ public sealed class ProfessorLaytonVsPhoenixWrightFileBundleGatherer
                                                     animationFileNames)
     => new ModelAndAnimations(
         name,
-        directory.AssertGetExistingSubdir(modelFileName),
+        directory.AssertGetExistingSubdir(modelFileName).Impl,
         animationFileNames.Select(f => directory.AssertGetExistingSubdir(f))
+                          .Select(d => d.Impl)
                           .ToArray());
 
   internal interface IXcDirectories {
     string Name { get; }
-    IFileHierarchyDirectory ModelDirectory { get; }
-    IFileHierarchyDirectory[]? AnimationDirectories { get; }
+    IReadOnlyTreeDirectory ModelDirectory { get; }
+    IReadOnlyTreeDirectory[]? AnimationDirectories { get; }
   }
 
 
   internal record ModelOnly(
       string Name,
-      IFileHierarchyDirectory ModelDirectory) : IXcDirectories {
-    public IFileHierarchyDirectory[]? AnimationDirectories => null;
+      IReadOnlyTreeDirectory ModelDirectory) : IXcDirectories {
+    public IReadOnlyTreeDirectory[]? AnimationDirectories => null;
   }
 
   internal record SameDirectories(
       string Name,
-      IFileHierarchyDirectory ModelDirectory) : IXcDirectories {
-    public IFileHierarchyDirectory[] AnimationDirectories { get; } =
+      IReadOnlyTreeDirectory ModelDirectory) : IXcDirectories {
+    public IReadOnlyTreeDirectory[] AnimationDirectories { get; } =
       [ModelDirectory];
   }
 
   internal record ModelAndAnimations(
       string Name,
-      IFileHierarchyDirectory ModelDirectory,
-      params IFileHierarchyDirectory[] AnimationDirectories) : IXcDirectories;
+      IReadOnlyTreeDirectory ModelDirectory,
+      params IReadOnlyTreeDirectory[] AnimationDirectories) : IXcDirectories;
 }

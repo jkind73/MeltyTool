@@ -58,7 +58,6 @@ public sealed class MainViewModelForDesigner {
 
     this.FileBundleTreeAsyncPanelViewModel = new ProgressPanelViewModel
         { Progress = progress };
-    ;
   }
 }
 

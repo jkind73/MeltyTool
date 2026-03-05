@@ -14,6 +14,9 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
 
 
   // Equality
+  public override int GetHashCode()
+    => string.GetHashCode(this.FullPath, StringComparison.OrdinalIgnoreCase);
+
   public override bool Equals(object? other) {
     if (ReferenceEquals(this, other)) {
       return true;
@@ -33,11 +36,14 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
     => this.Equals(other as IReadOnlyTreeIoObject);
 
   public bool Equals(IReadOnlyTreeIoObject? other)
-    => this.FullPath == other?.FullPath;
+    => this.FullPath.Equals(other?.FullPath,
+                            StringComparison.OrdinalIgnoreCase);
 
 
   // Directory fields
-  public ReadOnlySpan<char> Name => FinIoStatic.GetName(fullName);
+  public ReadOnlySpan<char> Name
+    => this.Equals(root?.Impl) ? root.Name : FinIoStatic.GetName(fullName);
+
   public string FullPath => fullName;
 
   public string DisplayFullName

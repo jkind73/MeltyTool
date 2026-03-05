@@ -46,8 +46,8 @@ public sealed class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
             anmFile => anmFile.NameWithoutExtension.SequenceEqual(
                 modFile.NameWithoutExtension));
         organizer.Add(new ModModelFileBundle {
-            ModFile = modFile,
-            AnmFile = anmFile,
+            ModFile = modFile.Impl,
+            AnmFile = anmFile?.Impl,
         });
       }
     }
@@ -79,8 +79,8 @@ public sealed class Pikmin1FileBundleGatherer : BGameCubeFileBundleGatherer {
                          modFiles,
                          anmFiles)) {
               organizer.Add(new ModModelFileBundle {
-                  ModFile = bundle.ModelFile,
-                  AnmFile = bundle.AnimationFiles.SingleOrDefault(),
+                  ModFile = bundle.ModelFile.Impl,
+                  AnmFile = bundle.AnimationFiles.SingleOrDefault()?.Impl,
               });
             }
           } catch { }

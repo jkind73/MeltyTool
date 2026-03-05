@@ -126,9 +126,6 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     protected CachedFileHierarchy TypedHierarchy { get; }
     public IFileHierarchyDirectory? Parent { get; }
 
-    public bool Equals(IReadOnlyTreeIoObject? other)
-      => this.Instance.Equals(other);
-
     public IReadOnlyTreeDirectory AssertGetParent()
       => Asserts.True(this.TryGetParent(out var parent))
           ? parent

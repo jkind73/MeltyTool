@@ -34,16 +34,16 @@ public sealed class MidnightClub2FileBundleGatherer : INamedAnnotatedFileBundleG
             (subdir, organizer) => {
               foreach (var xmodFile in subdir.FilesWithExtension(".xmod")) {
                 organizer.Add(new XmodModelFileBundle {
-                    XmodFile = xmodFile,
-                    TextureDirectory = textureDirectory,
+                    XmodFile = xmodFile.Impl,
+                    TextureDirectory = textureDirectory.Impl,
                 });
               }
 
               foreach (var pedFile in subdir.FilesWithExtension(".ped")) {
                 organizer.Add(new PedModelFileBundle {
-                    PedFile = pedFile,
-                    ModelDirectory = modelDirectory,
-                    TextureDirectory = textureDirectory,
+                    PedFile = pedFile.Impl,
+                    ModelDirectory = modelDirectory.Impl,
+                    TextureDirectory = textureDirectory.Impl,
                 });
               }
             })

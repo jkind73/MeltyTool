@@ -14,7 +14,7 @@ namespace vrml.api;
 
 public sealed class VrmlSceneImporter : ISceneImporter<VrmlSceneFileBundle> {
   public IScene Import(VrmlSceneFileBundle fileBundle) {
-    var wrlFile = fileBundle.WrlFile.Impl;
+    var wrlFile = fileBundle.WrlFile;
     using var wrlFileStream = wrlFile.OpenRead();
     var fileSet = fileBundle.WrlFile.AsFileSet();
 

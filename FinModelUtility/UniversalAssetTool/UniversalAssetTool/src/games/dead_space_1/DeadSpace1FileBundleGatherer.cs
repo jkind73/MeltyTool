@@ -41,22 +41,23 @@ public sealed class DeadSpace1FileBundleGatherer : BDesktopFileBundleGatherer {
                  .Select(f => assetFileHierarchy.Root.AssertGetExistingSubdir(
                              f))
                  .SelectMany(subdir => subdir.GetExistingSubdirs())) {
-      IFileHierarchyFile[] geoFiles = [];
+      IReadOnlyTreeFile[] geoFiles = [];
       if (charSubdir.TryToGetExistingSubdir("rigged/export",
                                             out var riggedSubdir)) {
         geoFiles =
             riggedSubdir.GetExistingFiles()
                         .Where(file => file.Name.EndsWith(".geo"))
+                        .Select(f => f.Impl)
                         .ToArray();
       }
 
-      IFileHierarchyFile? rcbFile = null;
-      IReadOnlyTreeFile[] bnkFiles = [];
+      IReadOnlyTreeFile? rcbFile = null;
       if (charSubdir.TryToGetExistingSubdir("cct/export",
                                             out var cctSubdir)) {
         rcbFile =
             cctSubdir.GetExistingFiles()
-                     .Single(file => file.Name.EndsWith(".rcb.WIN"));
+                     .Single(file => file.Name.EndsWith(".rcb.WIN"))
+                     .Impl;
       }
 
       if (geoFiles.Length > 0 || rcbFile != null) {

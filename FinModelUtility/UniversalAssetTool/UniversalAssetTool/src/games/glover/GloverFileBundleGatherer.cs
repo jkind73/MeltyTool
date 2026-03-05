@@ -27,7 +27,7 @@ public sealed class GloverFileBundleGatherer : INamedAnnotatedFileBundleGatherer
         gloverFileHierarchy.Root.AssertGetExistingSubdir("data");
     var topLevelBgmDirectory = dataDirectory.AssertGetExistingSubdir("bgm");
     foreach (var bgmFile in topLevelBgmDirectory.GetExistingFiles()) {
-      organizer.Add(new OggAudioFileBundle(bgmFile));
+      organizer.Add(new OggAudioFileBundle(bgmFile.Impl));
     }
 
     var topLevelObjectDirectory =
@@ -44,12 +44,12 @@ public sealed class GloverFileBundleGatherer : INamedAnnotatedFileBundleGatherer
     var objectFiles = objectDirectory.FilesWithExtension(".glo");
 
     var gloverSteamDirectory = gloverFileHierarchy.Root;
-    var textureDirectories = gloverSteamDirectory
+    var hierarchyTextureDirectories = gloverSteamDirectory
                              .AssertGetExistingSubdir("data/textures/generic")
                              .GetExistingSubdirs()
                              .ToList();
 
-    textureDirectories.AddRange([
+    hierarchyTextureDirectories.AddRange([
         gloverSteamDirectory.AssertGetExistingSubdir("data/textures/hub"),
         gloverSteamDirectory.AssertGetExistingSubdir("data/textures/ootw"),
         gloverSteamDirectory.AssertGetExistingSubdir(
@@ -63,14 +63,17 @@ public sealed class GloverFileBundleGatherer : INamedAnnotatedFileBundleGatherer
           gloverSteamDirectory.AssertGetExistingSubdir(
               objectDirectory.LocalPath.Replace("data\\objects",
                                                 "data\\textures"));
-      textureDirectories.Add(levelTextureDirectory);
-      textureDirectories.AddRange(levelTextureDirectory.GetExistingSubdirs());
+      hierarchyTextureDirectories.Add(levelTextureDirectory);
+      hierarchyTextureDirectories.AddRange(levelTextureDirectory.GetExistingSubdirs());
     } catch {
       // ignored
     }
 
+    var textureDirectories
+        = hierarchyTextureDirectories.Select(d => d.Impl).ToArray();
+
     foreach (var objectFile in objectFiles) {
-      organizer.Add(new GloModelFileBundle(objectFile, textureDirectories));
+      organizer.Add(new GloModelFileBundle(objectFile.Impl, textureDirectories));
     }
   }
 }

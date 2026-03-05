@@ -16,6 +16,6 @@ public sealed class FacadeFileBundleGatherer : BPrereqsFileBundleGatherer {
     var root = fileHierarchy.Root;
 
     var roomFile = root.AssertGetExistingFile("room.placeholder");
-    organizer.Add(new FacadeRoomModelFileBundle(roomFile, root));
+    organizer.Add(new FacadeRoomModelFileBundle(roomFile.Impl, root.Impl));
   }
 }

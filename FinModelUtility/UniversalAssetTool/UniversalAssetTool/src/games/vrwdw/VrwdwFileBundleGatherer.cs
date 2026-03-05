@@ -17,13 +17,13 @@ public sealed class VrwdwFileBundleGatherer : BPrereqsFileBundleGatherer {
       IMutablePercentageProgress mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
     foreach (var wrlFile in fileHierarchy.Root.GetFilesWithFileType(".wrl")) {
-      organizer.Add(new VrmlModelFileBundle { WrlFile = wrlFile });
-      organizer.Add(new VrmlSceneFileBundle { WrlFile = wrlFile });
+      organizer.Add(new VrmlModelFileBundle { WrlFile = wrlFile.Impl });
+      organizer.Add(new VrmlSceneFileBundle { WrlFile = wrlFile.Impl });
     }
 
     foreach (var midFile in fileHierarchy.Root.GetFilesWithFileType(".mid")) {
       organizer.Add(
-          new MidiAudioFileBundle(midFile, CommonFiles.WINDOWS_SOUNDFONT_FILE));
+          new MidiAudioFileBundle(midFile.Impl, CommonFiles.WINDOWS_SOUNDFONT_FILE));
     }
   }
 }

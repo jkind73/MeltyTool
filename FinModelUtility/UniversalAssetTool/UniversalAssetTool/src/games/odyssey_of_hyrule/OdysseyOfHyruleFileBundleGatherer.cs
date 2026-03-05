@@ -1,4 +1,5 @@
 ﻿using fin.common;
+using fin.io;
 using fin.io.bundles;
 using fin.util.progress;
 
@@ -7,23 +8,17 @@ using vrml.api;
 
 namespace uni.games.odyssey_of_hyrule;
 
-public sealed class OdysseyOfHyruleFileBundleGatherer : IAnnotatedFileBundleGatherer {
-  public string Name => "odyssey_of_hyrule";
+public sealed class OdysseyOfHyruleFileBundleGatherer
+    : BPrereqsFileBundleGatherer {
+  public override string Name => "odyssey_of_hyrule";
 
-  public void GatherFileBundles(
+  protected override void GatherFileBundlesFromHierarchy(
       IFileBundleOrganizer organizer,
-      IMutablePercentageProgress mutablePercentageProgress) {
-      if (!DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingSubdir(
-              Path.Join("odyssey_of_hyrule", ExtractorUtil.PREREQS),
-              out var vrwdwDir)) {
-        return;
-      }
-
-      var fileHierarchy = ExtractorUtil.GetFileHierarchy("odyssey_of_hyrule", vrwdwDir);
-
-      foreach (var wrlFile in fileHierarchy.Root.GetFilesWithFileType(".wrl")) {
-        organizer.Add(new VrmlModelFileBundle { WrlFile = wrlFile });
-        organizer.Add(new VrmlSceneFileBundle { WrlFile = wrlFile });
-      }
+      IMutablePercentageProgress mutablePercentageProgress,
+      IFileHierarchy fileHierarchy) {
+    foreach (var wrlFile in fileHierarchy.Root.GetFilesWithFileType(".wrl")) {
+      organizer.Add(new VrmlModelFileBundle { WrlFile = wrlFile.Impl });
+      organizer.Add(new VrmlSceneFileBundle { WrlFile = wrlFile.Impl });
     }
+  }
 }

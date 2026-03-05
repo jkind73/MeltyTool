@@ -16,12 +16,15 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
 
 
   // Equality
-  public new bool Equals(object? other) {
+  public override int GetHashCode()
+    => string.GetHashCode(this.FullPath, StringComparison.OrdinalIgnoreCase);
+
+  public override bool Equals(object? other) {
     if (ReferenceEquals(this, other)) {
       return true;
     }
 
-    if (other is not IReadOnlySystemIoObject otherSelf) {
+    if (other is not ISystemIoObject otherSelf) {
       return false;
     }
 
@@ -35,7 +38,8 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
     => this.Equals(other as IReadOnlyTreeIoObject);
 
   public bool Equals(IReadOnlyTreeIoObject? other)
-    => this.FullPath == other?.FullPath;
+    => this.FullPath.Equals(other?.FullPath,
+                            StringComparison.OrdinalIgnoreCase);
 
 
   // File fields

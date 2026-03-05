@@ -46,8 +46,8 @@ public sealed class AnimalCrossingFileBundleGatherer
             "int_yos_wheel_v.bin");
 
     organizer.Add(new AnimalCrossingModelFileBundle {
-        ModelFile = modelFile,
-        VertexFile = vertexFile,
+        ModelFile = modelFile.Impl,
+        VertexFile = vertexFile.Impl,
     });
   }
 }

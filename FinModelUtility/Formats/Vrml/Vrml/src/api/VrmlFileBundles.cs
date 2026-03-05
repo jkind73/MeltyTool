@@ -7,16 +7,16 @@ using fin.scene;
 namespace vrml.api;
 
 public interface IVrmlFileBundle : IFileBundle {
-  IFileHierarchyFile WrlFile { get; }
+  IReadOnlyTreeFile WrlFile { get; }
   IReadOnlyTreeFile IFileBundle.MainFile => this.WrlFile;
 }
 
 public sealed class VrmlModelFileBundle : IVrmlFileBundle, IModelFileBundle {
   public string? GameName { get; }
-  public required IFileHierarchyFile WrlFile { get; init; }
+  public required IReadOnlyTreeFile WrlFile { get; init; }
 }
 
 public sealed class VrmlSceneFileBundle : IVrmlFileBundle, ISceneFileBundle {
   public string? GameName { get; }
-  public required IFileHierarchyFile WrlFile { get; init; }
+  public required IReadOnlyTreeFile WrlFile { get; init; }
 }

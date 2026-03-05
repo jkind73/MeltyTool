@@ -38,25 +38,25 @@ public sealed class GauntletDarkLegacyFileBundleGatherer
       if (worldsFile == null) {
         organizer.Add(
             new GauntletDarkLegacyModelFileBundle {
-                ObjectsFile = objectsFile,
-                AnimFile = animFile,
-                TexturesFile = texturesFile,
+                ObjectsFile = objectsFile.Impl,
+                AnimFile = animFile.Impl,
+                TexturesFile = texturesFile.Impl,
             });
       } else {
         organizer.Add(
             new GauntletDarkLegacyWorldModelFileBundle {
-                ObjectsFile = objectsFile,
-                AnimFile = animFile,
-                TexturesFile = texturesFile,
-                WorldsFile = worldsFile,
+                ObjectsFile = objectsFile.Impl,
+                AnimFile = animFile.Impl,
+                TexturesFile = texturesFile.Impl,
+                WorldsFile = worldsFile.Impl,
             });
         organizer.Add(
             new GauntletDarkLegacySceneFileBundle {
-                ObjectsFile = objectsFile,
-                AnimFile = animFile,
-                TexturesFile = texturesFile,
-                WorldsFile = worldsFile,
-                MonstersDirectory = monstersDirectory,
+                ObjectsFile = objectsFile.Impl,
+                AnimFile = animFile.Impl,
+                TexturesFile = texturesFile.Impl,
+                WorldsFile = worldsFile.Impl,
+                MonstersDirectory = monstersDirectory.Impl,
             });
       }
     }

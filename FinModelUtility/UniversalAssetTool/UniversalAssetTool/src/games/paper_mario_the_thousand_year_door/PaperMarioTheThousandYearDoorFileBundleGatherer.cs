@@ -22,7 +22,7 @@ public sealed class PaperMarioTheThousandYearDoorFileBundleGatherer
           .Where(f => !f.Name.Contains('.') && !f.Name.EndsWith('-'));
 
     foreach (var modelFile in modelFiles) {
-      organizer.Add(new TtydModelFileBundle { ModelFile = modelFile });
+      organizer.Add(new TtydModelFileBundle { ModelFile = modelFile.Impl });
     }
   }
 }

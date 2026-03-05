@@ -59,21 +59,23 @@ public sealed class DeadSpace3FileBundleGatherer : INamedAnnotatedFileBundleGath
                  .Select(f => assetFileHierarchy.Root
                                                 .AssertGetExistingSubdir(f))
                  .SelectMany(subdir => subdir.GetExistingSubdirs())) {
-      IFileHierarchyFile[] geoFiles = [];
+      IReadOnlyTreeFile[] geoFiles = [];
       if (charSubdir.TryToGetExistingSubdir("rigged/export",
                                             out var riggedSubdir)) {
         geoFiles =
             riggedSubdir.GetExistingFiles()
                         .Where(file => file.Name.EndsWith(".geo"))
+                        .Select(f => f.Impl)
                         .ToArray();
       }
 
-      IFileHierarchyFile? rcbFile = null;
+      IReadOnlyTreeFile? rcbFile = null;
       if (charSubdir.TryToGetExistingSubdir("cct/export",
                                             out var cctSubdir)) {
         rcbFile =
             cctSubdir.GetExistingFiles()
-                     .SingleOrDefault(file => file.Name.EndsWith(".rcb.win"));
+                     .SingleOrDefault(file => file.Name.EndsWith(".rcb.win"))
+                     .Impl;
       }
 
       if (geoFiles.Length > 0 || rcbFile != null) {

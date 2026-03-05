@@ -17,7 +17,7 @@ public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
 
   public FileBundleTreeOrganizer() {
     this.lazyDirToBundleDir_ = new((lazyDict, dir) => {
-      if (!dir.TryGetParent(out var parent) || dir.IsRoot) {
+      if (!dir.TryGetParent(out var parent)) {
         return this.root_.AddSubdir(dir);
       }
 
