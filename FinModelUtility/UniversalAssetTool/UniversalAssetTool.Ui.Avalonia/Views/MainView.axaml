@@ -43,6 +43,12 @@
     <Style Selector="views|MainView:fileSelectorHover > Grid > DockPanel > Grid > SplitView">
       <Setter Property="IsPaneOpen" Value="True" />
     </Style>
+    <Style Selector="views|MainView:not(:fileSelectorHover) Border#FileSelectorPanel Border.ExtraHitTestMargin">
+      <Setter Property="IsVisible" Value="False" />
+    </Style>
+    <Style Selector="views|MainView:fileSelectorHover Border#FileSelectorPanel Border.ExtraHitTestMargin">
+      <Setter Property="IsVisible" Value="True" />
+    </Style>
 
     <Style Selector="views|MainView:infoPanelHover > Grid > DockPanel > Grid > SplitView > SplitView">
       <Setter Property="IsPaneOpen" Value="True" />
@@ -73,13 +79,21 @@
             <Border x:Name="FileSelectorPanel"
                     Background="Transparent"
                     BoxShadow="0 0 10 0 Black">
-              <progress:ProgressPanel DataContext="{Binding FileBundleTreeAsyncPanelViewModel}">
-                <progress:ProgressPanel.DataTemplate>
-                  <DataTemplate x:DataType="progress:ValueFractionProgress">
-                    <treeViews:FilterTreeView DataContext="{Binding Value}" />
-                  </DataTemplate>
-                </progress:ProgressPanel.DataTemplate>
-              </progress:ProgressPanel>
+              <DockPanel>
+                <Border Classes="ExtraHitTestMargin"
+                        DockPanel.Dock="Right"
+                        Background="Transparent"
+                        Width="32"
+                        Margin="0 0 -32 0"
+                        VerticalAlignment="Stretch" />
+                <progress:ProgressPanel DataContext="{Binding FileBundleTreeAsyncPanelViewModel}">
+                  <progress:ProgressPanel.DataTemplate>
+                    <DataTemplate x:DataType="progress:ValueFractionProgress">
+                      <treeViews:FilterTreeView DataContext="{Binding Value}" />
+                    </DataTemplate>
+                  </progress:ProgressPanel.DataTemplate>
+                </progress:ProgressPanel>
+              </DockPanel>
             </Border>
           </SplitView.Pane>
 
