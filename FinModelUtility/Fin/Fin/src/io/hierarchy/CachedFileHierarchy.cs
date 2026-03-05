@@ -221,7 +221,6 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     public ISystemDirectory Impl { get; }
 
     public bool IsEmpty => this.subdirs_.Count > 0;
-    public bool IsRoot => this.Parent == null;
 
     public IEnumerable<IFileHierarchyDirectory> GetExistingSubdirs()
       => this.subdirs_;

@@ -12,7 +12,7 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
     : ISystemFile {
   public FinFile(IReadOnlyTreeFile treeFile) : this(treeFile.FullPath) { }
 
-  public override string ToString() => this.DisplayFullName;
+  public override string ToString() => this.DisplayFullPath;
 
 
   // Equality
@@ -42,9 +42,6 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
   public ReadOnlySpan<char> Name => FinIoStatic.GetName(this.FullPath);
   public string FullPath { get; } = fullName;
 
-  public string DisplayFullName
-    => root != null ? root.GetDisplayName(this) : this.FullPath;
-
 
   // Ancestry methods
   public ReadOnlySpan<char> GetParentFullPath()
@@ -60,8 +57,9 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
 
   public bool TryGetParent(out ISystemDirectory parent) {
     var parentName = this.GetParentFullPath();
-    if (!parentName.IsEmpty) {
-      parent = new FinDirectory(parentName.ToString());
+    if (!parentName.IsEmpty &&
+        !(root != null && parentName.Length < root.Impl.FullPath.Length)) {
+      parent = new FinDirectory(parentName.ToString(), root);
       return true;
     }
 
@@ -88,7 +86,8 @@ public sealed class FinFile(string fullName, FinRootDirectory? root = null)
   // File methods
   public bool Exists => FinFileStatic.Exists(this.FullPath);
 
-  public string DisplayFullPath => this.FullPath;
+  public string DisplayFullPath
+    => root != null ? root.GetDisplayName(this) : this.FullPath;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public bool Delete() => FinFileStatic.Delete(this.FullPath);

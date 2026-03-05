@@ -48,7 +48,6 @@ public partial interface ITreeDirectory<TIoObject, TDirectory, TFile,
     ITreeDirectory<TIoObject, TDirectory, TFile, TFileType>
     where TFile : ITreeFile<TIoObject, TDirectory, TFile, TFileType> {
   new bool IsEmpty { get; }
-  new bool IsRoot { get; }
 
   [Const]
   new IEnumerable<TDirectory> GetExistingSubdirs();

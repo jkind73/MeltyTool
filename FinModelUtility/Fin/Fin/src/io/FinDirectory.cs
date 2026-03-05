@@ -43,8 +43,6 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   public string DisplayFullName
     => root != null ? root.GetDisplayName(this) : this.FullPath;
 
-  public bool IsRoot => root?.Impl.Equals(this) ?? false;
-
   // Ancestry methods
   public ReadOnlySpan<char> GetParentFullPath()
     => FinIoStatic.GetParentFullName(this.FullPath);
@@ -59,7 +57,8 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
 
   public bool TryGetParent(out ISystemDirectory parent) {
     var parentName = this.GetParentFullPath();
-    if (!parentName.IsEmpty) {
+    if (!parentName.IsEmpty &&
+        !(root != null && parentName.Length < root.Impl.FullPath.Length)) {
       parent = new FinDirectory(parentName.ToString(), root);
       return true;
     }
@@ -134,7 +133,8 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
                                      out ISystemDirectory subdir) {
     subdir = new FinDirectory(FinDirectoryStatic
                               .GetSubdir(this.FullPath, relativePath)
-                              .ToString(), root);
+                              .ToString(),
+                              root);
     return subdir.Exists;
   }
 
@@ -152,7 +152,8 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
   public ISystemDirectory GetOrCreateSubdir(ReadOnlySpan<char> relativePath)
     => new FinDirectory(FinDirectoryStatic
                         .GetSubdir(this.FullPath, relativePath, true)
-                        .ToString(), root);
+                        .ToString(),
+                        root);
 
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -199,7 +200,8 @@ public sealed class FinDirectory(string fullName, FinRootDirectory? root = null)
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public ISystemFile AssertGetExistingFile(ReadOnlySpan<char> path)
-    => new FinFile(FinDirectoryStatic.GetExistingFile(this.FullPath, path), root);
+    => new FinFile(FinDirectoryStatic.GetExistingFile(this.FullPath, path),
+                   root);
 
   public IEnumerable<ISystemFile> GetFilesWithNameRecursive(
       string name) {

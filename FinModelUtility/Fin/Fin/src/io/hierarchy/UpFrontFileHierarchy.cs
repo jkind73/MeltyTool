@@ -151,7 +151,6 @@ public static partial class FileHierarchy {
       public ISystemDirectory Impl { get; }
 
       public bool IsEmpty => this.Impl.IsEmpty;
-      public bool IsRoot => this.Parent == null;
 
       public IEnumerable<IFileHierarchyDirectory> GetExistingSubdirs()
         => this.subdirs_;
