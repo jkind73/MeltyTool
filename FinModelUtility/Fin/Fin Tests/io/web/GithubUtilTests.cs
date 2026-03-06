@@ -41,7 +41,7 @@ public sealed class GitHubUtilTests {
           **Stack trace**
           ```
           System.NotImplementedException: Foobar
-              at fin.io.web.GitHubUtilTests.SomeMethod2_(System.String message) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 20
+              at fin.io.web.GitHubUtilTests.SomeMethod2_(System.String message) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 26
               at fin.io.web.GitHubUtilTests.SomeMethod1_<T>(T value) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 17
               at fin.io.web.GitHubUtilTests.TestGetNewIssueUrlWithoutContext() in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 25
           ```
@@ -77,7 +77,7 @@ public sealed class GitHubUtilTests {
       var parsedQueryString
           = HttpUtility.ParseQueryString(issueUrl.Split('?')[1]);
 
-      Assert.AreEqual(@"[Bug] Failed to load mario_game\foo\bar\file.txt",
+      Assert.AreEqual(@"[Bug] Failed to load //mario_game/foo/bar/file.txt",
                       parsedQueryString["title"]);
       Assert.AreEqual(
           """
