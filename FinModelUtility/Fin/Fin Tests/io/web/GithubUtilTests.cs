@@ -42,8 +42,8 @@ public sealed class GitHubUtilTests {
           ```
           System.NotImplementedException: Foobar
               at fin.io.web.GitHubUtilTests.SomeMethod2_(System.String message) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 26
-              at fin.io.web.GitHubUtilTests.SomeMethod1_<T>(T value) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 17
-              at fin.io.web.GitHubUtilTests.TestGetNewIssueUrlWithoutContext() in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 25
+              at fin.io.web.GitHubUtilTests.SomeMethod1_<T>(T value) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 23
+              at fin.io.web.GitHubUtilTests.TestGetNewIssueUrlWithoutContext() in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 31
           ```
 
           **To Reproduce**
@@ -73,7 +73,7 @@ public sealed class GitHubUtilTests {
           = GitHubUtil.GetNewIssueUrl(
               e,
               new LoadFileBundleExceptionContext(
-                  new MockFileBundle("mario_game", @"foo\bar\file.txt")));
+                  new MockFileBundle("mario_game", "foo/bar/file.txt")));
       var parsedQueryString
           = HttpUtility.ParseQueryString(issueUrl.Split('?')[1]);
 
@@ -84,15 +84,15 @@ public sealed class GitHubUtilTests {
           **Stack trace**
           ```
           System.NotImplementedException: Foobar
-              at fin.io.web.GitHubUtilTests.SomeMethod2_(System.String message) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 20
-              at fin.io.web.GitHubUtilTests.SomeMethod1_<T>(T value) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 17
-              at fin.io.web.GitHubUtilTests.TestGetNewIssueUrlWithContext() in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 64
+              at fin.io.web.GitHubUtilTests.SomeMethod2_(System.String message) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 26
+              at fin.io.web.GitHubUtilTests.SomeMethod1_<T>(T value) in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 23
+              at fin.io.web.GitHubUtilTests.TestGetNewIssueUrlWithContext() in //Fin/Fin Tests/io/web/GitHubUtilTests.cs:line 70
           ```
 
           **To Reproduce**
           Steps to reproduce the behavior:
 
-          1. Attempted to load mario_game\foo\bar\file.txt.
+          1. Attempted to load //mario_game/foo/bar/file.txt.
 
           **Additional context**
           Add any other context about the problem here.
