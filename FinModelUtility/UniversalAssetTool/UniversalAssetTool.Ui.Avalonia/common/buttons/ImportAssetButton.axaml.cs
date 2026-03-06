@@ -45,6 +45,7 @@ public partial class ImportAssetButton : UserControl {
                         "All supported plugin extensions") {
                         Patterns = supportedExtensions
                                    .Select(extension => $"*{extension}")
+                                   .Order()
                                    .ToArray()
                     }
                 ]
