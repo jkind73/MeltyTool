@@ -16,10 +16,13 @@
       <MenuItem Header="Import single asset from files"
                 Click="OpenFileWindowAndTryToImportAsset_"/>
       <Separator />
-      <MenuItem Header="Export asset to..." />
-      <MenuItem Header="Export asset to out/" />
-      <MenuItem IsEnabled="{Binding ExportInDirectoryButtonEnabled}"
-                Header="{Binding ExportInDirectoryText}" />
+      <MenuItem Header="Export asset to..."
+                IsEnabled="{Binding HasExportableFileBundle}"
+                Click="ExportTo_" />
+      <MenuItem Header="Export asset to out/"
+                IsEnabled="{Binding HasExportableFileBundle}" />
+      <MenuItem Header="{Binding ExportInDirectoryText}"
+                IsEnabled="{Binding ExportInDirectoryButtonEnabled}" />
       <Separator />
       <MenuItem Header="Settings"
                 Click="OpenSettingsWindow_"/>

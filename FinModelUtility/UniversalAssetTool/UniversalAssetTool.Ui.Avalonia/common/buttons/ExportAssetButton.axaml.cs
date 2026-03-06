@@ -18,6 +18,7 @@ using fin.util.tasks;
 using uni.api;
 using uni.config;
 using uni.games;
+using uni.ui.avalonia.services;
 
 namespace uni.ui.avalonia.common.buttons;
 
@@ -36,68 +37,9 @@ public partial class ExportAssetButton : UserControl {
 
   protected void Button_OnClick(object? sender, RoutedEventArgs e) {
     if (this.FileBundle is IModelFileBundle modelFileBundle) {
-      FinTask.Run(async () => await this.ExportModelFileBundle_(modelFileBundle));
+      FileBundleExportService.ExportModelFileBundleTo(
+          modelFileBundle,
+          TopLevel.GetTopLevel(this));
     }
-  }
-
-  private IStorageFolder? lastDirectory_;
-  private string? lastExtension_;
-
-  private async Task ExportModelFileBundle_(
-      IModelFileBundle modelFileBundle) {
-    var storageProvider = TopLevel.GetTopLevel(this)?.StorageProvider;
-    if (storageProvider == null) {
-      return;
-    }
-
-    var startLocation
-        = this.lastDirectory_ ??
-          await storageProvider.TryGetFolderFromPathAsync(
-              DirectoryConstants.OUT_DIRECTORY.FullPath);
-    var defaultExtension = this.lastExtension_ ?? ".fbx";
-
-    var mainFile = modelFileBundle.MainFile;
-    var suggestedFileName = mainFile != null
-        ? $"{mainFile.NameWithoutExtension}{defaultExtension.ReplaceFirst('*', '.')}"
-        : null;
-
-    var selectedStorageFile
-        = await storageProvider
-            .SaveFilePickerAsync(new FilePickerSaveOptions {
-                SuggestedStartLocation = startLocation,
-                Title = "Export asset",
-                DefaultExtension = defaultExtension,
-                ShowOverwritePrompt = true,
-                SuggestedFileName = suggestedFileName,
-                FileTypeChoices = 
-                    ExporterUtil
-                        .SupportedExportFormats
-                        .OrderBy(f => f != defaultExtension.AsFormat())
-                        .Select(f => new FilePickerFileType(f.GetName()) {
-                            Patterns = [f.AsPattern()],
-                        })
-                        .ToArray()
-            });
-    if (selectedStorageFile == null) {
-      return;
-    }
-
-    this.lastDirectory_ = await selectedStorageFile.GetParentAsync();
-
-    var outputFile = new FinFile(selectedStorageFile.Path.AbsolutePath);
-    var outputDirectory = outputFile.AssertGetParent();
-
-    var outputFileType = outputFile.FileType;
-    var outputExportFormat = outputFileType.AsFormat();
-    this.lastExtension_ = outputExportFormat.AsFileExtension();
-
-    ExporterUtil.Export(
-        modelFileBundle,
-        () => new GlobalModelImporter().ImportAndProcess(modelFileBundle),
-        outputDirectory,
-        outputExportFormat.AsSet(),
-        true,
-        outputFile.Name.ToString()
-    );
   }
 }

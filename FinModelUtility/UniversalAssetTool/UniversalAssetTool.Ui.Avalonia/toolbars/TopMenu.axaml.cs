@@ -3,7 +3,9 @@ using System.Linq;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
+using fin.io.bundles;
 using fin.io.web;
+using fin.model.io;
 using fin.ui.avalonia;
 using fin.util.io;
 using fin.util.tasks;
@@ -12,6 +14,7 @@ using ReactiveUI;
 
 using uni.ui.avalonia.common.buttons;
 using uni.ui.avalonia.io;
+using uni.ui.avalonia.services;
 using uni.ui.avalonia.settings;
 using uni.ui.avalonia.util;
 using uni.ui.winforms.common.fileTreeView;
@@ -19,14 +22,25 @@ using uni.ui.winforms.common.fileTreeView;
 namespace uni.ui.avalonia.toolbars;
 
 public sealed class TopMenuModelForDesigner : TopMenuModel {
+  public new IFileBundle? FileBundle => null;
   public new IFileTreeParentNode? SelectedDirectory => null;
 }
 
 public class TopMenuModel : BViewModel {
   public TopMenuModel() {
     this.SelectedDirectory = null;
+    FileBundleService.OnFileBundleOpened
+        += (_, fileBundle) => this.FileBundle = fileBundle;
     SelectedFileTreeDirectoryService.OnFileTreeDirectorySelected
         += directory => this.SelectedDirectory = directory;
+  }
+
+  public IFileBundle? FileBundle {
+    get;
+    set {
+      this.RaiseAndSetIfChanged(ref field, value);
+      this.HasExportableFileBundle = value is IModelFileBundle;
+    }
   }
 
   public IFileTreeParentNode? SelectedDirectory {
@@ -39,6 +53,11 @@ public class TopMenuModel : BViewModel {
       this.ExportInDirectoryText
           = $"Export _all {fileBundleCount} asset{(fileBundleCount == 1 ? "" : "s")} in {value?.GetLocalPath() ?? "selected directory"} to out/";
     }
+  }
+
+  public bool HasExportableFileBundle {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
   public bool ExportInDirectoryButtonEnabled {
@@ -73,4 +92,13 @@ public partial class TopMenu : UserControl {
   private void OpenExtractionProgressWindow_(object? sender,
                                              RoutedEventArgs e)
     => FileBundleGatherersService.ShowExtractorProgressWindow(this);
+
+  private void ExportTo_(object? sender, RoutedEventArgs e) {
+    var fileBundle = (this.DataContext as TopMenuModel)?.FileBundle;
+    if (fileBundle is IModelFileBundle modelFileBundle) {
+      FileBundleExportService.ExportModelFileBundleTo(
+          modelFileBundle,
+          TopLevel.GetTopLevel(this));
+    }
+  }
 }
