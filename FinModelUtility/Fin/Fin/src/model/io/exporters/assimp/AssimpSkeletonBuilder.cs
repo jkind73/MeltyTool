@@ -2,47 +2,32 @@
 
 using Assimp;
 
-using fin.math.matrix;
 using fin.model;
 
-namespace fin.exporter.assimp {
-  public class AssimpSkeletonBuilder {
-    public void BuildAndBindSkeleton(
-        Scene assScene,
-        IModel finModel) {
-      var finRootBone = finModel.Skeleton.Root;
+namespace fin.exporter.assimp;
 
-      var assRootNode = assScene.RootNode;
+public class AssimpSkeletonBuilder {
+  public void BuildAndBindSkeleton(
+      Scene assScene,
+      IReadOnlyModel finModel) {
+    var finRootBone = finModel.Skeleton.Root;
 
-      var boneQueue = new Queue<(Node, IBone)>();
-      boneQueue.Enqueue((assRootNode, finRootBone));
+    var assRootNode = assScene.RootNode;
 
-      var skinNodesAndBones = new List<(Bone, IBone)>();
-      while (boneQueue.Count > 0) {
-        var (assNode, finBone) = boneQueue.Dequeue();
+    var boneQueue = new Queue<(Node, IReadOnlyBone)>();
+    boneQueue.Enqueue((assRootNode, finRootBone));
 
-        this.ApplyBoneOrientationToNode_(assNode, finBone);
+    while (boneQueue.Count > 0) {
+      var (assNode, finBone) = boneQueue.Dequeue();
 
-        foreach (var childFinBone in finBone.Children) {
-          var childAssNode = new Node(childFinBone.Name);
-          assNode.Children.Add(childAssNode);
+      assNode.Transform = finBone.Transform.LocalMatrix;
 
-          boneQueue.Enqueue((childAssNode, childFinBone));
-        }
+      foreach (var childFinBone in finBone.Children) {
+        var childAssNode = new Node(childFinBone.Name);
+        assNode.Children.Add(childAssNode);
+
+        boneQueue.Enqueue((childAssNode, childFinBone));
       }
-    }
-
-    private void ApplyBoneOrientationToNode_(Node assNode, IBone finBone) {
-      var finTransform =
-          MatrixTransformUtil.FromTrs(finBone.LocalPosition,
-                                      finBone.LocalRotation,
-                                      finBone.LocalScale);
-
-      var assNodeTransform = assNode.Transform;
-      MatrixConversionUtil.CopyFinIntoAssimp(
-          finTransform,
-          ref assNodeTransform);
-      assNode.Transform = assNodeTransform;
     }
   }
 }

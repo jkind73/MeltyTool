@@ -11,9 +11,6 @@
     <Compile Remove="src\io\filesystem\ImaginaryPathVerifier.cs" />
     <Compile Remove="src\io\tree\StubTree.cs" />
     <Compile Remove="src\model\io\exporters\assimp\AssimpConverter.cs" />
-    <Compile Remove="src\model\io\exporters\assimp\AssimpDirectExporter.cs" />
-    <Compile Remove="src\model\io\exporters\assimp\AssimpMeshBuilder.cs" />
-    <Compile Remove="src\model\io\exporters\assimp\AssimpSkeletonBuilder.cs" />
     <Compile Remove="src\schema\sequences\PointerSections.cs" />
   </ItemGroup>
 
