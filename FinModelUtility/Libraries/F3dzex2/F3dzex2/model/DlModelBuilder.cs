@@ -162,8 +162,7 @@ public sealed class DlModelBuilder {
         });
 
     var textureByImageAndParams
-        = new Dictionary<(IReadOnlyImage, WrapMode wrapModeU, WrapMode wrapModeV
-            , UvType uvType, int uvIndex), IReadOnlyTexture>();
+        = new Dictionary<(IReadOnlyImage, WrapMode wrapModeU, WrapMode wrapModeV, float repeatCountS, float repeatCountT, UvType uvType, int uvIndex), IReadOnlyTexture>();
 
     this.lazyTextureDictionary_ =
         new(segmentAndTextureParamsOrNull => {
@@ -176,15 +175,26 @@ public sealed class DlModelBuilder {
           var imageParams = textureParams.ImageParams;
           var image = this.lazyImageDictionary_[(segment, imageParams)];
 
-          var wrapModeU = textureParams.WrapModeS.AsFinWrapMode();
-          var wrapModeV = textureParams.WrapModeT.AsFinWrapMode();
+          var fullWidth = textureParams.Lrs - textureParams.Uls + 1;
+          var fullHeight = textureParams.Lrt - textureParams.Ult + 1;
+
+          var repeatCountS = fullWidth / image.Width;
+          var repeatCountT = fullHeight / image.Height;
+
+          var wrapModeU = textureParams.WrapModeS.AsFinWrapMode(
+                  textureParams.MaskS,
+                  repeatCountS);
+          var wrapModeV = textureParams.WrapModeT.AsFinWrapMode(
+                  textureParams.MaskT,
+                  repeatCountT);
           var uvType = textureParams.UvType;
           var uvIndex = textureParams.Index;
 
           // Reuse existing texture if possible.
           if (DEDUPLICATE_TEXTURES) {
             if (textureByImageAndParams.TryGetValue(
-                    (image, wrapModeU, wrapModeV, uvType, uvIndex),
+                    (image, wrapModeU, wrapModeV, repeatCountS, repeatCountT,
+                     uvType, uvIndex),
                     out var existingTexture)) {
               return existingTexture;
             }
@@ -198,13 +208,17 @@ public sealed class DlModelBuilder {
               : $"rgb({color.R}, {color.G}, {color.B})";
 
           texture.ThreePointFiltering = true;
+
           texture.WrapModeU = wrapModeU;
           texture.WrapModeV = wrapModeV;
+          texture.ClampS = new Vector2(0, repeatCountS);
+          texture.ClampT = new Vector2(0, repeatCountT);
+
           texture.UvType = uvType;
           texture.UvIndex = uvIndex;
 
           textureByImageAndParams[
-              (image, wrapModeU, wrapModeV, uvType, uvIndex)] = texture;
+              (image, wrapModeU, wrapModeV, repeatCountS, repeatCountT, uvType, uvIndex)] = texture;
 
           return texture;
         });

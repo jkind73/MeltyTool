@@ -45,7 +45,7 @@ public static partial class BitLogic {
   /// </summary>
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static uint ExtractFromRight(this uint number, int offset, int count)
-    => ((number >> offset) & GetMask(count));
+    => ((number >>> offset) & GetMask(count));
 
   /// <summary>
   //    Function to extract k bits from p position and returns the extracted

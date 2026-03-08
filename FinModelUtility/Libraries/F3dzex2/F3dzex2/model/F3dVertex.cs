@@ -42,7 +42,7 @@ public record struct F3dVertex : IBinaryDeserializable {
 
   public void Read(IBinaryReader br) {
     var bytes = MemoryMarshal.CreateSpan(ref this, 1).AsBytes();
-    br.ReadUInt16s(bytes.Cast<byte, ushort>()[..6]);
+    br.ReadInt16s(bytes.Cast<byte, short>()[..6]);
     br.ReadBytes(bytes[(6 * 2)..]);
   }
 }

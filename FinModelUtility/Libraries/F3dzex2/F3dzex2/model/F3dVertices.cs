@@ -93,22 +93,16 @@ public sealed class F3dVertices(
     var bmpHeight1 = Math.Max(textureParams1?.Height ?? 0, (ushort) 0);
 
     var newVertex = model.Skin.AddVertex(position);
-    newVertex.SetUv(0,
-                    definition.GetUv(
-                        ShiftToScale_(shiftS0) *
-                        n64Hardware.Rsp.TexScaleXFloat /
-                        (bmpWidth0 * 32),
-                        ShiftToScale_(shiftT0) *
-                        n64Hardware.Rsp.TexScaleYFloat /
-                        (bmpHeight0 * 32)));
-    newVertex.SetUv(1,
-                    definition.GetUv(
-                        ShiftToScale_(shiftS1) *
-                        n64Hardware.Rsp.TexScaleXFloat /
-                        (bmpWidth1 * 32),
-                        ShiftToScale_(shiftT1) *
-                        n64Hardware.Rsp.TexScaleYFloat /
-                        (bmpHeight1 * 32)));
+
+    var uv0 = definition.GetUv(
+        ShiftToScale_(shiftS0) * n64Hardware.Rsp.TexScaleXFloat / (bmpWidth0 * 32f), 
+        ShiftToScale_(shiftT0) * n64Hardware.Rsp.TexScaleYFloat / (bmpHeight0 * 32f));
+    var uv1 = definition.GetUv(
+        ShiftToScale_(shiftS1) * n64Hardware.Rsp.TexScaleXFloat / (bmpWidth1 * 32f),
+        ShiftToScale_(shiftT1) * n64Hardware.Rsp.TexScaleYFloat / (bmpHeight1 * 32f));
+
+    newVertex.SetUv(0, uv0);
+    newVertex.SetUv(1, uv1);
 
     var activeBoneWeights = this.boneWeights_[index];
     if (activeBoneWeights != null) {

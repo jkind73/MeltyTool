@@ -207,7 +207,7 @@ public static class ChosenPart0Util {
           32,
           32,
           F3dWrapMode.REPEAT,
-          F3dWrapMode.MIRROR_REPEAT,
+          F3dWrapMode.MIRROR,
           scale: scale,
           // TODO: Pretty sure this is right...???
           tileDescriptorIndex: 1);

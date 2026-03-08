@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Text.Json.Schema;
 using System.Text.RegularExpressions;
 
 using CommunityToolkit.Diagnostics;
@@ -10,8 +9,9 @@ using f3dzex2.displaylist.opcodes.f3dzex2;
 using f3dzex2.image;
 using f3dzex2.io;
 
-using fin.util.json;
 using fin.util.strings;
+
+var hexRegex = new Regex("[a-fA-F0-9]+");
 
 while (true) {
   Console.ForegroundColor = ConsoleColor.White;
@@ -19,11 +19,18 @@ while (true) {
 
   var line = Console.ReadLine();
   if (line == null || line.Trim().Length == 0) {
-    return;
+    continue;
   }
 
   line = line.Replace("0x", "", StringComparison.OrdinalIgnoreCase);
   line = Regex.Replace(line, "\\s", "");
+
+  if (!hexRegex.IsMatch(line)) {
+    Console.ForegroundColor = ConsoleColor.Red;
+    Console.WriteLine(
+        "Invalid command, contained unexpected character");
+    continue;
+  }
 
   if (line.Length % 8 != 0) {
     Console.ForegroundColor = ConsoleColor.Red;

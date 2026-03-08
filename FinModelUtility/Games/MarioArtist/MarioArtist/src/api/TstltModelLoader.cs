@@ -23,7 +23,6 @@ using fin.model.io.importers;
 using fin.model.util;
 using fin.schema.color;
 using fin.schema.vector;
-using fin.util.enumerables;
 using fin.util.linq;
 using fin.util.sets;
 
@@ -811,27 +810,6 @@ public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
             $"joint({(JointIndex) jointIndex}): chosenPart0(id: {chosenPart0.Id}, meshSetId: {meshDefinition.MeshSetId}, unkSection5: {unkSection5I}, subUnkSection5: {subUnkSection5I}, patternIndex: {patternIndex})",
             joint.isLeft,
             displayLists);
-
-        // HACK: These cases need textures to repeat, but for some reason
-        // they're loaded as clamp in the primitive DL.
-        var needRepeat
-            = mesh != null &&
-              (
-                  // No idea what this means. The suit the Steamed Ham
-                  // character wears needs to repeat though and has this set.
-                  // It is almost certainly a stupid choice to use this as a
-                  // discriminator for this.
-                  chosenPart0.Unk0 == 1 ||
-                  // Hair
-                  (chosenPart0.Id == 2 && patternIndex == 1));
-        if (needRepeat) {
-          foreach (var texture in mesh!.Primitives.Select(p => p.Material)
-                                       .WhereNonnull()
-                                       .SelectMany(m => m.Textures)
-                                       .Select(t => (ITexture) t)) {
-            texture.WrapModeU = texture.WrapModeV = WrapMode.REPEAT;
-          }
-        }
 
         dlModelBuilder.TransparentCutoff = .5f;
       }

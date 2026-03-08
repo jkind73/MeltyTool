@@ -318,23 +318,24 @@ public sealed class GeometryModeOpcodeCommand : IOpcodeCommand {
 
 public enum F3dWrapMode : byte {
   REPEAT = 0,
-  MIRROR_REPEAT = 1,
+  MIRROR = 1,
   CLAMP = 2,
 }
 
 public static class F3dWrapModeExtensions {
-  public static WrapMode AsFinWrapMode(this F3dWrapMode f3dWrapMode)
-    => f3dWrapMode switch {
-        F3dWrapMode.REPEAT        => WrapMode.REPEAT,
-        F3dWrapMode.MIRROR_REPEAT => WrapMode.MIRROR_REPEAT,
-        F3dWrapMode.CLAMP         => WrapMode.CLAMP,
-        // TODO: What does this actually mean?
-        (F3dWrapMode) 3 => WrapMode.MIRROR_REPEAT,
-        _ => throw new ArgumentOutOfRangeException(
-            nameof(f3dWrapMode),
-            f3dWrapMode,
-            null)
+  public static WrapMode AsFinWrapMode(this F3dWrapMode f3dWrapMode,
+                                       uint mask,
+                                       float repeatCount) {
+    var clamp = (f3dWrapMode.CheckFlag(F3dWrapMode.CLAMP) || mask == 0) && repeatCount <= 1;
+    var mirror = f3dWrapMode.CheckFlag(F3dWrapMode.MIRROR);
+    
+    return (clamp, mirror) switch {
+        (false, false)     => WrapMode.REPEAT,
+        (false, true)      => WrapMode.MIRROR_REPEAT,
+        (true, false)      => WrapMode.CLAMP,
+        (true, true)       => WrapMode.MIRROR_CLAMP,
     };
+  }
 }
 
 public sealed class SetTileOpcodeCommand : IOpcodeCommand {

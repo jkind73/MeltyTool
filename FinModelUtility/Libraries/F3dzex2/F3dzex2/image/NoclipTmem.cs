@@ -334,11 +334,17 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
 
     textureParams.WrapModeS = tile.wrapModeS;
     textureParams.WrapModeT = tile.wrapModeT;
+    textureParams.MaskS = tile.maskS;
+    textureParams.MaskT = tile.maskT;
     textureParams.ShiftS = tile.shiftS;
     textureParams.ShiftT = tile.shiftT;
 
     textureParams.Width = (ushort) tile.GetTileWidth();
     textureParams.Height = (ushort) tile.GetTileHeight();
+    textureParams.Uls = tile.uls;
+    textureParams.Ult = tile.ult;
+    textureParams.Lrs = tile.lrs;
+    textureParams.Lrt = tile.lrt;
 
     var fullWidth = tile.GetFullWidth();
 
