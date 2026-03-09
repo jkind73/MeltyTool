@@ -240,8 +240,12 @@ public static class JankTstltUtil {
     => chosenPartId switch {
         // HACK: Disables culling for hats
         3 => CullingMode.SHOW_BOTH,
+        // HACK: Disables culling for shirt collars
+        5 => CullingMode.SHOW_BOTH,
         // HACK: Disables culling for accessories worn on back
         6 => CullingMode.SHOW_BOTH,
+        // HACK: Disables culling for shoelaces
+        7 => CullingMode.SHOW_BOTH,
         // By default, only shows front face
         _ => CullingMode.SHOW_FRONT_ONLY,
     };
