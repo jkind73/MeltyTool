@@ -92,8 +92,8 @@ public sealed class CachedTextureUniformData {
         clampMax.Y = clampT.Value.Y;
       }
 
-      this.ClampMinUniform.SetAndMaybeMarkDirty(clampMin);
-      this.ClampMaxUniform.SetAndMaybeMarkDirty(clampMax);
+      this.ClampMinUniform.SetAndMarkDirty(clampMin);
+      this.ClampMaxUniform.SetAndMarkDirty(clampMax);
 
       var setMatrix = false;
       if (this.FinTexture != null && this.textureTransformManager_ != null) {

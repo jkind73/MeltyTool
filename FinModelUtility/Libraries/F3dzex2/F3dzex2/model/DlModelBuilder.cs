@@ -181,12 +181,8 @@ public sealed class DlModelBuilder {
           var repeatCountS = fullWidth / image.Width;
           var repeatCountT = fullHeight / image.Height;
 
-          var wrapModeU = textureParams.WrapModeS.AsFinWrapMode(
-                  textureParams.MaskS,
-                  repeatCountS);
-          var wrapModeV = textureParams.WrapModeT.AsFinWrapMode(
-                  textureParams.MaskT,
-                  repeatCountT);
+          var wrapModeU = textureParams.WrapModeS.AsFinWrapMode(repeatCountS);
+          var wrapModeV = textureParams.WrapModeT.AsFinWrapMode(repeatCountT);
           var uvType = textureParams.UvType;
           var uvIndex = textureParams.Index;
 

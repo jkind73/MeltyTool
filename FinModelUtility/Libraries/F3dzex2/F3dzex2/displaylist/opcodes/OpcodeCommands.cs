@@ -323,10 +323,8 @@ public enum F3dWrapMode : byte {
 }
 
 public static class F3dWrapModeExtensions {
-  public static WrapMode AsFinWrapMode(this F3dWrapMode f3dWrapMode,
-                                       uint mask,
-                                       float repeatCount) {
-    var clamp = (f3dWrapMode.CheckFlag(F3dWrapMode.CLAMP) || mask == 0) && repeatCount <= 1;
+  public static WrapMode AsFinWrapMode(this F3dWrapMode f3dWrapMode, float repeatCount) {
+    var clamp = f3dWrapMode.CheckFlag(F3dWrapMode.CLAMP) && repeatCount <= 1;
     var mirror = f3dWrapMode.CheckFlag(F3dWrapMode.MIRROR);
     
     return (clamp, mirror) switch {
