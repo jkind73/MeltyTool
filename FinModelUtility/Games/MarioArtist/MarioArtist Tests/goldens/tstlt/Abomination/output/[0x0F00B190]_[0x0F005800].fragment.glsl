@@ -32,13 +32,6 @@ uniform vec3 cameraPosition;
 uniform bool hasSpecular;
 uniform float shininess;
 
-struct Texture {
-  sampler2D sampler;
-  vec2 clampMin;
-  vec2 clampMax;
-};
-
-
 vec2 norm2denorm(sampler2D tex, vec2 uv) {
   return uv * vec2(textureSize(tex, 0)) - 0.5;
 }
@@ -147,11 +140,13 @@ vec4 texture_3point(sampler2D tex, vec2 uv) {
 
     return lambda0*t0 + lambda1*t1 + lambda2*t2;
 }
-uniform Texture texture0;
+uniform sampler2D texture0;
+uniform sampler2D texture1;
 
 in vec3 vertexPosition;
 in vec3 vertexNormal;
 in vec2 uv0;
+in vec2 uv1;
 
 out vec4 fragColor;
 
@@ -245,13 +240,9 @@ void main() {
   vec4 mergedLightSpecularColor = vec4(0);
   getMergedLightColors(vertexPosition, fragNormal, shininess, mergedLightDiffuseColor, mergedLightSpecularColor);
 
-  vec3 colorComponent = texture_3point(texture0.sampler, clamp(uv0, texture0.clampMin, texture0.clampMax)).rgb*mergedLightDiffuseColor.rgb;
+  vec3 colorComponent = ((texture_3point(texture1, uv1).rgb + vec3(-1.0)*vec3(0.7843137))*texture_3point(texture0, uv0).rgb + texture_3point(texture0, uv0).rgb)*mergedLightDiffuseColor.rgb;
 
-  float alphaComponent = texture_3point(texture0.sampler, clamp(uv0, texture0.clampMin, texture0.clampMax)).a;
+  float alphaComponent = texture_3point(texture0, uv0).a;
 
-  fragColor = vec4(colorComponent, alphaComponent);
-
-  if (!(alphaComponent > 0.01)) {
-    discard;
-  }
+  fragColor = vec4(colorComponent, 1);
 }
