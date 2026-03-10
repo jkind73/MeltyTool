@@ -71,9 +71,9 @@ public static partial class GoldenAssert {
       IReadOnlyTreeDirectory lhs,
       IReadOnlyTreeDirectory rhs) {
     var lhsFiles = lhs.GetExistingFiles()
-                      .ToDictionary(file => file.Name.ToString());
+                      .ToDictionary(file => file.Name.ToString().ToLower());
     var rhsFiles = rhs.GetExistingFiles()
-                      .ToDictionary(file => file.Name.ToString());
+                      .ToDictionary(file => file.Name.ToString().ToLower());
 
     var lhsFullPaths = lhsFiles.Keys.ToHashSet();
     var rhsFullPaths = rhsFiles.Keys.ToHashSet();
