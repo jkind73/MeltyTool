@@ -44,6 +44,8 @@ using sonicadventure.api;
 
 using sysdolphin.api;
 
+using tlpe.api;
+
 using ttyd.api;
 
 using UoT.api;
@@ -111,6 +113,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
         PmdcCharacterModelFileBundle pmdcCharacterModelFileBundle
             => new PmdcCharacterModelImporter().Import(
                 pmdcCharacterModelFileBundle),
+        ScbModelFileBundle scbModelFileBundle
+            => new ScbModelImporter().Import(scbModelFileBundle),
         Sm64dsModelFileBundle sm64dsModelFileBundle
             => new Sm64dsModelImporter().Import(sm64dsModelFileBundle),
         SonicAdventureModelFileBundle sonicAdventureModelFileBundle

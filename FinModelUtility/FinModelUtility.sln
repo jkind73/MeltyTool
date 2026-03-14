@@ -334,6 +334,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MarioKart3d", "MarioKart3d"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarioKart3d", "Games\MarioKart3d\MarioKart3d\MarioKart3d.csproj", "{7237B7E1-452D-4299-B7B0-5A16ED57F9DF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TheLabyrinthPlusEdition", "TheLabyrinthPlusEdition", "{6DAD3710-113C-4532-9801-F8F3E1518560}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheLabyrinthPlusEdition", "Games\TheLabyrinthPlusEdition\TheLabyrinthPlusEdition\TheLabyrinthPlusEdition.csproj", "{F8CB0937-A92B-4603-A46D-BD57A133D849}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -1142,6 +1146,14 @@ Global
 		{7237B7E1-452D-4299-B7B0-5A16ED57F9DF}.Release|x64.Build.0 = Release|x64
 		{7237B7E1-452D-4299-B7B0-5A16ED57F9DF}.Release|x86.ActiveCfg = Release|x86
 		{7237B7E1-452D-4299-B7B0-5A16ED57F9DF}.Release|x86.Build.0 = Release|x86
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Debug|x64.ActiveCfg = Debug|x64
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Debug|x64.Build.0 = Debug|x64
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Debug|x86.ActiveCfg = Debug|x86
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Debug|x86.Build.0 = Debug|x86
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Release|x64.ActiveCfg = Release|x64
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Release|x64.Build.0 = Release|x64
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Release|x86.ActiveCfg = Release|x86
+		{F8CB0937-A92B-4603-A46D-BD57A133D849}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1290,6 +1302,8 @@ Global
 		{AB6E2989-EAA8-4A86-B5C6-2CB11C14B5FB} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{96B3A300-9683-4B8B-9A1E-FCB0A2D2FB83} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
 		{7237B7E1-452D-4299-B7B0-5A16ED57F9DF} = {96B3A300-9683-4B8B-9A1E-FCB0A2D2FB83}
+		{6DAD3710-113C-4532-9801-F8F3E1518560} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
+		{F8CB0937-A92B-4603-A46D-BD57A133D849} = {6DAD3710-113C-4532-9801-F8F3E1518560}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CFECBD7-FE88-4CC9-8E1B-6F7805F4F45A}

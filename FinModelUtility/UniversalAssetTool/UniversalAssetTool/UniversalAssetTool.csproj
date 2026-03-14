@@ -142,6 +142,7 @@
     <ProjectReference Include="..\..\Games\Facade\Facade\Facade.csproj" />
     <ProjectReference Include="..\..\Games\MarioKart3d\MarioKart3d\MarioKart3d.csproj" />
     <ProjectReference Include="..\..\Games\PokemonColosseum\PokemonColosseum\PokemonColosseum.csproj" />
+    <ProjectReference Include="..\..\Games\TheLabyrinthPlusEdition\TheLabyrinthPlusEdition\TheLabyrinthPlusEdition.csproj" />
 
     <ProjectReference Include="..\..\Libraries\AngelStudios\AngelStudios\AngelStudios.csproj" />
     <ProjectReference Include="..\..\Libraries\F3dzex2\F3dzex2\F3dzex2.csproj" />
