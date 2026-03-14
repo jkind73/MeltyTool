@@ -35,6 +35,9 @@ public sealed partial class Scb : IBinaryConvertible {
     while (!br.Eof) {
       var sectionType = (SectionType) br.ReadUInt32();
       switch (sectionType) {
+        case 0: {
+          break;
+        }
         case SectionType.SECTION_1: {
           sections.Add(br.ReadNew<Section1>());
           break;

@@ -53,6 +53,17 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
       }
     }
 
+    foreach (var scbSection in scb.Sections) {
+      if (scbSection is Section6 section6) {
+        var textureName = section6.Names.Name1;
+        if (textureName.Length > 0) {
+          var textureFile = fileBundle.ScbFile.AssertGetParent()
+                                      .AssertGetExistingFile(textureName);
+          textureFiles.Add(textureFile);
+        }
+      }
+    }
+
     IMaterial[] textureMaterials
         = textureFiles
           .Select(textureFile => {
@@ -74,23 +85,25 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
         case MeshSection meshSection: {
           var finMesh = finSkin.AddMesh();
 
-          var finVertices
-              = meshSection
-                .Vertices.Select(v => {
-                  var finVertex = finSkin.AddVertex(v.Position);
-                  finVertex.SetLocalNormal(v.Normal);
-                  finVertex.SetUv(0, v.Uv0);
-                  finVertex.SetUv(1, v.Uv1);
-                  return finVertex;
-                })
-                .ToArray();
+          var scbVertices = meshSection.Vertices;
+          var finVertices = new IReadOnlyVertex[scbVertices.Length];
+          for (var i = 0; i < scbVertices.Length; ++i) {
+            var scbVertex = scbVertices[i];
+
+            var finVertex = finSkin.AddVertex(AdjustVector3_(scbVertex.Position));
+            finVertex.SetLocalNormal(AdjustVector3_(scbVertex.Normal));
+            finVertex.SetUv(0, scbVertex.Uv0);
+            finVertex.SetUv(1, scbVertex.Uv1);
+
+            finVertices[scbVertices.Length - 1 - i] = finVertex;
+          }
 
           var triangles
               = meshSection
                 .Faces.Select(f => {
-                  var v0 = (IReadOnlyVertex) finVertices[f.Vertex0];
-                  var v1 = (IReadOnlyVertex) finVertices[f.Vertex1];
-                  var v2 = (IReadOnlyVertex) finVertices[f.Vertex2];
+                  var v0 = finVertices[f.Vertex0];
+                  var v1 = finVertices[f.Vertex1];
+                  var v2 = finVertices[f.Vertex2];
 
                   return (v0, v1, v2);
                 })
@@ -114,6 +127,9 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
     public bool MapFromFile { get; set; }
     public bool NoEnvMap { get; set; }
   }
+
+  private static Vector3 AdjustVector3_(Vector3 input)
+    => new(input.X, input.Z, input.Y);
 
   private static IList<BallAttributes> ReadAllBallAttributes_(
       IReadOnlyTreeFile file) {
