@@ -13,6 +13,7 @@
 
 LittleEndian();
 
+local uint COLOR_MAGIC = 0x00ffff;
 local uint COLOR_SIZE = 0xff0000;
 local uint COLOR_COUNT = 0x0000ff;
 local uint COLOR_ORIENTATION = 0x00ff00;
@@ -31,6 +32,10 @@ typedef struct {
     float z;
 } Vec3 <bgcolor=COLOR_ORIENTATION>;
 
+typedef struct {
+    float values[3 * 4];
+} Mat3x4 <bgcolor=COLOR_ORIENTATION>;
+
 struct Header {
     uint maybeSize <bgcolor=COLOR_SIZE>;
     uint unkCount0 <bgcolor=COLOR_COUNT>;
@@ -39,38 +44,100 @@ struct Header {
     Vec3 unkVec3;
 } header;
 
-uint maybeMaterialCount <bgcolor=COLOR_COUNT>;
+enum<uint> SectionType {
+    MATERIAL = 1,
+    SECTION_2 = 2,
+    MESH = 3,
+    MATRICES = 6,
+};
 
-struct Material {
-    uint maybeSize <bgcolor=COLOR_SIZE>;
-    uint unk0[6] <bgcolor=COLOR_UNKNOWN>;
-    Vec3 unkVec3;
-    uint unk1[2] <bgcolor=COLOR_UNKNOWN>;
+struct Section {
+    SectionType sectionType <bgcolor=COLOR_MAGIC>;
     
-    uint nameLength <bgcolor=COLOR_SIZE>;
-    char name[nameLength] <bgcolor=COLOR_STRING, optimize=false>;
-} materials[maybeMaterialCount] <optimize=false>;
+    switch (sectionType) {
+        case MATERIAL: {
+            struct Material {
+                uint maybeSize <bgcolor=COLOR_SIZE>;
+                uint unk1[6] <bgcolor=COLOR_UNKNOWN>;
+                Vec3 unkVec3b;
+                uint unk2[1] <bgcolor=COLOR_UNKNOWN>;
+                
+                uint nameLength1 <bgcolor=COLOR_SIZE>;
+                uint nameLength0 <bgcolor=COLOR_SIZE>;
+            
+                if (nameLength0) {
+                    char name0[nameLength0] <bgcolor=COLOR_STRING, optimize=false>;
+                }
+                if (nameLength1) {
+                    char name1[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
+                }
+            } material;
 
-struct MeshHeader {
-    uint unkCount0 <bgcolor=COLOR_COUNT>;
-    uint unkCount1 <bgcolor=COLOR_COUNT>;
-    uint vertexCount <bgcolor=COLOR_COUNT>;
-    uint faceCount <bgcolor=COLOR_COUNT>;
-} meshHeader;
+            break;
+        }
+        case SECTION_2: {
+            struct Section2 {
+                uint unk0 <bgcolor=COLOR_UNKNOWN>;
+                uint unkIndex <bgcolor=COLOR_INDEX>;
+                uint unkCount1 <bgcolor=COLOR_COUNT>;
+                uint unk1[2] <bgcolor=COLOR_UNKNOWN>;
+                uint unkCount2 <bgcolor=COLOR_COUNT>;
+                uint unk2[2] <bgcolor=COLOR_UNKNOWN>;
+                
+                Vec3 vec3s[unkCount2] <optimize=true>;
+            } section2;
+            
+            break;
+        }
+        case MESH: {
+            struct Mesh {
+                struct MeshHeader {
+                    uint maybeSize <bgcolor=COLOR_COUNT>;
+                    uint vertexCount <bgcolor=COLOR_COUNT>;
+                    uint faceCount <bgcolor=COLOR_COUNT>;
+                } meshHeader;
+                
+                struct Vertex {
+                    Vec3 position;
+                    Vec3 normal;
+                    Vec2 uvs[2] <optimize=true>;
+                } vertices[meshHeader.vertexCount] <optimize=false>;
+                
+                struct Face {
+                    uint unk0 <bgcolor=COLOR_UNKNOWN>;
+                    uint unk1 <bgcolor=COLOR_UNKNOWN>;
+                    ushort vertices[3] <bgcolor=COLOR_INDEX>;
+                    ushort padding;
+                } faces[meshHeader.faceCount] <optimize=true>;
+            } mesh;
+            
+            break;
+        }
+        case MATRICES: {
+            struct Matrices {
+                uint maybeSize <bgcolor=COLOR_COUNT>;
+                uint maybeCount <bgcolor=COLOR_COUNT>;
+                
+                uint padding[2];
 
-struct Vertex {
-    Vec3 position;
-    Vec3 normal;
-    Vec2 uvs[2];
+                Mat3x4 mat3x4;
+                
+                uint nameLength1 <bgcolor=COLOR_SIZE>;
+                uint nameLength0 <bgcolor=COLOR_SIZE>;
+
+                if (nameLength0) {
+                    char name0[nameLength0] <bgcolor=COLOR_STRING, optimize=false>;
+                }
+                if (nameLength1) {
+                    char name1[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
+                }
+            } matrices;
+
+            break;
+        }
+    }
 };
 
-Vertex vertices[meshHeader.vertexCount] <optimize=false>;
-
-struct Face {
-    uint unk0 <bgcolor=COLOR_UNKNOWN>;
-    uint unk1 <bgcolor=COLOR_UNKNOWN>;
-    ushort vertices[3] <bgcolor=COLOR_INDEX>;
-    ushort padding;
-};
-
-Face faces[meshHeader.faceCount] <optimize=true>;
+while (!FEof()) {
+    Section section;
+}
