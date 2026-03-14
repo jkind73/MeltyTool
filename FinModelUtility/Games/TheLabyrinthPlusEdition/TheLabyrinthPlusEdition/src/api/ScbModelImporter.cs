@@ -92,8 +92,8 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
 
             var finVertex = finSkin.AddVertex(AdjustVector3_(scbVertex.Position));
             finVertex.SetLocalNormal(AdjustVector3_(scbVertex.Normal));
-            finVertex.SetUv(0, scbVertex.Uv0);
-            finVertex.SetUv(1, scbVertex.Uv1);
+            finVertex.SetUv(0, AdjustVector2_(scbVertex.Uv0));
+            finVertex.SetUv(1, AdjustVector2_(scbVertex.Uv1));
 
             finVertices[scbVertices.Length - 1 - i] = finVertex;
           }
@@ -127,6 +127,9 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
     public bool MapFromFile { get; set; }
     public bool NoEnvMap { get; set; }
   }
+
+  private static Vector2 AdjustVector2_(Vector2 input)
+    => input with { Y = 1 - input.Y };
 
   private static Vector3 AdjustVector3_(Vector3 input)
     => new(input.X, input.Z, input.Y);
