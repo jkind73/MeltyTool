@@ -15,8 +15,11 @@ public sealed class TheLabyrinthPlusEditionFileBundleGatherer
       IFileBundleOrganizer organizer,
       IMutablePercentageProgress mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
+    var ballsFile = fileHierarchy.Root.AssertGetExistingFile("balls.gam").Impl;
+    var texturesDir = fileHierarchy.Root.AssertGetExistingSubdir("Textures").Impl;
+
     foreach (var scbFile in fileHierarchy.Root.GetFilesWithFileType(".scb", true)) {
-      organizer.Add(new ScbModelFileBundle(scbFile));
+      organizer.Add(new ScbModelFileBundle(scbFile.Impl, ballsFile, texturesDir));
     }
   }
 }
