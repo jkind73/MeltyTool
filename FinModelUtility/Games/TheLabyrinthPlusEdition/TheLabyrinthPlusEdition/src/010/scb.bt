@@ -1,0 +1,76 @@
+//------------------------------------------------
+//--- 010 Editor v16.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+LittleEndian();
+
+local uint COLOR_SIZE = 0xff0000;
+local uint COLOR_COUNT = 0x0000ff;
+local uint COLOR_ORIENTATION = 0x00ff00;
+local uint COLOR_STRING = 0xff00ff;
+local uint COLOR_INDEX = 0xffff00;
+local uint COLOR_UNKNOWN = 0xffffff;
+
+typedef struct {
+    float x;
+    float y;
+} Vec2 <bgcolor=COLOR_ORIENTATION>;
+
+typedef struct {
+    float x;
+    float y;
+    float z;
+} Vec3 <bgcolor=COLOR_ORIENTATION>;
+
+struct Header {
+    uint maybeSize <bgcolor=COLOR_SIZE>;
+    uint unkCount0 <bgcolor=COLOR_COUNT>;
+    uint unkCount1 <bgcolor=COLOR_COUNT>;
+    uint unkCount2 <bgcolor=COLOR_COUNT>;
+    Vec3 unkVec3;
+} header;
+
+uint maybeMaterialCount <bgcolor=COLOR_COUNT>;
+
+struct Material {
+    uint maybeSize <bgcolor=COLOR_SIZE>;
+    uint unk0[6] <bgcolor=COLOR_UNKNOWN>;
+    Vec3 unkVec3;
+    uint unk1[2] <bgcolor=COLOR_UNKNOWN>;
+    
+    uint nameLength <bgcolor=COLOR_SIZE>;
+    char name[nameLength] <bgcolor=COLOR_STRING, optimize=false>;
+} materials[maybeMaterialCount] <optimize=false>;
+
+struct MeshHeader {
+    uint unkCount0 <bgcolor=COLOR_COUNT>;
+    uint unkCount1 <bgcolor=COLOR_COUNT>;
+    uint vertexCount <bgcolor=COLOR_COUNT>;
+    uint faceCount <bgcolor=COLOR_COUNT>;
+} meshHeader;
+
+struct Vertex {
+    Vec3 position;
+    Vec3 normal;
+    Vec2 uvs[2];
+};
+
+Vertex vertices[meshHeader.vertexCount] <optimize=false>;
+
+struct Face {
+    uint unk0 <bgcolor=COLOR_UNKNOWN>;
+    uint unk1 <bgcolor=COLOR_UNKNOWN>;
+    ushort vertices[3] <bgcolor=COLOR_INDEX>;
+    ushort padding;
+};
+
+Face faces[meshHeader.faceCount] <optimize=true>;
