@@ -53,6 +53,7 @@ NoEnvMap = 1
 Texture = smileyball.jpg
 MapFromFile = 1
 NoEnvMap = 1
+Geometry = Smileyball.scb
 
 [Croquet Ball]
 Texture = Croquetball.jpg

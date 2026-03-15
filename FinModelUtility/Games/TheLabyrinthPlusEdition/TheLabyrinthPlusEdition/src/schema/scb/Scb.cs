@@ -39,7 +39,7 @@ public sealed partial class Scb : IBinaryConvertible {
           break;
         }
         case SectionType.SECTION_1: {
-          sections.Add(br.ReadNew<Section1>());
+          sections.Add(br.ReadNew<JointSection>());
           break;
         }
         case SectionType.SECTION_2: {

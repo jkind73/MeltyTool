@@ -7,6 +7,9 @@ using schema.binary.attributes;
 
 namespace tlpe.scb;
 
+/// <summary>
+///   Probably animations.
+/// </summary>
 [BinarySchema]
 public sealed partial class Section2 : ISection {
   [Unknown]
@@ -24,16 +27,19 @@ public sealed partial class Section2 : ISection {
   [Unknown]
   private uint unk2_;
 
-  [WLengthOfSequence(nameof(UnkVec3s))]
-  private uint vectorCount_;
+  [WLengthOfSequence(nameof(Unk3s))]
+  private uint unk3Count_;
 
   [Unknown]
-  private uint unk3_;
+  [RSequenceLengthSource(nameof(unk3Count_))]
+  public Unk3[] Unk3s { get; set; }
+}
+
+[BinarySchema]
+public sealed partial class Unk3 : IBinaryConvertible {
+  [Unknown]
+  public uint Unk0 { get; set; }
 
   [Unknown]
-  private uint unk4_;
-
-  [Unknown]
-  [RSequenceLengthSource(nameof(vectorCount_))]
-  public Vector3[] UnkVec3s { get; set; }
+  public Vector3 Unk1 { get; set; }
 }

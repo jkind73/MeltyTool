@@ -2,6 +2,7 @@
 
 using fin.data.dictionaries;
 using fin.io;
+using fin.math.transform;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -37,8 +38,7 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
     var allBallAttributes = ReadAllBallAttributes_(fileBundle.BallsFile);
     var ballAttributesByGeometry
         = allBallAttributes
-          .Where(a => a.Geometry != null)
-          .ToListDictionary(a => a.Geometry!.ToLower());
+            .ToListDictionary(a => a.Geometry?.ToLower() ?? "ball.scb");
 
     var textureFiles = new List<IReadOnlyTreeFile>();
     if (ballAttributesByGeometry.TryGetList(
@@ -55,7 +55,7 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
 
     foreach (var scbSection in scb.Sections) {
       if (scbSection is Section6 section6) {
-        var textureName = section6.Names.Name1;
+        var textureName = section6.TextureName;
         if (textureName.Length > 0) {
           var textureFile = fileBundle.ScbFile.AssertGetParent()
                                       .AssertGetExistingFile(textureName);
@@ -67,9 +67,12 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
     IMaterial[] textureMaterials
         = textureFiles
           .Select(textureFile => {
-            (var finMaterial, _)
+            (var finMaterial, var finTexture)
                 = finModel.MaterialManager.AddSimpleTextureMaterialFromFile(
                     textureFile);
+
+            finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
+
             return finMaterial;
           })
           .ToArray();
@@ -80,20 +83,52 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
 
     var finSkin = finModel.Skin;
 
+    IBone? currentBone = null;
+    IReadOnlyBoneWeights? currentBoneWeights = null;
+
+    var finBoneByName = new CaseInvariantStringDictionary<IBone>();
+
     foreach (var scbSection in scb.Sections) {
       switch (scbSection) {
+        case JointSection joint: {
+          if (!finBoneByName.TryGetValue(joint.ParentName, out var parentBone)) {
+            parentBone = finModel.Skeleton.Root;
+          }
+
+          currentBone = parentBone.AddChild(AdjustVector3_(joint.Translation));
+          currentBone.Transform.SetRotationRadians(
+              AdjustVector3_(joint.Rotation));
+          currentBone.Transform.SetScale(AdjustVector3_(joint.Scale));
+          currentBone.Name = joint.Name;
+
+          finBoneByName[currentBone.Name] = currentBone;
+
+          currentBoneWeights
+              = finModel.Skin.GetOrCreateBoneWeights(
+                  VertexSpace.RELATIVE_TO_BONE,
+                  currentBone);
+
+          break;
+        }
         case MeshSection meshSection: {
           var finMesh = finSkin.AddMesh();
+          finMesh.Name = currentBone?.Name;
+
 
           var scbVertices = meshSection.Vertices;
           var finVertices = new IReadOnlyVertex[scbVertices.Length];
           for (var i = 0; i < scbVertices.Length; ++i) {
             var scbVertex = scbVertices[i];
 
-            var finVertex = finSkin.AddVertex(AdjustVector3_(scbVertex.Position));
+            var finVertex
+                = finSkin.AddVertex(AdjustVector3_(scbVertex.Position));
             finVertex.SetLocalNormal(AdjustVector3_(scbVertex.Normal));
             finVertex.SetUv(0, AdjustVector2_(scbVertex.Uv0));
             finVertex.SetUv(1, AdjustVector2_(scbVertex.Uv1));
+
+            if (currentBoneWeights != null) {
+              finVertex.SetBoneWeights(currentBoneWeights);
+            }
 
             finVertices[scbVertices.Length - 1 - i] = finVertex;
           }

@@ -45,7 +45,7 @@ struct Header {
 } header;
 
 enum<uint> SectionType {
-    MATERIAL = 1,
+    JOINT = 1,
     SECTION_2 = 2,
     MESH = 3,
     MATRICES = 6,
@@ -55,21 +55,22 @@ struct Section {
     SectionType sectionType <bgcolor=COLOR_MAGIC>;
     
     switch (sectionType) {
-        case MATERIAL: {
-            struct Material {
+        case JOINT: {
+            struct Joint {
                 uint maybeSize <bgcolor=COLOR_SIZE>;
-                uint unk1[6] <bgcolor=COLOR_UNKNOWN>;
-                Vec3 unkVec3b;
-                uint unk2[1] <bgcolor=COLOR_UNKNOWN>;
+                Vec3 translation;
+                Vec3 rotation;
+                Vec3 scale;
+                uint unk2 <bgcolor=COLOR_UNKNOWN>;
                 
                 uint nameLength1 <bgcolor=COLOR_SIZE>;
                 uint nameLength0 <bgcolor=COLOR_SIZE>;
             
                 if (nameLength0) {
-                    char name0[nameLength0] <bgcolor=COLOR_STRING, optimize=false>;
+                    char name[nameLength0] <bgcolor=COLOR_STRING, optimize=false>;
                 }
                 if (nameLength1) {
-                    char name1[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
+                    char parentName[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
                 }
             } material;
 
@@ -82,9 +83,13 @@ struct Section {
                 uint unkCount1 <bgcolor=COLOR_COUNT>;
                 uint unk1[2] <bgcolor=COLOR_UNKNOWN>;
                 uint unkCount2 <bgcolor=COLOR_COUNT>;
-                uint unk2[2] <bgcolor=COLOR_UNKNOWN>;
                 
-                Vec3 vec3s[unkCount2] <optimize=true>;
+                struct Unk3 {
+                    uint unk0;
+                    float unk1;
+                    uint unk2;
+                    uint unk3;
+                } unk3s[unkCount2] <bgcolor=COLOR_UNKNOWN, optimize=true>;
             } section2;
             
             break;
@@ -122,8 +127,8 @@ struct Section {
 
                 Mat3x4 mat3x4;
                 
-                uint nameLength1 <bgcolor=COLOR_SIZE>;
                 uint nameLength0 <bgcolor=COLOR_SIZE>;
+                uint nameLength1 <bgcolor=COLOR_SIZE>;
 
                 if (nameLength0) {
                     char name0[nameLength0] <bgcolor=COLOR_STRING, optimize=false>;
