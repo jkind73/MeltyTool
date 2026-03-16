@@ -33,8 +33,16 @@ typedef struct {
 } Vec3 <bgcolor=COLOR_ORIENTATION>;
 
 typedef struct {
-    float values[3 * 4];
-} Mat3x4 <bgcolor=COLOR_ORIENTATION>;
+    float r;
+    float g;
+    float b;
+    float a;
+    
+    local uint color = ((uint) (ubyte) (g * 255) << 8) | ((uint) (ubyte) (g * 255) << 16) | (ubyte) (r * 255);
+    
+    FSeek(FTell() - 16);
+    uint rgba[4] <bgcolor=color>;
+} Rgba;
 
 struct Header {
     uint maybeSize <bgcolor=COLOR_SIZE>;
@@ -46,9 +54,9 @@ struct Header {
 
 enum<uint> SectionType {
     JOINT = 1,
-    SECTION_2 = 2,
+    ANIMATION_TRACK = 2,
     MESH = 3,
-    MATRICES = 6,
+    MATERIAL = 6,
 };
 
 struct Section {
@@ -72,12 +80,12 @@ struct Section {
                 if (nameLength1) {
                     char parentName[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
                 }
-            } material;
+            } joint;
 
             break;
         }
-        case SECTION_2: {
-            struct Section2 {
+        case ANIMATION_TRACK: {
+            struct AnimationTrack {
                 uint unk0 <bgcolor=COLOR_UNKNOWN>;
                 uint unkIndex <bgcolor=COLOR_INDEX>;
                 uint unkCount1 <bgcolor=COLOR_COUNT>;
@@ -90,7 +98,7 @@ struct Section {
                     uint unk2;
                     uint unk3;
                 } unk3s[unkCount2] <bgcolor=COLOR_UNKNOWN, optimize=true>;
-            } section2;
+            } animationTrack;
             
             break;
         }
@@ -118,14 +126,16 @@ struct Section {
             
             break;
         }
-        case MATRICES: {
-            struct Matrices {
+        case MATERIAL: {
+            struct Material {
                 uint maybeSize <bgcolor=COLOR_COUNT>;
                 uint maybeCount <bgcolor=COLOR_COUNT>;
                 
                 uint padding[2];
 
-                Mat3x4 mat3x4;
+                Rgba diffuseColor;
+                Rgba unkColor0;
+                Rgba unkColor1;
                 
                 uint nameLength0 <bgcolor=COLOR_SIZE>;
                 uint nameLength1 <bgcolor=COLOR_SIZE>;
@@ -136,7 +146,7 @@ struct Section {
                 if (nameLength1) {
                     char name1[nameLength1] <bgcolor=COLOR_STRING, optimize=false>;
                 }
-            } matrices;
+            } material;
 
             break;
         }

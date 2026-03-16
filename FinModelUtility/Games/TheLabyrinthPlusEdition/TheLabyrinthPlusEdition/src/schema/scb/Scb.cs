@@ -51,7 +51,7 @@ public sealed partial class Scb : IBinaryConvertible {
           break;
         }
         case SectionType.SECTION_6: {
-          sections.Add(br.ReadNew<Section6>());
+          sections.Add(br.ReadNew<MaterialSection>());
           break;
         }
         default: throw new ArgumentOutOfRangeException();

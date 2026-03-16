@@ -35,8 +35,7 @@ public sealed partial class Vertex : IBinaryConvertible {
 
 [BinarySchema]
 public sealed partial class Face : IBinaryConvertible {
-  [Unknown]
-  private uint unk0_;
+  public uint MaterialId { get; set; }
 
   [Unknown]
   private uint unk1_;

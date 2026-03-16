@@ -1,6 +1,9 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
+using fin.color;
 using fin.data.dictionaries;
+using fin.image;
 using fin.io;
 using fin.math.transform;
 using fin.model;
@@ -40,7 +43,7 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
         = allBallAttributes
             .ToListDictionary(a => a.Geometry?.ToLower() ?? "ball.scb");
 
-    var textureFiles = new List<IReadOnlyTreeFile>();
+    var material1TextureFiles = new List<IReadOnlyTreeFile>();
     if (ballAttributesByGeometry.TryGetList(
             fileBundle.ScbFile.Name.ToString().ToLower(),
             out var matchingBallAttributes)) {
@@ -48,38 +51,49 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
         if (ballAttributes.Texture != null) {
           var textureFile = fileBundle.TexturesDir.AssertGetExistingFile(
               ballAttributes.Texture);
-          textureFiles.Add(textureFile);
+          material1TextureFiles.Add(textureFile);
         }
       }
     }
 
+    var materialById = new Dictionary<uint, IReadOnlyMaterial>();
+
     foreach (var scbSection in scb.Sections) {
-      if (scbSection is Section6 section6) {
-        var textureName = section6.TextureName;
+      if (scbSection is MaterialSection materialSection) {
+        var id = materialSection.Id;
+
+        var textureFiles = new List<IReadOnlyTreeFile>();
+        var textureName = materialSection.TextureName;
         if (textureName.Length > 0) {
           var textureFile = fileBundle.ScbFile.AssertGetParent()
                                       .AssertGetExistingFile(textureName);
           textureFiles.Add(textureFile);
         }
+
+        if (id == 1) {
+          textureFiles.AddRange(material1TextureFiles);
+        }
+
+        var textures = textureFiles
+                       .Select(textureFile => {
+                         var image = FinImage.FromFile(textureFile);
+                         var finTexture
+                             = finModel.MaterialManager.CreateTexture(image);
+                         finTexture.Name
+                             = textureFile.NameWithoutExtension.ToString();
+                         finTexture.WrapModeU
+                             = finTexture.WrapModeV = WrapMode.REPEAT;
+                         return finTexture;
+                       })
+                       .ToArray();
+
+        var finMaterial = finModel.MaterialManager.AddStandardMaterial();
+        finMaterial.Name = materialSection.Name;
+        finMaterial.DiffuseTexture = textures.FirstOrDefault();
+
+        materialById[id] = finMaterial;
       }
     }
-
-    IMaterial[] textureMaterials
-        = textureFiles
-          .Select(textureFile => {
-            (var finMaterial, var finTexture)
-                = finModel.MaterialManager.AddSimpleTextureMaterialFromFile(
-                    textureFile);
-
-            finTexture.WrapModeU = finTexture.WrapModeV = WrapMode.REPEAT;
-
-            return finMaterial;
-          })
-          .ToArray();
-
-    var finMaterial = textureMaterials.Length > 0
-        ? textureMaterials[0]
-        : finModel.MaterialManager.AddNullMaterial();
 
     var finSkin = finModel.Skin;
 
@@ -91,7 +105,8 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
     foreach (var scbSection in scb.Sections) {
       switch (scbSection) {
         case JointSection joint: {
-          if (!finBoneByName.TryGetValue(joint.ParentName, out var parentBone)) {
+          if (!finBoneByName.TryGetValue(joint.ParentName,
+                                         out var parentBone)) {
             parentBone = finModel.Skeleton.Root;
           }
 
@@ -133,19 +148,23 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
             finVertices[scbVertices.Length - 1 - i] = finVertex;
           }
 
-          var triangles
-              = meshSection
-                .Faces.Select(f => {
-                  var v0 = finVertices[f.Vertex0];
-                  var v1 = finVertices[f.Vertex1];
-                  var v2 = finVertices[f.Vertex2];
+          var trianglesByMaterial
+              = meshSection.Faces
+                           .ToListDictionary(
+                               f => f.MaterialId,
+                               f => {
+                                 var v0 = finVertices[f.Vertex0];
+                                 var v1 = finVertices[f.Vertex1];
+                                 var v2 = finVertices[f.Vertex2];
+                                 return (v0, v1, v2);
+                               });
 
-                  return (v0, v1, v2);
-                })
-                .ToArray();
-
-          var finPrimitive = finMesh.AddTriangles(triangles);
-          finPrimitive.SetMaterial(finMaterial);
+          foreach (var materialId in trianglesByMaterial.Keys) {
+            var finPrimitive = finMesh.AddTriangles(
+                (IReadOnlyList<(IReadOnlyVertex, IReadOnlyVertex,
+                    IReadOnlyVertex)>) trianglesByMaterial[materialId]);
+            finPrimitive.SetMaterial(materialById[materialId]);
+          }
 
           break;
         }
