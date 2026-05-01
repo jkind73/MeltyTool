@@ -4,7 +4,6 @@ using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Templates;
 using Avalonia.Layout;
 using Avalonia.Threading;
@@ -14,6 +13,7 @@ using fin.data.queues;
 using fin.io;
 using fin.io.bundles;
 using fin.ui.avalonia;
+using fin.ui.avalonia.trees;
 using fin.util.asserts;
 using fin.util.io;
 
@@ -36,8 +36,8 @@ public class FileBundleTreeViewModel
     : BViewModel, IFilterTreeViewViewModel<IFileBundle> {
   private readonly IReadOnlyList<IFileBundleNode> nodes_;
 
-  private readonly ISynchronizedView<IFileBundleNode, IFileBundleNode>
-      filteredNodes_;
+  public ISynchronizedView<IFileBundleNode, IFileBundleNode> FilteredNodes { get;
+  }
 
   public FileBundleTreeViewModel(IReadOnlyList<IFileBundleNode> nodes) {
     this.nodes_ = nodes;
@@ -60,78 +60,65 @@ public class FileBundleTreeViewModel
     this.AutoCompleteItems = autoCompleteItems.ToArray();
 
     var obsList = new ObservableList<IFileBundleNode>(nodes);
-    this.filteredNodes_ = obsList.CreateView(t => t);
+    this.FilteredNodes = obsList.CreateView(t => t);
 
-    this.Source
-        = new HierarchicalTreeDataGridSource<IFileBundleNode>(
-            this.filteredNodes_) {
-            Columns = {
-                new HierarchicalExpanderColumn<IFileBundleNode>(
-                    new TemplateColumn<IFileBundleNode>(
-                        "Name",
-                        new FuncDataTemplate<IFileBundleNode>((x, _) => {
-                          if (x == null) {
-                            return null;
-                          }
+    this.Source = TreeDataGridUtil.CreateSource(
+        new TreeDataGridSourceParams<IFileBundleNode> {
+            RootNodes = this.FilteredNodes,
+            ChildSelector = x => x.FilteredSubNodes,
+            HasChildren = x => x.HasChildren,
+            OnSelectionChanged = this.ChangeSelection,
+            Template = x => {
+              if (x == null) {
+                return null;
+              }
 
-                          var textBlock = new TextBlock {
-                              Text = x.Label,
-                              Classes = { "regular" }
-                          };
+              var textBlock = new TextBlock {
+                  Text = x.Label,
+                  Classes = { "regular" }
+              };
 
-                          if (x.Icon == null) {
-                            return textBlock;
-                          }
+              if (x.Icon == null) {
+                return textBlock;
+              }
 
-                          var icon = new MaterialIcon {
-                              Kind = x.Icon.Value,
-                              Margin = new Thickness(-24, 0, 4, 0),
-                              Height = 16,
-                              Width = 16
-                          };
+              var icon = new MaterialIcon {
+                  Kind = x.Icon.Value,
+                  Margin = new Thickness(-24, 0, 4, 0),
+                  Height = 16,
+                  Width = 16
+              };
 
-                          var stackPanel = new StackPanel {
-                              Orientation = Orientation.Horizontal,
-                          };
-                          stackPanel.Children.AddRange([icon, textBlock]);
+              var stackPanel = new StackPanel {
+                  Orientation = Orientation.Horizontal,
+              };
+              stackPanel.Children.AddRange([icon, textBlock]);
 
-                          var annotatedFileBundle = x.Value;
-                          var contextMenu = new ContextMenu();
-                          {
-                            var openInExplorerItem = new MenuItem {
-                                Header = "Show in Explorer",
-                                IsEnabled = annotatedFileBundle.MainFile != null
-                            };
-                            openInExplorerItem.Click += (_, _) => {
-                              if (annotatedFileBundle.MainFile != null) {
-                                ExplorerUtil.OpenInExplorer(
-                                    annotatedFileBundle.MainFile);
-                              }
-                            };
-                            contextMenu.Items.Add(openInExplorerItem);
-                          }
-                          stackPanel.ContextMenu = contextMenu;
+              var annotatedFileBundle = x.Value;
+              var contextMenu = new ContextMenu();
+              {
+                var openInExplorerItem = new MenuItem {
+                    Header = "Show in Explorer",
+                    IsEnabled = annotatedFileBundle.MainFile != null
+                };
+                openInExplorerItem.Click += (_, _) => {
+                  if (annotatedFileBundle.MainFile != null) {
+                    ExplorerUtil.OpenInExplorer(
+                        annotatedFileBundle.MainFile);
+                  }
+                };
+                contextMenu.Items.Add(openInExplorerItem);
+              }
+              stackPanel.ContextMenu = contextMenu;
 
-                          return stackPanel;
-                        })),
-                    x => x.FilteredSubNodes)
+              return stackPanel;
             }
-        };
-
-    Dispatcher.UIThread.Invoke(() => {
-      var rowSelection = this.Source.RowSelection!;
-      rowSelection.SelectionChanged += (_, e) => {
-        var selectedItems = e.SelectedItems;
-        if (selectedItems.Count == 0) {
-          return;
-        }
-
-        this.ChangeSelection(selectedItems[0]!);
-      };
-    });
+        });
   }
 
-  public HierarchicalTreeDataGridSource<IFileBundleNode> Source { get; }
+  public HierarchicalTreeDataGridSource<IFileBundleNode> Source { get;
+    private set;
+  }
 
   public string[] AutoCompleteItems { get; }
 
@@ -148,12 +135,12 @@ public class FileBundleTreeViewModel
     }
 
     if (filter == null) {
-      this.filteredNodes_.ResetFilter();
+      this.FilteredNodes.ResetFilter();
     } else {
-      this.filteredNodes_.AttachFilter(n => n.InFilter);
+      this.FilteredNodes.AttachFilter(n => n.InFilter);
     }
 
-    this.Source.Items = this.filteredNodes_.Where(i => i.InFilter);
+    this.Source.Items = this.FilteredNodes.Where(i => i.InFilter);
   }
 }
 
@@ -213,6 +200,8 @@ public sealed class FileBundleDirectoryNode
 
   public IFileBundle? Value => null;
 
+  public bool HasChildren => true;
+
   public INotifyCollectionChangedSynchronizedViewList<
       IFileBundleNode>? FilteredSubNodes { get; }
 
@@ -253,6 +242,7 @@ public sealed class FileBundleLeafNode(
     : BFileBundleNode(label), IFileBundleNode, IFileTreeLeafNode {
   public INotifyCollectionChangedSynchronizedViewList<
       IFileBundleNode>? FilteredSubNodes => null;
+  public bool HasChildren => false;
 
   public MaterialIconKind? Icon => data.Type switch {
       FileBundleType.AUDIO => MaterialIconKind.VolumeHigh,

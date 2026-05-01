@@ -4,7 +4,6 @@ using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -24,10 +23,8 @@ using marioartist.schema;
 using marioartist.schema.mfs;
 
 using marioartisttool.file_select;
-
 using marioartisttool.services;
 using marioartisttool.util;
-
 using marioartisttool.view;
 
 using ReactiveUI;
@@ -115,13 +112,13 @@ public class MainViewModel : BViewModel {
           = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
 
       this.FileSystemTreeSource
-          = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(
-              root.Children) {
-              Columns = {
-                  new HierarchicalExpanderColumn<MfsTreeIoObject>(
-                      new TemplateColumn<MfsTreeIoObject>(
-                          "Name",
-                          new FuncDataTemplate<MfsTreeIoObject>((x, _) => {
+          = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(root.Children)
+              .WithHierarchicalExpanderColumn(
+                  "Name",
+                  new TreeDataGridTemplateColumn {
+                      Width = GridLength.Star,
+                      CellTemplate
+                          = new FuncDataTemplate<MfsTreeIoObject>((x, _) => {
                             if (x == null) {
                               return null;
                             }
@@ -305,11 +302,8 @@ public class MainViewModel : BViewModel {
 
                             return border;
                           }),
-                          null,
-                          GridLength.Star),
-                      x => x.Children)
-              }
-          };
+                  },
+                  x => x.Children);
 
       Dispatcher.UIThread.Invoke(() => {
         var rowSelection = this.FileSystemTreeSource.RowSelection!;
@@ -325,9 +319,9 @@ public class MainViewModel : BViewModel {
         };
 
         this.FileSystemTreeSource.RowExpanded += (_, e)
-            => bbomByTreeIoObject[e.Row.Model].IsOpen = true;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen = true;
         this.FileSystemTreeSource.RowCollapsed += (_, e)
-            => bbomByTreeIoObject[e.Row.Model].IsOpen = false;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen = false;
       });
     };
   }

@@ -3,7 +3,6 @@ using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
@@ -20,6 +19,7 @@ using fin.util.enums;
 using Material.Icons;
 using Material.Icons.Avalonia;
 
+using uni.ui.avalonia.resources;
 using uni.ui.avalonia.resources.scene;
 
 namespace uni.ui.avalonia.resources;
@@ -60,34 +60,35 @@ public class FullHierarchyTreeViewModel : BViewModel {
     var regularFontSize = (double) TopLevelService.Instance.FindResource(
         "RegularFontSize");
 
-    this.Source = new(rootNodes) {
-        Columns = {
-            new HierarchicalExpanderColumn<IFullHierarchyNode>(
-                new TemplateColumn<IFullHierarchyNode>("Name",
-                  new FuncDataTemplate<IFullHierarchyNode>((_, _) => {
-                    var stackPanel = new StackPanel {
-                        Orientation = Orientation.Horizontal,
-                    };
-                    stackPanel.Children.AddRange([
-                        new MaterialIcon {
-                            Height = regularFontSize,
-                            Margin = new Thickness(0),
-                            [!MaterialIcon.KindProperty]
-                                = new Binding(nameof(IFullHierarchyNode.Icon)),
-                        },
-                        new TextBlock {
-                            Classes = { "regular" },
-                            Margin = new Thickness(3, 0, 0, 0),
-                            VerticalAlignment = VerticalAlignment.Center,
-                            [!TextBlock.TextProperty]
-                                = new Binding(nameof(IFullHierarchyNode.Name)),
-                        }
-                    ]);
-                    return stackPanel;
-                  })),
-                x => x.Children),
-        },
-    };
+    this.Source
+        = new HierarchicalTreeDataGridSource<IFullHierarchyNode>(rootNodes)
+            .WithHierarchicalExpanderColumn(
+                "Name",
+                new TreeDataGridTemplateColumn {
+                    Width = GridLength.Star,
+                    CellTemplate = new FuncDataTemplate<IFullHierarchyNode>((_, _) => {
+                      var stackPanel = new StackPanel {
+                          Orientation = Orientation.Horizontal,
+                      };
+                      stackPanel.Children.AddRange([
+                          new MaterialIcon {
+                              Height = regularFontSize,
+                              Margin = new Thickness(0),
+                              [!MaterialIcon.KindProperty]
+                                  = new Binding(nameof(IFullHierarchyNode.Icon)),
+                          },
+                          new TextBlock {
+                              Classes = { "regular" },
+                              Margin = new Thickness(3, 0, 0, 0),
+                              VerticalAlignment = VerticalAlignment.Center,
+                              [!TextBlock.TextProperty]
+                                  = new Binding(nameof(IFullHierarchyNode.Name)),
+                          }
+                      ]);
+                      return stackPanel;
+                    })
+                },
+                x => x.Children);
 
     this.Source.RowSelection!.SelectionChanged += (_, e) => {
       IReadOnlyBone? selectedBone = null;

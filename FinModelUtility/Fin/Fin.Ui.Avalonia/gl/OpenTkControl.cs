@@ -1,5 +1,6 @@
 ﻿using System;
 
+using Avalonia.Controls;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
 using Avalonia.Threading;
@@ -13,12 +14,16 @@ namespace fin.ui.avalonia.gl;
 
 public class OpenTkControl(Action initGl, Action renderGl, Action teardownGl)
     : OpenGlControlBase {
+  private TopLevel topLevel_;
   private AvaloniaOpenTkContext? avaloniaTkContext_;
   private TimedCallback renderCallback_;
+  private FpsTimer fpsTimer_;
 
   private static bool isLoaded_ = false;
 
   protected sealed override void OnOpenGlInit(GlInterface gl) {
+    this.topLevel_ = TopLevel.GetTopLevel(this);
+
     if (!isLoaded_) {
       //Initialize the OpenTK<->Avalonia Bridge
       this.avaloniaTkContext_ = new AvaloniaOpenTkContext(gl);
@@ -30,17 +35,14 @@ public class OpenTkControl(Action initGl, Action renderGl, Action teardownGl)
     GlUtil.SwitchContext(this);
     initGl();
 
-    this.renderCallback_ = TimedCallback.WithFrequency(
-        () => Dispatcher.UIThread.Post(this.RequestNextFrameRendering,
-                                       DispatcherPriority.Background),
-        UiConstants.FPS);
+    this.fpsTimer_ = new FpsTimer(this) {
+        Pause = false,
+    };
   }
 
   protected override void OnOpenGlRender(GlInterface gl, int fb) {
-    this.RequestNextFrameRendering();
-
-    GlUtil.SwitchContext(this);
-    renderGl();
+    //GlUtil.SwitchContext(this);
+    //renderGl();
   }
 
   protected sealed override void OnOpenGlDeinit(GlInterface gl)

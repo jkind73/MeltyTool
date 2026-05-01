@@ -2,7 +2,6 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <Namespace>marioartisttool</Namespace>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,12 +13,6 @@
     <Compile Remove="view\NewFolder\**" />
     <EmbeddedResource Remove="view\NewFolder\**" />
     <None Remove="view\NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.3.2" />
-    <PackageReference Include="TextMateSharp" Version="2.0.3" />
-    <PackageReference Include="TextMateSharp.Grammars" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>

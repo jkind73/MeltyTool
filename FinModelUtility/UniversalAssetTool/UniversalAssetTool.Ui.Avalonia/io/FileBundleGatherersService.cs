@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Avalonia;
+using Avalonia.Threading;
 
 using fin.io.bundles;
 using fin.util.progress;
@@ -29,25 +31,27 @@ public static class FileBundleGatherersService {
     var loadingProgress = splitProgress[0];
     var fileTreeProgress = splitProgress[1];
 
-    FinTask.Run(() => {
-      var rootDirectory = new RootFileBundleGatherer()
-          .GatherAllFiles(
-              loadingProgress,
-              out var gatherersAndProgresses);
-      gatherersAndProgresses_ = gatherersAndProgresses;
+    /*Dispatcher.CurrentDispatcher.InvokeAsync(async () => {
+      var (rootDirectory, counterProgress) = await FinTask.Run(() => {
+        var rootDirectory = new RootFileBundleGatherer()
+            .GatherAllFiles(
+                loadingProgress,
+                out var gatherersAndProgresses);
+        gatherersAndProgresses_ = gatherersAndProgresses;
 
-      var totalNodeCount
-          = GetTotalNodeCountWithinDirectory_(rootDirectory);
-      var counterProgress = new CounterPercentageProgress(totalNodeCount);
-      counterProgress.OnProgressChanged += (_, progress) => {
-        fileTreeProgress.ReportProgress(progress);
-      };
+        var totalNodeCount
+            = GetTotalNodeCountWithinDirectory_(rootDirectory);
+        var counterProgress = new CounterPercentageProgress(totalNodeCount);
+        counterProgress.OnProgressChanged += (_, progress) => {
+          fileTreeProgress.ReportProgress(progress);
+        };
 
-      var fileTreeViewModel
-          = GetFileTreeViewModel_(rootDirectory,
-                                  counterProgress);
+        return (rootDirectory, counterProgress);
+      });
+
+      var fileTreeViewModel = await GetFileTreeViewModel_(rootDirectory, counterProgress);
       valueFractionProgress.ReportCompletion(fileTreeViewModel);
-    });
+    }, DispatcherPriority.Background);*/
 
     return valueFractionProgress;
   }
@@ -58,16 +62,18 @@ public static class FileBundleGatherersService {
        directoryRoot.Subdirs.Sum(GetTotalNodeCountWithinDirectory_) +
        directoryRoot.FileBundles.Count;
 
-  private static FileBundleTreeViewModel GetFileTreeViewModel_(
+  private static async Task<FileBundleTreeViewModel> GetFileTreeViewModel_(
       IFileBundleDirectory directoryRoot,
       CounterPercentageProgress counterPercentageProgress) {
+    var rootSubdirs = await FinTask.Run(() => 
+      directoryRoot
+          .Subdirs
+          .Select(subdir => CreateDirectoryNode_(
+                      subdir,
+                      counterPercentageProgress)));
+
     var viewModel = new FileBundleTreeViewModel(
-        new ObservableCollection<INode<IFileBundle>>(
-            directoryRoot
-                .Subdirs
-                .Select(subdir => CreateDirectoryNode_(
-                            subdir,
-                            counterPercentageProgress))));
+        new ObservableCollection<INode<IFileBundle>>(rootSubdirs));
 
     viewModel.NodeSelected
         += (_, node) => {

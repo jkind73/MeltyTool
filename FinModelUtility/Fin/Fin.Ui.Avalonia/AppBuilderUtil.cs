@@ -29,7 +29,7 @@ public static class AppBuilderUtil {
                          Win32CompositionMode.LowLatencyDxgiSwapChain,
                          Win32CompositionMode.WinUIComposition,
                          Win32CompositionMode.DirectComposition
-                     ]
+                     ],
                  })
                  .With(new SkiaOptions {
                      // Use as much memory as available, similar to WPF. This

@@ -10,8 +10,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using Avalonia.Platform;
-using Avalonia.Rendering;
 using Avalonia.Rendering.Composition;
+using Avalonia.VisualTree;
 
 using fin.ui.rendering.gl;
 
@@ -163,7 +163,7 @@ public class SharpDxInteropControl : Control {
 
   private void UpdateFrame_() {
     this.updateQueued_ = false;
-    var root = this as IRenderRoot ?? this.VisualRoot;
+    var root = this.GetPresentationSource();
     if (root == null)
       return;
 

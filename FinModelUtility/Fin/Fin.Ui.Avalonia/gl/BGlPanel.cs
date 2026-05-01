@@ -22,7 +22,7 @@ public abstract class BGlPanel : Panel, ICustomHitTest {
       var renderGl = this.RenderGl;
       var teardownGl = this.TeardownGl;
 
-      if (FinConfig.PreferGlNativeInterop) {
+      if (false && FinConfig.PreferGlNativeInterop) {
         OpenGlVersionService.Init(false);
         if (await SharpDxInteropControl.TryToAddTo(this, initGl, renderGl, teardownGl)) {
           return;

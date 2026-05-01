@@ -69,8 +69,7 @@
 
     <controls:If Condition="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
       <TreeDataGrid Source="{Binding Source}"
-                    Margin="-4 0"
-                    ShowColumnHeaders="False" />
+                    Margin="-4 0" />
     </controls:If>
   </DockPanel>
 </UserControl>
