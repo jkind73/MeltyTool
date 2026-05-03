@@ -6,6 +6,8 @@ using fin.ui;
 namespace fin.util.time;
 
 public static class FrameTime {
+  private static readonly DiscreteFpsStopwatch discreteFpsStopwatch_ = new();
+
   private static readonly DateTime firstFrameStart_ = DateTime.Now;
   private static DateTime previousFrameStart_;
 
@@ -41,6 +43,8 @@ public static class FrameTime {
     var smoothedFrameTime = frameTimesForSmoothedActualFps_.Average();
 
     SmoothedActualFps = smoothedFrameTime == 0 ? 0 : 1 / smoothedFrameTime;
+
+    discreteFpsStopwatch_.MarkStartOfFrame();
   }
 
   public static void MarkEndOfFrameForFpsDisplay() {
@@ -71,9 +75,10 @@ public static class FrameTime {
 
   public static float DeltaTime { get; private set; }
 
+  public static int DiscreteFps => discreteFpsStopwatch_.Fps;
   public static float SmoothedActualFps { get; private set; }
   public static float SmoothedTheoreticalFps { get; private set; }
 
   public static string FpsString
-    => $"Universal Asset Tool ({SmoothedActualFps:0.0} / {SmoothedTheoreticalFps:0.0} fps)";
+    => $"Universal Asset Tool [{DiscreteFps:0} fps ({SmoothedTheoreticalFps:0.0} theoretical)]";
 }
