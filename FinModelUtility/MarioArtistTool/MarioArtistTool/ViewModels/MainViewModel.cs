@@ -12,6 +12,8 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 
+using Dorssel.Utilities.Generic;
+
 using fin.io;
 using fin.ui.avalonia;
 using fin.ui.avalonia.images;
@@ -76,6 +78,10 @@ public sealed class MainViewModelForDesigner : MainViewModel {
 }
 
 public class MainViewModel : BViewModel {
+  private readonly Debouncer<MfsTreeFile> fileDebouncer_ = new() {
+      DebounceWindow = TimeSpan.FromMilliseconds(100)
+  };
+
   public static Cursor ThumbInCursor { get; }
     = AssetLoaderUtil.LoadCursor("thumb_in.png", new PixelPoint(2, 2));
 
@@ -92,6 +98,9 @@ public class MainViewModel : BViewModel {
   public CursorObservableManager Com { get; } = new();
 
   public MainViewModel() {
+    this.fileDebouncer_.Debounced
+        += (_, files) => MfsFileSystemService.SelectFile(files.TriggerData.Last());
+
     MfsFileSystemService.OnFileSelected += file => {
       if (file?.FileType.ToLower() is ".tstlt") {
         using var br = file.OpenReadAsBinary(Endianness.BigEndian);
@@ -322,7 +331,7 @@ public class MainViewModel : BViewModel {
           }
 
           if (selectedItems[0] is MfsTreeFile file) {
-            MfsFileSystemService.SelectFile(file);
+            this.fileDebouncer_.Trigger(file);
           }
         };
 
