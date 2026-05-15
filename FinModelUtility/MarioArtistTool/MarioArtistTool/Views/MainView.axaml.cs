@@ -174,6 +174,7 @@ public partial class MainView : UserControl {
       }
     }
 
+    // Need to wait to change camera position or it causes jitter.
     if (file?.FileType.ToLower() != ".tstlt") {
       if (this.ma3d1CameraTransform_ != null) {
         (camera.Position, camera.PitchDegrees, camera.YawDegrees)
