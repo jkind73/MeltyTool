@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.OpenGL;
 using Avalonia.Win32;
+
 using ReactiveUI.Avalonia;
 
 using fin.ui.rendering.gl;
@@ -37,5 +38,8 @@ public static class AppBuilderUtil {
                      MaxGpuResourceSizeBytes = long.MaxValue
                  })
                  .WithInterFont()
+#if DEBUG
+                 .WithDeveloperTools()
+#endif
                  .UseReactiveUI(reactiveUiBuilder => { });
 }
