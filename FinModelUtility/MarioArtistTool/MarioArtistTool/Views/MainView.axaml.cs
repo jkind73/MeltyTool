@@ -74,11 +74,6 @@ public partial class MainView : UserControl {
     var allowMovingCamera = true;
     var showGrid = true;
 
-    if (this.ma3d1CameraTransform_ != null) {
-      (camera.Position, camera.PitchDegrees, camera.YawDegrees)
-          = this.ma3d1CameraTransform_.Value;
-    }
-
     IOrthoRenderable? newBackdropRenderer = null;
 
     switch (file?.FileType.ToLower()) {
@@ -176,6 +171,13 @@ public partial class MainView : UserControl {
         }
 
         break;
+      }
+    }
+
+    if (file?.FileType.ToLower() != ".tstlt") {
+      if (this.ma3d1CameraTransform_ != null) {
+        (camera.Position, camera.PitchDegrees, camera.YawDegrees)
+            = this.ma3d1CameraTransform_.Value;
       }
     }
 
