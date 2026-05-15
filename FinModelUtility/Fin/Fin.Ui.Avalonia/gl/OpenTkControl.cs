@@ -3,7 +3,6 @@
 using Avalonia.Controls;
 using Avalonia.OpenGL;
 using Avalonia.OpenGL.Controls;
-using Avalonia.Threading;
 
 using fin.ui.rendering.gl;
 using fin.util.time;
@@ -41,8 +40,8 @@ public class OpenTkControl(Action initGl, Action renderGl, Action teardownGl)
   }
 
   protected override void OnOpenGlRender(GlInterface gl, int fb) {
-    //GlUtil.SwitchContext(this);
-    //renderGl();
+    GlUtil.SwitchContext(this);
+    renderGl();
   }
 
   protected sealed override void OnOpenGlDeinit(GlInterface gl)

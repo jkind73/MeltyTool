@@ -248,8 +248,9 @@ public class SharpDxInteropControl : Control {
   private static extern IntPtr wglGetCurrentDC();
 
   protected void RenderFrame(PixelSize pixelSize) {
-    if (pixelSize == default)
+    if (pixelSize.Width * pixelSize.Height == 0) {
       return;
+    }
 
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
