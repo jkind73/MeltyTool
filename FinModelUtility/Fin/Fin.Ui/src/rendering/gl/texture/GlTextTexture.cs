@@ -56,7 +56,6 @@ public sealed class GlTextTexture : IGlTexture {
     GlUtil.SetClearColor(Color.Transparent);
     GlUtil.ClearColorAndDepth();
     drawing.Draw();
-    GL.Finish();
     this.impl_.UntargetFbo();
   }
 
