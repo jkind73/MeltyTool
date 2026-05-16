@@ -14,6 +14,7 @@ using Avalonia.Threading;
 
 using Dorssel.Utilities.Generic;
 
+using fin.data.queues;
 using fin.io;
 using fin.ui.avalonia;
 using fin.ui.avalonia.images;
@@ -99,7 +100,8 @@ public class MainViewModel : BViewModel {
 
   public MainViewModel() {
     this.fileDebouncer_.Debounced
-        += (_, files) => MfsFileSystemService.SelectFile(files.TriggerData.Last());
+        += (_, files)
+            => MfsFileSystemService.SelectFile(files.TriggerData.Last());
 
     MfsFileSystemService.OnFileSelected += file => {
       if (file?.FileType.ToLower() is ".tstlt") {
@@ -127,6 +129,10 @@ public class MainViewModel : BViewModel {
 
         var bbomByTreeIoObject
             = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
+
+        var zIndexByObject = new Dictionary<MfsTreeIoObject, int>();
+        var zIndex = 0;
+        CountChildrenDepthFirst_(root.Children, zIndexByObject, ref zIndex);
 
         this.FileSystemTreeSource
             = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(root.Children)
@@ -221,10 +227,12 @@ public class MainViewModel : BViewModel {
                                     = AssetLoaderUtil.LoadBitmap(
                                         "icon_many_files.png");
                                 var fileImage
-                                    = AssetLoaderUtil.LoadBitmap("icon_file.png");
+                                    = AssetLoaderUtil.LoadBitmap(
+                                        "icon_file.png");
 
                                 var fileCount = childCount % 7;
-                                var manyFilesCount = (childCount - fileCount) / 7;
+                                var manyFilesCount
+                                    = (childCount - fileCount) / 7;
 
                                 var childPanel = new WrapPanel();
                                 for (var i = 0; i < manyFilesCount; ++i) {
@@ -277,6 +285,7 @@ public class MainViewModel : BViewModel {
                                       marginTop,
                                       2,
                                       marginBottom),
+                                  ZIndex = zIndexByObject[x],
                               };
 
                               if (x is MfsTreeFile) {
@@ -336,11 +345,23 @@ public class MainViewModel : BViewModel {
         };
 
         this.FileSystemTreeSource.RowExpanded += (_, e)
-            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen = true;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen
+                = true;
         this.FileSystemTreeSource.RowCollapsed += (_, e)
-            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen = false;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen
+                = false;
       });
     };
+  }
+
+  private static void CountChildrenDepthFirst_(
+      IEnumerable<MfsTreeIoObject> objects,
+      Dictionary<MfsTreeIoObject, int> countByObject,
+      ref int count) {
+    foreach (var obj in objects) {
+      countByObject[obj] = count++;
+      CountChildrenDepthFirst_(obj.Children, countByObject, ref count);
+    }
   }
 }
 
