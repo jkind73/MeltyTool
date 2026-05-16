@@ -88,7 +88,10 @@ public class FullHierarchyTreeViewModel : BViewModel {
                       return stackPanel;
                     })
                 },
-                x => x.Children);
+                x => x.Children,
+                options: o => {
+                  o.Width = GridLength.Star;
+                });
 
     this.Source.RowSelection!.SelectionChanged += (_, e) => {
       IReadOnlyBone? selectedBone = null;

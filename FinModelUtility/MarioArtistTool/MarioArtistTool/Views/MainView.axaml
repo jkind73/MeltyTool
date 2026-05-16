@@ -45,10 +45,6 @@
       <Setter Property="BorderBrush" Value="#44433D" />
     </Style>
 
-    <Style Selector="TreeDataGridExpanderCell">
-      <Setter Property="Width" Value="242" />
-    </Style>
-
     <Style Selector="TreeDataGridExpanderCell,
                      TreeDataGridRow,
                      TreeDataGridTemplateCell">

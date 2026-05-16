@@ -114,6 +114,9 @@ public class FileBundleTreeViewModel
               return stackPanel;
             }
         });
+
+    this.Source.ShowColumnHeaders = false;
+    this.Source.CanUserResizeColumns = false;
   }
 
   public HierarchicalTreeDataGridSource<IFileBundleNode> Source { get;

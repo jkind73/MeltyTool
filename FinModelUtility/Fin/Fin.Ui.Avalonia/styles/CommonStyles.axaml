@@ -37,7 +37,7 @@
     </StackPanel>
   </Design.PreviewWith>
 
-  <Style Selector="TextBlock, SelectableTextBlock">
+  <Style Selector="TextBlock, SelectableTextBlock, AccessText">
     <Setter Property="FontFamily" Value="Tahoma" />
   </Style>
 
@@ -57,8 +57,8 @@
   </Style>
 
   <Style Selector="GroupBox">
-    <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
     <Setter Property="BorderThickness" Value="0" />
+    <Setter Property="Padding" Value="0" />
   </Style>
 
   <Style Selector="Menu > MenuItem">

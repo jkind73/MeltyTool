@@ -329,8 +329,12 @@ public class MainViewModel : BViewModel {
                               return border;
                             }),
                     },
-                    x => x.Children);
+                    x => x.Children,
+                    options: o => {
+                      o.Width = GridLength.Star;
+                    });
         this.FileSystemTreeSource.ShowColumnHeaders = false;
+        this.FileSystemTreeSource.CanUserResizeColumns = false;
 
         var rowSelection = this.FileSystemTreeSource.RowSelection!;
         rowSelection.SelectionChanged += (_, e) => {
