@@ -9,13 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaXaml Remove="view\NewFolder\**" />
-    <Compile Remove="view\NewFolder\**" />
-    <EmbeddedResource Remove="view\NewFolder\**" />
-    <None Remove="view\NewFolder\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Fin\Fin.Ui\Fin.Ui.csproj" />
     <ProjectReference Include="..\..\Fin\Fin.Ui.Avalonia\Fin.Ui.Avalonia.csproj" />
     <ProjectReference Include="..\..\Fin\Fin\Fin.csproj" />

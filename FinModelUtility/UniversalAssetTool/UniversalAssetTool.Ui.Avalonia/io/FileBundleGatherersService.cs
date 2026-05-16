@@ -31,7 +31,7 @@ public static class FileBundleGatherersService {
     var loadingProgress = splitProgress[0];
     var fileTreeProgress = splitProgress[1];
 
-    /*Dispatcher.CurrentDispatcher.InvokeAsync(async () => {
+    Dispatcher.CurrentDispatcher.InvokeAsync(async () => {
       var (rootDirectory, counterProgress) = await FinTask.Run(() => {
         var rootDirectory = new RootFileBundleGatherer()
             .GatherAllFiles(
@@ -51,7 +51,7 @@ public static class FileBundleGatherersService {
 
       var fileTreeViewModel = await GetFileTreeViewModel_(rootDirectory, counterProgress);
       valueFractionProgress.ReportCompletion(fileTreeViewModel);
-    }, DispatcherPriority.Background);*/
+    }, DispatcherPriority.Background);
 
     return valueFractionProgress;
   }

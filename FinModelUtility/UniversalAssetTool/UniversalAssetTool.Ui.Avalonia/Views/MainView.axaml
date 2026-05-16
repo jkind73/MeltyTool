@@ -126,20 +126,20 @@
     </DockPanel>
 
     <Grid ZIndex="-5">
-      <Grid Background="{StaticResource ColorControlCheckeredBackgroundBrush}">
+      <Panel Background="{StaticResource CheckeredBackgroundBrush}">
         <scene:SceneInstanceViewerGlPanel
-            x:Name="SceneViewerGlPanel"
-            IsTabStop="True"
-            TabIndex="0"
-            Focusable="True"
-            ShowGrid="True" />
-      </Grid>
+              x:Name="SceneViewerGlPanel"
+              IsTabStop="True"
+              TabIndex="0"
+              Focusable="True"
+              ShowGrid="True" />
+      </Panel>
 
-      <Grid MaxWidth="500"
-            VerticalAlignment="Bottom"
-            Margin="0 32">
+      <Panel MaxWidth="500"
+             VerticalAlignment="Bottom"
+             Margin="0 32">
         <audio:AudioPlayerPanel DataContext="{Binding AudioPlayerPanel}" />
-      </Grid>
+      </Panel>
     </Grid>
   </Grid>
 </UserControl>

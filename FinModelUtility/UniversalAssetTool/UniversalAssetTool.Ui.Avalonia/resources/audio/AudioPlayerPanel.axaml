@@ -40,7 +40,7 @@
                 Height="32"
                 Margin="0 4"
                 BorderBrush="{StaticResource BorderBrush}"
-                Background="{StaticResource ColorControlCheckeredBackgroundBrush}">
+                Background="{StaticResource CheckeredBackgroundBrush}">
           <audio:AudioWaveformGlPanel
               ActivePlayback="{Binding ActivePlayback}" />
         </Border>

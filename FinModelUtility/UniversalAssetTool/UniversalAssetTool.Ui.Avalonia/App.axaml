@@ -18,6 +18,7 @@
 
     <StyleInclude Source="avares://Fin.Ui.Avalonia/styles/CommonStyles.axaml" />
     <StyleInclude Source="avares://Fin.Ui.Avalonia/styles/IconStyles.axaml" />
+    <StyleInclude Source="avares://UniversalAssetTool.Ui.Avalonia/common/CommonStyles.axaml" />
   </Application.Styles>
 
   <Application.Resources>

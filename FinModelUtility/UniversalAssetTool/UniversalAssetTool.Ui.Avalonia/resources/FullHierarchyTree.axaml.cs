@@ -57,8 +57,8 @@ public class FullHierarchyTreeViewModel : BViewModel {
     => new(ModelFullHierarchyNode.GetChildren(model, type));
 
   public FullHierarchyTreeViewModel(IFullHierarchyNode[] rootNodes) {
-    var regularFontSize = (double) TopLevelService.Instance.FindResource(
-        "RegularFontSize");
+    // TODO: Look this up from resource dictionary
+    var regularFontSize = 11;
 
     this.Source
         = new HierarchicalTreeDataGridSource<IFullHierarchyNode>(rootNodes)
