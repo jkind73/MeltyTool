@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:gb="clr-namespace:GroupBox.Avalonia.Controls;assembly=GroupBox.Avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:textures="clr-namespace:uni.ui.avalonia.resources.texture"
              xmlns:common="clr-namespace:uni.ui.avalonia.common"
@@ -20,9 +19,9 @@
       <Grid RowDefinitions="150 *">
         <textures:TextureList DataContext="{Binding TextureList}"
                               TextureSelected="TextureList_OnTextureSelected" />
-        <gb:GroupBox Grid.Row="1"
-                     Classes="h2"
-                     Header="{Binding SelectedTexturePreview.Texture.Name}">
+        <GroupBox Grid.Row="1"
+                  Classes="h2"
+                  Header="{Binding SelectedTexturePreview.Texture.Name}">
           <Grid>
             <Grid.RowDefinitions>
               <RowDefinition Height="150" />
@@ -36,7 +35,7 @@
                 Grid.Row="1"
                 DataContext="{Binding SelectedTextureKeyValueGrid}" />
           </Grid>
-        </gb:GroupBox>
+        </GroupBox>
       </Grid>
     </controls:If.ContentWhenTrue>
     <controls:If.ContentWhenFalse>
