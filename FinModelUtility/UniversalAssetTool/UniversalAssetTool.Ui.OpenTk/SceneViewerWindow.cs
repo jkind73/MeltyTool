@@ -9,7 +9,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-namespace UniversalAssetTool.Ui.Gl;
+namespace UniversalAssetTool.Ui.OpenTk;
 
 public class SceneViewerWindow : GameWindow {
   private readonly SceneViewerGl viewerImpl_ = new();

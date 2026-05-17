@@ -2,7 +2,7 @@
 
 using OpenTK.Windowing.Desktop;
 
-namespace UniversalAssetTool.Ui.Gl;
+namespace UniversalAssetTool.Ui.OpenTk;
 
 internal class Program {
   static void Main(string[] args) {
