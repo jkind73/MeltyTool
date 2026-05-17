@@ -7,11 +7,10 @@ using Avalonia.Controls.Templates;
 using Avalonia.Data;
 using Avalonia.Layout;
 
-using fin.config.avalonia.services;
 using fin.model;
 using fin.scene;
 using fin.scene.components;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.rendering;
 using fin.util.enumerables;
 using fin.util.enums;

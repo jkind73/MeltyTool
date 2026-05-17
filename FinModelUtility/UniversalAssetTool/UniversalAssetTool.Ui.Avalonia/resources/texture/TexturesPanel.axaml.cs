@@ -6,7 +6,7 @@ using Avalonia.Controls;
 
 using fin.math;
 using fin.model;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.asserts;
 
 using ReactiveUI;

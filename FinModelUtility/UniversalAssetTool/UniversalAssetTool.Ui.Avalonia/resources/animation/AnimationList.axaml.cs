@@ -7,7 +7,7 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 using fin.model;
-using fin.ui.avalonia;
+using fin.ui;
 
 using Material.Icons;
 

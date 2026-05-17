@@ -7,7 +7,7 @@ using fin.animation.interpolation;
 using fin.animation.keyframes;
 using fin.animation.types;
 using fin.animation.types.vector3;
-using fin.ui.avalonia;
+using fin.ui;
 
 using OxyPlot;
 using OxyPlot.Axes;

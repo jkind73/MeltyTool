@@ -4,7 +4,7 @@ using System.Linq;
 using Avalonia.Controls;
 
 using fin.language.equations.fixedFunction;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.strings;
 
 using ReactiveUI;

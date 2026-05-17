@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 
 using fin.model;
+using fin.ui;
 using fin.ui.avalonia;
 using fin.util.asserts;
 

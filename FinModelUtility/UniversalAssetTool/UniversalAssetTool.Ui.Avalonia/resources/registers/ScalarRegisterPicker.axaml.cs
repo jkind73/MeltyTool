@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 using fin.language.equations.fixedFunction;
 using fin.math.floats;
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

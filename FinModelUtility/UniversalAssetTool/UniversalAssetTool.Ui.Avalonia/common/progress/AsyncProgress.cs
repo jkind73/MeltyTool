@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.progress;
 
 using ReactiveUI;

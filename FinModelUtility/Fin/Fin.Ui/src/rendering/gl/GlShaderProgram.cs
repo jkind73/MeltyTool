@@ -25,7 +25,8 @@ public sealed partial class GlShaderProgram : IShaderProgram {
             if (id != UNDEFINED_ID) {
               GL.DeleteShader(id);
             }
-          });
+          },
+          count => DebugService.VertexShaderCount = count);
 
   private static ReferenceCountCacheDictionary<string, int>
       fragmentShaderCache_ = new(
@@ -34,7 +35,8 @@ public sealed partial class GlShaderProgram : IShaderProgram {
             if (id != UNDEFINED_ID) {
               GL.DeleteShader(id);
             }
-          });
+          },
+          count => DebugService.FragmentShaderCount = count);
 
   private static
       ReferenceCountCacheDictionary<(string vertexSrc, string fragmentSrc),
@@ -91,7 +93,8 @@ public sealed partial class GlShaderProgram : IShaderProgram {
                 var (vertexSrc, fragmentSrc) = vertexAndFragmentSrc;
                 vertexShaderCache_.DecrementAndMaybeDispose(vertexSrc);
                 fragmentShaderCache_.DecrementAndMaybeDispose(fragmentSrc);
-              });
+              },
+              count => DebugService.ProgramCount = count);
 
   private const int UNDEFINED_ID = -1;
 

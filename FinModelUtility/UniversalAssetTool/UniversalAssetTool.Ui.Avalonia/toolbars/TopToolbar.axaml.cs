@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 
 using fin.io.bundles;
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

@@ -4,15 +4,13 @@ using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Templates;
 using Avalonia.Layout;
-using Avalonia.Threading;
 
 using fin.audio.io.importers.ogg;
 using fin.data.queues;
 using fin.io;
 using fin.io.bundles;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.trees;
 using fin.util.asserts;
 using fin.util.io;

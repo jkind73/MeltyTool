@@ -1,7 +1,9 @@
 ﻿using System.Runtime.CompilerServices;
 
+using fin.image.util;
 using fin.math;
 using fin.model;
+using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.material;
 using fin.ui.rendering.gl.model;
@@ -275,6 +277,22 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         = this.modelRenderComponents_
               .Select(t => t.Item2.SkeletonRenderer)
               .ToArray();
+
+    var uniqueModels = this.modelRenderComponents_
+                           .Select(m => m.Item2.Model)
+                           .Distinct()
+                           .ToArray();
+    var uniqueMaterials = uniqueModels
+                          .SelectMany(m => m.MaterialManager.All)
+                          .Distinct()
+                          .ToArray();
+
+    DebugService.RenderGraphElementCount = this.elements_.Length;
+    DebugService.ModelCount = uniqueModels.Length;
+    DebugService.MaterialCount = uniqueMaterials.Length;
+    DebugService.OpaqueMaterialCount = uniqueMaterials.Count(m => m.GetTransparencyType() is TransparencyType.OPAQUE);
+    DebugService.TransparentMaterialCount = DebugService.MaterialCount -
+                                            DebugService.OpaqueMaterialCount;
   }
 
   public void Render() {

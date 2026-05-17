@@ -5,7 +5,7 @@ using Avalonia.Interactivity;
 
 using fin.animation;
 using fin.math;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.asserts;
 
 using ReactiveUI;

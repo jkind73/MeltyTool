@@ -1,6 +1,6 @@
 ﻿using System;
 
-using fin.ui.avalonia;
+using fin.ui;
 
 using Material.Icons;
 

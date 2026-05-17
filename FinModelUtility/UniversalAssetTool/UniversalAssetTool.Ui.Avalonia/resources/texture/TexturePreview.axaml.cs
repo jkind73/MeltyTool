@@ -1,24 +1,18 @@
 using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Input;
 using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 
 using fin.image;
-using fin.image.formats;
 using fin.model;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.images;
 using fin.util.asserts;
 
 using ReactiveUI;
-
-using SixLabors.ImageSharp.PixelFormats;
 
 using uni.ui.avalonia.resources.model;
 

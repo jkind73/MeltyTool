@@ -48,31 +48,4 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
   </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="io\ExportProgressWindow.axaml.cs">
-      <DependentUpon>ExportProgressWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="io\FileBundleGatherersProgressWindow.axaml.cs">
-      <DependentUpon>FileBundleGatherersProgressWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\model\mesh\MeshesPanel.axaml.cs">
-      <DependentUpon>MeshesPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\FullHierarchyTree.axaml.cs">
-      <DependentUpon>FullHierarchyTree.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\model\skeleton\SkeletonPanel.axaml.cs">
-      <DependentUpon>SkeletonPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\scene\areas\AreasPanel.axaml.cs">
-      <DependentUpon>AreasPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\scene\ScenePanel.axaml.cs">
-      <DependentUpon>ScenePanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="toolbars\FileBundleToolbar.axaml.cs">
-      <DependentUpon>FileBundleToolbar.axaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
 </Project>
