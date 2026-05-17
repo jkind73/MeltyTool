@@ -4,39 +4,24 @@ using fin.scene;
 
 namespace fin.ui.rendering.viewer.controller;
 
-public interface IViewerInputs {
-  float MovementForwardVector { get; set; }
-  float MovementRightwardVector { get; set; }
-  float MovementUpwardVector { get; set; }
-  float MovementSpeed { get; set; }
-
-  Vector2 LookAxes { get; set; }
-}
-
-public enum ViewerInputKey {
-  UNDEFINED,
-  MOVE_FORWARD,
-  MOVE_BACKWARD,
-  MOVE_RIGHT,
-  MOVE_LEFT,
-  MOVE_UP,
-  MOVE_DOWN,
-  SPEED_UP,
-  SLOW_DOWN,
-}
-
 public class MouseAndKeyboardViewerInputs : IViewerInputs, ITickable {
   private readonly Dictionary<ViewerInputKey, bool> isKeyPressed_ = new();
 
-  private Vector2 mousePosition_;
   private bool isMousePressed_;
+  private bool hasPreviousMousePosition_;
+  private Vector2 previousMousePosition_;
+  private bool hasNewMousePosition_;
+  private Vector2 newMousePosition_;
 
-  public float MovementForwardVector { get; set; }
-  public float MovementRightwardVector { get; set; }
-  public float MovementUpwardVector { get; set; }
-  public float MovementSpeed { get; set; }
+  public float MovementForwardVector { get; private set; }
+  public float MovementRightwardVector { get; private set; }
+  public float MovementUpwardVector { get; private set; }
+  public float MovementSpeed { get; private set; }
 
-  public Vector2 LookAxes { get; set; }
+  public Vector2 ViewerSize { get; set; }
+  public float FovY { get; set; }
+  public float YawDegreesDelta { get; private set; }
+  public float PitchDegreesDelta { get; private set; }
 
   public void PressKey(ViewerInputKey key) {
     if (key == ViewerInputKey.UNDEFINED) {
@@ -52,6 +37,20 @@ public class MouseAndKeyboardViewerInputs : IViewerInputs, ITickable {
     }
 
     this.isKeyPressed_[key] = false;
+  }
+
+  public void PressMouse() {
+    this.isMousePressed_ = true;
+    this.hasPreviousMousePosition_ = false;
+  }
+
+  public void ReleaseMouse() {
+    this.isMousePressed_ = false;
+  }
+
+  public void MoveMouse(Vector2 position) {
+    this.hasNewMousePosition_ = true;
+    this.newMousePosition_ = position;
   }
 
   private bool IsKeyPressed_(ViewerInputKey key)
@@ -79,5 +78,27 @@ public class MouseAndKeyboardViewerInputs : IViewerInputs, ITickable {
     if (this.IsKeyPressed_(ViewerInputKey.SLOW_DOWN)) {
       this.MovementSpeed /= 2;
     }
+
+    this.YawDegreesDelta = this.PitchDegreesDelta = 0;
+
+    if (this.isMousePressed_ &&
+        this.hasNewMousePosition_ &&
+        this.hasPreviousMousePosition_) {
+      var deltaMousePosition
+          = this.newMousePosition_ - this.previousMousePosition_;
+
+      var deltaFrac = deltaMousePosition / this.ViewerSize;
+
+      var mouseSpeed = 3;
+
+      var fovX = this.FovY / this.ViewerSize.Y * this.ViewerSize.X;
+
+      this.YawDegreesDelta = -deltaFrac.X * fovX * mouseSpeed;
+      this.PitchDegreesDelta = -deltaFrac.Y * this.FovY * mouseSpeed;
+    }
+
+    this.previousMousePosition_ = this.newMousePosition_;
+    this.hasPreviousMousePosition_ = this.hasNewMousePosition_;
+    this.hasNewMousePosition_ = false;
   }
 }

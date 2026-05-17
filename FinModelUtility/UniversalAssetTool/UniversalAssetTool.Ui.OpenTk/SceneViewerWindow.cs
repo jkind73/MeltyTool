@@ -28,6 +28,10 @@ public class SceneViewerWindow : GameWindow {
         => this.inputsImpl_.PressKey(GetViewerKeyFromTk_(args.Key));
     this.KeyUp += args
         => this.inputsImpl_.ReleaseKey(GetViewerKeyFromTk_(args.Key));
+    this.MouseDown += args => this.inputsImpl_.PressMouse();
+    this.MouseUp += args => this.inputsImpl_.ReleaseMouse();
+    this.MouseMove += args => this.inputsImpl_.MoveMouse(
+        new Vector2(args.Position.X, args.Position.Y));
   }
 
   protected override void OnLoad() {
@@ -53,12 +57,22 @@ public class SceneViewerWindow : GameWindow {
     this.viewerImpl_.NearPlane = UiConstants.NEAR_PLANE;
     this.viewerImpl_.FarPlane = UiConstants.FAR_PLANE;
 
-    this.inputsImpl_.Tick();
-    this.viewerImpl_.Camera.Move(
-        this.inputsImpl_.MovementForwardVector,
-        this.inputsImpl_.MovementRightwardVector,
-        this.inputsImpl_.MovementUpwardVector,
-        this.inputsImpl_.MovementSpeed);
+    {
+      this.inputsImpl_.ViewerSize = new Vector2(this.Size.X, this.Size.Y);
+      this.inputsImpl_.FovY = this.viewerImpl_.FovY;
+      this.inputsImpl_.Tick();
+
+      var camera = this.viewerImpl_.Camera;
+      camera.Move(this.inputsImpl_.MovementForwardVector,
+                  this.inputsImpl_.MovementRightwardVector,
+                  this.inputsImpl_.MovementUpwardVector,
+                  this.inputsImpl_.MovementSpeed);
+      camera.YawDegrees += this.inputsImpl_.YawDegreesDelta;
+      camera.PitchDegrees = float.Clamp(
+          camera.PitchDegrees + this.inputsImpl_.PitchDegreesDelta,
+          -90,
+          90);
+    }
 
     this.viewerImpl_.Render();
 
