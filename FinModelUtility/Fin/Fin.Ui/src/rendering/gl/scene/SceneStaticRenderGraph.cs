@@ -1,4 +1,6 @@
-﻿using fin.math;
+﻿using System.Runtime.CompilerServices;
+
+using fin.math;
 using fin.model;
 using fin.scene;
 using fin.ui.rendering.gl.material;
@@ -49,6 +51,7 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   }
 }
 
+// TODO: Need to group these so there's not literally a million different elements
 public class RenderGraphElement : IComparable<RenderGraphElement> {
   public RenderGraphElement(IRenderGraphParams prms) {
     this.Params = prms;
@@ -58,29 +61,46 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
   public IRenderGraphParams Params { get; }
   public ulong SortKey { get; private set; }
 
-  public override string ToString() => $"{this.Params}, Sort key: {this.SortKey}";
+  public override string ToString()
+    => $"{this.Params}, Sort key: {this.SortKey}";
 
   // Loosely based on: https://realtimecollisiondetection.net/blog/?p=86
   // Transparent bits
   private const int TRANSPARENT_INVERSE_PRIORITY_BIT_COUNT_ = 16;
+
   private const ulong TRANSPARENT_INVERSE_PRIORITY_MASK_
       = ((ulong) 1 << TRANSPARENT_INVERSE_PRIORITY_BIT_COUNT_) - 1;
+
   private const int TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_ = 16;
+
   private const ulong TRANSPARENT_MIN_PRIMITIVE_INDEX_MASK_
       = ((ulong) 1 << TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_) - 1;
+
   private const int TRANSPARENT_DEPTH_BIT_COUNT_ = 31;
-  private const ulong TRANSPARENT_DEPTH_MAX_ = ((ulong) 1 << TRANSPARENT_DEPTH_BIT_COUNT_) - 1;
+
+  private const ulong TRANSPARENT_DEPTH_MAX_
+      = ((ulong) 1 << TRANSPARENT_DEPTH_BIT_COUNT_) - 1;
 
   // Opaque bits
   private const int OPAQUE_PROGRAM_ID_BIT_COUNT_ = 16;
-  private const ulong OPAQUE_PROGRAM_ID_MASK_ = ((ulong) 1 << OPAQUE_PROGRAM_ID_BIT_COUNT_) - 1;
+
+  private const ulong OPAQUE_PROGRAM_ID_MASK_
+      = ((ulong) 1 << OPAQUE_PROGRAM_ID_BIT_COUNT_) - 1;
+
   private const int OPAQUE_VAO_ID_BIT_COUNT_ = 12;
-  private const ulong OPAQUE_VAO_ID_MASK_ = ((ulong) 1 << OPAQUE_VAO_ID_BIT_COUNT_) - 1;
+
+  private const ulong OPAQUE_VAO_ID_MASK_
+      = ((ulong) 1 << OPAQUE_VAO_ID_BIT_COUNT_) - 1;
+
   private const int OPAQUE_MATERIAL_INDEX_BIT_COUNT_ = 12;
+
   private const ulong OPAQUE_MATERIAL_INDEX_MASK_
       = ((ulong) 1 << OPAQUE_MATERIAL_INDEX_BIT_COUNT_) - 1;
+
   private const int OPAQUE_DEPTH_BIT_COUNT_ = 23;
-  private const ulong OPAQUE_DEPTH_MAX_ = ((ulong) 1 << OPAQUE_DEPTH_BIT_COUNT_) - 1;
+
+  private const ulong OPAQUE_DEPTH_MAX_
+      = ((ulong) 1 << OPAQUE_DEPTH_BIT_COUNT_) - 1;
 
   private void InitSortKey_() {
     ulong sortKey = 0;
@@ -101,11 +121,13 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
               TRANSPARENT_MIN_PRIMITIVE_INDEX_BIT_COUNT_);
 
       var minPrimitiveIndexBits
-          = (ulong) prms.MinPrimitiveIndex & TRANSPARENT_MIN_PRIMITIVE_INDEX_MASK_;
+          = (ulong) prms.MinPrimitiveIndex &
+            TRANSPARENT_MIN_PRIMITIVE_INDEX_MASK_;
       sortKey |= minPrimitiveIndexBits << TRANSPARENT_DEPTH_BIT_COUNT_;
     } else {
       var programIdBits
-          = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) & OPAQUE_PROGRAM_ID_MASK_;
+          = (ulong) (materialShader?.ShaderProgram.ProgramId ?? 0) &
+            OPAQUE_PROGRAM_ID_MASK_;
       sortKey
           |= programIdBits <<
              (OPAQUE_DEPTH_BIT_COUNT_ +
@@ -118,14 +140,18 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
              (OPAQUE_DEPTH_BIT_COUNT_ +
               OPAQUE_MATERIAL_INDEX_BIT_COUNT_);
 
-      var materialIndexBits = (ulong) (material?.Index ?? 0) & OPAQUE_MATERIAL_INDEX_MASK_;
+      var materialIndexBits
+          = (ulong) (material?.Index ?? 0) & OPAQUE_MATERIAL_INDEX_MASK_;
       sortKey |= materialIndexBits << OPAQUE_DEPTH_BIT_COUNT_;
     }
 
     this.SortKey = sortKey;
   }
 
-  public void UpdateSortKey(ICamera camera, float nearPlane, float farPlane, float scale) {
+  public void UpdateSortKey(ICamera camera,
+                            float nearPlane,
+                            float farPlane,
+                            float scale) {
     ulong sortKey = this.SortKey;
 
     var prms = this.Params;
@@ -134,7 +160,8 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
     var isTransparent = prms.IsTransparent;
     sortKey |= (isTransparent ? (ulong) 1 : 0) << 63;
 
-    var distance = (camera.Position - transform.LocalTranslation).Length() * scale;
+    var distance = (camera.Position - transform.LocalTranslation).Length() *
+                   scale;
     var distance0To1
         = ((distance - nearPlane) / (farPlane - nearPlane))
         .Clamp(0, 1);
@@ -154,6 +181,11 @@ public class RenderGraphElement : IComparable<RenderGraphElement> {
 
   public int CompareTo(RenderGraphElement other)
     => this.SortKey.CompareTo(other.SortKey);
+
+  public class Comparer : IComparer<RenderGraphElement> {
+    public int Compare(RenderGraphElement? x, RenderGraphElement? y)
+      => x.SortKey.CompareTo(y.SortKey);
+  }
 }
 
 public sealed class SceneStaticRenderGraph : IRenderable {
@@ -264,7 +296,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       element.UpdateSortKey(camera, this.NearPlane, this.FarPlane, this.Scale);
     }
 
-    this.elements_.Sort();
+    this.SortElements_();
 
     var isSomethingSelected = this.selectedNode_ != null ||
                               this.selectedMesh_ != null ||
@@ -298,6 +330,29 @@ public sealed class SceneStaticRenderGraph : IRenderable {
         skeletonRenderer.Render();
       }
     }
+  }
+
+  private static readonly RenderGraphElement.Comparer comparer_ = new();
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  private void SortElements_() {
+    var elements = this.elements_.AsSpan();
+    if (AreSorted_(elements)) {
+      return;
+    }
+
+    Array.Sort(this.elements_, comparer_);
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  private static bool AreSorted_(Span<RenderGraphElement> elements) {
+    for (var i = 1; i < elements.Length; ++i) {
+      if (comparer_.Compare(elements[i - 1], elements[i]) > 0) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   private static void RenderParams_(IRenderGraphParams prms) {

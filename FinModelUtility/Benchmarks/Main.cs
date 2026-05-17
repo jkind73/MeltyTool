@@ -6,7 +6,7 @@ namespace benchmarks;
 
 public sealed class Program {
   public static void Main(string[] args) {
-    var summary = BenchmarkRunner.Run<IndexableDictionaries>(
+    var summary = BenchmarkRunner.Run<Sorting>(
         ManualConfig.Create(DefaultConfig.Instance)
                     .AddDiagnoser(MemoryDiagnoser.Default)
                     .WithOptions(ConfigOptions
