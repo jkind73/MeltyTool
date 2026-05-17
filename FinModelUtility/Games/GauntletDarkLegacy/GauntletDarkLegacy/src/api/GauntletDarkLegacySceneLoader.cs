@@ -73,6 +73,7 @@ public sealed class GauntletDarkLegacySceneImporter
                   ObjectsFile = objectsFile,
                   AnimFile = animFile,
                   TexturesFile = texturesFile,
+                  IncludeMeshAnimations = false,
               });
             }
           }

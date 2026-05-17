@@ -21,6 +21,7 @@ public static class MeshUtil {
       Object obj,
       LazyGdlMaterials lazyFinMaterials,
       MbFlags mbFlags,
+      bool useSubMeshes,
       out IMesh outRootMesh) {
     var finSkin = finModel.Skin;
     var finRootMesh = finSkin.AddMesh();
@@ -29,7 +30,7 @@ public static class MeshUtil {
     outRootMesh = finRootMesh;
 
     for (var m = 0; m < (obj.SubObjectModels?.All.Count ?? 0); ++m) {
-      var finSubMesh = finRootMesh.AddSubMesh();
+      var finMesh = useSubMeshes ? finRootMesh.AddSubMesh() : finRootMesh;
 
       var gdlMesh = obj.SubObjectModels.All[m];
       var textureIndex = gdlMesh.SubObject.TextureIndex;
@@ -93,7 +94,7 @@ public static class MeshUtil {
           }
         }
 
-        var finPrimitive = finSubMesh.AddTriangles(triangleVertices);
+        var finPrimitive = finMesh.AddTriangles(triangleVertices);
         finPrimitive.SetMaterial(
             lazyFinMaterials[(textureIndex, 
                               gdlMesh.SubObject.LmIndex,

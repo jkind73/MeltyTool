@@ -1,6 +1,7 @@
 ﻿using fin.io.web;
 using fin.scene;
 using fin.services;
+using fin.ui.rendering;
 using fin.ui.rendering.gl.scene;
 
 using uni.api;
@@ -13,6 +14,7 @@ public static class SceneService {
     FileBundleService.OnFileBundleOpened
         += (fileTreeLeafNode, fileBundle) => {
           if (fileBundle is ISceneFileBundle sceneFileBundle) {
+            SceneTypeService.IsASingleModel = false;
             LoadingStatusService.IsLoading = true;
 
             try {
@@ -30,6 +32,7 @@ public static class SceneService {
 
     ModelService.OnModelOpened
         += (fileTreeLeafNode, model) => {
+          SceneTypeService.IsASingleModel = true;
           var scene = new SceneImpl {
               FileBundle = model.FileBundle,
               Files = model.Files

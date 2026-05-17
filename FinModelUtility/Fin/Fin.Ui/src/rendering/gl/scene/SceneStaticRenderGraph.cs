@@ -51,7 +51,6 @@ public class RenderGraphMaterialRenderer : IRenderGraphParams {
   }
 }
 
-// TODO: Need to group these so there's not literally a million different elements
 public class RenderGraphElement : IComparable<RenderGraphElement> {
   public RenderGraphElement(IRenderGraphParams prms) {
     this.Params = prms;

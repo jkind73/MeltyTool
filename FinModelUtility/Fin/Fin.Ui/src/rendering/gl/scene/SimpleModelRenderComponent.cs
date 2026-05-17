@@ -52,19 +52,20 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
             MeshVisibility = this.meshVisibility_,
         };
 
-    this.SkeletonRenderer
-        = new SkeletonRenderer(model, this.BoneTransformManager);
+    if (SceneTypeService.IsASingleModel) {
+      this.SkeletonRenderer
+          = new SkeletonRenderer(model, this.BoneTransformManager);
+      SelectedBoneService.OnBoneSelected += selectedBone => {
+        var isBoneInModel = false;
+        if (selectedBone != null) {
+          isBoneInModel = model.Skeleton.Bones.Contains(selectedBone);
+        }
 
-    SelectedBoneService.OnBoneSelected += selectedBone => {
-      var isBoneInModel = false;
-      if (selectedBone != null) {
-        isBoneInModel = model.Skeleton.Bones.Contains(selectedBone);
-      }
-
-      this.isBoneSelected_ = isBoneInModel;
-      this.SkeletonRenderer.SelectedBone
-          = this.isBoneSelected_ ? selectedBone : null;
-    };
+        this.isBoneSelected_ = isBoneInModel;
+        this.SkeletonRenderer.SelectedBone
+            = this.isBoneSelected_ ? selectedBone : null;
+      };
+    }
 
     this.needsToAlwaysUpdateMatrices_
         = model.Skeleton.Bones.Any(b => b.FaceTowardsCameraType !=
@@ -83,7 +84,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     this.TextureFlipbookSwapManager.Dispose();
   }
 
-  public ISkeletonRenderer SkeletonRenderer { get; }
+  public ISkeletonRenderer? SkeletonRenderer { get; }
   public IModelRenderer ModelRenderer => this.modelRenderer_;
 
   public void TickAnimatables() {
@@ -149,7 +150,7 @@ public sealed class SimpleModelRenderComponent : IModelRenderComponent {
     this.modelRenderer_.Render();
 
     if (FinConfig.ShowSkeleton || this.isBoneSelected_) {
-      this.SkeletonRenderer.Render();
+      this.SkeletonRenderer?.Render();
     }
   }
 

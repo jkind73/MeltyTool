@@ -28,6 +28,9 @@ public sealed class GauntletDarkLegacyModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile TexturesFile { get; init; }
 
   public IReadOnlyTreeFile MainFile => this.ObjectsFile;
+
+  public bool UseSubMeshes { get; init; }
+  public bool IncludeMeshAnimations { get; init; } = true;
 }
 
 public sealed class GauntletDarkLegacyModelImporter
@@ -52,7 +55,7 @@ public sealed class GauntletDarkLegacyModelImporter
   }
 
   public static IModel ImportImpl(
-      IFileBundle fileBundle,
+      GauntletDarkLegacyModelFileBundle fileBundle,
       IReadOnlySet<IReadOnlyGenericFile> files,
       Objects objects,
       Anim anim,
@@ -327,53 +330,56 @@ public sealed class GauntletDarkLegacyModelImporter
                              obj,
                              lazyFinMaterials,
                              (gdlNode?.MbFlags ?? default) | worldObjectMbFlags,
+                             fileBundle.UseSubMeshes,
                              out var finRootMesh);
 
       rootFinMeshByName[finRootMesh.Name!] = finRootMesh;
     }
 
-    foreach (var gdlSkeleton in anim.Atrees) {
-      foreach (var gdlObjectAnimation in gdlSkeleton.Data.ObjectAnimationHeader
-                                                    .ObjectAnimations) {
-        SplitObjAnimMeshName_(
-            gdlObjectAnimation.Name,
-            out var meshNamePrefix,
-            out var lengthOfIndex,
-            out var currentMeshIndex);
-        var finMeshAnimation = finModel.AnimationManager.AddAnimation();
-        finMeshAnimation.Name = meshNamePrefix;
+    if (fileBundle.IncludeMeshAnimations) {
+      foreach (var gdlSkeleton in anim.Atrees) {
+        foreach (var gdlObjectAnimation in gdlSkeleton.Data.ObjectAnimationHeader
+                     .ObjectAnimations) {
+          SplitObjAnimMeshName_(
+              gdlObjectAnimation.Name,
+              out var meshNamePrefix,
+              out var lengthOfIndex,
+              out var currentMeshIndex);
+          var finMeshAnimation = finModel.AnimationManager.AddAnimation();
+          finMeshAnimation.Name = meshNamePrefix;
 
-        finMeshAnimation.FrameCount = gdlObjectAnimation.FrameCount;
-        finMeshAnimation.FrameRate = 30;
+          finMeshAnimation.FrameCount = gdlObjectAnimation.FrameCount;
+          finMeshAnimation.FrameRate = 30;
 
-        var meshesWithPrefix
-            = rootFinMeshByName
-              .Where(kvp => kvp.Key.StartsWith(meshNamePrefix))
-              .OrderBy(kvp => kvp.Key)
-              .Select(kvp => kvp.Value)
-              .GetEnumerator();
+          var meshesWithPrefix
+              = rootFinMeshByName
+                .Where(kvp => kvp.Key.StartsWith(meshNamePrefix))
+                .OrderBy(kvp => kvp.Key)
+                .Select(kvp => kvp.Value)
+                .GetEnumerator();
 
-        IMeshTracks? previousMeshTracks = null;
-        for (var f = gdlObjectAnimation.StartFrame;
-             f < gdlObjectAnimation.FrameCount;
-             ++f) {
-          meshesWithPrefix.MoveNext();
-          var finMesh = meshesWithPrefix.Current;
+          IMeshTracks? previousMeshTracks = null;
+          for (var f = gdlObjectAnimation.StartFrame;
+               f < gdlObjectAnimation.FrameCount;
+               ++f) {
+            meshesWithPrefix.MoveNext();
+            var finMesh = meshesWithPrefix.Current;
 
-          finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
+            finMesh.DefaultDisplayState = MeshDisplayState.HIDDEN;
 
-          var finMeshTracks = finMeshAnimation.AddMeshTracks(finMesh);
-          finMeshTracks.DisplayStates.Add(
-              new Keyframe<MeshDisplayState>(f, MeshDisplayState.VISIBLE));
+            var finMeshTracks = finMeshAnimation.AddMeshTracks(finMesh);
+            finMeshTracks.DisplayStates.Add(
+                new Keyframe<MeshDisplayState>(f, MeshDisplayState.VISIBLE));
 
-          previousMeshTracks?.DisplayStates.Add(
-              new Keyframe<MeshDisplayState>(f, MeshDisplayState.HIDDEN));
-          previousMeshTracks = finMeshTracks;
+            previousMeshTracks?.DisplayStates.Add(
+                new Keyframe<MeshDisplayState>(f, MeshDisplayState.HIDDEN));
+            previousMeshTracks = finMeshTracks;
+          }
+
+          previousMeshTracks.DisplayStates.Add(
+              new Keyframe<MeshDisplayState>(gdlObjectAnimation.FrameCount,
+                                             MeshDisplayState.HIDDEN));
         }
-
-        previousMeshTracks.DisplayStates.Add(
-            new Keyframe<MeshDisplayState>(gdlObjectAnimation.FrameCount,
-                                           MeshDisplayState.HIDDEN));
       }
     }
 
