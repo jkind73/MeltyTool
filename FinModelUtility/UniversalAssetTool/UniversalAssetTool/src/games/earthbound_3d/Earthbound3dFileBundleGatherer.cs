@@ -44,11 +44,6 @@ public sealed class Earthbound3dFileBundleGatherer
       texture.WrapModeU = texture.WrapModeV = WrapMode.REPEAT;
     }
 
-    foreach (var waterShoreMaterial in
-             model.MaterialManager.All.Where(m => m.Name is "water_shore")) {
-      waterShoreMaterial.DepthCompareType = DepthCompareType.LEqual;
-    }
-
     foreach (var mesh in model.Skin.Meshes) {
       foreach (var primitive in mesh.Primitives) {
         if (primitive.Material?.Name is "water_shore") {
