@@ -16,7 +16,7 @@ using Dorssel.Utilities.Generic;
 
 using fin.data.queues;
 using fin.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.images;
 using fin.ui.avalonia.observables;
 using fin.ui.avalonia.util;

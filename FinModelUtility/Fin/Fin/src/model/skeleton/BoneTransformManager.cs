@@ -23,13 +23,11 @@ public interface IVertexProjector {
       out Vector3 outPosition,
       out Vector3 outNormal);
 
-  void ProjectVertexPositionNormalTangent<TVertexAccessor>(
-      TVertexAccessor vertex,
+  void ProjectVertexPositionNormalTangent(
+      IVertexAccessor vertex,
       out Vector3 outPosition,
       out Vector3 outNormal,
-      out Vector4 outTangent)
-      where TVertexAccessor : IVertexAccessor;
-
+      out Vector4 outTangent);
 
   void ProjectPosition(IReadOnlyBone bone, ref Vector3 xyz);
 
@@ -305,12 +303,11 @@ public sealed class BoneTransformManager : IBoneTransformManager {
     }
   }
 
-  public void ProjectVertexPositionNormalTangent<TVertexAccessor>(
-      TVertexAccessor vertex,
+  public void ProjectVertexPositionNormalTangent(
+      IVertexAccessor vertex,
       out Vector3 outPosition,
       out Vector3 outNormal,
-      out Vector4 outTangent)
-      where TVertexAccessor : IVertexAccessor {
+      out Vector4 outTangent) {
     outPosition = vertex.LocalPosition;
 
     outNormal = vertex.LocalNormal.GetValueOrDefault();
