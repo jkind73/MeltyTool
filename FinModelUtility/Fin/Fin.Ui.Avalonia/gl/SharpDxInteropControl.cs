@@ -63,13 +63,13 @@ public class SharpDxInteropControl : Control {
       control = new SharpDxInteropControl(initGl, renderGl, teardownGl);
       parent.Children.Add(control);
       success = control.initialized_;
-    } catch {
-    }
+    } catch { }
 
     if (!success) {
       if (control != null) {
         parent.Children.Remove(control);
       }
+
       return false;
     }
 
@@ -200,7 +200,9 @@ public class SharpDxInteropControl : Control {
     using var adapter = factory.GetAdapter1(0);
     this.device_ = new Device(
         adapter,
-        GlConstants.Debug ? DeviceCreationFlags.Debug : DeviceCreationFlags.None,
+        GlConstants.Debug
+            ? DeviceCreationFlags.Debug
+            : DeviceCreationFlags.None,
         new[] {
             FeatureLevel.Level_12_1,
             FeatureLevel.Level_12_0,
@@ -259,11 +261,13 @@ public class SharpDxInteropControl : Control {
       this.Resize_(pixelSize);
     }
 
-    using (this.swapchain_!.BeginDraw(this.hDevice_,
-                                      pixelSize,
-                                      out this.currentImage_)) {
-      this.renderGl_();
-    }
+    GlUtil.RunLockedGl(() => {
+      using (this.swapchain_!.BeginDraw(this.hDevice_,
+                                        pixelSize,
+                                        out this.currentImage_)) {
+        this.renderGl_();
+      }
+    });
   }
 
   private void Resize_(PixelSize size) {
