@@ -82,9 +82,8 @@ public class FileBundleTreeViewModel
 
               var icon = new MaterialIcon {
                   Kind = x.Icon.Value,
-                  Margin = new Thickness(-24, 0, 4, 0),
                   Height = 16,
-                  Width = 16
+                  Width = 32,
               };
 
               var stackPanel = new StackPanel {

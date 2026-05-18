@@ -6,7 +6,7 @@
              xmlns:treeViews="clr-namespace:uni.ui.avalonia.common.treeViews"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="200"
+             mc:Ignorable="d" d:DesignWidth="32" d:DesignHeight="200"
              x:Class="uni.ui.avalonia.common.treeViews.FilterTreeView"
              x:DataType="treeViews:FileBundleTreeViewModelForDesigner">
   <Design.DataContext>
@@ -15,18 +15,19 @@
 
   <!-- Overrides expander styles in tree view. -->
   <UserControl.Styles>
-    <Style Selector="TreeDataGridTemplateCell">
-      <Setter Property="ClipToBounds" Value="False" />
+    <Style Selector="TreeDataGridExpanderCell[ShowExpander=False] /template/ Border#CellBorder > DockPanel > Border">
+      <Setter Property="IsVisible" Value="False" />
     </Style>
 
-    <Style Selector="TreeDataGridExpanderCell /template/ DockPanel Border">
-      <Setter Property="MinWidth" Value="28" />
+    <Style Selector="TreeDataGridExpanderCell[ShowExpander=True] /template/ Border#CellBorder > DockPanel > Border">
+      <Setter Property="Width" Value="32" />
+      <Setter Property="Margin" Value="0" />
+      <Setter Property="DockPanel.Dock" Value="Left" />
     </Style>
 
-    <Style Selector="TreeDataGridExpanderCell /template/ DockPanel Border ToggleButton">
-      <Setter Property="Width" Value="16" />
+    <Style Selector="TreeDataGridExpanderCell /template/ Border#CellBorder > DockPanel > Border > ToggleButton">
+      <Setter Property="Width" Value="32" />
       <Setter Property="Height" Value="16" />
-      <Setter Property="Margin" Value="0 0 -4 0" />
     </Style>
 
     <Style Selector="TreeDataGridExpanderCell /template/ ToggleButton:pointerover">
@@ -68,8 +69,7 @@
         Placeholder="Search file bundles..." />
 
     <controls:If Condition="{Binding Source, Converter={x:Static ObjectConverters.IsNotNull}}">
-      <TreeDataGrid Source="{Binding Source}"
-                    Margin="-4 0" />
+      <TreeDataGrid Source="{Binding Source}" />
     </controls:If>
   </DockPanel>
 </UserControl>

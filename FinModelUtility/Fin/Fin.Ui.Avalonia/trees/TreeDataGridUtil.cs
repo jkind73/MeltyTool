@@ -24,7 +24,7 @@ public static class TreeDataGridUtil {
             new TreeDataGridTemplateColumn {
                 CellTemplate
                     = new FuncDataTemplate<T>((x, _) => prms.Template(x)),
-                Width = GridLength.Star,
+                Width = GridLength.Star
             },
             children: prms.ChildSelector,
             hasChildren: prms.HasChildren,
