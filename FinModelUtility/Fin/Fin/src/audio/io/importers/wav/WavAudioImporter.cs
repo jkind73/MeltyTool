@@ -1,18 +1,27 @@
 ﻿using System;
 using System.IO;
 
+using fin.io;
 using fin.util.sets;
 
-using NVorbis;
+using NAudio.Wave;
 
-namespace fin.audio.io.importers.ogg;
+namespace fin.audio.io.importers.wav;
 
-public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
+public sealed class WavAudioFileBundle(IReadOnlyTreeFile oggFile)
+    : IAudioFileBundle {
+  public string? GameName { get; init; }
+  public IReadOnlyTreeFile MainFile => this.WavFile;
+
+  public IReadOnlyTreeFile WavFile { get; } = oggFile;
+}
+
+public sealed class WavAudioImporter : IAudioImporter<WavAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
-      OggAudioFileBundle audioFileBundle) {
-    using var oggStream = audioFileBundle.OggFile.OpenRead();
-    return [ImportAudio(audioManager, audioFileBundle, oggStream)];
+      WavAudioFileBundle audioFileBundle) {
+    using var wavStream = audioFileBundle.WavFile.OpenRead();
+    return [ImportAudio(audioManager, audioFileBundle, wavStream)];
   }
 
   public static ILoadedAudioBuffer<short> ImportAudio(
@@ -26,27 +35,17 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
     return mutableBuffer;
   }
 
-  public static IAudioBuffer<short> ImportAudio(
-      IAudioManager<short> audioManager,
-      Stream oggStream) {
-    var mutableBuffer = audioManager.CreateAudioBuffer();
-    ImportAudioImpl_(mutableBuffer, oggStream);
-    return mutableBuffer;
-  }
-
   private static void ImportAudioImpl_(
       IAudioBuffer<short> mutableBuffer,
-      Stream oggStream) {
-    using var ogg = new VorbisReader(oggStream);
-    mutableBuffer.Frequency = ogg.SampleRate;
+      Stream wavStream) {
+    using var wavFileReader = new WaveFileReader(wavStream);
+
+    mutableBuffer.Frequency = wavFileReader.WaveFormat.SampleRate;
+
+    var channelCount = wavFileReader.WaveFormat.Channels;
 
     {
-      var sampleCount = (int) ogg.TotalSamples;
-
-      var channelCount = ogg.Channels;
-      var floatCount = channelCount * sampleCount;
-      var floatPcm = new float[floatCount];
-      ogg.ReadSamples(floatPcm);
+      var sampleCount = (int) wavFileReader.SampleCount;
 
       var channels = new short[channelCount][];
       for (var c = 0; c < channelCount; ++c) {
@@ -54,8 +53,11 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
       }
 
       for (var i = 0; i < sampleCount; ++i) {
+        // TODO: This is awful, wish it used spans
+        var nextSampleFrame = wavFileReader.ReadNextSampleFrame();
+
         for (var c = 0; c < channelCount; ++c) {
-          var floatSample = floatPcm[channelCount * i + c];
+          var floatSample = nextSampleFrame[c];
 
           var floatMin = -1f;
           var floatMax = 1f;
