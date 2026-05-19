@@ -188,7 +188,42 @@ public static partial class GoldenAssert {
             Assert.AreEqual(lhsMesh.Primitives.Count, rhsMesh.Primitives.Count);
             foreach (var (lhsPrimitive, rhsPrimitive) in lhsMesh.Primitives.Zip(
                          rhsMesh.Primitives)) {
-              Assert.AreEqual(lhsPrimitive.Material, rhsPrimitive.Material);
+              var lhsMaterial = lhsPrimitive.Material;
+              var rhsMaterial = rhsPrimitive.Material;
+
+              if (!lhsMaterial.Equals(rhsMaterial)) {
+                Assert.AreEqual(lhsMaterial.Name, rhsMaterial.Name);
+                Assert.AreEqual(lhsMaterial.Unlit, rhsMaterial.Unlit);
+                Assert.AreEqual(lhsMaterial.Alpha, rhsMaterial.Alpha);
+                Assert.AreEqual(lhsMaterial.AlphaCutoff, rhsMaterial.AlphaCutoff);
+                Assert.AreEqual(lhsMaterial.DoubleSided, rhsMaterial.DoubleSided);
+
+                var lhsDiffuseTexture = lhsMaterial.GetDiffuseTexture();
+                var rhsDiffuseTexture = rhsMaterial.GetDiffuseTexture();
+
+                var lhsSampler = lhsDiffuseTexture.Sampler;
+                var rhsSampler = rhsDiffuseTexture.Sampler;
+
+                Assert.AreEqual(lhsSampler.Name, rhsSampler.Name);
+                Assert.AreEqual(lhsSampler.MagFilter, rhsSampler.MagFilter);
+                Assert.AreEqual(lhsSampler.MinFilter, rhsSampler.MinFilter);
+                Assert.AreEqual(lhsSampler.WrapS, rhsSampler.WrapS);
+                Assert.AreEqual(lhsSampler.WrapT, rhsSampler.WrapT);
+                Assert.AreEqual(lhsSampler.Extras, rhsSampler.Extras);
+                foreach (var (lhsExtension, rhsExtension) in lhsSampler
+                             .Extensions.Zip(rhsSampler.Extensions)) {
+                  Assert.AreEqual(lhsExtension, rhsExtension);
+                }
+                Assert.AreEqual(lhsSampler, rhsSampler);
+                Assert.AreEqual(lhsDiffuseTexture.PrimaryImage, rhsDiffuseTexture.PrimaryImage);
+                Assert.AreEqual(lhsDiffuseTexture, rhsDiffuseTexture);
+
+                Assert.AreEqual(lhsMaterial.Channels, rhsMaterial.Channels);
+
+                Assert.Fail(
+                    $"Found a change in material from {lhsMaterial} to {rhsMaterial}, but not sure where.");
+              }
+
               Asserts.SequenceEqual(lhsPrimitive.IndexAccessor.AsIndicesArray(),
                                     rhsPrimitive.IndexAccessor
                                                 .AsIndicesArray());

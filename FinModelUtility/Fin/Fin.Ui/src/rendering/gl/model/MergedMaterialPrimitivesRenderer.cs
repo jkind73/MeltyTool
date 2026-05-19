@@ -89,7 +89,7 @@ public partial class ModelRenderer {
 
           // Need to always include this to support rendering meshes when
           // selected in the viewer.
-          {
+          if (SceneTypeService.IsASingleModel) {
             var visibilityMeshMaterialTuple
                 = (primitive.Material, (mesh, isVisibilityAnimated));
             primitivesByMaterial.Add(visibilityMeshMaterialTuple, primitive);

@@ -1,6 +1,5 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:gb="clr-namespace:GroupBox.Avalonia.Controls;assembly=GroupBox.Avalonia">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Design.PreviewWith>
     <StackPanel Width="300" Height="900">
       <TextBlock>Standard text</TextBlock>
@@ -42,18 +41,18 @@
         <TabItem Header="Bar" />
       </TabControl>
 
-      <gb:GroupBox Classes="h1" Header="h1 GroupBox">
+      <GroupBox Classes="h1" Header="h1 GroupBox">
         <TextBlock>Simple text block</TextBlock>
-      </gb:GroupBox>
-      <gb:GroupBox Classes="h2" Header="h2 GroupBox">
+      </GroupBox>
+      <GroupBox Classes="h2" Header="h2 GroupBox">
         <TextBlock>Simple text block</TextBlock>
-      </gb:GroupBox>
-      <gb:GroupBox Classes="h3" Header="h3 GroupBox">
+      </GroupBox>
+      <GroupBox Classes="h3" Header="h3 GroupBox">
         <TextBlock>Simple text block</TextBlock>
-      </gb:GroupBox>
-      <gb:GroupBox Classes="h4" Header="h4 GroupBox">
+      </GroupBox>
+      <GroupBox Classes="h4" Header="h4 GroupBox">
         <TextBlock>Simple text block</TextBlock>
-      </gb:GroupBox>
+      </GroupBox>
     </StackPanel>
   </Design.PreviewWith>
 </Styles>

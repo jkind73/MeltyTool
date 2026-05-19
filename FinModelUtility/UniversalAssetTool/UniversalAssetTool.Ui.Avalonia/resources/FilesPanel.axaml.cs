@@ -5,7 +5,7 @@ using Avalonia.Controls;
 
 using fin.importers;
 using fin.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.linq;
 using fin.util.strings;
 

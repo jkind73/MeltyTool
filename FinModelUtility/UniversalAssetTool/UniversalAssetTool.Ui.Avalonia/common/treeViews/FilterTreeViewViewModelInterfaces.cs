@@ -1,6 +1,6 @@
 ﻿using System;
 
-using fin.ui.avalonia;
+using fin.ui;
 
 using Material.Icons;
 
@@ -32,6 +32,8 @@ public interface INode : IViewModelBase {
 
 public interface INode<T> : INode {
   T Value { get; }
+
+  bool HasChildren { get; }
 
   INotifyCollectionChangedSynchronizedViewList<INode<T>>? FilteredSubNodes {
     get;

@@ -4,7 +4,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

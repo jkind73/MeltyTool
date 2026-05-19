@@ -10,8 +10,8 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.LogicalTree;
 using Avalonia.Platform;
-using Avalonia.Rendering;
 using Avalonia.Rendering.Composition;
+using Avalonia.VisualTree;
 
 using fin.ui.rendering.gl;
 
@@ -63,13 +63,13 @@ public class SharpDxInteropControl : Control {
       control = new SharpDxInteropControl(initGl, renderGl, teardownGl);
       parent.Children.Add(control);
       success = control.initialized_;
-    } catch {
-    }
+    } catch { }
 
     if (!success) {
       if (control != null) {
         parent.Children.Remove(control);
       }
+
       return false;
     }
 
@@ -163,7 +163,7 @@ public class SharpDxInteropControl : Control {
 
   private void UpdateFrame_() {
     this.updateQueued_ = false;
-    var root = this as IRenderRoot ?? this.VisualRoot;
+    var root = this.GetPresentationSource();
     if (root == null)
       return;
 
@@ -200,7 +200,9 @@ public class SharpDxInteropControl : Control {
     using var adapter = factory.GetAdapter1(0);
     this.device_ = new Device(
         adapter,
-        GlConstants.Debug ? DeviceCreationFlags.Debug : DeviceCreationFlags.None,
+        GlConstants.Debug
+            ? DeviceCreationFlags.Debug
+            : DeviceCreationFlags.None,
         new[] {
             FeatureLevel.Level_12_1,
             FeatureLevel.Level_12_0,
@@ -248,8 +250,9 @@ public class SharpDxInteropControl : Control {
   private static extern IntPtr wglGetCurrentDC();
 
   protected void RenderFrame(PixelSize pixelSize) {
-    if (pixelSize == default)
+    if (pixelSize.Width * pixelSize.Height == 0) {
       return;
+    }
 
     GlUtil.SwitchContext(this.openTkWindow_!.Context);
 
@@ -258,11 +261,13 @@ public class SharpDxInteropControl : Control {
       this.Resize_(pixelSize);
     }
 
-    using (this.swapchain_!.BeginDraw(this.hDevice_,
-                                      pixelSize,
-                                      out this.currentImage_)) {
-      this.renderGl_();
-    }
+    GlUtil.RunLockedGl(() => {
+      using (this.swapchain_!.BeginDraw(this.hDevice_,
+                                        pixelSize,
+                                        out this.currentImage_)) {
+        this.renderGl_();
+      }
+    });
   }
 
   private void Resize_(PixelSize size) {

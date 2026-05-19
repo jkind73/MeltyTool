@@ -29,7 +29,6 @@ public interface IVertexProjector {
       out Vector3 outNormal,
       out Vector4 outTangent);
 
-
   void ProjectPosition(IReadOnlyBone bone, ref Vector3 xyz);
 
   void ProjectNormal(IReadOnlyBone bone, ref Vector3 xyz);
@@ -315,7 +314,7 @@ public sealed class BoneTransformManager : IBoneTransformManager {
     outTangent = vertex.LocalTangent.GetValueOrDefault();
 
     var finTransformMatrix = this.GetTransformMatrix(vertex);
-    if (finTransformMatrix == null) {
+    if (finTransformMatrix == null || finTransformMatrix.Impl.IsIdentity) {
       return;
     }
 

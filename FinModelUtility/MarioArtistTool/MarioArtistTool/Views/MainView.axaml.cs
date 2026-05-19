@@ -15,6 +15,7 @@ using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.scene;
 using fin.ui.rendering.viewer;
 using fin.util.asserts;
+using fin.util.tasks;
 
 using marioartist.api;
 
@@ -50,140 +51,146 @@ public partial class MainView : UserControl {
       this.ViewerGlPanel.Bind(Panel.CursorProperty, com.Cursor);
     };
 
-    MfsFileSystemService.OnFileSelected += file => {
-      LoadingStatusService.IsLoading = true;
+    MfsFileSystemService.OnFileSelected += file =>
+      FinTask.Run(() => this.LoadNextModel_(file));
+  }
 
-      var camera = this.ViewerGlPanel.Camera;
-      if (this.currentModelFileBundle_ is Ma3d1ModelFileBundle or null) {
-        this.ma3d1CameraTransform_ = (
-            camera.Position, camera.PitchDegrees, camera.YawDegrees);
+  private void LoadNextModel_(MfsTreeFile? file) {
+    LoadingStatusService.IsLoading = true;
+
+    var camera = this.ViewerGlPanel.Camera;
+    if (this.currentModelFileBundle_ is Ma3d1ModelFileBundle or null) {
+      this.ma3d1CameraTransform_ = (
+          camera.Position, camera.PitchDegrees, camera.YawDegrees);
+    }
+
+    var scene = new SceneImpl {
+        FileBundle = null,
+        Files = null
+    };
+
+    var area = scene.AddArea();
+
+    var allowMovingCamera = true;
+    var showGrid = true;
+
+    IOrthoRenderable? newBackdropRenderer = null;
+
+    switch (file?.FileType.ToLower()) {
+      case ".ma3d1": {
+        var bundle = new Ma3d1ModelFileBundle(file);
+        var model = new Ma3d1ModelLoader().Import(bundle);
+
+        var config = Config.INSTANCE;
+        config.MostRecentFileName = file.FullPath;
+        config.Save();
+
+        var obj = area.AddRootNode();
+        obj.AddSceneModel(model);
+
+        var lightingObj = area.AddRootNode();
+        scene.CreateDefaultLighting(lightingObj);
+
+        this.currentModelFileBundle_ = bundle;
+
+        break;
       }
+      case ".tstlt": {
+        allowMovingCamera = false;
+        showGrid = false;
 
-      var scene = new SceneImpl {
-          FileBundle = null,
-          Files = null
-      };
-
-      var area = scene.AddArea();
-
-      var allowMovingCamera = true;
-      var showGrid = true;
-
-      if (this.ma3d1CameraTransform_ != null) {
-        (camera.Position, camera.PitchDegrees, camera.YawDegrees)
-            = this.ma3d1CameraTransform_.Value;
-      }
-
-      IOrthoRenderable? newBackdropRenderer = null;
-
-      switch (file?.FileType.ToLower()) {
-        case ".ma3d1": {
-          var bundle = new Ma3d1ModelFileBundle(file);
-          var model = new Ma3d1ModelLoader().Import(bundle);
+        try {
+          var bundle = new TstltModelFileBundle(file);
+          var model = TstltModelLoader.Import(bundle, out var gender);
 
           var config = Config.INSTANCE;
           config.MostRecentFileName = file.FullPath;
           config.Save();
 
-          var obj = area.AddRootNode();
-          obj.AddSceneModel(model);
+          scene.CreateDefaultLighting(area.AddRootNode(), [model]);
 
-          var lightingObj = area.AddRootNode();
-          scene.CreateDefaultLighting(lightingObj);
+          var modelRenderComponent = new SimpleModelRenderComponent(model);
+
+          var characterObj = area.AddRootNode();
+
+          if (true) {
+            var modelObj = characterObj.AddChildNode();
+            modelObj.AddComponent(modelRenderComponent);
+
+            var shadowPlacementObj = characterObj.AddChildNode();
+            shadowPlacementObj.SetPosition(20, -20, -100);
+            shadowPlacementObj.SetScale(1, 1, 0);
+
+            var shadowModelObj = shadowPlacementObj.AddChildNode();
+            shadowModelObj.AddComponent(
+                new ShadowRenderComponent(
+                    new
+                        LambdaSceneNodeRenderComponent(_
+                            => modelRenderComponent
+                                .Render(false))));
+
+            characterObj.AddComponent(
+                new LookAtMouseTickComponent(
+                    modelRenderComponent.SimpleBoneTransformView,
+                    model.Skeleton
+                         .Bones
+                         .Single(b => b.Name?.StartsWith(
+                                          $"{JointIndex.NECK}:") ??
+                                      false),
+                    model.Skeleton
+                         .Bones
+                         .Single(b => b.Name?.StartsWith(
+                                          $"{JointIndex.TORSO}:") ??
+                                      false)));
+            modelObj.AddComponent(new RotateTalentTickComponent());
+            shadowModelObj.AddComponent(new RotateTalentTickComponent());
+          } else {
+            var modelObj = characterObj.AddChildNode();
+            modelObj.AddRenderComponent(_ => GlUtil.RenderWithColor(
+                                            () => modelRenderComponent.Render(),
+                                            Color.Black));
+
+            var ballObj = characterObj.AddChildNode();
+            ballObj.AddComponent(
+                new BallGameComponent(
+                    modelRenderComponent.SimpleBoneTransformView,
+                    model,
+                    3));
+          }
 
           this.currentModelFileBundle_ = bundle;
 
-          break;
+          camera.Position = new Vector3(0, -1.5f, .35f);
+          camera.PitchDegrees = 0;
+          camera.YawDegrees = 90;
+
+          newBackdropRenderer = new TalentStudioBackdropRenderer(gender);
+        } catch (Exception e) {
+          ExceptionService.HandleException(e, new LoadFileException(file));
+          this.ViewerGlPanel.Scene = null;
         }
-        case ".tstlt": {
-          allowMovingCamera = false;
-          showGrid = false;
 
-          try {
-            var bundle = new TstltModelFileBundle(file);
-            var model = TstltModelLoader.Import(bundle, out var gender);
-
-            var config = Config.INSTANCE;
-            config.MostRecentFileName = file.FullPath;
-            config.Save();
-
-            scene.CreateDefaultLighting(area.AddRootNode(), [model]);
-
-            var modelRenderComponent = new SimpleModelRenderComponent(model);
-
-            var characterObj = area.AddRootNode();
-
-            if (true) {
-              var modelObj = characterObj.AddChildNode();
-              modelObj.AddComponent(modelRenderComponent);
-
-              var shadowPlacementObj = characterObj.AddChildNode();
-              shadowPlacementObj.SetPosition(20, -20, -100);
-              shadowPlacementObj.SetScale(1, 1, 0);
-
-              var shadowModelObj = shadowPlacementObj.AddChildNode();
-              shadowModelObj.AddComponent(
-                  new ShadowRenderComponent(
-                      new
-                          LambdaSceneNodeRenderComponent(_
-                              => modelRenderComponent
-                                  .Render(false))));
-
-              characterObj.AddComponent(
-                  new LookAtMouseTickComponent(
-                      modelRenderComponent.SimpleBoneTransformView,
-                      model.Skeleton
-                           .Bones
-                           .Single(b => b.Name?.StartsWith(
-                                            $"{JointIndex.NECK}:") ??
-                                        false),
-                      model.Skeleton
-                           .Bones
-                           .Single(b => b.Name?.StartsWith(
-                                            $"{JointIndex.TORSO}:") ??
-                                        false)));
-              modelObj.AddComponent(new RotateTalentTickComponent());
-              shadowModelObj.AddComponent(new RotateTalentTickComponent());
-            } else {
-              var modelObj = characterObj.AddChildNode();
-              modelObj.AddRenderComponent(_ => GlUtil.RenderWithColor(
-                                              () => modelRenderComponent.Render(),
-                                              Color.Black));
-
-              var ballObj = characterObj.AddChildNode();
-              ballObj.AddComponent(
-                  new BallGameComponent(
-                      modelRenderComponent.SimpleBoneTransformView,
-                      model,
-                      3));
-            }
-
-            this.currentModelFileBundle_ = bundle;
-
-            camera.Position = new Vector3(0, -1.5f, .35f);
-            camera.PitchDegrees = 0;
-            camera.YawDegrees = 90;
-
-            newBackdropRenderer = new TalentStudioBackdropRenderer(gender);
-          } catch (Exception e) {
-            ExceptionService.HandleException(e, new LoadFileException(file));
-            this.ViewerGlPanel.Scene = null;
-          }
-
-          break;
-        }
+        break;
       }
+    }
 
-      newBackdropRenderer ??= new PolygonStudioSkyboxRenderer();
-      this.ViewerGlPanel.BackdropRenderer = newBackdropRenderer;
+    // Need to wait to change camera position or it causes jitter.
+    if (file?.FileType.ToLower() != ".tstlt") {
+      if (this.ma3d1CameraTransform_ != null) {
+        (camera.Position, camera.PitchDegrees, camera.YawDegrees)
+            = this.ma3d1CameraTransform_.Value;
+      }
+    }
 
-      var sceneInstance = new SceneInstanceImpl(scene);
-      this.ViewerGlPanel.Scene = sceneInstance;
+    newBackdropRenderer ??= new PolygonStudioSkyboxRenderer();
+    this.ViewerGlPanel.BackdropRenderer = newBackdropRenderer;
 
-      this.ViewerGlPanel.AllowMovingCamera = allowMovingCamera;
-      this.ViewerGlPanel.ShowGrid = showGrid;
+    var sceneInstance = new SceneInstanceImpl(scene);
+    this.ViewerGlPanel.Scene = sceneInstance;
 
-      LoadingStatusService.IsLoading = false;
-    };
+    this.ViewerGlPanel.AllowMovingCamera = allowMovingCamera;
+    this.ViewerGlPanel.ShowGrid = showGrid;
+
+    LoadingStatusService.IsLoading = false;
   }
 }

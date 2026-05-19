@@ -4,11 +4,10 @@ using System.Linq;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Primitives;
 using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Styling;
-
-using gbGroupBox = GroupBox.Avalonia.Controls.GroupBox;
 
 namespace fin.ui.avalonia.styles;
 
@@ -34,10 +33,9 @@ public sealed class HeaderStyles : Styles {
                              .ChildOfType<Panel>()
                              .ChildOfType<ContentPresenter>()
                              .Name("PART_ContentPresenter")),
-                      (Selectors.OfType<gbGroupBox>,
+                      (Selectors.OfType<GroupBox>,
                        x => x.ChildOfType<Grid>()
-                             .ChildOfType<ContentPresenter>()
-                             .Name("PART_HeaderPresenter")),
+                             .ChildOfType<AccessText>()),
                   }
               .Select(tuple => this.GetTargetSelectorDelegates_(
                           i,

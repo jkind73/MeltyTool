@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 using fin.model;
 using fin.scene;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.images;
 using fin.util.tasks;
 

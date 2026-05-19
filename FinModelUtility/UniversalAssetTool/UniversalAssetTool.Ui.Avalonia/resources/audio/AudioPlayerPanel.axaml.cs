@@ -9,7 +9,7 @@ using fin.audio.io;
 using fin.audio.io.importers.ogg;
 using fin.data;
 using fin.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.playback.al;
 using fin.util.asserts;
 using fin.util.enumerables;

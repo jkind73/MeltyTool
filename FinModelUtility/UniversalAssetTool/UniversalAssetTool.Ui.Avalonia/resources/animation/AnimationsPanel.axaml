@@ -1,7 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:gb="clr-namespace:GroupBox.Avalonia.Controls;assembly=GroupBox.Avalonia"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:animations="clr-namespace:uni.ui.avalonia.resources.animation"
              xmlns:converters="clr-namespace:uni.ui.avalonia.util.converters"
@@ -20,11 +19,11 @@
         <animations:AnimationList
           DataContext="{Binding AnimationList}"
           AnimationSelected="AnimationList_OnAnimationSelected" />
-        <gb:GroupBox Grid.Row="1"
-                     Classes="h2"
-                     Header="{Binding SelectedAnimation.Animation.Name}">
+        <GroupBox Grid.Row="1"
+                  Classes="h2"
+                  Header="{Binding SelectedAnimation.Animation.Name}">
           <animations:AnimationPlaybackPanel DataContext="{Binding AnimationPlaybackPanel}" />
-        </gb:GroupBox>
+        </GroupBox>
       </Grid>
     </controls:If.ContentWhenTrue>
     <controls:If.ContentWhenFalse>

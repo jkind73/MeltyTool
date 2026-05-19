@@ -1,6 +1,5 @@
 ﻿<Styles xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:gb="clr-namespace:GroupBox.Avalonia.Controls;assembly=GroupBox.Avalonia"
         xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
         xmlns:system="clr-namespace:System;assembly=System.Runtime">
   <Design.PreviewWith>
@@ -23,9 +22,9 @@
         <TabItem Header="Padded Tab 2" />
       </TabControl>
 
-      <gb:GroupBox Classes="h2" Header="GroupBox">
+      <GroupBox Classes="h2" Header="GroupBox">
         <TextBlock>Simple text block</TextBlock>
-      </gb:GroupBox>
+      </GroupBox>
 
       <Button>Hello</Button>
 
@@ -38,7 +37,7 @@
     </StackPanel>
   </Design.PreviewWith>
 
-  <Style Selector="TextBlock, SelectableTextBlock">
+  <Style Selector="TextBlock, SelectableTextBlock, AccessText">
     <Setter Property="FontFamily" Value="Tahoma" />
   </Style>
 
@@ -57,7 +56,8 @@
     <Setter Property="Foreground" Value="{StaticResource ForegroundMediumBrush}" />
   </Style>
 
-  <Style Selector="gb|GroupBox">
+  <Style Selector="GroupBox">
+    <Setter Property="BorderThickness" Value="0" />
     <Setter Property="Padding" Value="0" />
   </Style>
 

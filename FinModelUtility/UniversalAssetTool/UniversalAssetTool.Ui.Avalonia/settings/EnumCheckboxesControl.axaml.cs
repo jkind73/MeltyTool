@@ -5,7 +5,7 @@ using System.Linq;
 using Avalonia.Controls;
 
 using fin.data.sets;
-using fin.ui.avalonia;
+using fin.ui;
 
 using uni.config;
 

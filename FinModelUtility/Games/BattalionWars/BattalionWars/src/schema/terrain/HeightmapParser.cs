@@ -190,16 +190,9 @@ public partial class HeightmapParser : IBwHeightmap {
   }
 
   private class BwHeightmapTile : IBwHeightmapTile {
-    public Grid<IBwHeightmapPoint> Points { get; } = new(4, 4);
+    public Grid<BwHeightmapPoint> Points { get; } = new(4, 4);
     public uint MatlIndex { get; set; }
 
     public SchemaTile Schema { get; set; }
-  }
-
-  private struct BwHeightmapPoint : IBwHeightmapPoint {
-    public float X { get; set; }
-    public float Y { get; set; }
-    public float Height { get; set; }
-    public Rgba32 LightColor { get; set; }
   }
 }

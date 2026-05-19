@@ -167,7 +167,6 @@ public sealed class InfiniteGridRenderer : IRenderable {
             }
           }
           """);
-    material.DepthCompareType = DepthCompareType.LEqual;
 
     var v0 = model.Skin.AddVertex(-1, -1, 0);
     var v1 = model.Skin.AddVertex(1, -1, 0);

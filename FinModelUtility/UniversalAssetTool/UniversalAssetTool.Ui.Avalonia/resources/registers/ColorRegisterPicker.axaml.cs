@@ -4,7 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 
 using fin.language.equations.fixedFunction;
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

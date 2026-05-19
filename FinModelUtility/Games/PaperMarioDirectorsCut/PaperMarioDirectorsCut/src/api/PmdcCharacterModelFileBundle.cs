@@ -118,7 +118,6 @@ public sealed class PmdcCharacterModelImporter
               bundle.CharactersDirectory
                     .AssertGetExistingFile("bacShadow.png"));
       shadowTexture.WrapModeU = shadowTexture.WrapModeV = WrapMode.CLAMP;
-      shadowMaterial.DepthCompareType = DepthCompareType.LEqual;
 
       var ul = new Vector3(-width / 2, 0, -height/2);
       var ur = new Vector3(width / 2, 0, -height / 2);

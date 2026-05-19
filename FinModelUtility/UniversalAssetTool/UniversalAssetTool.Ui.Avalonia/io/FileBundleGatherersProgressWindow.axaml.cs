@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Avalonia.Controls;
 
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.progress;
 
 using ReactiveUI;

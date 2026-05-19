@@ -3,9 +3,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>uni.ui.avalonia</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
   </PropertyGroup>
-
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
@@ -17,20 +15,18 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Controls.ColorPicker" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Controls.DataGrid" Version="$(AvaloniaVersion)" />
-    <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.3.2" />
+    <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
     <PackageReference Include="AvaloniaControlsToolBar" Version="0.0.1" />
     <PackageReference Include="AvaloniaUIRibbon" Version="1.1.0-beta" />
-    <PackageReference Include="ConfigFactory" Version="0.4.3" />
-    <PackageReference Include="ConfigFactory.Avalonia" Version="0.4.3" />
-    <PackageReference Include="LoadingIndicators.Avalonia" Version="11.0.11.1" />
+    <PackageReference Include="ConfigFactory" Version="0.6.0" />
+    <PackageReference Include="ConfigFactory.Avalonia" Version="0.6.0" />
+    <PackageReference Include="Optris.LoadingIndicators.Avalonia" Version="12.0.4" />
     <PackageReference Include="MessageBox.Avalonia" Version="3.3.1.1" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" />
     <PackageReference Include="OxyPlot.Avalonia" Version="2.1.0" />
     <PackageReference Include="ObservableCollections" Version="3.3.4" />
     <PackageReference Include="TextMateSharp" Version="2.0.3" />
     <PackageReference Include="TextMateSharp.Grammars" Version="2.0.3" />
-    <PackageReference Include="UVtools.AvaloniaControls" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -51,32 +47,5 @@
     <AvaloniaResource Include="**\*.xaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="io\ExportProgressWindow.axaml.cs">
-      <DependentUpon>ExportProgressWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="io\FileBundleGatherersProgressWindow.axaml.cs">
-      <DependentUpon>FileBundleGatherersProgressWindow.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\model\mesh\MeshesPanel.axaml.cs">
-      <DependentUpon>MeshesPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\FullHierarchyTree.axaml.cs">
-      <DependentUpon>FullHierarchyTree.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\model\skeleton\SkeletonPanel.axaml.cs">
-      <DependentUpon>SkeletonPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\scene\areas\AreasPanel.axaml.cs">
-      <DependentUpon>AreasPanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="resources\scene\ScenePanel.axaml.cs">
-      <DependentUpon>ScenePanel.axaml</DependentUpon>
-    </Compile>
-    <Compile Update="toolbars\FileBundleToolbar.axaml.cs">
-      <DependentUpon>FileBundleToolbar.axaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 </Project>

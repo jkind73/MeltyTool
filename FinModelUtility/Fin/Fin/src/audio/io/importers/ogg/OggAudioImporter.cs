@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 
-using fin.util.asserts;
 using fin.util.sets;
 
 using NVorbis;
@@ -12,25 +11,27 @@ public sealed class OggAudioImporter : IAudioImporter<OggAudioFileBundle> {
   public ILoadedAudioBuffer<short>[] ImportAudio(
       IAudioManager<short> audioManager,
       OggAudioFileBundle audioFileBundle) {
-    var oggFile = audioFileBundle.OggFile;
-    Asserts.SequenceEqual(".ogg", oggFile.FileType.ToLower());
-
-    using var oggStream = oggFile.OpenRead();
-
-    var mutableBuffer = audioManager.CreateLoadedAudioBuffer(
-        audioFileBundle,
-        oggFile.AsFileSet());
-
-    ImportAudioImpl_(mutableBuffer, oggStream);
-    return [mutableBuffer];
+    using var oggStream = audioFileBundle.OggFile.OpenRead();
+    return [ImportAudio(audioManager, audioFileBundle, oggStream)];
   }
 
-  public static IAudioBuffer<short>[] ImportAudio(
+  public static ILoadedAudioBuffer<short> ImportAudio(
+      IAudioManager<short> audioManager,
+      IAudioFileBundle audioFileBundle,
+      Stream oggStream) {
+    var mutableBuffer = audioManager.CreateLoadedAudioBuffer(
+        audioFileBundle,
+        audioFileBundle.MainFile.AsFileSet());
+    ImportAudioImpl_(mutableBuffer, oggStream);
+    return mutableBuffer;
+  }
+
+  public static IAudioBuffer<short> ImportAudio(
       IAudioManager<short> audioManager,
       Stream oggStream) {
     var mutableBuffer = audioManager.CreateAudioBuffer();
     ImportAudioImpl_(mutableBuffer, oggStream);
-    return [mutableBuffer];
+    return mutableBuffer;
   }
 
   private static void ImportAudioImpl_(
