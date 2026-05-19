@@ -4,22 +4,15 @@ using fin.io;
 using fin.io.bundles;
 using fin.model;
 using fin.model.io.importers.gltf;
-using fin.util.progress;
 
 using SharpGLTF.Schema2;
 
-namespace uni.games.earthbound_3d;
+namespace uni.games.meltyplayer;
 
-public sealed class Earthbound3dFileBundleGatherer
-    : BPrereqsFileBundleGatherer {
-  public override string Name => "earthbound_3d";
-
-  protected override void GatherFileBundlesFromHierarchy(
+public sealed class Earthbound3dUtil {
+  public static void GatherFileBundlesFromHierarchy(
       IFileBundleOrganizer organizer,
-      IMutablePercentageProgress mutablePercentageProgress,
-      IFileHierarchy fileHierarchy) {
-    var root = fileHierarchy.Root;
-
+      IFileHierarchyDirectory rootDir) {
     var samplerType = typeof(TextureSampler);
     var constructor = samplerType.GetConstructor(
         BindingFlags.NonPublic | BindingFlags.Instance,
@@ -30,7 +23,7 @@ public sealed class Earthbound3dFileBundleGatherer
             typeof(TextureWrapMode)
         ]);
 
-    foreach (var glbFile in root.FilesWithExtensionRecursive(".glb")) {
+    foreach (var glbFile in rootDir.FilesWithExtensionRecursive(".glb")) {
       organizer.Add(new GltfModelFileBundle(glbFile) {
           AdditionalProcessing = ProcessModel_,
       });
