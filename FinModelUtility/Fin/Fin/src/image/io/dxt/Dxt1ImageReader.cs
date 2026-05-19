@@ -1,5 +1,7 @@
 ﻿using System;
 
+using CommunityToolkit.HighPerformance;
+
 using schema.binary;
 
 using SixLabors.ImageSharp.PixelFormats;
@@ -17,33 +19,60 @@ public sealed class Dxt1ImageReader(
       = new(subTileCountInAxis, subTileSizeInAxis, flipBlocksHorizontally);
 
   public IImage<Rgba32> ReadImage(IBinaryReader br) {
-      Span<ushort> shortBuffer = stackalloc ushort[2];
-      Span<Rgba32> paletteBuffer = stackalloc Rgba32[4];
-      Span<byte> indicesBuffer = stackalloc byte[4];
+    var image = this.tileReader_.CreateImage(width, height);
+    using var imageLock = image.Lock();
+    var scan0 = imageLock.Pixels;
 
-      var image = this.tileReader_.CreateImage(width, height);
-      using var imageLock = image.Lock();
-      var scan0 = imageLock.Pixels;
+    var tileXCount
+        = (int) Math.Ceiling(1f * width / this.tileReader_.TileWidth);
+    var tileYCount
+        = (int) Math.Ceiling(1f * height / this.tileReader_.TileHeight);
 
-      var tileXCount
-          = (int) Math.Ceiling(1f * width / this.tileReader_.TileWidth);
-      var tileYCount
-          = (int) Math.Ceiling(1f * height / this.tileReader_.TileHeight);
+    var tileSizeInAxis = subTileCountInAxis * subTileSizeInAxis;
 
-      for (var tileY = 0; tileY < tileYCount; ++tileY) {
-        for (var tileX = 0; tileX < tileXCount; ++tileX) {
-          this.tileReader_.Decode(br,
-                                  scan0,
-                                  tileX,
-                                  tileY,
-                                  width,
-                                  height,
-                                  shortBuffer,
-                                  paletteBuffer,
-                                  indicesBuffer);
+    Span<ushort> shortBuffer = stackalloc ushort[2];
+    var shortBufferBytes = shortBuffer.AsBytes();
+
+    Span<Rgba32> paletteBuffer = stackalloc Rgba32[4];
+    Span<byte> indicesBuffer = stackalloc byte[4];
+
+    var subblockCount = tileXCount *
+                        tileYCount *
+                        subTileCountInAxis *
+                        subTileCountInAxis;
+    Span<byte> allSubblocks = stackalloc byte[subblockCount * 8];
+    br.ReadBytes(allSubblocks);
+
+    var subblockIndex = 0;
+
+    for (var tileY = 0; tileY < tileYCount; ++tileY) {
+      for (var tileX = 0; tileX < tileXCount; ++tileX) {
+        for (var j = 0; j < subTileCountInAxis; ++j) {
+          for (var i = 0; i < subTileCountInAxis; ++i) {
+            var subblock = allSubblocks.Slice((subblockIndex++) * 8, 8);
+
+            if (!br.IsOppositeEndiannessOfSystem) {
+              subblock.Slice(0, 4).CopyTo(shortBufferBytes);
+            } else {
+              shortBuffer[0] = (ushort) ((subblock[0] << 8) | subblock[1]);
+              shortBuffer[1] = (ushort) ((subblock[2] << 8) | subblock[3]);
+            }
+            subblock.Slice(4).CopyTo(indicesBuffer);
+
+            this.tileReader_.DecodeSubblock(
+                shortBuffer,
+                scan0,
+                paletteBuffer,
+                indicesBuffer,
+                tileX * tileSizeInAxis + i * subTileSizeInAxis,
+                tileY * tileSizeInAxis + j * subTileSizeInAxis,
+                width,
+                height);
+          }
         }
       }
-
-      return image;
     }
+
+    return image;
+  }
 }

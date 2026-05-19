@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

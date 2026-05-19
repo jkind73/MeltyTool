@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 using fin.animation;
 using fin.model;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.rendering;
 
 using ReactiveUI;

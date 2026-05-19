@@ -10,10 +10,7 @@
     <resources:FullHierarchyTreeViewModelForDesigner />
   </Design.DataContext>
 
-  <TreeDataGrid
-      Source="{Binding Source}"
-      ShowColumnHeaders="False"
-      CanUserResizeColumns="False">
+  <TreeDataGrid Source="{Binding Source}">
     <TreeDataGrid.Styles>
       <Style Selector="TreeDataGridCellsPresenter">
         <Setter Property="Height" Value="{StaticResource RegularHeight}" />

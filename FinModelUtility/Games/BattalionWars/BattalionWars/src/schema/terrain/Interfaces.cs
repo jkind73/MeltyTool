@@ -36,16 +36,15 @@ public interface IBwHeightmapChunk {
 }
 
 public interface IBwHeightmapTile {
-  Grid<IBwHeightmapPoint> Points { get; }
+  Grid<BwHeightmapPoint> Points { get; }
   uint MatlIndex { get; }
 
   HeightmapParser.SchemaTile Schema { get; }
 }
 
-public interface IBwHeightmapPoint {
-  float X { get; }
-  float Y { get; }
-  float Height { get; }
-
-  Rgba32 LightColor { get; }
+public struct BwHeightmapPoint {
+  public float X { get; set; }
+  public float Y { get; set; }
+  public float Height { get; set; }
+  public Rgba32 LightColor { get; set; }
 }

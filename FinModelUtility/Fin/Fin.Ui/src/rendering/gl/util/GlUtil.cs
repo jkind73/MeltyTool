@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
 using fin.model;
-using fin.shaders.glsl;
 using fin.ui.rendering.gl.material;
 
 using OpenTK.Graphics.OpenGL4;
@@ -21,7 +20,7 @@ public static partial class GlUtil {
     IsInitialized = true;
   }
 
-  private static readonly object GL_LOCK_ = new();
+  private static readonly Lock GL_LOCK_ = new();
 
   public static void RunLockedGl(Action handler) {
     lock (GL_LOCK_) {

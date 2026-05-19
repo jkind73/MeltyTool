@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using fin.model;
 using fin.model.impl;
 using fin.shaders.glsl;
-using fin.ui.avalonia;
+using fin.ui;
 
 using ReactiveUI;
 

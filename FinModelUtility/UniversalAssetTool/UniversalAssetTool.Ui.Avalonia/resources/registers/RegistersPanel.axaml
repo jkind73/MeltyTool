@@ -2,7 +2,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:gb="clr-namespace:GroupBox.Avalonia.Controls;assembly=GroupBox.Avalonia"
              xmlns:registers="clr-namespace:uni.ui.avalonia.resources.registers"
              xmlns:converters="clr-namespace:uni.ui.avalonia.util.converters"
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
@@ -18,7 +17,7 @@
     <controls:If.ContentWhenTrue>
       <ScrollViewer>
         <StackPanel Margin="0 0 0 4">
-          <gb:GroupBox
+          <GroupBox
               Classes="h2 spaceFirst"
               Header="Color registers">
             <ItemsControl ItemsSource="{Binding ColorRegisterPickers}">
@@ -28,11 +27,11 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
-          </gb:GroupBox>
+          </GroupBox>
 
-          <gb:GroupBox
-            Classes="h2"
-            Header="Scalar registers">
+          <GroupBox
+              Classes="h2"
+              Header="Scalar registers">
             <ItemsControl ItemsSource="{Binding ScalarRegisterPickers}">
               <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -40,7 +39,7 @@
                 </DataTemplate>
               </ItemsControl.ItemTemplate>
             </ItemsControl>
-          </gb:GroupBox>
+          </GroupBox>
         </StackPanel>
       </ScrollViewer>
     </controls:If.ContentWhenTrue>

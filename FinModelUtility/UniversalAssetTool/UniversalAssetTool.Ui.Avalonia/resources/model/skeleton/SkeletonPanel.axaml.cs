@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 
 using fin.model;
-using fin.ui.avalonia;
-using fin.ui.rendering;
-using fin.util.asserts;
+using fin.ui;
 
 using ReactiveUI;
 

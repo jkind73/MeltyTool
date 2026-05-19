@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 
 using fin.scene;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.rendering;
 
 using ReactiveUI;

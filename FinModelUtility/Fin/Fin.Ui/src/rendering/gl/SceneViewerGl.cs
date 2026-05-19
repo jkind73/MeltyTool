@@ -11,9 +11,6 @@ using fin.ui.rendering.gl.ubo;
 using fin.ui.rendering.viewer;
 using fin.util.time;
 
-using OpenTK.Graphics.OpenGL4;
-
-
 namespace fin.ui.rendering.gl;
 
 public sealed class SceneViewerGl : ISceneViewer, IRenderable {
@@ -192,8 +189,6 @@ public sealed class SceneViewerGl : ISceneViewer, IRenderable {
 
     this.RenderSkybox_();
     this.RenderScene_();
-
-    GL.Finish();
 
     FrameTime.MarkEndOfFrameForFpsDisplay();
   }

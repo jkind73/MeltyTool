@@ -27,6 +27,8 @@ public sealed class GauntletDarkLegacyWorldModelFileBundle : IModelFileBundle {
   public required IReadOnlyTreeFile TexturesFile { get; init; }
 
   public IReadOnlyTreeFile MainFile => this.ObjectsFile;
+
+  public bool UseSubMeshes { get; init; }
 }
 
 public sealed class GauntletDarkLegacyWorldModelImporter
@@ -51,7 +53,7 @@ public sealed class GauntletDarkLegacyWorldModelImporter
   }
 
   public static IModel ImportImpl(
-      IFileBundle fileBundle,
+      GauntletDarkLegacyWorldModelFileBundle fileBundle,
       IReadOnlySet<IReadOnlyGenericFile> files,
       Worlds worlds,
       Objects objects,
@@ -119,6 +121,7 @@ public sealed class GauntletDarkLegacyWorldModelImporter
                              obj,
                              lazyFinMaterials,
                              mbFlags,
+                             fileBundle.UseSubMeshes,
                              out _);
     }
 

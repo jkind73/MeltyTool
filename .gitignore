@@ -17,7 +17,6 @@
 mono_crash.*
 
 # Build results
-[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -30,6 +29,7 @@ bld/
 [Gg]en/
 [Bb]in/
 [Oo]bj/
+_[Oo]bj/
 [Ll]og/
 [Ll]ogs/
 !**/src/**/log/
@@ -377,6 +377,5 @@ cli/roms/*/cache/**
 !KSoft/*/Debug/**
 !KSoft/**/ECF/**
 !FinModelUtility/**/goldens/**
-
 cli/ui/music/**
 !cli/ui/music/PUT UI BACKGROUND MUSIC HERE.txt

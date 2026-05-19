@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.OpenGL;
 using Avalonia.Win32;
+
 using ReactiveUI.Avalonia;
 
 using fin.ui.rendering.gl;
@@ -29,7 +30,7 @@ public static class AppBuilderUtil {
                          Win32CompositionMode.LowLatencyDxgiSwapChain,
                          Win32CompositionMode.WinUIComposition,
                          Win32CompositionMode.DirectComposition
-                     ]
+                     ],
                  })
                  .With(new SkiaOptions {
                      // Use as much memory as available, similar to WPF. This
@@ -37,5 +38,8 @@ public static class AppBuilderUtil {
                      MaxGpuResourceSizeBytes = long.MaxValue
                  })
                  .WithInterFont()
+#if DEBUG
+                 .WithDeveloperTools()
+#endif
                  .UseReactiveUI(reactiveUiBuilder => { });
 }

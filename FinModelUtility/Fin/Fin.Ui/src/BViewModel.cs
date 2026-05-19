@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace fin.ui.avalonia;
+namespace fin.ui;
 
 public interface IViewModelBase
     : IReactiveNotifyPropertyChanged<IReactiveObject>,

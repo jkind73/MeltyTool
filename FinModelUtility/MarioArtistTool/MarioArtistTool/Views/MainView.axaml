@@ -32,7 +32,7 @@
     </Style>
 
     <Style Selector="Border.TreeDirectory:pointerover,
-		             Border.TreeFile:pointerover">
+		                 Border.TreeFile:pointerover">
       <Setter Property="BorderBrush" Value="#EC1417" />
     </Style>
 
@@ -40,13 +40,15 @@
       <Setter Property="BorderBrush" Value="#F5B500" />
     </Style>
 
-	<Style Selector=":focus Border.TreeDirectory,
-		             :focus Border.TreeFile">
+	  <Style Selector=":focus Border.TreeDirectory,
+		                 :focus Border.TreeFile">
       <Setter Property="BorderBrush" Value="#44433D" />
     </Style>
 
-    <Style Selector=":selected /template/ TreeDataGridCellsPresenter#PART_CellsPresenter">
-      <Setter Property="Background" Value="Transparent" />
+    <Style Selector="TreeDataGridExpanderCell,
+                     TreeDataGridRow,
+                     TreeDataGridTemplateCell">
+      <Setter Property="ClipToBounds" Value="False" />
     </Style>
 
     <Style Selector=":selected .TreeFile Image">
@@ -63,60 +65,44 @@
       <fileSelect:FileSelectTopBar DockPanel.Dock="Top" />
 
       <Panel>
-        <Grid>
-          <Border>
-            <Border.Background>
-              <VisualBrush TileMode="Tile"
-                           Stretch="Uniform"
-                           DestinationRect="0,0,32,32">
-                <VisualBrush.Visual>
-                  <Image Width="32" Height="32">
-                    <Image.Source>
-                      <DrawingImage>
-                        <DrawingImage.Drawing>
-                          <DrawingGroup>
-                            <GeometryDrawing Geometry="M0,0 L2,0 2,2, 0,2Z"
-                                             Brush="#23503f" />
-                            <GeometryDrawing Geometry="M0,1 L2,1 2,2, 1,2 1,0 0,0Z"
-                                             Brush="#22473d" />
-                          </DrawingGroup>
-                        </DrawingImage.Drawing>
-                      </DrawingImage>
-                    </Image.Source>
-                  </Image>
-                </VisualBrush.Visual>
-              </VisualBrush>
-            </Border.Background>
-          </Border>
+        <Border>
+          <Border.Background>
+            <ImageBrush Source="/Assets/file_select/background.png"
+                        TileMode="Tile"
+                        Stretch="Uniform"
+                        DestinationRect="0,0,32,32" />
+          </Border.Background>
+        </Border>
 
-          <Image Source="/Assets/file_select/gradient_dark.png"
-                 Stretch="Fill"
-                 BlendMode="Multiply"
-                 Opacity=".5" />
+        <Image Source="/Assets/file_select/gradient_dark.png"
+               Stretch="Fill"
+               BlendMode="Multiply"
+               Opacity=".5" />
 
-          <Image Source="/Assets/file_select/gradient_light.png"
-                 Stretch="Fill"
-                 BlendMode="ColorDodge"
-                 Opacity=".9" />
-        </Grid>
+        <Image Source="/Assets/file_select/gradient_light.png"
+               Stretch="Fill"
+               BlendMode="ColorDodge"
+               Opacity=".9" />
 
         <Border Padding="4">
           <controls:If Condition="{Binding FileSystemTreeSource, Converter={x:Static ObjectConverters.IsNotNull}}">
-            <TreeDataGrid Source="{Binding FileSystemTreeSource}"
-                          ShowColumnHeaders="False" />
+            <TreeDataGrid x:Name="FileTree"
+                          Source="{Binding FileSystemTreeSource}" />
           </controls:If>
         </Border>
       </Panel>
     </DockPanel>
 
-    <Grid>
+    <Panel>
       <scene:SceneInstanceViewerGlPanel
           x:Name="ViewerGlPanel"
           IsTabStop="True"
           TabIndex="0"
           Focusable="True"
           ShowGrid="True"
-          UseRenderGraph="False" />
+          UseRenderGraph="False"
+          HorizontalAlignment="Stretch" 
+          VerticalAlignment="Stretch" />
       <TextBlock Text="{Binding FileLabel}"
                  Foreground="White"
                  HorizontalAlignment="Center"
@@ -124,13 +110,13 @@
                  Margin="0 16"
                  FontSize="24"
                  FontWeight="Bold">
-		<TextBlock.Effect>
+		    <TextBlock.Effect>
           <DropShadowEffect OffsetX="1"
                             OffsetY="2"
                             BlurRadius="0"
                             Color="{DynamicResource Black}" />
         </TextBlock.Effect>
-	  </TextBlock>
-    </Grid>
+	    </TextBlock>
+    </Panel>
   </DockPanel>
 </UserControl>

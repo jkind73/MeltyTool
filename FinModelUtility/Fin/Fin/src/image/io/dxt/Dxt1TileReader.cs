@@ -57,7 +57,7 @@ public readonly struct Dxt1TileReader(
                      Span<byte> indicesBuffer) {
     for (var j = 0; j < subTileCountInAxis; ++j) {
       for (var i = 0; i < subTileCountInAxis; ++i) {
-        this.DecodeSubblock_(
+        this.ReadAndDecodeSubblock_(
             br,
             shortBuffer,
             scan0,
@@ -72,7 +72,7 @@ public readonly struct Dxt1TileReader(
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private void DecodeSubblock_(
+  private void ReadAndDecodeSubblock_(
       IBinaryReader br,
       Span<ushort> shortBuffer,
       Span<Rgba32> scan0,
@@ -83,9 +83,31 @@ public readonly struct Dxt1TileReader(
       int imageWidth,
       int imageHeight) {
     br.ReadUInt16s(shortBuffer);
+    br.ReadBytes(indicesBuffer);
+
+    this.DecodeSubblock(
+        shortBuffer,
+        scan0,
+        paletteBuffer,
+        indicesBuffer,
+        imageX,
+        imageY,
+        imageWidth,
+        imageHeight);
+  }
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public void DecodeSubblock(
+      Span<ushort> shortBuffer,
+      Span<Rgba32> scan0,
+      Span<Rgba32> paletteBuffer,
+      Span<byte> indicesBuffer,
+      int imageX,
+      int imageY,
+      int imageWidth,
+      int imageHeight) {
     DecodePalette_(shortBuffer, paletteBuffer);
 
-    br.ReadBytes(indicesBuffer);
     for (var j = 0; j < subTileSizeInAxis; ++j) {
       if (imageY + j >= imageHeight) {
         break;

@@ -6,7 +6,7 @@ using Avalonia.Interactivity;
 using fin.io.bundles;
 using fin.io.web;
 using fin.model.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.util.io;
 using fin.util.tasks;
 

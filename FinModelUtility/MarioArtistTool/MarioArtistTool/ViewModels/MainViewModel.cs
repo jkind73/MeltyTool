@@ -4,7 +4,6 @@ using System.Linq;
 
 using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -13,8 +12,11 @@ using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
 
+using Dorssel.Utilities.Generic;
+
+using fin.data.queues;
 using fin.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.images;
 using fin.ui.avalonia.observables;
 using fin.ui.avalonia.util;
@@ -24,10 +26,8 @@ using marioartist.schema;
 using marioartist.schema.mfs;
 
 using marioartisttool.file_select;
-
 using marioartisttool.services;
 using marioartisttool.util;
-
 using marioartisttool.view;
 
 using ReactiveUI;
@@ -59,10 +59,17 @@ public sealed class MainViewModelForDesigner : MainViewModel {
 
     var subdir2Files = new LinkedList<MfsTreeFile>();
     var subdir2
-        = new MfsTreeDirectory(root,
-                               new MfsDirectory { Name = "subdir2" },
-                               [],
-                               subdir2Files);
+        = new MfsTreeDirectory(
+            root,
+            new MfsDirectory { Name = "subdir2" },
+            new LinkedList<MfsTreeDirectory>([
+                new MfsTreeDirectory(
+                    root,
+                    new MfsDirectory { Name = "subdir2a" },
+                    [],
+                    [])
+            ]),
+            subdir2Files);
     rootSubdirs.AddLast(subdir2);
 
     MfsFileSystemService.LoadFileSystem(root);
@@ -72,6 +79,10 @@ public sealed class MainViewModelForDesigner : MainViewModel {
 }
 
 public class MainViewModel : BViewModel {
+  private readonly Debouncer<MfsTreeFile> fileDebouncer_ = new() {
+      DebounceWindow = TimeSpan.FromMilliseconds(100)
+  };
+
   public static Cursor ThumbInCursor { get; }
     = AssetLoaderUtil.LoadCursor("thumb_in.png", new PixelPoint(2, 2));
 
@@ -88,6 +99,10 @@ public class MainViewModel : BViewModel {
   public CursorObservableManager Com { get; } = new();
 
   public MainViewModel() {
+    this.fileDebouncer_.Debounced
+        += (_, files)
+            => MfsFileSystemService.SelectFile(files.TriggerData.Last());
+
     MfsFileSystemService.OnFileSelected += file => {
       if (file?.FileType.ToLower() is ".tstlt") {
         using var br = file.OpenReadAsBinary(Endianness.BigEndian);
@@ -106,212 +121,221 @@ public class MainViewModel : BViewModel {
         return;
       }
 
-      var fileCursorObservable = new LoopingObservable<Cursor>(.1f,
-        AssetLoaderUtil.LoadCursor("file_0.png", PixelPoint.Origin),
-        AssetLoaderUtil.LoadCursor("file_1.png", PixelPoint.Origin),
-        AssetLoaderUtil.LoadCursor("file_2.png", PixelPoint.Origin));
+      Dispatcher.UIThread.Invoke(() => {
+        var fileCursorObservable = new LoopingObservable<Cursor>(.1f,
+          AssetLoaderUtil.LoadCursor("file_0.png", PixelPoint.Origin),
+          AssetLoaderUtil.LoadCursor("file_1.png", PixelPoint.Origin),
+          AssetLoaderUtil.LoadCursor("file_2.png", PixelPoint.Origin));
 
-      var bbomByTreeIoObject
-          = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
+        var bbomByTreeIoObject
+            = new Dictionary<MfsTreeIoObject, BucketBitmapObservableManager>();
 
-      this.FileSystemTreeSource
-          = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(
-              root.Children) {
-              Columns = {
-                  new HierarchicalExpanderColumn<MfsTreeIoObject>(
-                      new TemplateColumn<MfsTreeIoObject>(
-                          "Name",
-                          new FuncDataTemplate<MfsTreeIoObject>((x, _) => {
-                            if (x == null) {
-                              return null;
-                            }
+        var zIndexByObject = new Dictionary<MfsTreeIoObject, int>();
+        var zIndex = 0;
+        CountChildrenDepthFirst_(root.Children, zIndexByObject, ref zIndex);
 
-                            var stackPanel = new StackPanel {
-                                Orientation = Orientation.Horizontal,
-                            };
+        this.FileSystemTreeSource
+            = new HierarchicalTreeDataGridSource<MfsTreeIoObject>(root.Children)
+                .WithHierarchicalExpanderColumn(
+                    "Name",
+                    new TreeDataGridTemplateColumn {
+                        Width = GridLength.Star,
+                        CellTemplate
+                            = new FuncDataTemplate<MfsTreeIoObject>((x, _) => {
+                              if (x == null) {
+                                return null;
+                              }
 
-                            BucketBitmapObservableManager? bbom = null;
-                            Grid? bucketPanel = null;
-                            if (x is MfsTreeFile mfsTreeFile) {
-                              using var br
-                                  = mfsTreeFile.OpenReadAsBinary(
-                                      Endianness.BigEndian);
-
-                              var thumbnail = new Argb1555Image(24, 24);
-                              thumbnail.Read(br);
-
-                              var finImage = thumbnail.ToImage();
-                              var avaloniaImage = finImage.AsAvaloniaImage();
-
-                              var icon = new Image {
-                                  Source = avaloniaImage,
-                                  Margin = new Thickness(0, 0, 2, 0),
+                              var stackPanel = new StackPanel {
+                                  Orientation = Orientation.Horizontal,
                               };
 
-                              stackPanel.Children.Add(icon);
-                            } else if (x is MfsTreeDirectory d) {
-                              bbom = new BucketBitmapObservableManager();
-                              bbomByTreeIoObject[x] = bbom;
+                              BucketBitmapObservableManager? bbom = null;
+                              Grid? bucketPanel = null;
+                              if (x is MfsTreeFile mfsTreeFile) {
+                                using var br
+                                    = mfsTreeFile.OpenReadAsBinary(
+                                        Endianness.BigEndian);
 
-                              var bucketImage = bbom.BucketImage;
-                              var hatImage = bbom.HatImage;
+                                var thumbnail = new Argb1555Image(24, 24);
+                                thumbnail.Read(br);
 
-                              var bucket = new Image {
-                                  Margin = new Thickness(0, -20, -16, 0),
-                              };
-                              bucket.Bind(Image.SourceProperty, bucketImage);
+                                var finImage = thumbnail.ToImage();
+                                var avaloniaImage = finImage.AsAvaloniaImage();
 
-                              if (d.Children.Any()) {
-                                bucketPanel = new Grid {
-                                    Width = 32,
-                                    Height = 32
+                                var icon = new Image {
+                                    Source = avaloniaImage,
+                                    Margin = new Thickness(0, 0, 2, 0),
                                 };
-                                bucketPanel.Children.Add(bucket);
 
-                                var hat = new Image {
-                                    Width = 16,
-                                    Height = 8,
-                                    ZIndex = 2,
-                                    VerticalAlignment = VerticalAlignment.Top,
-                                    Margin = new Thickness(0, -3, -6, 0),
+                                stackPanel.Children.Add(icon);
+                              } else if (x is MfsTreeDirectory d) {
+                                bbom = new BucketBitmapObservableManager();
+                                bbomByTreeIoObject[x] = bbom;
+
+                                var bucketImage = bbom.BucketImage;
+                                var hatImage = bbom.HatImage;
+
+                                var bucket = new Image {
+                                    Margin = new Thickness(0, -20, -16, 0),
                                 };
-                                hat.Bind(Image.SourceProperty, hatImage);
-                                bucketPanel.Children.Add(hat);
+                                bucket.Bind(Image.SourceProperty, bucketImage);
 
-                                stackPanel.Children.Add(bucketPanel);
-                              } else {
-                                stackPanel.Children.Add(bucket);
-                              }
-                            }
-
-                            var brushWhite
-                                = new SolidColorBrush(
-                                    Color.FromRgb(255, 255, 255));
-
-                            var textBlock = new TextBlock {
-                                Text = x.Name.ToString(),
-                                Classes = {
-                                    x is MfsTreeDirectory ? "h3" : "h4"
-                                },
-                                Padding = new Thickness(0),
-                                VerticalAlignment = VerticalAlignment.Center,
-                                Foreground = brushWhite
-                            };
-
-                            if (x is MfsTreeFile) {
-                              stackPanel.Children.Add(textBlock);
-                            } else if (x is MfsTreeDirectory) {
-                              var childCount = x.Children.Count();
-
-                              var manyFilesImage
-                                  = AssetLoaderUtil.LoadBitmap(
-                                      "icon_many_files.png");
-                              var fileImage
-                                  = AssetLoaderUtil.LoadBitmap("icon_file.png");
-
-                              var fileCount = childCount % 7;
-                              var manyFilesCount = (childCount - fileCount) / 7;
-
-                              var childPanel = new WrapPanel();
-                              for (var i = 0; i < manyFilesCount; ++i) {
-                                childPanel.Children.Add(new Image {
-                                    Source = manyFilesImage,
-                                    Margin = new Thickness(1, 1 + 1, 1, 1),
-                                    Width = 11,
-                                    Height = 12,
-                                });
-                              }
-
-                              for (var i = 0; i < fileCount; ++i) {
-                                childPanel.Children.Add(new Image {
-                                    Source = fileImage,
-                                    Margin = new Thickness(1, 1 + 4, 1, 1),
-                                    Width = 8,
-                                    Height = 8,
-                                });
-                              }
-
-                              stackPanel.Children.Add(
-                                  new StackPanel {
-                                      Orientation = Orientation.Vertical,
-                                      Margin = new Thickness(6, 0, 0, 0),
-                                      Children = {
-                                          textBlock,
-                                          childPanel,
-                                      },
-                                  });
-                            }
-
-                            uint marginTop, marginBottom;
-                            if (x is MfsTreeDirectory) {
-                              marginTop = 4;
-                              marginBottom = marginTop / 2;
-                            } else {
-                              marginTop = 2;
-                              marginBottom = marginTop / 2;
-                            }
-
-                            var border = new Border {
-                                Child = stackPanel,
-                                Padding = new Thickness(2),
-                                CornerRadius = new CornerRadius(4),
-                                Background
-                                    = new SolidColorBrush(
-                                        Color.FromRgb(33, 33, 33)),
-                                Margin = new Thickness(
-                                    0,
-                                    marginTop,
-                                    2,
-                                    marginBottom),
-                            };
-
-                            if (x is MfsTreeFile) {
-                              border.AddClass("TreeFile");
-
-                              border.Bind(Border.CursorProperty,
-                                          fileCursorObservable);
-                            } else {
-                              border.AddClass("TreeDirectory");
-
-                              if (bbom != null) {
-                                border.PointerEntered +=
-                                    (_, _) => bbom.IsMouseOver = true;
-                                border.PointerExited +=
-                                    (_, _) => bbom.IsMouseOver = false;
-
-                                border.AttachedToVisualTree += (_, _) => {
-                                  var expanderCell =
-                                      border.GetParentExpanderCell();
-
-                                  expanderCell.DoubleTapped += (_, _) => {
-                                    expanderCell.IsExpanded
-                                        = !expanderCell.IsExpanded;
+                                if (d.Children.Any()) {
+                                  bucketPanel = new Grid {
+                                      Width = 32,
+                                      Height = 32
                                   };
+                                  bucketPanel.Children.Add(bucket);
 
-                                  if (bucketPanel != null) {
-                                    bucketPanel.Tapped += (_, _) => {
+                                  var hat = new Image {
+                                      Width = 16,
+                                      Height = 8,
+                                      ZIndex = 2,
+                                      VerticalAlignment = VerticalAlignment.Top,
+                                      Margin = new Thickness(0, -3, -6, 0),
+                                  };
+                                  hat.Bind(Image.SourceProperty, hatImage);
+                                  bucketPanel.Children.Add(hat);
+
+                                  stackPanel.Children.Add(bucketPanel);
+                                } else {
+                                  stackPanel.Children.Add(bucket);
+                                }
+                              }
+
+                              var brushWhite
+                                  = new SolidColorBrush(
+                                      Color.FromRgb(255, 255, 255));
+
+                              var textBlock = new TextBlock {
+                                  Text = x.Name.ToString(),
+                                  Classes = {
+                                      x is MfsTreeDirectory ? "h3" : "h4"
+                                  },
+                                  Padding = new Thickness(0),
+                                  VerticalAlignment = VerticalAlignment.Center,
+                                  Foreground = brushWhite
+                              };
+
+                              if (x is MfsTreeFile) {
+                                stackPanel.Children.Add(textBlock);
+                              } else if (x is MfsTreeDirectory) {
+                                var childCount = x.Children.Count();
+
+                                var manyFilesImage
+                                    = AssetLoaderUtil.LoadBitmap(
+                                        "icon_many_files.png");
+                                var fileImage
+                                    = AssetLoaderUtil.LoadBitmap(
+                                        "icon_file.png");
+
+                                var fileCount = childCount % 7;
+                                var manyFilesCount
+                                    = (childCount - fileCount) / 7;
+
+                                var childPanel = new WrapPanel();
+                                for (var i = 0; i < manyFilesCount; ++i) {
+                                  childPanel.Children.Add(new Image {
+                                      Source = manyFilesImage,
+                                      Margin = new Thickness(1, 1 + 1, 1, 1),
+                                      Width = 11,
+                                      Height = 12,
+                                  });
+                                }
+
+                                for (var i = 0; i < fileCount; ++i) {
+                                  childPanel.Children.Add(new Image {
+                                      Source = fileImage,
+                                      Margin = new Thickness(1, 1 + 4, 1, 1),
+                                      Width = 8,
+                                      Height = 8,
+                                  });
+                                }
+
+                                stackPanel.Children.Add(
+                                    new StackPanel {
+                                        Orientation = Orientation.Vertical,
+                                        Margin = new Thickness(6, 0, 0, 0),
+                                        Children = {
+                                            textBlock,
+                                            childPanel,
+                                        },
+                                    });
+                              }
+
+                              uint marginTop, marginBottom;
+                              if (x is MfsTreeDirectory) {
+                                marginTop = 4;
+                                marginBottom = marginTop / 2;
+                              } else {
+                                marginTop = 2;
+                                marginBottom = marginTop / 2;
+                              }
+
+                              var border = new Border {
+                                  Child = stackPanel,
+                                  Padding = new Thickness(2),
+                                  CornerRadius = new CornerRadius(4),
+                                  Background
+                                      = new SolidColorBrush(
+                                          Color.FromRgb(33, 33, 33)),
+                                  Margin = new Thickness(
+                                      0,
+                                      marginTop,
+                                      2,
+                                      marginBottom),
+                                  ZIndex = zIndexByObject[x],
+                              };
+
+                              if (x is MfsTreeFile) {
+                                border.AddClass("TreeFile");
+
+                                border.Bind(Border.CursorProperty,
+                                            fileCursorObservable);
+                              } else {
+                                border.AddClass("TreeDirectory");
+
+                                if (bbom != null) {
+                                  border.PointerEntered +=
+                                      (_, _) => bbom.IsMouseOver = true;
+                                  border.PointerExited +=
+                                      (_, _) => bbom.IsMouseOver = false;
+
+                                  border.AttachedToVisualTree += (_, _) => {
+                                    var expanderCell =
+                                        border.GetParentExpanderCell();
+
+                                    expanderCell.DoubleTapped += (_, _) => {
                                       expanderCell.IsExpanded
                                           = !expanderCell.IsExpanded;
                                     };
-                                  }
 
-                                  expanderCell.GotFocus += (_, _)
-                                      => bbom.IsFocused = true;
-                                  expanderCell.LostFocus += (_, _)
-                                      => bbom.IsFocused = false;
-                                };
+                                    if (bucketPanel != null) {
+                                      bucketPanel.Tapped += (_, _) => {
+                                        expanderCell.IsExpanded
+                                            = !expanderCell.IsExpanded;
+                                      };
+                                    }
+
+                                    expanderCell.GotFocus += (_, _)
+                                        => bbom.IsFocused = true;
+                                    expanderCell.LostFocus += (_, _)
+                                        => bbom.IsFocused = false;
+                                  };
+                                }
                               }
-                            }
 
-                            return border;
-                          }),
-                          null,
-                          GridLength.Star),
-                      x => x.Children)
-              }
-          };
+                              return border;
+                            }),
+                    },
+                    x => x.Children,
+                    options: o => {
+                      o.Width = GridLength.Star;
+                    });
+        this.FileSystemTreeSource.ShowColumnHeaders = false;
+        this.FileSystemTreeSource.CanUserResizeColumns = false;
 
-      Dispatcher.UIThread.Invoke(() => {
         var rowSelection = this.FileSystemTreeSource.RowSelection!;
         rowSelection.SelectionChanged += (_, e) => {
           var selectedItems = e.SelectedItems;
@@ -320,16 +344,28 @@ public class MainViewModel : BViewModel {
           }
 
           if (selectedItems[0] is MfsTreeFile file) {
-            MfsFileSystemService.SelectFile(file);
+            this.fileDebouncer_.Trigger(file);
           }
         };
 
         this.FileSystemTreeSource.RowExpanded += (_, e)
-            => bbomByTreeIoObject[e.Row.Model].IsOpen = true;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen
+                = true;
         this.FileSystemTreeSource.RowCollapsed += (_, e)
-            => bbomByTreeIoObject[e.Row.Model].IsOpen = false;
+            => bbomByTreeIoObject[(e.Row.Model as MfsTreeIoObject)!].IsOpen
+                = false;
       });
     };
+  }
+
+  private static void CountChildrenDepthFirst_(
+      IEnumerable<MfsTreeIoObject> objects,
+      Dictionary<MfsTreeIoObject, int> countByObject,
+      ref int count) {
+    foreach (var obj in objects) {
+      countByObject[obj] = count++;
+      CountChildrenDepthFirst_(obj.Children, countByObject, ref count);
+    }
   }
 }
 

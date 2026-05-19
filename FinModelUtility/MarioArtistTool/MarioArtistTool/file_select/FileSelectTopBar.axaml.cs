@@ -17,7 +17,7 @@ using fin.config.avalonia.services;
 using fin.data.queues;
 using fin.io;
 using fin.model.io;
-using fin.ui.avalonia;
+using fin.ui;
 using fin.ui.avalonia.observables;
 using fin.util.enumerables;
 using fin.util.io;

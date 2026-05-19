@@ -5,7 +5,7 @@ using Avalonia.Controls;
 using fin.animation.interpolation;
 using fin.animation.keyframes;
 using fin.animation.types.single;
-using fin.ui.avalonia;
+using fin.ui;
 
 using OxyPlot;
 using OxyPlot.Axes;
