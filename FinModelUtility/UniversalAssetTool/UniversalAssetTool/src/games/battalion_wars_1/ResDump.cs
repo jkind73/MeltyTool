@@ -17,10 +17,12 @@ public sealed class ResDump {
           resFile.Impl.Exists,
           $"Cannot dump RES because it does not exist: {resFile}");
 
-      var directoryFullName = resFile.FullNameWithoutExtension;
-
+      var directoryFullName = resFile.FullPath;
       var isResGz = resFile.Name.EndsWith(".res.gz");
       if (isResGz) {
+        directoryFullName = directoryFullName[..^7];
+      }
+      else {
         directoryFullName = directoryFullName[..^4];
       }
 
