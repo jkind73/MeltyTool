@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 
 using fin.exporter.assimp;
@@ -17,7 +18,9 @@ namespace uni.ui;
 public sealed class Program {
   [STAThread]
   public static void Main(string[] args) {
+    CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
     OpenGlVersionService.Init(false);
+
     Cli.Run(args,
             () => {
               DesignModeUtil.InDesignMode = false;
