@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Buffers;
 
 using CommunityToolkit.HighPerformance;
 
@@ -40,7 +41,10 @@ public sealed class Dxt1ImageReader(
                         tileYCount *
                         subTileCountInAxis *
                         subTileCountInAxis;
-    Span<byte> allSubblocks = stackalloc byte[subblockCount * 8];
+
+    var allSubBlocksSize = subblockCount * 8;
+    var allSubBlocksArray = ArrayPool<byte>.Shared.Rent(allSubBlocksSize);
+    Span<byte> allSubblocks = allSubBlocksArray.AsSpan(0, allSubBlocksSize);
     br.ReadBytes(allSubblocks);
 
     var subblockIndex = 0;
@@ -72,6 +76,8 @@ public sealed class Dxt1ImageReader(
         }
       }
     }
+
+    ArrayPool<byte>.Shared.Return(allSubBlocksArray);
 
     return image;
   }
