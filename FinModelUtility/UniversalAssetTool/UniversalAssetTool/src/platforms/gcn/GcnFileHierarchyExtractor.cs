@@ -1,4 +1,5 @@
-﻿using fin.common;
+﻿using fin.archives;
+using fin.common;
 using fin.config;
 using fin.io;
 using fin.io.archive;
@@ -51,8 +52,8 @@ public sealed class GcnFileHierarchyExtractor {
       ISystemFile romFile,
       Options options) {
     var directory = ExtractorUtil.GetOrCreateExtractedDirectory(romFile);
-    if (new SubArchiveExtractor().TryToExtractIntoNewDirectory<GcmReader>(
-            romFile,
+    if (new GcmArchiveImporter().ExtractInto(
+            new GcmArchiveFileBundle(romFile),
             directory) ==
         ArchiveExtractionResult.FAILED) {
       throw new Exception();
