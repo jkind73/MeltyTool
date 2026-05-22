@@ -22,8 +22,8 @@ public interface IArchive2 : IResource, IDisposable {
 public interface IArchiveDirectory2 {
   string Name { get; }
 
-  IReadOnlyList<IArchiveDirectory2> Subdirs { get; }
-  IReadOnlyList<IArchiveFile2> Files { get; }
+  IEnumerable<IArchiveDirectory2> Subdirs { get; }
+  IEnumerable<IArchiveFile2> Files { get; }
 }
 
 public interface IArchiveFile2 {

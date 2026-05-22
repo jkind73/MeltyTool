@@ -37,7 +37,8 @@ public sealed partial class Sond : IBinaryConvertible {
 public sealed class BwFile : IBinaryDeserializable {
   public string Type { get; private set; }
   public string FileName { get; private set; }
-  public byte[] Data { get; private set; }
+  public long Position { get; private set; }
+  public long Length { get; private set; }
 
   public void Read(IBinaryReader br) {
     SectionHeaderUtil.ReadNameAndSize(
@@ -45,16 +46,19 @@ public sealed class BwFile : IBinaryDeserializable {
         out var sectionName,
         out var dataLength);
     this.Type = sectionName;
+    this.Position = br.Position;
     var dataOffset = br.Position;
 
     this.FileName = br.ReadString(br.ReadInt32());
 
-    br.Position = dataOffset;
-    this.Data = br.ReadBytes((int) dataLength);
+    this.Position = dataOffset;
+    this.Length = dataLength;
 
     br.Position = dataOffset + dataLength;
   }
 
   public void Write(IBinaryWriter bw) =>
       throw new NotImplementedException();
+
+  public override string ToString() => $"{this.FileName}.{this.Type} ({this.Position}, {this.Length})";
 }

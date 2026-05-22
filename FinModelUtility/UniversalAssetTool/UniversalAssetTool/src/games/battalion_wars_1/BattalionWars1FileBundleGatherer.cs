@@ -1,5 +1,7 @@
-﻿using fin.data.sets;
+﻿using fin.config;
+using fin.data.sets;
 using fin.io;
+using fin.io.archive;
 using fin.io.bundles;
 using fin.util.progress;
 
@@ -21,7 +23,10 @@ public sealed class BattalionWars1FileBundleGatherer : BGameCubeFileBundleGather
       var didUpdate = false;
       var resFiles = directory.FilesWithExtension(".res");
       foreach (var resFile in resFiles) {
-        didUpdateAny |= didUpdate |= new ResDump().Run(resFile);
+        didUpdateAny |= didUpdate
+            |= (ResArchiveImporter.Extract(resFile.Impl,
+                                           FinConfig.CleanUpArchives) ==
+                ArchiveExtractionResult.NEWLY_EXTRACTED);
       }
 
       if (didUpdate) {

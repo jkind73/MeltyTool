@@ -9,7 +9,10 @@ using schema.binary.attributes;
 namespace uni.platforms.gcn.tools;
 
 public sealed record GcmArchiveFileBundle(IReadOnlyTreeFile RomFile)
-    : IArchiveFileBundle2 {
+    : ISimpleArchiveFileBundle<GcmArchiveFileBundle> {
+  public static GcmArchiveFileBundle FromFile(IReadOnlyTreeFile file)
+    => new(file);
+
   public IReadOnlyTreeFile MainFile => this.RomFile;
 }
 
@@ -17,19 +20,21 @@ public sealed record GcmArchiveFileBundle(IReadOnlyTreeFile RomFile)
 ///   Shamelessly ported from version 1.0 (20050213) of gcmdump by thakis.
 /// </summary>
 public partial class GcmArchiveImporter : BSimpleArchiveImporter<GcmArchiveFileBundle> {
-  protected override Stream BuildHierarchyAndGetFileStream(
+  protected override void BuildHierarchyAndGetFileStream(
       GcmArchiveFileBundle bundle,
       ISet<IReadOnlyGenericFile> fileSet,
-      ISimpleArchiveDirectory builderRoot) {
+      ISimpleArchiveDirectory builderRoot,
+      out Stream baseStream,
+      out Stream readStream) {
     var rawRomStream = bundle.RomFile.OpenRead();
 
     var isCiso = MagicTextUtil.Verify(rawRomStream, "CISO");
     rawRomStream.Position = 0;
-
-    var romStream =
+    
+    baseStream = readStream =
         !isCiso ? rawRomStream : new CisoStream(rawRomStream);
 
-    var br = new SchemaBinaryReader(romStream, Endianness.BigEndian);
+    var br = new SchemaBinaryReader(readStream, Endianness.BigEndian);
 
     var diskHeader = br.ReadNew<DiskHeader>();
     var fileEntries = this.ReadFileSystemTable_(br, diskHeader);
@@ -73,8 +78,6 @@ public partial class GcmArchiveImporter : BSimpleArchiveImporter<GcmArchiveFileB
         directoryStack.Top.Item1.AddFile(name, position, length);
       }
     }
-
-    return romStream;
   }
 
   private IList<FileEntry> ReadFileSystemTable_(IBinaryReader br,

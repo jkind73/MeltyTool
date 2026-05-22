@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -9,6 +10,11 @@ using SubstreamSharp;
 
 namespace fin.archives;
 
+public interface ISimpleArchiveFileBundle<out TThis> : IArchiveFileBundle2
+    where TThis : ISimpleArchiveFileBundle<TThis> {
+  static abstract TThis FromFile(IReadOnlyTreeFile file);
+}
+
 public interface ISimpleArchiveDirectory : IArchiveDirectory2 {
   ISimpleArchiveDirectory AddSubdir(string name);
   void AddFile(string name, long position, long length);
@@ -17,10 +23,12 @@ public interface ISimpleArchiveDirectory : IArchiveDirectory2 {
 public abstract class BSimpleArchiveImporter<TBundle>
     : IArchiveImporter2<TBundle>
     where TBundle : IArchiveFileBundle2 {
-  protected abstract Stream BuildHierarchyAndGetFileStream(
+  protected abstract void BuildHierarchyAndGetFileStream(
       TBundle bundle,
       ISet<IReadOnlyGenericFile> fileSet,
-      ISimpleArchiveDirectory builderRoot);
+      ISimpleArchiveDirectory builderRoot,
+      out Stream baseStream,
+      out Stream readStream);
 
   public IArchive2 Import(TBundle fileBundle) {
     var fileSet = fileBundle.Files.ToHashSet();
@@ -32,8 +40,13 @@ public abstract class BSimpleArchiveImporter<TBundle>
 
     var root = new SimpleArchiveDirectory(archive, "");
     archive.Root = root;
-    archive.Stream
-        = this.BuildHierarchyAndGetFileStream(fileBundle, fileSet, root);
+    this.BuildHierarchyAndGetFileStream(fileBundle,
+                                        fileSet,
+                                        root,
+                                        out var baseStream,
+                                        out var readStream);
+    archive.BaseStream = baseStream;
+    archive.ReadStream = readStream;
 
     return archive;
   }
@@ -43,31 +56,66 @@ public abstract class BSimpleArchiveImporter<TBundle>
     public required IReadOnlySet<IReadOnlyGenericFile> Files { get; init; }
 
     public IArchiveDirectory2 Root { get; set; }
-    public Stream Stream { get; set; }
+    public Stream BaseStream { get; set; }
+    public Stream ReadStream { get; set; }
 
-    public void Dispose() => this.Stream.Dispose();
+    public void Dispose() => this.BaseStream.Dispose();
   }
 
   private sealed class SimpleArchiveDirectory(
       SimpleArchive archive,
       string name)
       : ISimpleArchiveDirectory {
-    private readonly List<IArchiveDirectory2> subdirsImpl_ = new();
-    private readonly List<IArchiveFile2> filesImpl_ = new();
+    private readonly Dictionary<string, SimpleArchiveDirectory>
+        subdirsImpl_ = new();
+
+    private readonly Dictionary<string, IArchiveFile2> filesImpl_ = new();
 
     public string Name => name;
-    public IReadOnlyList<IArchiveDirectory2> Subdirs => this.subdirsImpl_;
-    public IReadOnlyList<IArchiveFile2> Files => this.filesImpl_;
+    public IEnumerable<IArchiveDirectory2> Subdirs => this.subdirsImpl_.Values;
+    public IEnumerable<IArchiveFile2> Files => this.filesImpl_.Values;
 
-    public ISimpleArchiveDirectory AddSubdir(string name) {
-      var subdir = new SimpleArchiveDirectory(archive, name);
-      this.subdirsImpl_.Add(subdir);
-      return subdir;
+    public ISimpleArchiveDirectory AddSubdir(string name)
+      => this.GetOrAddSubdirsFromParts_(name.Split('/', '\\'));
+
+    public void AddFile(string name, long position, long length) {
+      var parts = name.Split('/', '\\');
+      var partsSpan = parts.AsSpan();
+
+      var directoryParts = partsSpan[..^1];
+      var filePart = partsSpan[^1];
+
+      var parentDir = this.GetOrAddSubdirsFromParts_(directoryParts);
+      parentDir.AddFileFromPart_(filePart, position, length);
     }
 
-    public void AddFile(string name, long position, long length)
-      => this.filesImpl_.Add(
-          new SimpleArchiveFile(archive, name, position, length));
+    // TODO: Prevent duplicates?
+    private void AddFileFromPart_(string part, long position, long length)
+      => this.filesImpl_[part]
+          = new SimpleArchiveFile(archive, part, position, length);
+
+    private SimpleArchiveDirectory GetOrAddSubdirsFromParts_(
+        ReadOnlySpan<string> parts) {
+      SimpleArchiveDirectory current = this;
+      foreach (var part in parts) {
+        current = this.GetOrAddSubdirFromPart_(part);
+      }
+
+      return current;
+    }
+
+    private SimpleArchiveDirectory GetOrAddSubdirFromPart_(string part) {
+      if (part == "") {
+        return this;
+      }
+
+      if (!this.subdirsImpl_.TryGetValue(part, out var subdir)) {
+        subdir = new SimpleArchiveDirectory(archive, part);
+        this.subdirsImpl_[part] = subdir;
+      }
+
+      return subdir;
+    }
   }
 
   private sealed class SimpleArchiveFile(
@@ -77,6 +125,6 @@ public abstract class BSimpleArchiveImporter<TBundle>
       long length) : IArchiveFile2 {
     public string Name => name;
 
-    public Stream OpenRead() => archive.Stream.Substream(position, length);
+    public Stream OpenRead() => archive.ReadStream.Substream(position, length);
   }
 }

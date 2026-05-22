@@ -1,4 +1,7 @@
-﻿using fin.io;
+﻿using fin.archives;
+using fin.config;
+using fin.io;
+using fin.io.archive;
 using fin.io.bundles;
 using fin.util.progress;
 
@@ -24,7 +27,11 @@ public sealed class BattalionWars2FileBundleGatherer
           directory.GetExistingFiles()
                    .Where(file => file.Name.EndsWith(".res.gz"));
       foreach (var resFile in resFiles) {
-        didUpdateAny |= didUpdate |= new ResDump().Run(resFile);
+        didUpdateAny |= didUpdate
+            |= (ResArchiveImporter.Extract(
+                    resFile.Impl,
+                    FinConfig.CleanUpArchives) ==
+                ArchiveExtractionResult.NEWLY_EXTRACTED);
       }
 
       if (didUpdate) {

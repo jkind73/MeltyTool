@@ -3,6 +3,7 @@ using fin.common;
 using fin.config;
 using fin.io;
 using fin.io.archive;
+using fin.util.asserts;
 
 using gx.archives.rarc;
 using gx.compression.yay0;
@@ -52,11 +53,9 @@ public sealed class GcnFileHierarchyExtractor {
       ISystemFile romFile,
       Options options) {
     var directory = ExtractorUtil.GetOrCreateExtractedDirectory(romFile);
-    if (new GcmArchiveImporter().ExtractInto(
-            new GcmArchiveFileBundle(romFile),
-            directory) ==
+    if (new GcmArchiveImporter().ExtractInto(romFile, directory) ==
         ArchiveExtractionResult.FAILED) {
-      throw new Exception();
+      Asserts.Fail($"Failed to extract files from {romFile}!");
     }
 
     var fileHierarchy

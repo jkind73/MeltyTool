@@ -52,13 +52,11 @@ public sealed class TexrSection : IBinaryConvertible {
       SectionHeaderUtil.AssertNameAndReadSize(
           br, sectionName, out var textureLength);
       var endOffset = br.Position + textureLength;
-
       var textureName = br.ReadString(textureNameLength);
+      this.Textures.Add(
+          new BwTexrFile(textureName, baseOffset, endOffset - baseOffset));
 
-      br.Position = baseOffset;
-      var data = br.ReadBytes(endOffset - baseOffset);
-
-      this.Textures.Add(new BwTexrFile(textureName, data));
+      br.Position = endOffset;
     }
 
     Asserts.Equal(expectedTexrSectionEnd, br.Position);
@@ -69,4 +67,4 @@ public sealed class TexrSection : IBinaryConvertible {
   }
 }
 
-public record BwTexrFile(string Name, byte[] Data);
+public record BwTexrFile(string Name, long Position, long Length);
