@@ -196,7 +196,9 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       List<(IReadOnlySceneNodeInstance, SimpleModelRenderComponent)>
       modelRenderComponents_ = new();
 
-  private RenderGraphElement[] elements_;
+  private RenderGraphElement[] opaqueElements_;
+  private RenderGraphElement[] transparentElements_;
+
   private ISkeletonRenderer[] skeletonRenderers_;
 
   private IReadOnlyBone? selectedBone_;
@@ -231,7 +233,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
   private void ReleaseUnmanagedResources_() { }
 
   private void GenerateModelIfNull_() {
-    if (this.elements_ != null) {
+    if (this.opaqueElements_ != null) {
       return;
     }
 
@@ -272,7 +274,18 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       }
     }
 
-    this.elements_ = elements.ToArray();
+    this.opaqueElements_
+        = elements.Where(e => !e.Params.IsTransparent).ToArray();
+
+    var camera = Camera.Instance;
+    foreach (var element in this.opaqueElements_) {
+      element.UpdateSortKey(camera, this.NearPlane, this.FarPlane, this.Scale);
+    }
+    Array.Sort(this.opaqueElements_, comparer_);
+
+    this.transparentElements_
+        = elements.Where(e => e.Params.IsTransparent).ToArray();
+
     this.skeletonRenderers_
         = this.modelRenderComponents_
               .Select(t => t.Item2.SkeletonRenderer)
@@ -287,7 +300,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
                           .Distinct()
                           .ToArray();
 
-    DebugService.RenderGraphElementCount = this.elements_.Length;
+    DebugService.RenderGraphElementCount = elements.Count;
     DebugService.ModelCount = uniqueModels.Length;
     DebugService.MaterialCount = uniqueMaterials.Length;
     DebugService.OpaqueMaterialCount = uniqueMaterials.Count(m => m.GetTransparencyType() is TransparencyType.OPAQUE);
@@ -309,11 +322,10 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     }
 
     var camera = Camera.Instance;
-    foreach (var element in this.elements_) {
+    foreach (var element in this.transparentElements_) {
       element.UpdateSortKey(camera, this.NearPlane, this.FarPlane, this.Scale);
     }
-
-    this.SortElements_();
+    this.SortTransparentElements_();
 
     var isSomethingSelected = this.selectedNode_ != null ||
                               this.selectedMesh_ != null ||
@@ -328,13 +340,27 @@ public sealed class SceneStaticRenderGraph : IRenderable {
       }
     }*/
 
-    foreach (var element in this.elements_) {
+    foreach (var element in this.opaqueElements_) {
       var prms = element.Params;
       RenderParams_(prms);
     }
 
     if (isSomethingSelected) {
-      foreach (var element in this.elements_) {
+      foreach (var element in this.opaqueElements_) {
+        var prms = element.Params;
+        if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
+          GlUtil.RenderHighlight(() => RenderParams_(prms));
+        }
+      }
+    }
+
+    foreach (var element in this.transparentElements_) {
+      var prms = element.Params;
+      RenderParams_(prms);
+    }
+
+    if (isSomethingSelected) {
+      foreach (var element in this.transparentElements_) {
         var prms = element.Params;
         if (prms.IsSelected || this.selectedNode_ == prms.Node.Definition) {
           GlUtil.RenderHighlight(() => RenderParams_(prms));
@@ -352,13 +378,13 @@ public sealed class SceneStaticRenderGraph : IRenderable {
   private static readonly RenderGraphElement.Comparer comparer_ = new();
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
-  private void SortElements_() {
-    var elements = this.elements_.AsSpan();
+  private void SortTransparentElements_() {
+    var elements = this.transparentElements_.AsSpan();
     if (AreSorted_(elements)) {
       return;
     }
 
-    Array.Sort(this.elements_, comparer_);
+    Array.Sort(this.transparentElements_, comparer_);
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
