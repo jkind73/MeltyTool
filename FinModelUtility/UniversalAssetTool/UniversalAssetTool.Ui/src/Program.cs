@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using fin.exporter.assimp;
 using fin.io;
 using fin.model.io.exporters;
+using fin.ui;
 using fin.ui.rendering.gl;
 
 using pikmin1.api;
@@ -18,7 +19,7 @@ namespace uni.ui;
 public sealed class Program {
   [STAThread]
   public static void Main(string[] args) {
-    CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+    UiUtil.Initialize();
     OpenGlVersionService.Init(false);
 
     Cli.Run(args,

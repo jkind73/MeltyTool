@@ -5,6 +5,7 @@ using System.Text;
 using Avalonia;
 
 using fin.services;
+using fin.ui;
 using fin.ui.avalonia;
 using fin.ui.rendering.gl;
 using fin.util.time;
@@ -19,10 +20,7 @@ class Program {
   // yet and stuff might break.
   [STAThread]
   public static void Main(string[] args) {
-    CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-    FrameTime.Initialize();
-    GpuUtil.Initialize();
+    UiUtil.Initialize();
 
     Cli.Run(args,
             () => {
