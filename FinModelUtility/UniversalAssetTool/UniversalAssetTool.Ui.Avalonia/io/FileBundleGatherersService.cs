@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,13 +25,10 @@ public static class FileBundleGatherersService {
 
   public static ValueFractionProgress StartExtracting() {
     var valueFractionProgress = new ValueFractionProgress();
-
-    var splitProgress = valueFractionProgress.AsValueless().Split(2);
-    var loadingProgress = splitProgress[0];
-    var fileTreeProgress = splitProgress[1];
+    var loadingProgress = valueFractionProgress.AsValueless();
 
     Dispatcher.CurrentDispatcher.InvokeAsync(async () => {
-      var (rootDirectory, counterProgress) = await FinTask.Run(() => {
+      var (rootDirectory, pbYielder) = await FinTask.Run(() => {
         var rootDirectory = new RootFileBundleGatherer()
             .GatherAllFiles(
                 loadingProgress,
@@ -41,17 +37,14 @@ public static class FileBundleGatherersService {
 
         var totalNodeCount
             = GetTotalNodeCountWithinDirectory_(rootDirectory);
-        var counterProgress = new CounterPercentageProgress(totalNodeCount);
-        counterProgress.OnProgressChanged += (_, progress) => {
-          fileTreeProgress.ReportProgress(progress);
-        };
+        var pbYielder = new PercentageBasedYielder(totalNodeCount);
 
-        return (rootDirectory, counterProgress);
+        return (rootDirectory, pbYielder);
       });
 
-      var fileTreeViewModel = await GetFileTreeViewModel_(rootDirectory, counterProgress);
+      var fileTreeViewModel = await GetFileTreeViewModel_(rootDirectory, pbYielder);
       valueFractionProgress.ReportCompletion(fileTreeViewModel);
-    }, DispatcherPriority.Background);
+    }, DispatcherPriority.MaxValue);
 
     return valueFractionProgress;
   }
@@ -64,13 +57,12 @@ public static class FileBundleGatherersService {
 
   private static async Task<FileBundleTreeViewModel> GetFileTreeViewModel_(
       IFileBundleDirectory directoryRoot,
-      CounterPercentageProgress counterPercentageProgress) {
-    var rootSubdirs = await FinTask.Run(() => 
-      directoryRoot
+      PercentageBasedYielder pbYielder) {
+    var rootSubdirs = await Task.WhenAll(directoryRoot
           .Subdirs
           .Select(subdir => CreateDirectoryNode_(
                       subdir,
-                      counterPercentageProgress)));
+                      pbYielder)));
 
     var viewModel = new FileBundleTreeViewModel(
         new ObservableCollection<INode<IFileBundle>>(rootSubdirs));
@@ -97,11 +89,11 @@ public static class FileBundleGatherersService {
     return viewModel;
   }
 
-  private static INode<IFileBundle> CreateDirectoryNode_(
+  private static async Task<INode<IFileBundle>> CreateDirectoryNode_(
       IFileBundleDirectory directory,
-      CounterPercentageProgress counterPercentageProgress,
+      PercentageBasedYielder pbYielder,
       IList<string>? parts = null) {
-    counterPercentageProgress.Increment();
+    await pbYielder.IncrementAsync();
 
     var subdirs = directory.Subdirs;
     var fileBundles = directory.FileBundles;
@@ -114,11 +106,11 @@ public static class FileBundleGatherersService {
       parts.Add(directory.Name);
 
       return subdirCount == 1
-          ? CreateDirectoryNode_(subdirs[0],
-                                 counterPercentageProgress,
+          ? await CreateDirectoryNode_(subdirs[0],
+                                 pbYielder,
                                  parts)
-          : CreateFileNode_(fileBundles[0],
-                            counterPercentageProgress,
+          : await CreateFileNode_(fileBundles[0],
+                            pbYielder,
                             parts);
     }
 
@@ -128,25 +120,28 @@ public static class FileBundleGatherersService {
       text = string.Join('/', parts.ToArray());
     }
 
-    return new FileBundleDirectoryNode(
-        text,
-        new ObservableCollection<INode<IFileBundle>>(
-            directory
-                .Subdirs
-                .Select(d => CreateDirectoryNode_(
-                            d,
-                            counterPercentageProgress))
-                .Concat(
-                    directory.FileBundles.Select(f => CreateFileNode_(
-                                                     f,
-                                                     counterPercentageProgress)))));
+
+    var subnodes = new INode<IFileBundle>[subdirCount + fileBundlesCount];
+    var i = 0;
+    for (var d = 0; d < subdirCount; ++d) {
+      subnodes[i++] = await CreateDirectoryNode_(
+          subdirs[d],
+          pbYielder);
+    }
+    for (var f = 0; f < fileBundlesCount; ++f) {
+      subnodes[i++] = await CreateFileNode_(
+          fileBundles[f],
+          pbYielder);
+    }
+
+    return new FileBundleDirectoryNode(text, subnodes);
   }
 
-  private static INode<IFileBundle> CreateFileNode_(
+  private static async Task<INode<IFileBundle>> CreateFileNode_(
       IFileBundle fileBundle,
-      CounterPercentageProgress counterPercentageProgress,
+      PercentageBasedYielder pbYielder,
       IList<string>? parts = null) {
-    counterPercentageProgress.Increment();
+    await pbYielder.IncrementAsync();
 
     var displayName = fileBundle.DisplayName.ToString();
 

@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 
-namespace fin.util.progress;
+namespace fin.util.tasks;
 
-public sealed class CounterPercentageProgress(int total) : IPercentageProgress {
+public sealed class PercentageBasedYielder(
+    int total,
+    float yieldFrequency = .03f) {
   private bool isComplete_;
 
   private int current_;
 
-  public void Increment() {
+  public async Task IncrementAsync() {
     if (this.isComplete_) {
       return;
     }
@@ -19,8 +22,16 @@ public sealed class CounterPercentageProgress(int total) : IPercentageProgress {
       return;
     }
 
+    var previousProgress = this.Progress;
+
     this.Progress = 1f * current / total;
-    this.OnProgressChanged?.Invoke(this, this.Progress);
+
+    var newProgress = this.Progress;
+
+    if (Math.Floor(previousProgress / yieldFrequency) < Math.Floor(newProgress / yieldFrequency)) {
+      this.OnProgressChanged?.Invoke(this, this.Progress);
+      await Task.Yield();
+    }
   }
 
   public float Progress { get; private set; }
