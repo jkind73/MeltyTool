@@ -199,11 +199,12 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
           return finTexture;
         });
     var lazyMaterialDictionary
-        = new LazyDictionary<(AppearanceNode, TextNode?, bool hasVertexColor),
-            IMaterial>(
+        = new LazyDictionary<(IMaterialNode material, IReadOnlyList<IImageTextureNode>? frames,
+            ITextureTransformNode? textureTransform, TextNode?textNode, bool
+            hasVertexColor), IMaterial>(
             tuple => {
-              var (appearanceNode, textNode, hasVertexColor) = tuple;
-              var vrmlMaterial = appearanceNode.Material;
+              var (vrmlMaterial, vrmlFrames, vrmlTextureTransform, textNode,
+                  hasVertexColor) = tuple;
 
               var color = vrmlMaterial.DiffuseColor;
               var alpha = 1 - vrmlMaterial.Transparency;
@@ -213,14 +214,31 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
 
               var equations = finMaterial.Equations;
               var colorOps = equations.ColorOps;
-              var scalarOps = equations.ScalarOps;
 
               IReadOnlyTexture? finTexture = null;
-              var vrmlTexture = appearanceNode.Texture;
-              if (vrmlTexture != null) {
-                finTexture = lazyTextureDictionary[
-                    (vrmlTexture.Url.ToLower(),
-                     appearanceNode.TextureTransform)];
+              if ((vrmlFrames?.Count ?? 0) > 0) {
+                var finFrameTextures
+                    = vrmlFrames!.Select(f => lazyTextureDictionary[
+                                            (f.Url.ToLower(),
+                                             vrmlTextureTransform)])
+                                .ToArray();
+
+                finTexture = finFrameTextures[0];
+
+                if (vrmlFrames.Count > 1) {
+                  var animation = finModel.AnimationManager.AddAnimation();
+                  animation.Name = finTexture.Name;
+                  animation.FrameCount = vrmlFrames.Count;
+                  animation.FrameRate = 30;
+
+                  var textureTracks = animation.AddTextureTracks(finTexture);
+                  var flipbookSwapKeyframes
+                      = textureTracks.UseFlipbookSwapKeyframes(finFrameTextures.Length);
+                  for (var f = 0; f < finFrameTextures.Length; ++f) {
+                    flipbookSwapKeyframes.Add(
+                        new Keyframe<IReadOnlyTexture?>(f, finFrameTextures[f]));
+                  }
+                }
               } else if (textNode != null) {
                 finTexture = lazyTextTextureDictionary[textNode];
               }
@@ -353,13 +371,8 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
 
       switch (vrmlNode) {
         case IIsbPictureNode pictureNode: {
-            var image = pictureNode.Frames[0];
-            var appearance = new AppearanceNode {
-              Material = new MaterialNode(),
-              Texture = image,
-            };
-
-            var finMaterial = lazyMaterialDictionary[(appearance, null, false)];
+            var finMaterial = lazyMaterialDictionary[
+                (new MaterialNode(), pictureNode.Frames, null, null, false)];
 
             var vtx0 = finSkin.AddVertex(0, 0, 1);
             vtx0.SetUv(0, 1 - 0);
@@ -394,9 +407,14 @@ public sealed class VrmlModelImporter : IModelImporter<VrmlModelFileBundle> {
             var geometry = shapeNode.Geometry;
             var hasVertexColor
                 = (shapeNode.Geometry as IndexedFaceSetNode)?.Color != null;
-            var finMaterial = lazyMaterialDictionary[(shapeNode.Appearance,
-                                                      geometry as TextNode,
-                                                      hasVertexColor)];
+            var finMaterial = lazyMaterialDictionary[
+                (shapeNode.Appearance.Material,
+                 shapeNode.Appearance.Texture != null
+                     ? [shapeNode.Appearance.Texture]
+                     : null,
+                 shapeNode.Appearance.TextureTransform,
+                 geometry as TextNode,
+                 hasVertexColor)];
             var finMesh = finSkin.AddMesh();
 
             switch (geometry) {
