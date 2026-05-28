@@ -19,13 +19,11 @@ public sealed class GltfVertexBuilder {
   private readonly IndexableDictionary<IReadOnlyBoneWeights, (int, float)[]>
       skinningByBoneWeights_ = new();
 
-  public GltfVertexBuilder(IReadOnlyModel model,
-                           IIndexableDictionary<IReadOnlyBone, int>
-                               boneToIndex) {
+  public GltfVertexBuilder(IReadOnlyModel model) {
     foreach (var boneWeights in model.Skin.BoneWeights) {
       this.skinningByBoneWeights_[boneWeights] =
           boneWeights.Weights.Select(boneWeight => (
-                                         boneToIndex[boneWeight.Bone],
+                                         boneWeight.Bone.Index,
                                          boneWeight.Weight))
                      .ToArray();
     }

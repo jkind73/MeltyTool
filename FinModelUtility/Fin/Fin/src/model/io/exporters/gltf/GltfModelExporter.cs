@@ -25,7 +25,7 @@ public sealed class GltfModelExporter : IGltfModelExporter {
     var modelRoot = ModelRoot.CreateModel();
 
     var scene = modelRoot.UseScene("default");
-    var skin = modelRoot.CreateSkin();
+    var gltfSkin = modelRoot.CreateSkin();
 
     var animations = model.AnimationManager.Animations;
     var firstAnimation = (animations?.Count ?? 0) > 0 ? animations[0] : null;
@@ -43,12 +43,9 @@ public sealed class GltfModelExporter : IGltfModelExporter {
     var rootNode = scene.CreateNode();
     var skinNodeAndBones = GltfSkeletonBuilder.BuildAndBindSkeleton(
         rootNode,
-        skin,
+        gltfSkin,
         scale,
         model.Skeleton);
-    var joints = skinNodeAndBones
-                 .Select(skinNodeAndBone => skinNodeAndBone.Item1)
-                 .ToArray();
 
     // Builds materials.
     var finToTexCoordAndGltfMaterial =
@@ -58,11 +55,11 @@ public sealed class GltfModelExporter : IGltfModelExporter {
     var meshBuilder = new GltfSkinBuilder { UvIndices = this.UvIndices };
     meshBuilder.AddSkin(
         modelRoot,
+        gltfSkin,
         model,
         rootNode,
         scale,
         finToTexCoordAndGltfMaterial,
-        joints,
         out var gltfNodeByFinMesh);
 
     // Builds animations.

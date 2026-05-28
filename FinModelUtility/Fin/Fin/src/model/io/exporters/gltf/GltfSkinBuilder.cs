@@ -23,21 +23,17 @@ public sealed class GltfSkinBuilder {
 
   public void AddSkin(
       ModelRoot gltfModel,
+      Skin gltfSkin,
       IReadOnlyModel model,
       Node rootNode,
       float scale,
       IDictionary<IReadOnlyMaterial, MaterialBuilder>
           finToTexCoordAndGltfMaterial,
-      Node[] joints,
       out IReadOnlyDictionary<IReadOnlyMesh, Node> outGltfNodeByFinMesh) {
     var skin = model.Skin;
 
     var boneTransformManager = new BoneTransformManager();
     boneTransformManager.CalculateStaticMatricesForManualProjection(model);
-
-    var boneToIndex
-        = model.Skeleton.Skip(1)
-               .ToIndexByValueIndexableDictionary();
 
     var nullMaterialBuilder =
         new MaterialBuilder("null").WithDoubleSide(false)
@@ -48,7 +44,7 @@ public sealed class GltfSkinBuilder {
         = new IndexableDictionary<IReadOnlyVertex, IVertexBuilder>(
             skin.Vertices.Count);
 
-    var gltfVertexBuilder = new GltfVertexBuilder(model, boneToIndex) {
+    var gltfVertexBuilder = new GltfVertexBuilder(model) {
         UvIndices = this.UvIndices
     };
 
@@ -192,10 +188,9 @@ public sealed class GltfSkinBuilder {
 
       var gltfMesh = gltfModel.CreateMesh(gltfMeshBuilder);
       if (gltfMesh != null) {
+        gltfNode.WithMesh(gltfMesh);
         if (weightCount > 0) {
-          gltfNode.WithSkinnedMesh(gltfMesh, rootNode.WorldMatrix, joints);
-        } else {
-          gltfNode.WithMesh(gltfMesh);
+          gltfNode.Skin = gltfSkin;
         }
 
         gltfMesh.Name = finMesh.Name;
