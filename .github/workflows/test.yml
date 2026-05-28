@@ -53,7 +53,7 @@ jobs:
       with:
         node-version: '14'
     - name: Install 'lcov-result-merger'
-      run: npm i -g lcov-result-merger
+      run: npm i -g lcov-result-merger@5.0.1
     - name: Merge Test Coverage
       run: lcov-result-merger "**/coverage.info" "lcov.info" --legacy-temp-file
 
