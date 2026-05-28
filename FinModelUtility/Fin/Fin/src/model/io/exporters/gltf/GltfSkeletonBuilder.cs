@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Numerics;
 
 using fin.data.queues;
 
@@ -20,7 +21,8 @@ public sealed class GltfSkeletonBuilder {
     var boneQueue
         = new FinQueue<(GltfNode, IReadOnlyBone)>((rootNode, rootBone));
 
-    var skinNodesAndBones = new (GltfNode, IReadOnlyBone)[skeleton.Bones.Count - 1];
+    var skinNodesAndBones
+        = new (GltfNode, IReadOnlyBone)[skeleton.Bones.Count - 1];
     while (boneQueue.Count > 0) {
       var (node, bone) = boneQueue.Dequeue();
 
@@ -52,8 +54,15 @@ public sealed class GltfSkeletonBuilder {
   private static void ApplyBoneOrientationToNode_(GltfNode node,
                                                   IReadOnlyBone bone,
                                                   float scale) {
-    var matrix = bone.Transform.LocalMatrix;
-    matrix.Translation *= scale;
-    node.LocalMatrix = matrix;
+    var finTransform = bone.Transform;
+    node.WithLocalTranslation(finTransform.LocalTranslation * scale);
+
+    if (finTransform.LocalRotation != null) {
+      node.WithLocalRotation(finTransform.LocalRotation.Value);
+    }
+
+    if (finTransform.LocalScale != null) {
+      node.WithLocalScale(finTransform.LocalScale.Value);
+    }
   }
 }

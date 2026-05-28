@@ -6,6 +6,7 @@ using System.Numerics;
 using CommunityToolkit.HighPerformance;
 
 using fin.color;
+using fin.data.queues;
 using fin.math.matrix.four;
 using fin.model.accessor;
 using fin.model.skeleton;
@@ -21,11 +22,13 @@ using GltfPrimitiveType = SharpGLTF.Schema2.PrimitiveType;
 namespace fin.model.io.exporters.gltf.lowlevel;
 
 public static class LowLevelGltfMeshBuilder {
-  public static IList<Mesh> BuildAndBindMesh(
+  public static void BuildAndBindMesh(
       ModelRoot gltfModel,
       IReadOnlyModel model,
+      Node rootNode,
       float scale,
-      IDictionary<IReadOnlyMaterial, Material> finToTexCoordAndGltfMaterial) {
+      IDictionary<IReadOnlyMaterial, Material> finToTexCoordAndGltfMaterial,
+      out IReadOnlyDictionary<IReadOnlyMesh, Node> outGltfNodeByFinMesh) {
     var skin = model.Skin;
     var vertexAccessor = ConsistentVertexAccessor.GetAccessorForModel(model);
 
@@ -122,8 +125,25 @@ public static class LowLevelGltfMeshBuilder {
     }
 
     var gltfMeshes = new List<Mesh>();
-    foreach (var finMesh in skin.Meshes) {
-      var gltfMesh = gltfModel.CreateMesh(finMesh.Name);
+    var gltfNodeByFinMesh = new Dictionary<IReadOnlyMesh, Node>();
+    outGltfNodeByFinMesh = gltfNodeByFinMesh;
+
+    var meshQueue
+        = new FinTuple2Queue<IReadOnlyMesh, Node>(
+            skin.RootMeshes.Select(m => (m, rootNode)));
+
+    while (meshQueue.TryDequeue(out var finMesh, out var parentGltfNode)) {
+      var gltfMesh = gltfModel.CreateMesh();
+      gltfMeshes.Add(gltfMesh);
+
+      var gltfNode = parentGltfNode.CreateNode();
+      gltfNode.WithMesh(gltfMesh);
+      gltfNode.Name = gltfMesh.Name = finMesh.Name;
+      gltfNodeByFinMesh[finMesh] = gltfNode;
+
+      if (finMesh.DefaultDisplayState is MeshDisplayState.HIDDEN) {
+        gltfNode.SetVisibility(false);
+      }
 
       foreach (var finPrimitive in finMesh.Primitives) {
         Material material;
@@ -178,7 +198,7 @@ public static class LowLevelGltfMeshBuilder {
         }
       }
 
-      gltfMeshes.Add(gltfMesh);
+      meshQueue.Enqueue(finMesh.SubMeshes.Select(m => (m, gltfNode)));
     }
 
     // Vertex colors
@@ -247,8 +267,6 @@ public static class LowLevelGltfMeshBuilder {
         }
       }
     }
-
-    return gltfMeshes;
   }
 
   private static Vector4 FinToGltfColor_(IColor? color)

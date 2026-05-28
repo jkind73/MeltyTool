@@ -46,13 +46,9 @@ public sealed class GltfModelExporter : IGltfModelExporter {
         skin,
         scale,
         model.Skeleton);
-
-    // Builds animations.
-    new GltfAnimationBuilder().BuildAnimations(
-        modelRoot,
-        skinNodeAndBones,
-        scale,
-        model.AnimationManager.Animations);
+    var joints = skinNodeAndBones
+                 .Select(skinNodeAndBone => skinNodeAndBone.Item1)
+                 .ToArray();
 
     // Builds materials.
     var finToTexCoordAndGltfMaterial =
@@ -60,30 +56,22 @@ public sealed class GltfModelExporter : IGltfModelExporter {
 
     // Builds meshes.
     var meshBuilder = new GltfSkinBuilder { UvIndices = this.UvIndices };
-    var gltfMeshes = meshBuilder.AddSkin(
+    meshBuilder.AddSkin(
         modelRoot,
         model,
+        rootNode,
         scale,
-        finToTexCoordAndGltfMaterial);
+        finToTexCoordAndGltfMaterial,
+        joints,
+        out var gltfNodeByFinMesh);
 
-    var joints = skinNodeAndBones
-                 .Select(skinNodeAndBone => skinNodeAndBone.Item1)
-                 .ToArray();
-    foreach (var (gltfMesh, hasJoints) in gltfMeshes) {
-      // TODO: What causes this to happen???
-      if (gltfMesh == null) {
-        continue;
-      }
-
-      var sceneNode = scene.CreateNode();
-      if (hasJoints) {
-        sceneNode.WithSkinnedMesh(gltfMesh,
-                                  rootNode.WorldMatrix,
-                                  joints);
-      } else {
-        sceneNode.WithMesh(gltfMesh);
-      }
-    }
+    // Builds animations.
+    new GltfAnimationBuilder().BuildAnimations(
+        modelRoot,
+        skinNodeAndBones,
+        gltfNodeByFinMesh,
+        scale,
+        model.AnimationManager.Animations);
 
     return modelRoot;
   }

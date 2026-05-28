@@ -40,13 +40,6 @@ public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
         scale,
         model.Skeleton);
 
-    // Builds animations.
-    new GltfAnimationBuilder().BuildAnimations(
-        modelRoot,
-        skinNodeAndBones,
-        scale,
-        model.AnimationManager.Animations);
-
     // Builds materials.
     var finToTexCoordAndGltfMaterial =
         GltfMaterialBuilder.GetMaterials(
@@ -54,23 +47,21 @@ public sealed class LowLevelGltfModelExporter : IGltfModelExporter {
             model.MaterialManager);
 
     // Builds meshes.
-    var gltfMeshes = LowLevelGltfMeshBuilder.BuildAndBindMesh(
+    LowLevelGltfMeshBuilder.BuildAndBindMesh(
         modelRoot,
         model,
+        rootNode,
         scale,
-        finToTexCoordAndGltfMaterial);
+        finToTexCoordAndGltfMaterial,
+        out var gltfMeshByFinMesh);
 
-    /*var joints = skinNodeAndBones
-                 .Select(
-                     skinNodeAndBone => skinNodeAndBone.Item1)
-                 .ToArray();*/
-    foreach (var gltfMesh in gltfMeshes) {
-      /*scene.CreateNode()
-           .WithSkinnedMesh(gltfMesh,
-                            rootNode.WorldMatrix,
-                            joints);*/
-      scene.CreateNode().WithMesh(gltfMesh);
-    }
+    // Builds animations.
+    new GltfAnimationBuilder().BuildAnimations(
+        modelRoot,
+        skinNodeAndBones,
+        gltfMeshByFinMesh,
+        scale,
+        model.AnimationManager.Animations);
 
     return modelRoot;
   }

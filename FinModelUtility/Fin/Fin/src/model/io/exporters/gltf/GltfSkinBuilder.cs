@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using fin.data.indexable;
+using fin.data.queues;
 using fin.model.accessor;
 using fin.model.skeleton;
 using fin.model.util;
@@ -20,12 +21,15 @@ namespace fin.model.io.exporters.gltf;
 public sealed class GltfSkinBuilder {
   public bool UvIndices { get; set; }
 
-  public IList<(Mesh gltfMesh, bool hasJoints)> AddSkin(
+  public void AddSkin(
       ModelRoot gltfModel,
       IReadOnlyModel model,
+      Node rootNode,
       float scale,
       IDictionary<IReadOnlyMaterial, MaterialBuilder>
-          finToTexCoordAndGltfMaterial) {
+          finToTexCoordAndGltfMaterial,
+      Node[] joints,
+      out IReadOnlyDictionary<IReadOnlyMesh, Node> outGltfNodeByFinMesh) {
     var skin = model.Skin;
 
     var boneTransformManager = new BoneTransformManager();
@@ -48,8 +52,14 @@ public sealed class GltfSkinBuilder {
         UvIndices = this.UvIndices
     };
 
-    var gltfMeshes = new List<(Mesh, bool)>();
-    foreach (var finMesh in skin.Meshes) {
+    var gltfMeshAndNodeByFinMesh = new Dictionary<IReadOnlyMesh, Node>();
+    outGltfNodeByFinMesh = gltfMeshAndNodeByFinMesh;
+
+    var meshQueue
+        = new FinTuple2Queue<IReadOnlyMesh, Node>(
+            skin.RootMeshes.Select(m => (m, rootNode)));
+
+    while (meshQueue.TryDequeue(out var finMesh, out var parentGltfNode)) {
       bool hasNormals = false;
       bool hasTangents = false;
       int colorCount = 0;
@@ -93,7 +103,6 @@ public sealed class GltfSkinBuilder {
                                                   colorCount,
                                                   uvCount,
                                                   weightCount);
-      gltfMeshBuilder.Name = finMesh.Name;
 
       foreach (var primitive in finMesh.Primitives) {
         MaterialBuilder materialBuilder;
@@ -174,10 +183,26 @@ public sealed class GltfSkinBuilder {
         }
       }
 
-      gltfMeshes.Add((gltfModel.CreateMesh(gltfMeshBuilder),
-                      weightCount > 0));
-    }
+      var gltfNode = parentGltfNode.CreateNode();
+      gltfNode.Name = finMesh.Name;
 
-    return gltfMeshes;
+      if (finMesh.DefaultDisplayState is MeshDisplayState.HIDDEN) {
+        gltfNode.SetVisibility(false);
+      }
+
+      var gltfMesh = gltfModel.CreateMesh(gltfMeshBuilder);
+      if (gltfMesh != null) {
+        if (weightCount > 0) {
+          gltfNode.WithSkinnedMesh(gltfMesh, rootNode.WorldMatrix, joints);
+        } else {
+          gltfNode.WithMesh(gltfMesh);
+        }
+
+        gltfMesh.Name = finMesh.Name;
+        gltfMeshAndNodeByFinMesh[finMesh] = gltfNode;
+      }
+
+      meshQueue.Enqueue(finMesh.SubMeshes.Select(m => (m, gltfNode)));
+    }
   }
 }

@@ -15,16 +15,23 @@ public sealed class GltfAnimationBuilder {
   public void BuildAnimations(
       ModelRoot gltfModel,
       (GltfNode, IReadOnlyBone)[] skinNodesAndBones,
+      IReadOnlyDictionary<IReadOnlyMesh, Node> gltfNodeByFinMesh,
       float modelScale,
       IReadOnlyList<IReadOnlyModelAnimation> animations) {
     foreach (var animation in animations) {
-      this.BuildAnimation_(gltfModel, skinNodesAndBones, modelScale, animation);
+      this.BuildAnimation_(
+          gltfModel,
+          skinNodesAndBones,
+          gltfNodeByFinMesh,
+          modelScale,
+          animation);
     }
   }
 
   private void BuildAnimation_(
       ModelRoot gltfModel,
       (GltfNode, IReadOnlyBone)[] skinNodesAndBones,
+      IReadOnlyDictionary<IReadOnlyMesh, Node> gltfNodeByFinMesh,
       float modelScale,
       IReadOnlyModelAnimation animation) {
     var isValid
@@ -54,6 +61,8 @@ public sealed class GltfAnimationBuilder {
     var scaleTangentKeyframes
         = new Dictionary<float, (Vector3, Vector3, Vector3)>();
 
+    var visibilityKeyframes = new Dictionary<float, bool>();
+
     Span<Vector3> translationsOrScales
         = stackalloc Vector3[animation.FrameCount];
     Span<Quaternion> rotations = stackalloc Quaternion[animation.FrameCount];
@@ -74,15 +83,20 @@ public sealed class GltfAnimationBuilder {
             foreach (var (frame, value) in keyframes) {
               translationKeyframes[frame / fps] = value * modelScale;
             }
+
             gltfAnimation.CreateTranslationChannel(node, translationKeyframes);
           } else {
-            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(
+                         tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              translationTangentKeyframes[frame / fps] = (tangentIn, value * modelScale, tangentOut);
+              translationTangentKeyframes[frame / fps] = (
+                  tangentIn, value * modelScale, tangentOut);
             }
 
-            gltfAnimation.CreateTranslationChannel(node, translationTangentKeyframes);
+            gltfAnimation.CreateTranslationChannel(
+                node,
+                translationTangentKeyframes);
           }
         } else {
           boneTracks.Translations.GetAllFrames(translationsOrScales);
@@ -106,12 +120,15 @@ public sealed class GltfAnimationBuilder {
             foreach (var (frame, value) in keyframes) {
               rotationKeyframes[frame / fps] = value;
             }
+
             gltfAnimation.CreateRotationChannel(node, rotationKeyframes);
           } else {
-            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(
+                         tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              rotationTangentKeyframes[frame / fps] = (tangentIn, value, tangentOut);
+              rotationTangentKeyframes[frame / fps]
+                  = (tangentIn, value, tangentOut);
             }
 
             gltfAnimation.CreateRotationChannel(node, rotationTangentKeyframes);
@@ -138,12 +155,15 @@ public sealed class GltfAnimationBuilder {
             foreach (var (frame, value) in keyframes) {
               scaleKeyframes[frame / fps] = value;
             }
+
             gltfAnimation.CreateScaleChannel(node, scaleKeyframes);
           } else {
-            foreach (var (frameAndValue, tangents) in keyframes.Zip(tangentKeyframes)) {
+            foreach (var (frameAndValue, tangents) in keyframes.Zip(
+                         tangentKeyframes)) {
               var (frame, value) = frameAndValue;
               var (tangentIn, tangentOut) = tangents;
-              scaleTangentKeyframes[frame / fps] = (tangentIn, value, tangentOut);
+              scaleTangentKeyframes[frame / fps]
+                  = (tangentIn, value, tangentOut);
             }
 
             gltfAnimation.CreateScaleChannel(node, scaleTangentKeyframes);
@@ -156,6 +176,30 @@ public sealed class GltfAnimationBuilder {
           }
 
           gltfAnimation.CreateScaleChannel(node, scaleKeyframes);
+        }
+      }
+    }
+
+    if (animation.HasAnyMeshTracks) {
+      foreach (var (finMesh, gltfNode) in gltfNodeByFinMesh) {
+        var finMeshTracks = animation.MeshTracks[finMesh];
+
+        var displayStates = finMeshTracks.DisplayStates;
+        if (displayStates.HasAnyData) {
+          visibilityKeyframes.Clear();
+          foreach (var keyframe in displayStates.Definitions) {
+            if (keyframe.ValueOut is MeshDisplayState.HIDDEN) {
+              visibilityKeyframes[keyframe.Frame] = false;
+            } else if (keyframe.ValueOut is MeshDisplayState.VISIBLE) {
+              visibilityKeyframes[keyframe.Frame] = true;
+            }
+          }
+
+          if (visibilityKeyframes.Count > 0) {
+            gltfAnimation.CreateVisibilityChannel(
+                gltfNode,
+                visibilityKeyframes);
+          }
         }
       }
     }
