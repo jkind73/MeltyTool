@@ -7,6 +7,7 @@ using fin.model.util;
 using fin.scene;
 using fin.ui.rendering.gl.material;
 using fin.ui.rendering.gl.model;
+using fin.util.enumerables;
 
 namespace fin.ui.rendering.gl.scene;
 
@@ -289,6 +290,7 @@ public sealed class SceneStaticRenderGraph : IRenderable {
     this.skeletonRenderers_
         = this.modelRenderComponents_
               .Select(t => t.Item2.SkeletonRenderer)
+              .Nonnull()
               .ToArray();
 
     var uniqueModels = this.modelRenderComponents_
