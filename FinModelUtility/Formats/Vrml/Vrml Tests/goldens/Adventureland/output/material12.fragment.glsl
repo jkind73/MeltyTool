@@ -128,7 +128,11 @@ void main() {
 
   vec3 colorComponent = (ambientLightColor.rgb + mergedLightDiffuseColor.rgb)*vec3(0.486275,0.486275,0.0);
 
-  float alphaComponent = 1.0;
+  float alphaComponent = 0.5;
 
-  fragColor = vec4(colorComponent, 1);
+  fragColor = vec4(colorComponent, alphaComponent);
+
+  if (!(alphaComponent > 0.01)) {
+    discard;
+  }
 }

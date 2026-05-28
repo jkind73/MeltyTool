@@ -33,7 +33,6 @@ uniform bool hasSpecular;
 uniform float shininess;
 in vec3 vertexPosition;
 in vec3 vertexNormal;
-in vec4 vertexColor0;
 
 out vec4 fragColor;
 
@@ -127,13 +126,9 @@ void main() {
   vec4 mergedLightSpecularColor = vec4(0);
   getMergedLightColors(vertexPosition, fragNormal, shininess, mergedLightDiffuseColor, mergedLightSpecularColor);
 
-  vec3 colorComponent = (ambientLightColor.rgb + mergedLightDiffuseColor.rgb)*vec3(0.501961)*vertexColor0.rgb;
+  vec3 colorComponent = (ambientLightColor.rgb + mergedLightDiffuseColor.rgb)*vec3(0.74902);
 
-  float alphaComponent = 0.86;
+  float alphaComponent = 1.0;
 
-  fragColor = vec4(colorComponent, alphaComponent);
-
-  if (!(alphaComponent > 0.01)) {
-    discard;
-  }
+  fragColor = vec4(colorComponent, 1);
 }
