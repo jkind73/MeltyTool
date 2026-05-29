@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using fin.util.asserts;
+using fin.util.enumerables;
 
 namespace fin.language.equations.fixedFunction;
 
@@ -113,13 +114,13 @@ public partial class FixedFunctionEquations<TIdentifier> {
       => throw new NotSupportedException();
 
     public override IScalarValue R
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.R);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.R);
 
     public override IScalarValue G
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.G);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.G);
 
     public override IScalarValue B
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.B);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.B);
   }
 
   private sealed class ColorOutput(TIdentifier identifier, IColorValue value)
@@ -130,24 +131,23 @@ public partial class FixedFunctionEquations<TIdentifier> {
     public override IScalarValue? Intensity => null;
 
     public override IScalarValue R
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.R);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.R);
 
     public override IScalarValue G
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.G);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.G);
 
     public override IScalarValue B
-      => new ColorNamedValueSwizzle(this, ColorSwizzle.B);
+      => new ColorNamedValueSwizzle<TIdentifier>(this, ColorSwizzle.B);
   }
+}
 
-
-  private sealed class ColorNamedValueSwizzle(
-      IColorIdentifiedValue<TIdentifier> source,
-      ColorSwizzle swizzleType)
-      : BScalarValue,
-        IColorNamedValueSwizzle<TIdentifier> {
-    public IColorIdentifiedValue<TIdentifier> Source { get; } = source;
-    public ColorSwizzle SwizzleType { get; } = swizzleType;
-  }
+public sealed class ColorNamedValueSwizzle<TIdentifier>(
+    IColorIdentifiedValue<TIdentifier> source,
+    ColorSwizzle swizzleType)
+    : BScalarValue,
+      IColorNamedValueSwizzle<TIdentifier> {
+  public IColorIdentifiedValue<TIdentifier> Source { get; } = source;
+  public ColorSwizzle SwizzleType { get; } = swizzleType;
 }
 
 public sealed class ColorValueSwizzle(IColorValue source, ColorSwizzle swizzleType)
@@ -185,6 +185,18 @@ public sealed class ColorExpression(IReadOnlyList<IColorValue> terms)
   public override IScalarValue B
     => new ScalarExpression(this.Terms.Select(factor => factor.B)
                                 .ToArray());
+
+  public override bool Equals(object? other) {
+    if (ReferenceEquals(this, other)) {
+      return true;
+    }
+
+    if (other is IColorExpression otherColorExpression) {
+      return this.Terms.SequenceEqualOrBothEmpty(otherColorExpression.Terms);
+    }
+
+    return false;
+  }
 }
 
 public sealed class ColorTerm(
@@ -231,6 +243,21 @@ public sealed class ColorTerm(
         this.NumeratorFactors.Select(factor => factor.B).ToArray(),
         this.DenominatorFactors?.Select(factor => factor.B)
             .ToArray());
+
+  public override bool Equals(object? other) {
+    if (ReferenceEquals(this, other)) {
+      return true;
+    }
+
+    if (other is IColorTerm otherColorTerm) {
+      return this.NumeratorFactors.SequenceEqualOrBothEmpty(
+                 otherColorTerm.NumeratorFactors) &&
+             this.DenominatorFactors.SequenceEqualOrBothEmpty(
+                 otherColorTerm.DenominatorFactors);
+    }
+
+    return false;
+  }
 }
 
 public static class FixedFunctionUtils {

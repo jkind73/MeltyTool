@@ -7,9 +7,9 @@ public static partial class FixedFunctionEquationsExtensions {
       this IFixedFunctionEquations<FixedFunctionSource> equations,
       (IColorValue? color, IScalarValue? alpha) output) {
     equations.CreateColorOutput(FixedFunctionSource.OUTPUT_COLOR,
-                                output.color ?? equations.ColorOps.Zero);
+                                output.color ?? ColorConstant.ZERO);
     equations.CreateScalarOutput(FixedFunctionSource.OUTPUT_ALPHA,
-                                 output.alpha ?? equations.ScalarOps.Zero);
+                                 output.alpha ?? ScalarConstant.ZERO);
   }
 
   public static IColorValue GetMergedLightDiffuseColor(

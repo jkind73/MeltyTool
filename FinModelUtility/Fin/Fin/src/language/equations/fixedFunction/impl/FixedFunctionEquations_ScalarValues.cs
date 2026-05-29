@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using fin.util.asserts;
+using fin.util.enumerables;
 
 namespace fin.language.equations.fixedFunction;
 
@@ -71,6 +72,18 @@ public partial class FixedFunctionEquations<TIdentifier> {
 public sealed class ScalarExpression(IReadOnlyList<IScalarValue> terms)
     : BScalarValue, IScalarExpression {
   public IReadOnlyList<IScalarValue> Terms { get; } = terms;
+
+  public override bool Equals(object? other) {
+    if (ReferenceEquals(this, other)) {
+      return true;
+    }
+
+    if (other is IScalarExpression otherScalarExpression) {
+      return this.Terms.SequenceEqualOrBothEmpty(otherScalarExpression.Terms);
+    }
+
+    return false;
+  }
 }
 
 public sealed class ScalarTerm(
@@ -82,6 +95,21 @@ public sealed class ScalarTerm(
 
   public IReadOnlyList<IScalarValue>? DenominatorFactors { get; }
     = denominatorFactors;
+
+  public override bool Equals(object? other) {
+    if (ReferenceEquals(this, other)) {
+      return true;
+    }
+
+    if (other is IScalarTerm otherScalarTerm) {
+      return this.NumeratorFactors.SequenceEqualOrBothEmpty(
+                 otherScalarTerm.NumeratorFactors) &&
+             this.DenominatorFactors.SequenceEqualOrBothEmpty(
+                 otherScalarTerm.DenominatorFactors);
+    }
+
+    return false;
+  }
 }
 
 public sealed class ScalarConstant(float value) : BScalarValue, IScalarConstant {
