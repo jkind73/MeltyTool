@@ -2,19 +2,20 @@
 using System.Numerics;
 
 using SharpGLTF.Materials;
-using SharpGLTF.Memory;
 using SharpGLTF.Schema2;
 
 namespace fin.model.io.exporters.gltf;
 
 public static class GltfTextureUtil {
-  public static TextureBuilder UseTexture(this ChannelBuilder channelBuilder,
-                                          IReadOnlyTexture finTexture,
-                                          MemoryImage memoryImage) {
+  public static TextureBuilder UseTexture(
+      this ChannelBuilder channelBuilder,
+      IReadOnlyTexture finTexture,
+      ImageBuilder imageBuilder) {
     var textureBuilder = channelBuilder.UseTexture();
+
     textureBuilder
-        .WithPrimaryImage(memoryImage)
-        .WithCoordinateSet(0)
+        .WithPrimaryImage(imageBuilder)
+        .WithCoordinateSet(finTexture.UvIndex)
         .WithSampler(
             ConvertWrapMode_(finTexture.WrapModeU),
             ConvertWrapMode_(finTexture.WrapModeV),
@@ -22,7 +23,6 @@ public static class GltfTextureUtil {
             ConvertMagFilter_(finTexture.MagFilter));
 
     var transform = finTexture.TextureTransform;
-
     textureBuilder.WithTransform(
         new Vector2(transform.Translation?.X ?? 0, transform.Translation?.Y ?? 0),
         new Vector2(transform.Scale?.X ?? 1, transform.Scale?.Y ?? 1),
