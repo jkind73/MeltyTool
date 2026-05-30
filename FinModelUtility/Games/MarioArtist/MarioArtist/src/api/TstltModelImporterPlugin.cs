@@ -27,7 +27,7 @@ public sealed class TstltModelImporterPlugin : IModelImporterPlugin {
 
     var tstltBundle = new TstltModelFileBundle(tstltFiles[0]);
 
-    var tstltImporter = new TstltModelLoader();
+    var tstltImporter = new TstltModelImporter();
     return tstltImporter.Import(tstltBundle);
   }
 }

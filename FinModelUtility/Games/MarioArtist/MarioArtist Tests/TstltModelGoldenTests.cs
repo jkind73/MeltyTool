@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace marioartist;
 
 public sealed class TstltModelGoldenTests
-    : BModelGoldenTests<TstltModelFileBundle, TstltModelLoader> {
+    : BModelGoldenTests<TstltModelFileBundle, TstltModelImporter> {
   [Test]
   [TestCaseSource(nameof(GetGoldenDirectories_))]
   public async Task TestExportsGoldenAsExpected(

@@ -121,7 +121,7 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new SonicAdventureModelFileImporter().Import(
                 sonicAdventureModelFileBundle),
         TstltModelFileBundle tstltModelFileBundle
-            => new TstltModelLoader().Import(tstltModelFileBundle),
+            => new TstltModelImporter().Import(tstltModelFileBundle),
         TtydModelFileBundle ttydModelFileBundle
             => new TtydModelImporter().Import(ttydModelFileBundle),
         VbModelFileBundle vbModelFileBundle

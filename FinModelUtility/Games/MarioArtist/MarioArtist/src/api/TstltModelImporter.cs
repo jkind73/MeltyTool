@@ -92,7 +92,7 @@ public enum JointIndex {
   FOOT_1 = 29,
 }
 
-public sealed class TstltModelLoader : IModelImporter<TstltModelFileBundle> {
+public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   public const int HARDCODED_MESH_SET_ID = -1;
   public const bool INCLUDE_FACE = true;
 

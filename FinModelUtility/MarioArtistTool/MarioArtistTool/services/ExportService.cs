@@ -21,7 +21,7 @@ public static class ExportService {
             Ma3d1ModelFileBundle ma3dBundle
                 => new Ma3d1ModelLoader().Import(ma3dBundle),
             TstltModelFileBundle tstltBundle
-                => new TstltModelLoader().Import(tstltBundle),
+                => new TstltModelImporter().Import(tstltBundle),
             _ => null,
         };
 

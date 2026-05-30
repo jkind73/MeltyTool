@@ -101,7 +101,7 @@ public partial class MainView : UserControl {
 
         try {
           var bundle = new TstltModelFileBundle(file);
-          var model = TstltModelLoader.Import(bundle, out var gender);
+          var model = TstltModelImporter.Import(bundle, out var gender);
 
           var config = Config.INSTANCE;
           config.MostRecentFileName = file.FullPath;

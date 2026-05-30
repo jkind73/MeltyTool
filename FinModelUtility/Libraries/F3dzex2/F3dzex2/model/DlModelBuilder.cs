@@ -200,7 +200,7 @@ public sealed class DlModelBuilder {
 
           var color = this.vertices_.OverrideVertexColor;
           texture.Name = !imageParams.IsInvalid
-              ? String.Format("0x{0:X8}", textureParams.SegmentedAddress)
+              ? $"texture{this.lazyTextureDictionary_.Count}_0x{textureParams.SegmentedAddress:X8}"
               : $"rgb({color.R}, {color.G}, {color.B})";
 
           texture.ThreePointFiltering = true;
@@ -292,7 +292,7 @@ public sealed class DlModelBuilder {
               finMaterial.Name = (texture0 == null, texture1 == null) switch {
                   (false, false) => $"[{texture0.Name}]/[{texture1.Name}]",
                   (false, true)  => $"[{texture0.Name}]",
-                  (true, true)   => $"{materialParams.GetHashCode()}",
+                  (true, true)   => $"material{this.lazyMaterialDictionary_.Count}_{materialParams.GetHashCode()}",
               };
               finMaterial.CullingMode = materialParams.CullingMode;
               finMaterial.UpdateAlphaChannel = false;
