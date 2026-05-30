@@ -328,6 +328,45 @@ public enum FixedFunctionSource {
   UNDEFINED,
 }
 
+public static class FixedFunctionSourceExtensions {
+  public static bool IsDiffuse(this FixedFunctionSource src)
+    => src is FixedFunctionSource.LIGHT_DIFFUSE_COLOR_MERGED
+              or FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_MERGED
+              or (>= FixedFunctionSource.LIGHT_DIFFUSE_COLOR_0
+                  and <= FixedFunctionSource.LIGHT_DIFFUSE_COLOR_7)
+              or (>= FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_0
+                  and <= FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_7);
+
+  public static bool IsSpecular(this FixedFunctionSource src)
+    => src is FixedFunctionSource.LIGHT_SPECULAR_COLOR_MERGED
+              or FixedFunctionSource.LIGHT_SPECULAR_ALPHA_MERGED
+              or (>= FixedFunctionSource.LIGHT_SPECULAR_COLOR_0
+                  and <= FixedFunctionSource.LIGHT_SPECULAR_COLOR_7)
+              or (>= FixedFunctionSource.LIGHT_SPECULAR_ALPHA_0
+                  and <= FixedFunctionSource.LIGHT_SPECULAR_ALPHA_7);
+
+  public static bool IsAmbient(this FixedFunctionSource src)
+    => src is FixedFunctionSource.LIGHT_AMBIENT_COLOR
+              or FixedFunctionSource.LIGHT_AMBIENT_ALPHA;
+
+  public static bool IsTexture(this FixedFunctionSource src, out int index) {
+    if (src is >= FixedFunctionSource.TEXTURE_COLOR_0
+               and <= FixedFunctionSource.TEXTURE_COLOR_7) {
+      index = src - FixedFunctionSource.TEXTURE_COLOR_0;
+      return true;
+    }
+
+    if (src is >= FixedFunctionSource.TEXTURE_ALPHA_0
+               and <= FixedFunctionSource.TEXTURE_ALPHA_7) {
+      index = src - FixedFunctionSource.TEXTURE_ALPHA_0;
+      return true;
+    }
+
+    index = default;
+    return false;
+  }
+}
+
 [GenerateReadOnly]
 public partial interface IFixedFunctionMaterial : IMaterialWithNormalTexture {
   new IFixedFunctionEquations<FixedFunctionSource> Equations { get; }
@@ -494,7 +533,10 @@ public partial interface ITextureTransform {
   ITextureTransform SetTranslation3d(in Vector3 xyz);
 
   new Vector3? Scale { get; }
-  ITextureTransform SetScale2d(float x, float y) => SetScale2d(new Vector2(x, y));
+
+  ITextureTransform SetScale2d(float x, float y)
+    => SetScale2d(new Vector2(x, y));
+
   ITextureTransform SetScale2d(in Vector2 xy);
 
   ITextureTransform SetScale3d(float x, float y, float z)

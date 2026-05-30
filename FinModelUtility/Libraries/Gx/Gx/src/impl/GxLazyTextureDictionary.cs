@@ -47,7 +47,7 @@ public class GxLazyTextureDictionary<TState, TDiscriminator>
       var texture =
           model.MaterialManager.CreateTexture(gxTexture.MipmapImages);
 
-      texture.Name = gxTexture.Name ?? $"texture{dict.Count - 1}";
+      texture.Name = gxTexture.Name;
       texture.WrapModeU = gxTexture.WrapModeS.ToFinWrapMode();
       texture.WrapModeV = gxTexture.WrapModeT.ToFinWrapMode();
 

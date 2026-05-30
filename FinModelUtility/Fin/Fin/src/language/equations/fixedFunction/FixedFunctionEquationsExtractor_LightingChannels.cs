@@ -77,29 +77,46 @@ public static partial class FixedFunctionsEquationsExtractor {
 
   public static (bool, IColorValue) ExtractLightingChannelImpl_(
       this IColorValue src,
-      LightingChannel channel)
-    => src switch {
-        IColorExpression colorExpression
-            => colorExpression.ExtractLightingChannelImplExpression_(channel),
-        IColorTerm colorTerm
-            => colorTerm.ExtractLightingChannelImplTerm_(channel),
-        IColorFactor colorFactor
-            => colorFactor.ExtractLightingChannelImplFactor_(channel),
-        _ => throw new ArgumentOutOfRangeException(nameof(src))
-    };
+      LightingChannel channel) {
+    switch (src) {
+      case IColorExpression colorExpression:
+        return colorExpression.ExtractLightingChannelImplExpression_(channel);
+      case IColorTerm colorTerm:
+        return colorTerm.ExtractLightingChannelImplTerm_(channel);
+      case IColorFactor colorFactor:
+        return colorFactor.ExtractLightingChannelImplFactor_(channel);
+      case IColorValueTernaryOperator colorValueTernary: {
+        var (trueFoundChannel, trueValue)
+            = colorValueTernary.TrueValue.ExtractLightingChannelImpl_(channel);
+        var (falseFoundChannel, falseValue)
+            = colorValueTernary.TrueValue.ExtractLightingChannelImpl_(channel);
+
+        return (trueFoundChannel || falseFoundChannel,
+                new ColorValueTernaryOperator {
+                    ComparisonType = colorValueTernary.ComparisonType,
+                    Lhs = colorValueTernary.Lhs,
+                    Rhs = colorValueTernary.Rhs,
+                    TrueValue = trueValue,
+                    FalseValue = falseValue,
+                });
+      }
+      default: throw new ArgumentOutOfRangeException(nameof(src));
+    }
+  }
 
   public static (bool, IScalarValue) ExtractLightingChannelImpl_(
       this IScalarValue src,
-      LightingChannel channel)
-    => src switch {
-        IScalarExpression scalarExpression
-            => scalarExpression.ExtractLightingChannelImplExpression_(channel),
-        IScalarTerm scalarTerm
-            => scalarTerm.ExtractLightingChannelImplTerm_(channel),
-        IScalarFactor scalarFactor
-            => scalarFactor.ExtractLightingChannelImplFactor_(channel),
-        _ => throw new ArgumentOutOfRangeException(nameof(src))
-    };
+      LightingChannel channel) {
+    switch (src) {
+      case IScalarExpression scalarExpression:
+        return scalarExpression.ExtractLightingChannelImplExpression_(channel);
+      case IScalarTerm scalarTerm:
+        return scalarTerm.ExtractLightingChannelImplTerm_(channel);
+      case IScalarFactor scalarFactor:
+        return scalarFactor.ExtractLightingChannelImplFactor_(channel);
+      default: throw new ArgumentOutOfRangeException(nameof(src));
+    }
+  }
 
   private static (bool, IColorValue) ExtractLightingChannelImplExpression_(
       this IColorExpression src,
@@ -111,7 +128,8 @@ public static partial class FixedFunctionsEquationsExtractor {
       var (currentFoundChannel, value)
           = oldTerm.ExtractLightingChannelImpl_(channel);
       foundChannel |= currentFoundChannel;
-      if (!value.IsZero()) {
+      if ((currentFoundChannel || channel is LightingChannel.OTHER) &&
+          !value.IsZero()) {
         newTerms.Add(value);
       }
     }
@@ -137,7 +155,8 @@ public static partial class FixedFunctionsEquationsExtractor {
       var (currentFoundChannel, value)
           = oldTerm.ExtractLightingChannelImpl_(channel);
       foundChannel |= currentFoundChannel;
-      if (!value.IsZero()) {
+      if ((currentFoundChannel || channel is LightingChannel.OTHER) &&
+          !value.IsZero()) {
         newTerms.Add(value);
       }
     }
@@ -186,11 +205,13 @@ public static partial class FixedFunctionsEquationsExtractor {
       }
     }
 
-    if (newNumeratorFactors.Count == 0 && (src.DenominatorFactors?.Count ?? 0) == 0) {
+    if (newNumeratorFactors.Count == 0 &&
+        (src.DenominatorFactors?.Count ?? 0) == 0) {
       return (foundChannel, ColorConstant.ONE);
     }
 
-    if (newNumeratorFactors.Count == 1 && (src.DenominatorFactors?.Count ?? 0) == 0) {
+    if (newNumeratorFactors.Count == 1 &&
+        (src.DenominatorFactors?.Count ?? 0) == 0) {
       return (foundChannel, newNumeratorFactors[0]);
     }
 
@@ -231,11 +252,13 @@ public static partial class FixedFunctionsEquationsExtractor {
       }
     }
 
-    if (newNumeratorFactors.Count == 0 && (src.DenominatorFactors?.Count ?? 0) == 0) {
+    if (newNumeratorFactors.Count == 0 &&
+        (src.DenominatorFactors?.Count ?? 0) == 0) {
       return (foundChannel, ScalarConstant.ONE);
     }
 
-    if (newNumeratorFactors.Count == 1 && (src.DenominatorFactors?.Count ?? 0) == 0) {
+    if (newNumeratorFactors.Count == 1 &&
+        (src.DenominatorFactors?.Count ?? 0) == 0) {
       return (foundChannel, newNumeratorFactors[0]);
     }
 

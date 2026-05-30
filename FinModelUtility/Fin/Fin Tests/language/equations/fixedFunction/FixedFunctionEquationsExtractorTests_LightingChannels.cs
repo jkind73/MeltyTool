@@ -118,7 +118,7 @@ public sealed partial class FixedFunctionEquationsExtractorTests {
                     otherColorAlpha);
   }
 
-    [Test]
+  [Test]
   public void TestAll() {
     var equations = new FixedFunctionEquations<FixedFunctionSource>();
 
