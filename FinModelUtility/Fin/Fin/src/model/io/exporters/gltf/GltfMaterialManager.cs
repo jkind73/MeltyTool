@@ -149,12 +149,13 @@ public static class GltfMaterialBuilder {
             case IFixedFunctionMaterial fixedFunctionMaterial: {
               var equations = fixedFunctionMaterial.Equations;
 
-              FixedFunctionsEquationsExtractor.ExtractLightingChannels(
-                  equations,
-                  out var diffuseColorAlpha,
-                  out var specularColorAlpha,
-                  out var ambientColorAlpha,
-                  out var otherColorAlpha);
+              new FixedFunctionsEquationsLightingExtractor()
+                  .ExtractLightingChannels(
+                      equations,
+                      out var diffuseColorAlpha,
+                      out var specularColorAlpha,
+                      out var ambientColorAlpha,
+                      out var otherColorAlpha);
 
               var (diffuseColor, diffuseAlpha) = diffuseColorAlpha;
               var (specularColor, specularAlpha) = specularColorAlpha;
@@ -179,7 +180,7 @@ public static class GltfMaterialBuilder {
                                   gltfImageBuilderByFinTexture[compiledTexture]);
                 } else {
                   var (primaryTexture, primaryColor)
-                      = FixedFunctionsEquationsExtractor
+                      = FixedFunctionsEquationsUtil
                           .ExtractPrimaryTextureAndColor(
                               fixedFunctionMaterial,
                               (diffuseColor.Add(otherColor),
@@ -211,7 +212,7 @@ public static class GltfMaterialBuilder {
                                   gltfImageBuilderByFinTexture[compiledTexture]);
                 } else {
                   var (diffusePrimaryTexture, diffusePrimaryColor)
-                      = FixedFunctionsEquationsExtractor
+                      = FixedFunctionsEquationsUtil
                           .ExtractPrimaryTextureAndColor(
                               fixedFunctionMaterial,
                               (diffuseColor, otherAlpha));
@@ -236,7 +237,7 @@ public static class GltfMaterialBuilder {
                 }
 
                 var (specularPrimaryTexture, specularPrimaryColor)
-                    = FixedFunctionsEquationsExtractor
+                    = FixedFunctionsEquationsUtil
                         .ExtractPrimaryTextureAndColor(
                             fixedFunctionMaterial,
                             specularColorAlpha);

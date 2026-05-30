@@ -6,13 +6,13 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace fin.language.equations.fixedFunction;
 
-public sealed partial class FixedFunctionEquationsExtractorTests {
+public sealed class FixedFunctionEquationsExtractorTests {
   [Test]
   public void TestZero() {
     var equations = new FixedFunctionEquations<FixedFunctionSource>();
     equations.SetOutputColorAlpha((ColorConstant.ZERO, ScalarConstant.ZERO));
 
-    FixedFunctionsEquationsExtractor.ExtractLightingChannels(
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
         equations,
         out var diffuseColorAlpha,
         out var specularColorAlpha,
@@ -34,7 +34,7 @@ public sealed partial class FixedFunctionEquationsExtractorTests {
     var equations = new FixedFunctionEquations<FixedFunctionSource>();
     equations.SetOutputColorAlpha((ColorConstant.ONE, ScalarConstant.ONE));
 
-    FixedFunctionsEquationsExtractor.ExtractLightingChannels(
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
         equations,
         out var diffuseColorAlpha,
         out var specularColorAlpha,
@@ -101,7 +101,7 @@ public sealed partial class FixedFunctionEquationsExtractorTests {
 
     equations.SetOutputColorAlpha((outputColor, outputAlpha));
 
-    FixedFunctionsEquationsExtractor.ExtractLightingChannels(
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
         equations,
         out var diffuseColorAlpha,
         out var specularColorAlpha,
@@ -175,7 +175,7 @@ public sealed partial class FixedFunctionEquationsExtractorTests {
 
     equations.SetOutputColorAlpha((outputColor, outputAlpha));
 
-    FixedFunctionsEquationsExtractor.ExtractLightingChannels(
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
         equations,
         out var diffuseColorAlpha,
         out var specularColorAlpha,
@@ -190,5 +190,100 @@ public sealed partial class FixedFunctionEquationsExtractorTests {
                     ambientColorAlpha);
     Assert.AreEqual((otherColor, otherAlpha),
                     otherColorAlpha);
+  }
+
+  [Test]
+  public void TestDistributed() {
+    var equations = new FixedFunctionEquations<FixedFunctionSource>();
+
+    var texColor0
+        = equations.CreateOrGetColorInput(FixedFunctionSource.TEXTURE_COLOR_0);
+    var texAlpha0
+        = equations.CreateOrGetScalarInput(FixedFunctionSource.TEXTURE_ALPHA_0);
+
+    var outputColor = texColor0
+        .Multiply(
+            equations
+                .CreateOrGetColorInput(
+                    FixedFunctionSource.LIGHT_DIFFUSE_COLOR_MERGED)
+                .Add(equations.CreateOrGetColorInput(
+                         FixedFunctionSource.LIGHT_SPECULAR_COLOR_MERGED))
+                .Add(equations.CreateOrGetColorInput(
+                         FixedFunctionSource.LIGHT_AMBIENT_COLOR))
+                .Add(ScalarConstant.ONE));
+    var outputAlpha = texAlpha0
+        .Multiply(
+            equations
+                .CreateOrGetScalarInput(
+                    FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_MERGED)
+                .Add(equations.CreateOrGetScalarInput(
+                         FixedFunctionSource.LIGHT_SPECULAR_ALPHA_MERGED))
+                .Add(equations.CreateOrGetScalarInput(
+                         FixedFunctionSource.LIGHT_AMBIENT_ALPHA))
+                .Add(ScalarConstant.ONE));
+
+
+    equations.SetOutputColorAlpha((outputColor, outputAlpha));
+
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
+        equations,
+        out var diffuseColorAlpha,
+        out var specularColorAlpha,
+        out var ambientColorAlpha,
+        out var otherColorAlpha);
+
+    Assert.AreEqual((texColor0, texAlpha0), diffuseColorAlpha);
+    Assert.AreEqual((texColor0, texAlpha0), specularColorAlpha);
+    Assert.AreEqual((texColor0, texAlpha0), ambientColorAlpha);
+    Assert.AreEqual((texColor0, texAlpha0), otherColorAlpha);
+  }
+
+  [Test]
+  public void TestDistributedExpressions() {
+    var equations = new FixedFunctionEquations<FixedFunctionSource>();
+
+    var texColor0And1
+        = equations.CreateOrGetColorInput(FixedFunctionSource.TEXTURE_COLOR_0)
+                   .Add(equations.CreateOrGetColorInput(
+                            FixedFunctionSource.TEXTURE_COLOR_1));
+    var texAlpha0And1
+        = equations.CreateOrGetScalarInput(FixedFunctionSource.TEXTURE_ALPHA_0)
+                   .Add(equations.CreateOrGetScalarInput(
+                            FixedFunctionSource.TEXTURE_ALPHA_1));
+
+    var outputColor = texColor0And1
+        .Multiply(
+            equations
+                .CreateOrGetColorInput(
+                    FixedFunctionSource.LIGHT_DIFFUSE_COLOR_MERGED)
+                .Add(equations.CreateOrGetColorInput(
+                         FixedFunctionSource.LIGHT_SPECULAR_COLOR_MERGED))
+                .Add(equations.CreateOrGetColorInput(
+                         FixedFunctionSource.LIGHT_AMBIENT_COLOR))
+                .Add(ScalarConstant.ONE));
+    var outputAlpha = texAlpha0And1
+        .Multiply(
+            equations
+                .CreateOrGetScalarInput(
+                    FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_MERGED)
+                .Add(equations.CreateOrGetScalarInput(
+                         FixedFunctionSource.LIGHT_SPECULAR_ALPHA_MERGED))
+                .Add(equations.CreateOrGetScalarInput(
+                         FixedFunctionSource.LIGHT_AMBIENT_ALPHA))
+                .Add(ScalarConstant.ONE));
+
+    equations.SetOutputColorAlpha((outputColor, outputAlpha));
+
+    new FixedFunctionsEquationsLightingExtractor().ExtractLightingChannels(
+        equations,
+        out var diffuseColorAlpha,
+        out var specularColorAlpha,
+        out var ambientColorAlpha,
+        out var otherColorAlpha);
+
+    Assert.AreEqual((texColor0And1, texAlpha0And1), diffuseColorAlpha);
+    Assert.AreEqual((texColor0And1, texAlpha0And1), specularColorAlpha);
+    Assert.AreEqual((texColor0And1, texAlpha0And1), ambientColorAlpha);
+    Assert.AreEqual((texColor0And1, texAlpha0And1), otherColorAlpha);
   }
 }

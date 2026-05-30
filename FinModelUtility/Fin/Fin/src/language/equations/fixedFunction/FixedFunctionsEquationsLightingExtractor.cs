@@ -13,8 +13,11 @@ public enum LightingChannel {
   OTHER,
 }
 
-public static partial class FixedFunctionsEquationsExtractor {
-  public static void ExtractLightingChannels(
+public class FixedFunctionsEquationsLightingExtractor {
+  private readonly IDictionary<IValue, bool> dependsOnLightingChannel_
+      = new Dictionary<IValue, bool>();
+
+  public void ExtractLightingChannels(
       IFixedFunctionEquations<FixedFunctionSource> equations,
       out (IColorValue, IScalarValue) diffuseColorAlpha,
       out (IColorValue, IScalarValue) specularColorAlpha,
@@ -24,23 +27,23 @@ public static partial class FixedFunctionsEquationsExtractor {
     var outputAlpha = equations.ScalarOutputs[FixedFunctionSource.OUTPUT_ALPHA];
 
     diffuseColorAlpha = (
-        outputColor.ExtractLightingChannel(LightingChannel.DIFFUSE),
-        outputAlpha.ExtractLightingChannel(LightingChannel.DIFFUSE));
+        this.ExtractLightingChannel(outputColor, LightingChannel.DIFFUSE),
+        this.ExtractLightingChannel_(outputAlpha, LightingChannel.DIFFUSE));
     specularColorAlpha = (
-        outputColor.ExtractLightingChannel(LightingChannel.SPECULAR),
-        outputAlpha.ExtractLightingChannel(LightingChannel.SPECULAR));
+        this.ExtractLightingChannel(outputColor, LightingChannel.SPECULAR),
+        this.ExtractLightingChannel_(outputAlpha, LightingChannel.SPECULAR));
     ambientColorAlpha = (
-        outputColor.ExtractLightingChannel(LightingChannel.AMBIENT),
-        outputAlpha.ExtractLightingChannel(LightingChannel.AMBIENT));
+        this.ExtractLightingChannel(outputColor, LightingChannel.AMBIENT),
+        this.ExtractLightingChannel_(outputAlpha, LightingChannel.AMBIENT));
     otherColorAlpha = (
-        outputColor.ExtractLightingChannel(LightingChannel.OTHER),
-        outputAlpha.ExtractLightingChannel(LightingChannel.OTHER));
+        this.ExtractLightingChannel(outputColor, LightingChannel.OTHER),
+        this.ExtractLightingChannel_(outputAlpha, LightingChannel.OTHER));
   }
 
-  public static IColorValue ExtractLightingChannel(
-      this IColorValue src,
+  public IColorValue ExtractLightingChannel(
+      IColorValue src,
       LightingChannel channel) {
-    var (foundChannel, value) = src.ExtractLightingChannelImpl_(channel);
+    var (foundChannel, value) = this.ExtractLightingChannelImpl_(src, channel, false);
     if (foundChannel || channel is LightingChannel.OTHER) {
       if (value.IsZero()) {
         return ColorConstant.ZERO;
@@ -56,10 +59,10 @@ public static partial class FixedFunctionsEquationsExtractor {
     return ColorConstant.ZERO;
   }
 
-  public static IScalarValue ExtractLightingChannel(
-      this IScalarValue src,
+  public IScalarValue ExtractLightingChannel_(
+      IScalarValue src,
       LightingChannel channel) {
-    var (foundChannel, value) = src.ExtractLightingChannelImpl_(channel);
+    var (foundChannel, value) = this.ExtractLightingChannelImpl_(src, channel, false);
     if (foundChannel || channel is LightingChannel.OTHER) {
       if (value.IsZero()) {
         return ScalarConstant.ZERO;
@@ -75,21 +78,22 @@ public static partial class FixedFunctionsEquationsExtractor {
     return ScalarConstant.ZERO;
   }
 
-  public static (bool, IColorValue) ExtractLightingChannelImpl_(
-      this IColorValue src,
-      LightingChannel channel) {
+  public (bool, IColorValue) ExtractLightingChannelImpl_(
+      IColorValue src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     switch (src) {
       case IColorExpression colorExpression:
-        return colorExpression.ExtractLightingChannelImplExpression_(channel);
+        return this.ExtractLightingChannelImplExpression_(colorExpression, channel, foundChannelInParentTerm);
       case IColorTerm colorTerm:
-        return colorTerm.ExtractLightingChannelImplTerm_(channel);
+        return this.ExtractLightingChannelImplTerm_(colorTerm, channel, foundChannelInParentTerm);
       case IColorFactor colorFactor:
-        return colorFactor.ExtractLightingChannelImplFactor_(channel);
+        return this.ExtractLightingChannelImplFactor_(colorFactor, channel, foundChannelInParentTerm);
       case IColorValueTernaryOperator colorValueTernary: {
         var (trueFoundChannel, trueValue)
-            = colorValueTernary.TrueValue.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorValueTernary.TrueValue, channel, foundChannelInParentTerm);
         var (falseFoundChannel, falseValue)
-            = colorValueTernary.TrueValue.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorValueTernary.FalseValue, channel, foundChannelInParentTerm);
 
         return (trueFoundChannel || falseFoundChannel,
                 new ColorValueTernaryOperator {
@@ -104,31 +108,33 @@ public static partial class FixedFunctionsEquationsExtractor {
     }
   }
 
-  public static (bool, IScalarValue) ExtractLightingChannelImpl_(
-      this IScalarValue src,
-      LightingChannel channel) {
+  public (bool, IScalarValue) ExtractLightingChannelImpl_(
+      IScalarValue src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     switch (src) {
       case IScalarExpression scalarExpression:
-        return scalarExpression.ExtractLightingChannelImplExpression_(channel);
+        return this.ExtractLightingChannelImplExpression_(scalarExpression, channel, foundChannelInParentTerm);
       case IScalarTerm scalarTerm:
-        return scalarTerm.ExtractLightingChannelImplTerm_(channel);
+        return this.ExtractLightingChannelImplTerm_(scalarTerm, channel, foundChannelInParentTerm);
       case IScalarFactor scalarFactor:
-        return scalarFactor.ExtractLightingChannelImplFactor_(channel);
+        return this.ExtractLightingChannelImplFactor_(scalarFactor, channel, foundChannelInParentTerm);
       default: throw new ArgumentOutOfRangeException(nameof(src));
     }
   }
 
-  private static (bool, IColorValue) ExtractLightingChannelImplExpression_(
-      this IColorExpression src,
-      LightingChannel channel) {
+  private (bool, IColorValue) ExtractLightingChannelImplExpression_(
+      IColorExpression src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     var foundChannel = false;
     var newTerms = new List<IColorValue>();
 
     foreach (var oldTerm in src.Terms) {
       var (currentFoundChannel, value)
-          = oldTerm.ExtractLightingChannelImpl_(channel);
+          = this.ExtractLightingChannelImpl_(oldTerm, channel, foundChannelInParentTerm);
       foundChannel |= currentFoundChannel;
-      if ((currentFoundChannel || channel is LightingChannel.OTHER) &&
+      if ((foundChannelInParentTerm || currentFoundChannel || channel is LightingChannel.OTHER) &&
           !value.IsZero()) {
         newTerms.Add(value);
       }
@@ -145,17 +151,18 @@ public static partial class FixedFunctionsEquationsExtractor {
     return (foundChannel, new ColorExpression(newTerms));
   }
 
-  private static (bool, IScalarValue) ExtractLightingChannelImplExpression_(
-      this IScalarExpression src,
-      LightingChannel channel) {
+  private (bool, IScalarValue) ExtractLightingChannelImplExpression_(
+      IScalarExpression src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     var foundChannel = false;
     var newTerms = new List<IScalarValue>();
 
     foreach (var oldTerm in src.Terms) {
       var (currentFoundChannel, value)
-          = oldTerm.ExtractLightingChannelImpl_(channel);
+          = this.ExtractLightingChannelImpl_(oldTerm, channel, foundChannelInParentTerm);
       foundChannel |= currentFoundChannel;
-      if ((currentFoundChannel || channel is LightingChannel.OTHER) &&
+      if ((foundChannelInParentTerm || currentFoundChannel || channel is LightingChannel.OTHER) &&
           !value.IsZero()) {
         newTerms.Add(value);
       }
@@ -172,17 +179,20 @@ public static partial class FixedFunctionsEquationsExtractor {
     return (foundChannel, new ScalarExpression(newTerms));
   }
 
-  private static (bool, IColorValue) ExtractLightingChannelImplTerm_(
-      this IColorTerm src,
-      LightingChannel channel) {
+  private (bool, IColorValue) ExtractLightingChannelImplTerm_(
+      IColorTerm src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     var foundChannel = false;
     var newNumeratorFactors = new List<IColorValue>();
     List<IColorValue>? newDenominatorFactors = null;
 
-    foreach (var oldNumeratorFactor in src.NumeratorFactors) {
+    foreach (var oldNumeratorFactor in FixedFunctionsEquationsUtil
+                 .OrderFactorsWithChannelsFirst(this.dependsOnLightingChannel_,
+                                                src.NumeratorFactors)) {
       var (currentFoundChannel, value)
-          = oldNumeratorFactor.ExtractLightingChannelImpl_(channel);
-      foundChannel |= currentFoundChannel;
+          = this.ExtractLightingChannelImpl_(oldNumeratorFactor, channel, foundChannelInParentTerm);
+      foundChannelInParentTerm |= foundChannel |= currentFoundChannel;
 
       if (value.IsZero()) {
         return (false, ColorConstant.ZERO);
@@ -195,10 +205,12 @@ public static partial class FixedFunctionsEquationsExtractor {
 
     if (src.DenominatorFactors != null) {
       newDenominatorFactors = new List<IColorValue>();
-      foreach (var oldDenominatorFactor in src.DenominatorFactors) {
+      foreach (var oldDenominatorFactor in FixedFunctionsEquationsUtil
+                   .OrderFactorsWithChannelsFirst(this.dependsOnLightingChannel_,
+                                                  src.DenominatorFactors)) {
         var (currentFoundChannel, value)
-            = oldDenominatorFactor.ExtractLightingChannelImpl_(channel);
-        foundChannel |= currentFoundChannel;
+            = this.ExtractLightingChannelImpl_(oldDenominatorFactor, channel, foundChannelInParentTerm);
+        foundChannelInParentTerm |= foundChannel |= currentFoundChannel;
         if (!value.IsOne()) {
           newDenominatorFactors.Add(value);
         }
@@ -219,17 +231,20 @@ public static partial class FixedFunctionsEquationsExtractor {
             new ColorTerm(newNumeratorFactors, newDenominatorFactors));
   }
 
-  private static (bool, IScalarValue) ExtractLightingChannelImplTerm_(
-      this IScalarTerm src,
-      LightingChannel channel) {
+  private (bool, IScalarValue) ExtractLightingChannelImplTerm_(
+      IScalarTerm src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     var foundChannel = false;
     var newNumeratorFactors = new List<IScalarValue>();
     List<IScalarValue>? newDenominatorFactors = null;
 
-    foreach (var oldNumeratorFactor in src.NumeratorFactors) {
+    foreach (var oldNumeratorFactor in FixedFunctionsEquationsUtil
+                 .OrderFactorsWithChannelsFirst(this.dependsOnLightingChannel_,
+                                                src.NumeratorFactors)) {
       var (currentFoundChannel, value)
-          = oldNumeratorFactor.ExtractLightingChannelImpl_(channel);
-      foundChannel |= currentFoundChannel;
+          = this.ExtractLightingChannelImpl_(oldNumeratorFactor, channel, foundChannelInParentTerm);
+      foundChannelInParentTerm |= foundChannel |= currentFoundChannel;
 
       if (value.IsZero()) {
         return (false, ScalarConstant.ZERO);
@@ -242,10 +257,12 @@ public static partial class FixedFunctionsEquationsExtractor {
 
     if (src.DenominatorFactors != null) {
       newDenominatorFactors = new List<IScalarValue>();
-      foreach (var oldDenominatorFactor in src.DenominatorFactors) {
+      foreach (var oldDenominatorFactor in FixedFunctionsEquationsUtil
+                   .OrderFactorsWithChannelsFirst(this.dependsOnLightingChannel_,
+                                                  src.DenominatorFactors)) {
         var (currentFoundChannel, value)
-            = oldDenominatorFactor.ExtractLightingChannelImpl_(channel);
-        foundChannel |= currentFoundChannel;
+            = this.ExtractLightingChannelImpl_(oldDenominatorFactor, channel, foundChannelInParentTerm);
+        foundChannelInParentTerm |= foundChannel |= currentFoundChannel;
         if (!value.IsOne()) {
           newDenominatorFactors.Add(value);
         }
@@ -266,31 +283,32 @@ public static partial class FixedFunctionsEquationsExtractor {
             new ScalarTerm(newNumeratorFactors, newDenominatorFactors));
   }
 
-  public static (bool, IColorValue) ExtractLightingChannelImplFactor_(
-      this IColorFactor src,
-      LightingChannel channel) {
+  public (bool, IColorValue) ExtractLightingChannelImplFactor_(
+      IColorFactor src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     switch (src) {
       case ColorWrapper colorWrapper: {
         if (colorWrapper.Intensity != null) {
           var (foundChannel, value)
-              = colorWrapper.Intensity.ExtractLightingChannelImpl_(channel);
+              = this.ExtractLightingChannelImpl_(colorWrapper.Intensity, channel, foundChannelInParentTerm);
           return (foundChannel, new ColorWrapper(value));
         }
 
         var (foundChannelR, valueR)
-            = colorWrapper.R.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorWrapper.R, channel, foundChannelInParentTerm);
         var (foundChannelG, valueG)
-            = colorWrapper.G.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorWrapper.G, channel, foundChannelInParentTerm);
         var (foundChannelB, valueB)
-            = colorWrapper.B.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorWrapper.B, channel, foundChannelInParentTerm);
         return (foundChannelR || foundChannelG || foundChannelB,
                 new ColorWrapper(valueR, valueG, valueB));
       }
       case IColorInput<FixedFunctionSource> colorInput: {
-        return colorInput.ExtractLightingChannelImplInput_(channel);
+        return this.ExtractLightingChannelImplInput_(colorInput, channel);
       }
       case IColorOutput<FixedFunctionSource> colorOutput: {
-        return colorOutput.ColorValue.ExtractLightingChannelImpl_(channel);
+        return this.ExtractLightingChannelImpl_(colorOutput.ColorValue, channel, foundChannelInParentTerm);
       }
       default: {
         return (false, src);
@@ -298,15 +316,15 @@ public static partial class FixedFunctionsEquationsExtractor {
     }
   }
 
-  public static (bool, IScalarValue) ExtractLightingChannelImplFactor_(
-      this IScalarFactor src,
-      LightingChannel channel) {
+  public (bool, IScalarValue) ExtractLightingChannelImplFactor_(
+      IScalarFactor src,
+      LightingChannel channel,
+      bool foundChannelInParentTerm) {
     switch (src) {
       case IColorNamedValueSwizzle<FixedFunctionSource> colorNamedValueSwizzle
           : {
         var (foundChannel, value)
-            = colorNamedValueSwizzle.Source
-                                    .ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorNamedValueSwizzle.Source, channel, foundChannelInParentTerm);
 
         if (value is IColorIdentifiedValue<FixedFunctionSource>
             identifiedValue) {
@@ -320,15 +338,15 @@ public static partial class FixedFunctionsEquationsExtractor {
       }
       case IColorValueSwizzle colorValueSwizzle: {
         var (foundChannel, value)
-            = colorValueSwizzle.Source.ExtractLightingChannelImpl_(channel);
+            = this.ExtractLightingChannelImpl_(colorValueSwizzle.Source, channel, foundChannelInParentTerm);
         return (foundChannel,
                 new ColorValueSwizzle(value, colorValueSwizzle.SwizzleType));
       }
       case IScalarInput<FixedFunctionSource> scalarInput: {
-        return scalarInput.ExtractLightingChannelImplInput_(channel);
+        return this.ExtractLightingChannelImplInput_(scalarInput, channel);
       }
       case IScalarOutput scalarOutput: {
-        return scalarOutput.ScalarValue.ExtractLightingChannelImpl_(channel);
+        return this.ExtractLightingChannelImpl_(scalarOutput.ScalarValue, channel, foundChannelInParentTerm);
       }
       default: {
         return (false, src);
@@ -336,8 +354,8 @@ public static partial class FixedFunctionsEquationsExtractor {
     }
   }
 
-  public static (bool, IColorFactor) ExtractLightingChannelImplInput_(
-      this IColorInput<FixedFunctionSource> src,
+  public (bool, IColorFactor) ExtractLightingChannelImplInput_(
+      IColorInput<FixedFunctionSource> src,
       LightingChannel channel) {
     var identifier = src.Identifier;
     if (identifier.IsDiffuse()) {
@@ -367,8 +385,8 @@ public static partial class FixedFunctionsEquationsExtractor {
     return (false, src);
   }
 
-  public static (bool, IScalarFactor) ExtractLightingChannelImplInput_(
-      this IScalarInput<FixedFunctionSource> src,
+  public (bool, IScalarFactor) ExtractLightingChannelImplInput_(
+      IScalarInput<FixedFunctionSource> src,
       LightingChannel channel) {
     var identifier = src.Identifier;
     if (identifier.IsDiffuse()) {

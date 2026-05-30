@@ -11,7 +11,7 @@ using fin.util.enumerables;
 
 namespace fin.language.equations.fixedFunction;
 
-public static partial class FixedFunctionsEquationsExtractor {
+public static partial class FixedFunctionsEquationsUtil {
   public static (IReadOnlyTexture? primaryTexture, Vector4 primaryColor)
       ExtractPrimaryTextureAndColor(
           IFixedFunctionMaterial material,

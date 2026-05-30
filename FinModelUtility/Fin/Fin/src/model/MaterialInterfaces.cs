@@ -329,6 +329,9 @@ public enum FixedFunctionSource {
 }
 
 public static class FixedFunctionSourceExtensions {
+  public static bool IsLighting(this FixedFunctionSource src)
+    => src.IsDiffuse() || src.IsSpecular() || src.IsAmbient();
+
   public static bool IsDiffuse(this FixedFunctionSource src)
     => src is FixedFunctionSource.LIGHT_DIFFUSE_COLOR_MERGED
               or FixedFunctionSource.LIGHT_DIFFUSE_ALPHA_MERGED
