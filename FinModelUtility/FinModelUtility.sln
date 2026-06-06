@@ -340,6 +340,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheLabyrinthPlusEdition", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalAssetTool.Ui.OpenTk", "UniversalAssetTool\UniversalAssetTool.Ui.OpenTk\UniversalAssetTool.Ui.OpenTk.csproj", "{54A6E64C-0ACD-4244-B021-970D80FFC6E4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BeetleAdventureRacing", "BeetleAdventureRacing", "{423BA571-55D4-4E3E-B917-C49DBEFE9A9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeetleAdventureRacing", "Games\BeetleAdventureRacing\BeetleAdventureRacing\BeetleAdventureRacing.csproj", "{25BE76A1-0E98-4CAB-97A6-42ED87E96774}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -1164,6 +1168,14 @@ Global
 		{54A6E64C-0ACD-4244-B021-970D80FFC6E4}.Release|x64.Build.0 = Release|x64
 		{54A6E64C-0ACD-4244-B021-970D80FFC6E4}.Release|x86.ActiveCfg = Release|x86
 		{54A6E64C-0ACD-4244-B021-970D80FFC6E4}.Release|x86.Build.0 = Release|x86
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Debug|x64.ActiveCfg = Debug|x64
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Debug|x64.Build.0 = Debug|x64
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Debug|x86.ActiveCfg = Debug|x86
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Debug|x86.Build.0 = Debug|x86
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Release|x64.ActiveCfg = Release|x64
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Release|x64.Build.0 = Release|x64
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Release|x86.ActiveCfg = Release|x86
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -1315,6 +1327,8 @@ Global
 		{6DAD3710-113C-4532-9801-F8F3E1518560} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
 		{F8CB0937-A92B-4603-A46D-BD57A133D849} = {6DAD3710-113C-4532-9801-F8F3E1518560}
 		{54A6E64C-0ACD-4244-B021-970D80FFC6E4} = {2490FB17-BB03-4B06-95A2-56BD49921D53}
+		{423BA571-55D4-4E3E-B917-C49DBEFE9A9C} = {B0CB1025-E553-478F-AB51-B6D44312A46B}
+		{25BE76A1-0E98-4CAB-97A6-42ED87E96774} = {423BA571-55D4-4E3E-B917-C49DBEFE9A9C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4CFECBD7-FE88-4CC9-8E1B-6F7805F4F45A}
