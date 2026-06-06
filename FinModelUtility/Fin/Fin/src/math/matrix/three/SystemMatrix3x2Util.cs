@@ -3,7 +3,9 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 
 using fin.math.floats;
+using fin.math.matrix.four;
 using fin.math.rotations;
+using fin.util.asserts;
 using fin.util.hash;
 
 
@@ -163,6 +165,14 @@ public static class SystemMatrix3x2Util {
                    impl.M12 * impl.M22,
                    impl.M11 * impl.M11 +
                    impl.M12 * impl.M12);
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static Matrix3x2 AssertInvert(this in Matrix3x2 matrix) {
+    Asserts.True(Matrix3x2.Invert(matrix, out var inverted) ||
+                 !FinMatrix4x4.STRICT_INVERTING,
+                 "Failed to invert matrix!");
+    return inverted;
+  }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static void Decompose(

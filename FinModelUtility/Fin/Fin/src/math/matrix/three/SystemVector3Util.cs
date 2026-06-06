@@ -1,4 +1,8 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 using fin.math.floats;
@@ -39,5 +43,24 @@ public static class SystemVector3Util {
                                 out var y,
                                 out var z);
     return new Vector3(x, y, z);
+  }
+
+  public static Vector3 Average<T>(this IEnumerable<T> src,
+                                   Func<T, Vector3> selector)
+    => src.Select(selector).Average();
+
+  public static Vector3 Average(this IEnumerable<Vector3> src) {
+    var count = 0;
+    Vector3 total = default;
+    foreach (var vec3 in src) {
+      count++;
+      total += vec3;
+    }
+
+    if (count != 0) {
+      total /= count;
+    }
+
+    return total;
   }
 }
