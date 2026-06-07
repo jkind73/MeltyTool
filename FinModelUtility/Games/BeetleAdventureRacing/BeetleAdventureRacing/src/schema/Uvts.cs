@@ -10,7 +10,7 @@ public enum UvtsAnimationMode : byte {
 }
 
 /// <summary>
-///   Texture Sequence
+///   "Texture Sequence"
 /// 
 ///   Shamelessly stolen from:
 ///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/ParsedFiles/UVTS.ts
@@ -30,7 +30,8 @@ public sealed partial class Uvts : IBinaryConvertible {
   public float UnitsPerSecond { get; set; }
 }
 
-public sealed partial class UvtsFrame : IBinaryConvertible {
+[BinarySchema]
+public sealed partial class UvtsFrame : IBinaryDeserializable {
   public ushort UvtxIndex { get; set; }
   public float FrameLengthUnits { get; set; }
 }
