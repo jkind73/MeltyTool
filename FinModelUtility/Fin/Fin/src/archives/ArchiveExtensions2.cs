@@ -13,6 +13,13 @@ public static class ArchiveExtensions2 {
 
   public static ArchiveExtractionResult ExtractInto<TBundle>(
       this IArchiveImporter2<TBundle> importer,
+      IReadOnlyTreeFile file,
+      ISystemDirectory directory)
+      where TBundle : ISimpleArchiveFileBundle<TBundle>
+    => importer.ExtractInto((ISystemFile) file, directory);
+
+  public static ArchiveExtractionResult ExtractInto<TBundle>(
+      this IArchiveImporter2<TBundle> importer,
       ISystemFile file,
       ISystemDirectory directory,
       bool cleanUp = false)
@@ -33,7 +40,8 @@ public static class ArchiveExtensions2 {
               (archive.Root, directory));
       while (directoryQueue.TryDequeue(out var archiveDir, out var finDir)) {
         foreach (var archiveFile in archiveDir.Files) {
-          var finFile = new FinFile(Path.Join(finDir.FullPath, archiveFile.Name));
+          var finFile
+              = new FinFile(Path.Join(finDir.FullPath, archiveFile.Name));
           using var fw = finFile.OpenWrite();
           using var fr = archiveFile.OpenRead();
           fr.CopyTo(fw);
@@ -42,7 +50,8 @@ public static class ArchiveExtensions2 {
         directoryQueue.Enqueue(
             archiveDir.Subdirs.Select(child => (
                                           child,
-                                          finDir.GetOrCreateSubdir(child.Name))));
+                                          finDir.GetOrCreateSubdir(
+                                              child.Name))));
       }
     }
 

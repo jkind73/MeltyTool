@@ -31,7 +31,7 @@ public sealed partial class Uvts : IBinaryConvertible {
 }
 
 [BinarySchema]
-public sealed partial class UvtsFrame : IBinaryDeserializable {
+public sealed partial class UvtsFrame : IBinaryConvertible {
   public ushort UvtxIndex { get; set; }
   public float FrameLengthUnits { get; set; }
 }
