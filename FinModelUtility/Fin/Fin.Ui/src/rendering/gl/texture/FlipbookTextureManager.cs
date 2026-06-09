@@ -21,6 +21,7 @@ public partial interface ITextureFlipbookSwapManager : IDisposable {
 
 public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
   private readonly IReadOnlyList<IReadOnlyTexture> textures_;
+  private (IReadOnlyModelAnimation, float)? previousAnimationAndFrame_;
 
   private bool hasCreatedTextures_;
 
@@ -66,6 +67,11 @@ public sealed class TextureFlipbookSwapManager : ITextureFlipbookSwapManager {
       (IReadOnlyModelAnimation, float)? animationAndFrame) {
     this.GenerateGlTexturesIfNull();
 
+    if (this.previousAnimationAndFrame_ == animationAndFrame) {
+      return;
+    }
+
+    this.previousAnimationAndFrame_ = animationAndFrame;
     this.texturesToCurrentFlipbookSwaps_.Clear();
 
     var allTextureTracks = animationAndFrame?.Item1.TextureTracks;

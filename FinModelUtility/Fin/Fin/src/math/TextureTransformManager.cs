@@ -28,11 +28,19 @@ public sealed class TextureTransformManager : ITextureTransformManager {
   private readonly IndexableDictionary<IReadOnlyTexture, (bool is2d, Matrix3x2
       twoDMatrix, Matrix4x4 threeDMatrix)> texturesToMatrices_ = new();
 
+  private (IReadOnlyModelAnimation, float)? previousAnimationAndFrame_;
+
   public void Clear() => this.texturesToMatrices_.Clear();
 
   public void CalculateMatrices(
       IReadOnlyList<IReadOnlyTexture> textures,
       (IReadOnlyModelAnimation, float)? animationAndFrame) {
+    if (this.previousAnimationAndFrame_ == animationAndFrame) {
+      return;
+    }
+
+    this.previousAnimationAndFrame_ = animationAndFrame;
+    
     var animation = animationAndFrame?.Item1;
     var frame = animationAndFrame?.Item2;
 
