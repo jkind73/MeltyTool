@@ -1,12 +1,12 @@
 ﻿namespace LIBMIO0 {
-  struct MIO0_Header {
+  public struct MIO0_Header {
     public uint dest_size;
     public uint comp_offset;
     public uint uncomp_offset;
     public bool big_endian;
   };
 
-  class MIO0 {
+  public class MIO0 {
     private const int MIO0_HEADER_LENGTH = 16;
 
     private static int GET_BIT(byte[] buf, int offset, int bit) {
