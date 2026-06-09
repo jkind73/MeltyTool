@@ -22,6 +22,8 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
       IMutablePercentageProgress
           mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
-    // TODO: Gather these
+    foreach (var uvmdFile in fileHierarchy.Root.FilesWithExtension(".uvmd")) {
+      organizer.Add(new UvmdModelFileBundle(uvmdFile));
+    }
   }
 }

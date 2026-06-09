@@ -5,7 +5,7 @@ using fin.data.lazy;
 namespace fin.io.bundles;
 
 public interface IFileBundleOrganizer {
-  void Add(IFileBundle annotatedFileBundle);
+  void Add(IFileBundle fileBundle);
 }
 
 public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
@@ -25,9 +25,9 @@ public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
     });
   }
 
-  public void Add(IFileBundle annotatedFileBundle) {
-    this.lazyDirToBundleDir_[annotatedFileBundle.MainFile.AssertGetParent()]
-        .AddFileBundle(annotatedFileBundle);
+  public void Add(IFileBundle fileBundle) {
+    this.lazyDirToBundleDir_[fileBundle.MainFile.AssertGetParent()]
+        .AddFileBundle(fileBundle);
   }
 
   public IFileBundleDirectory CleanUpAndGetRoot() {
@@ -39,6 +39,6 @@ public sealed class FileBundleTreeOrganizer : IFileBundleOrganizer {
 public sealed class FileBundleListOrganizer : IFileBundleOrganizer {
   public List<IFileBundle> List { get; } = [];
 
-  public void Add(IFileBundle annotatedFileBundle)
-    => this.List.Add(annotatedFileBundle);
+  public void Add(IFileBundle fileBundle)
+    => this.List.Add(fileBundle);
 }

@@ -1,10 +1,11 @@
-﻿using fin.archives;
+﻿using bar.schema;
+
+using fin.archives;
 using fin.io;
 using fin.schema.data;
 using fin.util.streams;
 
 using schema.binary;
-using schema.binary.attributes;
 
 namespace bar.api;
 
@@ -13,6 +14,10 @@ public sealed record BarRomFileBundle(IReadOnlyTreeFile MainFile)
   public static BarRomFileBundle FromFile(IReadOnlyTreeFile file) => new(file);
 }
 
+/// <summary>
+///   Shamelessly stolen from:
+///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/Filesystem.ts
+/// </summary>
 public sealed class BarFileTableImporter
     : BSimpleArchiveImporter<BarRomFileBundle> {
   protected override void BuildHierarchyAndGetFileStream(
@@ -72,39 +77,4 @@ public sealed class BarFileTableImporter
       }
     }
   }
-}
-
-/// <summary>
-///   "File Table"
-/// </summary>
-[BinarySchema]
-public sealed partial class Uvft : IBinaryConvertible {
-  private readonly string magic_ = "UVFT";
-
-  [RSequenceUntilEndOfStream]
-  public UvtfFileType[] FileTypes { get; set; }
-}
-
-/// <summary>
-///   "File Table"
-/// </summary>
-[BinarySchema]
-public sealed partial class UvtfFileType : IBinaryConvertible {
-  private readonly AutoThruUnknownStringMagicUInt32SizedSection<UvtfOffsets>
-      impl_ = new();
-
-  [Skip]
-  public string Type => this.impl_.Magic;
-
-  [Skip]
-  public int[] Offsets => this.impl_.Data.Offsets;
-}
-
-/// <summary>
-///   "File Table"
-/// </summary>
-[BinarySchema]
-public sealed partial class UvtfOffsets : IBinaryConvertible {
-  [RSequenceUntilEndOfStream]
-  public int[] Offsets { get; set; }
 }

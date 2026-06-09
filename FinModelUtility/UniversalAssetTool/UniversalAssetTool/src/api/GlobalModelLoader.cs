@@ -1,5 +1,7 @@
 ﻿using ac.api;
 
+using bar.api;
+
 using Celeste64.api;
 
 using facade.api;
@@ -124,6 +126,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new TstltModelImporter().Import(tstltModelFileBundle),
         TtydModelFileBundle ttydModelFileBundle
             => new TtydModelImporter().Import(ttydModelFileBundle),
+        UvmdModelFileBundle uvmdModelFileBundle
+            => new UvmdModelFileImporter().Import(uvmdModelFileBundle),
         VbModelFileBundle vbModelFileBundle
             => new VbModelImporter().Import(vbModelFileBundle),
         VrmlModelFileBundle vrmlModelFileBundle
