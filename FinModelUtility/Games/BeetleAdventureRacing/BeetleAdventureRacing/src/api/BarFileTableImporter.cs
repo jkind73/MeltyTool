@@ -58,7 +58,7 @@ public sealed class BarFileTableImporter
               () => {
                 var str = romBr.ReadString(4);
                 if (str == "FORM") {
-                  return romBr.ReadUInt32();
+                  return 4 + 4 + romBr.ReadUInt32();
                 }
 
                 return (uint) 0;
