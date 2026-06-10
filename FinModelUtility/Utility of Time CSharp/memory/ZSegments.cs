@@ -170,7 +170,7 @@ namespace UoT.memory {
 
               segments.AddLast(new ZSegment {
                   FileName = fileName,
-                  Segment = new Segment {
+                  Segment = new SliceSegment {
                     Offset = startAddress,
                     Length = endAddress - startAddress,
                   }
@@ -183,7 +183,7 @@ namespace UoT.memory {
 
     private class ZSegment {
       public required string FileName { get; init; }
-      public required Segment Segment { get; init; }
+      public required ISegment Segment { get; init; }
     }
   }
 }

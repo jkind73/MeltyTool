@@ -23,7 +23,7 @@ public sealed class AnimalCrossingModelFileBundle : IModelFileBundle {
 public sealed class AnimalCrossingModelImporter
     : IModelImporter<AnimalCrossingModelFileBundle> {
   public IModel Import(AnimalCrossingModelFileBundle fileBundle) {
-    var n64Hardware = new N64Hardware<N64Memory>();
+    var n64Hardware = new N64Hardware<SlicedN64Memory>();
     var rdp = n64Hardware.Rdp = new Rdp {
         Tmem = new NoclipTmem(n64Hardware),
     };
@@ -45,7 +45,7 @@ public sealed class AnimalCrossingModelImporter
     }
 
     var n64Memory = n64Hardware.Memory
-        = new N64Memory(mergedMemoryStream.ToArray());
+        = new SlicedN64Memory(mergedMemoryStream.ToArray());
     n64Memory.SetSegment(0, 0, (uint) mergedMemoryStream.Length);
 
     var displayListReader = new DisplayListReader();

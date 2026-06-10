@@ -14,7 +14,7 @@ namespace marioartist.api;
 public static class TstltUtil {
   public static IMesh? AddDisplayLists(
       IModel model,
-      Segment segment,
+      ISegment segment,
       IN64Hardware n64Hardware,
       DlModelBuilder dlModelBuilder,
       string meshName,

@@ -32,7 +32,7 @@ namespace sm64.memory {
       return true;
     }
 
-    public SchemaBinaryReader OpenSegment(Segment segment, uint? offset = null) {
+    public SchemaBinaryReader OpenSegment(ISegment segment, uint? offset = null) {
       throw new NotImplementedException();
     }
 
@@ -66,28 +66,14 @@ namespace sm64.memory {
       throw new NotImplementedException();
     }
 
-    public Segment GetSegment(uint segmentAddress)
-      => new() { Offset = 0, Length = 0 };
+    public ISegment GetSegment(uint segmentAddress)
+      => new SliceSegment { Offset = 0, Length = 0 };
 
-    public void AddSegment(uint segmentIndex,
-                           uint offset,
-                           uint length,
-                           IArrayToArrayDecompressor? decompressor = null) {
+    public void AddSegment(uint segmentIndex, ISegment segment) {
       throw new NotImplementedException();
     }
 
-    public void AddSegment(uint segmentIndex, Segment segment) {
-      throw new NotImplementedException();
-    }
-
-    public void SetSegment(uint segmentIndex,
-                           uint offset,
-                           uint length,
-                           IArrayToArrayDecompressor? decompressor = null) {
-      throw new NotImplementedException();
-    }
-
-    public void SetSegment(uint segmentIndex, Segment segment) {
+    public void SetSegment(uint segmentIndex, ISegment segment) {
       throw new NotImplementedException();
     }
   }

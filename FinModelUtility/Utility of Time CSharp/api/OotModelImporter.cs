@@ -36,9 +36,9 @@ namespace UoT.api {
                                      or "object_link_child"
                                      or "object_torch2";
 
-      var n64Memory = new N64Memory(modelFileBundle.OotRom);
+      var n64Memory = new SlicedN64Memory(modelFileBundle.OotRom);
 
-      var n64Hardware = new N64Hardware<N64Memory>();
+      var n64Hardware = new N64Hardware<SlicedN64Memory>();
       n64Hardware.Memory = n64Memory;
       n64Hardware.Rdp = new Rdp { Tmem = new NoclipTmem(n64Hardware) };
       n64Hardware.Rsp = new Rsp();

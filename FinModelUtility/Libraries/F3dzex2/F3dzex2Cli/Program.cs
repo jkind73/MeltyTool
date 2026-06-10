@@ -49,14 +49,14 @@ while (true) {
   Console.WriteLine(
       $"Parsing bytes: {bytes.Select(b => b.ToHexString()).Join(", ")}");
 
-  var n64Hardware = new N64Hardware<N64Memory>();
+  var n64Hardware = new N64Hardware<SlicedN64Memory>();
   n64Hardware.Rdp = new Rdp {
       Tmem = new NoclipTmem(n64Hardware),
   };
   n64Hardware.Rsp = new Rsp {
       GeometryMode = GeometryMode.G_LIGHTING,
   };
-  var n64Memory = n64Hardware.Memory = new N64Memory(bytes);
+  var n64Memory = n64Hardware.Memory = new SlicedN64Memory(bytes);
   n64Memory.SetSegment(0, 0, (uint) bytes.Length);
 
   var displayListReader = new DisplayListReader();

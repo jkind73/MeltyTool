@@ -6,6 +6,42 @@ using fin.math;
 namespace f3dzex2.image;
 
 public static class RdpExtensions {
+  public static void SetSimpleCombinerCycleParams(
+      this IRdp rdp,
+      bool isTextured,
+      bool hasShade,
+      bool doesTextureHaveAlpha) {
+    switch ((isTextured, hasShade)) {
+      case (false, false): {
+        rdp.SetCombinerCycleParams(new CombinerCycleParams {
+            ColorMuxA = GenericColorMux.G_CCMUX_0,
+            ColorMuxB = GenericColorMux.G_CCMUX_0,
+            ColorMuxC = GenericColorMux.G_CCMUX_0,
+            ColorMuxD = GenericColorMux.G_CCMUX_1,
+            AlphaMuxA = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxB = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxC = GenericAlphaMux.G_ACMUX_0,
+            AlphaMuxD = GenericAlphaMux.G_ACMUX_1,
+        });
+        break;
+      }
+      case (false, true): {
+        rdp.SetCombinerCycleParams(CombinerCycleParams.FromShade(false));
+        break;
+      }
+      case (true, false): {
+        rdp.SetCombinerCycleParams(
+            CombinerCycleParams.FromTexture0(doesTextureHaveAlpha));
+        break;
+      }
+      case (true, true): {
+        rdp.SetCombinerCycleParams(
+            CombinerCycleParams.FromTexture0AndShade(doesTextureHaveAlpha));
+        break;
+      }
+    }
+  }
+
   public static void SetCombinerCycleParams(
       this IRdp rdp,
       (CombinerCycleParams, CombinerCycleParams?) combinerCycleParams)

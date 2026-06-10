@@ -36,10 +36,10 @@ public sealed class DlModelBuilder {
   public const bool DEDUPLICATE_TEXTURES = true;
   public const bool DEDUPLICATE_MATERIALS = true;
 
-  private readonly LazyDictionary<(Segment?, ImageParams), IReadOnlyImage>
+  private readonly LazyDictionary<(ISegment?, ImageParams), IReadOnlyImage>
       lazyImageDictionary_;
 
-  private readonly LazyDictionary<(Segment?, TextureParams)?, IReadOnlyTexture?>
+  private readonly LazyDictionary<(ISegment?, TextureParams)?, IReadOnlyTexture?>
       lazyTextureDictionary_;
 
   private readonly LazyDictionary<MaterialParams, IReadOnlyMaterial>
@@ -227,7 +227,7 @@ public sealed class DlModelBuilder {
     this.lazyMaterialDictionary_ =
         new(materialParams
                 => {
-              (Segment?, TextureParams)? segmentAndTextureParams0
+              (ISegment?, TextureParams)? segmentAndTextureParams0
                   = materialParams.TextureParams0 != null
                       ? (n64Hardware.Memory.GetSegmentOrNull(
                              materialParams.TextureParams0
@@ -235,7 +235,7 @@ public sealed class DlModelBuilder {
                              24),
                          materialParams.TextureParams0)
                       : null;
-              (Segment?, TextureParams)? segmentAndTextureParams1
+              (ISegment?, TextureParams)? segmentAndTextureParams1
                   = materialParams.TextureParams1 != null
                       ? (n64Hardware.Memory.GetSegmentOrNull(
                              materialParams.TextureParams1.SegmentedAddress >>

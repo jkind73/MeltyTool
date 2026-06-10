@@ -6,6 +6,7 @@ using f3dzex2.rsp;
 
 using fin.math;
 using fin.model;
+using fin.util.enums;
 
 namespace f3dzex2.image;
 
@@ -33,6 +34,13 @@ public interface IRsp {
   Color PrimColor { get; set; }
 
   CullingMode CullingMode { get; set; }
+
+  bool Lighting {
+    get => this.GeometryMode.CheckFlag(GeometryMode.G_LIGHTING);
+    set => this.GeometryMode = value
+        ? (this.GeometryMode | GeometryMode.G_LIGHTING)
+        : (this.GeometryMode & ~GeometryMode.G_LIGHTING);
+  }
 
   N64UvType UvType {
     get => (N64UvType) ((uint) this.GeometryMode).ExtractFromRight(18, 2);

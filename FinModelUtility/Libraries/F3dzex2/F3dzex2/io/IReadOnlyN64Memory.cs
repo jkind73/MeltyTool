@@ -1,15 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
-using CommunityToolkit.Diagnostics;
-
-using fin.data.dictionaries;
 using fin.compression;
-using fin.io;
-using fin.util.asserts;
-using fin.util.hex;
-using fin.util.linq;
+using fin.util.types;
 
 using schema.binary;
 
@@ -17,6 +9,7 @@ namespace f3dzex2.io;
 
 public interface IReadOnlyN64Memory {
   Endianness Endianness { get; }
+
   SchemaBinaryReader OpenAtSegmentedAddress(uint segmentedAddress);
 
   IEnumerable<SchemaBinaryReader> OpenPossibilitiesAtSegmentedAddress(
@@ -27,181 +20,53 @@ public interface IReadOnlyN64Memory {
       out IEnumerable<SchemaBinaryReader> possibilities);
 
   SchemaBinaryReader OpenSegment(uint segmentIndex);
-  SchemaBinaryReader OpenSegment(Segment segment, uint? offset = null);
+  SchemaBinaryReader OpenSegment(ISegment segment, uint? offset = null);
 
   IEnumerable<SchemaBinaryReader> OpenPossibilitiesForSegment(
       uint segmentIndex);
 
-  Segment GetSegment(uint segmentIndex);
+  ISegment GetSegment(uint segmentIndex);
   bool IsValidSegment(uint segmentIndex);
   bool IsValidSegmentedAddress(uint segmentedAddress);
   bool IsSegmentCompressed(uint segmentIndex);
 }
 
 public interface IN64Memory : IReadOnlyN64Memory {
+  void AddSegment(uint segmentIndex, ISegment segment);
+  void SetSegment(uint segmentIndex, ISegment segment);
+}
+
+public interface ISeparateN64Memory : IN64Memory {
+  void AddSegment(uint segmentIndex, uint offset, byte[] bytes);
+  void SetSegment(uint segmentIndex, uint offset, byte[] bytes);
+}
+
+public interface ISlicedN64Memory : ISeparateN64Memory {
   void AddSegment(uint segmentIndex,
                   uint offset,
                   uint length,
                   IArrayToArrayDecompressor? decompressor = null);
 
-  void AddSegment(uint segmentIndex, Segment segment);
-
   void SetSegment(uint segmentIndex,
                   uint offset,
                   uint length,
                   IArrayToArrayDecompressor? decompressor = null);
-
-  void SetSegment(uint segmentIndex, Segment segment);
 }
 
-public sealed class N64Memory(
-    byte[] data,
-    Endianness endianness = Endianness.BigEndian) : IN64Memory {
-  private readonly ListDictionary<uint, Segment> segments_ = new();
-
-  public N64Memory(IReadOnlyGenericFile file,
-                   Endianness endianness = Endianness.BigEndian) :
-      this(file.ReadAllBytes(), endianness) { }
-
-  public Endianness Endianness { get; } = endianness;
-
-  public SchemaBinaryReader OpenAtSegmentedAddress(uint segmentedAddress) {
-    var possibilities
-        = this.OpenPossibilitiesAtSegmentedAddress(segmentedAddress);
-
-    if (!possibilities.TryGetSingle(out var single)) {
-      Asserts.Fail(
-          $"Expected to have a single possibility for {segmentedAddress.ToHexString()}");
-    }
-
-    return single;
-  }
-
-  public IEnumerable<SchemaBinaryReader> OpenPossibilitiesAtSegmentedAddress(
-      uint segmentedAddress) {
-    if (!this.TryToOpenPossibilitiesAtSegmentedAddress(
-            segmentedAddress,
-            out var possibilities)) {
-      Asserts.Fail(
-          $"Expected 0x{segmentedAddress.ToHex()} to be a valid segmented address.");
-    }
-
-    return possibilities;
-  }
-
-  public bool TryToOpenPossibilitiesAtSegmentedAddress(
-      uint segmentedAddress,
-      out IEnumerable<SchemaBinaryReader> possibilities) {
-    if (!this.TryToGetSegmentsAtSegmentedAddress_(
-            segmentedAddress,
-            out var offset,
-            out var validSegments)) {
-      possibilities = null;
-      return false;
-    }
-
-    possibilities =
-        validSegments.Select(segment => this.OpenSegment(segment, offset));
-    return true;
-  }
-
-  public SchemaBinaryReader OpenSegment(uint segmentIndex)
-    => this.OpenPossibilitiesForSegment(segmentIndex).Single();
-
-  public SchemaBinaryReader OpenSegment(Segment segment,
-                                        uint? offset = null) {
-    var br = new SchemaBinaryReader(
-        new MemoryStream(data,
-                         (int) segment.Offset,
-                         (int) segment.Length),
-        this.Endianness);
-    if (offset != null) {
-      br.Position = offset.Value;
-    }
-
-    return br;
-  }
-
-  public IEnumerable<SchemaBinaryReader> OpenPossibilitiesForSegment(
-      uint segmentIndex)
-    => this
-       .segments_[segmentIndex]
-       .Select(segment => this.OpenSegment(segment));
-
-
-  public Segment GetSegment(uint segmentIndex)
-    => this.segments_[segmentIndex].Single();
-
-  public bool IsValidSegment(uint segmentIndex)
-    => this.segments_.HasList(segmentIndex);
-
-  public bool IsValidSegmentedAddress(uint segmentedAddress) {
-    IoUtils.SplitSegmentedAddress(segmentedAddress,
-                                  out var segmentIndex,
-                                  out var offset);
-    if (!this.segments_.TryGetList(segmentIndex, out var segments)) {
-      return false;
-    }
-
-    var offsetInSegment = offset;
-    return segments!.Any(segment => offsetInSegment < segment.Length);
-  }
-
-  public bool IsSegmentCompressed(uint segmentIndex)
-    => this.segments_[segmentIndex].Single().Decompressor != null;
-
-  public void AddSegment(uint segmentIndex,
-                         uint offset,
-                         uint length,
-                         IArrayToArrayDecompressor? decompressor = null)
-    => this.AddSegment(segmentIndex,
-                       new Segment {
-                           Offset = offset,
-                           Length = length,
-                           Decompressor = decompressor,
-                       });
-
-  public void AddSegment(uint segmentIndex, Segment segment)
-    => this.segments_.Add(segmentIndex, segment);
-
-  public void SetSegment(uint segmentIndex,
-                         uint offset,
-                         uint length,
-                         IArrayToArrayDecompressor? decompressor = null)
-    => this.SetSegment(segmentIndex,
-                       new Segment {
-                           Offset = offset,
-                           Length = length,
-                           Decompressor = decompressor,
-                       });
-
-  public void SetSegment(uint segmentIndex, Segment segment) {
-    this.segments_.ClearList(segmentIndex);
-    this.segments_.Add(segmentIndex, segment);
-  }
-
-  private bool TryToGetSegmentsAtSegmentedAddress_(
-      uint segmentedAddress,
-      out uint offset,
-      out IEnumerable<Segment> validSegments) {
-    IoUtils.SplitSegmentedAddress(segmentedAddress,
-                                  out var segmentIndex,
-                                  out offset);
-    var offsetInSegment = offset;
-
-    if (!this.segments_.TryGetList(segmentIndex, out var segments)) {
-      validSegments = null;
-      return false;
-    }
-
-    validSegments =
-        segments!.Where(segment => offsetInSegment < segment.Length);
-    return segments!.Any();
-  }
+[UnionCandidate]
+public interface ISegment {
+  uint Offset { get; }
+  uint Length { get; }
 }
 
-public readonly struct Segment {
+public class SliceSegment : ISegment {
   public required uint Offset { get; init; }
   public required uint Length { get; init; }
   public IArrayToArrayDecompressor? Decompressor { get; init; }
+}
+
+public class BytesSegment : ISegment {
+  public required uint Offset { get; init; }
+  public uint Length => (uint) this.Bytes.Length;
+  public required byte[] Bytes { get; init; }
 }

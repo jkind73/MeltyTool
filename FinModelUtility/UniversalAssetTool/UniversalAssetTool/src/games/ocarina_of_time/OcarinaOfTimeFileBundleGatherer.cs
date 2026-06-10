@@ -41,7 +41,7 @@ public sealed class OcarinaOfTimeFileBundleGatherer : INamedAnnotatedFileBundleG
     });
 
     {
-      var n64Memory = new N64Memory(ocarinaOfTimeRom);
+      var n64Memory = new SlicedN64Memory(ocarinaOfTimeRom);
 
       var didWriteAny = false;
       foreach (var (zObject, path) in zObjectsAndPaths) {

@@ -2,13 +2,18 @@
 
 using bar.schema;
 
+using f3dzex2.combiner;
+using f3dzex2.displaylist.opcodes;
+using f3dzex2.image;
+using f3dzex2.io;
+using f3dzex2.model;
+
 using fin.io;
-using fin.math.rotations;
 using fin.model;
-using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enums;
 using fin.util.sets;
 
 using schema.binary;
@@ -22,10 +27,16 @@ public sealed class UvmdModelFileImporter
     : IModelImporter<UvmdModelFileBundle> {
   public IModel Import(UvmdModelFileBundle fileBundle) {
     var files = fileBundle.MainFile.AsFileSet();
-    var finModel = new ModelImpl {
-        FileBundle = fileBundle,
-        Files = files
+    var n64Hardware = new N64Hardware<SeparateN64Memory>();
+    var n64Memory = n64Hardware.Memory = new SeparateN64Memory();
+    var rdp = n64Hardware.Rdp = new Rdp {
+        Tmem = new NoclipTmem(n64Hardware),
     };
+    var rsp = n64Hardware.Rsp = new Rsp {
+        GeometryMode = GeometryMode.G_LIGHTING
+    };
+    var dlModelBuilder = new DlModelBuilder(n64Hardware, fileBundle, files);
+    var finModel = dlModelBuilder.Model;
 
     var fileChunks
         = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
@@ -50,40 +61,133 @@ public sealed class UvmdModelFileImporter
                           bone))
               .ToArray();
 
-    var finMesh = finSkin.AddMesh();
 
     var uvmdLod0ModelParts = uvmd.Lods[0].ModelParts;
     for (var i = 0; i < uvmdLod0ModelParts.Length; ++i) {
-      var finBoneWeights = allFinBoneWeights[i];
+      rsp.ActiveBoneWeights = allFinBoneWeights[i];
 
       var uvmdModelPart = uvmdLod0ModelParts[i];
       foreach (var uvmdMaterialMesh in uvmdModelPart.MaterialMeshes) {
         // TODO: Handle billboards
-        // TODO: Handle materials, https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/MaterialRenderer.ts#L163
 
-        var finVertices = uvmdMaterialMesh.Vertices.Select(v => {
-                                            var finVertex
-                                                = finSkin.AddVertex(
-                                                    v.Position.X,
-                                                    v.Position.Y,
-                                                    v.Position.Z);
-                                            finVertex.SetUv(v.TexCoords.X / 32f,
-                                              v.TexCoords.Y / 32f);
-                                            finVertex.SetColor(v.Color);
-                                            finVertex.SetBoneWeights(
-                                                finBoneWeights);
-                                            return (IReadOnlyVertex) finVertex;
-                                          })
-                                          .ToArray();
+        SetUpMaterial_(uvmdMaterialMesh, n64Hardware.Memory, rsp, rdp);
 
-        finMesh.AddTriangles(
-            uvmdMaterialMesh.Triangles.Select(t => (finVertices[t.Item1],
-                                                    finVertices[t.Item2],
-                                                    finVertices[t.Item3]))
-                            .ToArray());
+        dlModelBuilder.AddDl(uvmdMaterialMesh.DisplayList);
       }
     }
 
     return finModel;
+  }
+
+  /// <summary>
+  ///   Shamelessly stolen from:
+  ///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/MaterialRenderer.ts#L163
+  /// </summary>
+  private static void SetUpMaterial_(
+      UvmdMaterialMesh materialMesh,
+      ISeparateN64Memory memory,
+      IRsp rsp,
+      IRdp rdp) {
+    var renderOpts = materialMesh.RenderOptions;
+    var isTextured = materialMesh.UvtxIndex != 0xFFF;
+
+    var otherModeLRenderMode = (uint) 0;
+    if (renderOpts.CheckFlag(RenderOptions.UNK_18)) {
+      var m = (uint) (renderOpts &
+                      (RenderOptions.UNK_17 | RenderOptions.UNK_16));
+      if (m == 0)
+        otherModeLRenderMode = 0x00112e10;
+      if (m == 0x400000)
+        otherModeLRenderMode = 0x00112d58;
+      if (m == 0x800000)
+        otherModeLRenderMode = 0x00104e50;
+      if (m == 0xc00000)
+        otherModeLRenderMode = 0x00104dd8;
+    } else if (renderOpts.CheckFlag(RenderOptions.UNK_17)) {
+      var m = (uint) (renderOpts &
+                      (RenderOptions.UNK_16 |
+                       RenderOptions.ENABLE_DEPTH_CALCULATIONS));
+
+      Uvtx? uvtx = null;
+
+      if (m == 0) {
+        if (!isTextured)
+          otherModeLRenderMode = 0x00104340;
+        else
+          otherModeLRenderMode = 0x00104240;
+      }
+
+      if (m == 0x200000) {
+        if (!isTextured)
+          otherModeLRenderMode = 0x00104b50;
+        //else if (uvtx.usesAlphaBlending)
+        //  otherModeLRenderMode = 0x00105278;
+        else
+          otherModeLRenderMode = 0x00104a50;
+      }
+
+      if (m == 0x400000) {
+        if (!isTextured)
+          otherModeLRenderMode = 0x001041c8;
+        else if ( /* TODO: complicated flag checks */ false)
+          otherModeLRenderMode = 0x00103048;
+        else
+          otherModeLRenderMode = 0x001041c8;
+      }
+
+      if (m == 0x600000) {
+        if (!isTextured)
+          otherModeLRenderMode = 0x001045d8;
+        //else if (uvtx.usesAlphaBlending)
+        //  otherModeLRenderMode = 0x00105278;
+        else if ( /* TODO: complicated flag checks */ false)
+          otherModeLRenderMode = 0x00103078;
+        else
+          otherModeLRenderMode = 0x001049d8;
+      }
+    } else {
+      var m = (uint) (renderOpts &
+                      (RenderOptions.UNK_16 |
+                       RenderOptions.ENABLE_DEPTH_CALCULATIONS));
+      if (m == 0)
+        otherModeLRenderMode = 0x03024000;
+      if (m == 0x200000)
+        otherModeLRenderMode = 0x00112230;
+      if (m == 0x400000)
+        otherModeLRenderMode = 0x00102048;
+      if (m == 0x600000)
+        otherModeLRenderMode = 0x00102078;
+    }
+
+    // This sets A to 0 and B to 1 in the first cycle,
+    // so the first cycle equation is always just ((P * 0 + M * 1) / (0 + 1)) = (0 + M) / 1 = M
+    otherModeLRenderMode |= 0x0c080000;
+
+    rdp.OtherModeL = otherModeLRenderMode;
+
+    var cullBack = renderOpts.CheckFlag(RenderOptions.ENABLE_BACKFACE_CULLING);
+    var cullFront
+        = renderOpts.CheckFlag(RenderOptions.ENABLE_FRONTFACE_CULLING);
+    rsp.CullingMode = (cullFront, cullBack) switch {
+        (false, false) => CullingMode.SHOW_BOTH,
+        (false, true)  => CullingMode.SHOW_FRONT_ONLY,
+        (true, false)  => CullingMode.SHOW_BACK_ONLY,
+        (true, true)   => CullingMode.SHOW_NEITHER,
+    };
+
+    if (isTextured) {
+      memory.SetSegment(0, 0, new byte[200]);
+      rdp.Tmem.SetImageSimple(
+          0,
+          N64ColorFormat.L,
+          BitsPerTexel._8BPT,
+          1,
+          1,
+          F3dWrapMode.CLAMP,
+          F3dWrapMode.CLAMP);
+    }
+
+    rsp.Lighting = renderOpts.CheckFlag(RenderOptions.USES_LIGHTING);
+    rdp.SetSimpleCombinerCycleParams(isTextured, true, false);
   }
 }

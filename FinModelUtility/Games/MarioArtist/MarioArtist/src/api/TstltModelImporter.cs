@@ -39,10 +39,10 @@ namespace marioartist.api;
 
 using BoneTuple = (IReadOnlyBone bone, Joint joint, int jointIndex);
 using ChosenPart0Tuple =
-    (Segment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5,
+    (ISegment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5,
     ChosenPart0 chosenPart, int unkSection5I, int subUnkSection5I);
 using ChosenPart1Tuple
-    = (Segment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead
+    = (ISegment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead
     );
 
 public record TstltModelFileBundle(IReadOnlyTreeFile MainFile)
@@ -107,14 +107,14 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
                               out Gender gender) {
     using var br = fileBundle.MainFile.OpenReadAsBinary(Endianness.BigEndian);
 
-    var n64Hardware = new N64Hardware<N64Memory>();
+    var n64Hardware = new N64Hardware<SlicedN64Memory>();
     var rdp = n64Hardware.Rdp = new Rdp {
         Tmem = new NoclipTmem(n64Hardware),
     };
     var rsp = n64Hardware.Rsp = new Rsp {
         GeometryMode = GeometryMode.G_LIGHTING,
     };
-    var n64Memory = n64Hardware.Memory = new N64Memory(fileBundle.MainFile);
+    var n64Memory = n64Hardware.Memory = new SlicedN64Memory(fileBundle.MainFile);
     n64Memory.SetSegment(0, 0, (uint) br.Length);
 
     var dlModelBuilder =
@@ -129,10 +129,10 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     var bodySectionOffset = headSectionOffset + headSectionLength;
     var bodySectionLength = br.Length - bodySectionOffset;
 
-    var headSegment = new Segment {
+    var headSegment = new SliceSegment {
         Offset = (uint) headSectionOffset, Length = headSectionLength
     };
-    var bodySegment = new Segment {
+    var bodySegment = new SliceSegment {
         Offset = (uint) bodySectionOffset, Length = (uint) bodySectionLength
     };
 
@@ -567,7 +567,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   public static void AddAllChosenPart0sInPass(
       bool isAlphaPass,
       IModel model,
-      IN64Hardware n64Hardware,
+      IN64Hardware<SlicedN64Memory> n64Hardware,
       DlModelBuilder dlModelBuilder,
       BoneTuple[] finBonesAndJoints,
       ChosenPart0 skinChosenPart,
@@ -625,7 +625,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   public static void FindCorrectJointAndClearStateAndAddChosenPart0Meshes(
       bool isAlphaPass,
       IModel model,
-      IN64Hardware n64Hardware,
+      IN64Hardware<SlicedN64Memory> n64Hardware,
       DlModelBuilder dlModelBuilder,
       BoneTuple boneTuple,
       ChosenPart0 skinChosenPart,
@@ -666,7 +666,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   public static void AddChosenPart0MeshesForJoint(
       bool isAlphaPass,
       IModel model,
-      IN64Hardware n64Hardware,
+      IN64Hardware<SlicedN64Memory> n64Hardware,
       DlModelBuilder dlModelBuilder,
       ChosenPart0Tuple chosenPart0Tuple,
       BoneTuple boneTuple,
@@ -819,7 +819,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   private static void TryToAddChosenPart1Tuple_(
       IModel model,
       ChosenPart1Tuple chosenPart1Tuple,
-      N64Hardware<N64Memory> n64Hardware,
+      N64Hardware<SlicedN64Memory> n64Hardware,
       DlModelBuilder dlModelBuilder,
       Joint joint,
       IReadOnlyBone bone,
