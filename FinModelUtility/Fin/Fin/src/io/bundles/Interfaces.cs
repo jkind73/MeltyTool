@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using fin.util.asserts;
 using fin.util.progress;
+using fin.util.strings;
 
 namespace fin.io.bundles;
 
@@ -27,9 +28,9 @@ public interface IFileBundle : IUiFile, IComparable<IFileBundle> {
   string TrueFullPath => Asserts.CastNonnull(this.MainFile.FullPath);
 
   int IComparable<IFileBundle>.CompareTo(IFileBundle? other)
-    => this.DisplayFullPath.CompareTo(
-        other!.DisplayFullPath,
-        StringComparison.OrdinalIgnoreCase);
+    => StringUtil.NaturalSortInstance.Compare(
+        this.DisplayFullPath,
+        other!.DisplayFullPath);
 }
 
 public interface INamedAnnotatedFileBundleGatherer

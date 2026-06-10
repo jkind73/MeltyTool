@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using fin.util.strings;
+
 namespace fin.io.bundles;
 
 public interface IFileBundleDirectory {
@@ -64,7 +66,7 @@ public sealed class FileBundleDirectory : IFileBundleDirectory {
       this.subdirs_.Remove(subdir);
     }
 
-    this.subdirs_.Sort((lhs, rhs) => lhs.Name.CompareTo(rhs.Name));
+    this.subdirs_.Sort((lhs, rhs) => StringUtil.NaturalSortInstance.Compare(lhs.Name, rhs.Name));
     this.fileBundles_.Sort();
   }
 }

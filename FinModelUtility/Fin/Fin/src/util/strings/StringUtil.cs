@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using NaturalSort.Extension;
-
 namespace fin.util.strings;
 
 public static class StringUtil {
