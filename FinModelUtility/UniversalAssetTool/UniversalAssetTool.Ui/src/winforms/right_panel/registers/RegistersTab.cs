@@ -6,8 +6,7 @@ using System.Windows.Forms;
 
 using fin.model;
 using fin.util.linq;
-
-using NaturalSort.Extension;
+using fin.util.strings;
 
 using uni.ui.winforms.common;
 
@@ -73,8 +72,7 @@ public partial class RegistersTab : UserControl {
                 .Select(mat => mat.Equations)
                 .ToArray();
 
-        var comparer
-            = new NaturalSortComparer(StringComparison.OrdinalIgnoreCase);
+        var comparer = StringUtil.NaturalSortInstance;
         var colorRegisters = registers.ColorRegisters
                                       .OrderBy(reg => reg.Name, comparer)
                                       .ToArray();

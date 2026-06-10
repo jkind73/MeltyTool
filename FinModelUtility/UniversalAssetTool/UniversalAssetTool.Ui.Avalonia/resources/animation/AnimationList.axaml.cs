@@ -8,10 +8,9 @@ using Avalonia.Interactivity;
 
 using fin.model;
 using fin.ui;
+using fin.util.strings;
 
 using Material.Icons;
-
-using NaturalSort.Extension;
 
 using ReactiveUI;
 
@@ -38,8 +37,7 @@ public class AnimationListViewModel : BViewModel {
                             { Animation = a })
                .OrderBy(
                    a => a.Animation.Name,
-                   new NaturalSortComparer(
-                       StringComparison.OrdinalIgnoreCase)) ??
+                   StringUtil.NaturalSortInstance) ??
           Enumerable.Empty<AnimationViewModel>());
     }
   }

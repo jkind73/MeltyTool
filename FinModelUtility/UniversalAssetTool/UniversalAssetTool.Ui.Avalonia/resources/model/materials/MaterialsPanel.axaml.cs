@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -9,8 +8,7 @@ using Avalonia.Data.Converters;
 using fin.model;
 using fin.ui;
 using fin.ui.rendering;
-
-using NaturalSort.Extension;
+using fin.util.strings;
 
 using ReactiveUI;
 
@@ -38,8 +36,7 @@ public class MaterialsPanelViewModel : BViewModel {
       this.Materials
           = new ObservableCollection<(int, IReadOnlyMaterial?)>(
               materials.OrderBy(m => m?.Name,
-                                new NaturalSortComparer(
-                                    StringComparison.OrdinalIgnoreCase))
+                                StringUtil.NaturalSortInstance)
                        .Select((m, i) => (i, m)));
     }
   }

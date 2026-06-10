@@ -9,8 +9,7 @@ using Avalonia.Interactivity;
 using fin.model;
 using fin.ui;
 using fin.ui.rendering;
-
-using NaturalSort.Extension;
+using fin.util.strings;
 
 using ReactiveUI;
 
@@ -49,8 +48,7 @@ public class TextureListViewModel : BViewModel {
                             { Texture = texture })
                .OrderBy(
                    t => t.Texture.Name,
-                   new NaturalSortComparer(
-                       StringComparison.OrdinalIgnoreCase)) ??
+                   StringUtil.NaturalSortInstance) ??
           Enumerable.Empty<TextureViewModel>());
     }
   }
