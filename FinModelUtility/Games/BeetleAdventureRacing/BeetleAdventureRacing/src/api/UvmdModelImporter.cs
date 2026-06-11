@@ -2,14 +2,15 @@
 
 using bar.schema;
 
-using f3dzex2.combiner;
 using f3dzex2.displaylist.opcodes;
 using f3dzex2.image;
 using f3dzex2.io;
 using f3dzex2.model;
 
 using fin.io;
+using fin.io.bundles;
 using fin.model;
+using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
@@ -26,6 +27,33 @@ public sealed record UvmdModelFileBundle(IReadOnlyTreeFile MainFile)
 public sealed class UvmdModelFileImporter
     : IModelImporter<UvmdModelFileBundle> {
   public IModel Import(UvmdModelFileBundle fileBundle) {
+    var fileChunks
+        = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
+    if (fileChunks.Chunks.Count == 0) {
+      return new ModelImpl {
+          FileBundle = fileBundle,
+          Files = new HashSet<IReadOnlyGenericFile>(),
+      };
+    }
+
+    var uvmd
+        = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
+                                 Endianness.BigEndian).ReadNew<Uvmd>();
+    return FromMaterialMeshes(
+        fileBundle,
+        uvmd.Lods[0].ModelParts.Select(p => p.MaterialMeshes),
+        uvmd.Transforms);
+  }
+
+  public static IModel FromMaterialMeshes(
+      IFileBundle fileBundle,
+      IEnumerable<UvmdMaterialMesh> materialMeshes)
+    => FromMaterialMeshes(fileBundle, [materialMeshes], null);
+
+  public static IModel FromMaterialMeshes(
+      IFileBundle fileBundle,
+      IEnumerable<IEnumerable<UvmdMaterialMesh>> materialMeshesByBone,
+      Matrix4x4[]? boneMatrices) {
     var files = fileBundle.MainFile.AsFileSet();
     var n64Hardware = new N64Hardware<SeparateN64Memory>();
     var n64Memory = n64Hardware.Memory = new SeparateN64Memory();
@@ -38,40 +66,33 @@ public sealed class UvmdModelFileImporter
     var dlModelBuilder = new DlModelBuilder(n64Hardware, fileBundle, files);
     var finModel = dlModelBuilder.Model;
 
-    var fileChunks
-        = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
-    if (fileChunks.Chunks.Count == 0) {
-      return finModel;
-    }
-
-    var uvmd
-        = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
-                                 Endianness.BigEndian).ReadNew<Uvmd>();
-
     var finSkeletonRoot = finModel.Skeleton.Root;
     finSkeletonRoot.Transform.LocalRotation
         = Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
 
     var finSkin = finModel.Skin;
     var allFinBoneWeights
-        = uvmd.Transforms
-              .Select(transform => finSkeletonRoot.AddChild(transform))
-              .Select(bone => finSkin.GetOrCreateBoneWeights(
-                          VertexSpace.RELATIVE_TO_BONE,
-                          bone))
-              .ToArray();
+        = (boneMatrices ?? [])
+          .Select(transform => finSkeletonRoot.AddChild(transform))
+          .Select(bone => finSkin.GetOrCreateBoneWeights(
+                      VertexSpace.RELATIVE_TO_BONE,
+                      bone))
+          .ToArray();
 
+    var i = 0;
+    foreach (var materialMeshesForBone in materialMeshesByBone) {
+      if (boneMatrices != null) {
+        rsp.ActiveBoneWeights = allFinBoneWeights[i];
+      } else {
+        rsp.ActiveBoneWeights
+            = finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
+                                             finSkeletonRoot);
+      }
 
-    var uvmdLod0ModelParts = uvmd.Lods[0].ModelParts;
-    for (var i = 0; i < uvmdLod0ModelParts.Length; ++i) {
-      rsp.ActiveBoneWeights = allFinBoneWeights[i];
-
-      var uvmdModelPart = uvmdLod0ModelParts[i];
-      foreach (var uvmdMaterialMesh in uvmdModelPart.MaterialMeshes) {
+      foreach (var uvmdMaterialMesh in materialMeshesForBone) {
         // TODO: Handle billboards
 
         SetUpMaterial_(uvmdMaterialMesh, n64Hardware.Memory, rsp, rdp);
-
         dlModelBuilder.AddDl(uvmdMaterialMesh.DisplayList);
       }
     }

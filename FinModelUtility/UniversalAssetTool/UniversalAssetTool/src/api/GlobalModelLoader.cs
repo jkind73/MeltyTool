@@ -126,6 +126,8 @@ public sealed class GlobalModelImporter : IModelImporter<IModelFileBundle> {
             => new TstltModelImporter().Import(tstltModelFileBundle),
         TtydModelFileBundle ttydModelFileBundle
             => new TtydModelImporter().Import(ttydModelFileBundle),
+        UvctModelFileBundle uvctModelFileBundle
+            => new UvctModelFileImporter().Import(uvctModelFileBundle),
         UvmdModelFileBundle uvmdModelFileBundle
             => new UvmdModelFileImporter().Import(uvmdModelFileBundle),
         VbModelFileBundle vbModelFileBundle
