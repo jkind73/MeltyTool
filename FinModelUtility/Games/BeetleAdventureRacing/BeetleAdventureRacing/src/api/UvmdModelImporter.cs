@@ -21,12 +21,17 @@ using schema.binary;
 
 namespace bar.api;
 
-public sealed record UvmdModelFileBundle(IReadOnlyTreeFile MainFile)
+public sealed record UvmdModelFileBundle(
+    IReadOnlyTreeFile MainFile,
+    IReadOnlyTreeDirectory RootDirectory)
     : IModelFileBundle;
 
 public sealed class UvmdModelFileImporter
     : IModelImporter<UvmdModelFileBundle> {
-  public IModel Import(UvmdModelFileBundle fileBundle) {
+  public IModel Import(UvmdModelFileBundle fileBundle)
+    => Import(fileBundle, true);
+
+  public static IModel Import(UvmdModelFileBundle fileBundle, bool fixRotation) {
     var fileChunks
         = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
     if (fileChunks.Chunks.Count == 0) {
@@ -41,18 +46,28 @@ public sealed class UvmdModelFileImporter
                                  Endianness.BigEndian).ReadNew<Uvmd>();
     return FromMaterialMeshes(
         fileBundle,
+        fileBundle.RootDirectory,
         uvmd.Lods[0].ModelParts.Select(p => p.MaterialMeshes),
+        true,
         uvmd.Transforms);
   }
 
   public static IModel FromMaterialMeshes(
       IFileBundle fileBundle,
-      IEnumerable<UvmdMaterialMesh> materialMeshes)
-    => FromMaterialMeshes(fileBundle, [materialMeshes], null);
+      IReadOnlyTreeDirectory rootDirectory,
+      IEnumerable<UvmdMaterialMesh> materialMeshes,
+      bool fixRotation)
+    => FromMaterialMeshes(fileBundle,
+                          rootDirectory,
+                          [materialMeshes],
+                          fixRotation,
+                          null);
 
   public static IModel FromMaterialMeshes(
       IFileBundle fileBundle,
+      IReadOnlyTreeDirectory rootDirectory,
       IEnumerable<IEnumerable<UvmdMaterialMesh>> materialMeshesByBone,
+      bool fixRotation,
       Matrix4x4[]? boneMatrices) {
     var files = fileBundle.MainFile.AsFileSet();
     var n64Hardware = new N64Hardware<SeparateN64Memory>();
@@ -67,8 +82,10 @@ public sealed class UvmdModelFileImporter
     var finModel = dlModelBuilder.Model;
 
     var finSkeletonRoot = finModel.Skeleton.Root;
-    finSkeletonRoot.Transform.LocalRotation
-        = Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
+    if (fixRotation) {
+      finSkeletonRoot.Transform.LocalRotation
+          = Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
+    }
 
     var finSkin = finModel.Skin;
     var allFinBoneWeights
@@ -83,7 +100,7 @@ public sealed class UvmdModelFileImporter
     foreach (var materialMeshesForBone in materialMeshesByBone) {
       if (boneMatrices != null) {
         rsp.ActiveBoneWeights = allFinBoneWeights[i];
-      } else {
+      } else if (fixRotation) {
         rsp.ActiveBoneWeights
             = finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                              finSkeletonRoot);

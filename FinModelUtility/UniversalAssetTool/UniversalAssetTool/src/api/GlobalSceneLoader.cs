@@ -1,4 +1,6 @@
-﻿using Celeste64.api;
+﻿using bar.api;
+
+using Celeste64.api;
 
 using fin.scene;
 
@@ -49,6 +51,8 @@ public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
         Sm64LevelSceneFileBundle sm64LevelSceneFileBundle
             => new Sm64LevelSceneImporter().Import(
                 sm64LevelSceneFileBundle),
+        UvctSceneFileBundle uvctSceneFileBundle
+            => new UvctSceneFileImporter().Import(uvctSceneFileBundle),
         VictoryHeatRallyTrackSceneFileBundle vhrSceneFileBundle
             => new VictoryHeatRallyTrackSceneImporter().Import(
                 vhrSceneFileBundle),

@@ -22,12 +22,17 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
       IMutablePercentageProgress
           mutablePercentageProgress,
       IFileHierarchy fileHierarchy) {
+    var rootDirectoryImpl = fileHierarchy.Root.Impl;
+
     foreach (var uvmdFile in fileHierarchy.Root.FilesWithExtension(".uvmd")) {
-      organizer.Add(new UvmdModelFileBundle(uvmdFile.Impl));
+      organizer.Add(new UvmdModelFileBundle(uvmdFile.Impl, rootDirectoryImpl));
     }
 
     foreach (var uvctFile in fileHierarchy.Root.FilesWithExtension(".uvct")) {
-      organizer.Add(new UvctModelFileBundle(uvctFile.Impl));
+      var uvctFileImpl = uvctFile.Impl;
+
+      organizer.Add(new UvctModelFileBundle(uvctFileImpl, rootDirectoryImpl));
+      organizer.Add(new UvctSceneFileBundle(uvctFileImpl, rootDirectoryImpl));
     }
   }
 }

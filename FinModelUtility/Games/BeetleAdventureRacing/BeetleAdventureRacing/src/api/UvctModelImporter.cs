@@ -10,7 +10,9 @@ using schema.binary;
 
 namespace bar.api;
 
-public sealed record UvctModelFileBundle(IReadOnlyTreeFile MainFile)
+public sealed record UvctModelFileBundle(
+    IReadOnlyTreeFile MainFile,
+    IReadOnlyTreeDirectory RootDirectory)
     : IModelFileBundle;
 
 public sealed class UvctModelFileImporter
@@ -27,8 +29,11 @@ public sealed class UvctModelFileImporter
 
     var uvct = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
                                       Endianness.BigEndian)
-            .ReadNew<Uvct>();
+        .ReadNew<Uvct>();
     return UvmdModelFileImporter.FromMaterialMeshes(
         fileBundle,
-        uvct.MaterialMeshes.Select(m => m.Impl));
-  }}
+        fileBundle.RootDirectory,
+        uvct.MaterialMeshes.Select(m => m.Impl),
+        true);
+  }
+}
