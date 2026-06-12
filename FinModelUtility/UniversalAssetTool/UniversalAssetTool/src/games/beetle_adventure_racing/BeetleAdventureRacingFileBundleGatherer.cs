@@ -24,15 +24,19 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
       IFileHierarchy fileHierarchy) {
     var rootDirectoryImpl = fileHierarchy.Root.Impl;
 
-    foreach (var uvmdFile in fileHierarchy.Root.FilesWithExtension(".uvmd")) {
+    foreach (var uvmdFile in fileHierarchy.Root.FilesWithExtensionRecursive(".uvmd")) {
       organizer.Add(new UvmdModelFileBundle(uvmdFile.Impl, rootDirectoryImpl));
     }
 
-    foreach (var uvctFile in fileHierarchy.Root.FilesWithExtension(".uvct")) {
+    foreach (var uvctFile in fileHierarchy.Root.FilesWithExtensionRecursive(".uvct")) {
       var uvctFileImpl = uvctFile.Impl;
 
       organizer.Add(new UvctModelFileBundle(uvctFileImpl, rootDirectoryImpl));
       organizer.Add(new UvctSceneFileBundle(uvctFileImpl, rootDirectoryImpl));
+    }
+
+    foreach (var uvtrFile in fileHierarchy.Root.FilesWithExtensionRecursive(".uvtr")) {
+      organizer.Add(new UvtrSceneFileBundle(uvtrFile.Impl, rootDirectoryImpl));
     }
   }
 }

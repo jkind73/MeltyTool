@@ -53,6 +53,8 @@ public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
                 sm64LevelSceneFileBundle),
         UvctSceneFileBundle uvctSceneFileBundle
             => new UvctSceneFileImporter().Import(uvctSceneFileBundle),
+        UvtrSceneFileBundle uvtrSceneFileBundle
+            => new UvtrSceneFileImporter().Import(uvtrSceneFileBundle),
         VictoryHeatRallyTrackSceneFileBundle vhrSceneFileBundle
             => new VictoryHeatRallyTrackSceneImporter().Import(
                 vhrSceneFileBundle),

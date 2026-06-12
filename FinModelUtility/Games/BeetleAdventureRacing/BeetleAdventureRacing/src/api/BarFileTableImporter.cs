@@ -70,8 +70,9 @@ public sealed class BarFileTableImporter
               });
         }
 
+        var type = uvftFileType.Type.ToLower();
         builderRoot.AddFile(
-            $"{i}.{uvftFileType.Type}",
+            $"{type}/{i}.{type}",
             currentFilePosition,
             fileLength);
       }

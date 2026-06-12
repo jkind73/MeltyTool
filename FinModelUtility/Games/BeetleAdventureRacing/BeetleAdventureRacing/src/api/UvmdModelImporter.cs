@@ -37,7 +37,7 @@ public sealed class UvmdModelFileImporter
     if (fileChunks.Chunks.Count == 0) {
       return new ModelImpl {
           FileBundle = fileBundle,
-          Files = new HashSet<IReadOnlyGenericFile>(),
+          Files = fileBundle.MainFile.AsFileSet(),
       };
     }
 

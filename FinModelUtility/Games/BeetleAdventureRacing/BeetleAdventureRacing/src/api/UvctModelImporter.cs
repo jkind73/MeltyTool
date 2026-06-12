@@ -5,6 +5,7 @@ using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
+using fin.util.sets;
 
 using schema.binary;
 
@@ -23,7 +24,7 @@ public sealed class UvctModelFileImporter
     if (fileChunks.Chunks.Count == 0) {
       return new ModelImpl {
           FileBundle = fileBundle,
-          Files = new HashSet<IReadOnlyGenericFile>(),
+          Files = fileBundle.MainFile.AsFileSet(),
       };
     }
 

@@ -8,6 +8,8 @@ using schema.binary.attributes;
 namespace bar.schema;
 
 /// <summary>
+///   "ConTour", a single part of a UVTR track.
+/// 
 ///   Shamelessly stolen from:
 ///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/ParsedFiles/UVCT.ts
 /// </summary>
@@ -70,5 +72,4 @@ public sealed partial class UvctMaterialMesh : IBinaryDeserializable {
 
   [SequenceLengthSource(4)]
   public uint[] Unk1 { get; set; }
-
 }
