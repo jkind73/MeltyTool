@@ -10,7 +10,11 @@ Multitool for viewing/extracting assets from various N64/GCN/3DS/PC games en-mas
 
 Separate batch scripts are provided for each supported game in order to simplify the process.
 
-![image](https://user-images.githubusercontent.com/15970939/204156969-084cc1a4-1824-45c9-becc-e44ad69668d6.png)
+*Current WinForms-based UI:*
+<img width="1160" height="762" alt="image" src="https://github.com/user-attachments/assets/e336b705-81d3-4c4b-bddc-5ef957f7bfea" />
+
+*Upcoming Avalonia-based UI:*
+<img width="1422" height="736" alt="image" src="https://github.com/user-attachments/assets/46a5375c-a960-439a-9073-172cb9fed3ff" />
 
 ## Suggestions
 
