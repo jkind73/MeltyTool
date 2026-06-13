@@ -12,7 +12,6 @@ using f3dzex2.model;
 using fin.data.lazy;
 using fin.io;
 using fin.io.bundles;
-using fin.math;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -74,7 +73,9 @@ public sealed class UvmdModelFileImporter
       bool fixRotation,
       Matrix4x4[]? boneMatrices) {
     var files = fileBundle.MainFile.AsFileSet();
-    var n64Hardware = new N64Hardware<SeparateN64Memory>();
+    var n64Hardware = new N64Hardware<SeparateN64Memory> {
+        DeinterleaveImages = true
+    };
     var n64Memory = n64Hardware.Memory = new SeparateN64Memory();
     var rdp = n64Hardware.Rdp = new Rdp {
         Tmem = new NoclipTmem(n64Hardware),
@@ -101,7 +102,7 @@ public sealed class UvmdModelFileImporter
           .ToArray();
 
     var textureSegmentsAndDisplayListByUvtxIndex
-        = new LazyDictionary<uint, ((byte, ISegment)[] segments, IDisplayList displayList)>(uvtxIndex => {
+        = new LazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments, IDisplayList displayList)>(uvtxIndex => {
           var uvtxFile
               = rootDirectory.AssertGetExistingFile($"uvtx/{uvtxIndex}.uvtx");
 
@@ -115,12 +116,21 @@ public sealed class UvmdModelFileImporter
               n64Memory,
               new F3dzex2OpcodeParser(),
               new SchemaBinaryReader(uvtx.DlCommandsData, Endianness.BigEndian));
-          return ([
+
+          var segments = new List<(byte, ISegment)> {
               (0, new BytesSegment {
                   Offset = 0,
                   Bytes = uvtx.TexelData,
               })
-          ], displayList);
+          };
+          if (uvtx.PalettesData != null) {
+            segments.Add((1, new BytesSegment {
+                Offset = 0,
+                Bytes = uvtx.PalettesData.SelectMany(p => p).ToArray()
+            }));
+          }
+
+          return (uvtx, segments, displayList);
         });
 
     var i = 0;
@@ -156,7 +166,7 @@ public sealed class UvmdModelFileImporter
   private static void SetUpMaterial_(
       DlModelBuilder dlModelBuilder,
       UvmdMaterialMesh materialMesh,
-      ILazyDictionary<uint, ((byte, ISegment)[] segments, IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
+      ILazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments, IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
       ISeparateN64Memory memory,
       IRsp rsp,
       IRdp rdp) {
@@ -251,8 +261,9 @@ public sealed class UvmdModelFileImporter
     rdp.SetSimpleCombinerCycleParams(isTextured, true, false);
 
     if (isTextured) {
-      var (segments, displayList)
+      var (uvtx, segments, displayList)
           = textureSegmentsAndDisplayListByUvtxIndex[materialMesh.UvtxIndex];
+      rdp.PaletteSegmentedAddress = 0x01000000;
 
       foreach (var (segmentIndex, segment) in segments) {
         memory.SetSegment(segmentIndex, segment);

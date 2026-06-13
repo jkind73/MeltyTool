@@ -114,10 +114,8 @@ public sealed class N64ImageParser(IN64Hardware n64Hardware) {
       case N64ColorFormat.RGBA: {
         switch (bitsPerTexel) {
           case BitsPerTexel._16BPT:
-            return PixelImageReader.New(imageWidth,
-                                        imageHeight,
-                                        new Argb1555PixelReader())
-                                   .ReadImage(data, Endianness.BigEndian);
+            return new Argb1555ImageReader(imageWidth, imageHeight, n64Hardware.DeinterleaveImages)
+                                   .ReadImage(new SchemaBinaryReader(data, Endianness.BigEndian));
           case BitsPerTexel._32BPT:
             return PixelImageReader.New(imageWidth,
                                         imageHeight,
@@ -133,10 +131,8 @@ public sealed class N64ImageParser(IN64Hardware n64Hardware) {
       case N64ColorFormat.L: {
         switch (bitsPerTexel) {
           case BitsPerTexel._4BPT:
-            return PixelImageReader.New(imageWidth,
-                                        imageHeight,
-                                        new I4PixelReader())
-                                   .ReadImage(data, Endianness.BigEndian);
+            return new I4ImageReader(width, height, n64Hardware.DeinterleaveImages)
+                                   .ReadImage(new SchemaBinaryReader(data, Endianness.BigEndian));
           case BitsPerTexel._8BPT:
             return PixelImageReader.New(imageWidth,
                                         imageHeight,
@@ -175,16 +171,13 @@ public sealed class N64ImageParser(IN64Hardware n64Hardware) {
       }
       case N64ColorFormat.CI: {
         var indexedImage = bitsPerTexel switch {
-            BitsPerTexel._4BPT => PixelImageReader
-                                  .New(imageWidth,
-                                       imageHeight,
-                                       new L4PixelReader())
-                                  .ReadImage(data, Endianness.BigEndian),
+            BitsPerTexel._4BPT => new CI4ImageReader(imageWidth, imageHeight, n64Hardware.DeinterleaveImages)
+                                  .ReadImage(new SchemaBinaryReader(data, Endianness.BigEndian)),
             BitsPerTexel._8BPT => PixelImageReader
                                   .New(imageWidth,
                                        imageHeight,
                                        new L8PixelReader())
-                                  .ReadImage(data, Endianness.BigEndian),
+                                  .ReadImage(data, Endianness.BigEndian), 
             _ => throw new ArgumentOutOfRangeException(
                 nameof(bitsPerTexel),
                 bitsPerTexel,

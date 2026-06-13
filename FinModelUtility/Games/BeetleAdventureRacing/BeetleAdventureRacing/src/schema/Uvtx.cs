@@ -57,11 +57,9 @@ public sealed partial class Uvtx : IBinaryDeserializable {
     if (this.Unk1 != 0) {
       this.PalettesData = null;
     } else {
-      this.PalettesData = new byte[this.LevelCount + 1][];
+      this.PalettesData = new byte[this.LevelCount][];
       for (var i = 0; i < this.LevelCount; ++i) {
-        //TODO(?)
-        // i+1 because 0 palette is reserved or something
-        this.PalettesData[i + 1] = br.ReadBytes(32);
+        this.PalettesData[i] = br.ReadBytes(32);
       }
     }
   }
