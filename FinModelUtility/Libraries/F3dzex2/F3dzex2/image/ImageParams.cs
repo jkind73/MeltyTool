@@ -25,9 +25,7 @@ public sealed class ImageParams : IEquatable<ImageParams> {
                  .With(this.Height)
                  .With(this.SegmentedAddress);
 
-  public bool IsInvalid => this.Width < 1 ||
-                           this.Height < 1 ||
-                           this.SegmentedAddress == 0;
+  public bool IsInvalid => this.Width < 1 || this.Height < 1;
 
   public bool Equals(ImageParams other)
     => this.ColorFormat == other.ColorFormat &&
