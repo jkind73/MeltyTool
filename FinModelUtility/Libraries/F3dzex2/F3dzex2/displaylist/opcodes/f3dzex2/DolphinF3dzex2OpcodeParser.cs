@@ -41,7 +41,7 @@ public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
                                              F3dzex2Opcode opcode) {
     switch (opcode) {
       case F3dzex2Opcode.G_NOOP:
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       case F3dzex2Opcode.G_DL: {
         var storeReturnAddress = br.ReadByte() == 0;
         br.AssertUInt16(0);
@@ -236,7 +236,7 @@ public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
         var first = br.ReadUInt32();
         var second = br.ReadUInt32();
 
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       }
       case F3dzex2Opcode.G_LOADTILE: {
         var first = br.ReadUInt24();
@@ -277,16 +277,16 @@ public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
       // TODO: Especially implement these
       case F3dzex2Opcode.G_SETCIMG:
       case F3dzex2Opcode.G_SETZIMG:
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       // TODO: Implement these
       case F3dzex2Opcode.G_CULLDL:
       case F3dzex2Opcode.G_BRANCH_Z:
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       case F3dzex2Opcode.G_RDPPIPESYNC:
       case F3dzex2Opcode.G_RDPTILESYNC:
       case F3dzex2Opcode.G_RDPFULLSYNC:
       case F3dzex2Opcode.G_RDPLOADSYNC:
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
 
       default:
         throw new ArgumentOutOfRangeException(nameof(opcode), opcode, null);

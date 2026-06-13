@@ -15,7 +15,7 @@ using fin.util.strings;
 
 namespace f3dzex2.displaylist.opcodes;
 
-public sealed class NoopOpcodeCommand : IOpcodeCommand;
+public sealed record NoopOpcodeCommand(string EnumName) : IOpcodeCommand;
 
 public sealed class SimpleDlOpcodeCommand : IOpcodeCommand {
   public uint SegmentedAddress { get; set; }
@@ -480,7 +480,7 @@ public sealed class LoadBlockOpcodeCommand : IOpcodeCommand {
   public override string ToString() {
     var isb = new IndentedStringBuilder();
     isb.AppendBlock(
-        "SetTileSize",
+        "LoadBlock",
         () => {
           isb.AppendLine(
               $"- tileDescriptorIndex: {(int) this.TileDescriptorIndex}");

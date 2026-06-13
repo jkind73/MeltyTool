@@ -194,7 +194,7 @@ public sealed class F3dOpcodeParser : IOpcodeParser {
       case F3dOpcode.G_MOVEWORD:
       case F3dOpcode.G_SETOTHERMODE_L:
       case F3dOpcode.G_SETOTHERMODE_H:
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       case F3dOpcode.G_RDPLOADSYNC:
       case F3dOpcode.G_RDPPIPESYNC:
       case F3dOpcode.G_RDPTILESYNC:
@@ -203,7 +203,7 @@ public sealed class F3dOpcodeParser : IOpcodeParser {
       case F3dOpcode.G_NOOP: {
         br.AssertUInt24(0);
         br.AssertUInt32(0);
-        return new NoopOpcodeCommand();
+        return new NoopOpcodeCommand(opcode.ToString());
       }
       default:
         throw new ArgumentOutOfRangeException(nameof(opcode), opcode, null);
