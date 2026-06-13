@@ -23,8 +23,11 @@ public sealed partial class Uvtx : IBinaryDeserializable {
   [RSequenceLengthSource(nameof(TexelDataSize))]
   public byte[] TexelData { get; private set; }
 
-  [RSequenceLengthSource(nameof(DlCommandCount))]
-  public byte[] DlCommands { get; private set; }
+  [Skip]
+  public int DlCommandSize => this.DlCommandCount * 8;
+
+  [RSequenceLengthSource(nameof(DlCommandSize))]
+  public byte[] DlCommandsData { get; private set; }
 
   public ushort Width { get; set; }
   public ushort Height { get; set; }
@@ -32,10 +35,10 @@ public sealed partial class Uvtx : IBinaryDeserializable {
   public byte UnkByte3 { get; set; }
   public byte UnkByte4 { get; set; }
   public byte UnkByte5 { get; set; }
- 
+
   public uint FlagsAndIndex { get; set; }
   public ushort OtherUvtxIndex { get; set; }
-  
+
   public ushort Unk6 { get; set; }
   public byte Unk1 { get; set; }
   public byte Unk8 { get; set; }
@@ -45,4 +48,21 @@ public sealed partial class Uvtx : IBinaryDeserializable {
   public uint Unk12 { get; set; }
   public byte BlendAlpha { get; set; }
   public byte LevelCount { get; set; }
+
+  [Skip]
+  public byte[][]? PalettesData { get; set; }
+
+  [ReadLogic]
+  private void ReadPalettes_(IBinaryReader br) {
+    if (this.Unk1 != 0) {
+      this.PalettesData = null;
+    } else {
+      this.PalettesData = new byte[this.LevelCount + 1][];
+      for (var i = 0; i < this.LevelCount; ++i) {
+        //TODO(?)
+        // i+1 because 0 palette is reserved or something
+        this.PalettesData[i + 1] = br.ReadBytes(32);
+      }
+    }
+  }
 }

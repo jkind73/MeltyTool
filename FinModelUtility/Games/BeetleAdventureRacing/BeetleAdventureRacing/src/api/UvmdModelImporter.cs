@@ -2,13 +2,17 @@
 
 using bar.schema;
 
+using f3dzex2.displaylist;
 using f3dzex2.displaylist.opcodes;
+using f3dzex2.displaylist.opcodes.f3dzex2;
 using f3dzex2.image;
 using f3dzex2.io;
 using f3dzex2.model;
 
+using fin.data.lazy;
 using fin.io;
 using fin.io.bundles;
+using fin.math;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -96,6 +100,29 @@ public sealed class UvmdModelFileImporter
                       bone))
           .ToArray();
 
+    var textureSegmentsAndDisplayListByUvtxIndex
+        = new LazyDictionary<uint, ((byte, ISegment)[] segments, IDisplayList displayList)>(uvtxIndex => {
+          var uvtxFile
+              = rootDirectory.AssertGetExistingFile($"uvtx/{uvtxIndex}.uvtx");
+
+          var fileChunks
+              = uvtxFile.ReadNew<FileChunks>(Endianness.BigEndian);
+          var uvtx
+              = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
+                                       Endianness.BigEndian).ReadNew<Uvtx>();
+
+          var displayList = new DisplayListReader().ReadDisplayList(
+              n64Memory,
+              new F3dzex2OpcodeParser(),
+              new SchemaBinaryReader(uvtx.DlCommandsData, Endianness.BigEndian));
+          return ([
+              (0, new BytesSegment {
+                  Offset = 0,
+                  Bytes = uvtx.TexelData,
+              })
+          ], displayList);
+        });
+
     var i = 0;
     foreach (var materialMeshesForBone in materialMeshesByBone) {
       if (boneMatrices != null) {
@@ -109,7 +136,12 @@ public sealed class UvmdModelFileImporter
       foreach (var uvmdMaterialMesh in materialMeshesForBone) {
         // TODO: Handle billboards
 
-        SetUpMaterial_(uvmdMaterialMesh, n64Hardware.Memory, rsp, rdp);
+        SetUpMaterial_(dlModelBuilder,
+                       uvmdMaterialMesh,
+                       textureSegmentsAndDisplayListByUvtxIndex,
+                       n64Hardware.Memory,
+                       rsp,
+                       rdp);
         dlModelBuilder.AddDl(uvmdMaterialMesh.DisplayList);
       }
     }
@@ -122,7 +154,9 @@ public sealed class UvmdModelFileImporter
   ///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/MaterialRenderer.ts#L163
   /// </summary>
   private static void SetUpMaterial_(
+      DlModelBuilder dlModelBuilder,
       UvmdMaterialMesh materialMesh,
+      ILazyDictionary<uint, ((byte, ISegment)[] segments, IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
       ISeparateN64Memory memory,
       IRsp rsp,
       IRdp rdp) {
@@ -213,19 +247,17 @@ public sealed class UvmdModelFileImporter
         (true, true)   => CullingMode.SHOW_NEITHER,
     };
 
-    if (isTextured) {
-      memory.SetSegment(0, 0, new byte[200]);
-      rdp.Tmem.SetImageSimple(
-          0,
-          N64ColorFormat.L,
-          BitsPerTexel._8BPT,
-          1,
-          1,
-          F3dWrapMode.CLAMP,
-          F3dWrapMode.CLAMP);
-    }
-
     rsp.Lighting = renderOpts.CheckFlag(RenderOptions.USES_LIGHTING);
     rdp.SetSimpleCombinerCycleParams(isTextured, true, false);
+
+    if (isTextured) {
+      var (segments, displayList)
+          = textureSegmentsAndDisplayListByUvtxIndex[materialMesh.UvtxIndex];
+
+      foreach (var (segmentIndex, segment) in segments) {
+        memory.SetSegment(segmentIndex, segment);
+      }
+      dlModelBuilder.AddDl(displayList);
+    }
   }
 }
