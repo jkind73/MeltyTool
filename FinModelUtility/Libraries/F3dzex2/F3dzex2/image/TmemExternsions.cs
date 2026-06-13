@@ -59,7 +59,7 @@ public static class TmemExtensions {
     tmem.GsSpTexture(scale.Value, 
                      scale.Value,
                      0,
-                     TileDescriptorIndex.TX_LOADTILE,
+                     0, // TODO: Set this to the primitive tile
                      TileDescriptorState.ENABLED);
 
     tmem.GsDpSetTextureImage(colorFormat,

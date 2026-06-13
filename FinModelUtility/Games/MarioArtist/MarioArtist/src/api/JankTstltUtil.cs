@@ -83,7 +83,7 @@ public static class JankTstltUtil {
     rdp.Tmem.GsSpTexture(BitLogic.ConvertDoubleToBinaryFraction(1),
                          BitLogic.ConvertDoubleToBinaryFraction(1),
                          0,
-                         TileDescriptorIndex.TX_LOADTILE,
+                         0,
                          withTexture0
                              ? TileDescriptorState.ENABLED
                              : TileDescriptorState.DISABLED);

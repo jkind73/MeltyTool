@@ -1,6 +1,5 @@
 ﻿using System;
 
-using f3dzex2.combiner;
 using f3dzex2.image;
 using f3dzex2.io;
 using f3dzex2.model;
@@ -151,7 +150,7 @@ public sealed class F3dOpcodeParser : IOpcodeParser {
             NewTileDescriptorState = newTileDescriptorState,
             HorizontalScaling = horizontalScale,
             VerticalScaling = verticalScale,
-            MaximumNumberOfMipmaps = maximumNumberOfMipmaps,
+            MaximumNumberOfMipmapsMinus1 = maximumNumberOfMipmaps,
         };
       }
       case F3dOpcode.G_SETTILE:

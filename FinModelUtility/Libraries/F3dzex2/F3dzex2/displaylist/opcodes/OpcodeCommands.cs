@@ -199,7 +199,7 @@ public static class TileDescriptorExtensions {
 public sealed class TextureOpcodeCommand : IOpcodeCommand {
   public TileDescriptorIndex TileDescriptorIndex { get; set; }
   public TileDescriptorState NewTileDescriptorState { get; set; }
-  public byte MaximumNumberOfMipmaps { get; set; }
+  public byte MaximumNumberOfMipmapsMinus1 { get; set; }
   public ushort HorizontalScaling { get; set; }
   public ushort VerticalScaling { get; set; }
 }

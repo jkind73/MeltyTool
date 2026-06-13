@@ -352,7 +352,9 @@ public sealed class DlModelBuilder {
                       GenericColorMux.G_CCMUX_ENVIRONMENT => environmentColor,
                       GenericColorMux.G_CCMUX_1           => color1,
                       GenericColorMux.G_CCMUX_0           => color0,
+                      // TODO: Implement these
                       GenericColorMux.G_CCMUX_NOISE       => color1,
+                      GenericColorMux.G_CCMUX_LOD_FRAC    => color0,
                       GenericColorMux.G_CCMUX_CENTER      => color1,
                       GenericColorMux.G_CCMUX_K4          => color1,
                       GenericColorMux.G_CCMUX_COMBINED_ALPHA =>
@@ -653,7 +655,7 @@ public sealed class DlModelBuilder {
           this.n64Hardware_.Rdp.Tmem.GsSpTexture(
               textureOpcodeCommand.HorizontalScaling,
               textureOpcodeCommand.VerticalScaling,
-              textureOpcodeCommand.MaximumNumberOfMipmaps,
+              textureOpcodeCommand.MaximumNumberOfMipmapsMinus1,
               textureOpcodeCommand.TileDescriptorIndex,
               textureOpcodeCommand.NewTileDescriptorState);
           break;

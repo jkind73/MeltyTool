@@ -92,7 +92,7 @@ public sealed class DolphinF3dzex2OpcodeParser : IOpcodeParser {
             NewTileDescriptorState = newTileDescriptorState,
             HorizontalScaling = horizontalScale,
             VerticalScaling = verticalScale,
-            MaximumNumberOfMipmaps = maximumNumberOfMipmaps,
+            MaximumNumberOfMipmapsMinus1 = maximumNumberOfMipmaps,
         };
       }
       case F3dzex2Opcode.G_POPMTX: {

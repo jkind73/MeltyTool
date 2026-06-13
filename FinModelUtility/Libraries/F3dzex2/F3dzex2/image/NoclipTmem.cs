@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using f3dzex2.combiner;
 using f3dzex2.displaylist.opcodes;
 
-using fin.model;
 using fin.util.asserts;
-
 
 namespace f3dzex2.image;
 
@@ -163,7 +160,7 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
   private readonly TileState[] dpTileStates_ =
       Enumerable.Range(0, 8).Select(_ => new TileState()).ToArray();
 
-  private readonly Dictionary<uint, uint> dpTmemTracker_ = new();
+  private readonly TmemAddressDictionary dpTmemTracker_ = new();
 
   public void GsDpLoadBlock(float uls,
                             float ult,
@@ -178,12 +175,14 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
     var tile = this.dpTileStates_[(byte) tileDescriptor];
     // Compute the texture size from lrs/dxt. This is required for mipmapping to work correctly
     // in B-K due to hackery.
-    var numWordsTotal = texels + 1;
-    var numWordsInLine = (1 << 11) / dxt;
-    var numPixelsInLine = (numWordsInLine * 8 * 8) / tile.siz.GetBitCount();
-    var lrs = (numPixelsInLine - 1) << 2;
-    var lrt = (((numWordsTotal / numWordsInLine) / 4) - 1) << 2;
-    tile.SetSize(uls, ult, lrs, lrt, (ushort) lrs);
+    if (dxt != 0) {
+      var numWordsTotal = texels + 1;
+      var numWordsInLine = (1 << 11) / dxt;
+      var numPixelsInLine = (numWordsInLine * 8 * 8) / tile.siz.GetBitCount();
+      var lrs = (numPixelsInLine - 1) << 2;
+      var lrt = (((numWordsTotal / numWordsInLine) / 4) - 1) << 2;
+      tile.SetSize(uls, ult, lrs, lrt, (ushort) lrs);
+    }
 
     // Track the TMEM destination back to the originating DRAM address.
     this.dpTmemTracker_[tile.offsetOfTextureInTmem]
@@ -271,17 +270,18 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
   public void GsSpTexture(ushort scaleS,
                           ushort scaleT,
                           uint maxExtraMipmapLevels,
-                          TileDescriptorIndex tileDescriptor,
+                          TileDescriptorIndex primitiveTileDescriptor,
                           TileDescriptorState tileDescriptorState) {
     // (Melty inclusion)
     n64Hardware.Rsp.TexScaleXShort = scaleS;
     n64Hardware.Rsp.TexScaleYShort = scaleT;
 
-    // This is the texture we're using to rasterize triangles going forward.
+    // This is the texture we're using to rasterize triangles going forward:
+    // https://jrra.zone/n64/doc/tutorial/graphics/9/9_3.htm
     this.spTextureState_.Set((1f * scaleS) / 0x10000,
                              (1f * scaleT) / 0x10000,
                              maxExtraMipmapLevels,
-                             tileDescriptor,
+                             primitiveTileDescriptor,
                              tileDescriptorState);
     this.stateChanged_ = true;
   }
@@ -297,9 +297,17 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
         imageSegmentedAddress);
 
   public MaterialParams GetMaterialParams() {
+    var primitiveTileIndex = this.spTextureState_.tileDescriptor;
+    // TODO: Support LODs
+    var texel0Index = (int) primitiveTileIndex;
+    var texel1Index = texel0Index + 1;
+
+    var textureParams0 = this.GetOrCreateTextureParamsForTile_(texel0Index, 0);
+    var textureParams1 = this.GetOrCreateTextureParamsForTile_(texel1Index, 1);
+
     return new MaterialParams {
-        TextureParams0 = this.GetOrCreateTextureParamsForTile_(0),
-        TextureParams1 = this.GetOrCreateTextureParamsForTile_(1),
+        TextureParams0 = textureParams0,
+        TextureParams1 = textureParams1,
         CombinerCycleParams0 = n64Hardware.Rdp.CombinerCycleParams0,
         CombinerCycleParams1 = n64Hardware.Rdp.CycleType == CycleType.TWO_CYCLE
             ? n64Hardware.Rdp.CombinerCycleParams1
@@ -308,22 +316,24 @@ public sealed class NoclipTmem(IN64Hardware n64Hardware) : ITmem {
     };
   }
 
-  private TextureParams? GetOrCreateTextureParamsForTile_(int index) {
+  private TextureParams? GetOrCreateTextureParamsForTile_(
+      int tileIndex,
+      int uvIndex) {
     if (this.spTextureState_.tileDescriptorState ==
         TileDescriptorState.DISABLED) {
       return null;
     }
 
     var rdp = n64Hardware.Rdp;
-    if (index == 1 && rdp.CycleType != CycleType.TWO_CYCLE) {
+    if (uvIndex == 1 && rdp.CycleType != CycleType.TWO_CYCLE) {
       return null;
     }
 
-    var tile = this.dpTileStates_[index];
+    var tile = this.dpTileStates_[tileIndex];
 
     var textureParams = new TextureParams();
 
-    textureParams.Index = index;
+    textureParams.Index = uvIndex;
 
     textureParams.ColorFormat = tile.fmt;
     textureParams.BitsPerTexel = tile.siz;

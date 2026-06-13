@@ -71,7 +71,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
                 mipmapLevelsAndTileDescriptor,
                 0,
                 3);
-        var maximumNumberOfMipmaps =
+        var maximumNumberOfMipmapsMinus1 =
             (byte) BitLogic.ExtractFromRight(mipmapLevelsAndTileDescriptor,
                                              3,
                                              3);
@@ -85,7 +85,7 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
             NewTileDescriptorState = newTileDescriptorState,
             HorizontalScaling = horizontalScale,
             VerticalScaling = verticalScale,
-            MaximumNumberOfMipmaps = maximumNumberOfMipmaps,
+            MaximumNumberOfMipmapsMinus1 = maximumNumberOfMipmapsMinus1,
         };
       }
       case F3dzex2Opcode.G_POPMTX: {
