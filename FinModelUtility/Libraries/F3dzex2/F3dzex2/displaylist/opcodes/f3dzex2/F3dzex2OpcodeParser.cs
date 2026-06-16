@@ -245,6 +245,8 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
       case F3dzex2Opcode.G_SETCIMG:
       case F3dzex2Opcode.G_SETZIMG:
         return new NoopOpcodeCommand(opcode.ToString());
+      case F3dzex2Opcode.G_SETBLENDCOLOR:
+        return new NoopOpcodeCommand(opcode.ToString());
       // TODO: Implement these
       case F3dzex2Opcode.G_CULLDL:
       case F3dzex2Opcode.G_BRANCH_Z:
@@ -254,7 +256,6 @@ public sealed class F3dzex2OpcodeParser : IOpcodeParser {
       case F3dzex2Opcode.G_RDPFULLSYNC:
       case F3dzex2Opcode.G_RDPLOADSYNC:
         return new NoopOpcodeCommand(opcode.ToString());
-
       default:
         throw new ArgumentOutOfRangeException(nameof(opcode), opcode, null);
     }

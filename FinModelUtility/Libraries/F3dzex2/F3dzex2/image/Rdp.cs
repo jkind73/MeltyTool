@@ -5,6 +5,12 @@ using fin.math;
 
 namespace f3dzex2.image;
 
+public enum AlphaCompare {
+  NONE,
+  COMPARE_TO_BLEND_ALPHA,
+  COMPARE_TO_RANDOM,
+}
+
 public enum ZMode {
   ZMODE_OPA,
   ZMODE_INTER,
@@ -51,6 +57,11 @@ public interface IRdp {
   uint OtherModeL { get; set; }
 
   // Cycle-Independent Blender Settings
+  AlphaCompare AlphaCompare {
+    get => (AlphaCompare) this.OtherModeL.ExtractFromRight(0, 2);
+    set => this.OtherModeL = this.OtherModeL.SetFromRight(0, 2, (uint) value);
+  }
+  
   bool ZCompare {
     get => this.OtherModeL.GetBit(3 + 1);
     set => this.OtherModeL =

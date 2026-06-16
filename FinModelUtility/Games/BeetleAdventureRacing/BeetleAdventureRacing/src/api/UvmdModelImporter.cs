@@ -34,7 +34,8 @@ public sealed class UvmdModelFileImporter
   public IModel Import(UvmdModelFileBundle fileBundle)
     => Import(fileBundle, true);
 
-  public static IModel Import(UvmdModelFileBundle fileBundle, bool fixRotation) {
+  public static IModel
+      Import(UvmdModelFileBundle fileBundle, bool fixRotation) {
     var fileChunks
         = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
     if (fileChunks.Chunks.Count == 0) {
@@ -102,7 +103,8 @@ public sealed class UvmdModelFileImporter
           .ToArray();
 
     var textureSegmentsAndDisplayListByUvtxIndex
-        = new LazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments, IDisplayList displayList)>(uvtxIndex => {
+        = new LazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)>
+            segments, IDisplayList displayList)>(uvtxIndex => {
           var uvtxFile
               = rootDirectory.AssertGetExistingFile($"uvtx/{uvtxIndex}.uvtx");
 
@@ -115,7 +117,8 @@ public sealed class UvmdModelFileImporter
           var displayList = new DisplayListReader().ReadDisplayList(
               n64Memory,
               new F3dzex2OpcodeParser(),
-              new SchemaBinaryReader(uvtx.DlCommandsData, Endianness.BigEndian));
+              new SchemaBinaryReader(uvtx.DlCommandsData,
+                                     Endianness.BigEndian));
 
           var segments = new List<(byte, ISegment)> {
               (0, new BytesSegment {
@@ -166,7 +169,8 @@ public sealed class UvmdModelFileImporter
   private static void SetUpMaterial_(
       DlModelBuilder dlModelBuilder,
       UvmdMaterialMesh materialMesh,
-      ILazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments, IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
+      ILazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments,
+          IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
       ISeparateN64Memory memory,
       IRsp rsp,
       IRdp rdp) {
@@ -190,7 +194,11 @@ public sealed class UvmdModelFileImporter
                       (RenderOptions.UNK_16 |
                        RenderOptions.ENABLE_DEPTH_CALCULATIONS));
 
-      Uvtx? uvtx = null;
+      Uvtx? uvtx = isTextured
+          ? textureSegmentsAndDisplayListByUvtxIndex[materialMesh.UvtxIndex]
+              .Item1
+          : null;
+      var usesAlphaBlending = uvtx?.BlendAlpha != 0xff;
 
       if (m == 0) {
         if (!isTextured)
@@ -202,8 +210,8 @@ public sealed class UvmdModelFileImporter
       if (m == 0x200000) {
         if (!isTextured)
           otherModeLRenderMode = 0x00104b50;
-        //else if (uvtx.usesAlphaBlending)
-        //  otherModeLRenderMode = 0x00105278;
+        else if (usesAlphaBlending)
+          otherModeLRenderMode = 0x00105278;
         else
           otherModeLRenderMode = 0x00104a50;
       }
@@ -220,8 +228,8 @@ public sealed class UvmdModelFileImporter
       if (m == 0x600000) {
         if (!isTextured)
           otherModeLRenderMode = 0x001045d8;
-        //else if (uvtx.usesAlphaBlending)
-        //  otherModeLRenderMode = 0x00105278;
+        else if (usesAlphaBlending)
+          otherModeLRenderMode = 0x00105278;
         else if ( /* TODO: complicated flag checks */ false)
           otherModeLRenderMode = 0x00103078;
         else
@@ -268,6 +276,7 @@ public sealed class UvmdModelFileImporter
       foreach (var (segmentIndex, segment) in segments) {
         memory.SetSegment(segmentIndex, segment);
       }
+
       dlModelBuilder.AddDl(displayList);
     }
   }

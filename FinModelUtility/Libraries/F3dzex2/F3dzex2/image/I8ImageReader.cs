@@ -1,7 +1,5 @@
 ﻿using fin.image;
 using fin.image.formats;
-using fin.image.io.pixel;
-using fin.math;
 
 using schema.binary;
 
@@ -11,9 +9,9 @@ namespace f3dzex2.image;
 
 /// <summary>
 ///   Shamelessly stolen from:
-///   https://github.com/magcius/noclip.website/blob/main/src/Common/N64/Image.ts#L216
+///   https://github.com/magcius/noclip.website/blob/main/src/Common/N64/Image.ts#L241
 /// </summary>
-public sealed class I4ImageReader(int width, int height, bool deinterleave)
+public sealed class I8ImageReader(int width, int height, bool deinterleave)
     : fin.image.io.IImageReader<I8Image> {
   public I8Image ReadImage(IBinaryReader br) {
     var dstIdx = 0;
@@ -23,24 +21,20 @@ public sealed class I4ImageReader(int width, int height, bool deinterleave)
       deinterleave = false;
     }
 
-    var bytes = br.ReadBytes(width * height / 2);
+    var bytes = br.ReadBytes(width * height);
 
-    var image = new I8Image(PixelFormat.I4, width, height);
+    var image = new I8Image(PixelFormat.I8, width, height);
 
     using var fastLock = image.Lock();
     var scan0 = fastLock.Pixels;
 
     for (var y = 0; y < height; ++y) {
       var di = deinterleave ? ((y & 1) << 2) : 0;
-      for (var x = 0; x < width / 2; ++x) {
+      for (var x = 0; x < width; ++x) {
         var b = bytes[srcIdx ^ di];
-
-        var upper = BitLogic.Expand4To8((b >> 4) & 0xF);
-        var lower = BitLogic.Expand4To8(b & 0xF);
-
-        scan0[dstIdx++] = new La16(upper, upper);
-        scan0[dstIdx++] = new La16(lower, lower);
-
+        
+        scan0[dstIdx++] = new La16(b, b);
+        
         ++srcIdx;
       }
     }
