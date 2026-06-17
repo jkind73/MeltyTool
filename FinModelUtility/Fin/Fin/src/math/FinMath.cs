@@ -70,6 +70,10 @@ public static class FinMath {
     => MathF.Ceiling(value / target) * target;
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
+  public static int CeilToNearest(this int value, int target)
+    => (int) MathF.Ceiling(1f * value / target) * target;
+
+  [MethodImpl(MethodImplOptions.AggressiveInlining)]
   public static float FloorToNearest(this float value, float target)
     => MathF.Floor(value / target) * target;
 

@@ -61,6 +61,10 @@ public sealed class PixelImageReader<TPixel>(
          i < width * height;
          i += pixelReader.PixelsPerRead, b += bytesPerRead) {
       pixelIndexer.GetPixelCoordinates(i, out var x, out var y);
+      if (x >= width) {
+        continue;
+      }
+
       var dstOffs = y * width + x;
       pixelReader.Decode(bytes.Slice(b, bytesPerRead),
                          scan0,
