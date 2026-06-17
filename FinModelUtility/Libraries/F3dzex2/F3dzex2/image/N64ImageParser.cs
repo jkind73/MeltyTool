@@ -62,10 +62,14 @@ public static class BitsPerTexelExtensions {
 
   public static uint GetByteCount(this BitsPerTexel bitsPerTexel,
                                   uint texelCount) {
+    if (texelCount == 0) {
+      return 0;
+    }
+
     var wordShift = bitsPerTexel.GetWordShift();
-    return wordShift >= 0
+    return Math.Max(1, wordShift >= 0
         ? texelCount << wordShift
-        : texelCount >> -wordShift;
+        : texelCount >> -wordShift);
   }
 
   public static uint GetBitCount(this BitsPerTexel bitsPerTexel)

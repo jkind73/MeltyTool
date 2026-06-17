@@ -21,7 +21,9 @@ public sealed class A4PixelReader : IPixelReader<La16> {
     var lower = BitLogic.Expand4To8(value & 0xF);
 
     scan0[offset + 0] = new La16(0xFF, upper);
-    scan0[offset + 1] = new La16(0xFF, lower);
+    if (scan0.Length > 1) {
+      scan0[offset + 1] = new La16(0xFF, lower);
+    }
   }
 
   public int PixelsPerRead => 2;

@@ -22,7 +22,9 @@ public sealed class L4PixelReader : IPixelReader<L8> {
     var lower = BitLogic.Expand4To8(value & 0xF);
 
     scan0[offset + 0] = new L8(upper);
-    scan0[offset + 1] = new L8(lower);
+    if (scan0.Length > 1) {
+      scan0[offset + 1] = new L8(lower);
+    }
   }
 
   public int PixelsPerRead => 2;

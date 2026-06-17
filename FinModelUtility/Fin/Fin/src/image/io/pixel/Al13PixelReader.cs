@@ -22,7 +22,9 @@ public sealed class Al13PixelReader : IPixelReader<La16> {
     var lower = (byte) ((value & 0xF) * 17);
 
     scan0[offset + 0] = FromNibble_(upper);
-    scan0[offset + 1] = FromNibble_(lower);
+    if (scan0.Length > 1) {
+      scan0[offset + 1] = FromNibble_(lower);
+    }
   }
 
   [MethodImpl(MethodImplOptions.AggressiveInlining)]
