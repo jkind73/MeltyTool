@@ -108,54 +108,58 @@ public sealed class DlModelBuilder {
             var sizeInBytes = imageParams.BitsPerTexel.GetByteCount(
                 (uint) (imageParams.Width * imageParams.Height));
 
-            byte[] imageData;
-            if (loadTileParams == null) {
-              imageData = br.ReadBytes(sizeInBytes);
-            } else {
-              var (fullWidth, uls, ult) = loadTileParams.Value;
+            try {
+              byte[] imageData;
+              if (loadTileParams == null) {
+                imageData = br.ReadBytes(sizeInBytes);
+              } else {
+                var (fullWidth, uls, ult) = loadTileParams.Value;
 
-              var fullLineSizeInBytes
-                  = (int) imageParams.BitsPerTexel.GetByteCount(
-                      fullWidth);
-              var lineOffsetInBytes
-                  = (int) imageParams.BitsPerTexel.GetByteCount(
-                      uls);
-              var usedLineSizeInBytes
-                  = (int) imageParams.BitsPerTexel.GetByteCount(
-                      imageParams.Width);
+                var fullLineSizeInBytes
+                    = (int) imageParams.BitsPerTexel.GetByteCount(
+                        fullWidth);
+                var lineOffsetInBytes
+                    = (int) imageParams.BitsPerTexel.GetByteCount(
+                        uls);
+                var usedLineSizeInBytes
+                    = (int) imageParams.BitsPerTexel.GetByteCount(
+                        imageParams.Width);
 
-              imageData = new byte[sizeInBytes];
+                imageData = new byte[sizeInBytes];
 
-              Span<byte> fullLineSpan = stackalloc byte[fullLineSizeInBytes];
-              for (var i = 0; i < ult; ++i) {
-                br.ReadBytes(fullLineSpan);
+                Span<byte> fullLineSpan = stackalloc byte[fullLineSizeInBytes];
+                for (var i = 0; i < ult; ++i) {
+                  br.ReadBytes(fullLineSpan);
+                }
+
+                for (var i = 0; i < imageParams.Height; ++i) {
+                  br.ReadBytes(fullLineSpan);
+                  fullLineSpan.Slice(lineOffsetInBytes, usedLineSizeInBytes)
+                              .CopyTo(imageData.AsSpan()
+                                               .Slice(usedLineSizeInBytes * i,
+                                                 usedLineSizeInBytes));
+                }
               }
 
-              for (var i = 0; i < imageParams.Height; ++i) {
-                br.ReadBytes(fullLineSpan);
-                fullLineSpan.Slice(lineOffsetInBytes, usedLineSizeInBytes)
-                            .CopyTo(imageData.AsSpan()
-                                             .Slice(usedLineSizeInBytes * i,
-                                                    usedLineSizeInBytes));
+              br.Dispose();
+
+              var crc32 = Crc32.HashToUInt32(imageData);
+              if (DEDUPLICATE_TEXTURES) {
+                if (imageByDataCrc32.TryGetValue(crc32, out var image)) {
+                  return image;
+                }
               }
+
+              return imageByDataCrc32[crc32]
+                  = new N64ImageParser(this.n64Hardware_).Parse(
+                      imageParams.ColorFormat,
+                      imageParams.BitsPerTexel,
+                      imageData,
+                      imageParams.Width,
+                      imageParams.Height);
+            } catch (Exception e) {
+              return FinImage.Create1x1FromColor(Color.Magenta);
             }
-
-            br.Dispose();
-
-            var crc32 = Crc32.HashToUInt32(imageData);
-            if (DEDUPLICATE_TEXTURES) {
-              if (imageByDataCrc32.TryGetValue(crc32, out var image)) {
-                return image;
-              }
-            }
-
-            return imageByDataCrc32[crc32]
-                = new N64ImageParser(this.n64Hardware_).Parse(
-                    imageParams.ColorFormat,
-                    imageParams.BitsPerTexel,
-                    imageData,
-                    imageParams.Width,
-                    imageParams.Height);
           }
 
           return FinImage.Create1x1FromColor(Color.Magenta);
