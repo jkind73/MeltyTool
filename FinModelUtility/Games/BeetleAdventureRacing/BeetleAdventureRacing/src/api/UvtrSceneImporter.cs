@@ -12,7 +12,8 @@ namespace bar.api;
 
 public sealed record UvtrSceneFileBundle(
     IReadOnlyTreeFile MainFile,
-    IReadOnlyTreeDirectory RootDirectory)
+    IReadOnlyTreeDirectory RootDirectory,
+    string? HumanReadableName)
     : ISceneFileBundle;
 
 public sealed class UvtrSceneFileImporter

@@ -4,6 +4,7 @@ using fin.archives;
 using fin.io;
 using fin.io.bundles;
 using fin.util.progress;
+using fin.util.strings;
 
 namespace uni.games.beetle_adventure_racing;
 
@@ -36,7 +37,24 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
     }
 
     foreach (var uvtrFile in fileHierarchy.Root.FilesWithExtensionRecursive(".uvtr")) {
-      organizer.Add(new UvtrSceneFileBundle(uvtrFile.Impl, rootDirectoryImpl));
+      var displayName = int.Parse(uvtrFile.Name.SubstringUpTo('.')) switch {
+          19 => "Coventry Cove",
+          20 => "Sunset Sands",
+          22 => "Inferno Isle",
+          23 => "Wicked Woods",
+          24 => "Airport",
+          26 => "Castle",
+          27 => "Stadium",
+          28 => "Volcano",
+          29 => "Dunes",
+          30 => "Rooftops",
+          31 => "Ice FLows",
+          32 => "Parkade",
+          33 => "Woods",
+          _ => null,
+      };
+
+      organizer.Add(new UvtrSceneFileBundle(uvtrFile.Impl, rootDirectoryImpl, displayName));
     }
   }
 }
