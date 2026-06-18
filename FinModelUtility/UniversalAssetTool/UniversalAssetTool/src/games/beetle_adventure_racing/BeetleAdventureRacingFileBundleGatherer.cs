@@ -37,7 +37,7 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
     }
 
     foreach (var uvtrFile in fileHierarchy.Root.FilesWithExtensionRecursive(".uvtr")) {
-      var displayName = int.Parse(uvtrFile.Name.SubstringUpTo('.')) switch {
+      var displayName = int.Parse(uvtrFile.NameWithoutExtension) switch {
           19 => "Coventry Cove",
           20 => "Sunset Sands",
           22 => "Inferno Isle",
@@ -48,7 +48,7 @@ public sealed class BeetleAdventureRacingFileBundleGatherer
           28 => "Volcano",
           29 => "Dunes",
           30 => "Rooftops",
-          31 => "Ice FLows",
+          31 => "Ice Flows",
           32 => "Parkade",
           33 => "Woods",
           _ => null,

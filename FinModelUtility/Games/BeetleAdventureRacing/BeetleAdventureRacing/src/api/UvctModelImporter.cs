@@ -34,6 +34,7 @@ public sealed class UvctModelFileImporter
     return UvmdModelFileImporter.FromMaterialMeshes(
         fileBundle,
         fileBundle.RootDirectory,
+        false,
         uvct.MaterialMeshes.Select(m => m.Impl),
         true);
   }

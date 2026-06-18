@@ -12,6 +12,7 @@ using f3dzex2.model;
 using fin.data.lazy;
 using fin.io;
 using fin.io.bundles;
+using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
@@ -51,6 +52,7 @@ public sealed class UvmdModelFileImporter
     return FromMaterialMeshes(
         fileBundle,
         fileBundle.RootDirectory,
+        uvmd.Lods[0].Billboard,
         uvmd.Lods[0].ModelParts.Select(p => p.MaterialMeshes),
         true,
         uvmd.Transforms);
@@ -59,10 +61,12 @@ public sealed class UvmdModelFileImporter
   public static IModel FromMaterialMeshes(
       IFileBundle fileBundle,
       IReadOnlyTreeDirectory rootDirectory,
+      bool isBillboard,
       IEnumerable<UvmdMaterialMesh> materialMeshes,
       bool fixRotation)
     => FromMaterialMeshes(fileBundle,
                           rootDirectory,
+                          isBillboard,
                           [materialMeshes],
                           fixRotation,
                           null);
@@ -70,6 +74,7 @@ public sealed class UvmdModelFileImporter
   public static IModel FromMaterialMeshes(
       IFileBundle fileBundle,
       IReadOnlyTreeDirectory rootDirectory,
+      bool isBillboard,
       IEnumerable<IEnumerable<UvmdMaterialMesh>> materialMeshesByBone,
       bool fixRotation,
       Matrix4x4[]? boneMatrices) {
@@ -92,6 +97,12 @@ public sealed class UvmdModelFileImporter
       finSkeletonRoot.Transform.LocalRotation
           = Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0);
     }
+
+    if (isBillboard) {
+      // TODO: What does this need to be?
+    }
+
+    var needsToUseBoneWeights = fixRotation || isBillboard;
 
     var finSkin = finModel.Skin;
     var allFinBoneWeights
@@ -140,15 +151,13 @@ public sealed class UvmdModelFileImporter
     foreach (var materialMeshesForBone in materialMeshesByBone) {
       if (boneMatrices != null) {
         rsp.ActiveBoneWeights = allFinBoneWeights[i];
-      } else if (fixRotation) {
+      } else if (needsToUseBoneWeights) {
         rsp.ActiveBoneWeights
             = finSkin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                              finSkeletonRoot);
       }
 
       foreach (var uvmdMaterialMesh in materialMeshesForBone) {
-        // TODO: Handle billboards
-
         SetUpMaterial_(dlModelBuilder,
                        uvmdMaterialMesh,
                        textureSegmentsAndDisplayListByUvtxIndex,
@@ -266,7 +275,6 @@ public sealed class UvmdModelFileImporter
     };
 
     rsp.Lighting = renderOpts.CheckFlag(RenderOptions.USES_LIGHTING);
-    rdp.SetSimpleCombinerCycleParams(isTextured, true, false);
 
     if (isTextured) {
       var (uvtx, segments, displayList)
@@ -279,5 +287,8 @@ public sealed class UvmdModelFileImporter
 
       dlModelBuilder.AddDl(displayList);
     }
+
+    var isTranslucent = rdp.ForceBlending;
+    rdp.SetSimpleCombinerCycleParams(isTextured, true, isTranslucent);
   }
 }

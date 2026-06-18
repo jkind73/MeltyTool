@@ -52,10 +52,12 @@ public sealed class UvctSceneFileImporter
     var rootDirectory = fileBundle.RootDirectory;
 
     var uvctNode = rootNode.AddChildNode();
+    uvctNode.Name = $"UVCT #{fileBundle.MainFile.NameWithoutExtension}";
 
     var finLevelModel = UvmdModelFileImporter.FromMaterialMeshes(
         fileBundle,
         rootDirectory,
+        false,
         uvct.MaterialMeshes.Select(m => m.Impl),
         false);
     files.Add(finLevelModel.Files);
@@ -69,9 +71,12 @@ public sealed class UvctSceneFileImporter
               rootDirectory),
           false);
       files.Add(finModel.Files);
-      uvctNode.AddChildNode()
-              .SetMatrix(uvctModel.RdpMatrices[0].ToMatrix4x4())
-              .AddSceneModel(finModel);
+      var uvmdNode = uvctNode.AddChildNode();
+      uvmdNode.SetMatrix(
+          Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(0, MathF.PI / 2, 0)) * 
+          uvctModel.RdpMatrices[0].ToMatrix4x4());
+      uvmdNode.AddSceneModel(finModel);
+      uvmdNode.Name = $"UVMD #{uvctModel.ModelIndex}";
     }
 
     return uvctNode;
