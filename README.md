@@ -151,6 +151,8 @@ If you'd like to vote on new games or features that should be supported, please 
   *(Rip these first with [mfs_manager](https://github.com/LuigiBlood/mfs_manager) and include them in `roms/mario_artist/prereqs`.)*
   - Mario Artist: Polygon Studio
   - Mario Artist: Talent Studio
+- .uvct/.uvmd/.uvtr (N64)
+  - Beetle Adventure Racing! (`beetle_adventure_racing.z64`)
 - .vis/.xtd (PC)
   - Halo Wars (Steam)
 - VRML (.wrl)
