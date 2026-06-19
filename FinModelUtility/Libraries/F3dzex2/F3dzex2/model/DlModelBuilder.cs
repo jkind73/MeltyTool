@@ -334,11 +334,12 @@ public sealed class DlModelBuilder {
               var lodFracAlpha = scalar0;
               var primLodFrac
                   = equations.CreateScalarConstant(rsp.PrimLodFraction);
-              var primColor = equations.CreateColorConstant(
-                  rsp.PrimColor.R / 255f,
-                  rsp.PrimColor.G / 255f,
-                  rsp.PrimColor.B / 255f);
-              var primAlpha = equations.CreateScalarConstant(
+              var primColorConstant = equations
+                      .CreateColorConstant(
+                          rsp.PrimColor.R / 255f,
+                          rsp.PrimColor.G / 255f,
+                          rsp.PrimColor.B / 255f);
+              var primAlphaConstant = equations.CreateScalarConstant(
                   rsp.PrimColor.A / 255f);
               var shadeColor =
                   rsp.GeometryMode.CheckFlag(GeometryMode.G_LIGHTING)
@@ -349,91 +350,138 @@ public sealed class DlModelBuilder {
               IColorValue combinedColor = color0;
               IScalarValue combinedAlpha = scalar0;
 
-              Func<GenericColorMux, int, IColorValue> getColorValue =
-                  (colorMux, cycle) => colorMux switch {
-                      GenericColorMux.G_CCMUX_COMBINED => combinedColor,
-                      GenericColorMux.G_CCMUX_TEXEL0
-                          => cycle == 0
-                              ? equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_COLOR_0)
-                              : equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_COLOR_1),
-                      GenericColorMux.G_CCMUX_TEXEL1
-                          => cycle == 0
-                              ? equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_COLOR_1)
-                              : equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_COLOR_0),
-                      GenericColorMux.G_CCMUX_PRIMITIVE   => primColor,
-                      GenericColorMux.G_CCMUX_SHADE       => shadeColor,
-                      GenericColorMux.G_CCMUX_ENVIRONMENT => environmentColor,
-                      GenericColorMux.G_CCMUX_1           => color1,
-                      GenericColorMux.G_CCMUX_0           => color0,
-                      // TODO: Implement these
-                      GenericColorMux.G_CCMUX_NOISE    => color1,
-                      GenericColorMux.G_CCMUX_LOD_FRAC => lodFracColor,
-                      GenericColorMux.G_CCMUX_CENTER   => color1,
-                      GenericColorMux.G_CCMUX_K4       => color1,
-                      GenericColorMux.G_CCMUX_COMBINED_ALPHA =>
-                          equations.CreateColor(combinedAlpha),
-                      GenericColorMux.G_CCMUX_TEXEL0_ALPHA
-                          => cycle == 0
-                              ? equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_0)
-                              : equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_1),
-                      GenericColorMux.G_CCMUX_TEXEL1_ALPHA
-                          => cycle == 0
-                              ? equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_1)
-                              : equations.CreateOrGetColorInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_0),
-                      GenericColorMux.G_CCMUX_PRIMITIVE_ALPHA =>
-                          equations.CreateColor(primAlpha),
-                      GenericColorMux.G_CCMUX_SHADE_ALPHA
-                          => equations.CreateOrGetColorInput(
-                              FixedFunctionSource.VERTEX_ALPHA_0),
-                      GenericColorMux.G_CCMUX_ENV_ALPHA =>
-                          equations.CreateColor(environmentAlpha),
-                      GenericColorMux.G_CCMUX_PRIM_LOD_FRAC
-                          => primLodFrac.Wrap(),
-                      GenericColorMux.G_CCMUX_SCALE => color1,
-                      GenericColorMux.G_CCMUX_K5    => color1,
-                      _ => throw new ArgumentOutOfRangeException(
-                          nameof(colorMux),
-                          colorMux,
-                          null)
-                  };
-
-              Func<GenericAlphaMux, int, IScalarValue> getAlphaValue =
-                  (alphaMux, cycle) => alphaMux switch {
-                      GenericAlphaMux.G_ACMUX_COMBINED => combinedAlpha,
-                      GenericAlphaMux.G_ACMUX_TEXEL0
-                          => cycle == 0
-                              ? equations.CreateOrGetScalarInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_0)
-                              : equations.CreateOrGetScalarInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_1),
-                      GenericAlphaMux.G_ACMUX_TEXEL1
-                          => cycle == 0
-                              ? equations.CreateOrGetScalarInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_1)
-                              : equations.CreateOrGetScalarInput(
-                                  FixedFunctionSource.TEXTURE_ALPHA_0),
-                      GenericAlphaMux.G_ACMUX_PRIMITIVE => primAlpha,
-                      GenericAlphaMux.G_ACMUX_SHADE
-                          => equations.CreateOrGetScalarInput(
-                              FixedFunctionSource.VERTEX_ALPHA_0),
-                      GenericAlphaMux.G_ACMUX_ENVIRONMENT   => environmentAlpha,
-                      GenericAlphaMux.G_ACMUX_1             => scalar1,
-                      GenericAlphaMux.G_ACMUX_0             => scalar0,
-                      GenericAlphaMux.G_ACMUX_PRIM_LOD_FRAC => primLodFrac,
-                      GenericAlphaMux.G_ACMUX_LOD_FRACTION  => lodFracAlpha,
-                      _ => throw new ArgumentOutOfRangeException(
-                          nameof(alphaMux),
-                          alphaMux,
-                          null)
-                  };
+              var lazyAlphaValues
+                  = new LazyDictionary<(GenericAlphaMux, int cycle),
+                      IScalarValue>(tuple => {
+                    var (alphaMux, cycle) = tuple;
+                    return alphaMux switch {
+                        GenericAlphaMux.G_ACMUX_COMBINED => combinedAlpha,
+                        GenericAlphaMux.G_ACMUX_TEXEL0
+                            => cycle == 0
+                                ? equations.CreateOrGetScalarInput(
+                                    FixedFunctionSource.TEXTURE_ALPHA_0)
+                                : equations.CreateOrGetScalarInput(
+                                    FixedFunctionSource.TEXTURE_ALPHA_1),
+                        GenericAlphaMux.G_ACMUX_TEXEL1
+                            => cycle == 0
+                                ? equations.CreateOrGetScalarInput(
+                                    FixedFunctionSource.TEXTURE_ALPHA_1)
+                                : equations.CreateOrGetScalarInput(
+                                    FixedFunctionSource.TEXTURE_ALPHA_0),
+                        GenericAlphaMux.G_ACMUX_PRIMITIVE => rsp.UseRegisterForPrimColor
+                            ? finMaterial.Registers.GetOrCreateScalarRegister(
+                                "primitiveAlpha",
+                                primAlphaConstant)
+                            : primAlphaConstant,
+                        GenericAlphaMux.G_ACMUX_SHADE
+                            => equations.CreateOrGetScalarInput(
+                                FixedFunctionSource.VERTEX_ALPHA_0),
+                        GenericAlphaMux.G_ACMUX_ENVIRONMENT => environmentAlpha,
+                        GenericAlphaMux.G_ACMUX_1 => scalar1,
+                        GenericAlphaMux.G_ACMUX_0 => scalar0,
+                        GenericAlphaMux.G_ACMUX_PRIM_LOD_FRAC => primLodFrac,
+                        GenericAlphaMux.G_ACMUX_LOD_FRACTION => lodFracAlpha,
+                        _ => throw new ArgumentOutOfRangeException(
+                            nameof(alphaMux),
+                            alphaMux,
+                            null)
+                    };
+                  });
+              var lazyColorValues
+                  = new LazyDictionary<(GenericColorMux, int cycle),
+                      IColorValue>(tuple => {
+                    var (colorMux, cycle) = tuple;
+                    return colorMux switch {
+                        GenericColorMux.G_CCMUX_COMBINED =>
+                            combinedColor,
+                        GenericColorMux.G_CCMUX_TEXEL0
+                            => cycle == 0
+                                ? equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_COLOR_0)
+                                : equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_COLOR_1),
+                        GenericColorMux.G_CCMUX_TEXEL1
+                            => cycle == 0
+                                ? equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_COLOR_1)
+                                : equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_COLOR_0),
+                        GenericColorMux.G_CCMUX_PRIMITIVE =>
+                            rsp.UseRegisterForPrimColor
+                                ? finMaterial.Registers.GetOrCreateColorRegister(
+                                    "primitiveColor",
+                                    primColorConstant)
+                                : primColorConstant,
+                        GenericColorMux.G_CCMUX_SHADE =>
+                            shadeColor,
+                        GenericColorMux.G_CCMUX_ENVIRONMENT =>
+                            environmentColor,
+                        GenericColorMux.G_CCMUX_1 => color1,
+                        GenericColorMux.G_CCMUX_0 => color0,
+                        // TODO: Implement these
+                        GenericColorMux.G_CCMUX_NOISE =>
+                            color1,
+                        GenericColorMux.G_CCMUX_LOD_FRAC =>
+                            lodFracColor,
+                        GenericColorMux.G_CCMUX_CENTER =>
+                            color1,
+                        GenericColorMux.G_CCMUX_K4 => color1,
+                        GenericColorMux.G_CCMUX_COMBINED_ALPHA
+                            =>
+                            equations.CreateColor(
+                                combinedAlpha),
+                        GenericColorMux.G_CCMUX_TEXEL0_ALPHA
+                            => cycle == 0
+                                ? equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_ALPHA_0)
+                                : equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_ALPHA_1),
+                        GenericColorMux.G_CCMUX_TEXEL1_ALPHA
+                            => cycle == 0
+                                ? equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_ALPHA_1)
+                                : equations
+                                    .CreateOrGetColorInput(
+                                        FixedFunctionSource
+                                            .TEXTURE_ALPHA_0),
+                        GenericColorMux.G_CCMUX_PRIMITIVE_ALPHA
+                            => equations.CreateColor(
+                                lazyAlphaValues[
+                                    (GenericAlphaMux.G_ACMUX_PRIMITIVE,
+                                     cycle)]),
+                        GenericColorMux.G_CCMUX_SHADE_ALPHA
+                            => equations.CreateOrGetColorInput(
+                                FixedFunctionSource
+                                    .VERTEX_ALPHA_0),
+                        GenericColorMux.G_CCMUX_ENV_ALPHA =>
+                            equations.CreateColor(
+                                environmentAlpha),
+                        GenericColorMux.G_CCMUX_PRIM_LOD_FRAC
+                            => primLodFrac.Wrap(),
+                        GenericColorMux.G_CCMUX_SCALE =>
+                            color1,
+                        GenericColorMux.G_CCMUX_K5 => color1,
+                        _ => throw new
+                            ArgumentOutOfRangeException(
+                                nameof(colorMux),
+                                colorMux,
+                                null)
+                    };
+                  });
 
               ReadOnlySpan<CombinerCycleParams> cycleParams =
                   cycleParams1 != null
@@ -445,10 +493,10 @@ public sealed class DlModelBuilder {
 
               for (var cycle = 0; cycle < cycleParams.Length; ++cycle) {
                 var combinerCycleParams = cycleParams[cycle];
-                var cA = getColorValue(combinerCycleParams.ColorMuxA, cycle);
-                var cB = getColorValue(combinerCycleParams.ColorMuxB, cycle);
-                var cC = getColorValue(combinerCycleParams.ColorMuxC, cycle);
-                var cD = getColorValue(combinerCycleParams.ColorMuxD, cycle);
+                var cA = lazyColorValues[(combinerCycleParams.ColorMuxA, cycle)];
+                var cB = lazyColorValues[(combinerCycleParams.ColorMuxB, cycle)];
+                var cC = lazyColorValues[(combinerCycleParams.ColorMuxC, cycle)];
+                var cD = lazyColorValues[(combinerCycleParams.ColorMuxD, cycle)];
 
                 combinedColor = colorOps.Add(
                                     colorOps.Multiply(
@@ -457,10 +505,10 @@ public sealed class DlModelBuilder {
                                     cD) ??
                                 colorOps.Zero;
 
-                var aA = getAlphaValue(combinerCycleParams.AlphaMuxA, cycle);
-                var aB = getAlphaValue(combinerCycleParams.AlphaMuxB, cycle);
-                var aC = getAlphaValue(combinerCycleParams.AlphaMuxC, cycle);
-                var aD = getAlphaValue(combinerCycleParams.AlphaMuxD, cycle);
+                var aA = lazyAlphaValues[(combinerCycleParams.AlphaMuxA, cycle)];
+                var aB = lazyAlphaValues[(combinerCycleParams.AlphaMuxB, cycle)];
+                var aC = lazyAlphaValues[(combinerCycleParams.AlphaMuxC, cycle)];
+                var aD = lazyAlphaValues[(combinerCycleParams.AlphaMuxD, cycle)];
 
                 combinedAlpha = scalarOps.Add(
                                     scalarOps.Multiply(

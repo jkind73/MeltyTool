@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 using bar.schema;
 
@@ -299,6 +300,8 @@ public sealed class UvmdModelFileImporter
     rsp.UvType = renderOpts.CheckFlag(RenderOptions.ENABLE_TEX_GEN_SPHERICAL)
         ? N64UvType.SPHERICAL
         : N64UvType.STANDARD;
+    rsp.UseRegisterForPrimColor = true;
+    rsp.PrimColor = Color.White;
 
     rdp.CombinerCycleParams0 = null!;
     rdp.CombinerCycleParams1 = null!;

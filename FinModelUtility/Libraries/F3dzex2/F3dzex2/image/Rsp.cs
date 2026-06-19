@@ -32,6 +32,7 @@ public interface IRsp {
 
   float PrimLodFraction { get; set; }
   Color PrimColor { get; set; }
+  bool UseRegisterForPrimColor { get; set; }
 
   CullingMode CullingMode { get; set; }
 
@@ -83,6 +84,7 @@ public sealed class Rsp : IRsp {
   public Color EnvironmentColor { get; set; }
   public float PrimLodFraction { get; set; } = .5f;
   public Color PrimColor { get; set; }
+  public bool UseRegisterForPrimColor { get; set; }
 
   public CullingMode CullingMode { get; set; }
 
