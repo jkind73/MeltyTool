@@ -296,6 +296,9 @@ public sealed class UvmdModelFileImporter
     };
 
     rsp.Lighting = renderOpts.CheckFlag(RenderOptions.USES_LIGHTING);
+    rsp.UvType = renderOpts.CheckFlag(RenderOptions.ENABLE_TEX_GEN_SPHERICAL)
+        ? N64UvType.SPHERICAL
+        : N64UvType.STANDARD;
 
     rdp.CombinerCycleParams0 = null!;
     rdp.CombinerCycleParams1 = null!;
