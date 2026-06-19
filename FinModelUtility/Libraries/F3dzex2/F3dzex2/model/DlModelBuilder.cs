@@ -257,9 +257,9 @@ public sealed class DlModelBuilder {
               var cycleParams1 = materialParams.CombinerCycleParams1;
 
               var usesTexel0 = cycleParams0.DependsOnTexel(0) ||
-                               (cycleParams1?.DependsOnTexel(0) ?? false);
-              var usesTexel1 = cycleParams0.DependsOnTexel(1) ||
                                (cycleParams1?.DependsOnTexel(1) ?? false);
+              var usesTexel1 = cycleParams0.DependsOnTexel(1) ||
+                               (cycleParams1?.DependsOnTexel(0) ?? false);
 
               /*if (!usesTexel0 &&
                   (!usesTexel1 || segmentAndTextureParams1 != null)) {
@@ -348,15 +348,21 @@ public sealed class DlModelBuilder {
               IColorValue combinedColor = color0;
               IScalarValue combinedAlpha = scalar0;
 
-              Func<GenericColorMux, IColorValue> getColorValue =
-                  (colorMux) => colorMux switch {
+              Func<GenericColorMux, int, IColorValue> getColorValue =
+                  (colorMux, cycle) => colorMux switch {
                       GenericColorMux.G_CCMUX_COMBINED => combinedColor,
                       GenericColorMux.G_CCMUX_TEXEL0
-                          => equations.CreateOrGetColorInput(
-                              FixedFunctionSource.TEXTURE_COLOR_0),
+                          => cycle == 0
+                              ? equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_COLOR_0)
+                              : equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_COLOR_1),
                       GenericColorMux.G_CCMUX_TEXEL1
-                          => equations.CreateOrGetColorInput(
-                              FixedFunctionSource.TEXTURE_COLOR_1),
+                          => cycle == 0
+                              ? equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_COLOR_1)
+                              : equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_COLOR_0),
                       GenericColorMux.G_CCMUX_PRIMITIVE   => primColor,
                       GenericColorMux.G_CCMUX_SHADE       => shadeColor,
                       GenericColorMux.G_CCMUX_ENVIRONMENT => environmentColor,
@@ -370,11 +376,17 @@ public sealed class DlModelBuilder {
                       GenericColorMux.G_CCMUX_COMBINED_ALPHA =>
                           equations.CreateColor(combinedAlpha),
                       GenericColorMux.G_CCMUX_TEXEL0_ALPHA
-                          => equations.CreateOrGetColorInput(
-                              FixedFunctionSource.TEXTURE_ALPHA_0),
+                          => cycle == 0
+                              ? equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_0)
+                              : equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_1),
                       GenericColorMux.G_CCMUX_TEXEL1_ALPHA
-                          => equations.CreateOrGetColorInput(
-                              FixedFunctionSource.TEXTURE_ALPHA_1),
+                          => cycle == 0
+                              ? equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_1)
+                              : equations.CreateOrGetColorInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_0),
                       GenericColorMux.G_CCMUX_PRIMITIVE_ALPHA =>
                           equations.CreateColor(primAlpha),
                       GenericColorMux.G_CCMUX_SHADE_ALPHA
@@ -392,15 +404,21 @@ public sealed class DlModelBuilder {
                           null)
                   };
 
-              Func<GenericAlphaMux, IScalarValue> getAlphaValue =
-                  (alphaMux) => alphaMux switch {
+              Func<GenericAlphaMux, int, IScalarValue> getAlphaValue =
+                  (alphaMux, cycle) => alphaMux switch {
                       GenericAlphaMux.G_ACMUX_COMBINED => combinedAlpha,
-                      GenericAlphaMux.G_ACMUX_TEXEL0 =>
-                          equations.CreateOrGetScalarInput(
-                              FixedFunctionSource.TEXTURE_ALPHA_0),
-                      GenericAlphaMux.G_ACMUX_TEXEL1 =>
-                          equations.CreateOrGetScalarInput(
-                              FixedFunctionSource.TEXTURE_ALPHA_1),
+                      GenericAlphaMux.G_ACMUX_TEXEL0
+                          => cycle == 0
+                              ? equations.CreateOrGetScalarInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_0)
+                              : equations.CreateOrGetScalarInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_1),
+                      GenericAlphaMux.G_ACMUX_TEXEL1
+                          => cycle == 0
+                              ? equations.CreateOrGetScalarInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_1)
+                              : equations.CreateOrGetScalarInput(
+                                  FixedFunctionSource.TEXTURE_ALPHA_0),
                       GenericAlphaMux.G_ACMUX_PRIMITIVE => primAlpha,
                       GenericAlphaMux.G_ACMUX_SHADE
                           => equations.CreateOrGetScalarInput(
@@ -424,11 +442,12 @@ public sealed class DlModelBuilder {
                       ]
                       : [cycleParams0];
 
-              foreach (var combinerCycleParams in cycleParams) {
-                var cA = getColorValue(combinerCycleParams.ColorMuxA);
-                var cB = getColorValue(combinerCycleParams.ColorMuxB);
-                var cC = getColorValue(combinerCycleParams.ColorMuxC);
-                var cD = getColorValue(combinerCycleParams.ColorMuxD);
+              for (var cycle = 0; cycle < cycleParams.Length; ++cycle) {
+                var combinerCycleParams = cycleParams[cycle];
+                var cA = getColorValue(combinerCycleParams.ColorMuxA, cycle);
+                var cB = getColorValue(combinerCycleParams.ColorMuxB, cycle);
+                var cC = getColorValue(combinerCycleParams.ColorMuxC, cycle);
+                var cD = getColorValue(combinerCycleParams.ColorMuxD, cycle);
 
                 combinedColor = colorOps.Add(
                                     colorOps.Multiply(
@@ -437,10 +456,10 @@ public sealed class DlModelBuilder {
                                     cD) ??
                                 colorOps.Zero;
 
-                var aA = getAlphaValue(combinerCycleParams.AlphaMuxA);
-                var aB = getAlphaValue(combinerCycleParams.AlphaMuxB);
-                var aC = getAlphaValue(combinerCycleParams.AlphaMuxC);
-                var aD = getAlphaValue(combinerCycleParams.AlphaMuxD);
+                var aA = getAlphaValue(combinerCycleParams.AlphaMuxA, cycle);
+                var aB = getAlphaValue(combinerCycleParams.AlphaMuxB, cycle);
+                var aC = getAlphaValue(combinerCycleParams.AlphaMuxC, cycle);
+                var aD = getAlphaValue(combinerCycleParams.AlphaMuxD, cycle);
 
                 combinedAlpha = scalarOps.Add(
                                     scalarOps.Multiply(
