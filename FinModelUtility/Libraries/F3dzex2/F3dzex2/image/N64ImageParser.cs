@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Pipelines;
 using System.Linq;
 
 using fin.color;
@@ -61,16 +62,8 @@ public static class BitsPerTexelExtensions {
     };
 
   public static uint GetByteCount(this BitsPerTexel bitsPerTexel,
-                                  uint texelCount) {
-    if (texelCount == 0) {
-      return 0;
-    }
-
-    var wordShift = bitsPerTexel.GetWordShift();
-    return Math.Max(1, wordShift >= 0
-        ? texelCount << wordShift
-        : texelCount >> -wordShift);
-  }
+                                  uint texelCount)
+    => ImageUtils.GetByteCount(texelCount, bitsPerTexel.GetBitCount());
 
   public static uint GetBitCount(this BitsPerTexel bitsPerTexel)
     => bitsPerTexel switch {

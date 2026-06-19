@@ -29,8 +29,10 @@ public sealed class BasicTileReader<TPixel>(
     var xx = tileX * this.TileWidth;
     var yy = tileY * this.TileHeight;
 
-    Span<byte> bytes = stackalloc byte[this.TileWidth * this.TileHeight *
-        pixelReader.BitsPerPixel / 8];
+    Span<byte> bytes = stackalloc byte[(int) ImageUtils.GetByteCount(
+            (uint) this.TileWidth,
+            (uint) this.TileHeight,
+            (uint) pixelReader.BitsPerPixel)];
 
     var bytesPerRead = pixelReader.PixelsPerRead * pixelReader.BitsPerPixel / 8;
     br.FillBuffer(bytes, bytesPerRead);

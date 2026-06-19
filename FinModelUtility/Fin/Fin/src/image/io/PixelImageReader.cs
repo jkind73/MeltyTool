@@ -51,8 +51,10 @@ public sealed class PixelImageReader<TPixel>(
     using var imageLock = image.Lock();
     var scan0 = imageLock.Pixels;
 
-    Span<byte> bytes =
-        stackalloc byte[Math.Max(1, width * height * pixelReader.BitsPerPixel / 8)];
+    Span<byte> bytes = stackalloc byte[(int) ImageUtils.GetByteCount(
+        (uint) width,
+        (uint) height,
+        (uint) pixelReader.BitsPerPixel)];
 
     var bytesPerRead = pixelReader.PixelsPerRead * pixelReader.BitsPerPixel / 8;
     br.FillBuffer(bytes, bytesPerRead);
