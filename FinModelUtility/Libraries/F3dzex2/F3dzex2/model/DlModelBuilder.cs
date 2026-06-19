@@ -331,6 +331,8 @@ public sealed class DlModelBuilder {
                   rsp.EnvironmentColor.B / 255f);
               var environmentAlpha = equations.CreateScalarConstant(
                   rsp.EnvironmentColor.A / 255f);
+              var lodFracColor = color0;
+              var lodFracAlpha = scalar0;
               var primLodFrac
                   = equations.CreateScalarConstant(rsp.PrimLodFraction);
               var primColor = equations.CreateColorConstant(
@@ -369,10 +371,10 @@ public sealed class DlModelBuilder {
                       GenericColorMux.G_CCMUX_1           => color1,
                       GenericColorMux.G_CCMUX_0           => color0,
                       // TODO: Implement these
-                      GenericColorMux.G_CCMUX_NOISE       => color1,
-                      GenericColorMux.G_CCMUX_LOD_FRAC    => color0,
-                      GenericColorMux.G_CCMUX_CENTER      => color1,
-                      GenericColorMux.G_CCMUX_K4          => color1,
+                      GenericColorMux.G_CCMUX_NOISE    => color1,
+                      GenericColorMux.G_CCMUX_LOD_FRAC => lodFracColor,
+                      GenericColorMux.G_CCMUX_CENTER   => color1,
+                      GenericColorMux.G_CCMUX_K4       => color1,
                       GenericColorMux.G_CCMUX_COMBINED_ALPHA =>
                           equations.CreateColor(combinedAlpha),
                       GenericColorMux.G_CCMUX_TEXEL0_ALPHA
@@ -427,7 +429,7 @@ public sealed class DlModelBuilder {
                       GenericAlphaMux.G_ACMUX_1             => scalar1,
                       GenericAlphaMux.G_ACMUX_0             => scalar0,
                       GenericAlphaMux.G_ACMUX_PRIM_LOD_FRAC => primLodFrac,
-                      GenericAlphaMux.G_ACMUX_LOD_FRACTION  => scalar1,
+                      GenericAlphaMux.G_ACMUX_LOD_FRACTION  => lodFracAlpha,
                       _ => throw new ArgumentOutOfRangeException(
                           nameof(alphaMux),
                           alphaMux,
