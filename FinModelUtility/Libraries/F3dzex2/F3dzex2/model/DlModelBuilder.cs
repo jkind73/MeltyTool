@@ -20,7 +20,10 @@ using fin.language.equations.fixedFunction.impl;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
+using fin.util.asserts;
 using fin.util.enums;
+using fin.util.hex;
+using fin.util.linq;
 
 using schema.binary;
 
@@ -98,7 +101,10 @@ public sealed class DlModelBuilder {
                     .TryToOpenPossibilitiesAtSegmentedAddress(
                         imageParams.SegmentedAddress,
                         out var possibilities)) {
-              br = possibilities.First();
+              if (!possibilities.TryGetFirst(out br)) {
+                return FinImage.Create1x1FromColor(Color.Magenta);
+                //Asserts.Fail($"Failed to find an image at address 0x{imageParams.SegmentedAddress.ToHex()}");
+              }
             }
           }
 

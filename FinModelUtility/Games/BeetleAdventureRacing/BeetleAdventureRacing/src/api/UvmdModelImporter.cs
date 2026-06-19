@@ -2,6 +2,7 @@
 
 using bar.schema;
 
+using f3dzex2.combiner;
 using f3dzex2.displaylist;
 using f3dzex2.displaylist.opcodes;
 using f3dzex2.displaylist.opcodes.f3dzex2;
@@ -12,18 +13,22 @@ using f3dzex2.model;
 using fin.data.lazy;
 using fin.io;
 using fin.io.bundles;
-using fin.math.rotations;
 using fin.model;
 using fin.model.impl;
 using fin.model.io;
 using fin.model.io.importers;
 using fin.model.util;
+using fin.util.enumerables;
 using fin.util.enums;
 using fin.util.sets;
 
 using schema.binary;
 
 namespace bar.api;
+
+using UvtxData
+    = (Uvtx uvtx0, Uvtx? uvtx1, IReadOnlyList<(byte, ISegment)> segments,
+    IDisplayList displayList);
 
 public sealed record UvmdModelFileBundle(
     IReadOnlyTreeFile MainFile,
@@ -113,39 +118,56 @@ public sealed class UvmdModelFileImporter
                       bone))
           .ToArray();
 
-    var textureSegmentsAndDisplayListByUvtxIndex
-        = new LazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)>
-            segments, IDisplayList displayList)>(uvtxIndex => {
-          var uvtxFile
-              = rootDirectory.AssertGetExistingFile($"uvtx/{uvtxIndex}.uvtx");
+    var uvtxByIndex = new LazyDictionary<uint, Uvtx>(uvtxIndex => {
+      var uvtxFile
+          = rootDirectory.AssertGetExistingFile($"uvtx/{uvtxIndex}.uvtx");
 
-          var fileChunks
-              = uvtxFile.ReadNew<FileChunks>(Endianness.BigEndian);
-          var uvtx
-              = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
-                                       Endianness.BigEndian).ReadNew<Uvtx>();
+      var fileChunks
+          = uvtxFile.ReadNew<FileChunks>(Endianness.BigEndian);
+      return new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
+                                    Endianness.BigEndian).ReadNew<Uvtx>();
+    });
 
-          var displayList = new DisplayListReader().ReadDisplayList(
-              n64Memory,
-              new F3dzex2OpcodeParser(),
-              new SchemaBinaryReader(uvtx.DlCommandsData,
-                                     Endianness.BigEndian));
+    var uvtxDataByIndex = new LazyDictionary<uint, UvtxData>(uvtxIndex => {
+      var uvtx0 = uvtxByIndex[uvtxIndex];
+      var uvtx1 = (uvtx0.OtherUvtxIndex != 0xFFF &&
+                   uvtx0.OtherUvtxIndex != (uvtx0.FlagsAndIndex & 0xFFF))
+          ? uvtxByIndex[uvtx0.OtherUvtxIndex]
+          : null;
 
-          var segments = new List<(byte, ISegment)> {
-              (0, new BytesSegment {
-                  Offset = 0,
-                  Bytes = uvtx.TexelData,
-              })
-          };
-          if (uvtx.PalettesData != null) {
-            segments.Add((1, new BytesSegment {
-                Offset = 0,
-                Bytes = uvtx.PalettesData.SelectMany(p => p).ToArray()
-            }));
-          }
+      var displayList = new DisplayListReader().ReadDisplayList(
+          n64Memory,
+          new F3dzex2OpcodeParser(),
+          new SchemaBinaryReader(uvtx0.DlCommandsData,
+                                 Endianness.BigEndian));
 
-          return (uvtx, segments, displayList);
-        });
+      Span<uint> uvtxAddresses = stackalloc uint[2];
+      uvtxAddresses[0] = 0;
+      uvtxAddresses[1] = 0x01000000;
+
+      SetTimgAddresses_(displayList, uvtxAddresses);
+
+      var segments = new List<(byte, ISegment)>();
+      segments.Add((0, new BytesSegment {
+          Offset = 0,
+          Bytes = uvtx0.TexelData,
+      }));
+      if (uvtx1 != null) {
+        segments.Add((1, new BytesSegment {
+            Offset = 0,
+            Bytes = uvtx1.TexelData,
+        }));
+      }
+
+      if (uvtx0.PalettesData != null) {
+        segments.Add((2, new BytesSegment {
+            Offset = 0,
+            Bytes = uvtx0.PalettesData.SelectMany(p => p).ToArray()
+        }));
+      }
+
+      return (uvtx0, uvtx1, segments, displayList);
+    });
 
     var i = 0;
     foreach (var materialMeshesForBone in materialMeshesByBone) {
@@ -158,12 +180,12 @@ public sealed class UvmdModelFileImporter
       }
 
       foreach (var uvmdMaterialMesh in materialMeshesForBone) {
-        SetUpMaterial_(dlModelBuilder,
-                       uvmdMaterialMesh,
-                       textureSegmentsAndDisplayListByUvtxIndex,
-                       n64Hardware.Memory,
-                       rsp,
-                       rdp);
+        var uvtxData = SetUpMaterial_(dlModelBuilder,
+                                      uvmdMaterialMesh,
+                                      uvtxDataByIndex,
+                                      n64Hardware.Memory,
+                                      rsp,
+                                      rdp);
         dlModelBuilder.AddDl(uvmdMaterialMesh.DisplayList);
       }
     }
@@ -175,11 +197,10 @@ public sealed class UvmdModelFileImporter
   ///   Shamelessly stolen from:
   ///   https://github.com/magcius/noclip.website/blob/main/src/BeetleAdventureRacing/MaterialRenderer.ts#L163
   /// </summary>
-  private static void SetUpMaterial_(
+  private static UvtxData? SetUpMaterial_(
       DlModelBuilder dlModelBuilder,
       UvmdMaterialMesh materialMesh,
-      ILazyDictionary<uint, (Uvtx, IReadOnlyList<(byte, ISegment)> segments,
-          IDisplayList displayList)> textureSegmentsAndDisplayListByUvtxIndex,
+      ILazyDictionary<uint, UvtxData> uvtxDataByIndex,
       ISeparateN64Memory memory,
       IRsp rsp,
       IRdp rdp) {
@@ -204,7 +225,7 @@ public sealed class UvmdModelFileImporter
                        RenderOptions.ENABLE_DEPTH_CALCULATIONS));
 
       Uvtx? uvtx = isTextured
-          ? textureSegmentsAndDisplayListByUvtxIndex[materialMesh.UvtxIndex]
+          ? uvtxDataByIndex[materialMesh.UvtxIndex]
               .Item1
           : null;
       var usesAlphaBlending = uvtx?.BlendAlpha != 0xff;
@@ -276,10 +297,14 @@ public sealed class UvmdModelFileImporter
 
     rsp.Lighting = renderOpts.CheckFlag(RenderOptions.USES_LIGHTING);
 
+    rdp.CombinerCycleParams0 = null!;
+    rdp.CombinerCycleParams1 = null!;
+
+    UvtxData? uvtxData = null;
     if (isTextured) {
-      var (uvtx, segments, displayList)
-          = textureSegmentsAndDisplayListByUvtxIndex[materialMesh.UvtxIndex];
-      rdp.PaletteSegmentedAddress = 0x01000000;
+      uvtxData = uvtxDataByIndex[materialMesh.UvtxIndex];
+      var (uvtx0, uvtx1, segments, displayList) = uvtxData.Value;
+      rdp.PaletteSegmentedAddress = 0x02000000;
 
       foreach (var (segmentIndex, segment) in segments) {
         memory.SetSegment(segmentIndex, segment);
@@ -289,6 +314,32 @@ public sealed class UvmdModelFileImporter
     }
 
     var isTranslucent = rdp.ForceBlending;
-    rdp.SetSimpleCombinerCycleParams(isTextured, true, isTranslucent);
+    if (rdp.CombinerCycleParams0 != null && rdp.CombinerCycleParams1 == null) {
+      rdp.CycleType = CycleType.ONE_CYCLE;
+    } else if (rdp.CombinerCycleParams0 == null) {
+      rdp.SetSimpleCombinerCycleParams(isTextured, true, isTranslucent);
+    }
+
+    return uvtxData;
+  }
+
+  private static void SetTimgAddresses_(
+      IDisplayList? displayList,
+      ReadOnlySpan<uint> newTimgAddresses) {
+    if (displayList == null) {
+      return;
+    }
+
+    var newTimgIndex = 0;
+
+    foreach (var opcode in displayList.OpcodeCommands) {
+      switch (opcode) {
+        case SetTimgOpcodeCommand setTimgOpcodeCommand: {
+          setTimgOpcodeCommand.TextureSegmentedAddress
+              = newTimgAddresses[newTimgIndex++];
+          break;
+        }
+      }
+    }
   }
 }
