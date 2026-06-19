@@ -314,10 +314,20 @@ public sealed class UvmdModelFileImporter
     }
 
     var isTranslucent = rdp.ForceBlending;
-    if (rdp.CombinerCycleParams0 != null && rdp.CombinerCycleParams1 == null) {
-      rdp.CycleType = CycleType.ONE_CYCLE;
-    } else if (rdp.CombinerCycleParams0 == null) {
-      rdp.SetSimpleCombinerCycleParams(isTextured, true, isTranslucent);
+    switch (rdp.CombinerCycleParams0 == null,
+            rdp.CombinerCycleParams1 == null) {
+      case (false, false): {
+        rdp.CycleType = CycleType.TWO_CYCLE;
+        break;
+      }
+      case (false, true): {
+        rdp.CycleType = CycleType.ONE_CYCLE;
+        break;
+      }
+      default: {
+        rdp.SetSimpleCombinerCycleParams(isTextured, true, isTranslucent);
+        break;
+      }
     }
 
     return uvtxData;
