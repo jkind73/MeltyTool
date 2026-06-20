@@ -146,7 +146,11 @@ public sealed class UvmdModelFileImporter
       uvtxAddresses[0] = 0;
       uvtxAddresses[1] = 0x01000000;
 
-      SetTimgAddresses_(displayList, uvtxAddresses);
+      Uvtx?[] uvtxes = new Uvtx?[2];
+      uvtxes[0] = uvtx0;
+      uvtxes[1] = uvtx1;
+
+      displayList = StubDisplayList_(displayList, uvtxAddresses, uvtxes);
 
       var segments = new List<(byte, ISegment)>();
       segments.Add((0, new BytesSegment {
@@ -339,23 +343,75 @@ public sealed class UvmdModelFileImporter
     return uvtxData;
   }
 
-  private static void SetTimgAddresses_(
+  private static IDisplayList? StubDisplayList_(
       IDisplayList? displayList,
-      ReadOnlySpan<uint> newTimgAddresses) {
+      ReadOnlySpan<uint> newTimgAddresses,
+      ReadOnlySpan<Uvtx?> uvtxes) {
     if (displayList == null) {
-      return;
+      return null;
     }
 
+    TileDescriptorIndex? primitiveTileIndex = null;
     var newTimgIndex = 0;
+    Span<bool> foundSetTileSizes = stackalloc bool[2];
 
     foreach (var opcode in displayList.OpcodeCommands) {
       switch (opcode) {
+        case TextureOpcodeCommand textureOpcodeCommand: {
+          primitiveTileIndex = textureOpcodeCommand.TileDescriptorIndex;
+          break;
+        }
         case SetTimgOpcodeCommand setTimgOpcodeCommand: {
           setTimgOpcodeCommand.TextureSegmentedAddress
               = newTimgAddresses[newTimgIndex++];
           break;
         }
+        case SetTileSizeOpcodeCommand setTileSizeOpcodeCommand: {
+          if (setTileSizeOpcodeCommand.TileDescriptorIndex ==
+              primitiveTileIndex) {
+            foundSetTileSizes[0] = true;
+          }
+          else if (setTileSizeOpcodeCommand.TileDescriptorIndex ==
+              primitiveTileIndex + 1) {
+            foundSetTileSizes[1] = true;
+          }
+          break;
+        }
       }
     }
+
+    // TODO: Is stubbing in the width/height really necessary, or is there a bug
+    // in my TMEM code?
+    var newOpcodes = new List<IOpcodeCommand>();
+    newOpcodes.AddRange(displayList.OpcodeCommands.Where(o => o is not EndDlOpcodeCommand));
+
+    if (primitiveTileIndex != null) {
+      var uvtx0 = uvtxes[0];
+      if (!foundSetTileSizes[0]) {
+        newOpcodes.Add(new SetTileSizeOpcodeCommand {
+            Uls = .5f,
+            Ult = .5f,
+            Lrs = uvtx0.Width - .5f,
+            Lrt = uvtx0.Height - .5f,
+            TileDescriptorIndex = primitiveTileIndex.Value,
+        });
+      }
+
+      var uvtx1 = uvtxes[1];
+      if (uvtx1 != null && !foundSetTileSizes[1]) {
+        newOpcodes.Add(new SetTileSizeOpcodeCommand {
+            Uls = .5f,
+            Ult = .5f,
+            Lrs = uvtx1.Width - .5f,
+            Lrt = uvtx1.Height - .5f,
+            TileDescriptorIndex = (TileDescriptorIndex) (primitiveTileIndex + 1),
+        });
+      }
+    }
+
+    return new DisplayList {
+        Type = DisplayListType.F3DZEX2,
+        OpcodeCommands = newOpcodes,
+    };
   }
 }
