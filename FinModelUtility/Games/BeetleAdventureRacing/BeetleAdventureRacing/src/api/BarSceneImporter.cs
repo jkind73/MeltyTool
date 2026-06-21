@@ -3,7 +3,9 @@
 using bar.schema;
 
 using fin.color;
+using fin.data.lazy;
 using fin.io;
+using fin.model;
 using fin.scene;
 using fin.util.sets;
 
@@ -39,11 +41,14 @@ public sealed class BarSceneFileImporter
     var barSceneEntry = barSceneUvmo.Entries[fileBundle.SceneIndex];
 
     var rootDirectory = fileBundle.RootDirectory;
+    var lazyUvmdModelDictionary
+        = BarUtils.CreateLazyUvmdModelDictionary(files, rootDirectory);
     AddUvtrToScene(
         rootDirectory.AssertGetExistingFile(
             $"uvtr/{barSceneEntry.UvtrIndex}.uvtr"),
         rootDirectory,
         files,
+        lazyUvmdModelDictionary,
         rootNode);
     AddUvenToScene(
         rootDirectory.AssertGetExistingFile(
@@ -60,6 +65,7 @@ public sealed class BarSceneFileImporter
       IReadOnlyTreeFile uvtrFile,
       IReadOnlyTreeDirectory rootDirectory,
       HashSet<IReadOnlyGenericFile> files,
+      ILazyDictionary<short, IReadOnlyModel> lazyUvmdModelDictionary,
       ISceneNode rootNode) {
     var fileChunks = uvtrFile.ReadNew<FileChunks>(Endianness.BigEndian);
     var uvtr = new SchemaBinaryReader(fileChunks.Chunks[0].Buffer,
@@ -80,6 +86,7 @@ public sealed class BarSceneFileImporter
                   $"uvct/{uvtrCell.Data.UvctIndex}.uvct"),
               rootDirectory),
           files,
+          lazyUvmdModelDictionary,
           uvtrNode);
       node?.SetMatrix(uvtrCell.Data.Transform);
     }

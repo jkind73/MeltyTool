@@ -2,6 +2,7 @@
 
 using bar.schema;
 
+using fin.data.lazy;
 using fin.io;
 using fin.scene;
 using fin.util.sets;
@@ -37,6 +38,11 @@ public sealed class UvtrSceneFileImporter
                                       Endianness.BigEndian)
         .ReadNew<Uvtr>();
 
+    var lazyUvmdModelDictionary
+        = BarUtils.CreateLazyUvmdModelDictionary(
+            files,
+            fileBundle.RootDirectory);
+
     var rootDirectory = fileBundle.RootDirectory;
 
     foreach (var uvtrCell in uvtr.Cells) {
@@ -50,6 +56,7 @@ public sealed class UvtrSceneFileImporter
                   $"uvct/{uvtrCell.Data.UvctIndex}.uvct"),
               rootDirectory),
           files,
+          lazyUvmdModelDictionary,
           rootNode);
       node?.SetMatrix(uvtrCell.Data.Transform);
     }

@@ -2,7 +2,9 @@
 
 using bar.schema;
 
+using fin.data.lazy;
 using fin.io;
+using fin.model;
 using fin.scene;
 using fin.util.sets;
 
@@ -28,7 +30,12 @@ public sealed class UvctSceneFileImporter
     var rootNode = finArea.AddRootNode();
     rootNode.SetMatrix(BarUtils.ROOT_MATRIX);
 
-    AddToScene(fileBundle, files, rootNode);
+    var lazyUvmdModelDictionary
+        = BarUtils.CreateLazyUvmdModelDictionary(
+            files,
+            fileBundle.RootDirectory);
+
+    AddToScene(fileBundle, files, lazyUvmdModelDictionary, rootNode);
 
     return finScene;
   }
@@ -36,6 +43,7 @@ public sealed class UvctSceneFileImporter
   public static ISceneNode? AddToScene(
       UvctSceneFileBundle fileBundle,
       HashSet<IReadOnlyGenericFile> files,
+      ILazyDictionary<short, IReadOnlyModel> lazyUvmdModelDictionary,
       ISceneNode rootNode) {
     var fileChunks
         = fileBundle.MainFile.ReadNew<FileChunks>(Endianness.BigEndian);
@@ -51,7 +59,7 @@ public sealed class UvctSceneFileImporter
 
     var uvctNode = rootNode.AddChildNode();
     uvctNode.Name = $"UVCT #{fileBundle.MainFile.NameWithoutExtension}";
-
+    
     var finLevelModel = UvmdModelFileImporter.FromMaterialMeshes(
         fileBundle,
         rootDirectory,
@@ -62,13 +70,7 @@ public sealed class UvctSceneFileImporter
     uvctNode.AddChildNode().AddSceneModel(finLevelModel);
 
     foreach (var uvctModel in uvct.Models) {
-      var finModel = UvmdModelFileImporter.Import(
-          new UvmdModelFileBundle(
-              rootDirectory.AssertGetExistingFile(
-                  $"uvmd/{uvctModel.ModelIndex}.uvmd"),
-              rootDirectory),
-          false);
-      files.Add(finModel.Files);
+      var finModel = lazyUvmdModelDictionary[uvctModel.ModelIndex];
       var uvmdNode = uvctNode.AddChildNode();
       uvmdNode.SetMatrix(
           Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromYawPitchRoll(0, MathF.PI / 2, 0)) * 
