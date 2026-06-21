@@ -26,9 +26,7 @@ public sealed class UvctSceneFileImporter
     var finArea = finScene.AddArea();
 
     var rootNode = finArea.AddRootNode();
-    rootNode.SetMatrix(
-        Matrix4x4.CreateFromQuaternion(
-            Quaternion.CreateFromYawPitchRoll(0, -MathF.PI / 2, 0)));
+    rootNode.SetMatrix(BarUtils.ROOT_MATRIX);
 
     AddToScene(fileBundle, files, rootNode);
 

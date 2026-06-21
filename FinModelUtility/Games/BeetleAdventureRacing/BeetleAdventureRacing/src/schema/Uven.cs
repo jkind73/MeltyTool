@@ -17,21 +17,21 @@ public sealed partial class Uven : IBinaryDeserializable {
   public Rgb24 FogColor { get; set; }
 
   [SequenceLengthSource(40)]
-  public byte[] Unk0 { get; }
+  public byte[] Unk0 { get; set; }
 
   [IntegerFormat(SchemaIntegerType.BYTE)]
   public bool ShouldClearScreen { get; set; }
 
   [SequenceLengthSource(5)]
-  public byte[] Unk1 { get; }
+  public byte[] Unk1 { get; set; }
 
   public byte UvmdCount { get; set; }
 
-  [SequenceLengthSource(60)]
-  public byte[] Unk2 { get; }
+  [SequenceLengthSource(43)]
+  public byte[] Unk2 { get; set; }
 
   [RSequenceLengthSource(nameof(UvmdCount))]
-  public UvmdTuple[] Uvmds { get; }
+  public UvmdTuple[] Uvmds { get; set; }
 }
 
 [BinarySchema]

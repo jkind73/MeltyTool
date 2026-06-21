@@ -32,6 +32,8 @@ namespace uni.api;
 public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
   public IScene Import(ISceneFileBundle sceneFileBundle)
     => sceneFileBundle switch {
+        BarSceneFileBundle barSceneFileBundle
+            => new BarSceneFileImporter().Import(barSceneFileBundle),
         BolSceneFileBundle bolSceneFileBundle
             => new BolSceneImporter().Import(bolSceneFileBundle),
         BwSceneFileBundle bwSceneFileBundle
@@ -53,8 +55,6 @@ public sealed class GlobalSceneImporter : ISceneImporter<ISceneFileBundle> {
                 sm64LevelSceneFileBundle),
         UvctSceneFileBundle uvctSceneFileBundle
             => new UvctSceneFileImporter().Import(uvctSceneFileBundle),
-        UvtrSceneFileBundle uvtrSceneFileBundle
-            => new UvtrSceneFileImporter().Import(uvtrSceneFileBundle),
         VictoryHeatRallyTrackSceneFileBundle vhrSceneFileBundle
             => new VictoryHeatRallyTrackSceneImporter().Import(
                 vhrSceneFileBundle),

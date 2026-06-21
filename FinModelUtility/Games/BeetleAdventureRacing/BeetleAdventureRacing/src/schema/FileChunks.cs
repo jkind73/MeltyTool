@@ -43,18 +43,15 @@ public sealed partial class FileChunks : IBinaryDeserializable {
 
           break;
         }
-        case "COMM": {
-          var commData = br.ReadBytes(chunkLength);
-          chunks.Add(new UvFileChunk(chunkTag, commData));
-          break;
-        }
         case "PAD ": {
           var padData = br.ReadBytes(chunkLength);
           //chunks.Add(new UvFileChunk(chunkTag, padData));
           break;
         }
         default: {
-          throw new NotImplementedException();
+          var commData = br.ReadBytes(chunkLength);
+          chunks.Add(new UvFileChunk(chunkTag, commData));
+          break;
         }
       }
     }
