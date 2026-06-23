@@ -1,6 +1,5 @@
 ﻿using System;
 
-using fin.math.matrix.four;
 using fin.ui.rendering;
 using fin.ui.rendering.gl;
 using fin.ui.rendering.gl.ubo;

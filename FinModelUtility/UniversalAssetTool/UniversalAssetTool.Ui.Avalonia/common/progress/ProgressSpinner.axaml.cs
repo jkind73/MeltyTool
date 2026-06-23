@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 
 using fin.ui;
-using fin.ui.avalonia;
 using fin.util.tasks;
 
 using ReactiveUI;

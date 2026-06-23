@@ -22,8 +22,6 @@ using SharpGLTF.Materials;
 using SharpGLTF.Memory;
 using SharpGLTF.Schema2;
 
-using AlphaMode = SharpGLTF.Materials.AlphaMode;
-
 namespace fin.model.io.exporters.gltf;
 
 public static class GltfMaterialBuilder {

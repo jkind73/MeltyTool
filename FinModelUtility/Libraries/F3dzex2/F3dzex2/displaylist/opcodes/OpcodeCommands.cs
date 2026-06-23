@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 using f3dzex2.combiner;
 using f3dzex2.image;

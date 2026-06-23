@@ -23,7 +23,6 @@ using SixLabors.ImageSharp.PixelFormats;
 
 using Color = System.Drawing.Color;
 using Image = SixLabors.ImageSharp.Image;
-using Rectangle = System.Drawing.Rectangle;
 
 namespace fin.image;
 

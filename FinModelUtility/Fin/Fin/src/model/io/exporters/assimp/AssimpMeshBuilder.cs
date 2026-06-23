@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
+﻿using System.Linq;
 
 using Assimp;
 
-using fin.data.dictionaries;
 using fin.data.queues;
 using fin.model;
 
 
 namespace fin.exporter.assimp {
-  using FinPrimitiveType = fin.model.PrimitiveType;
   using AssPrimitiveType = Assimp.PrimitiveType;
 
   public class AssimpMeshBuilder {

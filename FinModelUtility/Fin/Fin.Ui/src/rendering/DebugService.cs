@@ -1,5 +1,4 @@
-﻿using fin.ui.rendering.gl;
-using fin.util.types;
+﻿using fin.util.types;
 
 using ReactiveUI;
 

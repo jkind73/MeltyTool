@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.HighPerformance;
-
-using fin.model;
+﻿using fin.model;
 using fin.shaders.glsl;
 
 using Vector4 = System.Numerics.Vector4;

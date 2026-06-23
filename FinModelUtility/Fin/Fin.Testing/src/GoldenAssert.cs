@@ -7,8 +7,6 @@ using fin.util.asserts;
 using fin.util.exceptions;
 using fin.util.strings;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using SixLabors.ImageSharp.PixelFormats;
 
 

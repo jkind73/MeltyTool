@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using schema.binary;
+﻿using schema.binary;
 using schema.binary.testing;
 
 namespace fin.testing;

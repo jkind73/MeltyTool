@@ -1,8 +1,5 @@
-﻿using System.Numerics;
-
-using fin.schema;
+﻿using fin.schema;
 using fin.schema.color;
-using fin.schema.matrix;
 
 using schema.binary;
 using schema.binary.attributes;

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using fin.image.util;
-using fin.language.equations.fixedFunction;
 
 namespace fin.model.util;
 

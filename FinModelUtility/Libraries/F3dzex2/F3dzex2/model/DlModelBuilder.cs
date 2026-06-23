@@ -20,9 +20,7 @@ using fin.language.equations.fixedFunction.impl;
 using fin.model;
 using fin.model.impl;
 using fin.model.util;
-using fin.util.asserts;
 using fin.util.enums;
-using fin.util.hex;
 using fin.util.linq;
 
 using schema.binary;
@@ -32,7 +30,7 @@ using Color = System.Drawing.Color;
 
 namespace f3dzex2.model;
 
-public sealed class DlModelBuilder {
+public sealed partial class DlModelBuilder {
   private readonly IN64Hardware n64Hardware_;
   private IMesh? currentMesh_;
 
@@ -77,6 +75,7 @@ public sealed class DlModelBuilder {
 
     var imageByDataCrc32 = new Dictionary<uint, IReadOnlyImage>();
 
+    // TODO: Deduplicate images with exact same data
     this.lazyImageDictionary_ =
         new(segmentAndImageParams => {
           var (_, imageParams) = segmentAndImageParams;
@@ -174,6 +173,7 @@ public sealed class DlModelBuilder {
     var textureByImageAndParams
         = new Dictionary<(IReadOnlyImage, WrapMode wrapModeU, WrapMode wrapModeV, float repeatCountS, float repeatCountT, UvType uvType, int uvIndex), IReadOnlyTexture>();
 
+    // TODO: Deduplicate textures with exact same data
     this.lazyTextureDictionary_ =
         new(segmentAndTextureParamsOrNull => {
           if (segmentAndTextureParamsOrNull == null) {

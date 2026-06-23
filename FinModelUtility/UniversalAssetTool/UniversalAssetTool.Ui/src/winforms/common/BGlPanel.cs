@@ -3,8 +3,6 @@
 using fin.ui.rendering.gl;
 using fin.util.time;
 
-using OpenTK.Graphics.OpenGL4;
-
 using uni.util.windows;
 
 namespace uni.ui.winforms.common;

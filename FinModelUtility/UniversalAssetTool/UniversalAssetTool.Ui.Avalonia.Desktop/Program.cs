@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Globalization;
-using System.Text;
 
 using Avalonia;
 
 using fin.services;
 using fin.ui;
 using fin.ui.avalonia;
-using fin.ui.rendering.gl;
-using fin.util.time;
 
 using uni.cli;
 

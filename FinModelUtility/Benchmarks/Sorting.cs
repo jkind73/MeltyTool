@@ -1,7 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
 
-using VxSort;
-
 namespace benchmarks;
 
 public class Sorting {

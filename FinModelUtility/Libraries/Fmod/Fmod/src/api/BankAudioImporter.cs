@@ -7,8 +7,6 @@ using fin.io;
 using fin.util.asserts;
 using fin.util.sets;
 
-using Fmod5Sharp.CodecRebuilders;
-
 namespace fmod.api;
 
 public record BankAudioFileBundle(IReadOnlyTreeFile BankFile)

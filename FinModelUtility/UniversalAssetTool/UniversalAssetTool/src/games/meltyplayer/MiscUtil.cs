@@ -2,7 +2,6 @@
 using fin.io.bundles;
 using fin.model;
 using fin.model.io.importers.gltf;
-using fin.model.util;
 
 using gm.api;
 

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-using Assimp.Unmanaged;
-
 using fin.io;
 using fin.io.bundles;
 using fin.util.enumerables;

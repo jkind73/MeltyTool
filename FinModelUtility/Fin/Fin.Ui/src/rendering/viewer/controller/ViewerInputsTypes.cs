@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace fin.ui.rendering.viewer.controller;
+﻿namespace fin.ui.rendering.viewer.controller;
 
 public interface IViewerInputs {
   float MovementForwardVector { get; }

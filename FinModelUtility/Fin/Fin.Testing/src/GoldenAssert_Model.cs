@@ -2,8 +2,6 @@
 using fin.util.asserts;
 using fin.util.exceptions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using SharpGLTF.Schema2;
 
 

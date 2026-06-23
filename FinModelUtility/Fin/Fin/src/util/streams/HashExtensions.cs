@@ -3,7 +3,6 @@ using System.IO;
 using System.IO.Hashing;
 
 using schema.binary;
-using schema.util.streams;
 
 namespace fin.util.streams;
 

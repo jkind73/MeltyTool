@@ -18,7 +18,6 @@ using fin.util.enums;
 using Material.Icons;
 using Material.Icons.Avalonia;
 
-using uni.ui.avalonia.resources;
 using uni.ui.avalonia.resources.scene;
 
 namespace uni.ui.avalonia.resources;

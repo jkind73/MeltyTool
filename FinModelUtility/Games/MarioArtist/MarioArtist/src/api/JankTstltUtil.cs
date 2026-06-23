@@ -3,7 +3,6 @@
 using f3dzex2.combiner;
 using f3dzex2.displaylist.opcodes;
 using f3dzex2.image;
-using f3dzex2.io;
 
 using fin.math;
 using fin.model;

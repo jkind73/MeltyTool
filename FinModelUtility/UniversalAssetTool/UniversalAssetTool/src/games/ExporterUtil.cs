@@ -12,7 +12,6 @@ using fin.model.io.exporters.assimp.indirect;
 using fin.model.io.importers;
 using fin.model.processing;
 using fin.util.asserts;
-using fin.util.linq;
 using fin.util.progress;
 
 using uni.config;

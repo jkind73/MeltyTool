@@ -1,7 +1,6 @@
 ﻿using System.Numerics;
 
 using fin.math.matrix.four;
-using fin.model;
 using fin.model.impl;
 using fin.model.util;
 using fin.shaders.glsl;

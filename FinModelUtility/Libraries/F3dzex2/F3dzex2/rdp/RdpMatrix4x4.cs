@@ -3,8 +3,6 @@ using System.Numerics;
 
 using CommunityToolkit.HighPerformance;
 
-using fin.math.matrix.four;
-
 using schema.binary;
 using schema.binary.attributes;
 

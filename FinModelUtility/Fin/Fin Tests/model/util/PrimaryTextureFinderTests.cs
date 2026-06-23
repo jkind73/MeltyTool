@@ -1,11 +1,8 @@
 ﻿using System.Drawing;
-using System.Linq;
 
 using fin.image;
 using fin.model.impl;
 using fin.util.asserts;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using NUnit.Framework;
 

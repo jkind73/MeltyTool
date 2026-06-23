@@ -1,7 +1,5 @@
-﻿using System.Drawing;
-using System.Numerics;
+﻿using System.Numerics;
 
-using fin.color;
 using fin.data.dictionaries;
 using fin.image;
 using fin.io;

@@ -1,14 +1,9 @@
 ﻿using System.Numerics;
 
-using bar.schema;
-
 using fin.data.lazy;
 using fin.io;
 using fin.model;
-using fin.scene;
 using fin.util.sets;
-
-using schema.binary;
 
 namespace bar.api;
 
