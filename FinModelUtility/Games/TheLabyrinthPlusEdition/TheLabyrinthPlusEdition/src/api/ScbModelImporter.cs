@@ -1,8 +1,12 @@
 ﻿using System.Numerics;
 
+using fin.animation.keyframes;
+using fin.color;
 using fin.data.dictionaries;
+using fin.data.lazy;
 using fin.image;
 using fin.io;
+using fin.math.rotations;
 using fin.math.transform;
 using fin.model;
 using fin.model.impl;
@@ -100,6 +104,14 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
 
     var finBoneByName = new CaseInvariantStringDictionary<IBone>();
 
+    var framerate = 30f;
+    var lazyAnimationById = new LazyDictionary<uint, IModelAnimation>(i => {
+      var finAnimation = finModel.AnimationManager.AddAnimation();
+      finAnimation.Name = $"animation {i}";
+      finAnimation.FrameRate = framerate;
+      return finAnimation;
+    });
+
     foreach (var scbSection in scb.Sections) {
       switch (scbSection) {
         case JointSection joint: {
@@ -109,8 +121,8 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
           }
 
           currentBone = parentBone.AddChild(AdjustVector3_(joint.Translation));
-          currentBone.Transform.SetRotationRadians(
-              AdjustVector3_(joint.Rotation));
+          currentBone.Transform.SetRotation(
+              ConvertRotationToQuaternion_(joint.Rotation));
           currentBone.Transform.SetScale(AdjustVector3_(joint.Scale));
           currentBone.Name = joint.Name;
 
@@ -120,6 +132,24 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
               = finModel.Skin.GetOrCreateBoneWeights(
                   VertexSpace.RELATIVE_TO_BONE,
                   currentBone);
+
+          break;
+        }
+        case AnimationSection animationSection: {
+          var finAnimation = lazyAnimationById[animationSection.Id];
+
+          var finBoneTracks = finAnimation.GetOrCreateBoneTracks(currentBone!);
+          var rotationTrack = finBoneTracks.UseCombinedQuaternionKeyframes(
+              animationSection.Keyframes.Length);
+          foreach (var keyframe in animationSection.Keyframes) {
+            var frame = keyframe.Frame / framerate;
+
+            finAnimation.FrameCount = (int) Math.Max(finAnimation.FrameCount, frame);
+
+            var rotation = currentBone.Transform.LocalRotation.Value *
+                           ConvertRotationToQuaternion_(keyframe.EulerRadians);
+            rotationTrack.SetKeyframe(frame, rotation);
+          }
 
           break;
         }
@@ -162,6 +192,7 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
                 (IReadOnlyList<(IReadOnlyVertex, IReadOnlyVertex,
                     IReadOnlyVertex)>) trianglesByMaterial[materialId]);
             finPrimitive.SetMaterial(materialById[materialId]);
+            finPrimitive.SetVertexOrder(VertexOrder.COUNTER_CLOCKWISE);
           }
 
           break;
@@ -183,8 +214,10 @@ public sealed class ScbModelImporter : IModelImporter<ScbModelFileBundle> {
   private static Vector2 AdjustVector2_(Vector2 input)
     => input with { Y = 1 - input.Y };
 
-  private static Vector3 AdjustVector3_(Vector3 input)
-    => new(input.X, input.Z, input.Y);
+  private static Vector3 AdjustVector3_(Vector3 input) => input;
+
+  private static Quaternion ConvertRotationToQuaternion_(Vector3 input)
+    => input.CreateZyxRadians();
 
   private static IList<BallAttributes> ReadAllBallAttributes_(
       IReadOnlyTreeFile file) {

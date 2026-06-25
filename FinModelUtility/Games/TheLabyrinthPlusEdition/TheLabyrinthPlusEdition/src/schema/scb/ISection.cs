@@ -4,7 +4,7 @@ namespace tlpe.scb;
 
 public enum SectionType : uint {
   SECTION_1 = 1,
-  SECTION_2 = 2,
+  ANIMATION = 2,
   MESH = 3,
   SECTION_6 = 6,
 }

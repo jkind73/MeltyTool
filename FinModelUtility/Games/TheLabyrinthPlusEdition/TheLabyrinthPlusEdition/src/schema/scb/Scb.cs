@@ -42,8 +42,8 @@ public sealed partial class Scb : IBinaryConvertible {
           sections.Add(br.ReadNew<JointSection>());
           break;
         }
-        case SectionType.SECTION_2: {
-          sections.Add(br.ReadNew<Section2>());
+        case SectionType.ANIMATION: {
+          sections.Add(br.ReadNew<AnimationSection>());
           break;
         }
         case SectionType.MESH: {
