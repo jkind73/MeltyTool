@@ -353,6 +353,7 @@ public sealed class UvmdModelFileImporter
     TileDescriptorIndex? primitiveTileIndex = null;
     var newTimgIndex = 0;
     Span<bool> foundSetTileSizes = stackalloc bool[2];
+    Span<uint?> foundTmemOffsets = stackalloc uint?[2];
 
     foreach (var opcode in displayList.OpcodeCommands) {
       switch (opcode) {
@@ -363,6 +364,17 @@ public sealed class UvmdModelFileImporter
         case SetTimgOpcodeCommand setTimgOpcodeCommand: {
           setTimgOpcodeCommand.TextureSegmentedAddress
               = newTimgAddresses[newTimgIndex++];
+          break;
+        }
+        case SetTileOpcodeCommand setTileOpcodeCommand: {
+          if (setTileOpcodeCommand.TileDescriptorIndex ==
+              primitiveTileIndex) {
+            foundTmemOffsets[0] = setTileOpcodeCommand.OffsetOfTextureInTmem;
+          }
+          else if (setTileOpcodeCommand.TileDescriptorIndex ==
+                   primitiveTileIndex + 1) {
+            foundTmemOffsets[1] = setTileOpcodeCommand.OffsetOfTextureInTmem;
+          }
           break;
         }
         case SetTileSizeOpcodeCommand setTileSizeOpcodeCommand: {
@@ -403,6 +415,15 @@ public sealed class UvmdModelFileImporter
             Ult = .5f,
             Lrs = uvtx1.Width - .5f,
             Lrt = uvtx1.Height - .5f,
+            TileDescriptorIndex = (TileDescriptorIndex) (primitiveTileIndex + 1),
+        });
+      } else if (foundTmemOffsets[0] == foundTmemOffsets[1] &&
+                 foundTmemOffsets[0] != null) {
+        newOpcodes.Add(new SetTileSizeOpcodeCommand {
+            Uls = .5f,
+            Ult = .5f,
+            Lrs = uvtx0.Width - .5f,
+            Lrt = uvtx0.Height - .5f,
             TileDescriptorIndex = (TileDescriptorIndex) (primitiveTileIndex + 1),
         });
       }
