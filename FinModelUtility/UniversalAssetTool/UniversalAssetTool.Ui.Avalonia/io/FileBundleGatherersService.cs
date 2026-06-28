@@ -76,7 +76,7 @@ public static class FileBundleGatherersService {
                 SelectedFileTreeDirectoryService.SelectFileTreeDirectory(
                     leafNode.Parent);
               }
-              FileBundleService.OpenFileBundle(null, leafNode.Value);
+              FileBundleService.OpenFileBundle(leafNode, leafNode.Value);
               break;
             }
             case IFileTreeParentNode parentNode: {

@@ -5,7 +5,7 @@ using fin.ui;
 
 using ReactiveUI;
 
-namespace uni.ui.avalonia.toolbars;
+namespace uni.ui.avalonia.toolbars.top;
 
 public sealed class TopToolbarModelForDesigner : TopToolbarModel {
   public new IFileBundle? FileBundle => null;

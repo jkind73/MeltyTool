@@ -2,13 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:toolbars="clr-namespace:uni.ui.avalonia.toolbars"
-             xmlns:converters="clr-namespace:uni.ui.avalonia.util.converters"
+             xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="uni.ui.avalonia.toolbars.TopMenu"
-             x:DataType="toolbars:TopMenuModel">
+             x:Class="uni.ui.avalonia.toolbars.top.TopMenu"
+             x:DataType="top:TopMenuModel">
   <Design.DataContext>
-    <toolbars:TopMenuModelForDesigner />
+    <top:TopMenuModelForDesigner />
   </Design.DataContext>
 
   <Menu>

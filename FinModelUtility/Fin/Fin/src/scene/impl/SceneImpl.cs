@@ -10,6 +10,11 @@ namespace fin.scene;
 public partial class SceneImpl : IScene {
   private readonly List<ISceneArea> areas_ = [];
 
+  public static IScene CreateForViewer() => new SceneImpl {
+      FileBundle = null,
+      Files = new HashSet<IReadOnlyGenericFile>(),
+  };
+
   public void Dispose() {
     foreach (var area in this.areas_) {
       area.Dispose();

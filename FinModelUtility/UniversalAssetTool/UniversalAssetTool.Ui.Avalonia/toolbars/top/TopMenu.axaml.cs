@@ -20,7 +20,7 @@ using uni.ui.avalonia.settings;
 using uni.ui.avalonia.util;
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni.ui.avalonia.toolbars;
+namespace uni.ui.avalonia.toolbars.top;
 
 public sealed class TopMenuModelForDesigner : TopMenuModel {
   public new IFileBundle? FileBundle => null;

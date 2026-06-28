@@ -48,4 +48,10 @@
       <SubType>Designer</SubType>
     </AvaloniaResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="toolbars\top\AnnouncementBar.axaml.cs">
+      <DependentUpon>AnnouncementBar.axaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>

@@ -3,13 +3,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:buttons="clr-namespace:uni.ui.avalonia.common.buttons"
-             xmlns:toolbars="clr-namespace:uni.ui.avalonia.toolbars"
              xmlns:buttons1="clr-namespace:fin.ui.avalonia.buttons;assembly=Fin.Ui.Avalonia"
+             xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
-             x:Class="uni.ui.avalonia.toolbars.TopToolbar"
-             x:DataType="toolbars:TopToolbarModel">
+             x:Class="uni.ui.avalonia.toolbars.top.TopToolbar"
+             x:DataType="top:TopToolbarModel">
   <Design.DataContext>
-    <toolbars:TopToolbarModelForDesigner />
+    <top:TopToolbarModelForDesigner />
   </Design.DataContext>
 
   <StackPanel Orientation="Horizontal">

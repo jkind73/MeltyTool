@@ -1,8 +1,8 @@
-﻿using fin.io.bundles;
+﻿using fin.io;
+using fin.io.bundles;
 using fin.scene;
 using fin.services;
 using fin.ui.rendering;
-using fin.ui.rendering.gl.scene;
 using fin.util.types;
 
 using uni.api;
@@ -28,22 +28,6 @@ public static class SceneService {
 
             LoadingStatusService.IsLoading = false;
           }
-        };
-
-    ModelService.OnModelSuccessfullyOpened
-        += (fileTreeLeafNode, model) => {
-          SceneTypeService.IsASingleModel = true;
-          var scene = new SceneImpl {
-              FileBundle = model.FileBundle,
-              Files = model.Files
-          };
-          var area = scene.AddArea();
-          var obj = area.AddRootNode();
-
-          scene.CreateDefaultLighting(obj, [model]);
-          obj.AddComponent(new SimpleModelRenderComponent(model));
-
-          OpenScene(fileTreeLeafNode, scene);
         };
   }
 

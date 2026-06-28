@@ -14,6 +14,7 @@
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
              xmlns:scene1="clr-namespace:uni.ui.avalonia.resources.scene"
              xmlns:debug="clr-namespace:uni.ui.avalonia.debug"
+             xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="900"
              x:Class="uni.ui.avalonia.Views.MainView"
              x:DataType="vm:MainViewModel">
@@ -62,15 +63,16 @@
 
   <Grid>
     <DockPanel>
-      <Panel Classes="Toolbars"
-             DockPanel.Dock="Top">
-        <toolbars:TopMenu />
+      <DockPanel Classes="Toolbars"
+                 DockPanel.Dock="Top">
+        <top:TopMenu DockPanel.Dock="Left" />
+        <top:TopToolbar 
+          DataContext="{Binding TopToolbar}"
+          Margin="2"
+          DockPanel.Dock="Right" />
 
-        <toolbars:TopToolbar 
-            DataContext="{Binding TopToolbar}"
-            Margin="2"
-            HorizontalAlignment="Right" />
-      </Panel>
+        <top:AnnouncementBar Margin="2"/>
+      </DockPanel>
 
       <Grid>
         <SplitView DisplayMode="CompactInline"

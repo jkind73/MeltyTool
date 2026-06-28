@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
+             xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="100"
+             x:Class="uni.ui.avalonia.toolbars.top.AnnouncementBar"
+             x:DataType="top:AnnouncementBarViewModel">
+  <Design.DataContext>
+    <top:AnnouncementBarViewModelForDesigner />
+  </Design.DataContext>
+
+  <Border Background="#8000"
+          CornerRadius="8"
+          Padding="16 0">
+    <StackPanel VerticalAlignment="Center"
+                Orientation="Horizontal">
+      <controls:If Condition="{Binding ExceptionAndContext, Converter={x:Static ObjectConverters.IsNotNull}}">
+        <Button Click="ShowException_"
+                Background="Transparent"
+                Margin="-8 0 0 0">
+          <avalonia:MaterialIcon
+              ToolTip.Tip="Show exception"
+              Kind="ErrorOutline"
+              ClipToBounds="False"
+              Foreground="{Binding Foreground}" />
+        </Button>
+      </controls:If>
+
+      <SelectableTextBlock 
+          Foreground="{Binding Foreground}"
+          Text="{Binding Text}"
+          Classes="regular"
+          VerticalAlignment="Center" />
+    </StackPanel>
+  </Border>
+</UserControl>
