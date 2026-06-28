@@ -12,6 +12,7 @@ using fin.model.processing;
 using fin.util.tasks;
 
 using uni.cli;
+using uni.services;
 
 namespace uni.ui.avalonia.common.buttons;
 

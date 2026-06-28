@@ -1,14 +1,16 @@
-﻿using fin.io.web;
+﻿using fin.io.bundles;
 using fin.scene;
 using fin.services;
 using fin.ui.rendering;
 using fin.ui.rendering.gl.scene;
+using fin.util.types;
 
 using uni.api;
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni;
+namespace uni.services;
 
+[IocCandiate]
 public static class SceneService {
   static SceneService() {
     FileBundleService.OnFileBundleOpened
@@ -21,16 +23,14 @@ public static class SceneService {
               var scene = new GlobalSceneImporter().Import(sceneFileBundle);
               OpenScene(fileTreeLeafNode, scene);
             } catch (Exception e) {
-              ExceptionService.HandleException(
-                  e,
-                  new LoadFileBundleExceptionContext(fileBundle));
+              FailToOpenScene(fileBundle, e);
             }
 
             LoadingStatusService.IsLoading = false;
           }
         };
 
-    ModelService.OnModelOpened
+    ModelService.OnModelSuccessfullyOpened
         += (fileTreeLeafNode, model) => {
           SceneTypeService.IsASingleModel = true;
           var scene = new SceneImpl {
@@ -47,9 +47,18 @@ public static class SceneService {
         };
   }
 
-  public static event Action<IFileTreeLeafNode?, IScene> OnSceneOpened;
+  public static event Action<IFileTreeLeafNode?, IScene>
+      OnSceneSuccessfullyOpened;
 
-  public static void OpenScene(IFileTreeLeafNode? fileTreeLeafNode,
-                               IScene scene)
-    => OnSceneOpened?.Invoke(fileTreeLeafNode, scene);
+  public static event Action<IFileBundle?, Exception> OnSceneFailedToOpen;
+
+  public static void OpenScene(
+      IFileTreeLeafNode? fileTreeLeafNode,
+      IScene scene)
+    => OnSceneSuccessfullyOpened?.Invoke(fileTreeLeafNode, scene);
+
+  public static void FailToOpenScene(
+      IFileBundle fileBundle,
+      Exception exception)
+    => OnSceneFailedToOpen?.Invoke(fileBundle, exception);
 }

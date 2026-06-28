@@ -1,9 +1,11 @@
 ﻿using fin.io.bundles;
+using fin.util.types;
 
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni;
+namespace uni.services;
 
+[IocCandiate]
 public static class FileBundleService {
   static FileBundleService() {
     FileTreeLeafNodeService.OnFileTreeLeafNodeOpened += fileTreeLeafNode

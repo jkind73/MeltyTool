@@ -1,14 +1,17 @@
-﻿using fin.io.web;
+﻿using fin.io.bundles;
+using fin.io.web;
 using fin.model;
 using fin.model.io;
 using fin.model.processing;
 using fin.services;
+using fin.util.types;
 
 using uni.api;
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni;
+namespace uni.services;
 
+[IocCandiate]
 public static class ModelService {
   static ModelService() {
     FileBundleService.OnFileBundleOpened
@@ -21,9 +24,7 @@ public static class ModelService {
                   = new GlobalModelImporter().ImportAndProcess(modelFileBundle);
               OpenModel(fileTreeLeafNode, model);
             } catch (Exception e) {
-              ExceptionService.HandleException(
-                  e,
-                  new LoadFileBundleExceptionContext(fileBundle));
+              FailToOpenModel(fileBundle, e);
             }
           }
 
@@ -31,9 +32,18 @@ public static class ModelService {
         };
   }
 
-  public static event Action<IFileTreeLeafNode?, IModel>? OnModelOpened;
+  public static event Action<IFileTreeLeafNode?, IModel>?
+      OnModelSuccessfullyOpened;
 
-  public static void OpenModel(IFileTreeLeafNode? fileTreeLeafNode,
-                               IModel model)
-    => OnModelOpened?.Invoke(fileTreeLeafNode, model);
+  public static event Action<IFileBundle?, Exception>? OnModelFailedToOpen;
+
+  public static void OpenModel(
+      IFileTreeLeafNode? fileTreeLeafNode,
+      IModel model)
+    => OnModelSuccessfullyOpened?.Invoke(fileTreeLeafNode, model);
+
+  public static void FailToOpenModel(
+      IFileBundle fileBundle,
+      Exception exception)
+    => OnModelFailedToOpen?.Invoke(fileBundle, exception);
 }

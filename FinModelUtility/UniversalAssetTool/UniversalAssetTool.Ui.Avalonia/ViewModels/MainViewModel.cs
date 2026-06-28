@@ -10,6 +10,7 @@ using fin.util.tasks;
 
 using ReactiveUI;
 
+using uni.services;
 using uni.ui.avalonia.common.progress;
 using uni.ui.avalonia.common.treeViews;
 using uni.ui.avalonia.io;

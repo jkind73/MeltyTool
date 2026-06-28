@@ -12,6 +12,7 @@ using fin.util.tasks;
 
 using ReactiveUI;
 
+using uni.services;
 using uni.ui.avalonia.common.buttons;
 using uni.ui.avalonia.io;
 using uni.ui.avalonia.services;

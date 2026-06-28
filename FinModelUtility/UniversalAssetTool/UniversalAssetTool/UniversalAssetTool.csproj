@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\NewFolder\**" />
     <Compile Remove="util\separator\**" />
+    <EmbeddedResource Remove="src\NewFolder\**" />
     <EmbeddedResource Remove="util\separator\**" />
+    <None Remove="src\NewFolder\**" />
     <None Remove="util\separator\**" />
   </ItemGroup>
 

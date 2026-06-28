@@ -1,10 +1,12 @@
 ﻿using fin.audio.io;
+using fin.util.types;
 
 using uni.config;
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni;
+namespace uni.services;
 
+[IocCandiate]
 public static class AudioPlaylistService {
   private static IFileTreeParentNode? gameDirectoryForPlaylist_;
 

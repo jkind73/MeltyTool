@@ -6,6 +6,7 @@ using Avalonia.Controls;
 
 using uni.config;
 using uni.model;
+using uni.services;
 
 namespace uni.ui.avalonia.Views;
 

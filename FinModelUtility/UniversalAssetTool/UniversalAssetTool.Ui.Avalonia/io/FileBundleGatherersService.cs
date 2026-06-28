@@ -11,6 +11,7 @@ using fin.util.progress;
 using fin.util.tasks;
 
 using uni.games;
+using uni.services;
 using uni.ui.avalonia.common.progress;
 using uni.ui.avalonia.common.treeViews;
 using uni.ui.avalonia.util;

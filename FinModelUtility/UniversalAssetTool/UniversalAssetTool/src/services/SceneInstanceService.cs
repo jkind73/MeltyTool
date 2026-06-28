@@ -1,13 +1,15 @@
 ﻿using fin.scene;
 using fin.scene.instance;
+using fin.util.types;
 
 using uni.ui.winforms.common.fileTreeView;
 
-namespace uni;
+namespace uni.services;
 
+[IocCandiate]
 public static class SceneInstanceService {
   static SceneInstanceService() {
-    SceneService.OnSceneOpened
+    SceneService.OnSceneSuccessfullyOpened
         += (fileTreeLeafNode, scene) =>
             OpenSceneInstance(fileTreeLeafNode,
                               new SceneInstanceImpl(scene));

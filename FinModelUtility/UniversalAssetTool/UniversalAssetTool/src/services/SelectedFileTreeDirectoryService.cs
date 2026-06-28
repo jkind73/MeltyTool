@@ -1,7 +1,10 @@
-﻿using uni.ui.winforms.common.fileTreeView;
+﻿using fin.util.types;
 
-namespace uni;
+using uni.ui.winforms.common.fileTreeView;
 
+namespace uni.services;
+
+[IocCandiate]
 public static class SelectedFileTreeDirectoryService {
   public static event Action<IFileTreeParentNode>? OnFileTreeDirectorySelected;
 
