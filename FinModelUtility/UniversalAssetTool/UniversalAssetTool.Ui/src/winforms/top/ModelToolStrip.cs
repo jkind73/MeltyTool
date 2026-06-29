@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
 using fin.io.bundles;
-using fin.math.floats;
 using fin.model;
 using fin.model.io;
 using fin.util.progress;
-using fin.util.tasks;
 
-using uni.api;
 using uni.config;
+using uni.services;
 using uni.ui.winforms.common.fileTreeView;
 
-using static uni.games.ExporterUtil;
+using DialogResult = System.Windows.Forms.DialogResult;
 
 namespace uni.ui.winforms.top;
 
@@ -59,15 +56,14 @@ public partial class ModelToolStrip : UserControl {
     };
   }
 
-  public MemoryProgress<(float, IModelFileBundle?)> Progress { get; } =
-    new((0, null));
+  public MemoryProgress<(float, IModelFileBundle?)> Progress
+    => ExportService.Progress;
 
-  public CancellationTokenSource? CancellationToken { get; private set; }
+  public CancellationTokenSource? CancellationToken
+    => ExportService.CancellationToken;
 
-  public bool IsStarted => this.CancellationToken != null;
-
-  public bool IsInProgress
-    => this.IsStarted && !this.Progress.Current.Item1.IsRoughly1();
+  public bool IsStarted => ExportService.IsStarted;
+  public bool IsInProgress => ExportService.IsInProgress;
 
   public IFileTreeParentNode? DirectoryNode {
     set {
@@ -131,12 +127,9 @@ public partial class ModelToolStrip : UserControl {
 
   private void exportAllModelsInSelectedDirectoryButton__Click(
       object sender,
-      EventArgs e) {
-    var models =
-        this.directoryNode_!.GetFilesOfType<IModelFileBundle>(true)
-            .ToArray();
-    this.StartExportingModelsInBackground_(models);
-  }
+      EventArgs e)
+    => ExportService.ExportAllModelsInDirectory(this.directoryNode_!,
+                                                ShowMessageBox_);
 
   private void exportSelectedModelButton__Click(object sender, EventArgs e) {
     if (this.fileNodeAndModel_ == null) {
@@ -144,32 +137,7 @@ public partial class ModelToolStrip : UserControl {
     }
 
     var (fileNode, _) = this.fileNodeAndModel_.Value;
-    if (fileNode.File.IsOfType<IModelFileBundle>(out var modelFileBundle)) {
-      this.StartExportingModelsInBackground_([modelFileBundle]);
-    }
-  }
-
-  private void StartExportingModelsInBackground_(
-      IReadOnlyList<IModelFileBundle> modelFileBundles) {
-    var extractorPromptChoice =
-        PromptIfModelFileBundlesAlreadyExported_(
-            modelFileBundles,
-            Config.Instance.Exporter.General.ExportedFormats);
-    if (extractorPromptChoice != ExporterPromptChoice.CANCEL) {
-      this.CancellationToken = new CancellationTokenSource();
-
-      FinTask.Run(() => {
-        ExportAll(modelFileBundles,
-                               new GlobalModelImporter(),
-                               this.Progress,
-                               this.CancellationToken,
-                               Config.Instance.Exporter.General
-                                     .ExportedFormats,
-                               extractorPromptChoice ==
-                               ExporterPromptChoice
-                                   .OVERWRITE_EXISTING);
-      });
-    }
+    ExportService.ExportSelectedFile(fileNode, ShowMessageBox_);
   }
 
   private string GetTotalNodeText_(IFileTreeNode node) {
@@ -191,44 +159,19 @@ public partial class ModelToolStrip : UserControl {
     return totalText;
   }
 
-  private static ExporterPromptChoice
-      PromptIfModelFileBundlesAlreadyExported_(
-          IReadOnlyList<IFileBundle> modelFileBundles,
-          IReadOnlySet<ExportedFormat> formats) {
-    if (CheckIfModelFileBundlesAlreadyExported(
-            modelFileBundles,
-            formats,
-            out var existingOutputFiles)) {
-      var totalCount = modelFileBundles.Count;
-      if (totalCount == 1) {
-        var result =
-            MessageBox.Show(
-                $"Model defined in \"{existingOutputFiles.First().DisplayFullPath}\" has already been exported. Would you like to overwrite it?",
-                "Model has already been exported!",
-                MessageBoxButtons.YesNo,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button1);
-        return result switch {
-            DialogResult.Yes => ExporterPromptChoice.OVERWRITE_EXISTING,
-            DialogResult.No  => ExporterPromptChoice.CANCEL,
-        };
-      } else {
-        var existingCount = existingOutputFiles.Count();
-        var result =
-            MessageBox.Show(
-                $"{existingCount} model{(existingCount != 1 ? "s have" : " has")} already been exported. Select 'Yes' to overwrite them, 'No' to skip them, or 'Cancel' to abort this operation.",
-                $"{existingCount}/{totalCount} models have already been exported!",
-                MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Warning,
-                MessageBoxDefaultButton.Button1);
-        return result switch {
-            DialogResult.Yes    => ExporterPromptChoice.OVERWRITE_EXISTING,
-            DialogResult.No     => ExporterPromptChoice.SKIP_EXISTING,
-            DialogResult.Cancel => ExporterPromptChoice.CANCEL,
-        };
-      }
-    }
-
-    return ExporterPromptChoice.SKIP_EXISTING;
-  }
+  private static services.DialogResult ShowMessageBox_(
+      string title,
+      string message,
+      bool includeCancel)
+    => MessageBox.Show(
+        message,
+        title,
+        includeCancel ? MessageBoxButtons.YesNoCancel : MessageBoxButtons.YesNo,
+        MessageBoxIcon.Warning,
+        MessageBoxDefaultButton.Button1) switch {
+        DialogResult.Cancel => services.DialogResult.CANCEL,
+        DialogResult.Yes    => services.DialogResult.YES,
+        DialogResult.No     => services.DialogResult.NO,
+        _                   => throw new ArgumentOutOfRangeException()
+    };
 }

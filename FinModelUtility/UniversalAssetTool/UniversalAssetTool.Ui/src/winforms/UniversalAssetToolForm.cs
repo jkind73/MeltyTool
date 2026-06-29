@@ -21,6 +21,8 @@ using uni.ui.winforms.common.fileTreeView;
 using uni.api;
 using uni.services;
 
+using DialogResult = System.Windows.Forms.DialogResult;
+
 namespace uni.ui.winforms;
 
 public partial class UniversalAssetToolForm : Form {
