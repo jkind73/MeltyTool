@@ -8,6 +8,7 @@ using fin.io.web;
 using fin.services;
 using fin.ui;
 using fin.util.asserts;
+using fin.util.progress;
 
 using ReactiveUI;
 
@@ -32,6 +33,16 @@ public class AnnouncementBarViewModel : BViewModel {
     this.Announcement = null;
     AnnouncementService.OnAnnouncement
         += announcement => this.Announcement = announcement;
+
+    ExportService.OnExportStart
+        += () => {
+          this.IsExporting = true;
+          this.ProgressValue = 0;
+        };
+    ExportService.OnExportComplete
+        += () => this.IsExporting = false;
+    ExportService.Progress.ProgressChanged
+        += (_, current) => this.ProgressValue = 100 * current.Item1;
   }
 
   public Announcement? Announcement {
@@ -63,6 +74,16 @@ public class AnnouncementBarViewModel : BViewModel {
   }
 
   public (Exception, IExceptionContext?)? ExceptionAndContext {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public bool IsExporting  {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public double ProgressValue {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }

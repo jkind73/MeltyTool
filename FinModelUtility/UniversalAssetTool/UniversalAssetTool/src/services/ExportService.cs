@@ -23,11 +23,6 @@ public static class ExportService {
   public static event Action OnExportStart;
   public static event Action OnExportComplete;
 
-  public delegate Task<DialogResult> ShowMessageBox(
-      string title,
-      string message,
-      bool includeCancel);
-
   public static MemoryProgress<(float, IModelFileBundle?)> Progress { get; } =
     new((0, null));
 
@@ -37,6 +32,22 @@ public static class ExportService {
 
   public static bool IsInProgress
     => IsStarted && !Progress.Current.Item1.IsRoughly1();
+
+  static ExportService() {
+    Progress.ProgressChanged += (_, current) => {
+      var (_, modelFileBundle) = current;
+      if (modelFileBundle != null) {
+        AnnouncementService.DisplayAnnouncement(
+            new Announcement(AnnouncementType.INFO,
+                             $"Exporting model to /out: {modelFileBundle.DisplayFullPath}"));
+      }
+    };
+  }
+
+  public delegate Task<DialogResult> ShowMessageBox(
+      string title,
+      string message,
+      bool includeCancel);
 
   public static async Task ExportAllModelsInDirectory(
       IFileTreeParentNode directoryNode,

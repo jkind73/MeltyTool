@@ -15,25 +15,30 @@
   <Border Background="#8000"
           CornerRadius="8"
           Padding="16 0">
-    <StackPanel VerticalAlignment="Center"
-                Orientation="Horizontal">
-      <controls:If Condition="{Binding ExceptionAndContext, Converter={x:Static ObjectConverters.IsNotNull}}">
-        <Button Click="ShowException_"
-                Background="Transparent"
-                Margin="-8 0 0 0">
-          <avalonia:MaterialIcon
+    <StackPanel VerticalAlignment="Center">
+      <StackPanel Orientation="Horizontal">
+        <controls:If Condition="{Binding ExceptionAndContext, Converter={x:Static ObjectConverters.IsNotNull}}">
+          <Button Click="ShowException_"
+                  Background="Transparent"
+                  Margin="-8 0 0 0">
+            <avalonia:MaterialIcon
               ToolTip.Tip="Show exception"
               Kind="ErrorOutline"
               ClipToBounds="False"
               Foreground="{Binding Foreground}" />
-        </Button>
-      </controls:If>
+          </Button>
+        </controls:If>
 
-      <SelectableTextBlock 
+        <SelectableTextBlock 
           Foreground="{Binding Foreground}"
           Text="{Binding Text}"
           Classes="regular"
           VerticalAlignment="Center" />
+      </StackPanel>
+
+      <controls:If Condition="{Binding IsExporting}">
+        <ProgressBar Value="{Binding ProgressValue}" />
+      </controls:If>
     </StackPanel>
   </Border>
 </UserControl>
