@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -9,6 +11,9 @@ using fin.model.io;
 using fin.ui;
 using fin.util.io;
 using fin.util.tasks;
+
+using MsBox.Avalonia;
+using MsBox.Avalonia.Enums;
 
 using ReactiveUI;
 
@@ -102,4 +107,38 @@ public partial class TopMenu : UserControl {
           TopLevel.GetTopLevel(this));
     }
   }
+
+  private void ExportSelectedAsset_(object? sender, RoutedEventArgs e) {
+    var fileBundle = (this.DataContext as TopMenuModel)?.FileBundle;
+    if (fileBundle is IModelFileBundle modelFileBundle) {
+      ExportService.ExportSelectedFile(modelFileBundle, ShowMessageBox_);
+    }
+  }
+
+  private void ExportSelectedDirectory_(object? sender, RoutedEventArgs e) {
+    var selectedDirectory = (this.DataContext as TopMenuModel)?.SelectedDirectory;
+    if (selectedDirectory != null) {
+      ExportService.ExportAllModelsInDirectory(
+          selectedDirectory,
+          ShowMessageBox_);
+    }
+  }
+
+  private static async Task<DialogResult> ShowMessageBox_(
+      string title,
+      string message,
+      bool includeCancel)
+    => (await MessageBoxManager.GetMessageBoxStandard(
+                                   title,
+                                   message,
+                                   includeCancel
+                                       ? ButtonEnum.YesNoCancel
+                                       : ButtonEnum.YesNo,
+                                   Icon.Warning)
+                               .ShowAsync()) switch {
+        ButtonResult.Yes    => DialogResult.YES,
+        ButtonResult.No     => DialogResult.NO,
+        ButtonResult.Cancel => DialogResult.CANCEL,
+        _                   => throw new ArgumentOutOfRangeException()
+    };
 }

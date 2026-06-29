@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using fin.io.bundles;
@@ -128,8 +129,9 @@ public partial class ModelToolStrip : UserControl {
   private void exportAllModelsInSelectedDirectoryButton__Click(
       object sender,
       EventArgs e)
-    => ExportService.ExportAllModelsInDirectory(this.directoryNode_!,
-                                                ShowMessageBox_);
+    => ExportService.ExportAllModelsInDirectory(
+        this.directoryNode_!,
+        ShowMessageBox_);
 
   private void exportSelectedModelButton__Click(object sender, EventArgs e) {
     if (this.fileNodeAndModel_ == null) {
@@ -137,7 +139,11 @@ public partial class ModelToolStrip : UserControl {
     }
 
     var (fileNode, _) = this.fileNodeAndModel_.Value;
-    ExportService.ExportSelectedFile(fileNode, ShowMessageBox_);
+    if (fileNode.File.IsOfType<IModelFileBundle>(out var modelFileBundle)) {
+      ExportService.ExportSelectedFile(
+          modelFileBundle,
+          ShowMessageBox_);
+    }
   }
 
   private string GetTotalNodeText_(IFileTreeNode node) {
@@ -159,7 +165,7 @@ public partial class ModelToolStrip : UserControl {
     return totalText;
   }
 
-  private static services.DialogResult ShowMessageBox_(
+  private static async Task<services.DialogResult> ShowMessageBox_(
       string title,
       string message,
       bool includeCancel)

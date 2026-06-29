@@ -23,7 +23,7 @@ public static class ExportService {
   public static event Action OnExportStart;
   public static event Action OnExportComplete;
 
-  public delegate DialogResult ShowMessageBox(
+  public delegate Task<DialogResult> ShowMessageBox(
       string title,
       string message,
       bool includeCancel);
@@ -38,27 +38,26 @@ public static class ExportService {
   public static bool IsInProgress
     => IsStarted && !Progress.Current.Item1.IsRoughly1();
 
-  public static void ExportAllModelsInDirectory(
+  public static async Task ExportAllModelsInDirectory(
       IFileTreeParentNode directoryNode,
       ShowMessageBox showMessageBox) {
     var models = directoryNode.GetFilesOfType<IModelFileBundle>(true)
                               .ToArray();
-    StartExportingModelsInBackground_(models, showMessageBox);
+    await StartExportingModelsInBackground_(models, showMessageBox);
   }
 
-  public static void ExportSelectedFile(
-      IFileTreeLeafNode fileNode,
-      ShowMessageBox showMessageBox) {
-    if (fileNode.File.IsOfType<IModelFileBundle>(out var modelFileBundle)) {
-      StartExportingModelsInBackground_([modelFileBundle], showMessageBox);
-    }
-  }
+  public static async Task ExportSelectedFile(
+      IModelFileBundle modelFileBundle,
+      ShowMessageBox showMessageBox)
+    => await StartExportingModelsInBackground_(
+        [modelFileBundle],
+        showMessageBox);
 
-  private static void StartExportingModelsInBackground_(
+  private static async Task StartExportingModelsInBackground_(
       IReadOnlyList<IModelFileBundle> modelFileBundles,
       ShowMessageBox showMessageBox) {
     var extractorPromptChoice =
-        PromptIfModelFileBundlesAlreadyExported_(
+        await PromptIfModelFileBundlesAlreadyExported_(
             modelFileBundles,
             showMessageBox,
             Config.Instance.Exporter.General.ExportedFormats);
@@ -83,7 +82,7 @@ public static class ExportService {
     }
   }
 
-  private static ExporterUtil.ExporterPromptChoice
+  private static async Task<ExporterUtil.ExporterPromptChoice>
       PromptIfModelFileBundlesAlreadyExported_(
           IReadOnlyList<IFileBundle> modelFileBundles,
           ShowMessageBox showMessageBox,
@@ -94,7 +93,7 @@ public static class ExportService {
             out var existingOutputFiles)) {
       var totalCount = modelFileBundles.Count;
       if (totalCount == 1) {
-        var result = showMessageBox(
+        var result = await showMessageBox(
             "Model has already been exported!",
             $"Model defined in \"{existingOutputFiles.First().DisplayFullPath}\" has already been exported. Would you like to overwrite it?",
             false);
@@ -105,7 +104,7 @@ public static class ExportService {
         };
       } else {
         var existingCount = existingOutputFiles.Count();
-        var result = showMessageBox(
+        var result = await showMessageBox(
             $"{existingCount}/{totalCount} models have already been exported!",
             $"{existingCount} model{(existingCount != 1 ? "s have" : " has")} already been exported. Select 'Yes' to overwrite them, 'No' to skip them, or 'Cancel' to abort this operation.",
             true);
