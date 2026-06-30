@@ -4,6 +4,7 @@ using Avalonia.Threading;
 using fin.config.avalonia.services;
 using fin.services;
 using fin.ui.avalonia.dialogs;
+using fin.util.tasks;
 using fin.util.time;
 
 namespace uni.ui.avalonia.Views;
@@ -35,5 +36,6 @@ public partial class MainWindow : Window {
     };
 
     TopLevelService.Init(this);
+    FinTask.RunOnUiThread = Dispatcher.UIThread.Invoke;
   }
 }

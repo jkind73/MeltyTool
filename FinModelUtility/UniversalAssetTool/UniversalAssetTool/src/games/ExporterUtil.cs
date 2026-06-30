@@ -21,6 +21,16 @@ using uni.thirdparty;
 
 namespace uni.games;
 
+using ExportResultTuple
+    = (IFileBundle fileBundle, ExportResult result, Exception? exception);
+
+public enum ExportResult {
+  SKIPPED,
+  ALREADY_EXISTS,
+  FAILURE,
+  SUCCESS,
+}
+
 public static class ExporterUtil {
   static ExporterUtil() {
     logger_ = Logging.Create("exportor");
@@ -178,7 +188,7 @@ public static class ExporterUtil {
   }
 
 
-  public static void ExportAll<T>(
+  public static ExportResultTuple[] ExportAll<T>(
       IEnumerable<IFileBundle> fileBundles,
       IModelImporter<T> reader,
       IProgress<(float, T?)> progress,
@@ -187,37 +197,46 @@ public static class ExporterUtil {
       bool overwriteExistingFiles)
       where T : IModelFileBundle {
     var fileBundleArray = fileBundles.OfType<T>().ToArray();
+
+    var results = new ExportResultTuple[fileBundleArray.Length];
+
     for (var i = 0; i < fileBundleArray.Length; ++i) {
+      var modelFileBundle = fileBundleArray[i];
+
       if (cancellationTokenSource.IsCancellationRequested) {
-        break;
+        results[i] = (modelFileBundle, ExportResult.SKIPPED, null);
+        continue;
       }
 
-      var modelFileBundle = fileBundleArray[i];
       progress.Report((i * 1f / fileBundleArray.Length, modelFileBundle));
-      Export(modelFileBundle,
-             reader,
-             formats,
-             overwriteExistingFiles);
+      results[i] = Export(
+          modelFileBundle,
+          reader,
+          formats,
+          overwriteExistingFiles);
     }
 
     progress.Report((1, default));
+
+    return results;
   }
 
-  public static void Export<T>(T modelFileBundle,
-                               IModelImporter<T> reader,
-                               IReadOnlySet<ExportedFormat> formats,
-                               bool overwriteExistingFile)
-      where T : IModelFileBundle {
-    Export(modelFileBundle,
-           () => reader.ImportAndProcess(modelFileBundle),
-           formats,
-           overwriteExistingFile);
-  }
+  public static ExportResultTuple Export<T>(
+      T modelFileBundle,
+      IModelImporter<T> reader,
+      IReadOnlySet<ExportedFormat> formats,
+      bool overwriteExistingFile)
+      where T : IModelFileBundle
+    => Export(modelFileBundle,
+              () => reader.ImportAndProcess(modelFileBundle),
+              formats,
+              overwriteExistingFile);
 
-  public static void Export<T>(T threeDFileBundle,
-                               Func<IModel> loaderHandler,
-                               IReadOnlySet<ExportedFormat> formats,
-                               bool overwriteExistingFile)
+  public static ExportResultTuple Export<T>(
+      T threeDFileBundle,
+      Func<IModel> loaderHandler,
+      IReadOnlySet<ExportedFormat> formats,
+      bool overwriteExistingFile)
       where T : I3dFileBundle {
     var mainFile = Asserts.CastNonnull(threeDFileBundle.MainFile);
 
@@ -227,19 +246,20 @@ public static class ExporterUtil {
         Path.Join(parentOutputDirectory.FullPath,
                   mainFile.NameWithoutExtension));
 
-    Export(threeDFileBundle,
-           loaderHandler,
-           outputDirectory,
-           formats,
-           overwriteExistingFile);
+    return Export(threeDFileBundle,
+                  loaderHandler,
+                  outputDirectory,
+                  formats,
+                  overwriteExistingFile);
   }
 
-  public static void Export<T>(T threeDFileBundle,
-                               Func<IModel> loaderHandler,
-                               ISystemDirectory outputDirectory,
-                               IReadOnlySet<ExportedFormat> formats,
-                               bool overwriteExistingFile,
-                               string? overrideName = null)
+  public static ExportResultTuple Export<T>(
+      T threeDFileBundle,
+      Func<IModel> loaderHandler,
+      ISystemDirectory outputDirectory,
+      IReadOnlySet<ExportedFormat> formats,
+      bool overwriteExistingFile,
+      string? overrideName = null)
       where T : I3dFileBundle
     => Export(threeDFileBundle,
               loaderHandler,
@@ -250,7 +270,7 @@ public static class ExporterUtil {
               overwriteExistingFile,
               overrideName);
 
-  public static void Export<T>(
+  public static ExportResultTuple Export<T>(
       T threeDFileBundle,
       Func<IModel> loaderHandler,
       ISystemDirectory outputDirectory,
@@ -271,11 +291,13 @@ public static class ExporterUtil {
     if (!overwriteExistingFile &&
         targetFiles.All(targetFile => targetFile.Exists)) {
       MessageUtil.LogAlreadyProcessed(logger_, mainFile);
-      return;
+      return (threeDFileBundle, ExportResult.ALREADY_EXISTS, null);
     }
 
     outputDirectory.Create();
     MessageUtil.LogExporting(logger_, mainFile);
+
+    Exception? exception = null;
 
     try {
       var model = loaderHandler();
@@ -304,9 +326,14 @@ public static class ExporterUtil {
             model);
       }
     } catch (Exception e) {
+      exception = e;
       logger_.LogError(e.ToString());
     }
 
     logger_.LogInformation(" ");
+
+    return (threeDFileBundle, 
+            exception != null ? ExportResult.FAILURE : ExportResult.SUCCESS,
+            exception);
   }
 }

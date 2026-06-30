@@ -41,6 +41,15 @@ public sealed class RenderFileBundleExceptionContext(IFileBundle fb)
     => $"1. Attempted to render {fb.TrueFullPath}.";
 }
 
+public sealed class ExportFileBundleExceptionContext(IFileBundle fb)
+    : IExceptionContext {
+  public string Title
+    => $"[Bug] Failed to export {fb.TrueFullPath}";
+
+  public string Steps
+    => $"1. Attempted to export {fb.TrueFullPath}.";
+}
+
 public static class GitHubUtil {
   public const string GITHUB_URL
       = "https://github.com/MeltyPlayer/MeltyTool";

@@ -1,4 +1,7 @@
-﻿using fin.io.bundles;
+﻿using System.Text;
+
+using fin.io.bundles;
+using fin.io.web;
 using fin.math.floats;
 using fin.model.io;
 using fin.util.progress;
@@ -30,8 +33,10 @@ public static class ExportService {
 
   public static bool IsStarted => CancellationToken != null;
 
+  //public static ISubject<bool> ΔIsInProgress
   public static bool IsInProgress
     => IsStarted && !Progress.Current.Item1.IsRoughly1();
+
 
   static ExportService() {
     Progress.ProgressChanged += (_, current) => {
@@ -78,15 +83,37 @@ public static class ExportService {
       FinTask.Run(() => {
         OnExportStart?.Invoke();
 
-        ExporterUtil.ExportAll(
+        var results = ExporterUtil.ExportAll(
             modelFileBundles,
             new GlobalModelImporter(),
             Progress,
             CancellationToken,
-            Config.Instance.Exporter.General
-                  .ExportedFormats,
+            Config.Instance.Exporter.General.ExportedFormats,
             extractorPromptChoice ==
             ExporterUtil.ExporterPromptChoice.OVERWRITE_EXISTING);
+
+        var total = results.Length;
+        var successCount = results.Count(r => r.result == ExportResult.SUCCESS);
+        var skipCount = results.Count(r => r.result == ExportResult.SKIPPED);
+
+        var messageSb = new StringBuilder();
+        messageSb.Append($"Exported {successCount}/{total} asset{(successCount != 1 ? "s" : "")} successfully");
+
+        if (skipCount == 0) {
+          messageSb.Append('.');
+        } else {
+          messageSb.Append($"; skipped {skipCount}.");
+        }
+
+        FinTask.RunOnUiThread(() => {
+          AnnouncementService.DisplayAnnouncement(
+              new Announcement(
+                  AnnouncementType.INFO,
+                  messageSb.ToString(),
+                  results.Where(r => r.exception != null)
+                         .Select(r => (r.exception!, (IExceptionContext?) new ExportFileBundleExceptionContext(r.fileBundle)))
+                         .ToArray()));
+        });
 
         OnExportComplete?.Invoke();
       });

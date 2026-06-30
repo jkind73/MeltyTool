@@ -54,7 +54,8 @@ public class TopMenuModel : BViewModel {
     set {
       this.RaiseAndSetIfChanged(ref field, value);
 
-      var fileBundleCount = value?.GetFiles(true).Count() ?? 0;
+      var fileBundleCount = value?.GetFiles(true)
+                                 .Count(fb => fb is IModelFileBundle) ?? 0;
       this.ExportInDirectoryButtonEnabled = fileBundleCount > 0;
       this.ExportInDirectoryText
           = $"Export _all {fileBundleCount} asset{(fileBundleCount == 1 ? "" : "s")} in {value?.GetLocalPath() ?? "selected directory"} to out/";

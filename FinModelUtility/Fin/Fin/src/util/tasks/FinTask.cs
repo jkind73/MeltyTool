@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 namespace fin.util.tasks;
 
 public static class FinTask {
+  public static Action<Action> RunOnUiThread { get; set; }
+    = action => Run(action);
+
   public static Task Run(Action action)
     => Task.Run(() => {
       Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;

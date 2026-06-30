@@ -8,7 +8,6 @@ using fin.io.web;
 using fin.services;
 using fin.ui;
 using fin.util.asserts;
-using fin.util.progress;
 
 using ReactiveUI;
 
