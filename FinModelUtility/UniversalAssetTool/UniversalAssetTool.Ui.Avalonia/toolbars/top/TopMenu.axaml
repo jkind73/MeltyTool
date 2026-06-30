@@ -21,8 +21,8 @@
       <MenuItem Header="Export asset to out/"
                 IsEnabled="{Binding HasExportableFileBundle}"
                 Click="ExportSelectedAsset_" />
-      <MenuItem Header="{Binding ExportInDirectoryText}"
-                IsEnabled="{Binding ExportInDirectoryButtonEnabled}"
+      <MenuItem Header="{Binding ΔExportInDirectoryText^}"
+                IsEnabled="{Binding ΔExportInDirectoryButtonEnabled^}"
                 Click="ExportSelectedDirectory_" />
       <Separator />
       <MenuItem Header="Settings"

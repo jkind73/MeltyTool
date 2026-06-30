@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Reactive.Subjects;
+using System.Text;
 
 using fin.io.bundles;
 using fin.io.web;
@@ -33,7 +34,9 @@ public static class ExportService {
 
   public static bool IsStarted => CancellationToken != null;
 
-  //public static ISubject<bool> ΔIsInProgress
+  private static readonly BehaviorSubject<bool> isInProjectSubject_ = new(false);
+  public static IObservable<bool> ΔIsInProgress => isInProjectSubject_;
+
   public static bool IsInProgress
     => IsStarted && !Progress.Current.Item1.IsRoughly1();
 
@@ -81,6 +84,7 @@ public static class ExportService {
       CancellationToken = new CancellationTokenSource();
 
       FinTask.Run(() => {
+        isInProjectSubject_.OnNext(true);
         OnExportStart?.Invoke();
 
         var results = ExporterUtil.ExportAll(
@@ -115,6 +119,7 @@ public static class ExportService {
                          .ToArray()));
         });
 
+        isInProjectSubject_.OnNext(false);
         OnExportComplete?.Invoke();
       });
     }

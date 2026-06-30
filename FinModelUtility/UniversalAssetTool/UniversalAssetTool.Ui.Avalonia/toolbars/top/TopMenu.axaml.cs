@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 
 using Avalonia.Controls;
@@ -54,11 +56,12 @@ public class TopMenuModel : BViewModel {
     set {
       this.RaiseAndSetIfChanged(ref field, value);
 
-      var fileBundleCount = value?.GetFiles(true)
-                                 .Count(fb => fb is IModelFileBundle) ?? 0;
-      this.ExportInDirectoryButtonEnabled = fileBundleCount > 0;
-      this.ExportInDirectoryText
-          = $"Export _all {fileBundleCount} asset{(fileBundleCount == 1 ? "" : "s")} in {value?.GetLocalPath() ?? "selected directory"} to out/";
+      this.selectedDirectoryAndFileBundlesSubject_.OnNext(
+          (value,
+           value?.GetFiles(true)
+                .OfType<IModelFileBundle>()
+                .ToArray() ??
+           []));
     }
   }
 
@@ -67,15 +70,27 @@ public class TopMenuModel : BViewModel {
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  public bool ExportInDirectoryButtonEnabled {
-    get;
-    set => this.RaiseAndSetIfChanged(ref field, value);
-  }
+  private readonly BehaviorSubject<(IFileTreeParentNode?, IModelFileBundle[])>
+      selectedDirectoryAndFileBundlesSubject_ = new((null, []));
 
-  public string ExportInDirectoryText {
-    get;
-    set => this.RaiseAndSetIfChanged(ref field, value);
-  }
+  public IObservable<bool> ΔExportInDirectoryButtonEnabled
+    => ExportService
+       .ΔIsInProgress
+       .CombineLatest(this.selectedDirectoryAndFileBundlesSubject_,
+                      (isExporting, selectedDirectoryAndFileBundles)
+                          => !isExporting &&
+                             selectedDirectoryAndFileBundles.Item2.Length > 0);
+
+  public IObservable<string> ΔExportInDirectoryText
+    => this.selectedDirectoryAndFileBundlesSubject_
+           .Select(selectedDirectoryAndFileBundles => {
+             var (selectedDirectory, fileBundles)
+                 = selectedDirectoryAndFileBundles;
+             var fileBundleCount = fileBundles.Length;
+
+             return
+                 $"Export _all {fileBundleCount} asset{(fileBundleCount == 1 ? "" : "s")} in {selectedDirectory?.GetLocalPath() ?? "selected directory"} to out/";
+           });
 }
 
 public partial class TopMenu : UserControl {
@@ -117,7 +132,8 @@ public partial class TopMenu : UserControl {
   }
 
   private void ExportSelectedDirectory_(object? sender, RoutedEventArgs e) {
-    var selectedDirectory = (this.DataContext as TopMenuModel)?.SelectedDirectory;
+    var selectedDirectory
+        = (this.DataContext as TopMenuModel)?.SelectedDirectory;
     if (selectedDirectory != null) {
       ExportService.ExportAllModelsInDirectory(
           selectedDirectory,
