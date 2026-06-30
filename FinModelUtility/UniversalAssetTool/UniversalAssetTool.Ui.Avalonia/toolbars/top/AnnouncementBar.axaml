@@ -5,7 +5,7 @@
              xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
              xmlns:controls="clr-namespace:fin.ui.avalonia.controls;assembly=Fin.Ui.Avalonia"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="100"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="32"
              x:Class="uni.ui.avalonia.toolbars.top.AnnouncementBar"
              x:DataType="top:AnnouncementBarViewModel">
   <Design.DataContext>
@@ -21,19 +21,36 @@
           <Button Click="ShowException_"
                   Background="Transparent"
                   Margin="-8 0 0 0">
-            <avalonia:MaterialIcon
-              ToolTip.Tip="Show exception"
-              Kind="ErrorOutline"
-              ClipToBounds="False"
-              Foreground="{Binding Foreground}" />
+            <Grid>
+              <avalonia:MaterialIcon
+                  ToolTip.Tip="Show exception"
+                  Kind="ErrorOutline"
+                  ClipToBounds="False"
+                  Foreground="{Binding Foreground}" />
+
+              <avalonia:MaterialIcon
+                  ToolTip.Tip="Show exception"
+                  Kind="ErrorOutline"
+                  ClipToBounds="False"
+                  ZIndex="-1"
+                  Foreground="#8000"
+                  Margin=".5 .5 -.5 -.5" />
+            </Grid>
           </Button>
         </controls:If>
 
-        <SelectableTextBlock 
-          Foreground="{Binding Foreground}"
-          Text="{Binding Text}"
-          Classes="regular"
-          VerticalAlignment="Center" />
+        <Grid VerticalAlignment="Center">
+          <SelectableTextBlock 
+              Foreground="{Binding Foreground}"
+              Text="{Binding Text}"
+              Classes="regular" />
+          <TextBlock
+              Text="{Binding Text}"
+              Classes="regular"
+              ZIndex="-1"
+              Foreground="#8000"
+              Margin=".5 .5 -.5 -.5" />
+        </Grid>
       </StackPanel>
 
       <controls:If Condition="{Binding IsExporting}">

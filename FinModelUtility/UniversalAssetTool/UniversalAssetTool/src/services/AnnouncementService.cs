@@ -9,10 +9,10 @@ public enum AnnouncementType {
   ERROR,
 }
 
-public record Announcement(
-    AnnouncementType Type,
-    string Message,
-    (Exception, IExceptionContext?)[]? ExceptionsAndContexts = null);
+public record Announcement(AnnouncementType Type, string Message) {
+  public (Exception, IExceptionContext?)[]? ExceptionsAndContexts { get; init; }
+  public CancellationTokenSource? CancellationTokenSource { get; init; }
+}
 
 [IocCandiate]
 public static class AnnouncementService {
@@ -38,16 +38,29 @@ public static class AnnouncementService {
                 AnnouncementType.ERROR,
                 fileBundle != null
                     ? $"Failed to open model: {fileBundle.DisplayFullPath}"
-                    : "Failed to open model.",
-                [(exception, fileBundle != null ? new LoadFileBundleExceptionContext(fileBundle) : null)]));
+                    : "Failed to open model.") {
+                ExceptionsAndContexts = [
+                    (exception,
+                     fileBundle != null
+                         ? new LoadFileBundleExceptionContext(fileBundle)
+                         : null)
+                ]
+            });
     SceneService.OnSceneFailedToOpen
         += (fileBundle, exception) => DisplayAnnouncement(
             new Announcement(
                 AnnouncementType.ERROR,
                 fileBundle != null
                     ? $"Failed to open scene: {fileBundle.DisplayFullPath}"
-                    : "Failed to open scene.",
-                [(exception, fileBundle != null ? new LoadFileBundleExceptionContext(fileBundle) : null)]));  }
+                    : "Failed to open scene.") {
+                ExceptionsAndContexts = [
+                    (exception,
+                     fileBundle != null
+                         ? new LoadFileBundleExceptionContext(fileBundle)
+                         : null)
+                ]
+            });
+  }
 
   public static event Action<Announcement?> OnAnnouncement;
 

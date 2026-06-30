@@ -34,7 +34,9 @@ public static class ExportService {
 
   public static bool IsStarted => CancellationToken != null;
 
-  private static readonly BehaviorSubject<bool> isInProjectSubject_ = new(false);
+  private static readonly BehaviorSubject<bool>
+      isInProjectSubject_ = new(false);
+
   public static IObservable<bool> ΔIsInProgress => isInProjectSubject_;
 
   public static bool IsInProgress
@@ -46,8 +48,11 @@ public static class ExportService {
       var (_, modelFileBundle) = current;
       if (modelFileBundle != null) {
         AnnouncementService.DisplayAnnouncement(
-            new Announcement(AnnouncementType.INFO,
-                             $"Exporting model to /out: {modelFileBundle.DisplayFullPath}"));
+            new Announcement(
+                AnnouncementType.INFO,
+                $"Exporting model to /out: {modelFileBundle.DisplayFullPath}") {
+                CancellationTokenSource = CancellationToken
+            });
       }
     };
   }
@@ -101,7 +106,8 @@ public static class ExportService {
         var skipCount = results.Count(r => r.result == ExportResult.SKIPPED);
 
         var messageSb = new StringBuilder();
-        messageSb.Append($"Exported {successCount}/{total} asset{(successCount != 1 ? "s" : "")} successfully");
+        messageSb.Append(
+            $"Exported {successCount}/{total} asset{(successCount != 1 ? "s" : "")} successfully");
 
         if (skipCount == 0) {
           messageSb.Append('.');
@@ -113,10 +119,17 @@ public static class ExportService {
           AnnouncementService.DisplayAnnouncement(
               new Announcement(
                   AnnouncementType.INFO,
-                  messageSb.ToString(),
-                  results.Where(r => r.exception != null)
-                         .Select(r => (r.exception!, (IExceptionContext?) new ExportFileBundleExceptionContext(r.fileBundle)))
-                         .ToArray()));
+                  messageSb.ToString()) {
+                  ExceptionsAndContexts
+                      = results
+                        .Where(r => r.exception != null)
+                        .Select(r => (r.exception!,
+                                      (IExceptionContext?)
+                                      new
+                                          ExportFileBundleExceptionContext(
+                                              r.fileBundle)))
+                        .ToArray()
+              });
         });
 
         isInProjectSubject_.OnNext(false);

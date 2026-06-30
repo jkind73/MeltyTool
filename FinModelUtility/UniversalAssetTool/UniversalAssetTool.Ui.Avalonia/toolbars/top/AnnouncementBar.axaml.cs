@@ -20,10 +20,12 @@ public sealed class AnnouncementBarViewModelForDesigner
   public AnnouncementBarViewModelForDesigner() {
     this.Announcement
         = new Announcement(AnnouncementType.ERROR,
-                           "Uh oh, failed to do something.",
-                           [
-                               (new Exception("Here is an error message."), null)
-                           ]);
+                           "Superduperreallylongerrormessagethatjustkeepsgoingonandon.") {
+            ExceptionsAndContexts = [
+                (new Exception("Here is an error message."), null),
+                (new Exception("I'm another error."), null)
+            ]
+        };
   }
 }
 
@@ -77,7 +79,7 @@ public class AnnouncementBarViewModel : BViewModel {
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
 
-  public bool IsExporting  {
+  public bool IsExporting {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
