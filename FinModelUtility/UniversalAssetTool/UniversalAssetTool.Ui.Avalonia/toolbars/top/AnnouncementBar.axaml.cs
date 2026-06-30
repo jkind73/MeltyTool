@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -24,7 +25,8 @@ public sealed class AnnouncementBarViewModelForDesigner
             ExceptionsAndContexts = [
                 (new Exception("Here is an error message."), null),
                 (new Exception("I'm another error."), null)
-            ]
+            ],
+            CancellationTokenSource = new CancellationTokenSource(),
         };
   }
 }
@@ -58,6 +60,8 @@ public class AnnouncementBarViewModel : BViewModel {
       };
       this.Text = value?.Message ?? "No announcements.";
 
+      this.CancellationTokenSource = value?.CancellationTokenSource;
+
       var exceptionsAndContexts = value?.ExceptionsAndContexts ?? [];
       this.ExceptionAndContext
           = exceptionsAndContexts.Length > 0 ? exceptionsAndContexts[0] : null;
@@ -70,6 +74,11 @@ public class AnnouncementBarViewModel : BViewModel {
   }
 
   public string Text {
+    get;
+    set => this.RaiseAndSetIfChanged(ref field, value);
+  }
+
+  public CancellationTokenSource? CancellationTokenSource {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }
@@ -94,6 +103,11 @@ public partial class AnnouncementBar : UserControl {
   public AnnouncementBar() {
     this.DataContext ??= new AnnouncementBarViewModel();
     InitializeComponent();
+  }
+
+  private void CancelOperation_(object? sender, RoutedEventArgs e) {
+    var dataContext = this.DataContext.AssertAsA<AnnouncementBarViewModel>();
+    dataContext.CancellationTokenSource?.Cancel();
   }
 
   private void ShowException_(object? sender, RoutedEventArgs e) {

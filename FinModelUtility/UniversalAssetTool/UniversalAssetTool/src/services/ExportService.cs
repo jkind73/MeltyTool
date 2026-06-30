@@ -46,7 +46,7 @@ public static class ExportService {
   static ExportService() {
     Progress.ProgressChanged += (_, current) => {
       var (_, modelFileBundle) = current;
-      if (modelFileBundle != null) {
+      if (IsInProgress && modelFileBundle != null) {
         AnnouncementService.DisplayAnnouncement(
             new Announcement(
                 AnnouncementType.INFO,
@@ -102,8 +102,10 @@ public static class ExportService {
             ExporterUtil.ExporterPromptChoice.OVERWRITE_EXISTING);
 
         var total = results.Length;
-        var successCount = results.Count(r => r.result == ExportResult.SUCCESS);
-        var skipCount = results.Count(r => r.result == ExportResult.SKIPPED);
+        var successCount = results.Count(r => r.result is ExportResult.SUCCESS);
+        var skipCount
+            = results.Count(r => r.result is ExportResult.SKIPPED
+                                             or ExportResult.ALREADY_EXISTS);
 
         var messageSb = new StringBuilder();
         messageSb.Append(

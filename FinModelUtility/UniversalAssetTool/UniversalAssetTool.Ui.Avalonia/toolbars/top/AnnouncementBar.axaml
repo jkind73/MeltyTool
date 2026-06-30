@@ -15,47 +15,72 @@
   <Border Background="#8000"
           CornerRadius="8"
           Padding="16 0">
-    <StackPanel VerticalAlignment="Center">
-      <StackPanel Orientation="Horizontal">
-        <controls:If Condition="{Binding ExceptionAndContext, Converter={x:Static ObjectConverters.IsNotNull}}">
-          <Button Click="ShowException_"
-                  Background="Transparent"
-                  Margin="-8 0 0 0">
-            <Grid>
-              <avalonia:MaterialIcon
-                  ToolTip.Tip="Show exception"
-                  Kind="ErrorOutline"
-                  ClipToBounds="False"
-                  Foreground="{Binding Foreground}" />
+    <Grid>
+      <StackPanel VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal">
+          <controls:If Condition="{Binding CancellationTokenSource, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <controls:If.ContentWhenTrue>
+              <Button Click="CancelOperation_"
+                      Background="Transparent"
+                      Margin="-8 0 0 0">
+                <Grid>
+                  <avalonia:MaterialIcon
+                      ToolTip.Tip="Cancel operation"
+                      Kind="Cancel"
+                      ClipToBounds="False"
+                      Foreground="{Binding Foreground}" />
+                  <avalonia:MaterialIcon
+                      Kind="Cancel"
+                      ClipToBounds="False"
+                      ZIndex="-1"
+                      Foreground="#8000"
+                      Margin=".5 .5 -.5 -.5" />
+                </Grid>
+              </Button>
+            </controls:If.ContentWhenTrue>
+            <controls:If.ContentWhenFalse>
+              <controls:If Condition="{Binding ExceptionAndContext, Converter={x:Static ObjectConverters.IsNotNull}}">
+                <Button Click="ShowException_"
+                        Background="Transparent"
+                        Margin="-8 0 0 0">
+                  <Grid>
+                    <avalonia:MaterialIcon
+                        ToolTip.Tip="Show exception"
+                        Kind="ErrorOutline"
+                        ClipToBounds="False"
+                        Foreground="{Binding Foreground}" />
+                    <avalonia:MaterialIcon
+                        Kind="ErrorOutline"
+                        ClipToBounds="False"
+                        ZIndex="-1"
+                        Foreground="#8000"
+                        Margin=".5 .5 -.5 -.5" />
+                  </Grid>
+                </Button>
+              </controls:If>
+            </controls:If.ContentWhenFalse>
+          </controls:If>
 
-              <avalonia:MaterialIcon
-                  ToolTip.Tip="Show exception"
-                  Kind="ErrorOutline"
-                  ClipToBounds="False"
-                  ZIndex="-1"
-                  Foreground="#8000"
-                  Margin=".5 .5 -.5 -.5" />
-            </Grid>
-          </Button>
-        </controls:If>
-
-        <Grid VerticalAlignment="Center">
-          <SelectableTextBlock 
-              Foreground="{Binding Foreground}"
-              Text="{Binding Text}"
-              Classes="regular" />
-          <TextBlock
-              Text="{Binding Text}"
-              Classes="regular"
-              ZIndex="-1"
-              Foreground="#8000"
-              Margin=".5 .5 -.5 -.5" />
-        </Grid>
+          <Grid VerticalAlignment="Center">
+            <SelectableTextBlock 
+                Foreground="{Binding Foreground}"
+                Text="{Binding Text}"
+                Classes="regular" />
+            <TextBlock
+                Text="{Binding Text}"
+                Classes="regular"
+                ZIndex="-1"
+                Foreground="#8000"
+                Margin=".5 .5 -.5 -.5" />
+          </Grid>
+        </StackPanel>
       </StackPanel>
 
       <controls:If Condition="{Binding IsExporting}">
-        <ProgressBar Value="{Binding ProgressValue}" />
+        <ProgressBar VerticalAlignment="Bottom"
+                     Margin="0 3"
+                     Value="{Binding ProgressValue}" />
       </controls:If>
-    </StackPanel>
+    </Grid>
   </Border>
 </UserControl>
