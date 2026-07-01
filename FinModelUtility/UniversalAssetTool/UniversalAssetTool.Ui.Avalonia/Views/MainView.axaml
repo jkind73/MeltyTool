@@ -66,10 +66,7 @@
       <DockPanel Classes="Toolbars"
                  DockPanel.Dock="Top">
         <top:TopMenu DockPanel.Dock="Left" />
-        <top:TopToolbar 
-          DataContext="{Binding TopToolbar}"
-          Margin="2"
-          DockPanel.Dock="Right" />
+        <top:TopToolbar Margin="2" DockPanel.Dock="Right" />
 
         <top:AnnouncementBar Margin="2"/>
       </DockPanel>

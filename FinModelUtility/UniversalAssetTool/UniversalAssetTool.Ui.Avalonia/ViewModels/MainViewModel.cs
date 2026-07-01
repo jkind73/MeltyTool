@@ -33,9 +33,6 @@ public sealed class MainViewModelForDesigner {
   public FileBundleToolbarModel FileBundleToolbar { get; }
     = new FileBundleToolbarModelForDesigner();
 
-  public TopToolbarModel TopToolbar { get; }
-    = new TopToolbarModelForDesigner();
-
   public MainViewModelForDesigner() {
     var progress = new ValueFractionProgress();
 
@@ -79,9 +76,8 @@ public sealed class MainViewModel : BViewModel {
           this.FileBundleToolbar = new FileBundleToolbarModel {
               FileName = fileBundle?.DisplayFullPath.ToString(),
           };
-          this.TopToolbar = new TopToolbarModel {
-              FileBundle = fileBundle,
-          };
+
+          ContextService.SetCurrentFileBundle(fileBundle);
 
           var animatableModels
               = sceneInstance.EnumerateAllAnimatableModels().ToArray();
@@ -121,11 +117,6 @@ public sealed class MainViewModel : BViewModel {
   }
 
   public FileBundleToolbarModel FileBundleToolbar {
-    get;
-    set => this.RaiseAndSetIfChanged(ref field, value);
-  }
-
-  public TopToolbarModel TopToolbar {
     get;
     set => this.RaiseAndSetIfChanged(ref field, value);
   }

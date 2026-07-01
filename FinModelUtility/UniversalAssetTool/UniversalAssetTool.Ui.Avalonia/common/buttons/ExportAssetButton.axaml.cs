@@ -1,32 +1,33 @@
-using Avalonia;
+using System;
+using System.Reactive.Linq;
+
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 
 using fin.io.bundles;
 using fin.model.io;
 
+using uni.services;
 using uni.ui.avalonia.services;
 
 namespace uni.ui.avalonia.common.buttons;
 
 public partial class ExportAssetButton : UserControl {
-  public static readonly StyledProperty<IFileBundle?> FileBundleProperty =
-      AvaloniaProperty.Register<ExportAssetButton, IFileBundle?>(
-          nameof(FileBundle));
+  public IObservable<IFileBundle?> ΔFileBundle
+    => ContextService.ΔFileBundle;
 
-  public IFileBundle? FileBundle {
-    get => this.GetValue(FileBundleProperty);
-    set => this.SetValue(FileBundleProperty, value);
-  }
+  public IObservable<bool> ΔIsEnabled
+    => this.ΔFileBundle.Select(f => f != null);
 
   public ExportAssetButton() => this.InitializeComponent();
 
-
   protected void Button_OnClick(object? sender, RoutedEventArgs e) {
-    if (this.FileBundle is IModelFileBundle modelFileBundle) {
-      FileBundleExportService.ExportModelFileBundleTo(
-          modelFileBundle,
-          TopLevel.GetTopLevel(this));
-    }
+    this.ΔFileBundle.Take(1).Subscribe(fb => {
+      if (fb is IModelFileBundle modelFileBundle) {
+        FileBundleExportService.ExportModelFileBundleTo(
+            modelFileBundle,
+            TopLevel.GetTopLevel(this));
+      }
+    });
   }
 }

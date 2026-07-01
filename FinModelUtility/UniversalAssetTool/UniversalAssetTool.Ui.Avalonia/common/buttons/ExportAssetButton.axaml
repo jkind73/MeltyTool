@@ -7,7 +7,9 @@
              x:Class="uni.ui.avalonia.common.buttons.ExportAssetButton"
              x:CompileBindings="False">
   <buttons:ContrastableIconButton
+      DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType = UserControl}}"
       Tooltip="Export asset"
       Icon="FileExport"
+      IsEnabled="{Binding ΔIsEnabled^}"
       Click="Button_OnClick" />
 </UserControl>

@@ -1,8 +1,11 @@
 using System;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 
 using Material.Icons;
 
@@ -31,7 +34,8 @@ public partial class ContrastableIconButton : UserControl {
 
   public static new readonly StyledProperty<bool> IsEnabledProperty =
       AvaloniaProperty.Register<ContrastableIconButton, bool>(
-          nameof(IsEnabled), true);
+          nameof(IsEnabled),
+          true);
 
   public new bool IsEnabled {
     get => this.GetValue(IsEnabledProperty);
@@ -47,6 +51,12 @@ public partial class ContrastableIconButton : UserControl {
     get => this.GetValue(HighContrastProperty);
     set => this.SetValue(HighContrastProperty, value);
   }
+
+  public IObservable<IBrush> ΔForeground
+    => this.GetObservable(IsEnabledProperty)
+           .Select(isEnabled => isEnabled
+                       ? SolidColorBrush.Parse("White")
+                       : SolidColorBrush.Parse("Gray"));
 
   public event EventHandler<RoutedEventArgs> Click;
 

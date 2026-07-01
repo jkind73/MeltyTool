@@ -19,7 +19,7 @@
         <Grid>
           <avalonia:MaterialIcon
               Kind="{Binding Icon}" 
-              Foreground="White"
+              Foreground="{Binding ΔForeground^}"
               ZIndex="1" />
           <avalonia:MaterialIcon 
               Kind="{Binding Icon}"

@@ -6,15 +6,10 @@
              xmlns:buttons1="clr-namespace:fin.ui.avalonia.buttons;assembly=Fin.Ui.Avalonia"
              xmlns:top="clr-namespace:uni.ui.avalonia.toolbars.top"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="40"
-             x:Class="uni.ui.avalonia.toolbars.top.TopToolbar"
-             x:DataType="top:TopToolbarModel">
-  <Design.DataContext>
-    <top:TopToolbarModelForDesigner />
-  </Design.DataContext>
-
+             x:Class="uni.ui.avalonia.toolbars.top.TopToolbar">
   <StackPanel Orientation="Horizontal">
     <buttons:ImportAssetButton />
-    <buttons:ExportAssetButton FileBundle="{Binding FileBundle}" />
+    <buttons:ExportAssetButton />
     <buttons:OpenSettingsButton />
     <buttons1:ReportIssueButton />
   </StackPanel>
