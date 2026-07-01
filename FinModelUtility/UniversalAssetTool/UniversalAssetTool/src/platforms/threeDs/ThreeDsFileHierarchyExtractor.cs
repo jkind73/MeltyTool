@@ -84,6 +84,8 @@ public sealed class ThreeDsFileHierarchyExtractor {
       if (didChange) {
         directory.Refresh();
       }
+
+      didDecompress |= didChange;
     }
 
     if (didDecompress) {
