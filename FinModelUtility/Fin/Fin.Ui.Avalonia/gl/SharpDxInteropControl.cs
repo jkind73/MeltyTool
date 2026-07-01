@@ -229,7 +229,7 @@ public class SharpDxInteropControl : Control {
 
   protected void FreeGraphicsResources() {
     if (this.swapchain_ is not null) {
-      this.swapchain_.DisposeAsync().GetAwaiter().GetResult();
+      this.swapchain_.Dispose();
       this.swapchain_ = null;
     }
 

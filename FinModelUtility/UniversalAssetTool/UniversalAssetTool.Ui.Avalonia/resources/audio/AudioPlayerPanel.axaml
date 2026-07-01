@@ -12,7 +12,7 @@
     <audio:AudioPlayerPanelViewModelForDesigner />
   </Design.DataContext>
 
-  <controls:If Condition="{Binding AudioFileBundles, Converter={x:Static ObjectConverters.IsNotNull}}">
+  <controls:If Condition="{Binding LoadedAudioBuffers, Converter={x:Static ObjectConverters.IsNotNull}}">
     <Border Background="{DynamicResource SystemAltMediumHighColor}"
             BoxShadow="0 0 10 0 Black"
             Padding="8">

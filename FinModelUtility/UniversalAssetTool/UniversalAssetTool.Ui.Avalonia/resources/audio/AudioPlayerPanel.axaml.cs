@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,6 +10,7 @@ using fin.audio.io;
 using fin.audio.io.importers.ogg;
 using fin.data;
 using fin.io;
+using fin.services;
 using fin.ui;
 using fin.ui.playback.al;
 using fin.util.asserts;
@@ -80,6 +82,7 @@ public sealed class AudioPlayerPanelViewModel
       }
 
       if (field.SequenceEqualOrBothEmpty(value)) {
+        this.LoadedAudioBuffers = null;
         return;
       }
 
@@ -87,9 +90,13 @@ public sealed class AudioPlayerPanelViewModel
       field = value;
 
       var ar = new GlobalAudioReader();
-      this.LoadedAudioBuffers
-          = value?.SelectMany(a => ar.ImportAudio(this.audioManager_, a))
-                 .ToArray();
+      try {
+        this.LoadedAudioBuffers
+            = value?.SelectMany(a => ar.ImportAudio(this.audioManager_, a))
+                   .ToArray();
+      } catch (Exception e) {
+        ExceptionService.HandleException(e, null);
+      }
     }
   }
 
@@ -101,6 +108,7 @@ public sealed class AudioPlayerPanelViewModel
       }
 
       if (field.SequenceEqualOrBothEmpty(value)) {
+        this.AudioBuffer = null;
         return;
       }
 

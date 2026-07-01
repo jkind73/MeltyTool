@@ -66,9 +66,10 @@ class D3d11Swapchain {
     return foundMultiple ? firstFound : null;
   }
 
-  public async ValueTask DisposeAsync() {
-    foreach (var img in this.pendingImages_)
-      await img.DisposeAsync();
+  public void Dispose() {
+    foreach (var img in this.pendingImages_) {
+      img.ForceDispose();
+    }
   }
 
   class AnonymousDisposable : IDisposable {
@@ -282,6 +283,12 @@ public sealed class D3D11SwapchainImage {
       }
     }
 
+    this.FreeResources_();
+  }
+
+  public void ForceDispose() => this.FreeResources_();
+
+  private void FreeResources_() {
     this.RenderTargetView.Dispose();
     this.mutex_.Dispose();
     this.texture_.Dispose();
@@ -293,6 +300,7 @@ public sealed class D3D11SwapchainImage {
     GL.DeleteFramebuffers(1, [this.fboId_]);
     GL.DeleteTextures(1, [this.colorTextureId_]);
     GL.DeleteTextures(1, [this.depthTextureId_]);
+
   }
 
   [DllImport("Kernel32.dll")]

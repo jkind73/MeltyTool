@@ -25,7 +25,7 @@ public sealed class AotWaveformRenderer : IRenderable {
     GC.SuppressFinalize(this);
   }
 
-  private void ReleaseUnmanagedResources_() => this.renderer_.Dispose();
+  private void ReleaseUnmanagedResources_() => this.renderer_?.Dispose();
 
   public void Render() {
     if (this.ActivePlayback?.IsDisposed ?? true) {
