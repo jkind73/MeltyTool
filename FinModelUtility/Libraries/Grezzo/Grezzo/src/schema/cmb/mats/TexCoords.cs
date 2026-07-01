@@ -6,7 +6,7 @@ using schema.binary.attributes;
 namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
-public sealed partial class TexCoords : IBinaryDeserializable {
+public sealed partial record TexCoords : IBinaryDeserializable {
   public byte coordinateIndex { get; private set; }
   public byte referenceCameraIndex { get; private set; }
 

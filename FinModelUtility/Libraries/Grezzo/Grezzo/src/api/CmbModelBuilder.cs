@@ -9,6 +9,8 @@ using fin.data.dictionaries;
 using fin.data.lazy;
 using fin.data.queues;
 using fin.image;
+using fin.image.formats;
+using fin.image.util;
 using fin.io;
 using fin.io.bundles;
 using fin.math;
@@ -22,13 +24,19 @@ using fin.util.sets;
 
 using grezzo.material;
 using grezzo.schema.cmb;
+using grezzo.schema.cmb.mats;
 using grezzo.schema.cmb.skl;
 using grezzo.schema.csab;
 using grezzo.schema.ctxb;
 using grezzo.schema.shpa;
 
-using Version = grezzo.schema.cmb.Version;
+using SixLabors.ImageSharp.PixelFormats;
 
+using Version = grezzo.schema.cmb.Version;
+using FinTextureMinFilter = fin.model.TextureMinFilter;
+using FinTextureMagFilter = fin.model.TextureMagFilter;
+using TextureMagFilter = grezzo.schema.cmb.TextureMagFilter;
+using TextureMinFilter = grezzo.schema.cmb.TextureMinFilter;
 
 namespace grezzo.api;
 
@@ -176,8 +184,8 @@ public sealed class CmbModelBuilder {
             image = textureImage;
           } else {
             var ctxb
-                = ctxbs?.FirstOrDefault(
-                    ctxb => ctxb.Chunk.Entry.Name == cmbTexture.name);
+                = ctxbs?.FirstOrDefault(ctxb => ctxb.Chunk.Entry.Name ==
+                                                cmbTexture.name);
             image = ctxb != null
                 ? cmbTexture.GetImageReader()
                             .ReadImage(ctxb.Chunk.Entry.Data)
@@ -187,14 +195,129 @@ public sealed class CmbModelBuilder {
           return image;
         });
 
-    var finMaterials =
-        new LazyDictionary<(int, bool hasVertexColors), IMaterial>(
-            indexAndHasVertexColors => new CmbFixedFunctionMaterial(
-                finModel,
-                cmb,
-                indexAndHasVertexColors.Item1,
-                indexAndHasVertexColors.hasVertexColors,
-                textureImages).Material);
+    var lazyFinTextures = new LazyDictionary<(TexMapper, TexCoords), IReadOnlyTexture?>(texMapperAndCoords => {
+      var (texMapper, texCoords) = texMapperAndCoords;
+      var textureId = texMapper.textureId;
+      if (textureId == -1) {
+        return null;
+      }
+      
+      var cmbTexture = cmb.tex.Data.textures[textureId];
+
+      var rawTextureImage = textureImages[textureId];
+
+      // TODO: Is this logic possibly right????
+      IImage textureImage;
+      if (TransparencyTypeUtil.GetTransparencyType(rawTextureImage) !=
+          TransparencyType.OPAQUE ||
+          !CmbFixedFunctionMaterial.USE_JANKY_TRANSPARENCY) {
+        textureImage = rawTextureImage;
+      } else {
+        var backgroundColor = texMapper.BorderColor;
+
+        var processedImage = new Rgba32Image(
+            rawTextureImage.PixelFormat,
+            rawTextureImage.Width,
+            rawTextureImage.Height);
+        textureImage = processedImage;
+
+        rawTextureImage.Access(srcGetHandler => {
+          using var dstLock = processedImage.Lock();
+          var dstPtr = dstLock.Pixels;
+          for (var y = 0; y < rawTextureImage.Height; y++) {
+            for (var x = 0; x < rawTextureImage.Width; x++) {
+              srcGetHandler(x,
+                            y,
+                            out var r,
+                            out var g,
+                            out var b,
+                            out var a);
+
+              if (r == backgroundColor.Rb &&
+                  g == backgroundColor.Gb &&
+                  b == backgroundColor.Bb) {
+                a = 0;
+              }
+
+              dstPtr[y * rawTextureImage.Width + x] = new Rgba32(r, g, b, a);
+            }
+          }
+        });
+      }
+
+      var finTexture = finModel.MaterialManager.CreateTexture(textureImage);
+      finTexture.Name = cmbTexture.name;
+      finTexture.WrapModeU = this.CmbToFinWrapMode(texMapper.wrapS);
+      finTexture.WrapModeV = this.CmbToFinWrapMode(texMapper.wrapT);
+      finTexture.MinFilter =
+          texMapper.minFilter switch {
+              TextureMinFilter.Nearest =>
+                  FinTextureMinFilter.NEAR,
+              TextureMinFilter.Linear =>
+                  FinTextureMinFilter.LINEAR,
+              TextureMinFilter
+                      .NearestMipmapNearest =>
+                  FinTextureMinFilter
+                      .NEAR_MIPMAP_NEAR,
+              TextureMinFilter
+                      .LinearMipmapNearest =>
+                  FinTextureMinFilter
+                      .LINEAR_MIPMAP_NEAR,
+              TextureMinFilter
+                      .NearestMipmapLinear =>
+                  FinTextureMinFilter
+                      .NEAR_MIPMAP_LINEAR,
+              TextureMinFilter
+                      .LinearMipmapLinear =>
+                  FinTextureMinFilter
+                      .LINEAR_MIPMAP_LINEAR,
+              _ => throw new ArgumentOutOfRangeException()
+          };
+      finTexture.MagFilter =
+          texMapper.magFilter switch {
+              TextureMagFilter.Nearest =>
+                  FinTextureMagFilter.NEAR,
+              TextureMagFilter.Linear =>
+                  FinTextureMagFilter.LINEAR,
+              _ => throw new ArgumentOutOfRangeException()
+          };
+      finTexture.LodBias = texMapper.lodBias;
+      finTexture.MinLod = texMapper.minLodBias;
+      finTexture.UvIndex = texCoords.coordinateIndex;
+      finTexture.BorderColor = texMapper.BorderColor;
+
+      finTexture.UvType =
+          texCoords.mappingMethod ==
+          TextureMappingType.UvCoordinateMap
+              ? UvType.STANDARD
+              : UvType.SPHERICAL;
+
+      // TODO: Better way to specify this??
+      if (texCoords.scale.Y == 2 &&
+          texMapper.wrapT == TextureWrapMode.Mirror) {
+        texCoords.translation.Y -= 1;
+      }
+
+      finTexture.TextureTransform
+                .SetTranslation2d(texCoords.translation.X,
+                                  texCoords.translation.Y)
+                .SetRotationRadians2d(texCoords.rotation)
+                .SetScale2d(texCoords.scale.X,
+                            texCoords.scale.Y);
+
+      // TODO: Use LUTs/Distribution in specular calculation
+
+      return finTexture;
+    });
+
+    var lazyFinMaterials =
+        new LazyDictionary<(int, bool hasVertexColors),
+            IMaterial>(indexAndHasVertexColors => new CmbFixedFunctionMaterial(
+                           finModel,
+                           cmb,
+                           indexAndHasVertexColors.Item1,
+                           indexAndHasVertexColors.hasVertexColors,
+                           lazyFinTextures).Material);
 
     // Creates meshes
     var verticesByIndex = new ListDictionary<int, IVertex>();
@@ -241,7 +364,7 @@ public sealed class CmbModelBuilder {
       var hasBi = shape.vertFlags.GetBit(inc++);
       var hasBw = shape.vertFlags.GetBit(inc++);
 
-      var material = finMaterials[(cmbMesh.materialIndex, hasClr)];
+      var material = lazyFinMaterials[(cmbMesh.materialIndex, hasClr)];
       var needsUv0 = material?.Textures.Any(t => t.UvIndex == 0) ?? false;
       var needsUv1 = material?.Textures.Any(t => t.UvIndex == 1) ?? false;
       var needsUv2 = material?.Textures.Any(t => t.UvIndex == 2) ?? false;
@@ -418,4 +541,13 @@ public sealed class CmbModelBuilder {
 
     return finModel;
   }
+
+  public WrapMode CmbToFinWrapMode(TextureWrapMode cmbMode)
+    => cmbMode switch {
+        TextureWrapMode.ClampToBorder => WrapMode.CLAMP,
+        TextureWrapMode.Repeat        => WrapMode.REPEAT,
+        TextureWrapMode.ClampToEdge   => WrapMode.CLAMP,
+        TextureWrapMode.Mirror        => WrapMode.MIRROR_REPEAT,
+        _                             => throw new ArgumentOutOfRangeException(nameof(cmbMode), cmbMode, null)
+    };
 }

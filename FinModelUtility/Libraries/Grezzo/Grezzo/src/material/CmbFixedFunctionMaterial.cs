@@ -2,36 +2,28 @@
 using System.Linq;
 
 using fin.data.lazy;
-using fin.image;
-using fin.image.formats;
 using fin.model;
-using fin.image.util;
 
 using grezzo.schema.cmb;
-
-using SixLabors.ImageSharp.PixelFormats;
+using grezzo.schema.cmb.mats;
 
 using BlendEquation = grezzo.schema.cmb.BlendEquation;
 using BlendFactor = grezzo.schema.cmb.BlendFactor;
 using FinBlendEquation = fin.model.BlendEquation;
 using FinBlendFactor = fin.model.BlendFactor;
-using FinTextureMinFilter = fin.model.TextureMinFilter;
-using FinTextureMagFilter = fin.model.TextureMagFilter;
-using TextureMagFilter = grezzo.schema.cmb.TextureMagFilter;
-using TextureMinFilter = grezzo.schema.cmb.TextureMinFilter;
 
 namespace grezzo.material;
 
 public sealed class CmbFixedFunctionMaterial {
   private const bool USE_FIXED_FUNCTION = true;
-  private const bool USE_JANKY_TRANSPARENCY = false;
+  public const bool USE_JANKY_TRANSPARENCY = false;
 
   public CmbFixedFunctionMaterial(
       IModel finModel,
       Cmb cmb,
       int materialIndex,
       bool hasVertexColors,
-      ILazyArray<IImage> textureImages) {
+      ILazyDictionary<(TexMapper, TexCoords), IReadOnlyTexture?> lazyFinTextures) {
       var mats = cmb.mats.Data;
       var cmbMaterials = mats.Materials;
       var cmbMaterial = cmbMaterials[materialIndex];
@@ -39,122 +31,9 @@ public sealed class CmbFixedFunctionMaterial {
       // Get associated texture
       var finTextures =
           cmbMaterial
-              .texMappers.Select((texMapper, i) => {
-                var textureId = texMapper.textureId;
-
-                ITexture? finTexture = null;
-                if (textureId != -1) {
-                  var cmbTexture = cmb.tex.Data.textures[textureId];
-
-                  var rawTextureImage = textureImages[textureId];
-
-                  // TODO: Is this logic possibly right????
-                  IImage textureImage;
-                  if (TransparencyTypeUtil.GetTransparencyType(rawTextureImage) !=
-                      TransparencyType.OPAQUE || !USE_JANKY_TRANSPARENCY) {
-                    textureImage = rawTextureImage;
-                  } else {
-                    var backgroundColor = texMapper.BorderColor;
-
-                    var processedImage = new Rgba32Image(
-                        rawTextureImage.PixelFormat,
-                        rawTextureImage.Width,
-                        rawTextureImage.Height);
-                    textureImage = processedImage;
-
-                    rawTextureImage.Access(srcGetHandler => {
-                      using var dstLock = processedImage.Lock();
-                      var dstPtr = dstLock.Pixels;
-                      for (var y = 0; y < rawTextureImage.Height; y++) {
-                        for (var x = 0; x < rawTextureImage.Width; x++) {
-                          srcGetHandler(x,
-                                        y,
-                                        out var r,
-                                        out var g,
-                                        out var b,
-                                        out var a);
-
-                          if (r == backgroundColor.Rb &&
-                              g == backgroundColor.Gb &&
-                              b == backgroundColor.Bb) {
-                            a = 0;
-                          }
-
-                          dstPtr[y * rawTextureImage.Width + x] =
-                              new Rgba32(r, g, b, a);
-                        }
-                      }
-                    });
-                  }
-
-                  var cmbTexCoord = cmbMaterial.texCoords[i];
-
-                  finTexture =
-                      finModel.MaterialManager.CreateTexture(textureImage);
-                  finTexture.Name = cmbTexture.name;
-                  finTexture.WrapModeU = this.CmbToFinWrapMode(texMapper.wrapS);
-                  finTexture.WrapModeV = this.CmbToFinWrapMode(texMapper.wrapT);
-                  finTexture.MinFilter =
-                      texMapper.minFilter switch {
-                          TextureMinFilter.Nearest =>
-                              FinTextureMinFilter.NEAR,
-                          TextureMinFilter.Linear =>
-                              FinTextureMinFilter.LINEAR,
-                          TextureMinFilter
-                                  .NearestMipmapNearest =>
-                              FinTextureMinFilter
-                                  .NEAR_MIPMAP_NEAR,
-                          TextureMinFilter
-                                  .LinearMipmapNearest =>
-                              FinTextureMinFilter
-                                  .LINEAR_MIPMAP_NEAR,
-                          TextureMinFilter
-                                  .NearestMipmapLinear =>
-                              FinTextureMinFilter
-                                  .NEAR_MIPMAP_LINEAR,
-                          TextureMinFilter
-                                  .LinearMipmapLinear =>
-                              FinTextureMinFilter
-                                  .LINEAR_MIPMAP_LINEAR,
-                          _ => throw new ArgumentOutOfRangeException()
-                      };
-                  finTexture.MagFilter =
-                      texMapper.magFilter switch {
-                          TextureMagFilter.Nearest =>
-                              FinTextureMagFilter.NEAR,
-                          TextureMagFilter.Linear =>
-                              FinTextureMagFilter.LINEAR,
-                          _ => throw new ArgumentOutOfRangeException()
-                      };
-                  finTexture.LodBias = texMapper.lodBias;
-                  finTexture.MinLod = texMapper.minLodBias;
-                  finTexture.UvIndex = cmbTexCoord.coordinateIndex;
-                  finTexture.BorderColor = texMapper.BorderColor;
-
-                  finTexture.UvType =
-                      cmbTexCoord.mappingMethod ==
-                      TextureMappingType.UvCoordinateMap
-                          ? UvType.STANDARD
-                          : UvType.SPHERICAL;
-
-                  // TODO: Better way to specify this??
-                  if (cmbTexCoord.scale.Y == 2 &&
-                      texMapper.wrapT == TextureWrapMode.Mirror) {
-                    cmbTexCoord.translation.Y -= 1;
-                  }
-
-                  finTexture.TextureTransform
-                            .SetTranslation2d(cmbTexCoord.translation.X,
-                                        cmbTexCoord.translation.Y)
-                            .SetRotationRadians2d(cmbTexCoord.rotation)
-                            .SetScale2d(cmbTexCoord.scale.X,
-                                        cmbTexCoord.scale.Y);
-
-                  // TODO: Use LUTs/Distribution in specular calculation
-                }
-
-                return finTexture;
-              })
+              .texMappers.Select((texMapper, i)
+                                     => lazyFinTextures[
+                                         (texMapper, cmbMaterial.texCoords[i])])
               .ToArray();
 
       // Create material
@@ -311,15 +190,6 @@ public sealed class CmbFixedFunctionMaterial {
     }
 
   public IMaterial Material { get; }
-
-  public WrapMode CmbToFinWrapMode(TextureWrapMode cmbMode)
-    => cmbMode switch {
-        TextureWrapMode.ClampToBorder => WrapMode.CLAMP,
-        TextureWrapMode.Repeat        => WrapMode.REPEAT,
-        TextureWrapMode.ClampToEdge   => WrapMode.CLAMP,
-        TextureWrapMode.Mirror        => WrapMode.MIRROR_REPEAT,
-        _                             => throw new ArgumentOutOfRangeException(nameof(cmbMode), cmbMode, null)
-    };
 
   public FinBlendEquation CmbBlendEquationToFin(
       BlendEquation cmbBlendEquation)

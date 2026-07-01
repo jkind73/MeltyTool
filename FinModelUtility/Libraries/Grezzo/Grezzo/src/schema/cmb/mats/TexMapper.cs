@@ -5,7 +5,7 @@ using schema.binary;
 namespace grezzo.schema.cmb.mats;
 
 [BinarySchema]
-public sealed partial class TexMapper : IBinaryConvertible {
+public sealed partial record TexMapper : IBinaryConvertible {
   public short textureId { get; set; }
   private readonly ushort padding_ = 0;
   public TextureMinFilter minFilter;
