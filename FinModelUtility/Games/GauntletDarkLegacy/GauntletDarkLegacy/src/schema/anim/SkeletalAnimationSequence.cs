@@ -7,6 +7,7 @@ using fin.util.enums;
 using schema.binary;
 using schema.binary.attributes;
 
+
 namespace gdl.schema.anim;
 
 [Flags]
@@ -96,9 +97,14 @@ public sealed partial class SkeletalAnimationSequence
     br.SubreadAt(
         this.Parent.BlockPointer + this.DataPointer,
         () => {
-          var hasFrames = new BitArray(br.ReadUInt32s((frameCount + 0x1f) >> 5)
-                                         .AsBytes()
-                                         .ToArray());
+          BitArray hasFrames;
+          if (frameCount > 1) {
+            hasFrames = new BitArray(br.ReadUInt32s((frameCount + 0x1f) >> 5)
+                                       .AsBytes()
+                                       .ToArray());
+          } else {
+            hasFrames = new BitArray(0);
+          }
 
           this.ReadUncompressedFrame_(br,
                                       out var rotationX0,

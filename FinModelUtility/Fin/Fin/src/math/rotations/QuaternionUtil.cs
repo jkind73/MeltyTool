@@ -174,4 +174,8 @@ public static class QuaternionUtil {
 
     return Quaternion.Normalize((first + second) * division);
   }
+
+  public static bool IsInvalid(in this Quaternion q)
+    => float.IsNaN(q.X) || float.IsNaN(q.Y) || float.IsNaN(q.Z) ||
+       float.IsNaN(q.W);
 }
