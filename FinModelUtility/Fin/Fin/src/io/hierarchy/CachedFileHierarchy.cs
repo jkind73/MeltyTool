@@ -217,7 +217,7 @@ public partial class CachedFileHierarchy : IFileHierarchy {
     protected override ISystemIoObject Instance => this.Impl;
     public ISystemDirectory Impl { get; }
 
-    public bool IsEmpty => this.subdirs_.Count > 0;
+    public bool IsEmpty => this.subdirs_.Count == 0 && this.files_.Count == 0;
 
     public IEnumerable<IFileHierarchyDirectory> GetExistingSubdirs()
       => this.subdirs_;
