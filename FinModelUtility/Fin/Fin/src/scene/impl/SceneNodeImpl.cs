@@ -23,10 +23,10 @@ public partial class SceneImpl {
 
     public string? Name { get; set; }
 
-    public SceneNodeTag Tags { get; private set; }
+    public SceneNodeTag Tag { get; private set; }
 
     public ISceneNode SetTag(SceneNodeTag tag) {
-      this.Tags = tag;
+      this.Tag = tag;
       return this;
     }
 
