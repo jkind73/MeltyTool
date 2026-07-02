@@ -45,6 +45,7 @@ public sealed class BallRenderer(float radius) : IRenderable {
                          radius * .9f,
                          30,
                          blackMaterial);
+    model.RemoveAllNormals();
 
     var modelRenderer = new ModelRenderer(model);
     modelRenderer.GenerateModelIfNull();
