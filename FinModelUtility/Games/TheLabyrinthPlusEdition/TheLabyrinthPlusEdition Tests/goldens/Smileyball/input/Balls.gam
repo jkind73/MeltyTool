@@ -1,0 +1,138 @@
+[Chrome Ball]
+MapFromFile = 0
+NoEnvMap = 0
+
+[Eyeball]
+Texture = Eyeball.jpg
+MapFromFile = 1
+NoEnvMap = 0
+
+[Tennis Ball]
+Texture = Tennisball.jpg
+MapFromFile = 0
+NoEnvMap = 1
+
+[Teknoball]
+Texture = Teknoball.jpg
+MapFromFile = 1
+NoEnvMap = 0
+Geometry = Techball.scb
+
+[Hoopball]
+Texture = hoopball.tif
+MapFromFile = 1
+NoEnvMap = 0
+Geometry = Hoopball.scb
+
+[Eightball]
+Texture = eightball.jpg
+MapFromFile = 0
+NoEnvMap = 0
+
+[Basketball]
+Texture = Basketball.jpg
+MapFromFile = 0
+NoEnvMap = 1
+
+[Bowling Ball]
+Texture = Bowlingball.jpg
+MapFromFile = 1
+NoEnvMap = 0
+
+[Soccer Ball]
+Texture = Soccerball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+
+[Earth]
+Texture = Earthball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+
+[Smiley Ball]
+Texture = smileyball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Smileyball.scb
+
+[Croquet Ball]
+Texture = Croquetball.jpg
+MapFromFile = 0
+NoEnvMap = 1
+
+[Snowball]
+Texture = Snowball.jpg
+MapFromFile = 1
+NoEnvMap = 0
+
+[Spikeball]
+Texture = grey.tif
+MapFromFile = 1
+NoEnvMap = 0
+Geometry =Spikeball.scb
+
+[Skull Ball]
+Texture = SkullGlow.jpg
+MapFromFile = 1
+NoEnvMap = 0
+Geometry =Skullball.scb
+
+[PolkaDotBall]
+Texture = Polkadot.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Ironball.scb
+
+[AppleBall]
+Texture = Apple.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = AppleBall.scb
+
+[JupiterBall]
+Texture = Jupiter.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Ironball.scb
+
+[EggBall]
+Texture = Egg.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = EggBall.scb
+
+[LemonBall]
+Texture = Lemon.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = LemonBall.scb
+
+[TubeBall]
+Texture = Tubeball.jpg
+MapFromFile = 1
+NoEnvMap = 0
+
+[CheeseBall]
+Texture = Cheeseball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Cheeseball.scb
+
+[WiffleBall]
+Texture = Wiffleball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Wiffleball.scb
+
+[CircuitBall]
+Texture = Circuit_ball.jpg
+MapFromFile = 1
+NoEnvMap = 1
+Geometry = Circuitball.scb
+
+[Plus!Ball]
+Texture = Plus!_ball.jpg
+MapFromFile = 0
+NoEnvMap = 1
+
+
