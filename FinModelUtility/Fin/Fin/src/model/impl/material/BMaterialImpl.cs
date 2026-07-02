@@ -10,7 +10,12 @@ public partial class ModelImpl<TVertex> {
     public abstract IEnumerable<IReadOnlyTexture> Textures { get; }
 
     public required int Index { get; init; }
-    public string? Name { get; set; }
+
+    public string? Name {
+      get => field ?? $"material{this.Index}";
+      set;
+    }
+
     public CullingMode CullingMode { get; set; }
 
     public DepthMode DepthMode { get; set; } = DepthMode.READ_AND_WRITE;
@@ -89,5 +94,18 @@ public partial class ModelImpl<TVertex> {
       BlendFactor.ONE;
 
     public LogicOp LogicOp { get; private set; } = LogicOp.UNDEFINED;
+
+    public override string ToString() {
+      var type = this switch {
+          IColorMaterial         => "color",
+          IFixedFunctionMaterial => "fixedFunction",
+          IHiddenMaterial        => "hidden",
+          INullMaterial          => "null",
+          IStandardMaterial      => "standard",
+          ITextureMaterial       => "texture",
+      };
+
+      return $"[{type}] {this.Name}";
+    }
   }
 }

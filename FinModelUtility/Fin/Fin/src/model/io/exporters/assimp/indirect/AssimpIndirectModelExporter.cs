@@ -90,9 +90,7 @@ public sealed class AssimpIndirectModelExporter : IModelExporter {
     var finMaterials = model.MaterialManager.All;
     for (var i = 0; i < finMaterials.Count; ++i) {
       var finMaterial = finMaterials[i];
-      var materialName =
-          finMaterial.Name?.ReplaceInvalidFilenameCharacters() ??
-          $"material{i}";
+      var materialName = finMaterial.Name?.ReplaceInvalidFilenameCharacters();
 
       var shaderSource = finMaterial.ToShaderSource(model, modelRequirements);
       var vertexShaderFile = new FinFile(

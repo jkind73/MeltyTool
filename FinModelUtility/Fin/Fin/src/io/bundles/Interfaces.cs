@@ -27,10 +27,16 @@ public interface IFileBundle : IUiFile, IComparable<IFileBundle> {
 
   string TrueFullPath => Asserts.CastNonnull(this.MainFile.FullPath);
 
-  int IComparable<IFileBundle>.CompareTo(IFileBundle? other)
-    => StringUtil.NaturalSortInstance.Compare(
+  int IComparable<IFileBundle>.CompareTo(IFileBundle? other) {
+    var nameComparison = StringUtil.NaturalSortInstance.Compare(
         this.DisplayFullPath,
         other!.DisplayFullPath);
+    if (nameComparison != 0) {
+      return nameComparison;
+    }
+
+    return this.Type.CompareTo(other.Type);
+  }
 }
 
 public interface INamedAnnotatedFileBundleGatherer
