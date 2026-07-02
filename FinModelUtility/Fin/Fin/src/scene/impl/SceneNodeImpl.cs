@@ -23,6 +23,13 @@ public partial class SceneImpl {
 
     public string? Name { get; set; }
 
+    public SceneNodeTag Tags { get; private set; }
+
+    public ISceneNode SetTag(SceneNodeTag tag) {
+      this.Tags = tag;
+      return this;
+    }
+
     public IReadOnlyList<ISceneNode> ChildNodes => this.childNodes_;
 
     public ISceneNode AddChildNode() {

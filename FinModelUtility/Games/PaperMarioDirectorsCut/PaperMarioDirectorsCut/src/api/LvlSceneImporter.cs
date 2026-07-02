@@ -164,7 +164,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                .SetPosition(npcPosition.X, npcPosition.Z, npcPosition.Y)
                .AddComponent(
                    new SimpleModelRenderComponent(
-                       lazyCharacterModels[npcCharacterType]));
+                       lazyCharacterModels[npcCharacterType]))
+               .SetTag(SceneNodeTag.ENEMY);
       }
     }
 
@@ -175,7 +176,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                      .SetPosition(npcPosition.X, npcPosition.Z, npcPosition.Y)
                      .AddComponent(
                          new SimpleModelRenderComponent(
-                             lazyCharacterModels[npcCharacterType]));
+                             lazyCharacterModels[npcCharacterType]))
+                     .SetTag(SceneNodeTag.NPC);
         npcNode.Name = npcName;
       }
     }
@@ -188,7 +190,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                .SetPosition(saveBlockPosition.X,
                             saveBlockPosition.Z,
                             saveBlockPosition.Y)
-               .AddSceneModel(saveBlockModel);
+               .AddSceneModel(saveBlockModel)
+               .SetTag(SceneNodeTag.ENEMY);
       }
     }
 
@@ -200,7 +203,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
                .SetPosition(saveBlockPosition.X,
                             saveBlockPosition.Z,
                             saveBlockPosition.Y)
-               .AddSceneModel(saveBlockModel);
+               .AddSceneModel(saveBlockModel)
+               .SetTag(SceneNodeTag.SAVE_POINT);
       }
     }
 
@@ -210,7 +214,8 @@ public sealed class LvlSceneImporter : ISceneImporter<LvlSceneFileBundle> {
       foreach (var treePosition in lvl.Trees) {
         finArea.AddRootNode()
                .SetPosition(treePosition.X, treePosition.Z, treePosition.Y)
-               .AddSceneModel(treeModel);
+               .AddSceneModel(treeModel)
+               .SetTag(SceneNodeTag.SCENERY_TREE);
       }
     }
 

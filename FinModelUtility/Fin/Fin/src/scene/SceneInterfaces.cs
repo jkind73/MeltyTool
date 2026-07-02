@@ -55,6 +55,20 @@ public partial interface ISceneArea : IDisposable {
   ISceneNode CreateCustomSkyboxNode();
 }
 
+public enum SceneNodeTag {
+  UNDEFINED,
+  PLAYER,
+  NPC,
+  ENEMY,
+  CURRENCY,
+  GROUP,
+  AREA,
+  SCENERY_TREE,
+  SCENERY_MISC,
+  LEVEL_GEOMETRY,
+  SAVE_POINT,
+}
+
 /// <summary>
 ///   An instance of an object in a scene. This can be used for anything that
 ///   appears in the scene, such as the level geometry, scenery, or
@@ -62,6 +76,9 @@ public partial interface ISceneArea : IDisposable {
 /// </summary>
 [GenerateReadOnly]
 public partial interface ISceneNode : IDisposable, INamed {
+  SceneNodeTag Tag { get; }
+  ISceneNode SetTag(SceneNodeTag tag);
+
   new IReadOnlyList<ISceneNode> ChildNodes { get; }
   ISceneNode AddChildNode();
 
