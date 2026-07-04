@@ -979,44 +979,70 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
           () => {
             var basePose = br.ReadNew<BasePose>();
 
-            if (i == 72) {
-              ;
-            }
 
-            SetFirstFrame_(headBoneTracks, basePose.HeadRotation);
+            SetFirstFrame_(headBoneTracks, false, i, basePose.HeadRotation);
 
             SetFirstFrame_(leftUpperArmBoneTracks,
+                           false,
+                           i,
                            basePose.LeftUpperArmRotation);
-            SetFirstFrame_(leftForearmBoneTracks, basePose.LeftForearmRotation);
-            SetFirstFrame_(leftHandBoneTracks, basePose.LeftHandRotation);
+            SetFirstFrame_(leftForearmBoneTracks,
+                           false,
+                           i,
+                           basePose.LeftForearmRotation);
+            SetFirstFrame_(leftHandBoneTracks,
+                           true,
+                           i,
+                           basePose.LeftHandRotation);
 
             SetFirstFrame_(rightUpperArmBoneTracks,
+                           false,
+                           i,
                            basePose.RightUpperArmRotation);
             SetFirstFrame_(rightForearmBoneTracks,
+                           false,
+                           i,
                            basePose.RightForearmRotation);
-            SetFirstFrame_(rightHandBoneTracks, basePose.RightHandRotation);
+            SetFirstFrame_(rightHandBoneTracks,
+                           true,
+                           i,
+                           basePose.RightHandRotation);
 
-            SetFirstFrame_(torsoBoneTracks, basePose.TorsoRotation);
-            SetFirstFrame_(hipBoneTracks, basePose.HipRotation);
-            SetFirstFrame_(leftThighBoneTracks, basePose.LeftThighRotation);
-            SetFirstFrame_(rightThighBoneTracks, basePose.RightThighRotation);
+            SetFirstFrame_(torsoBoneTracks, false, i, basePose.TorsoRotation);
+            SetFirstFrame_(hipBoneTracks, false, i, basePose.HipRotation);
+            SetFirstFrame_(leftThighBoneTracks,
+                           false,
+                           i,
+                           basePose.LeftThighRotation);
+            SetFirstFrame_(rightThighBoneTracks,
+                           false,
+                           i,
+                           basePose.RightThighRotation);
           });
     }
   }
 
-  private static void SetFirstFrame_(IBoneTracks boneTracks, short rotation) {
+  private static void SetFirstFrame_(IBoneTracks boneTracks, bool isHand, int i, short degreesTimesTen) {
+    var defaultLocalEulerRadians = boneTracks.Bone.Transform.LocalEulerRadians ?? Vector3.Zero;
+
+    //degreesTimesTen = (short) (i * 10);
+    var deltaRadians = (degreesTimesTen / 10f) / 180 * MathF.PI;
+
+    var newLocalEulerRadians = defaultLocalEulerRadians + (isHand
+        ? new Vector3(0, -deltaRadians, 0)
+        : new Vector3(deltaRadians, 0, 0));
+
     boneTracks
         .UseCombinedQuaternionKeyframes(1)
         .Add(new Keyframe<Quaternion>(
                  0,
-                 (boneTracks.Bone.Transform.LocalRotation ??
-                  Quaternion.Identity) * GetQuaternionFromRotation_(rotation)));
+                 newLocalEulerRadians.CreateZyxRadians()));
   }
 
   // TODO: I have no idea what these are meant to be
   private static Quaternion
-      GetQuaternionFromRotation_(short rotationTimesTen) {
-    var radians = (rotationTimesTen / 10f) / 180 * MathF.PI;
+      GetQuaternionFromRotation_(short degreesTimesTen) {
+    var radians = (degreesTimesTen / 10f) / 180 * MathF.PI;
     return Quaternion.CreateFromAxisAngle(Vector3.UnitY, radians);
   }
 }
