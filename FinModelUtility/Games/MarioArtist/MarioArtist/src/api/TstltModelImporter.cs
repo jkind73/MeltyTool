@@ -940,16 +940,15 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     for (var i = 0; i < 96; ++i) {
       var finAnimation = finAnimationManager.AddAnimation();
 
-      finAnimation.FrameCount = 1;
+      var keyframeCount = br.ReadUInt16();
+
+      finAnimation.FrameCount = br.ReadUInt16();
       finAnimation.FrameRate = 30;
 
-      var unk0 = br.ReadUInt16();
-      var maybeLength = br.ReadUInt16();
-
-      var unk1 = br.ReadUInt32();
       var segmentedAddress0 = br.ReadUInt32();
       var segmentedAddress1 = br.ReadUInt32();
       var segmentedAddress2 = br.ReadUInt32();
+      var segmentedAddress3 = br.ReadUInt32();
 
       var headBoneTracks = finAnimation.GetOrCreateBoneTracks(headBone);
       var leftUpperArmBoneTracks
@@ -970,60 +969,52 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
       var rightThighBoneTracks
           = finAnimation.GetOrCreateBoneTracks(rightThighBone);
 
+      var headQuaternions = headBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftUpperArmQuaternions = leftUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftForearmQuaternions = leftForearmBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftHandQuaternions = leftHandBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightUpperArmQuaternions = rightUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightForearmQuaternions = rightForearmBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightHandQuaternions = rightHandBoneTracks.UseCombinedQuaternionKeyframes();
+      var torsoQuaternions = torsoBoneTracks.UseCombinedQuaternionKeyframes();
+      var hipQuaternions = hipBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftThighQuaternions = leftThighBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightThighQuaternions = rightThighBoneTracks.UseCombinedQuaternionKeyframes();
+
       IoUtils.SplitSegmentedAddress(segmentedAddress0, out _, out var offset0);
       IoUtils.SplitSegmentedAddress(segmentedAddress1, out _, out var offset1);
       IoUtils.SplitSegmentedAddress(segmentedAddress2, out _, out var offset2);
+      IoUtils.SplitSegmentedAddress(segmentedAddress3, out _, out var offset3);
 
-      br.SubreadAt(
-          SEGMENT_4_OFFSET + offset0,
-          () => {
-            var basePose = br.ReadNew<BasePose>();
+      var keyframeTimeOffsets = br.SubreadAt(SEGMENT_4_OFFSET + offset0,
+                                             () => br.ReadUInt16s(
+                                                 keyframeCount));
 
+      var pose1s = br.SubreadAt(SEGMENT_4_OFFSET + offset1,
+                                () => br.ReadNews<Pose1>(keyframeCount));
 
-            SetFirstFrame_(headBoneTracks, false, i, basePose.HeadRotation);
+      for (var f = 0; f < keyframeCount; ++f) {
+        // TODO: Factor in pose2 and pose3?
+        var pose1 = pose1s[f];
+        var time = keyframeTimeOffsets[f];
 
-            SetFirstFrame_(leftUpperArmBoneTracks,
-                           false,
-                           i,
-                           basePose.LeftUpperArmRotation);
-            SetFirstFrame_(leftForearmBoneTracks,
-                           false,
-                           i,
-                           basePose.LeftForearmRotation);
-            SetFirstFrame_(leftHandBoneTracks,
-                           true,
-                           i,
-                           basePose.LeftHandRotation);
-
-            SetFirstFrame_(rightUpperArmBoneTracks,
-                           false,
-                           i,
-                           basePose.RightUpperArmRotation);
-            SetFirstFrame_(rightForearmBoneTracks,
-                           false,
-                           i,
-                           basePose.RightForearmRotation);
-            SetFirstFrame_(rightHandBoneTracks,
-                           true,
-                           i,
-                           basePose.RightHandRotation);
-
-            SetFirstFrame_(torsoBoneTracks, false, i, basePose.TorsoRotation);
-            SetFirstFrame_(hipBoneTracks, false, i, basePose.HipRotation);
-            SetFirstFrame_(leftThighBoneTracks,
-                           false,
-                           i,
-                           basePose.LeftThighRotation);
-            SetFirstFrame_(rightThighBoneTracks,
-                           false,
-                           i,
-                           basePose.RightThighRotation);
-          });
+        headQuaternions.SetKeyframe(time, GetQuaternion_(headBone, false, pose1.HeadRotation));
+        leftUpperArmQuaternions.SetKeyframe(time, GetQuaternion_(leftUpperArmBone, false, pose1.LeftUpperArmRotation));
+        leftForearmQuaternions.SetKeyframe(time, GetQuaternion_(leftForearmBone, false, pose1.LeftForearmRotation));
+        leftHandQuaternions.SetKeyframe(time, GetQuaternion_(leftHandBone, true, pose1.LeftHandRotation));
+        rightUpperArmQuaternions.SetKeyframe(time, GetQuaternion_(rightUpperArmBone, false, pose1.RightUpperArmRotation));
+        rightForearmQuaternions.SetKeyframe(time, GetQuaternion_(rightForearmBone, false, pose1.RightForearmRotation));
+        rightHandQuaternions.SetKeyframe(time, GetQuaternion_(rightHandBone, true, pose1.RightHandRotation));
+        torsoQuaternions.SetKeyframe(time, GetQuaternion_(torsoBone, false, pose1.TorsoRotation));
+        hipQuaternions.SetKeyframe(time, GetQuaternion_(hipBone, false, pose1.HipRotation));
+        leftThighQuaternions.SetKeyframe(time, GetQuaternion_(leftThighBone, false, pose1.LeftThighRotation));
+        rightThighQuaternions.SetKeyframe(time, GetQuaternion_(rightThighBone, false, pose1.RightThighRotation));
+      }
     }
   }
 
-  private static void SetFirstFrame_(IBoneTracks boneTracks, bool isHand, int i, short degreesTimesTen) {
-    var defaultLocalEulerRadians = boneTracks.Bone.Transform.LocalEulerRadians ?? Vector3.Zero;
+  private static Quaternion GetQuaternion_(IReadOnlyBone bone, bool isHand, short degreesTimesTen) {
+    var defaultLocalEulerRadians = bone.Transform.LocalEulerRadians ?? Vector3.Zero;
 
     //degreesTimesTen = (short) (i * 10);
     var deltaRadians = (degreesTimesTen / 10f) / 180 * MathF.PI;
@@ -1032,18 +1023,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
         ? new Vector3(0, -deltaRadians, 0)
         : new Vector3(deltaRadians, 0, 0));
 
-    boneTracks
-        .UseCombinedQuaternionKeyframes(1)
-        .Add(new Keyframe<Quaternion>(
-                 0,
-                 newLocalEulerRadians.CreateZyxRadians()));
-  }
-
-  // TODO: I have no idea what these are meant to be
-  private static Quaternion
-      GetQuaternionFromRotation_(short degreesTimesTen) {
-    var radians = (degreesTimesTen / 10f) / 180 * MathF.PI;
-    return Quaternion.CreateFromAxisAngle(Vector3.UnitY, radians);
+    return newLocalEulerRadians.CreateZyxRadians();
   }
 }
 
@@ -1070,7 +1050,7 @@ public sealed partial class Vertex : IBinaryDeserializable {
 }
 
 [BinarySchema]
-public sealed partial class BasePose : IBinaryDeserializable {
+public sealed partial class Pose1 : IBinaryDeserializable {
   public short HeadRotation { get; set; }
   public short LeftForearmRotation { get; set; }
   public short LeftHandRotation { get; set; }
