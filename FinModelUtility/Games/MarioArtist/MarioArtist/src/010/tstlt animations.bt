@@ -16,56 +16,77 @@ BigEndian();
 local uint COLOR_HEADER = 0x0000ff;
 local uint COLOR_COUNT = 0x00ff00;
 local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_INDEX = 0x00ffff;
 local uint COLOR_ORIENTATION = 0x888800;
 local uint COLOR_UNKNOWN = 0xffff00;
 
-void SegmentedFSeek(uint address) {
+uint GetFileAddress(uint maybeSegmentedAddress) {
     // 0x0401DDF4 is start of animations, same as 0x1DEAC4
     // So any 0x04 addresses are relative to 0x1C0CD0.
-    
-    if ((address >> 24) != 0x04) {
-        FSeek(address);
-        return;
+    if ((maybeSegmentedAddress >> 24) == 0x04) {
+        return 0x1C0CD0 + (maybeSegmentedAddress & 0xFFFFFF);
     }
-    
-    FSeek(0x1C0CD0 + (address & 0xFFFFFF));
+
+    return maybeSegmentedAddress;
 }
 
-typedef struct {
-    ushort unk0 <bgcolor=COLOR_UNKNOWN>;   
-    ushort length <bgcolor=COLOR_COUNT>;
-    
-    uint unk1;
+struct Vec3s {
+    short x;
+    short y;
+    short z;
+};
 
-    uint dataAddress0 <bgcolor=COLOR_OFFSET>;    
-    uint dataAddress1 <bgcolor=COLOR_OFFSET>;    
-    uint dataAddress2 <bgcolor=COLOR_OFFSET>;    
+typedef struct {
+    ushort keyframeCount <bgcolor=COLOR_UNKNOWN>;   
+    ushort animationLength <bgcolor=COLOR_COUNT>;
+    
+    uint segmentedAddress0 <bgcolor=COLOR_OFFSET>;    
+    local uint fileAddress0 = GetFileAddress(segmentedAddress0);
+    local uint ramAddress0 = 0x802EEC50 + fileAddress0;        
+
+    uint segmentedAddress1 <bgcolor=COLOR_OFFSET>;    
+    local uint fileAddress1 = GetFileAddress(segmentedAddress1);
+    local uint ramAddress1 = 0x802EEC50 + fileAddress1;        
+
+    uint segmentedAddress2 <bgcolor=COLOR_OFFSET>;    
+    local uint fileAddress2 = GetFileAddress(segmentedAddress2);
+    local uint ramAddress2 = 0x802EEC50 + fileAddress2;        
+
+    uint segmentedAddress3 <bgcolor=COLOR_OFFSET>;    
+    local uint fileAddress3 = GetFileAddress(segmentedAddress3);
+    local uint ramAddress3 = 0x802EEC50 + fileAddress3;        
 
     local uint temp = FTell();
     {        
-        SegmentedFSeek(dataAddress0);
-        uint unk5;
+        FSeek(fileAddress0);
+        ushort keyframeIndices[keyframeCount] <bgcolor=COLOR_INDEX>;
         
-        SegmentedFSeek(dataAddress1);
-     
+        FSeek(fileAddress1);
         // It would be too convenient if this matched the order of the bones in
         // the TSTLT file. Thankfully, the order here is totally different.
-        struct BasePose {
-            ushort headRotation;
-            ushort leftForearmRotation;
-            ushort leftHandRotation;
-            ushort rightForearmRotation;
-            ushort rightHandRotation;
-            ushort leftUpperArmRotation;
-            ushort rightUpperArmRotation;
-            ushort leftThighRotation;
-            ushort rightThighRotation;
-            ushort upperTorsoRotation;
-            ushort lowerTorsoRotation;
-        } basePose <bgcolor=COLOR_ORIENTATION>;
+        struct Pose1 {
+            short headRotation;
+            short leftForearmRotation;
+            short leftHandRotation;
+            short rightForearmRotation;
+            short rightHandRotation;
+            short leftUpperArmRotation;
+            short rightUpperArmRotation;
+            short leftThighRotation;
+            short rightThighRotation;
+            short upperTorsoRotation;
+            short lowerTorsoRotation;
+        } pose1s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
         
-        SegmentedFSeek(dataAddress2);
-        uint unk6;
+        FSeek(fileAddress2);
+        struct Pose2 {
+            Vec3s rotations[14] <optimize=false>;
+        } pose2s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
+             
+        FSeek(fileAddress3);
+        struct Pose3 {
+            Vec3s rotations[3] <optimize=false, bgcolor=COLOR_ORIENTATION>;
+        } pose3s[keyframeCount];
     }
     FSeek(temp);
 } AnimationHeader <bgcolor=COLOR_HEADER>;
