@@ -64,6 +64,8 @@ typedef struct {
         FSeek(fileAddress1);
         // It would be too convenient if this matched the order of the bones in
         // the TSTLT file. Thankfully, the order here is totally different.
+        // These rotations are weird. They're degrees * 10, and are generally
+        // rotations around the x axis or y axis (the hands).
         struct Pose1 {
             short headRotation;
             short leftForearmRotation;
@@ -80,11 +82,13 @@ typedef struct {
         
         FSeek(fileAddress2);
         struct Pose2 {
+            // TODO: Which bones are these?
             Vec3s rotations[14] <optimize=false>;
         } pose2s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
              
         FSeek(fileAddress3);
         struct Pose3 {
+            // TODO: Which bones are these?
             Vec3s rotations[3] <optimize=false, bgcolor=COLOR_ORIENTATION>;
         } pose3s[keyframeCount];
     }
@@ -102,5 +106,3 @@ AnimationHeader standingAnimationHeader;
 
 FSeek(0x1DF08C);
 AnimationHeader waitingAnimationHeader;
-
-// 804C8AE8 is where legs start, each get 3 axes
