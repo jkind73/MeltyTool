@@ -76,7 +76,7 @@ public sealed class UvctSceneFileImporter
     foreach (var uvctModel in uvct.Models) {
       var finModel = lazyUvmdModelDictionary[uvctModel.ModelIndex];
       var uvmdNode = uvctNode.AddChildNode();
-      uvmdNode.SetTag(SceneNodeTag.SCENERY);
+      uvmdNode.SetTag(SceneNodeTag.SCENERY_MISC);
       uvmdNode.SetMatrix(
           Matrix4x4.CreateFromQuaternion(
               Quaternion.CreateFromYawPitchRoll(0, MathF.PI / 2, 0)) *

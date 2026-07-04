@@ -11,6 +11,7 @@ using f3dzex2.image;
 using f3dzex2.io;
 using f3dzex2.model;
 
+using fin.animation.keyframes;
 using fin.color;
 using fin.data.dictionaries;
 using fin.data.queues;
@@ -39,13 +40,16 @@ namespace marioartist.api;
 
 using BoneTuple = (IReadOnlyBone bone, Joint joint, int jointIndex);
 using ChosenPart0Tuple =
-    (ISegment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5,
+    (ISegment segment, MeshDefinition meshDefinition, SubUnkSection5 unkSection5
+    ,
     ChosenPart0 chosenPart, int unkSection5I, int subUnkSection5I);
 using ChosenPart1Tuple
     = (ISegment segment, ChosenPart1 chosenPart, IReadOnlyBone bone, bool isHead
     );
 
-public record TstltModelFileBundle(IReadOnlyTreeFile MainFile)
+public record TstltModelFileBundle(
+    IReadOnlyTreeFile MainFile,
+    IReadOnlyTreeFile? RomFile = null)
     : IModelFileBundle;
 
 public enum JointIndex {
@@ -114,7 +118,8 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     var rsp = n64Hardware.Rsp = new Rsp {
         GeometryMode = GeometryMode.G_LIGHTING,
     };
-    var n64Memory = n64Hardware.Memory = new SlicedN64Memory(fileBundle.MainFile);
+    var n64Memory
+        = n64Hardware.Memory = new SlicedN64Memory(fileBundle.MainFile);
     n64Memory.SetSegment(0, 0, (uint) br.Length);
 
     var dlModelBuilder =
@@ -315,6 +320,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
       }
     }
 
+    TryToAddAnimations_(model, finBonesAndJoints, fileBundle.RomFile);
 
     // Adds face
     if (INCLUDE_FACE) {
@@ -902,6 +908,117 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
     dlModelBuilder.TransparentCutoff = .5f;
   }
+
+  private static void TryToAddAnimations_(
+      IModel finModel,
+      BoneTuple[] finBonesAndJoints,
+      IReadOnlyTreeFile? romFile) {
+    if (romFile == null) {
+      return;
+    }
+
+    var br = romFile.OpenReadAsBinary(Endianness.BigEndian);
+    br.Position = 0x1DEAC4;
+
+    var finAnimationManager = finModel.AnimationManager;
+
+    const uint SEGMENT_4_OFFSET = 0x1C0CD0;
+
+    var headBone = finBonesAndJoints[(int) JointIndex.NECK].bone;
+    var leftUpperArmBone = finBonesAndJoints[(int) JointIndex.UPPER_ARM_0].bone;
+    var leftForearmBone = finBonesAndJoints[(int) JointIndex.FOREARM_0].bone;
+    var leftHandBone = finBonesAndJoints[(int) JointIndex.HAND_0].bone;
+    var rightUpperArmBone
+        = finBonesAndJoints[(int) JointIndex.UPPER_ARM_1].bone;
+    var rightForearmBone = finBonesAndJoints[(int) JointIndex.FOREARM_1].bone;
+    var rightHandBone = finBonesAndJoints[(int) JointIndex.HAND_1].bone;
+    var torsoBone = finBonesAndJoints[(int) JointIndex.TORSO].bone;
+    var hipBone = finBonesAndJoints[(int) JointIndex.HIP].bone;
+    var leftThighBone = finBonesAndJoints[(int) JointIndex.UPPER_LEG_0].bone;
+    var rightThighBone = finBonesAndJoints[(int) JointIndex.UPPER_LEG_1].bone;
+
+    for (var i = 0; i < 96; ++i) {
+      var finAnimation = finAnimationManager.AddAnimation();
+
+      finAnimation.FrameCount = 1;
+      finAnimation.FrameRate = 30;
+
+      var unk0 = br.ReadUInt16();
+      var maybeLength = br.ReadUInt16();
+
+      var unk1 = br.ReadUInt32();
+      var segmentedAddress0 = br.ReadUInt32();
+      var segmentedAddress1 = br.ReadUInt32();
+      var segmentedAddress2 = br.ReadUInt32();
+
+      var headBoneTracks = finAnimation.GetOrCreateBoneTracks(headBone);
+      var leftUpperArmBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(leftUpperArmBone);
+      var leftForearmBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(leftForearmBone);
+      var leftHandBoneTracks = finAnimation.GetOrCreateBoneTracks(leftHandBone);
+      var rightUpperArmBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(rightUpperArmBone);
+      var rightForearmBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(rightForearmBone);
+      var rightHandBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(rightHandBone);
+      var torsoBoneTracks = finAnimation.GetOrCreateBoneTracks(torsoBone);
+      var hipBoneTracks = finAnimation.GetOrCreateBoneTracks(hipBone);
+      var leftThighBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(leftThighBone);
+      var rightThighBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(rightThighBone);
+
+      IoUtils.SplitSegmentedAddress(segmentedAddress0, out _, out var offset0);
+      IoUtils.SplitSegmentedAddress(segmentedAddress1, out _, out var offset1);
+      IoUtils.SplitSegmentedAddress(segmentedAddress2, out _, out var offset2);
+
+      br.SubreadAt(
+          SEGMENT_4_OFFSET + offset0,
+          () => {
+            var basePose = br.ReadNew<BasePose>();
+
+            if (i == 72) {
+              ;
+            }
+
+            SetFirstFrame_(headBoneTracks, basePose.HeadRotation);
+
+            SetFirstFrame_(leftUpperArmBoneTracks,
+                           basePose.LeftUpperArmRotation);
+            SetFirstFrame_(leftForearmBoneTracks, basePose.LeftForearmRotation);
+            SetFirstFrame_(leftHandBoneTracks, basePose.LeftHandRotation);
+
+            SetFirstFrame_(rightUpperArmBoneTracks,
+                           basePose.RightUpperArmRotation);
+            SetFirstFrame_(rightForearmBoneTracks,
+                           basePose.RightForearmRotation);
+            SetFirstFrame_(rightHandBoneTracks, basePose.RightHandRotation);
+
+            SetFirstFrame_(torsoBoneTracks, basePose.TorsoRotation);
+            SetFirstFrame_(hipBoneTracks, basePose.HipRotation);
+            SetFirstFrame_(leftThighBoneTracks, basePose.LeftThighRotation);
+            SetFirstFrame_(rightThighBoneTracks, basePose.RightThighRotation);
+          });
+    }
+  }
+
+  private static void SetFirstFrame_(IBoneTracks boneTracks, short rotation) {
+    boneTracks
+        .UseCombinedQuaternionKeyframes(1)
+        .Add(new Keyframe<Quaternion>(
+                 0,
+                 (boneTracks.Bone.Transform.LocalRotation ??
+                  Quaternion.Identity) * GetQuaternionFromRotation_(rotation)));
+  }
+
+  // TODO: I have no idea what these are meant to be
+  private static Quaternion
+      GetQuaternionFromRotation_(short rotationTimesTen) {
+    var radians = (rotationTimesTen / 10f) / 180 * MathF.PI;
+    return Quaternion.CreateFromAxisAngle(Vector3.UnitY, radians);
+  }
 }
 
 // https://wiki.cloudmodding.com/oot/F3DZEX2#Vertex_Structure
@@ -924,4 +1041,19 @@ public sealed partial class Vertex : IBinaryDeserializable {
   public float NormalZ { get; set; }
 
   public byte Alpha { get; set; }
+}
+
+[BinarySchema]
+public sealed partial class BasePose : IBinaryDeserializable {
+  public short HeadRotation { get; set; }
+  public short LeftForearmRotation { get; set; }
+  public short LeftHandRotation { get; set; }
+  public short RightForearmRotation { get; set; }
+  public short RightHandRotation { get; set; }
+  public short LeftUpperArmRotation { get; set; }
+  public short RightUpperArmRotation { get; set; }
+  public short LeftThighRotation { get; set; }
+  public short RightThighRotation { get; set; }
+  public short TorsoRotation { get; set; }
+  public short HipRotation { get; set; }
 }

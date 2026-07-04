@@ -1,0 +1,85 @@
+//------------------------------------------------
+//--- 010 Editor v16.0.1 Binary Template
+//
+//      File: 
+//   Authors: 
+//   Version: 
+//   Purpose: 
+//  Category: 
+// File Mask: 
+//  ID Bytes: 
+//   History: 
+//------------------------------------------------
+
+BigEndian();
+
+local uint COLOR_HEADER = 0x0000ff;
+local uint COLOR_COUNT = 0x00ff00;
+local uint COLOR_OFFSET = 0xff0000;
+local uint COLOR_ORIENTATION = 0x888800;
+local uint COLOR_UNKNOWN = 0xffff00;
+
+void SegmentedFSeek(uint address) {
+    // 0x0401DDF4 is start of animations, same as 0x1DEAC4
+    // So any 0x04 addresses are relative to 0x1C0CD0.
+    
+    if ((address >> 24) != 0x04) {
+        FSeek(address);
+        return;
+    }
+    
+    FSeek(0x1C0CD0 + (address & 0xFFFFFF));
+}
+
+typedef struct {
+    ushort unk0 <bgcolor=COLOR_UNKNOWN>;   
+    ushort length <bgcolor=COLOR_COUNT>;
+    
+    uint unk1;
+
+    uint dataAddress0 <bgcolor=COLOR_OFFSET>;    
+    uint dataAddress1 <bgcolor=COLOR_OFFSET>;    
+    uint dataAddress2 <bgcolor=COLOR_OFFSET>;    
+
+    local uint temp = FTell();
+    {        
+        SegmentedFSeek(dataAddress0);
+        uint unk5;
+        
+        SegmentedFSeek(dataAddress1);
+     
+        // It would be too convenient if this matched the order of the bones in
+        // the TSTLT file. Thankfully, the order here is totally different.
+        struct BasePose {
+            ushort headRotation;
+            ushort leftForearmRotation;
+            ushort leftHandRotation;
+            ushort rightForearmRotation;
+            ushort rightHandRotation;
+            ushort leftUpperArmRotation;
+            ushort rightUpperArmRotation;
+            ushort leftThighRotation;
+            ushort rightThighRotation;
+            ushort upperTorsoRotation;
+            ushort lowerTorsoRotation;
+        } basePose <bgcolor=COLOR_ORIENTATION>;
+        
+        SegmentedFSeek(dataAddress2);
+        uint unk6;
+    }
+    FSeek(temp);
+} AnimationHeader <bgcolor=COLOR_HEADER>;
+
+FSeek(0x1DEAC4);
+AnimationHeader animationHeaders0[72] <optimize=false>;
+
+FSeek(0x1DF064);
+AnimationHeader animationHeaders1[24] <optimize=false>;
+
+FSeek(0x1DF064);
+AnimationHeader standingAnimationHeader;
+
+FSeek(0x1DF08C);
+AnimationHeader waitingAnimationHeader;
+
+// 804C8AE8 is where legs start, each get 3 axes

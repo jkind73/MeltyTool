@@ -1,4 +1,5 @@
-﻿using fin.io;
+﻿using fin.common;
+using fin.io;
 using fin.io.bundles;
 using fin.util.progress;
 
@@ -16,12 +17,14 @@ public sealed class MarioArtistFileBundleGatherer : BPrereqsFileBundleGatherer {
       IFileHierarchy fileHierarchy) {
     var root = fileHierarchy.Root;
 
+    DirectoryConstants.ROMS_DIRECTORY.TryToGetExistingFile("mario_artist_talent_studio.z64", out var romFile);
+
     foreach (var ma3d1File in root.FilesWithExtensionRecursive(".ma3d1")) {
       organizer.Add(new Ma3d1ModelFileBundle(ma3d1File));
     }
 
     foreach (var tstltFile in root.FilesWithExtensionRecursive(".tstlt")) {
-      organizer.Add(new TstltModelFileBundle(tstltFile));
+      organizer.Add(new TstltModelFileBundle(tstltFile, romFile));
     }
   }
 }
