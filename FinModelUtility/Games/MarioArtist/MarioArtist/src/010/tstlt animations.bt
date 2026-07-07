@@ -62,10 +62,11 @@ typedef struct {
         ushort keyframeIndices[keyframeCount] <bgcolor=COLOR_INDEX>;
         
         FSeek(fileAddress1);
+
         // It would be too convenient if this matched the order of the bones in
         // the TSTLT file. Thankfully, the order here is totally different.
         // These rotations are weird. They're degrees * 10, and are generally
-        // rotations around the x axis or y axis (the hands).
+        // rotations around the x axis but sometimes the y axis (the hands).
         struct Pose1 {
             short headRotation;
             short leftForearmRotation;
@@ -80,17 +81,51 @@ typedef struct {
             short lowerTorsoRotation;
         } pose1s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
         
+        // Seems to be positions for inverse kinematics.
+        // The root is placed at the set position, and the other bones will try
+        // to point towards whichever position is set for them.
+        // Notably, when fiddling with these values in memory, some bones impact
+        // the rotations of other bones.
+        // First axis is right+/left-, second axis is up+/down-, third is
+        // towards screen+/away from screen-.
+        // Some of these have values set, but don't visibly affect anything
+        // when changed.
         FSeek(fileAddress2);
         struct Pose2 {
             // TODO: Which bones are these?
-            Vec3s rotations[14] <optimize=false>;
+            Vec3s root; // Impacts everything
+            Vec3s unk0;
+            Vec3s torso; // Impacts only the torso and up
+            Vec3s hip; // Impacts torso as well
+            Vec3s unk1;
+            Vec3s unk2;
+            Vec3s unk3;
+            Vec3s unk4;
+            Vec3s unk5;
+            Vec3s unk6;
+            Vec3s unk7;
+            Vec3s unk8;
+            Vec3s leftFoot; // Impacts all of the left leg
+            Vec3s rightFoot; // Impacts all of the right leg
         } pose2s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
              
+        // Seems to also be positions for inverse kinematics? Either that or
+        // normals.
+        // 
+        // the set position, and the other bones will try to point towards
+        // whichever position is set for them. Notably, when fiddling with
+        // these values in memory, some bones impact the rotations of other
+        // bones.
+        // The reason why I wonder if this is normals is because the order
+        // and signs of the axes are screwy compared to the other one.
+        // First axis is is up+/down-, second is left+/right-, third is
+        // towards screen+/away from screen-.
         FSeek(fileAddress3);
         struct Pose3 {
-            // TODO: Which bones are these?
-            Vec3s rotations[3] <optimize=false, bgcolor=COLOR_ORIENTATION>;
-        } pose3s[keyframeCount];
+            Vec3s head;
+            Vec3s leftHand; // Impacts all of the left arm.
+            Vec3s rightHand; // Impacts all of the right arm.
+        } pose3s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
     }
     FSeek(temp);
 } AnimationHeader <bgcolor=COLOR_HEADER>;
