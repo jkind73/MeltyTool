@@ -182,6 +182,12 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     var joints = br.ReadNews<Joint>(0x1F);
     var originalFlipByJoint = new Dictionary<Joint, Vector3>();
 
+    br.Position = 0xeae0;
+    var nosePosition = br.ReadUInt32s(2);
+    var noseX = nosePosition[0];
+    var noseY = nosePosition[1];
+    var faceDlSegmentedAddresses = br.ReadUInt32s(3);
+
     foreach (var joint in joints) {
       var matrix = Matrix4x4.Transpose(joint.matrix);
       matrix.AssertDecompose(out var translation,
@@ -221,9 +227,14 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
         // HACK: Fixes position of head meshes
         switch ((JointIndex) i) {
           case JointIndex.NOSE: {
+            // From decomp, at 0x80110d64.
+            // TODO: These don't work for some reason.
+            var placementNoseX = (noseX - 31f) * 8.1999998f;
+            var placementNoseY = 508 - (noseY - 53.0) * 7.6999998f;
+
             // TODO: Still not quite right for some reason.
             jointTranslation = joint.matrix.Translation with {
-                Z = 0
+                Z = 0,
             };
             break;
           }
@@ -333,10 +344,6 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
       JankTstltUtil.SetCombiner(n64Hardware, true, false);
 
-      br.Position = 0xeae0;
-      var nosePosition = br.ReadUInt32s(2);
-      var faceDlSegmentedAddresses = br.ReadUInt32s(3);
-
       var headRootBone = finBonesAndJoints[(int) JointIndex.HEAD_ROOT].Item1;
       var noseBone = finBonesAndJoints[(int) JointIndex.NOSE].Item1;
 
@@ -399,8 +406,6 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
           model.Skin.GetOrCreateBoneWeights(VertexSpace.RELATIVE_TO_BONE,
                                             noseBone);
 
-      var noseX = nosePosition[0];
-      var noseY = nosePosition[1];
       // These values look super random, but they come from digging into what
       // the game does--it generates a display list like this at runtime.
       var noseUls = (ushort) (noseX - 15);
@@ -879,10 +884,6 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
       case (true, 8): {
         // HACK: Hardcodes cycle count to 2.
         n64Hardware.Rdp.CycleType = CycleType.TWO_CYCLE;
-        // TODO: This still isn't quite right because in-game, glasses catch
-        // the light and reflect white. Currently, this just renders as the
-        // frame with no reflection, though. Reflections are probably done with
-        // blend mode nonsense?
         break;
       }
     }
@@ -970,16 +971,24 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
           = finAnimation.GetOrCreateBoneTracks(rightThighBone);
 
       var headQuaternions = headBoneTracks.UseCombinedQuaternionKeyframes();
-      var leftUpperArmQuaternions = leftUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
-      var leftForearmQuaternions = leftForearmBoneTracks.UseCombinedQuaternionKeyframes();
-      var leftHandQuaternions = leftHandBoneTracks.UseCombinedQuaternionKeyframes();
-      var rightUpperArmQuaternions = rightUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
-      var rightForearmQuaternions = rightForearmBoneTracks.UseCombinedQuaternionKeyframes();
-      var rightHandQuaternions = rightHandBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftUpperArmQuaternions
+          = leftUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftForearmQuaternions
+          = leftForearmBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftHandQuaternions
+          = leftHandBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightUpperArmQuaternions
+          = rightUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightForearmQuaternions
+          = rightForearmBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightHandQuaternions
+          = rightHandBoneTracks.UseCombinedQuaternionKeyframes();
       var torsoQuaternions = torsoBoneTracks.UseCombinedQuaternionKeyframes();
       var hipQuaternions = hipBoneTracks.UseCombinedQuaternionKeyframes();
-      var leftThighQuaternions = leftThighBoneTracks.UseCombinedQuaternionKeyframes();
-      var rightThighQuaternions = rightThighBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftThighQuaternions
+          = leftThighBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightThighQuaternions
+          = rightThighBoneTracks.UseCombinedQuaternionKeyframes();
 
       IoUtils.SplitSegmentedAddress(segmentedAddress0, out _, out var offset0);
       IoUtils.SplitSegmentedAddress(segmentedAddress1, out _, out var offset1);
@@ -992,38 +1001,100 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
       var pose1s = br.SubreadAt(SEGMENT_4_OFFSET + offset1,
                                 () => br.ReadNews<Pose1>(keyframeCount));
+      var pose2s = br.SubreadAt(SEGMENT_4_OFFSET + offset2,
+                                () => br.ReadNews<Pose2>(keyframeCount));
+      var pose3s = br.SubreadAt(SEGMENT_4_OFFSET + offset3,
+                                () => br.ReadNews<Pose3>(keyframeCount));
 
       for (var f = 0; f < keyframeCount; ++f) {
-        // TODO: Factor in pose2 and pose3?
         var pose1 = pose1s[f];
         var time = keyframeTimeOffsets[f];
 
-        headQuaternions.SetKeyframe(time, GetQuaternion_(headBone, false, pose1.HeadRotation));
-        leftUpperArmQuaternions.SetKeyframe(time, GetQuaternion_(leftUpperArmBone, false, pose1.LeftUpperArmRotation));
-        leftForearmQuaternions.SetKeyframe(time, GetQuaternion_(leftForearmBone, false, pose1.LeftForearmRotation));
-        leftHandQuaternions.SetKeyframe(time, GetQuaternion_(leftHandBone, true, pose1.LeftHandRotation));
-        rightUpperArmQuaternions.SetKeyframe(time, GetQuaternion_(rightUpperArmBone, false, pose1.RightUpperArmRotation));
-        rightForearmQuaternions.SetKeyframe(time, GetQuaternion_(rightForearmBone, false, pose1.RightForearmRotation));
-        rightHandQuaternions.SetKeyframe(time, GetQuaternion_(rightHandBone, true, pose1.RightHandRotation));
-        torsoQuaternions.SetKeyframe(time, GetQuaternion_(torsoBone, false, pose1.TorsoRotation));
-        hipQuaternions.SetKeyframe(time, GetQuaternion_(hipBone, false, pose1.HipRotation));
-        leftThighQuaternions.SetKeyframe(time, GetQuaternion_(leftThighBone, false, pose1.LeftThighRotation));
-        rightThighQuaternions.SetKeyframe(time, GetQuaternion_(rightThighBone, false, pose1.RightThighRotation));
+        // How is IK done for pose2 and pose3?
+
+        headQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(headBone),
+                GetPose1Rotation_(false, pose1.HeadRotation)));
+
+        leftUpperArmQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(leftUpperArmBone),
+                GetPose1Rotation_(false, pose1.LeftUpperArmRotation)));
+        leftForearmQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(leftForearmBone),
+                GetPose1Rotation_(false, pose1.LeftForearmRotation)));
+        leftHandQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(leftHandBone),
+                GetPose1Rotation_(true, pose1.LeftHandRotation)));
+
+        rightUpperArmQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(rightUpperArmBone),
+                GetPose1Rotation_(false, pose1.RightUpperArmRotation)));
+        rightForearmQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(rightForearmBone),
+                GetPose1Rotation_(false, pose1.RightForearmRotation)));
+        rightHandQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(rightHandBone),
+                GetPose1Rotation_(true, pose1.RightHandRotation)));
+
+        torsoQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(torsoBone),
+                GetPose1Rotation_(false, pose1.TorsoRotation)));
+        hipQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(hipBone),
+                GetPose1Rotation_(false, pose1.HipRotation)));
+        leftThighQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(leftThighBone),
+                GetPose1Rotation_(false, pose1.LeftThighRotation)));
+        rightThighQuaternions.SetKeyframe(
+            time,
+            CombineRotations_(
+                GetDefaultRotation_(rightThighBone),
+                GetPose1Rotation_(false, pose1.RightThighRotation)));
       }
     }
   }
 
-  private static Quaternion GetQuaternion_(IReadOnlyBone bone, bool isHand, short degreesTimesTen) {
-    var defaultLocalEulerRadians = bone.Transform.LocalEulerRadians ?? Vector3.Zero;
+  private static Quaternion CombineRotations_(
+      params ReadOnlySpan<Quaternion> rotations) {
+    // TODO: This isn't validated against the game code, should these just be
+    // multiplied together instead?
+    var totalRotation = Quaternion.Identity;
+    foreach (var rotation in rotations) {
+      totalRotation = rotation * totalRotation;
+    }
 
-    //degreesTimesTen = (short) (i * 10);
+    return totalRotation;
+  }
+
+  private static Quaternion GetDefaultRotation_(IReadOnlyBone bone)
+    => bone.Transform.LocalRotation ?? Quaternion.Identity;
+
+  private static Quaternion GetPose1Rotation_(bool isHand,
+                                              short degreesTimesTen) {
     var deltaRadians = (degreesTimesTen / 10f) / 180 * MathF.PI;
-
-    var newLocalEulerRadians = defaultLocalEulerRadians + (isHand
+    return (isHand
         ? new Vector3(0, -deltaRadians, 0)
-        : new Vector3(deltaRadians, 0, 0));
-
-    return newLocalEulerRadians.CreateZyxRadians();
+        : new Vector3(deltaRadians, 0, 0)).CreateZyxRadians();
   }
 }
 
@@ -1049,6 +1120,13 @@ public sealed partial class Vertex : IBinaryDeserializable {
   public byte Alpha { get; set; }
 }
 
+/// <summary>
+///   It would be too convenient if this matched the order of the bones in the
+///   TSTLT file. Thankfully, the order here is totally different.
+/// 
+///   These rotations are weird. They're degrees * 10, and are generally
+///   rotations around the x axis but sometimes the y axis (the hands).
+/// </summary>
 [BinarySchema]
 public sealed partial class Pose1 : IBinaryDeserializable {
   public short HeadRotation { get; set; }
@@ -1062,4 +1140,63 @@ public sealed partial class Pose1 : IBinaryDeserializable {
   public short RightThighRotation { get; set; }
   public short TorsoRotation { get; set; }
   public short HipRotation { get; set; }
+}
+
+/// <summary>
+///   Seems to be positions for inverse kinematics.
+///
+///   The root is placed at the set position, and the other bones will try to
+///   point towards whichever position is set for them.
+/// 
+///   Notably, when fiddling with these values in memory, some bones impact the
+///   rotations of other bones.
+///
+///   First axis is right+/left-, second axis is up+/down-, third is towards
+///   screen+/away from screen-.
+/// 
+///   Some of these have values set, but don't visibly affect anything when
+///   changed.
+/// </summary>
+[BinarySchema]
+public sealed partial class Pose2 : IBinaryDeserializable {
+  public Vector3s Root { get; } = new();
+  public Vector3s Unk0 { get; } = new();
+
+  // Impacts only the torso and up
+  public Vector3s Torso { get; } = new();
+
+  // Impacts torso as well
+  public Vector3s Hip { get; } = new();
+
+  public Vector3s Unk1 { get; } = new();
+  public Vector3s Unk2 { get; } = new();
+  public Vector3s Unk3 { get; } = new();
+  public Vector3s Unk4 { get; } = new();
+  public Vector3s Unk5 { get; } = new();
+  public Vector3s Unk6 { get; } = new();
+  public Vector3s Unk7 { get; } = new();
+  public Vector3s Unk8 { get; } = new();
+
+  // Impacts all of the left leg
+  public Vector3s LeftFoot { get; } = new();
+
+  // Impacts all of the right leg
+  public Vector3s RightFoot { get; } = new();
+}
+
+/// <summary>
+///   Seems to also be positions for inverse kinematics? Either that or
+///   normals.
+/// 
+///   The reason why I wonder if this is normals is because the order and
+///   signs of the axes are screwy compared to the other one.
+/// 
+///   First axis is is up+/down-, second is left+/right-, third is towards
+///   screen+/away from screen-.
+/// </summary>
+[BinarySchema]
+public sealed partial class Pose3 : IBinaryDeserializable {
+  public Vector3s Head { get; } = new();
+  public Vector3s LeftHand { get; } = new();
+  public Vector3s RightHand { get; } = new();
 }

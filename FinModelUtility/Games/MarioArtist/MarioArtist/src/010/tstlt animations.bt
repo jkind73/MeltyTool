@@ -92,11 +92,12 @@ typedef struct {
         // when changed.
         FSeek(fileAddress2);
         struct Pose2 {
-            // TODO: Which bones are these?
             Vec3s root; // Impacts everything
+            // TODO: Which bone is this?
             Vec3s unk0;
             Vec3s torso; // Impacts only the torso and up
             Vec3s hip; // Impacts torso as well
+            // TODO: Which bones are these?
             Vec3s unk1;
             Vec3s unk2;
             Vec3s unk3;
@@ -111,11 +112,6 @@ typedef struct {
              
         // Seems to also be positions for inverse kinematics? Either that or
         // normals.
-        // 
-        // the set position, and the other bones will try to point towards
-        // whichever position is set for them. Notably, when fiddling with
-        // these values in memory, some bones impact the rotations of other
-        // bones.
         // The reason why I wonder if this is normals is because the order
         // and signs of the axes are screwy compared to the other one.
         // First axis is is up+/down-, second is left+/right-, third is
