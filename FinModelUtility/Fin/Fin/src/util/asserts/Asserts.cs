@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
 
 using fin.math.floats;
+using fin.math.matrix.three;
 
 namespace fin.util.asserts;
 
@@ -128,6 +130,18 @@ public sealed class Asserts {
 
   public static bool IsRoughly(float expected,
                                float actual,
+                               string? message = null) {
+    if (expected.IsRoughly(actual)) {
+      return true;
+    }
+
+    Fail(message ??
+         $"Expected {actual} to roughly equal {expected}.");
+    return false;
+  }
+
+  public static bool IsRoughly(Vector3 expected,
+                               Vector3 actual,
                                string? message = null) {
     if (expected.IsRoughly(actual)) {
       return true;

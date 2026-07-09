@@ -925,6 +925,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
     const uint SEGMENT_4_OFFSET = 0x1C0CD0;
 
+    var rootBone = finBonesAndJoints[(int) JointIndex.BODY_ROOT].bone;
     var headBone = finBonesAndJoints[(int) JointIndex.NECK].bone;
     var leftUpperArmBone = finBonesAndJoints[(int) JointIndex.UPPER_ARM_0].bone;
     var leftForearmBone = finBonesAndJoints[(int) JointIndex.FOREARM_0].bone;
@@ -937,6 +938,8 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     var hipBone = finBonesAndJoints[(int) JointIndex.HIP].bone;
     var leftThighBone = finBonesAndJoints[(int) JointIndex.UPPER_LEG_0].bone;
     var rightThighBone = finBonesAndJoints[(int) JointIndex.UPPER_LEG_1].bone;
+    var leftKneeBone = finBonesAndJoints[(int) JointIndex.LOWER_LEG_0].bone;
+    var rightKneeBone = finBonesAndJoints[(int) JointIndex.LOWER_LEG_1].bone;
 
     for (var i = 0; i < 96; ++i) {
       var finAnimation = finAnimationManager.AddAnimation();
@@ -951,6 +954,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
       var segmentedAddress2 = br.ReadUInt32();
       var segmentedAddress3 = br.ReadUInt32();
 
+      var rootBoneTracks = finAnimation.GetOrCreateBoneTracks(rootBone);
       var headBoneTracks = finAnimation.GetOrCreateBoneTracks(headBone);
       var leftUpperArmBoneTracks
           = finAnimation.GetOrCreateBoneTracks(leftUpperArmBone);
@@ -969,7 +973,12 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
           = finAnimation.GetOrCreateBoneTracks(leftThighBone);
       var rightThighBoneTracks
           = finAnimation.GetOrCreateBoneTracks(rightThighBone);
+      var leftKneeBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(leftKneeBone);
+      var rightKneeBoneTracks
+          = finAnimation.GetOrCreateBoneTracks(rightKneeBone);
 
+      var rootPositions = rootBoneTracks.UseCombinedTranslationKeyframes();
       var headQuaternions = headBoneTracks.UseCombinedQuaternionKeyframes();
       var leftUpperArmQuaternions
           = leftUpperArmBoneTracks.UseCombinedQuaternionKeyframes();
@@ -989,6 +998,10 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
           = leftThighBoneTracks.UseCombinedQuaternionKeyframes();
       var rightThighQuaternions
           = rightThighBoneTracks.UseCombinedQuaternionKeyframes();
+      var leftKneeQuaternions
+          = leftKneeBoneTracks.UseCombinedQuaternionKeyframes();
+      var rightKneeQuaternions
+          = rightKneeBoneTracks.UseCombinedQuaternionKeyframes();
 
       IoUtils.SplitSegmentedAddress(segmentedAddress0, out _, out var offset0);
       IoUtils.SplitSegmentedAddress(segmentedAddress1, out _, out var offset1);
@@ -1008,9 +1021,67 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
       for (var f = 0; f < keyframeCount; ++f) {
         var pose1 = pose1s[f];
+
+        // TODO: These are just positions, but the models can be different
+        // sizes. These probably have to be scaled???
+        var pose2 = pose2s[f];
+        var pose3 = pose3s[f];
+
         var time = keyframeTimeOffsets[f];
 
-        // How is IK done for pose2 and pose3?
+        var rootPos = pose2.Root.AsVector3();
+        var leftFootPos = pose2.LeftFoot.AsVector3() - rootPos;
+
+        var (leftThighIkRotation, leftKneeIkRotation)
+            = GetPose2Ik_(leftThighBone, leftKneeBone, leftFootPos, i);
+
+        var (leftShoulderIkRotation, leftElbowIkRotation)
+            = GetPose3Ik_((leftUpperArmBone, pose1.LeftUpperArmRotation),
+                          (leftForearmBone, pose1.LeftForearmRotation),
+                          leftHandBone,
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitY,
+                              -MathF.PI / 2),
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitX,
+                              MathF.PI / 2),
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitX,
+                              MathF.PI),
+                          pose3.LeftHand.AsVector3(),
+                          true,
+                          i,
+                          f);
+        var (rightShoulderIkRotation, rightElbowIkRotation)
+            = GetPose3Ik_((rightUpperArmBone, pose1.RightUpperArmRotation),
+                          (rightForearmBone, pose1.RightForearmRotation),
+                          rightHandBone,
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitY,
+                              MathF.PI / 2),
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitX,
+                              -MathF.PI / 2) * 
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitZ,
+                              MathF.PI),
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitX,
+                              -MathF.PI / 2) * 
+                          Quaternion.CreateFromAxisAngle(
+                              Vector3.UnitZ,
+                              MathF.PI),
+                          pose3.RightHand.AsVector3(),
+                          true,
+                          i,
+                          f);
+
+        // TODO: How is IK done for pose2 and pose3, where is it in the code?
+
+        // TODO: Do these need to be added to the original positions?
+        rootPositions.SetKeyframe(
+            time,
+            pose2.Root.AsVector3());
 
         headQuaternions.SetKeyframe(
             time,
@@ -1020,14 +1091,10 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
         leftUpperArmQuaternions.SetKeyframe(
             time,
-            CombineRotations_(
-                GetDefaultRotation_(leftUpperArmBone),
-                GetPose1Rotation_(false, pose1.LeftUpperArmRotation)));
+            leftShoulderIkRotation);
         leftForearmQuaternions.SetKeyframe(
             time,
-            CombineRotations_(
-                GetDefaultRotation_(leftForearmBone),
-                GetPose1Rotation_(false, pose1.LeftForearmRotation)));
+            leftElbowIkRotation);
         leftHandQuaternions.SetKeyframe(
             time,
             CombineRotations_(
@@ -1036,14 +1103,10 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
 
         rightUpperArmQuaternions.SetKeyframe(
             time,
-            CombineRotations_(
-                GetDefaultRotation_(rightUpperArmBone),
-                GetPose1Rotation_(false, pose1.RightUpperArmRotation)));
+            rightShoulderIkRotation);
         rightForearmQuaternions.SetKeyframe(
             time,
-            CombineRotations_(
-                GetDefaultRotation_(rightForearmBone),
-                GetPose1Rotation_(false, pose1.RightForearmRotation)));
+            rightElbowIkRotation);
         rightHandQuaternions.SetKeyframe(
             time,
             CombineRotations_(
@@ -1064,7 +1127,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
             time,
             CombineRotations_(
                 GetDefaultRotation_(leftThighBone),
-                GetPose1Rotation_(false, pose1.LeftThighRotation)));
+                leftThighIkRotation)); //GetPose1Rotation_(false, pose1.LeftThighRotation)));
         rightThighQuaternions.SetKeyframe(
             time,
             CombineRotations_(
@@ -1095,6 +1158,97 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
     return (isHand
         ? new Vector3(0, -deltaRadians, 0)
         : new Vector3(deltaRadians, 0, 0)).CreateZyxRadians();
+  }
+
+  private static (Quaternion quaternion0, Quaternion quaternion1) GetPose2Ik_(
+      IReadOnlyBone bone0,
+      IReadOnlyBone bone1,
+      Vector3 target,
+      int i) {
+    target = new Vector3(target.X, -target.Z, target.Y);
+
+    var (pitchDegrees0, yawDegrees0)
+        = FinTrig.GetPitchYawDegreesFromTowards(
+            Vector3.Zero,
+            target,
+            i);
+
+    return (
+        QuaternionUtil.CreateZyxRadians(
+            yawDegrees0 * FinTrig.DEG_2_RAD,
+            pitchDegrees0 * FinTrig.DEG_2_RAD,
+            0 // yaw
+        ),
+        Quaternion.Identity);
+  }
+
+  private static (Quaternion quaternion0, Quaternion quaternion1) GetPose3Ik_(
+      (IReadOnlyBone bone, short rollDegreesTimesTen) tuple0,
+      (IReadOnlyBone bone, short rollDegreesTimesTen) tuple1,
+      IReadOnlyBone bone2,
+      Quaternion towardsIdentity,
+      Quaternion alignRotation0,
+      Quaternion alignRotation1,
+      Vector3 target,
+      bool enable,
+      int i,
+      float f) {
+    // TODO: This is just a lot of bullshit I threw together that kind of works.
+    // Where's this actually done in the code?
+
+    Quaternion quaternion0, quaternion1;
+
+    if (true) {
+      target = new Vector3(-target.Y, -target.Z, target.X);
+      //target = new Vector3((f + 1) / 4 * 100, 0, 0);
+
+      var length0 = tuple1.bone.Transform.LocalTranslation.Length();
+      var length1 = bone2.Transform.LocalTranslation.Length();
+      var rollRadians0
+          = tuple0.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
+      var rollRadians1
+          = tuple1.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
+
+      if (i == 74) {
+        ;
+      }
+
+      (quaternion0, quaternion1) = FinTrig.GetQuaternionsTowards(
+          (length0, rollRadians0),
+          (length1, rollRadians1),
+          target,
+          out var forwardNormal,
+          out var middlePoint);
+
+      if (i == 74) {
+        ;
+      }
+    } else {
+      quaternion0 = quaternion1
+          = QuaternionUtil.CreateZyxRadians(0,
+                                            10 * f * FinTrig.DEG_2_RAD,
+                                            10 * f * FinTrig.DEG_2_RAD);
+    }
+
+    var bone0 = tuple1.bone;
+    bone0.Parent.Transform.WorldMatrix.AssertDecompose(
+        out _,
+        out var rootRotation,
+        out var rootScale);
+
+    var undoRoot = Quaternion.Inverse(rootRotation);
+
+    return (
+        undoRoot *
+        towardsIdentity *
+        alignRotation0 *
+        quaternion0 *
+        Quaternion.Inverse(alignRotation0),
+        enable
+            ? alignRotation1 *
+              quaternion1 *
+              Quaternion.Inverse(alignRotation1)
+            : Quaternion.Identity);
   }
 }
 

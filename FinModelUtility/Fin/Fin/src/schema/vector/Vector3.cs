@@ -90,7 +90,9 @@ public sealed partial class Vector3f
 public sealed partial class Vector3i : BVector3<int>, IBinaryConvertible;
 
 [BinarySchema]
-public sealed partial class Vector3s : BVector3<short>, IBinaryConvertible;
+public sealed partial class Vector3s : BVector3<short>, IBinaryConvertible {
+  public Vector3 AsVector3() => new Vector3(this.X, this.Y, this.Z);
+}
 
 [BinarySchema]
 public sealed partial class

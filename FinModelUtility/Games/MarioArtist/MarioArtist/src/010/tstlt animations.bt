@@ -110,17 +110,16 @@ typedef struct {
             Vec3s rightFoot; // Impacts all of the right leg
         } pose2s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
              
-        // Seems to also be positions for inverse kinematics? Either that or
-        // normals.
-        // The reason why I wonder if this is normals is because the order
-        // and signs of the axes are screwy compared to the other one.
+        // Positions for inverse kinematics.
+        // For some reason, the order and signs of the axes are screwy compared
+        // to the other one.
         // First axis is is up+/down-, second is left+/right-, third is
         // towards screen+/away from screen-.
         FSeek(fileAddress3);
         struct Pose3 {
             Vec3s head;
-            Vec3s leftHand; // Impacts all of the left arm.
-            Vec3s rightHand; // Impacts all of the right arm.
+            Vec3s leftHand; // Relative to shoulder, impacts full arm.
+            Vec3s rightHand; // Relative to shoulder, impacts full arm.
         } pose3s[keyframeCount] <optimize=false, bgcolor=COLOR_ORIENTATION>;
     }
     FSeek(temp);

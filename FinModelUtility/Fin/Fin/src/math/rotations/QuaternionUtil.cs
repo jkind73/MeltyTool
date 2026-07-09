@@ -60,6 +60,9 @@ public static class QuaternionUtil {
   public static Quaternion CreateZyxRadians(in this Vector3 xyzRadians)
     => CreateZyxRadians(xyzRadians.X, xyzRadians.Y, xyzRadians.Z);
 
+  public static Vector3 ToNormal(in this Quaternion q)
+    => Vector3.Transform(Vector3.UnitX, q);
+
   // TODO: Slow! Figure out how to populate animations with raw quaternions instead
   public static Vector3 ToEulerRadians(in this Quaternion q) {
     if (q.IsIdentity) {

@@ -26,13 +26,13 @@ public interface ISkeletonRenderer : IRenderable {
 /// </summary>
 public sealed class SkeletonRenderer
     : ISkeletonRenderer {
-  private static readonly IModelRenderer BONE_RENDERER_;
+  private static readonly IModelRenderer BONE_RENDERER_= GenerateBoneRenderer();
 
   private static readonly Color UNSELECTED_BONE = Color.Blue;
   private static readonly Color SELECTED_BONE = Color.White;
   private static readonly Color SELECTED_CHILD = Color.CornflowerBlue;
 
-  static SkeletonRenderer() {
+  public static IModelRenderer GenerateBoneRenderer() {
     var model = ModelImpl.CreateForViewer();
 
     var material = model.MaterialManager.AddNullMaterial();
@@ -73,7 +73,7 @@ public sealed class SkeletonRenderer
         ])
         .SetMaterial(material);
 
-    BONE_RENDERER_ = new ModelRenderer(model);
+    return new ModelRenderer(model);
   }
 
   public void Dispose() { }

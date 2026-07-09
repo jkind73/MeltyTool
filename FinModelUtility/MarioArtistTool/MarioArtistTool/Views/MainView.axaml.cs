@@ -85,11 +85,27 @@ public partial class MainView : UserControl {
         config.MostRecentFileName = file.FullPath;
         config.Save();
 
-        var obj = area.AddRootNode();
-        obj.AddSceneModel(model);
+        if (false) {
+          var obj = area.AddRootNode();
+          obj.AddSceneModel(model);
 
-        var lightingObj = area.AddRootNode();
-        scene.CreateDefaultLighting(lightingObj);
+          var lightingObj = area.AddRootNode();
+          scene.CreateDefaultLighting(lightingObj);
+        } else {
+          var debuggerObj0 = area.AddRootNode();
+          debuggerObj0.SetPosition(-200, 0, 0);
+          debuggerObj0.AddComponent(new IkDebuggerComponent(new Vector3(100, 0, 0), Color.Red));
+
+          var debuggerObj1 = area.AddRootNode();
+          debuggerObj1.SetPosition(0, 0, 0);
+          debuggerObj1.AddComponent(new IkDebuggerComponent(new Vector3(0, 100, 0), Color.Blue));
+
+          var debuggerObj2 = area.AddRootNode();
+          debuggerObj2.SetPosition(200, 0, 0);
+          debuggerObj2.AddComponent(new IkDebuggerComponent(new Vector3(0, 0, 100), Color.Green));
+
+          //debuggerObj.AddComponent(new IkDebuggerComponent());
+        }
 
         this.currentModelFileBundle_ = bundle;
 
