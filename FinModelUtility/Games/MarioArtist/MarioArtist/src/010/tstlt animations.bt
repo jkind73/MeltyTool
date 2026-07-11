@@ -37,6 +37,8 @@ struct Vec3s {
 };
 
 typedef struct {
+    local uint id = (FTell() - 0x1DEAC4) / 20;
+    
     ushort keyframeCount <bgcolor=COLOR_UNKNOWN>;   
     ushort animationLength <bgcolor=COLOR_COUNT>;
     
@@ -125,14 +127,37 @@ typedef struct {
     FSeek(temp);
 } AnimationHeader <bgcolor=COLOR_HEADER>;
 
+
+struct GenderAnimations {
+    // Each dance move has its own brief animation, these are randomly mixed
+    // together at runtime.
+    AnimationHeader dancing[21]  <optimize=false>;
+
+    AnimationHeader standing;
+    AnimationHeader unk0;
+    AnimationHeader impatient;
+    AnimationHeader sleeping;
+    
+    AnimationHeader pokeHead[4] <optimize=false>; 
+    AnimationHeader pokeChest[4] <optimize=false>;
+    AnimationHeader pokePelvis[4] <optimize=false>;
+
+    AnimationHeader pokeRightArm_looking;
+    AnimationHeader pokeLeftArm_looking;
+    AnimationHeader pokeRightArm_angry;
+    AnimationHeader pokeLeftArm_angry;
+
+    AnimationHeader pokeRightLeg_looking;
+    AnimationHeader pokeLeftLeg_looking;
+    AnimationHeader pokeRightLeg_angry;
+    AnimationHeader pokeLeftLeg_angry;
+};
+
 FSeek(0x1DEAC4);
-AnimationHeader animationHeaders0[72] <optimize=false>;
+AnimationHeader animationHeaders0[3] <optimize=false>;
 
-FSeek(0x1DF064);
-AnimationHeader animationHeaders1[24] <optimize=false>;
+GenderAnimations boyOrOtherAnimations <optimize=false>;
 
-FSeek(0x1DF064);
-AnimationHeader standingAnimationHeader;
+AnimationHeader animationHeaders1[3] <optimize=false>;
 
-FSeek(0x1DF08C);
-AnimationHeader waitingAnimationHeader;
+GenderAnimations girlAnimations <optimize=false>;
