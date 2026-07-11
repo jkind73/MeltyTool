@@ -16,7 +16,8 @@ public partial class AlAudioManager : IAudioManager<short> {
   public static IAudioManager<short> TryToCreateOrStub() {
     try {
       return new AlAudioManager();
-    } catch (Exception ex) {
+    } catch (Exception e) {
+      Console.Error.WriteLine($"Failed to create AL manager: {e}");
       return new StubbedAudioManager();
     }
   }
@@ -40,7 +41,11 @@ public partial class AlAudioManager : IAudioManager<short> {
 
   private void ReleaseUnmanagedResources_() {
     this.IsDisposed = true;
-    this.AudioPlayer.Dispose();
-    ALC.DestroyContext(this.context_);
+    try {
+      this.AudioPlayer?.Dispose();
+      ALC.DestroyContext(this.context_);
+    } catch (Exception e) {
+      Console.Error.WriteLine($"Failed to dispose AL manager: {e}");
+    }
   }
 }
