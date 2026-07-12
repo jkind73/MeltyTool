@@ -28,15 +28,15 @@ if not exist "%patchedAssimpPath%\CMakeLists.txt" (
   if errorlevel 1 exit /b 1
 )
 
-git -C "%patchedAssimpPath%" apply --reverse --check "%assimpPatch%" >nul 2>nul
+git -C "%patchedAssimpPath%" apply --reverse --check --ignore-space-change "%assimpPatch%" >nul 2>nul
 if errorlevel 1 (
   echo Applying MeltyTool FBX morph-animation patch...
-  git -C "%patchedAssimpPath%" apply --check "%assimpPatch%"
+  git -C "%patchedAssimpPath%" apply --check --ignore-space-change "%assimpPatch%"
   if errorlevel 1 (
     echo ERROR: Assimp source has incompatible local changes.
     exit /b 1
   )
-  git -C "%patchedAssimpPath%" apply "%assimpPatch%"
+  git -C "%patchedAssimpPath%" apply --ignore-space-change "%assimpPatch%"
   if errorlevel 1 exit /b 1
 )
 
