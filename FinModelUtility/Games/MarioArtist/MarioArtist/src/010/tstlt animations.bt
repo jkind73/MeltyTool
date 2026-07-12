@@ -37,7 +37,8 @@ struct Vec3s {
 };
 
 typedef struct {
-    local uint id = (FTell() - 0x1DEAC4) / 20;
+    local uint id = (FTell() - 0x1DEAC4) / 20;    
+    local uint headerRamAddress = 0x802EEC50 + FTell();
     
     ushort keyframeCount <bgcolor=COLOR_UNKNOWN>;   
     ushort animationLength <bgcolor=COLOR_COUNT>;
@@ -134,7 +135,7 @@ struct GenderAnimations {
     AnimationHeader dancing[21]  <optimize=false>;
 
     AnimationHeader standing;
-    AnimationHeader unk0;
+    AnimationHeader yawning;
     AnimationHeader impatient;
     AnimationHeader sleeping;
     
