@@ -130,8 +130,8 @@ public static class FinTrig {
       upNormal = Vector3.UnitZ;
     }
 
-    var rightNormal = Vector3.Cross(forwardNormal, upNormal);
-    upNormal = Vector3.Cross(rightNormal, forwardNormal);
+    var rightNormal = Vector3.Normalize(Vector3.Cross(forwardNormal, upNormal));
+    upNormal = Vector3.Normalize(Vector3.Cross(rightNormal, forwardNormal));
 
     var startingRadians
         = CalculateLawOfCosinesRadians_(length1, distance, length0);

@@ -76,13 +76,19 @@ public class IkDebuggerComponent(Vector3? localTarget, Color color) : ISceneNode
     float length0;
     float length1;
 
+    length0 = 100;
+    length1 = 100;
+
     if (localTarget != null) {
       offset = self.Transform.WorldMatrix.Translation;
-      target = offset + localTarget.Value;
-      length0 = 100;
-      length1 = 100;
+      target = offset + localTarget.Value;  
     } else {
-      var pitchDegreesTowardsOffset
+      var upDownRadians = (.5f + .5f * MathF.Sin(frameTime / 5 * 2 * MathF.PI)) * MathF.PI / 2;
+
+      offset = new Vector3(25, 30, 40);
+      target = offset + 100 * new Vector3(0, MathF.Cos(upDownRadians), MathF.Sin(upDownRadians));
+
+      /*var pitchDegreesTowardsOffset
           = 0; //MathF.Sin(frameTime * 22 * FinTrig.DEG_2_RAD) * 22;
       var pitchDegreesTowardsTarget
           = 0; //MathF.Sin(frameTime * 34 * FinTrig.DEG_2_RAD) * 34;
@@ -117,7 +123,7 @@ public class IkDebuggerComponent(Vector3? localTarget, Color color) : ISceneNode
       offset = new Vector3(offsetXNormal, offsetYNormal, offsetZNormal) *
                    offsetDistance;
       target = new Vector3(targetXNormal, targetYNormal, targetZNormal) *
-                   targetDistance;
+                   targetDistance;*/
     }
 
     GlTransform.PushMatrix();

@@ -26,6 +26,7 @@ using fin.schema.color;
 using fin.schema.vector;
 using fin.util.linq;
 using fin.util.sets;
+using fin.util.time;
 
 using marioartist.schema;
 using marioartist.schema.talent_studio;
@@ -1048,10 +1049,8 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
                           Quaternion.CreateFromAxisAngle(
                               Vector3.UnitX,
                               MathF.PI),
-                          pose3.LeftHand.AsVector3(),
-                          true,
-                          i,
-                          f);
+                          pose3.LeftHand.AsVector3());
+
         var (rightShoulderIkRotation, rightElbowIkRotation)
             = GetPose3Ik_((rightUpperArmBone, pose1.RightUpperArmRotation),
                           (rightForearmBone, pose1.RightForearmRotation),
@@ -1071,10 +1070,7 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
                           Quaternion.CreateFromAxisAngle(
                               Vector3.UnitZ,
                               MathF.PI),
-                          pose3.RightHand.AsVector3(),
-                          true,
-                          i,
-                          f);
+                          pose3.RightHand.AsVector3());
 
         // TODO: How is IK done for pose2 and pose3, where is it in the code?
 
@@ -1183,52 +1179,29 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
   }
 
   private static (Quaternion quaternion0, Quaternion quaternion1) GetPose3Ik_(
-      (IReadOnlyBone bone, short rollDegreesTimesTen) tuple0,
-      (IReadOnlyBone bone, short rollDegreesTimesTen) tuple1,
+      (IReadOnlyBone bone, int rollDegreesTimesTen) tuple0,
+      (IReadOnlyBone bone, int rollDegreesTimesTen) tuple1,
       IReadOnlyBone bone2,
       Quaternion towardsIdentity,
       Quaternion alignRotation0,
       Quaternion alignRotation1,
-      Vector3 target,
-      bool enable,
-      int i,
-      float f) {
+      Vector3 target) {
     // TODO: This is just a lot of bullshit I threw together that kind of works.
     // Where's this actually done in the code?
 
-    Quaternion quaternion0, quaternion1;
+    target = new Vector3(-target.Y, -target.Z, target.X);
 
-    if (true) {
-      target = new Vector3(-target.Y, -target.Z, target.X);
-      //target = new Vector3((f + 1) / 4 * 100, 0, 0);
+    var length0 = tuple1.bone.Transform.LocalTranslation.Length();
+    var length1 = bone2.Transform.LocalTranslation.Length();
+    var rollRadians0
+        = tuple0.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
+    var rollRadians1
+        = tuple1.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
 
-      var length0 = tuple1.bone.Transform.LocalTranslation.Length();
-      var length1 = bone2.Transform.LocalTranslation.Length();
-      var rollRadians0
-          = tuple0.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
-      var rollRadians1
-          = tuple1.rollDegreesTimesTen * .1f * FinTrig.DEG_2_RAD;
-
-      if (i == 74) {
-        ;
-      }
-
-      (quaternion0, quaternion1) = FinTrig.GetQuaternionsTowards(
-          (length0, rollRadians0),
-          (length1, rollRadians1),
-          target,
-          out var forwardNormal,
-          out var middlePoint);
-
-      if (i == 74) {
-        ;
-      }
-    } else {
-      quaternion0 = quaternion1
-          = QuaternionUtil.CreateZyxRadians(0,
-                                            10 * f * FinTrig.DEG_2_RAD,
-                                            10 * f * FinTrig.DEG_2_RAD);
-    }
+    var (quaternion0, quaternion1) = FinTrig.GetQuaternionsTowards(
+        (length0, rollRadians0),
+        (length1, rollRadians1),
+        target);
 
     var bone0 = tuple1.bone;
     bone0.Parent.Transform.WorldMatrix.AssertDecompose(
@@ -1244,11 +1217,9 @@ public sealed class TstltModelImporter : IModelImporter<TstltModelFileBundle> {
         alignRotation0 *
         quaternion0 *
         Quaternion.Inverse(alignRotation0),
-        enable
-            ? alignRotation1 *
-              quaternion1 *
-              Quaternion.Inverse(alignRotation1)
-            : Quaternion.Identity);
+        alignRotation1 *
+        quaternion1 *
+        Quaternion.Inverse(alignRotation1));
   }
 }
 

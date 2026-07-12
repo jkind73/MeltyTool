@@ -92,7 +92,7 @@ public partial class MainView : UserControl {
           var lightingObj = area.AddRootNode();
           scene.CreateDefaultLighting(lightingObj);
         } else {
-          var debuggerObj0 = area.AddRootNode();
+          /*var debuggerObj0 = area.AddRootNode();
           debuggerObj0.SetPosition(-200, 0, 0);
           debuggerObj0.AddComponent(new IkDebuggerComponent(new Vector3(100, 0, 0), Color.Red));
 
@@ -102,9 +102,10 @@ public partial class MainView : UserControl {
 
           var debuggerObj2 = area.AddRootNode();
           debuggerObj2.SetPosition(200, 0, 0);
-          debuggerObj2.AddComponent(new IkDebuggerComponent(new Vector3(0, 0, 100), Color.Green));
+          debuggerObj2.AddComponent(new IkDebuggerComponent(new Vector3(0, 0, 100), Color.Green));*/
 
-          //debuggerObj.AddComponent(new IkDebuggerComponent());
+          var debuggerObj = area.AddRootNode();
+          debuggerObj.AddComponent(new IkDebuggerComponent(null, Color.White));
         }
 
         this.currentModelFileBundle_ = bundle;
